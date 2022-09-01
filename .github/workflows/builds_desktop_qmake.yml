@@ -34,7 +34,7 @@ jobs:
 
       # Install Qt
       - name: Install Qt
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v3
         with:
           version: '6.3.1'
           modules: qtconnectivity qtcharts qt5compat
@@ -81,7 +81,7 @@ jobs:
 
       # Install Qt
       - name: Install Qt
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v3
         with:
           version: '6.3.1'
           modules: qtconnectivity qtcharts qt5compat
@@ -124,7 +124,7 @@ jobs:
 
       # Install Qt
       - name: Install Qt
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v3
         with:
           version: '6.3.1'
           modules: qtconnectivity qtcharts qt5compat
