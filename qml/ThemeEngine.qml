@@ -186,9 +186,9 @@ Item {
             themeStatusbar = Material.Light
             colorStatusbar = "white"
 
-            colorHeader = "#f8f2f3"
+            colorHeader = "#f1f0ef"
             colorHeaderContent = "#444"
-            colorHeaderHighlight = "#ebe5e6"
+            colorHeaderHighlight = "#e2e1df"
 
             colorSidebar = "white"
             colorSidebarContent = "#444"

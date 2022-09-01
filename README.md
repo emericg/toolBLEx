@@ -14,7 +14,10 @@ A Bluetooth Low Energy scanner and device analyzer.
 
 ## Screenshots
 
-TODO
+![GUI_DESKTOP1](https://i.imgur.com/0wAUe0t.png)
+![GUI_DESKTOP2](https://i.imgur.com/4QDkAZg.png)
+![GUI_DESKTOP3](https://i.imgur.com/BtGO6rG.png)
+![GUI_DESKTOP4](https://i.imgur.com/bv2oMz6.png)
 
 
 ## Documentation
@@ -42,11 +45,15 @@ $ make
 
 ##### Linux
 
+Bluetooth driver support might be a little shaky...
+
 ##### macOS
 
 Starting with macOS 11, the application will ask you for permission to use Bluetooth. You can learn more on Apple [developer website](https://developer.apple.com/documentation/bundleresources/information_property_list/nsbluetoothalwaysusagedescription).
 
 ##### Windows
+
+Bluetooth driver support might be a little shaky...
 
 #### Third party projects used by toolBLEx
 
