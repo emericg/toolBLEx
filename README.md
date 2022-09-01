@@ -15,9 +15,10 @@ A Bluetooth Low Energy scanner and device analyzer.
 ## Screenshots
 
 ![GUI_DESKTOP1](https://i.imgur.com/0wAUe0t.png)
-![GUI_DESKTOP2](https://i.imgur.com/4QDkAZg.png)
-![GUI_DESKTOP3](https://i.imgur.com/BtGO6rG.png)
-![GUI_DESKTOP4](https://i.imgur.com/bv2oMz6.png)
+![GUI_DESKTOP2](https://i.imgur.com/5IXNUJ3.png)
+![GUI_DESKTOP3](https://i.imgur.com/Rkb1pJX.png)
+![GUI_DESKTOP4](https://i.imgur.com/BtGO6rG.png)
+![GUI_DESKTOP5](https://i.imgur.com/bv2oMz6.png)
 
 
 ## Documentation
