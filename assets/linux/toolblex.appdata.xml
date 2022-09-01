@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2022 Emeric Grange <emeric.grange@gmail.com> -->
+
+<component type="desktop-application">
+  <id>io.emeric.toolblex</id>
+  <name>toolBLEx</name>
+  <launchable type="desktop-id">toolblex.desktop</launchable>
+
+  <summary>A Bluetooth Low Energy scanner and device analyzer</summary>
+  <description>
+    <p>A Bluetooth Low Energy scanner and device analyzer</p>
+    <p>Features:</p>
+    <ul>
+      <li>Support many different sensors</li>
+    </ul>
+  </description>
+
+  <releases>
+    <release version="0.1" date="2022-09-01" />
+  </releases>
+
+  <project_license>GPL-3.0+</project_license>
+  <metadata_license>CC0-1.0</metadata_license>
+  <content_rating type="oars-1.1" />
+
+  <developer_name>Emeric Grange</developer_name>
+  <updatecontact>emeric.grange@gmail.com</updatecontact>
+  <url type="homepage">https://emeric.io/toolBLEx</url>
+  <url type="contact">https://emeric.io/toolBLEx/support.html</url>
+  <url type="bugtracker">https://github.com/emericg/toolBLEx/issues</url>
+  <url type="translate">https://github.com/emericg/toolBLEx/blob/master/i18n/README.md</url>
+  <url type="donation">https://paypal.me/EmericGrange</url>
+
+  <screenshots>
+    <screenshot type="default">
+      <image>https://i.imgur.com/1F666UF.png</image>
+      <caption>Device list screen</caption>
+    </screenshot>
+  </screenshots>
+
+  <recommends>
+    <control>keyboard</control>
+    <control>pointing</control>
+  </recommends>
+
+  <categories>
+    <category>Utility</category>
+    <category>DataVisualization</category>
+  </categories>
+
+  <keywords>
+    <keyword>sensor</keyword>
+    <keyword>sensors</keyword>
+    <keyword>ble</keyword>
+    <keyword>bluetooth</keyword>
+    <keyword>bluetooth low energy</keyword>
+  </keywords>
+</component>

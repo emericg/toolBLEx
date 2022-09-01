@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   height="24px"
+   viewBox="0 0 24 24"
+   width="24px"
+   version="1.1"
+   id="svg14"
+   xmlns="http://www.w3.org/2000/svg">
+  <g
+     id="g12"
+     style="opacity:0.66">
+    <g
+       id="g10">
+      <path
+         d="M6,13c0-1.65,0.67-3.15,1.76-4.24L6.34,7.34C4.9,8.79,4,10.79,4,13c0,4.08,3.05,7.44,7,7.93v-2.02 C8.17,18.43,6,15.97,6,13z"
+         id="path8" />
+    </g>
+  </g>
+  <g
+     id="g12-3"
+     transform="translate(-2)">
+    <g
+       id="g10-6">
+      <path
+         d="M 14,5 V 2 l -4,4 4,4 V 7 c 3.31,0 6,2.69 6,6 0,2.97 -2.17,5.43 -5,5.91 v 2.02 C 18.95,20.44 22,17.08 22,13 22,8.58 18.42,5 14,5 Z"
+         id="path6-7" />
+    </g>
+  </g>
+</svg>

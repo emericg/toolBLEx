@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file compress-algo="zstd" compress="1">vendors/ble-manufacturer-ids.csv</file>
+        <file compress-algo="zstd" compress="1">vendors/ble-service-uuids.csv</file>
+        <file compress-algo="zstd" compress="1">vendors/mac-vendors.csv</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,162 @@
+#--------------------------------------------------------------------------------
+# Workflow configuration
+#--------------------------------------------------------------------------------
+
+name: "Desktop CI builds (qmake)"
+on:
+  push:
+  pull_request:
+
+#--------------------------------------------------------------------------------
+# Define application name & version
+#--------------------------------------------------------------------------------
+
+env:
+  VERSION: "0.1"
+  APPLICATION: "toolBLEx"
+  QMAKE_PROJECT: "toolBLEx.pro"
+
+#--------------------------------------------------------------------------------
+# Workflow jobs
+#--------------------------------------------------------------------------------
+
+jobs:
+  ## GNU/Linux build ###########################################################
+  build-linux:
+    name: "Linux CI build"
+    runs-on: ubuntu-20.04
+    steps:
+      # Checkout the repository
+      - name: Checkout repository and submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      # Install Qt
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: '6.3.1'
+          modules: qtconnectivity qtcharts qt5compat
+
+      # Install dependencies (from package manager)
+      - name: Install dependencies (from package manager)
+        run: |
+             sudo apt-get install libgl1-mesa-dev libxkbcommon-x11-dev libx11-xcb-dev libzstd-dev -y;
+             sudo apt-get install appstream -y;
+
+      # Build application
+      - name: Build application
+        run: |
+             qmake --version
+             qmake ${{env.QMAKE_PROJECT}} CONFIG+=release PREFIX=/usr
+             make -j$(nproc)
+
+      # Deploy application
+      - name: Deploy application
+        run: ./deploy_linux.sh -c -i -p
+
+      # Upload AppImage
+      - name: Upload AppImage
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{env.APPLICATION}}-${{env.VERSION}}-linux64.AppImage
+          path: ${{env.APPLICATION}}*.AppImage
+
+  ## macOS build ###############################################################
+  build-mac:
+    name: "macOS CI build"
+    runs-on: macos-11
+    steps:
+      # Checkout the repository
+      - name: Checkout repository and submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      # Install dependencies
+      #- name: Install dependencies
+      #  run: |
+      #       brew install qt6
+
+      # Install Qt
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: '6.3.1'
+          modules: qtconnectivity qtcharts qt5compat
+
+      # Build application
+      - name: Build application
+        run: |
+             qmake --version
+             qmake ${{env.QMAKE_PROJECT}} CONFIG+=release
+             make -j$(nproc)
+
+      # Deploy application
+      - name: Deploy application
+        run: ./deploy_macos.sh -c -p
+
+      # Upload app zip
+      - name: Upload app zip
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{env.APPLICATION}}-${{env.VERSION}}-macOS.zip
+          path: bin/${{env.APPLICATION}}-${{env.VERSION}}-macOS.zip
+
+  ## Windows build #############################################################
+  build-windows:
+    name: "Windows CI build"
+    runs-on: windows-2022
+    steps:
+      # Checkout the repository
+      - name: Checkout repository and submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      # Configure MSVC
+      - name: Configure MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+          spectre: true
+
+      # Install Qt
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: '6.3.1'
+          modules: qtconnectivity qtcharts qt5compat
+
+      # Install NSIS (already installed in 'windows-2022')
+      #- name: Install NSIS
+      #  run: |
+      #       Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')
+      #       scoop bucket add extras
+      #       scoop install nsis
+
+      # Build application
+      - name: Build application
+        run: |
+             qmake --version
+             qmake ${{env.QMAKE_PROJECT}} CONFIG+=release
+             nmake
+
+      # Deploy application
+      - name: Deploy application
+        run: sh deploy_windows.sh -c -p
+
+      # Upload ZIP
+      - name: Upload ZIP
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{env.APPLICATION}}-${{env.VERSION}}-win64.zip
+          path: ${{env.APPLICATION}}-${{env.VERSION}}-win64.zip
+
+      # Upload NSIS installer
+      - name: Upload NSIS installer
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{env.APPLICATION}}-${{env.VERSION}}-win64.exe
+          path: ${{env.APPLICATION}}-${{env.VERSION}}-win64.exe

@@ -1,0 +1,30 @@
+<RCC>
+    <qresource prefix="/qml">
+        <file>DesktopApplication.qml</file>
+        <file>DesktopHeader.qml</file>
+        <file>ScreenBluetooth.qml</file>
+        <file>ScreenScanner.qml</file>
+        <file>ScreenAdvertiser.qml</file>
+        <file>ScreenSettings.qml</file>
+        <file>PanelDevice.qml</file>
+        <file>PanelDeviceInfos.qml</file>
+        <file>PanelDeviceAdvertisement.qml</file>
+        <file>PanelDeviceServices.qml</file>
+        <file>PanelScanner.qml</file>
+
+        <file alias="AdapterWidget.qml">components/AdapterWidget.qml</file>
+        <file alias="AdvertisementDataWidget.qml">components/AdvertisementDataWidget.qml</file>
+        <file alias="AdvertisementDataWidgetAdvanced.qml">components/AdvertisementDataWidgetAdvanced.qml</file>
+        <file alias="BleServiceWidget.qml">components/BleServiceWidget.qml</file>
+        <file alias="BleCharacteristicWidget.qml">components/BleCharacteristicWidget.qml</file>
+        <file alias="DeviceScannerHeader.qml">components/DeviceScannerHeader.qml</file>
+        <file alias="DeviceScannerWidget.qml">components/DeviceScannerWidget.qml</file>
+
+        <file alias="RssiBar.qml">components/RssiBar.qml</file>
+        <file alias="RssiGraph.qml">components/RssiGraph.qml</file>
+        <file alias="TextSelectable.qml">components/TextSelectable.qml</file>
+
+        <file>ThemeEngine.qml</file>
+        <file>WindowGeometrySaver.qml</file>
+    </qresource>
+</RCC>
