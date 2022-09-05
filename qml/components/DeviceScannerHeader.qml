@@ -11,6 +11,9 @@ Rectangle {
     height: 36
     color: Theme.colorLVheader
 
+    property bool showAddress: (Qt.platform.os !== "osx")
+    property bool showManufacturer: (Qt.platform.os !== "osx")
+
     Row {
         anchors.left: parent.left
         anchors.leftMargin: 12
@@ -23,6 +26,7 @@ Rectangle {
         Item { // separator ////////////////////////////////////////////////////
             width: 16
             height: 24
+            visible: showAddress
             Rectangle {
                 anchors.centerIn: parent
                 width: 2; height: 18;
@@ -34,6 +38,8 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             width: ref.contentWidth
 
+            visible: showAddress
+
             text: qsTr("Address")
             color: Theme.colorText
             font.bold: (deviceManager.orderBy_role === "address")
@@ -41,7 +47,9 @@ Rectangle {
             Text {
                 id: ref
                 visible: false
-                text: "00:11:22:33:44:55"
+                text: (Qt.platform.os === "osx") ?
+                          "329562a2-d357-470a-862c-6f6b73397607" :
+                          "00:11:22:33:44:55"
                 textFormat: Text.PlainText
                 font.family: "Monospace"
             }
@@ -133,6 +141,7 @@ Rectangle {
         Item { // separator ////////////////////////////////////////////////////
             width: 16
             height: 24
+            visible: showAddress
             Rectangle {
                 anchors.centerIn: parent
                 width: 2; height: 18;
@@ -143,6 +152,8 @@ Rectangle {
         Text { // manufacturer column header
             anchors.verticalCenter: parent.verticalCenter
             width: 220
+
+            visible: showAddress
 
             text: qsTr("Manufacturer")
             font.bold: (deviceManager.orderBy_role === "manufacturer")

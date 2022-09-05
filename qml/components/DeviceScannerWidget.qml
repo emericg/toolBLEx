@@ -13,16 +13,9 @@ Item {
     property var boxDevice: pointer
 
     property bool isSelected: boxDevice.selected
-    //property bool isSelected: (screenScanner.selected === index)
-    //property bool isSelected: (splitview.currentIndex === index)
 
-    ////////////////////////////////////////////////////////////////////////////
-
-    Component.onCompleted: initBoxData()
-
-    function initBoxData() {
-        //
-    }
+    property bool showAddress: (Qt.platform.os !== "osx")
+    property bool showManufacturer: (Qt.platform.os !== "osx")
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -106,6 +99,8 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             width: ref.contentWidth
 
+            visible: showAddress
+
             text: boxDevice.deviceAddress
             textFormat: Text.PlainText
             font.family: "Monospace"
@@ -115,7 +110,9 @@ Item {
             Text {
                 id: ref
                 visible: false
-                text: "00:11:22:33:44:55"
+                text: (Qt.platform.os === "osx") ?
+                          "329562a2-d357-470a-862c-6f6b73397607" :
+                          "00:11:22:33:44:55"
                 textFormat: Text.PlainText
                 font.family: "Monospace"
             }
@@ -129,7 +126,11 @@ Item {
 
             text: boxDevice.deviceName
             textFormat: Text.PlainText
-            color: isSelected ? "white" : Theme.colorText
+            color: {
+                if (isSelected) return "white"
+                if (boxDevice.deviceName.length === 0) return Theme.colorSubText
+                return Theme.colorText
+            }
             elide: Text.ElideRight
         }
 
@@ -138,6 +139,8 @@ Item {
         Text {
             anchors.verticalCenter: parent.verticalCenter
             width: 220
+
+            visible: showAddress
 
             text: boxDevice.deviceManufacturer
             textFormat: Text.PlainText

@@ -157,6 +157,8 @@ Loader {
                             opacity: settingsManager.scanShowBeacon ? 1 : 0.5
                             font.bold: false
 
+                            visible: (Qt.platform.os !== "osx")
+
                             text: qsTr("beacons")
                             onClicked: {
                                 settingsManager.scanShowBeacon = !settingsManager.scanShowBeacon
