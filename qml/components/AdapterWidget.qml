@@ -98,6 +98,29 @@ Rectangle {
             height: 32
             spacing: 12
 
+            visible: modelData.manufacturer.length
+
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                width: col.legendWidth
+
+                text: qsTr("MAC vendor")
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContent
+                horizontalAlignment: Text.AlignRight
+                color: Theme.colorSubText
+            }
+
+            TextSelectable {
+                anchors.verticalCenter: parent.verticalCenter
+                text: modelData.manufacturer
+            }
+        }
+
+        Row {
+            height: 32
+            spacing: 12
+
             visible: modelData.version.length
 
             Text {

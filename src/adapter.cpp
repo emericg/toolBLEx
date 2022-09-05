@@ -20,6 +20,7 @@
  */
 
 #include "adapter.h"
+#include "VendorsDatabase.h"
 
 #include <QProcess>
 #include <unistd.h>
@@ -30,9 +31,12 @@ Adapter::Adapter(const QBluetoothHostInfo &adapterInfo, bool inUse, QObject *par
 {
     m_default = inUse;
 
-    m_name = adapterInfo.name();
+    m_hostname = adapterInfo.name();
     m_address = adapterInfo.address().toString();
-    m_bluetoothVersion = "";
+    m_bluetooth_version = "";
+
+    VendorsDatabase *v = VendorsDatabase::getInstance();
+    v->getVendor(m_address, m_mac_manufacturer);
 
 #if defined(Q_OS_LINUX)
     QProcess process;
@@ -49,22 +53,22 @@ Adapter::Adapter(const QBluetoothHostInfo &adapterInfo, bool inUse, QObject *par
     {
         if (line.contains("addr ") && line.contains(m_address))
         {
-            if (line.contains("version 12")) m_bluetoothVersion = "5.3";
-            else if (line.contains("version 11")) m_bluetoothVersion = "5.2";
-            else if (line.contains("version 10")) m_bluetoothVersion = "5.1";
-            else if (line.contains("version 9")) m_bluetoothVersion = "5.0";
-            else if (line.contains("version 8")) m_bluetoothVersion = "4.2";
-            else if (line.contains("version 7")) m_bluetoothVersion = "4.1";
-            else if (line.contains("version 6")) m_bluetoothVersion = "4.0";
-            else if (line.contains("version 5")) m_bluetoothVersion = "3.0";
-            else if (line.contains("version 4")) m_bluetoothVersion = "2.1";
-            else if (line.contains("version 3")) m_bluetoothVersion = "2.0";
-            else if (line.contains("version 2")) m_bluetoothVersion = "1.2";
-            else if (line.contains("version 1")) m_bluetoothVersion = "1.1";
-            else if (line.contains("version 0")) m_bluetoothVersion = "1.0";
+            if (line.contains("version 12")) m_bluetooth_version = "5.3";
+            else if (line.contains("version 11")) m_bluetooth_version = "5.2";
+            else if (line.contains("version 10")) m_bluetooth_version = "5.1";
+            else if (line.contains("version 9")) m_bluetooth_version = "5.0";
+            else if (line.contains("version 8")) m_bluetooth_version = "4.2";
+            else if (line.contains("version 7")) m_bluetooth_version = "4.1";
+            else if (line.contains("version 6")) m_bluetooth_version = "4.0";
+            else if (line.contains("version 5")) m_bluetooth_version = "3.0";
+            else if (line.contains("version 4")) m_bluetooth_version = "2.1";
+            else if (line.contains("version 3")) m_bluetooth_version = "2.0";
+            else if (line.contains("version 2")) m_bluetooth_version = "1.2";
+            else if (line.contains("version 1")) m_bluetooth_version = "1.1";
+            else if (line.contains("version 0")) m_bluetooth_version = "1.0";
         }
 
-        if (!m_bluetoothVersion.isEmpty()) break;
+        if (!m_bluetooth_version.isEmpty()) break;
     }
 #endif // defined(Q_OS_LINUX)
 }
