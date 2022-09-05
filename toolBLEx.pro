@@ -69,6 +69,13 @@ lupdate_only {
                qml/components/*.qml qml/components_generic/*.qml qml/components_js/*.js
 }
 
+OTHER_FILES += README.md \
+               deploy_linux.sh \
+               deploy_macos.sh \
+               deploy_windows.sh \
+               .github/workflows/builds_desktop_qmake.yml \
+               .gitignore
+
 # Build settings ###############################################################
 
 CONFIG(release, debug|release) : DEFINES += NDEBUG QT_NO_DEBUG QT_NO_DEBUG_OUTPUT

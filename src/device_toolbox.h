@@ -154,6 +154,9 @@ class DeviceToolbox: public Device
     Q_PROPERTY(bool isLowEnergy READ isBluetoothLowEnergy NOTIFY boolChanged)
     Q_PROPERTY(bool isClassic READ isBluetoothClassic NOTIFY boolChanged)
 
+    Q_PROPERTY(QDateTime firstSeen READ getFirstSeen CONSTANT)
+    Q_PROPERTY(QDateTime lastSeen READ getLastSeen NOTIFY seenChanged)
+
     // RSSI
     Q_PROPERTY(int rssiMin READ getRssiMin NOTIFY rssiUpdated)
     Q_PROPERTY(int rssiMax READ getRssiMax NOTIFY rssiUpdated)
@@ -183,6 +186,12 @@ class DeviceToolbox: public Device
     bool m_isBlacklisted = false;
     bool m_isClassic = false;
     bool m_isBLE = false;
+
+    QDateTime m_firstSeen;
+    QDateTime m_lastSeen;
+
+    QDateTime getFirstSeen() const { return m_firstSeen; }
+    QDateTime getLastSeen() const { return m_lastSeen; }
 
     bool m_hasAdvertisement = false;
     int m_advertisementInterval = 0;
@@ -225,8 +234,8 @@ Q_SIGNALS:
     void advertisementChanged();
     void advertisementFilteredChanged();
     void servicesUpdated();
-    void packetsChanged(); // remove?
     void boolChanged();
+    void seenChanged();
 
 public:
     DeviceToolbox(const QString &deviceAddr, const QString &deviceName, QObject *parent = nullptr);
@@ -234,6 +243,8 @@ public:
     ~DeviceToolbox();
 
     virtual void setCoreConfiguration(const int bleconf);
+
+    void setLastSeen(const QDateTime &dt);
 
     QVariant getServices() { return QVariant::fromValue(m_services); }
     int getServicesCount() { return m_services.count(); }

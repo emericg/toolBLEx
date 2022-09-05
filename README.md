@@ -6,6 +6,8 @@
 
 A Bluetooth Low Energy scanner and device analyzer.
 
+> Available on Linux, macOS, Windows.
+
 - host adapters info
 - RSSI graph / proximity graph (BLE and classic)
 - device scanner (BLE and classic)
@@ -50,6 +52,11 @@ Bluetooth driver support might be a little shaky...
 
 ##### macOS
 
+macOS has various limitations regarding Bluetooth handling:  
+- MAC addresses are hidden by the OS, and replaced by randomly generated UUIDs, making proper device identification hard
+- Apple iBeacons are hidden by the OS and don't appear in scan results
+- Bluetooth Classic scanning doesn't seem to work at the moment
+
 Starting with macOS 11, the application will ask you for permission to use Bluetooth. You can learn more on Apple [developer website](https://developer.apple.com/documentation/bundleresources/information_property_list/nsbluetoothalwaysusagedescription).
 
 ##### Windows
@@ -59,7 +66,6 @@ Bluetooth driver support might be a little shaky...
 #### Third party projects used by toolBLEx
 
 * [Qt6](https://www.qt.io) ([LGPL v3](https://www.gnu.org/licenses/lgpl-3.0.txt))
-* [MobileUI](src/thirdparty/MobileUI/README.md) ([MIT](https://opensource.org/licenses/MIT))
 * [SingleApplication](https://github.com/itay-grudev/SingleApplication) ([MIT](https://opensource.org/licenses/MIT))
 * Graphical resources: [assets/COPYING](assets/COPYING)
 

@@ -67,14 +67,18 @@ AdvertisementData::AdvertisementData(const uint16_t adv_mode, const uint16_t adv
 DeviceToolbox::DeviceToolbox(const QString &deviceAddr, const QString &deviceName, QObject *parent):
     Device(deviceAddr, deviceName, parent)
 {
-    //
+    // Creation from database cache
 }
 
 DeviceToolbox::DeviceToolbox(const QBluetoothDeviceInfo &d, QObject *parent):
     Device(d, parent)
 {
+    // Creation from BLE scanning
+
     addAdvertisementEntry(d.rssi(), !d.manufacturerIds().empty(), !d.serviceIds().empty());
     setCoreConfiguration(d.coreConfigurations());
+
+    m_firstSeen = QDateTime::currentDateTime();
 
     if (d.rssi() == 0) setCached(true);
     if (d.isCached()) setCached(true);
@@ -108,6 +112,12 @@ void DeviceToolbox::setCoreConfiguration(const int bleconf)
     if (bleconf == 2 && !m_isClassic) { m_isClassic = true; Q_EMIT boolChanged(); }
 
     Device::setCoreConfiguration(bleconf);
+}
+
+void DeviceToolbox::setLastSeen(const QDateTime &dt)
+{
+    m_lastSeen = dt;
+    Q_EMIT seenChanged();
 }
 
 /* ************************************************************************** */
