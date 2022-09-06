@@ -62,7 +62,7 @@ Loader {
 
                     z: 5
                     clip: true
-                    height: 240
+                    height: isHdpi ? 200 : 230
                     color: Theme.colorActionbar
 
                     Row {
@@ -448,6 +448,35 @@ Loader {
 
                                 checked: settingsManager.scanAuto
                                 onClicked: settingsManager.scanAuto = checked
+                            }
+                        }
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 48
+                            color: Theme.colorForeground
+
+                            Text {
+                                anchors.left: parent.left
+                                anchors.leftMargin: 20
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                text: qsTr("Cache devices automatically")
+                                textFormat: Text.PlainText
+                                font.pixelSize: Theme.fontSizeContentBig
+                                font.bold: false
+                                color: Theme.colorText
+                                wrapMode: Text.WordWrap
+                                verticalAlignment: Text.AlignVCenter
+                            }
+
+                            SwitchThemedDesktop {
+                                anchors.right: parent.right
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                checked: settingsManager.scanCacheAuto
+                                onClicked: settingsManager.scanCacheAuto = checked
                             }
                         }
 

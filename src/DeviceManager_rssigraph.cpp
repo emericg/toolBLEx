@@ -46,7 +46,7 @@ void DeviceManager::getRssiGraphData(QLineSeries *one, int index)
 
     one->clear();
 
-    DeviceToolbox *dd = qobject_cast<DeviceToolbox *>(m_devices_model->m_devices.at(index));
+    DeviceToolBLEx *dd = qobject_cast<DeviceToolBLEx *>(m_devices_model->m_devices.at(index));
     if (dd)
     {
         one->setColor(dd->getDeviceColor());

@@ -54,7 +54,7 @@ void DeviceManager::updateBleDevice(const QBluetoothDeviceInfo &info,
 
     for (auto d: qAsConst(m_devices_model->m_devices))
     {
-        DeviceToolbox *dd = qobject_cast<DeviceToolbox *>(d);
+        DeviceToolBLEx *dd = qobject_cast<DeviceToolBLEx *>(d);
 
 #if defined(Q_OS_MACOS) || defined(Q_OS_IOS)
         if (dd && dd->getAddress() == info.deviceUuid().toString())
@@ -64,12 +64,10 @@ void DeviceManager::updateBleDevice(const QBluetoothDeviceInfo &info,
         {
             dd->setName(info.name());
             dd->setRssi(info.rssi());
+            dd->setCached(info.isCached() || info.rssi() >= 0);
             dd->setCoreConfiguration(info.coreConfigurations());
             dd->setDeviceClass(info.majorDeviceClass(), info.minorDeviceClass(), info.serviceClasses());
             dd->setLastSeen(QDateTime::currentDateTime());
-
-            if (info.rssi() >= 0) dd->setCached(true);
-            if (info.isCached()) dd->setCached(true);
 
             bool hasmfd = false;
             bool hassvd = false;

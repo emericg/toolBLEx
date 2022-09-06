@@ -274,7 +274,7 @@ Rectangle {
 
         Item { // Adv interval header column
             anchors.verticalCenter: parent.verticalCenter
-            width: 180
+            width: 120
             height: 24
 
             Row {
@@ -342,7 +342,7 @@ Rectangle {
 
         Text { // last seen header column
             anchors.verticalCenter: parent.verticalCenter
-            width: 180
+            width: 120
 
             text: qsTr("Last seen")
             font.bold: (deviceManager.orderBy_role === "lastseen")
@@ -354,7 +354,7 @@ Rectangle {
             }
 
             Canvas {
-                id: indicatorLastseen
+                id: indicatorLastSeen
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
 
@@ -365,7 +365,58 @@ Rectangle {
 
                 Connections {
                     target: ThemeEngine
-                    function onCurrentThemeChanged() { indicatorLastseen.requestPaint() }
+                    function onCurrentThemeChanged() { indicatorLastSeen.requestPaint() }
+                }
+
+                onPaint: {
+                    var ctx = getContext("2d")
+                    ctx.reset()
+                    ctx.moveTo(0, 0)
+                    ctx.lineTo(width, 0)
+                    ctx.lineTo(width / 2, height)
+                    ctx.closePath()
+                    ctx.fillStyle = Theme.colorIcon
+                    ctx.fill()
+                }
+            }
+        }
+
+        Item { // separator ////////////////////////////////////////////////////
+            width: 16
+            height: 24
+            Rectangle {
+                anchors.centerIn: parent
+                width: 2; height: 18;
+                color: Theme.colorLVseparator
+            }
+        }
+
+        Text { // first seen header column
+            anchors.verticalCenter: parent.verticalCenter
+            width: 120
+
+            text: qsTr("First seen")
+            font.bold: (deviceManager.orderBy_role === "firstseen")
+            color: Theme.colorText
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: deviceManager.orderby_firstseen()
+            }
+
+            Canvas {
+                id: indicatorFirstSeen
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+
+                width: 8
+                height: 4
+                rotation: deviceManager.orderBy_order ? 0 : 180
+                visible: (deviceManager.orderBy_role === "firstseen")
+
+                Connections {
+                    target: ThemeEngine
+                    function onCurrentThemeChanged() { indicatorFirstSeen.requestPaint() }
                 }
 
                 onPaint: {

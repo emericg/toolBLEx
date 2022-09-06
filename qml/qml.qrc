@@ -20,6 +20,7 @@
         <file alias="DeviceScannerHeader.qml">components/DeviceScannerHeader.qml</file>
         <file alias="DeviceScannerWidget.qml">components/DeviceScannerWidget.qml</file>
 
+        <file alias="ProximityRadar.qml">components/ProximityRadar.qml</file>
         <file alias="RssiBar.qml">components/RssiBar.qml</file>
         <file alias="RssiGraph.qml">components/RssiGraph.qml</file>
         <file alias="TextSelectable.qml">components/TextSelectable.qml</file>

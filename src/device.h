@@ -204,7 +204,7 @@ public:
     virtual ~Device();
 
     void setName(const QString &name);
-    void setDeviceClass(const int major, const int minor, const int service);
+    virtual void setDeviceClass(const int major, const int minor, const int service);
     virtual void setCoreConfiguration(const int bleconf);
 
     // Device infos

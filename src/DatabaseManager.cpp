@@ -113,11 +113,11 @@ bool DatabaseManager::openDatabase_sqlite()
                         // Must be done before the creation, so we migrate old data tables
                         // instead of creating new empty tables
 
-                        //migrateDatabase();
+                        migrateDatabase();
 
                         // Check if our tables exists //////////////////////////
 
-                        //createDatabase();
+                        createDatabase();
 
                         // Sanitize database ///////////////////////////////////
 
@@ -251,7 +251,7 @@ void DatabaseManager::createDatabase()
                        << createDbVersion.lastError().type() << ":" << createDbVersion.lastError().text();
         }
     }
-/*
+
     if (!tableExists("devices"))
     {
         qDebug() << "+ Adding 'devices' table to local database";
@@ -263,9 +263,11 @@ void DatabaseManager::createDatabase()
                               "deviceName VARCHAR(255)," \
                               "deviceModel VARCHAR(255)," \
                               "deviceModelID VARCHAR(255)," \
+                              "deviceManufacturer VARCHAR(255)," \
                               "deviceFirmware VARCHAR(255)," \
                               "deviceBattery INT," \
                               "deviceCoreConfig INT," \
+                              "deviceClass VARCHAR(255)," \
                               "comment VARCHAR(255)," \
                               "color VARCHAR(255)," \
                               "firstSeen DATETIME," \
@@ -279,7 +281,7 @@ void DatabaseManager::createDatabase()
                        << createDevices.lastError().type() << ":" << createDevices.lastError().text();
         }
     }
-*/
+
     if (!tableExists("devicesBlacklist"))
     {
         qDebug() << "+ Adding 'devicesBlacklist' table to local database";

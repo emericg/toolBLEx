@@ -89,7 +89,12 @@ Item {
 
                     TextSelectable {
                         anchors.verticalCenter: parent.verticalCenter
-                        text: selectedDevice.deviceName
+
+                        property bool nameAvailable: (selectedDevice.deviceName.length > 0)
+
+                        selectByMouse: nameAvailable
+                        color: nameAvailable ? Theme.colorText : Theme.colorSubText
+                        text: nameAvailable ? selectedDevice.deviceName : qsTr("Unavailable")
                     }
                 }
                 Row {
@@ -172,27 +177,23 @@ Item {
         }
 
         ////////
-/*
-        Rectangle {
-            id: connectionBar0
+
+        Item {
             width: detailView.ww
-            height: 36
-            radius: 8
-            color: Theme.colorBox // Theme.colorActionbar
+            height: 32
 
             Row {
-                anchors.fill: parent
+                anchors.centerIn: parent
+                height: 32
                 spacing: 24
 
                 ButtonWireframeIcon {
-                    height: parent.height
-
                     fullColor: true
                     text: {
                         if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
                             qsTr("connect")
-                        //else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
-                        //    qsTr("connecting...")
+                        else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
+                            qsTr("connecting...")
                         else //if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
                             qsTr("disconnect")
                     }
@@ -205,17 +206,26 @@ Item {
                     }
                 }
 
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
+                ButtonWireframeIcon {
+                    fullColor: true
+                    primaryColor: Theme.colorGrey
 
-                    text: {
-                        return UtilsDeviceSensors.getDeviceStatusText(selectedDevice.status)
-                    }
-                    color: Theme.colorText
+                    text: selectedDevice.isCached ? qsTr("forget") : qsTr("cache")
+                    source: "qrc:/assets/icons_material/baseline-bluetooth_disabled-24px.svg"
+                    onClicked: selectedDevice.cache(!selectedDevice.isCached)
+                }
+
+                ButtonWireframeIcon {
+                    fullColor: true
+                    primaryColor: Theme.colorGrey
+
+                    text: selectedDevice.isBlacklisted ? qsTr("whitelist") : qsTr("blacklist")
+                    source: "qrc:/assets/icons_material/baseline-bluetooth_disabled-24px.svg"
+                    onClicked: selectedDevice.blacklist(!selectedDevice.isBlacklisted)
                 }
             }
         }
-*/
+
         ////////
 
         Rectangle {
@@ -317,6 +327,8 @@ Item {
             width: detailView.ww
             height: box3.height + 24
             radius: 4
+
+            visible: (selectedDevice.rssi !== 0)
             color: Theme.colorBox
             clip: true
 
@@ -343,6 +355,7 @@ Item {
 
                     Row {
                         anchors.verticalCenter: parent.verticalCenter
+                        visible: (selectedDevice.rssi !== 0)
                         spacing: 4
 
                         Item {
@@ -370,6 +383,16 @@ Item {
                             text: qsTr("dBm")
                             color: Theme.colorSubText
                         }
+                    }
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        visible: (selectedDevice.rssi === 0)
+
+                        text: qsTr("Unknown")
+                        textFormat: Text.PlainText
+                        font.pixelSize: Theme.fontSizeContent
+                        color: Theme.colorText
                     }
                 }
 
@@ -455,13 +478,13 @@ Item {
                             anchors.right: parent.right
                             anchors.bottom: parent.bottom
 
-                            height: (Math.abs(modelData.rssi) / 100) * parent.height
+                            height: ((100 - Math.abs(modelData.rssi)) / 100) * parent.height
                             radius: 2
 
                             color: {
-                                if (modelData.hasMFD && modelData.hasSVD) return Theme.colorOrange // "orange"
-                                if (modelData.hasMFD) return Theme.colorBlue // "blue"
-                                if (modelData.hasSVD) return Theme.colorGreen // "green"
+                                if (modelData.hasMFD) return Theme.colorBlue
+                                if (modelData.hasSVD) return Theme.colorGreen
+                                if (modelData.hasMFD && modelData.hasSVD) Theme.colorOrange
                                 return Theme.colorPrimary
                             }
                         }
@@ -476,6 +499,8 @@ Item {
             width: detailView.ww
             height: box4.height + 24
             radius: 4
+
+            visible: (selectedDevice.rssi !== 0)
             color: Theme.colorBox
             clip: true
 
@@ -590,4 +615,5 @@ Item {
         }
 
         ////
-    }}
+    }
+}

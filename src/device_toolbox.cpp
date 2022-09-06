@@ -36,6 +36,8 @@
 #include <QLowEnergyService>
 
 #include <QJsonDocument>
+#include <QSqlQuery>
+#include <QSqlError>
 
 #include <QDateTime>
 #include <QTimer>
@@ -64,13 +66,20 @@ AdvertisementData::AdvertisementData(const uint16_t adv_mode, const uint16_t adv
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-DeviceToolbox::DeviceToolbox(const QString &deviceAddr, const QString &deviceName, QObject *parent):
-    Device(deviceAddr, deviceName, parent)
+DeviceToolBLEx::DeviceToolBLEx(const QString &deviceAddr, const QString &deviceName, const QString &deviceManufacturer,
+                               const QDateTime &firstSeen, const QDateTime &lastSeen,
+                               QObject *parent): Device(deviceAddr, deviceName, parent)
 {
     // Creation from database cache
+
+    m_deviceManufacturer = deviceManufacturer;
+    m_firstSeen = firstSeen;
+    m_lastSeen = lastSeen;
+
+    setCached(true);
 }
 
-DeviceToolbox::DeviceToolbox(const QBluetoothDeviceInfo &d, QObject *parent):
+DeviceToolBLEx::DeviceToolBLEx(const QBluetoothDeviceInfo &d, QObject *parent):
     Device(d, parent)
 {
     // Creation from BLE scanning
@@ -84,7 +93,7 @@ DeviceToolbox::DeviceToolbox(const QBluetoothDeviceInfo &d, QObject *parent):
     if (d.isCached()) setCached(true);
 }
 
-DeviceToolbox::~DeviceToolbox()
+DeviceToolBLEx::~DeviceToolBLEx()
 {
     qDeleteAll(m_services);
     m_services.clear();
@@ -106,23 +115,137 @@ DeviceToolbox::~DeviceToolbox()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void DeviceToolbox::setCoreConfiguration(const int bleconf)
+void DeviceToolBLEx::setDeviceClass(const int major, const int minor, const int service)
 {
-    if (bleconf == 1 && !m_isBLE) { m_isBLE = true; Q_EMIT boolChanged(); }
-    if (bleconf == 2 && !m_isClassic) { m_isClassic = true; Q_EMIT boolChanged(); }
+    if (m_major != major || m_minor != minor || m_service != service)
+    {
+        Device::setDeviceClass(major, minor, service);
+
+        updateCache();
+    }
+}
+
+void DeviceToolBLEx::setCoreConfiguration(const int bleconf)
+{
+    if (bleconf == 1 && !m_isBLE)
+    {
+        m_isBLE = true;
+        Q_EMIT boolChanged();
+
+        updateCache();
+    }
+    if (bleconf == 2 && !m_isClassic)
+    {
+        m_isClassic = true;
+        Q_EMIT boolChanged();
+
+        updateCache();
+    }
 
     Device::setCoreConfiguration(bleconf);
 }
 
-void DeviceToolbox::setLastSeen(const QDateTime &dt)
+void DeviceToolBLEx::setLastSeen(const QDateTime &dt)
 {
     m_lastSeen = dt;
     Q_EMIT seenChanged();
+
+    updateCache();
+}
+
+void DeviceToolBLEx::setBeacon(bool v)
+{
+    if (m_isBeacon != v)
+    {
+        m_isBeacon = v;
+        Q_EMIT boolChanged();
+    }
+}
+
+void DeviceToolBLEx::setBlacklisted(bool v)
+{
+    if (m_isBlacklisted != v)
+    {
+        m_isBlacklisted = v;
+        Q_EMIT boolChanged();
+
+        static_cast<DeviceManager *>(parent())->invalidate();
+    }
+}
+
+void DeviceToolBLEx::setCached(bool v)
+{
+    if (m_isCached != v)
+    {
+        m_isCached = v;
+        Q_EMIT boolChanged();
+
+        static_cast<DeviceManager *>(parent())->invalidate();
+    }
+}
+
+void DeviceToolBLEx::setDeviceColor(const QString &color)
+{
+    m_color = color;
 }
 
 /* ************************************************************************** */
 
-void DeviceToolbox::serviceScanDone()
+void DeviceToolBLEx::updateCache()
+{
+    if (m_dbInternal || m_dbExternal)
+    {
+        QString deviceClass;
+        if (m_major && m_minor)
+        {
+            deviceClass = QString::number(m_major) + "-" +
+                          QString::number(m_minor) + "-" +
+                          QString::number(m_service);
+        }
+
+        QSqlQuery updateCache;
+        updateCache.prepare("UPDATE devices SET deviceCoreConfig = :deviceCoreConfig, deviceClass = :deviceClass, lastSeen = :lastSeen WHERE deviceAddr = :deviceAddr");
+        updateCache.bindValue(":deviceCoreConfig", m_bluetoothCoreConfiguration);
+        updateCache.bindValue(":deviceClass", deviceClass);
+        updateCache.bindValue(":lastSeen", m_lastSeen);
+        updateCache.bindValue(":deviceAddr", getAddress());
+
+        if (!updateCache.exec())
+        {
+            qWarning() << "> updateCache.exec() ERROR"
+                       << updateCache.lastError().type() << ":" << updateCache.lastError().text();
+        }
+    }
+}
+
+/* ************************************************************************** */
+
+void DeviceToolBLEx::blacklist(bool b)
+{
+    if (m_isBlacklisted != b)
+    {
+        if (b) static_cast<DeviceManager *>(parent())->blacklistDevice(m_deviceAddress);
+        else static_cast<DeviceManager *>(parent())->whitelistDevice(m_deviceAddress);
+
+        setBlacklisted(b);
+    }
+}
+
+void DeviceToolBLEx::cache(bool c)
+{
+    if (m_isCached != c)
+    {
+        if (c) static_cast<DeviceManager *>(parent())->cacheDevice(m_deviceAddress);
+        else static_cast<DeviceManager *>(parent())->uncacheDevice(m_deviceAddress);
+
+        setCached(c);
+    }
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+void DeviceToolBLEx::serviceScanDone()
 {
     qDebug() << "DeviceToolbox::serviceScanDone(" << m_deviceAddress << ")";
 
@@ -134,7 +257,7 @@ void DeviceToolbox::serviceScanDone()
 
 /* ************************************************************************** */
 
-void DeviceToolbox::addLowEnergyService(const QBluetoothUuid &uuid)
+void DeviceToolBLEx::addLowEnergyService(const QBluetoothUuid &uuid)
 {
     qDebug() << "DeviceToolbox::addLowEnergyService(" << uuid.toString() << ")";
 
@@ -154,10 +277,10 @@ void DeviceToolbox::addLowEnergyService(const QBluetoothUuid &uuid)
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-bool DeviceToolbox::parseAdvertisementToolBLEx(const uint16_t mode,
-                                               const uint16_t id,
-                                               const QBluetoothUuid &uuid,
-                                               const QByteArray &data)
+bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
+                                                const uint16_t id,
+                                                const QBluetoothUuid &uuid,
+                                                const QByteArray &data)
 {
     bool hasNewData = false;
 
@@ -262,7 +385,7 @@ bool DeviceToolbox::parseAdvertisementToolBLEx(const uint16_t mode,
 
 /* ************************************************************************** */
 
-void DeviceToolbox::addAdvertisementEntry(const int rssi, const bool hasMFD, const bool hasSVD)
+void DeviceToolBLEx::addAdvertisementEntry(const int rssi, const bool hasMFD, const bool hasSVD)
 {
     m_advertisementEntries.push_back(new AdvertisementEntry(rssi, hasMFD, hasSVD));
     if (m_advertisementEntries.length() > 60)
@@ -285,7 +408,7 @@ void DeviceToolbox::addAdvertisementEntry(const int rssi, const bool hasMFD, con
     Q_EMIT rssiUpdated();
 }
 
-void DeviceToolbox::cleanAdvertisementEntries()
+void DeviceToolBLEx::cleanAdvertisementEntries()
 {
     qDeleteAll(m_advertisementEntries);
     m_advertisementEntries.clear();
@@ -293,7 +416,7 @@ void DeviceToolbox::cleanAdvertisementEntries()
 
 /* ************************************************************************** */
 
-void DeviceToolbox::mfdFilterUpdate()
+void DeviceToolBLEx::mfdFilterUpdate()
 {
     QList <uint16_t> accepted_uuids;
     for (auto u: m_mfd_uuid)
@@ -315,7 +438,7 @@ void DeviceToolbox::mfdFilterUpdate()
     Q_EMIT advertisementFilteredChanged();
 }
 
-void DeviceToolbox::svdFilterUpdate()
+void DeviceToolBLEx::svdFilterUpdate()
 {
     QList <uint16_t> accepted_uuids;
     for (auto u: m_svd_uuid)
@@ -342,7 +465,7 @@ bool comparefunc(AdvertisementData *c1, AdvertisementData *c2)
     return c1->getTimestamp() > c2->getTimestamp();
 }
 
-void DeviceToolbox::advertisementFilterUpdate()
+void DeviceToolBLEx::advertisementFilterUpdate()
 {
     QList <uint16_t> accepted_uuids;
     for (auto u: m_svd_uuid)

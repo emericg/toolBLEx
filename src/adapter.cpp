@@ -23,7 +23,6 @@
 #include "VendorsDatabase.h"
 
 #include <QProcess>
-#include <unistd.h>
 
 /* ************************************************************************** */
 

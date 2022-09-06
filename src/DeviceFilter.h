@@ -92,6 +92,7 @@ public:
         DeviceManufacturerRole,
         DeviceRssiRole,
         DeviceIntervalRole,
+        DeviceFirstSeenRole,
         DeviceLastSeenRole,
 
         DeviceModelRole,

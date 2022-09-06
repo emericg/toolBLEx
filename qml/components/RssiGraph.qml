@@ -2,7 +2,6 @@ import QtQuick
 import QtCharts
 
 import ThemeEngine 1.0
-import "qrc:/js/UtilsNumber.js" as UtilsNumber
 
 ChartView {
     id: rssiGraph

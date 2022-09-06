@@ -82,7 +82,7 @@ Item {
 
         ////
 
-        Item {
+        Item { // color
             width: 16; height: 24;
 
             Rectangle {
@@ -95,7 +95,7 @@ Item {
 
         ////
 
-        Text {
+        Text { // address
             anchors.verticalCenter: parent.verticalCenter
             width: ref.contentWidth
 
@@ -120,11 +120,11 @@ Item {
 
         ////
 
-        Text {
+        Text { // name
             anchors.verticalCenter: parent.verticalCenter
             width: 200
 
-            text: boxDevice.deviceName
+            text: (boxDevice.deviceName.length) ? boxDevice.deviceName : qsTr("Unavailable")
             textFormat: Text.PlainText
             color: {
                 if (isSelected) return "white"
@@ -136,7 +136,7 @@ Item {
 
         ////
 
-        Text {
+        Text { // mac vendor
             anchors.verticalCenter: parent.verticalCenter
             width: 220
 
@@ -150,14 +150,13 @@ Item {
 
         ////
 
-        Item {
+        Item { // rssi
             anchors.verticalCenter: parent.verticalCenter
             width: 180
             height: 16
 
-            visible: (boxDevice.rssi !== 0)
-
             Row {
+                visible: (boxDevice.rssi !== 0)
                 spacing: 4
 
                 Text {
@@ -175,7 +174,6 @@ Item {
                     text: "dBm"
                     textFormat: Text.PlainText
                     color: isSelected ? "white" : Theme.colorSubText
-                    //horizontalAlignment: Text.AlignRight
                     font.pixelSize: 12
                 }
             }
@@ -185,6 +183,7 @@ Item {
                 anchors.right: parent.right
                 width: 105
 
+                visible: (boxDevice.rssi !== 0)
                 value: boxDevice.rssi
                 value2: boxDevice.rssiMax
             }
@@ -192,31 +191,66 @@ Item {
 
         ////
 
-        Row {
+        Item { // interval
             anchors.verticalCenter: parent.verticalCenter
-            width: 160
-            spacing: 4
+            width: 120
+            height: 32
 
-            visible: (boxDevice.advInterval !== 0)
+            Row {
+                anchors.verticalCenter: parent.verticalCenter
+                visible: (boxDevice.advInterval !== 0)
+                spacing: 4
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: boxDevice.advInterval
+                    textFormat: Text.PlainText
+                    color: isSelected ? "white" : Theme.colorText
+                }
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: "ms"
+                    textFormat: Text.PlainText
+                    color: isSelected ? "white" : Theme.colorSubText
+                    font.pixelSize: 12
+                }
+            }
+        }
+
+        ////
+
+        Item { // last seen
+            width: 120
+            height: 32
 
             Text {
                 anchors.verticalCenter: parent.verticalCenter
-                //width: 64
 
-                text: boxDevice.advInterval
+                text: boxDevice.lastSeen.toLocaleTimeString(locale, "hh:mm")
                 textFormat: Text.PlainText
                 color: isSelected ? "white" : Theme.colorText
             }
+        }
+
+        ////
+
+        Item { // first seen
+            width: 120
+            height: 32
 
             Text {
                 anchors.verticalCenter: parent.verticalCenter
-                text: "ms"
+
+                text: boxDevice.firstSeen.toLocaleString(locale, "dd/MM hh:mm")
                 textFormat: Text.PlainText
-                color: isSelected ? "white" : Theme.colorSubText
-                //horizontalAlignment: Text.AlignRight
-                font.pixelSize: 12
+                color: isSelected ? "white" : Theme.colorText
             }
         }
+
+        ////
 /*
         IconSvg { // imageBattery
             width: 28

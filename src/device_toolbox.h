@@ -19,8 +19,8 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#ifndef DEVICE_TOOLBOX_H
-#define DEVICE_TOOLBOX_H
+#ifndef DEVICE_TOOLBLEX_H
+#define DEVICE_TOOLBLEX_H
 /* ************************************************************************** */
 
 #include "device.h"
@@ -140,9 +140,9 @@ public:
 /* ************************************************************************** */
 
 /*!
- * \brief The DeviceToolbox class
+ * \brief The DeviceToolBLEx class
  */
-class DeviceToolbox: public Device
+class DeviceToolBLEx: public Device
 {
     Q_OBJECT
 
@@ -190,9 +190,6 @@ class DeviceToolbox: public Device
     QDateTime m_firstSeen;
     QDateTime m_lastSeen;
 
-    QDateTime getFirstSeen() const { return m_firstSeen; }
-    QDateTime getLastSeen() const { return m_lastSeen; }
-
     bool m_hasAdvertisement = false;
     int m_advertisementInterval = 0;
 
@@ -226,6 +223,8 @@ class DeviceToolbox: public Device
     int getManufacturerUuidCount() const { return m_mfd_uuid.count(); }
 
 private:
+    void updateCache();
+
     // QLowEnergyController related
     void serviceScanDone();
     void addLowEnergyService(const QBluetoothUuid &uuid);
@@ -238,12 +237,17 @@ Q_SIGNALS:
     void seenChanged();
 
 public:
-    DeviceToolbox(const QString &deviceAddr, const QString &deviceName, QObject *parent = nullptr);
-    DeviceToolbox(const QBluetoothDeviceInfo &d, QObject *parent = nullptr);
-    ~DeviceToolbox();
+    DeviceToolBLEx(const QString &deviceAddr, const QString &deviceName, const QString &deviceManufacturer,
+                   const QDateTime &firstSeen, const QDateTime &lastSeen,
+                   QObject *parent = nullptr);
+    DeviceToolBLEx(const QBluetoothDeviceInfo &d, QObject *parent = nullptr);
+    ~DeviceToolBLEx();
 
+    virtual void setDeviceClass(const int major, const int minor, const int service);
     virtual void setCoreConfiguration(const int bleconf);
 
+    QDateTime getFirstSeen() const { return m_firstSeen; }
+    QDateTime getLastSeen() const { return m_lastSeen; }
     void setLastSeen(const QDateTime &dt);
 
     QVariant getServices() { return QVariant::fromValue(m_services); }
@@ -262,11 +266,11 @@ public:
 
      int getAdvertisementInterval() const { return m_advertisementInterval; }
 
+     void setBeacon(bool v);
+     void setBlacklisted(bool v);
+     void setCached(bool v);
+     void setDeviceColor(const QString &color);
      QString getDeviceColor() const { return m_color; }
-     void setDeviceColor(const QString &color) { m_color = color; }
-     void setBeacon(bool v) { m_isBeacon = v; Q_EMIT boolChanged(); }
-     void setBlacklisted(bool v) { m_isBlacklisted = v; Q_EMIT boolChanged(); }
-     void setCached(bool v) { m_isCached = v; Q_EMIT boolChanged(); }
 
      bool hasAdvertisement() const { return m_hasAdvertisement; }
      bool isBeacon() const { return m_isBeacon; }
@@ -275,10 +279,13 @@ public:
      bool isBluetoothClassic() const { return m_isClassic; }
      bool isBluetoothLowEnergy() const { return m_isBLE; }
 
+     Q_INVOKABLE void blacklist(bool blacklist);
+     Q_INVOKABLE void cache(bool cache);
+
      Q_INVOKABLE void mfdFilterUpdate();
      Q_INVOKABLE void svdFilterUpdate();
      Q_INVOKABLE void advertisementFilterUpdate();
 };
 
 /* ************************************************************************** */
-#endif // DEVICE_TOOLBOX_H
+#endif // DEVICE_TOOLBLEX_H

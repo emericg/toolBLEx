@@ -51,6 +51,7 @@ class SettingsManager: public QObject
     Q_PROPERTY(QString appLanguage READ getAppLanguage WRITE setAppLanguage NOTIFY appLanguageChanged)
 
     Q_PROPERTY(bool scanAuto READ getScanAuto WRITE setScanAuto NOTIFY scanAutoChanged)
+    Q_PROPERTY(bool scanCacheAuto READ getScanCacheAuto WRITE setScanCacheAuto NOTIFY scanCacheAutoChanged)
     Q_PROPERTY(int scanTimeout READ getScanTimeout WRITE setScanTimeout NOTIFY scanTimeoutChanged)
     Q_PROPERTY(int scanRssiInterval READ getScanRssiInterval WRITE setScanRssiInterval NOTIFY scanRssiIntervalChanged)
 
@@ -82,6 +83,7 @@ class SettingsManager: public QObject
     int m_scanTimeout = 0;
     int m_scanRssiInterval = 1000;
     bool m_scanAuto = true;
+    bool m_scanCacheAuto = false;
     bool m_scanShowBeacon = true;
     bool m_scanShowBlacklisted = false;
     bool m_scanShowCached = true;
@@ -110,6 +112,7 @@ Q_SIGNALS:
     void appLanguageChanged();
 
     void scanAutoChanged();
+    void scanCacheAutoChanged();
     void scanTimeoutChanged();
     void scanRssiIntervalChanged();
     void scanShowChanged();
@@ -146,6 +149,9 @@ public:
 
     bool getScanAuto() const { return m_scanAuto; }
     void setScanAuto(const bool value);
+
+    bool getScanCacheAuto() const { return m_scanCacheAuto; }
+    void setScanCacheAuto(const bool value);
 
     int getScanTimeout() const { return m_scanTimeout; }
     void setScanTimeout(const int value);

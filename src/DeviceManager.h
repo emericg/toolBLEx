@@ -190,11 +190,18 @@ public:
     DeviceFilter *getDevicesFiltered() const { return m_devices_filter; }
     int getDeviceCount() const { return m_devices_model->getDeviceCount(); }
 
+    void blacklistDevice(const QString &addr);
+    void whitelistDevice(const QString &addr);
+
+    void cacheDevice(const QString &addr);
+    void uncacheDevice(const QString &addr);
+
     Q_INVOKABLE void orderby_address();
     Q_INVOKABLE void orderby_name();
     Q_INVOKABLE void orderby_manufacturer();
     Q_INVOKABLE void orderby_rssi();
     Q_INVOKABLE void orderby_interval();
+    Q_INVOKABLE void orderby_firstseen();
     Q_INVOKABLE void orderby_lastseen();
     Q_INVOKABLE void orderby_model();
     void orderby(int role, Qt::SortOrder order);

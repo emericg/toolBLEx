@@ -102,6 +102,9 @@ bool SettingsManager::readSettings()
         if (settings.contains("settings/scanAuto"))
             m_scanAuto = settings.value("settings/scanAuto").toBool();
 
+        if (settings.contains("settings/scanCacheAuto"))
+            m_scanCacheAuto = settings.value("settings/scanCacheAuto").toBool();
+
         if (settings.contains("settings/scanTimeout"))
             m_scanTimeout = settings.value("settings/scanTimeout").toInt();
         if (settings.contains("settings/scanRssiInterval"))
@@ -149,6 +152,7 @@ bool SettingsManager::writeSettings()
         settings.setValue("settings/appUnits", m_appUnits);
 
         settings.setValue("settings/scanAuto", m_scanAuto);
+        settings.setValue("settings/scanCacheAuto", m_scanCacheAuto);
         settings.setValue("settings/scanTimeout", m_scanTimeout);
         settings.setValue("settings/scanRssiInterval", m_scanRssiInterval);
         settings.setValue("settings/scanShowBeacon", m_scanShowBeacon);
@@ -256,6 +260,16 @@ void SettingsManager::setScanAuto(const bool value)
         m_scanAuto = value;
         writeSettings();
         Q_EMIT scanAutoChanged();
+    }
+}
+
+void SettingsManager::setScanCacheAuto(const bool value)
+{
+    if (m_scanCacheAuto != value)
+    {
+        m_scanCacheAuto = value;
+        writeSettings();
+        Q_EMIT scanCacheAutoChanged();
     }
 }
 

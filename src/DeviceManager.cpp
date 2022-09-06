@@ -83,8 +83,37 @@ DeviceManager::DeviceManager(bool daemon)
             }
         }
 
-        // Load saved devices?
-        // TODO
+        // Load cached devices
+        QSqlQuery queryDevices;
+        queryDevices.exec("SELECT deviceAddr, deviceName, deviceManufacturer, deviceCoreConfig, deviceClass, firstSeen, lastSeen FROM devices");
+        while (queryDevices.next())
+        {
+            QString deviceAddr = queryDevices.value(0).toString();
+            QString deviceName = queryDevices.value(1).toString();
+            QString deviceManufacturer = queryDevices.value(2).toString();
+            int deviceCoreConfig = queryDevices.value(3).toInt();
+            QString deviceClass = queryDevices.value(4).toString();
+            QDateTime firstSeen = queryDevices.value(5).toDateTime();
+            QDateTime lastSeen = queryDevices.value(6).toDateTime();
+
+            DeviceToolBLEx *d = new DeviceToolBLEx(deviceAddr, deviceName, deviceManufacturer,
+                                                   firstSeen, lastSeen, this);
+            if (d)
+            {
+                d->setCoreConfiguration(deviceCoreConfig);
+                d->setDeviceColor(getAvailableColor());
+
+                QStringList dc = deviceClass.split('-');
+                if (dc.size() == 3)
+                {
+                    d->setDeviceClass(dc.at(0).toInt(), dc.at(1).toInt(), dc.at(2).toInt());
+                }
+
+                m_devices_model->addDevice(d);
+                //qDebug() << "* Device added (from database): " << deviceName << "/" << deviceAddr;
+            }
+        }
+
     }
 }
 
@@ -620,12 +649,11 @@ void DeviceManager::addBleDevice(const QBluetoothDeviceInfo &info)
     }
 
     // Create the device
-    DeviceToolbox *d = new DeviceToolbox(info, this);
+    DeviceToolBLEx *d = new DeviceToolBLEx(info, this);
     if (d)
     {
         if (info.name().replace('-', ':') == info.address().toString()) d->setBeacon(true);
-        if (info.rssi() == 0) d->setCached(true);
-        if (info.isCached()) d->setCached(true);
+        if (info.isCached() || info.rssi() == 0) d->setCached(true);
         if (m_devices_blacklist.contains(info.address().toString())) d->setBlacklisted(true);
 
         // Get a random color
@@ -633,9 +661,14 @@ void DeviceManager::addBleDevice(const QBluetoothDeviceInfo &info)
 
         // Add it to the UI
         m_devices_model->addDevice(d);
-
         Q_EMIT devicesListUpdated();
-        //m_devices_filter->invalidate();
+
+        // Add it to the cache? But not if it's a beacon...
+        SettingsManager *sm = SettingsManager::getInstance();
+        if (sm->getScanCacheAuto() && !d->isBeacon())
+        {
+            cacheDevice(info.address().toString());
+        }
 
         //qDebug() << "Device added (from BLE discovery): " << d->getName() << "/" << d->getAddress();
     }
@@ -649,6 +682,134 @@ void DeviceManager::disconnectDevices()
     {
         Device *dd = qobject_cast<Device *>(d);
         dd->deviceDisconnect();
+    }
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+void DeviceManager::blacklistDevice(const QString &addr)
+{
+    if (m_dbInternal || m_dbExternal)
+    {
+        // if
+        QSqlQuery queryDevice;
+        queryDevice.prepare("SELECT deviceAddr FROM devicesBlacklist WHERE deviceAddr = :deviceAddr");
+        queryDevice.bindValue(":deviceAddr", addr);
+        queryDevice.exec();
+
+        // then
+        if (queryDevice.last() == false)
+        {
+            qDebug() << "+ Blacklisting device: " << addr;
+
+            QSqlQuery blacklistDevice;
+            blacklistDevice.prepare("INSERT INTO devicesBlacklist (deviceAddr) VALUES (:deviceAddr)");
+            blacklistDevice.bindValue(":deviceAddr", addr);
+
+            if (blacklistDevice.exec() == true)
+            {
+                m_devices_blacklist.push_back(addr);
+                Q_EMIT devicesBlacklistUpdated();
+            }
+        }
+    }
+}
+
+void DeviceManager::whitelistDevice(const QString &addr)
+{
+    if (m_dbInternal || m_dbExternal)
+    {
+        qDebug() << "+ Whitelisting device: " << addr;
+
+        QSqlQuery whitelistDevice;
+        whitelistDevice.prepare("DELETE FROM devicesBlacklist WHERE deviceAddr = :deviceAddr");
+        whitelistDevice.bindValue(":deviceAddr", addr);
+
+        if (whitelistDevice.exec() == true)
+        {
+            m_devices_blacklist.removeAll(addr);
+            Q_EMIT devicesBlacklistUpdated();
+        }
+    }
+}
+
+/* ************************************************************************** */
+
+void DeviceManager::cacheDevice(const QString &addr)
+{
+    qDebug() << "+ Caching device: " << addr << "to local database";
+
+    if (m_dbInternal || m_dbExternal)
+    {
+        for (auto d: qAsConst(m_devices_model->m_devices))
+        {
+            DeviceToolBLEx *dd = qobject_cast<DeviceToolBLEx *>(d);
+            if (dd->getAddress() == addr)
+            {
+                // if
+                QSqlQuery queryDevice;
+                queryDevice.prepare("SELECT deviceName FROM devices WHERE deviceAddr = :deviceAddr");
+                queryDevice.bindValue(":deviceAddr", addr);
+                queryDevice.exec();
+
+                // then
+                if (queryDevice.last() == false)
+                {
+                    qDebug() << "+ Caching device: " << dd->getName() << "/" << dd->getAddress() << "to local database";
+
+                    QString deviceClass;
+                    if (dd->getMajorClass() && dd->getMinorClass())
+                    {
+                        deviceClass = QString::number(dd->getMajorClass()) + "-" +
+                                      QString::number(dd->getMinorClass()) + "-" +
+                                      QString::number(dd->getServiceClass());
+                    }
+
+                    QSqlQuery cacheDevice;
+                    cacheDevice.prepare("INSERT INTO devices (deviceAddr, deviceName, deviceManufacturer, deviceCoreConfig, deviceClass, firstSeen) VALUES (:deviceAddr, :deviceName, :deviceManufacturer, :deviceCoreConfig, :deviceClass, :firstSeen)");
+                    cacheDevice.bindValue(":deviceAddr", dd->getAddress());
+                    cacheDevice.bindValue(":deviceName", dd->getName());
+                    cacheDevice.bindValue(":deviceManufacturer", dd->getManufacturer());
+                    cacheDevice.bindValue(":deviceCoreConfig", dd->getBluetoothConfiguration());
+                    cacheDevice.bindValue(":deviceClass", deviceClass);
+                    cacheDevice.bindValue(":firstSeen", dd->getFirstSeen());
+
+                    if (cacheDevice.exec() == false)
+                    {
+                        qWarning() << "> cacheDevice.exec() ERROR"
+                                   << cacheDevice.lastError().type() << ":" << cacheDevice.lastError().text();
+                    }
+                }
+            }
+        }
+    }
+}
+
+void DeviceManager::uncacheDevice(const QString &addr)
+{
+    if (m_dbInternal || m_dbExternal)
+    {
+        for (auto d: qAsConst(m_devices_model->m_devices))
+        {
+            DeviceToolBLEx *dd = qobject_cast<DeviceToolBLEx *>(d);
+            if (dd->getAddress() == addr)
+            {
+                qDebug() << "+ Uncaching device: " << addr;
+
+                QSqlQuery uncacheDevice;
+                uncacheDevice.prepare("DELETE FROM devices WHERE deviceAddr = :deviceAddr");
+                uncacheDevice.bindValue(":deviceAddr", addr);
+
+                if (uncacheDevice.exec() == false)
+                {
+                    qWarning() << "> uncacheDevice.exec() ERROR"
+                               << uncacheDevice.lastError().type() << ":" << uncacheDevice.lastError().text();
+                }
+            }
+
+            break;
+        }
     }
 }
 
@@ -723,6 +884,11 @@ void DeviceManager::orderby_rssi()
 void DeviceManager::orderby_interval()
 {
     orderby(DeviceModel::DeviceIntervalRole, m_orderBy_order);
+}
+
+void DeviceManager::orderby_firstseen()
+{
+    orderby(DeviceModel::DeviceFirstSeenRole, m_orderBy_order);
 }
 
 void DeviceManager::orderby_lastseen()

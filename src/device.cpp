@@ -31,9 +31,9 @@
 #include <QBluetoothServiceInfo>
 #include <QLowEnergyService>
 
+#include <QJsonDocument>
 #include <QSqlQuery>
 #include <QSqlError>
-#include <QJsonDocument>
 
 #include <QDateTime>
 #include <QTimer>
@@ -484,7 +484,6 @@ bool Device::setSetting(const QString &key, QVariant value)
             updateSettings.bindValue(":deviceAddr", getAddress());
 
             status = updateSettings.exec();
-
             if (!status)
             {
                 qWarning() << "> updateSettings.exec() ERROR"

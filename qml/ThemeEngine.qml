@@ -194,7 +194,7 @@ Item {
             colorSidebarContent = "#444"
             colorSidebarHighlight = colorMaterialDarkGrey
 
-            colorActionbar = "#f3eeef"
+            colorActionbar = "#edebe8"
             colorActionbarContent = "#444"
             colorActionbarHighlight = "#bab5b6"
 

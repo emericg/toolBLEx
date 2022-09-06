@@ -86,7 +86,7 @@ bool DeviceFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourcePare
         //if (model.contains(m_filterString, Qt::CaseInsensitive)) accepted = true;
     }
 
-    DeviceToolbox *d = static_cast<DeviceToolbox *>(static_cast<DeviceModel *>(sourceModel())->device(index));
+    DeviceToolBLEx *d = static_cast<DeviceToolBLEx *>(static_cast<DeviceModel *>(sourceModel())->device(index));
     if (d)
     {
         if (!m_filterShowBluetoothClassic && d->isBluetoothClassic() && !d->isBluetoothLowEnergy()) accepted = false;
@@ -132,6 +132,7 @@ QHash <int, QByteArray> DeviceModel::roleNames() const
     roles[DeviceManufacturerRole] = "manufacturer";
     roles[DeviceRssiRole] = "rssi";
     roles[DeviceIntervalRole] = "interval";
+    roles[DeviceFirstSeenRole] = "first seen";
     roles[DeviceLastSeenRole] = "last seen";
 
     roles[DeviceModelRole] = "model";
@@ -165,7 +166,7 @@ QVariant DeviceModel::data(const QModelIndex &index, int role) const
     if (index.row() < 0 || index.row() >= m_devices.size() || !index.isValid())
         return QVariant();
 
-    DeviceToolbox *device = static_cast<DeviceToolbox *>(m_devices[index.row()]);
+    DeviceToolBLEx *device = static_cast<DeviceToolBLEx *>(m_devices[index.row()]);
     if (device)
     {
         if (role == DeviceAddressRole)
@@ -191,6 +192,10 @@ QVariant DeviceModel::data(const QModelIndex &index, int role) const
         if (role == DeviceIntervalRole)
         {
             return device->getAdvertisementInterval();
+        }
+        if (role == DeviceFirstSeenRole)
+        {
+            return 0;
         }
         if (role == DeviceLastSeenRole)
         {
