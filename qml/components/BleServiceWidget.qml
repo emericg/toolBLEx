@@ -5,21 +5,24 @@ import ThemeEngine 1.0
 
 Rectangle {
     id: bleServiceWidget
-    height: extended ? (80 + characteristicview.count * 150) : 80
 
-    clip: true
+    //height: extended ? (80 + characteristicview.count * 150) : 80
+    height: extended ? (80 + characteristicview.contentHeight) : 80
+    Behavior on height { NumberAnimation { duration: 233 } }
+
     color: Theme.colorBox
+    clip: true
+
+    //////////
 
     property bool extended: false
-
-    Behavior on height { NumberAnimation { duration: 233 } }
 
     MouseArea {
         anchors.fill: parent
         onClicked: extended = !extended
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    //////////
 
     Item {
         height: 80
@@ -40,8 +43,7 @@ Rectangle {
                 width: parent.width
                 height: 32
 
-                Text {
-                    id: serviceName
+                Text { // serviceName
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
 
@@ -50,27 +52,43 @@ Rectangle {
                     font.bold: true
                     color: Theme.colorSubText
                 }
-                Text {
-                    id: serviceType
+
+                Row {
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
+                    spacing: 8
 
-                    text: modelData.serviceType
-                    font.pixelSize: 14
-                    color: Theme.colorSubText
+                    Text { // serviceType
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: modelData.serviceType
+                        font.pixelSize: 14
+                        color: Theme.colorSubText
+                    }
+                    IconSvg { // expandIcon
+                        width: 24
+                        height: 24
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        color: Theme.colorSubText
+                        source: bleServiceWidget.extended ?
+                                    "qrc:/assets/icons_material/baseline-unfold_less-24px.svg" :
+                                    "qrc:/assets/icons_material/baseline-unfold_more-24px.svg"
+                    }
                 }
             }
+
             Row {
                 spacing: 4
                 Text {
                     text: qsTr("UUID:")
-                    font.pixelSize: 16
+                    font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorSubText
                 }
                 Text {
                     id: serviceUuid
                     text: modelData.serviceUuid
-                    font.pixelSize: 16
+                    font.pixelSize: Theme.fontSizeContent
+                    font.capitalization: Font.AllUppercase
                     color: Theme.colorText
                 }
             }
@@ -85,13 +103,14 @@ Rectangle {
         anchors.topMargin: 80
         anchors.left: parent.left
         anchors.right: parent.right
+        anchors.bottom: parent.bottom
 
-        //clip: true
         interactive: false
-        height: count * 150
 
         model: modelData.characteristicList
-        delegate: BleCharacteristicWidget { }
+        delegate: BleCharacteristicWidget {
+            width: parent.width
+        }
     }
 
     ////////

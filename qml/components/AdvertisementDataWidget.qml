@@ -49,7 +49,7 @@ Column {
                 text: packet.advUUIDstr
                 color: Theme.colorText
                 font.family: "monospace"
-                font.capitalization: Font.AllUppercase
+                //font.capitalization: Font.AllUppercase
             }
         }
 

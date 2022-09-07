@@ -22,12 +22,8 @@
 #include "serviceinfo.h"
 #include "characteristicinfo.h"
 
-#include <QBluetoothServiceDiscoveryAgent>
-#include <QBluetoothDeviceDiscoveryAgent>
-#include <QtBluetooth/QLowEnergyCharacteristic>
-
-#include <QBluetoothDeviceInfo>
 #include <QBluetoothServiceInfo>
+#include <QLowEnergyCharacteristic>
 
 #include <QTimer>
 #include <QDebug>
@@ -57,16 +53,14 @@ QLowEnergyService *ServiceInfo::service() const
 
 QString ServiceInfo::getName() const
 {
-    if (!m_service)
-        return QString();
+    if (!m_service) return QString();
 
     return m_service->serviceName();
 }
 
 QString ServiceInfo::getType() const
 {
-    if (!m_service)
-        return QString();
+    if (!m_service) return QString();
 
     QString result;
     if (m_service->type() & QLowEnergyService::PrimaryService)
@@ -84,22 +78,23 @@ QString ServiceInfo::getType() const
 
 QString ServiceInfo::getUuid() const
 {
-    if (!m_service)
-        return QString();
+    if (!m_service) return QString();
 
     const QBluetoothUuid uuid = m_service->serviceUuid();
     bool success = false;
 
     quint16 result16 = uuid.toUInt16(&success);
     if (success)
-        return QStringLiteral("0x") + QString::number(result16, 16);
+        return QStringLiteral("0x") + QString::number(result16, 16).toUpper().rightJustified(4, '0');
 
     quint32 result32 = uuid.toUInt32(&success);
     if (success)
-        return QStringLiteral("0x") + QString::number(result32, 16);
+        return QStringLiteral("0x") + QString::number(result32, 16).toUpper().rightJustified(8, '0');
 
     return uuid.toString().remove(QLatin1Char('{')).remove(QLatin1Char('}'));
 }
+
+/* ************************************************************************** */
 
 void ServiceInfo::connectToService()
 {
@@ -107,13 +102,10 @@ void ServiceInfo::connectToService()
 
     qDeleteAll(m_characteristics);
     m_characteristics.clear();
-    Q_EMIT characteristicsUpdated();
 
     if (service->state() == QLowEnergyService::RemoteService)
     {
-        connect(service, &QLowEnergyService::stateChanged,
-                this, &ServiceInfo::serviceDetailsDiscovered);
-
+        connect(service, &QLowEnergyService::stateChanged, this, &ServiceInfo::serviceDetailsDiscovered);
         QTimer::singleShot(0, [=] () { service->discoverDetails(); });
 
         return;

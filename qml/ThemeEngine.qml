@@ -132,7 +132,6 @@ Item {
         if (index === ThemeEngine.THEME_DESKTOP_LIGHT) return "THEME_DESKTOP_LIGHT"
         if (index === ThemeEngine.THEME_DESKTOP_DARK) return "THEME_DESKTOP_DARK"
 
-
         return ""
     }
 
@@ -172,9 +171,6 @@ Item {
         // Do not reload the same theme
         if (themeIndex === currentTheme) return
 
-
-
-
         if (themeIndex === ThemeEngine.THEME_DESKTOP_LIGHT) {
 
             colorGreen = "#85c700"
@@ -194,7 +190,7 @@ Item {
             colorSidebarContent = "#444"
             colorSidebarHighlight = colorMaterialDarkGrey
 
-            colorActionbar = "#edebe8"
+            colorActionbar = "#eaeae8"
             colorActionbarContent = "#444"
             colorActionbarHighlight = "#bab5b6"
 
@@ -202,8 +198,8 @@ Item {
             colorTabletmenuContent = "#9d9d9d"
             colorTabletmenuHighlight = "#cfcbcb"
 
-            colorBackground = "#f9f8f7" //
-            colorForeground = "#f8f2f3" // "#e7e2e3" "#f3eeef"
+            colorBackground = "#f9f8f7"
+            colorForeground = "#f5f4f3"
 
             colorPrimary = colorYellow
             colorSecondary = "#ffe800"
@@ -214,7 +210,7 @@ Item {
             colorText = "#373737"
             colorSubText = "#666666"
             colorIcon = "#373737"
-            colorSeparator = "#eaeaea" //  // colorMaterialDarkGrey
+            colorSeparator = "#eaeaea"
             colorLowContrast = "white"
             colorHighContrast = "#303030"
 

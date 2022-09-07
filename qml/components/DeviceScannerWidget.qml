@@ -83,9 +83,10 @@ Item {
         ////
 
         Item { // color
-            width: 16; height: 24;
+            width: 16; height: 32;
 
             Rectangle {
+                anchors.centerIn: parent
                 width: 8
                 height: 24
                 radius: 2

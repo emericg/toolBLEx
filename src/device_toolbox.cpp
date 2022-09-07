@@ -52,7 +52,8 @@ AdvertisementData::AdvertisementData(const uint16_t adv_mode, const uint16_t adv
     m_timestamp = QDateTime::currentDateTime();
     advMode = adv_mode;
     advUUID = adv_id;
-    advUUIDstr = QString::number(advUUID, 16).rightJustified(4, '0');
+
+    advUUIDstr = QString::number(advUUID, 16).toUpper().rightJustified(4, '0');
 
     VendorsDatabase *v = VendorsDatabase::getInstance();
     if (adv_mode == DeviceUtils::BLE_ADV_MANUFACTURERDATA)
