@@ -191,13 +191,24 @@ Item {
                     fullColor: true
                     text: {
                         if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
-                            qsTr("connect")
+                            return qsTr("scan services")
                         else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
-                            qsTr("connecting...")
-                        else //if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
-                            qsTr("disconnect")
+                            return qsTr("connecting...")
+                        else if (selectedDevice.status <= DeviceUtils.DEVICE_WORKING)
+                            return qsTr("scanning...")
+                        else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTED)
+                            return qsTr("disconnect")
                     }
-                    source: "qrc:/assets/icons_material/duotone-bluetooth_connected-24px.svg"
+                    source: {
+                        if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
+                            return "qrc:/assets/icons_material/baseline-bluetooth-24px.svg"
+                        else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
+                            return "qrc:/assets/icons_material/duotone-bluetooth_connected-24px.svg"
+                        else if (selectedDevice.status <= DeviceUtils.DEVICE_WORKING)
+                            return "qrc:/assets/icons_material/duotone-bluetooth_searching-24px.svg"
+                        else //if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
+                            return "qrc:/assets/icons_material/duotone-settings_bluetooth-24px.svg"
+                    }
                     onClicked: {
                         if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
                             selectedDevice.actionScan()
@@ -208,10 +219,25 @@ Item {
 
                 ButtonWireframeIcon {
                     fullColor: true
+                    primaryColor: selectedDevice.isStarred ?Theme.colorSecondary : Theme.colorGrey
+
+                    text: selectedDevice.isStarred ? qsTr("starred") : qsTr("star")
+                    source: selectedDevice.isStarred ?
+                                "qrc:/assets/icons_material/baseline-stars-24px.svg" :
+                                "qrc:/assets/icons_material/outline-add_circle-24px.svg"
+                    onClicked: selectedDevice.isStarred = !selectedDevice.isStarred
+                }
+
+                ButtonWireframeIcon {
+                    fullColor: true
                     primaryColor: Theme.colorGrey
 
-                    text: selectedDevice.isCached ? qsTr("forget") : qsTr("cache")
-                    source: "qrc:/assets/icons_material/baseline-bluetooth_disabled-24px.svg"
+                    visible: (!settingsManager.scanCacheAuto && !selectedDevice.isBeacon)
+
+                    text: selectedDevice.hasCache ? qsTr("forget") : qsTr("cache")
+                    source: selectedDevice.hasCache ?
+                                "qrc:/assets/icons_material/baseline-loupe_minus-24px.svg" :
+                                "qrc:/assets/icons_material/baseline-loupe-24px.svg"
                     onClicked: selectedDevice.cache(!selectedDevice.isCached)
                 }
 
@@ -220,7 +246,9 @@ Item {
                     primaryColor: Theme.colorGrey
 
                     text: selectedDevice.isBlacklisted ? qsTr("whitelist") : qsTr("blacklist")
-                    source: "qrc:/assets/icons_material/baseline-bluetooth_disabled-24px.svg"
+                    source: selectedDevice.isBlacklisted ?
+                                "qrc:/assets/icons_material/outline-add_circle-24px.svg" :
+                                "qrc:/assets/icons_material/baseline-cancel-24px.svg"
                     onClicked: selectedDevice.blacklist(!selectedDevice.isBlacklisted)
                 }
             }

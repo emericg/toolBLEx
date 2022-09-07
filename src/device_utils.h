@@ -144,8 +144,6 @@ public:
     enum DeviceActions {
         ACTION_IDLE                 = 0,  //!< No action, stay connected
 
-        ACTION_SCAN,                      //!< Scan for services and their characteristics
-
         ACTION_UPDATE,                    //!< Read sensor latest data
         ACTION_UPDATE_REALTIME,           //!< Stay connected and read sensor data
         ACTION_UPDATE_HISTORY,            //!< Sync sensor history
@@ -155,7 +153,10 @@ public:
         ACTION_WATERING,
         ACTION_CALIBRATE,
 
-        ACTION_REBOOT,
+        ACTION_SCAN = 64,                 //!< Scan for services and their characteristics
+        ACTION_SCAN_WITH_VALUES,          //!< Scan for services and their characteristics and associated values
+
+        ACTION_REBOOT = 256,
         ACTION_SHUTDOWN,
     };
     Q_ENUM(DeviceActions)

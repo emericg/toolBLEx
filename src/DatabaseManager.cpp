@@ -268,6 +268,7 @@ void DatabaseManager::createDatabase()
                               "deviceBattery INT," \
                               "deviceCoreConfig INT," \
                               "deviceClass VARCHAR(255)," \
+                              "starred INT," \
                               "comment VARCHAR(255)," \
                               "color VARCHAR(255)," \
                               "firstSeen DATETIME," \

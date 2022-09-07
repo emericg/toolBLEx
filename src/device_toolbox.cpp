@@ -67,17 +67,15 @@ AdvertisementData::AdvertisementData(const uint16_t adv_mode, const uint16_t adv
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-DeviceToolBLEx::DeviceToolBLEx(const QString &deviceAddr, const QString &deviceName, const QString &deviceManufacturer,
-                               const QDateTime &firstSeen, const QDateTime &lastSeen,
+DeviceToolBLEx::DeviceToolBLEx(const QString &deviceAddr, const QString &deviceName,
                                QObject *parent): Device(deviceAddr, deviceName, parent)
 {
     // Creation from database cache
 
-    m_deviceManufacturer = deviceManufacturer;
-    m_firstSeen = firstSeen;
-    m_lastSeen = lastSeen;
-
+    setCache(true);
     setCached(true);
+
+    getSqlDeviceInfos();
 }
 
 DeviceToolBLEx::DeviceToolBLEx(const QBluetoothDeviceInfo &d, QObject *parent):
@@ -96,6 +94,9 @@ DeviceToolBLEx::DeviceToolBLEx(const QBluetoothDeviceInfo &d, QObject *parent):
 
 DeviceToolBLEx::~DeviceToolBLEx()
 {
+    // will update last seen
+    updateCache();
+
     qDeleteAll(m_services);
     m_services.clear();
 
@@ -113,6 +114,73 @@ DeviceToolBLEx::~DeviceToolBLEx()
     m_mfd_uuid.clear();
 }
 
+bool DeviceToolBLEx::getSqlDeviceInfos()
+{
+    //qDebug() << "Device::getSqlDeviceInfos(" << m_deviceAddress << ")";
+    bool status = false;
+
+    if (m_dbInternal || m_dbExternal)
+    {
+        QSqlQuery getInfos;
+        getInfos.prepare("SELECT deviceAddrMAC, deviceModel, deviceModelID, deviceManufacturer," \
+                           "deviceFirmware, deviceBattery," \
+                           "deviceCoreConfig, deviceClass," \
+                           "starred, comment, color," \
+                           "firstSeen, lastSeen " \
+                         "FROM devices WHERE deviceAddr = :deviceAddr");
+        getInfos.bindValue(":deviceAddr", getAddress());
+        if (getInfos.exec())
+        {
+            while (getInfos.next())
+            {
+                m_deviceAddressMAC = getInfos.value(0).toString();
+                m_deviceModel = getInfos.value(1).toString();
+                m_deviceModelID = getInfos.value(2).toString();
+                m_deviceManufacturer = getInfos.value(3).toString();
+
+                m_deviceFirmware = getInfos.value(4).toString();
+                m_deviceBattery = getInfos.value(5).toInt();
+
+                int deviceCoreConfig = getInfos.value(6).toInt();
+                setCoreConfiguration(deviceCoreConfig);
+
+                QString deviceClass = getInfos.value(7).toString();
+                QStringList dc = deviceClass.split('-');
+                if (dc.size() == 3)
+                {
+                    setDeviceClass(dc.at(0).toInt(), dc.at(1).toInt(), dc.at(2).toInt());
+                }
+
+                m_userStarred = getInfos.value(8).toInt();
+                m_userComment = getInfos.value(9).toString();
+                m_userColor = getInfos.value(10).toString();
+
+                m_firstSeen = getInfos.value(11).toDateTime();
+                m_lastSeen = getInfos.value(12).toDateTime();
+
+                QString settings = getInfos.value(11).toString();
+                QJsonDocument doc = QJsonDocument::fromJson(settings.toUtf8());
+                if (!doc.isNull() && doc.isObject())
+                {
+                    m_additionalSettings = doc.object();
+                }
+
+                status = true;
+                Q_EMIT batteryUpdated();
+                Q_EMIT sensorUpdated();
+                Q_EMIT settingsUpdated();
+            }
+        }
+        else
+        {
+            qWarning() << "> getInfos.exec() ERROR"
+                       << getInfos.lastError().type() << ":" << getInfos.lastError().text();
+        }
+    }
+
+    return status;
+}
+
 /* ************************************************************************** */
 /* ************************************************************************** */
 
@@ -121,7 +189,6 @@ void DeviceToolBLEx::setDeviceClass(const int major, const int minor, const int 
     if (m_major != major || m_minor != minor || m_service != service)
     {
         Device::setDeviceClass(major, minor, service);
-
         updateCache();
     }
 }
@@ -133,26 +200,24 @@ void DeviceToolBLEx::setCoreConfiguration(const int bleconf)
         m_isBLE = true;
         Q_EMIT boolChanged();
 
+        Device::setCoreConfiguration(bleconf);
         updateCache();
     }
-    if (bleconf == 2 && !m_isClassic)
+    else if (bleconf == 2 && !m_isClassic)
     {
         m_isClassic = true;
         Q_EMIT boolChanged();
 
+        Device::setCoreConfiguration(bleconf);
         updateCache();
     }
-
-    Device::setCoreConfiguration(bleconf);
+    else
+    {
+        Device::setCoreConfiguration(bleconf);
+    }
 }
 
-void DeviceToolBLEx::setLastSeen(const QDateTime &dt)
-{
-    m_lastSeen = dt;
-    Q_EMIT seenChanged();
-
-    updateCache();
-}
+/* ************************************************************************** */
 
 void DeviceToolBLEx::setBeacon(bool v)
 {
@@ -185,9 +250,37 @@ void DeviceToolBLEx::setCached(bool v)
     }
 }
 
+void DeviceToolBLEx::setCache(bool v)
+{
+    if (m_hasCache != v)
+    {
+        m_hasCache = v;
+        Q_EMIT cacheChanged();
+
+        static_cast<DeviceManager *>(parent())->invalidate();
+    }
+}
+
 void DeviceToolBLEx::setDeviceColor(const QString &color)
 {
     m_color = color;
+}
+
+void DeviceToolBLEx::setStarred(bool v)
+{
+    if (m_userStarred != v)
+    {
+        m_userStarred = v;
+        Q_EMIT starChanged();
+
+        updateCache();
+    }
+}
+
+void DeviceToolBLEx::setLastSeen(const QDateTime &dt)
+{
+    m_lastSeen = dt;
+    Q_EMIT seenChanged();
 }
 
 /* ************************************************************************** */
@@ -205,9 +298,18 @@ void DeviceToolBLEx::updateCache()
         }
 
         QSqlQuery updateCache;
-        updateCache.prepare("UPDATE devices SET deviceCoreConfig = :deviceCoreConfig, deviceClass = :deviceClass, lastSeen = :lastSeen WHERE deviceAddr = :deviceAddr");
+        updateCache.prepare("UPDATE devices SET "
+                             "deviceCoreConfig = :deviceCoreConfig, "
+                             "deviceClass = :deviceClass, "
+                             "starred = :starred, "
+                             "comment = :comment, "
+                             "lastSeen = :lastSeen "
+                            "WHERE deviceAddr = :deviceAddr");
         updateCache.bindValue(":deviceCoreConfig", m_bluetoothCoreConfiguration);
         updateCache.bindValue(":deviceClass", deviceClass);
+        updateCache.bindValue(":starred", m_userStarred);
+        updateCache.bindValue(":comment", m_userComment);
+        //updateCache.bindValue(":color", m_userColor);
         updateCache.bindValue(":lastSeen", m_lastSeen);
         updateCache.bindValue(":deviceAddr", getAddress());
 
@@ -239,21 +341,17 @@ void DeviceToolBLEx::cache(bool c)
         if (c) static_cast<DeviceManager *>(parent())->cacheDevice(m_deviceAddress);
         else static_cast<DeviceManager *>(parent())->uncacheDevice(m_deviceAddress);
 
-        setCached(c);
+        setCache(c);
+        if (m_rssi >= 0) setCached(c);
     }
 }
 
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void DeviceToolBLEx::serviceScanDone()
+void DeviceToolBLEx::deviceConnected()
 {
-    qDebug() << "DeviceToolbox::serviceScanDone(" << m_deviceAddress << ")";
-
-    if (m_services.isEmpty())
-    {
-        Q_EMIT servicesUpdated();
-    }
+    Device::deviceConnected();
 }
 
 /* ************************************************************************** */
@@ -273,6 +371,18 @@ void DeviceToolBLEx::addLowEnergyService(const QBluetoothUuid &uuid)
     m_services.append(serv);
 
     Q_EMIT servicesUpdated();
+}
+
+/* ************************************************************************** */
+
+void DeviceToolBLEx::serviceScanDone()
+{
+    qDebug() << "DeviceToolbox::serviceScanDone(" << m_deviceAddress << ")";
+
+    if (m_services.isEmpty())
+    {
+        Q_EMIT servicesUpdated();
+    }
 }
 
 /* ************************************************************************** */

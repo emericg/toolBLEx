@@ -85,35 +85,22 @@ DeviceManager::DeviceManager(bool daemon)
 
         // Load cached devices
         QSqlQuery queryDevices;
-        queryDevices.exec("SELECT deviceAddr, deviceName, deviceManufacturer, deviceCoreConfig, deviceClass, firstSeen, lastSeen FROM devices");
+        queryDevices.exec("SELECT deviceAddr, deviceName FROM devices");
         while (queryDevices.next())
         {
             QString deviceAddr = queryDevices.value(0).toString();
             QString deviceName = queryDevices.value(1).toString();
-            QString deviceManufacturer = queryDevices.value(2).toString();
-            int deviceCoreConfig = queryDevices.value(3).toInt();
-            QString deviceClass = queryDevices.value(4).toString();
-            QDateTime firstSeen = queryDevices.value(5).toDateTime();
-            QDateTime lastSeen = queryDevices.value(6).toDateTime();
 
-            DeviceToolBLEx *d = new DeviceToolBLEx(deviceAddr, deviceName, deviceManufacturer,
-                                                   firstSeen, lastSeen, this);
+            DeviceToolBLEx *d = new DeviceToolBLEx(deviceAddr, deviceName, this);
             if (d)
             {
-                d->setCoreConfiguration(deviceCoreConfig);
+                d->setCached(true);
                 d->setDeviceColor(getAvailableColor());
-
-                QStringList dc = deviceClass.split('-');
-                if (dc.size() == 3)
-                {
-                    d->setDeviceClass(dc.at(0).toInt(), dc.at(1).toInt(), dc.at(2).toInt());
-                }
 
                 m_devices_model->addDevice(d);
                 //qDebug() << "* Device added (from database): " << deviceName << "/" << deviceAddr;
             }
         }
-
     }
 }
 
@@ -738,8 +725,6 @@ void DeviceManager::whitelistDevice(const QString &addr)
 
 void DeviceManager::cacheDevice(const QString &addr)
 {
-    qDebug() << "+ Caching device: " << addr << "to local database";
-
     if (m_dbInternal || m_dbExternal)
     {
         for (auto d: qAsConst(m_devices_model->m_devices))
@@ -756,7 +741,7 @@ void DeviceManager::cacheDevice(const QString &addr)
                 // then
                 if (queryDevice.last() == false)
                 {
-                    qDebug() << "+ Caching device: " << dd->getName() << "/" << dd->getAddress() << "to local database";
+                    //qDebug() << "+ Caching device: " << dd->getName() << "/" << dd->getAddress() << "to local database";
 
                     QString deviceClass;
                     if (dd->getMajorClass() && dd->getMinorClass())
@@ -795,7 +780,7 @@ void DeviceManager::uncacheDevice(const QString &addr)
             DeviceToolBLEx *dd = qobject_cast<DeviceToolBLEx *>(d);
             if (dd->getAddress() == addr)
             {
-                qDebug() << "+ Uncaching device: " << addr;
+                //qDebug() << "+ Uncaching device: " << addr;
 
                 QSqlQuery uncacheDevice;
                 uncacheDevice.prepare("DELETE FROM devices WHERE deviceAddr = :deviceAddr");
@@ -828,6 +813,7 @@ QString DeviceManager::getOrderByRole() const
     if (m_orderBy_role == DeviceModel::DeviceManufacturerRole) return "manufacturer";
     if (m_orderBy_role == DeviceModel::DeviceRssiRole) return "rssi";
     if (m_orderBy_role == DeviceModel::DeviceIntervalRole) return "interval";
+    if (m_orderBy_role == DeviceModel::DeviceFirstSeenRole) return "firstseen";
     if (m_orderBy_role == DeviceModel::DeviceLastSeenRole) return "lastseen";
     if (m_orderBy_role == DeviceModel::DeviceModelRole) return "model";
     return "";

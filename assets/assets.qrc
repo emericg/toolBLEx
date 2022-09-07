@@ -56,12 +56,15 @@
         <file>icons_material/baseline-battery_unknown-24px.svg</file>
         <file>icons_material/baseline-bluetooth-24px.svg</file>
         <file>icons_material/baseline-bluetooth_disabled-24px.svg</file>
+        <file>icons_material/baseline-cancel-24px.svg</file>
         <file>icons_material/baseline-chevron_left-24px.svg</file>
         <file>icons_material/baseline-chevron_right-24px.svg</file>
         <file>icons_material/baseline-check-24px.svg</file>
         <file>icons_material/baseline-close-24px.svg</file>
         <file>icons_material/baseline-help-24px.svg</file>
         <file>icons_material/baseline-insert_link-24px.svg</file>
+        <file>icons_material/baseline-loupe-24px.svg</file>
+        <file>icons_material/baseline-loupe_minus-24px.svg</file>
         <file>icons_material/baseline-pause-24px.svg</file>
         <file>icons_material/baseline-play_arrow-24px.svg</file>
         <file>icons_material/baseline-save-24px.svg</file>
@@ -71,9 +74,12 @@
         <file>icons_material/baseline-signal_cellular_full-24px.svg</file>
         <file>icons_material/baseline-signal_cellular_null-24px.svg</file>
         <file>icons_material/baseline-signal_cellular_off-24px.svg</file>
+        <file>icons_material/baseline-stars-24px.svg</file>
         <file>icons_material/baseline-sort-24px.svg</file>
         <file>icons_material/baseline-stop-24px.svg</file>
         <file>icons_material/baseline-supervised_user_circle-24px.svg</file>
+        <file>icons_material/baseline-unfold_less-24px.svg</file>
+        <file>icons_material/baseline-unfold_more-24px.svg</file>
         <file>icons_material/baseline-support-24px.svg</file>
         <file>icons_material/baseline-wifi_tethering-24px.svg</file>
         <file>icons_material/baseline-warning-24px.svg</file>

@@ -131,11 +131,6 @@ protected:
     bool m_isEnabled = true;
     QJsonObject m_additionalSettings;
 
-    // toolBLEx
-    QString m_color;
-    QString m_userColor;
-    QString m_userComment;
-
     // Status
     int m_ble_status = 0;           //!< See DeviceStatus enum
     int m_ble_action = 0;           //!< See DeviceActions enum
@@ -247,9 +242,7 @@ public:
     bool isUpdating() const;            //!< Is currently being updated?
     bool isErrored() const;             //!< Has emitted a BLE error
 
-    // toolBLEx
-    QString getUserComment() const { return m_userComment; }
-    void setUserComment(const QString &name);
+    //
     bool hasAddressMAC() const;
     QString getAddressMAC() const;
     void setAddressMAC(const QString &mac);
