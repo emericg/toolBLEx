@@ -163,8 +163,6 @@ bool SettingsManager::writeSettings()
         settings.setValue("settings/scanSplitviewOrientation", m_scanviewOrientation);
         settings.setValue("settings/scanSplitviewSize", m_scanviewSize);
 
-        settings.setValue("settings/orderBy", m_canviewOrderBy);
-
         if (settings.status() == QSettings::NoError)
         {
             status = true;
@@ -356,16 +354,6 @@ void SettingsManager::setScanviewSize(const QByteArray &value)
         m_scanviewSize = value;
         writeSettings();
         Q_EMIT scanviewChanged();
-    }
-}
-
-void SettingsManager::setScanviewOrderBy(const QString &value)
-{
-    if (m_canviewOrderBy != value)
-    {
-        m_canviewOrderBy = value;
-        writeSettings();
-        Q_EMIT scanviewOrderByChanged();
     }
 }
 

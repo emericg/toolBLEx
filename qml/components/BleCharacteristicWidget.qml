@@ -72,7 +72,7 @@ Rectangle {
                 color: Theme.colorText
             }
         }
-*/
+
         Row {
             spacing: 4
 
@@ -86,6 +86,26 @@ Rectangle {
                 text: modelData.characteristicPermission
                 font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorText
+            }
+        }
+*/
+        Row {
+            spacing: 4
+
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                text: qsTr("Properties:")
+                font.pixelSize: Theme.fontSizeContent
+                color: Theme.colorSubText
+            }
+            Repeater {
+                anchors.verticalCenter: parent.verticalCenter
+                model: modelData.characteristicPermissionList
+                ItemTag {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: modelData
+                    color: Theme.colorComponent
+                }
             }
         }
 

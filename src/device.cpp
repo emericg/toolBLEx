@@ -552,13 +552,16 @@ void Device::setCoreConfiguration(const int bleconf)
 {
     //qDebug() << "Device::setCoreConfiguration(" << bleconf << ")";
 
-    if (m_bluetoothCoreConfiguration != bleconf && m_bluetoothCoreConfiguration != 3)
+    if (bleconf > 0)
     {
-        if (m_bluetoothCoreConfiguration == 1 && bleconf == 2) m_bluetoothCoreConfiguration = 3;
-        else if (m_bluetoothCoreConfiguration == 2 && bleconf == 1) m_bluetoothCoreConfiguration = 3;
-        else m_bluetoothCoreConfiguration = bleconf;
+        if (m_bluetoothCoreConfiguration != bleconf && m_bluetoothCoreConfiguration != 3)
+        {
+            if (m_bluetoothCoreConfiguration == 1 && bleconf == 2) m_bluetoothCoreConfiguration = 3;
+            else if (m_bluetoothCoreConfiguration == 2 && bleconf == 1) m_bluetoothCoreConfiguration = 3;
+            else m_bluetoothCoreConfiguration = bleconf;
 
-        Q_EMIT advertisementUpdated();
+            Q_EMIT advertisementUpdated();
+        }
     }
 }
 

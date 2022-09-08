@@ -21,9 +21,6 @@
 
 #include "device_toolbox.h"
 #include "serviceinfo.h"
-#include "characteristicinfo.h"
-
-#include "SettingsManager.h"
 #include "DeviceManager.h"
 #include "VendorsDatabase.h"
 
@@ -72,8 +69,8 @@ DeviceToolBLEx::DeviceToolBLEx(const QString &deviceAddr, const QString &deviceN
 {
     // Creation from database cache
 
-    setCache(true);
-    setCached(true);
+    m_isCached = true;
+    m_hasCache = true;
 
     getSqlDeviceInfos();
 }
@@ -84,17 +81,15 @@ DeviceToolBLEx::DeviceToolBLEx(const QBluetoothDeviceInfo &d, QObject *parent):
     // Creation from BLE scanning
 
     addAdvertisementEntry(d.rssi(), !d.manufacturerIds().empty(), !d.serviceIds().empty());
-    setCoreConfiguration(d.coreConfigurations());
 
+    m_isCached = (d.isCached() || d.rssi() == 0);
     m_firstSeen = QDateTime::currentDateTime();
-
-    if (d.rssi() == 0) setCached(true);
-    if (d.isCached()) setCached(true);
+    m_bluetoothCoreConfiguration = d.coreConfigurations();
 }
 
 DeviceToolBLEx::~DeviceToolBLEx()
 {
-    // will update last seen
+    // will update 'last seen'
     updateCache();
 
     qDeleteAll(m_services);
@@ -141,14 +136,15 @@ bool DeviceToolBLEx::getSqlDeviceInfos()
                 m_deviceFirmware = getInfos.value(4).toString();
                 m_deviceBattery = getInfos.value(5).toInt();
 
-                int deviceCoreConfig = getInfos.value(6).toInt();
-                setCoreConfiguration(deviceCoreConfig);
+                m_bluetoothCoreConfiguration = getInfos.value(6).toInt();
+                m_isBLE = (m_bluetoothCoreConfiguration == 1 || m_bluetoothCoreConfiguration == 3);
+                m_isClassic = (m_bluetoothCoreConfiguration == 2 || m_bluetoothCoreConfiguration == 3);
 
                 QString deviceClass = getInfos.value(7).toString();
                 QStringList dc = deviceClass.split('-');
                 if (dc.size() == 3)
                 {
-                    setDeviceClass(dc.at(0).toInt(), dc.at(1).toInt(), dc.at(2).toInt());
+                    Device::setDeviceClass(dc.at(0).toInt(), dc.at(1).toInt(), dc.at(2).toInt());
                 }
 
                 m_userStarred = getInfos.value(8).toInt();
@@ -166,9 +162,6 @@ bool DeviceToolBLEx::getSqlDeviceInfos()
                 }
 
                 status = true;
-                Q_EMIT batteryUpdated();
-                Q_EMIT sensorUpdated();
-                Q_EMIT settingsUpdated();
             }
         }
         else
@@ -195,25 +188,28 @@ void DeviceToolBLEx::setDeviceClass(const int major, const int minor, const int 
 
 void DeviceToolBLEx::setCoreConfiguration(const int bleconf)
 {
-    if (bleconf == 1 && !m_isBLE)
+    if (bleconf > 0)
     {
-        m_isBLE = true;
-        Q_EMIT boolChanged();
+        if (bleconf == 1 && !m_isBLE)
+        {
+            m_isBLE = true;
+            Q_EMIT boolChanged();
 
-        Device::setCoreConfiguration(bleconf);
-        updateCache();
-    }
-    else if (bleconf == 2 && !m_isClassic)
-    {
-        m_isClassic = true;
-        Q_EMIT boolChanged();
+            Device::setCoreConfiguration(bleconf);
+            updateCache();
+        }
+        else if (bleconf == 2 && !m_isClassic)
+        {
+            m_isClassic = true;
+            Q_EMIT boolChanged();
 
-        Device::setCoreConfiguration(bleconf);
-        updateCache();
-    }
-    else
-    {
-        Device::setCoreConfiguration(bleconf);
+            Device::setCoreConfiguration(bleconf);
+            updateCache();
+        }
+        else
+        {
+            Device::setCoreConfiguration(bleconf);
+        }
     }
 }
 

@@ -63,27 +63,26 @@ class SettingsManager: public QObject
 
     Q_PROPERTY(int scanviewOrientation READ getScanviewOrientation WRITE setScanviewOrientation NOTIFY scanviewChanged)
     Q_PROPERTY(QByteArray scanviewSize READ getScanviewSize WRITE setScanviewSize NOTIFY scanviewChanged)
-    Q_PROPERTY(QString scanviewOrderBy READ getScanviewOrderBy WRITE setScanviewOrderBy NOTIFY scanviewOrderByChanged)
 
     bool m_firstlaunch = true;
 
     // Application window
     QSize m_appSize;
     QSize m_appPosition;
-    unsigned m_appVisibility = 1;               //!< QWindow::Visibility
+    unsigned m_appVisibility = 1;                   //!< QWindow::Visibility
 
     // Application generic
-    QString m_appTheme = "THEME_PLANT";
+    QString m_appTheme = "THEME_DESKTOP_LIGHT";
     bool m_appThemeAuto = false;
     bool m_appThemeCSD = false;
-    unsigned m_appUnits = QLocale::MetricSystem;                    //!< QLocale::MeasurementSystem
+    unsigned m_appUnits = QLocale::MetricSystem;    //!< QLocale::MeasurementSystem
     QString m_appLanguage = "auto";
 
     // Application specific
-    int m_scanTimeout = 0;
+    int m_scanTimeout = 5;
     int m_scanRssiInterval = 1000;
     bool m_scanAuto = true;
-    bool m_scanCacheAuto = false;
+    bool m_scanCacheAuto = true;
     bool m_scanShowBeacon = true;
     bool m_scanShowBlacklisted = false;
     bool m_scanShowCached = true;
@@ -92,7 +91,6 @@ class SettingsManager: public QObject
 
     int m_scanviewOrientation = Qt::Horizontal;
     QByteArray m_scanviewSize;
-    QString m_canviewOrderBy = "model";
 
     // Singleton
     static SettingsManager *instance;
@@ -117,7 +115,6 @@ Q_SIGNALS:
     void scanRssiIntervalChanged();
     void scanShowChanged();
     void scanviewChanged();
-    void scanviewOrderByChanged();
 
 public:
     static SettingsManager *getInstance();
@@ -174,8 +171,6 @@ public:
     void setScanviewOrientation(const int value);
     QByteArray getScanviewSize() const { return m_scanviewSize; }
     void setScanviewSize(const QByteArray &value);
-    QString getScanviewOrderBy() const { return m_canviewOrderBy; };
-    void setScanviewOrderBy(const QString &value);
 
     ////
 

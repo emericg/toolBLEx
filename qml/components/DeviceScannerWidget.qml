@@ -1,9 +1,11 @@
 import QtQuick
+import QtQuick.Layouts
 
 import ThemeEngine 1.0
 import DeviceUtils 1.0
+
 import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
-import "qrc:/js/UtilsNumber.js" as UtilsNumber
+import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
 
 Item {
     id: deviceScannerWidget
@@ -121,18 +123,60 @@ Item {
 
         ////
 
-        Text { // name
+        RowLayout { // icons + name
+            width: 220
+            height: 32
             anchors.verticalCenter: parent.verticalCenter
-            width: 200
+            spacing: 8
 
-            text: (boxDevice.deviceName.length) ? boxDevice.deviceName : qsTr("Unavailable")
-            textFormat: Text.PlainText
-            color: {
-                if (isSelected) return "white"
-                if (boxDevice.deviceName.length === 0) return Theme.colorSubText
-                return Theme.colorText
+            IconSvg { // device
+                Layout.preferredWidth: 20
+                Layout.preferredHeight: 20
+
+                visible: (source.toString().length)
+                source: {
+                    if (boxDevice.isBeacon) return "qrc:/assets/icons_bootstrap/tags.svg"
+                    if (boxDevice.majorClass) return UtilsBluetooth.getBluetoothMinorClassIcon(boxDevice.majorClass, boxDevice.minorClass)
+                    return ""
+                }
+                opacity: 0.8
+                color: Theme.colorIcon
             }
-            elide: Text.ElideRight
+
+            Text { // name
+                Layout.fillWidth: true
+
+                text: (boxDevice.deviceName.length) ? boxDevice.deviceName : qsTr("Unavailable")
+                textFormat: Text.PlainText
+                elide: Text.ElideRight
+                color: {
+                    if (isSelected) return "white"
+                    if (boxDevice.deviceName.length === 0) return Theme.colorSubText
+                    return Theme.colorText
+                }
+            }
+
+            //IconSvg { // battery
+            //    Layout.preferredWidth: 18
+            //    Layout.preferredHeight: 20
+            //    visible: (boxDevice.hasBattery && boxDevice.deviceBattery >= 0)
+            //
+            //    source: UtilsDeviceSensors.getDeviceBatteryIcon(boxDevice.deviceBattery)
+            //    color: Theme.colorIcon
+            //    rotation: 90
+            //    fillMode: Image.PreserveAspectCrop
+            //}
+
+            IconSvg { // starred
+                Layout.preferredWidth: 20
+                Layout.preferredHeight: 20
+                Layout.alignment: Qt.AlignRight
+                visible: (boxDevice.isStarred)
+
+                opacity: 0.8
+                source: "qrc:/assets/icons_material/baseline-stars-24px.svg"
+                color: Theme.colorIcon
+            }
         }
 
         ////
@@ -252,41 +296,6 @@ Item {
         }
 
         ////
-/*
-        IconSvg { // imageBattery
-            width: 28
-            height: 30
-            anchors.verticalCenter: parent.verticalCenter
-
-            visible: (boxDevice.hasBattery && boxDevice.deviceBattery >= 0)
-            source: UtilsDeviceSensors.getDeviceBatteryIcon(boxDevice.deviceBattery)
-            color: Theme.colorIcon
-            rotation: 90
-            fillMode: Image.PreserveAspectCrop
-        }
-
-        Text {
-            id: textStatus
-            anchors.verticalCenter: parent.verticalCenter
-
-            textFormat: Text.PlainText
-            color: Theme.colorGreen
-            font.pixelSize: 15
-
-            SequentialAnimation on opacity {
-                id: opa
-                loops: Animation.Infinite
-                alwaysRunToEnd: true
-                running: (visible &&
-                          boxDevice.status !== DeviceUtils.DEVICE_OFFLINE &&
-                          boxDevice.status !== DeviceUtils.DEVICE_QUEUED &&
-                          boxDevice.status !== DeviceUtils.DEVICE_CONNECTED)
-
-                PropertyAnimation { to: 0.33; duration: 750; }
-                PropertyAnimation { to: 1; duration: 750; }
-            }
-        }
-*/
     }
 
     ////////////////////////////////////////////////////////////////////////////

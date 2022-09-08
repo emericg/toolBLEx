@@ -46,9 +46,14 @@ ServiceInfo::~ServiceInfo()
 
 /* ************************************************************************** */
 
-QLowEnergyService *ServiceInfo::service() const
+const QLowEnergyService *ServiceInfo::service() const
 {
     return m_service;
+}
+
+const QList <QObject *> ServiceInfo::characteristics() const
+{
+    return m_characteristics;
 }
 
 QString ServiceInfo::getName() const
@@ -92,6 +97,12 @@ QString ServiceInfo::getUuid() const
         return QStringLiteral("0x") + QString::number(result32, 16).toUpper().rightJustified(8, '0');
 
     return uuid.toString().remove(QLatin1Char('{')).remove(QLatin1Char('}'));
+}
+
+QString ServiceInfo::getUuidFull() const
+{
+    if (!m_service) return QString();
+    return m_service->serviceUuid().toString();
 }
 
 /* ************************************************************************** */

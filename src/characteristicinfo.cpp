@@ -41,12 +41,15 @@ void CharacteristicInfo::setCharacteristic(const QLowEnergyCharacteristic &chara
 
 /* ************************************************************************** */
 
+QLowEnergyCharacteristic CharacteristicInfo::getCharacteristic() const
+{
+    return m_characteristic;
+}
+
 QString CharacteristicInfo::getName() const
 {
     QString name = m_characteristic.name();
-    if (!name.isEmpty())
-        return name;
-
+    if (!name.isEmpty()) return name;
 /*
     // QT6 // find descriptor with CharacteristicUserDescription
     const QList<QLowEnergyDescriptor> descriptors = m_characteristic.descriptors();
@@ -58,7 +61,7 @@ QString CharacteristicInfo::getName() const
     }
 */
     if (name.isEmpty())
-        name = "Unknown";
+        name = "Unknown Characteristic";
 
     return name;
 }
@@ -66,36 +69,23 @@ QString CharacteristicInfo::getName() const
 QString CharacteristicInfo::getUuid() const
 {
     const QBluetoothUuid uuid = m_characteristic.uuid();
-/*
+
     bool success = false;
 
     quint16 result16 = uuid.toUInt16(&success);
     if (success)
-        return QStringLiteral("0x") + QString::number(result16, 16);
+        return QStringLiteral("0x") + QString::number(result16, 16).toUpper().rightJustified(4, '0');
 
     quint32 result32 = uuid.toUInt32(&success);
     if (success)
-        return QStringLiteral("0x") + QString::number(result32, 16);
-*/
+        return QStringLiteral("0x") + QString::number(result32, 16).toUpper().rightJustified(8, '0');
+
     return uuid.toString().remove(QLatin1Char('{')).remove(QLatin1Char('}'));
 }
 
-QString CharacteristicInfo::getValue() const
+QString CharacteristicInfo::getUuidFull() const
 {
-    // Show raw string first and hex value below
-    QByteArray a = m_characteristic.value();
-
-    QString result;
-    if (a.isEmpty()) {
-        result = QStringLiteral("<none>");
-        return result;
-    }
-
-    result = a;
-    result += QLatin1Char('\n');
-    result += a.toHex();
-
-    return result;
+    return m_characteristic.uuid().toString();
 }
 
 QString CharacteristicInfo::getHandle() const
@@ -166,9 +156,98 @@ QString CharacteristicInfo::getPermission() const
     return properties;
 }
 
-QLowEnergyCharacteristic CharacteristicInfo::getCharacteristic() const
+QStringList CharacteristicInfo::getPermissionList() const
 {
-    return m_characteristic;
+    uint permission = m_characteristic.properties();
+    QStringList properties;
+
+    if (permission & QLowEnergyCharacteristic::Read)
+    {
+        properties += QStringLiteral("Read");
+    }
+    if (permission & QLowEnergyCharacteristic::Write)
+    {
+        properties += QStringLiteral("Write");
+    }
+    if (permission & QLowEnergyCharacteristic::Notify)
+    {
+        properties += QStringLiteral("Notify");
+    }
+    if (permission & QLowEnergyCharacteristic::Indicate)
+    {
+        properties += QStringLiteral("Indicate");
+    }
+    if (permission & QLowEnergyCharacteristic::ExtendedProperty)
+    {
+        properties += QStringLiteral("ExtendedProperty");
+    }
+    if (permission & QLowEnergyCharacteristic::Broadcasting)
+    {
+        properties += QStringLiteral("Broadcast");
+    }
+    if (permission & QLowEnergyCharacteristic::WriteNoResponse)
+    {
+        properties += QStringLiteral("WriteNoResp");
+    }
+    if (permission & QLowEnergyCharacteristic::WriteSigned)
+    {
+        properties += QStringLiteral("WriteSigned");
+    }
+
+    return properties;
+}
+
+QString CharacteristicInfo::getValue() const
+{
+    // Show raw string first and hex value below
+    QByteArray a = m_characteristic.value();
+
+    QString result;
+    if (a.isEmpty())
+    {
+        result = QStringLiteral("<none>");
+        return result;
+    }
+
+    result = a;
+    result += QLatin1Char('\n');
+    result += a.toHex();
+
+    return result;
+}
+
+QString CharacteristicInfo::getValueStr() const
+{
+    // Show raw string first and hex value below
+    QByteArray a = m_characteristic.value();
+
+    QString result;
+    if (a.isEmpty())
+    {
+        result = QStringLiteral("<none>");
+        return result;
+    }
+
+    result = a;
+
+    return result;
+}
+
+QString CharacteristicInfo::getValueHex() const
+{
+    // Show raw string first and hex value below
+    QByteArray a = m_characteristic.value();
+
+    QString result;
+    if (a.isEmpty())
+    {
+        result = QStringLiteral("<none>");
+        return result;
+    }
+
+    result = a.toHex().toUpper();
+
+    return result;
 }
 
 /* ************************************************************************** */

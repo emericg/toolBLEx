@@ -94,7 +94,6 @@ DeviceManager::DeviceManager(bool daemon)
             DeviceToolBLEx *d = new DeviceToolBLEx(deviceAddr, deviceName, this);
             if (d)
             {
-                d->setCached(true);
                 d->setDeviceColor(getAvailableColor());
 
                 m_devices_model->addDevice(d);

@@ -99,7 +99,7 @@ Rectangle {
 
         Text { // name column header
             anchors.verticalCenter: parent.verticalCenter
-            width: 200
+            width: 220
 
             text: qsTr("Advertised name")
             color: Theme.colorText

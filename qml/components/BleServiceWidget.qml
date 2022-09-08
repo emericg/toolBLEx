@@ -84,11 +84,11 @@ Rectangle {
                     font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorSubText
                 }
-                Text {
+                TextSelectable {
                     id: serviceUuid
-                    text: modelData.serviceUuid
+                    text: modelData.serviceUuidFull
                     font.pixelSize: Theme.fontSizeContent
-                    font.capitalization: Font.AllUppercase
+                    //font.capitalization: Font.AllUppercase
                     color: Theme.colorText
                 }
             }

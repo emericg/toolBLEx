@@ -30,8 +30,8 @@ Item {
         // prevent clicks below this area
         MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
 
-        // only make sense for BLE device
-        visible: (selectedDevice && selectedDevice.isLowEnergy)
+        // only make sense for BLE device?
+        //visible: (selectedDevice && selectedDevice.isLowEnergy)
 
         SelectorMenuThemed {
             id: deviceMenu
@@ -40,7 +40,9 @@ Item {
             anchors.verticalCenterOffset: -1
             height: 32
 
+            enabled: (selectedDevice && selectedDevice.isLowEnergy)
             currentSelection: 1
+
             model: ListModel {
                 id: m1
                 ListElement { idx: 1; txt: qsTr("device info"); src: ""; sz: 0; }
@@ -68,7 +70,7 @@ Item {
     ////////////////////////////////////////////////////////////////////////////
 
     PanelDeviceInfos {
-        anchors.top: (selectedDevice && selectedDevice.isLowEnergy) ? actionBar.bottom : parent.top
+        anchors.top: actionBar.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
