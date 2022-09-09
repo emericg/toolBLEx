@@ -12,6 +12,7 @@ A Bluetooth Low Energy scanner and device analyzer.
 - RSSI graph / proximity graph (BLE and classic)
 - device scanner (BLE and classic)
 - device advertisement and service explorer (BLE)
+- export device info: advertisement packets, services and characteristics (with or without walues)
 
 
 ## Screenshots

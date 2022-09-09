@@ -96,13 +96,13 @@ QString ServiceInfo::getUuid() const
     if (success)
         return QStringLiteral("0x") + QString::number(result32, 16).toUpper().rightJustified(8, '0');
 
-    return uuid.toString().remove(QLatin1Char('{')).remove(QLatin1Char('}'));
+    return uuid.toString().toUpper().remove(QLatin1Char('{')).remove(QLatin1Char('}'));
 }
 
 QString ServiceInfo::getUuidFull() const
 {
     if (!m_service) return QString();
-    return m_service->serviceUuid().toString();
+    return m_service->serviceUuid().toString().toUpper();
 }
 
 /* ************************************************************************** */

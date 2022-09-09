@@ -13,6 +13,9 @@ Flickable {
     contentWidth: -1
     contentHeight: columnDeviceAdvertisement.height
 
+    boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
+    ScrollBar.vertical: ScrollBar { visible: false }
+
     Column {
         id: columnDeviceAdvertisement
         anchors.left: parent.left

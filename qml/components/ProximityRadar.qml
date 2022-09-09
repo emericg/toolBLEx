@@ -94,12 +94,14 @@ Item {
 
         model: deviceManager.devicesList
         delegate: Rectangle {
-            property var boxDevice: pointer
+            id: circleDelegate
+
+            property var circleDevice: pointer
 
             property real alpha: Math.random() * (3.14/2) + (3.14/4)
             property real a: c * Math.cos(alpha)
             property real b: c * Math.sin(alpha)
-            property real c: proximityRadar.height * Math.abs(((boxDevice.rssi)+12) / 100)
+            property real c: proximityRadar.height * Math.abs(((circleDevice.rssi)+12) / 100)
 
             x: (proximityRadar.width / 2) - a
             y: proximityRadar.height - b
@@ -108,22 +110,35 @@ Item {
             height: 32
             radius: 32
 
-            opacity: (boxDevice.rssi < 0) ? 1 : 0.66
-            visible: (boxDevice.rssi !== 0)
+            opacity: (circleDevice.rssi < 0) ? 1 : 0.66
+            visible: (circleDevice.rssi !== 0)
 
-            border.width: boxDevice.selected ? 6 : 2
-            border.color: boxDevice.selected ? Theme.colorSecondary : Qt.darker(color, 1.2)
+            border.width: circleDevice.selected ? 6 : 2
+            border.color: circleDevice.selected ? Theme.colorSecondary : Qt.darker(color, 1.2)
 
             color: {
-                if (Math.abs(boxDevice.rssi) < 65) return Theme.colorGreen
-                if (Math.abs(boxDevice.rssi) < 85) return Theme.colorOrange
-                if (Math.abs(boxDevice.rssi) < 100) return Theme.colorRed
+                if (Math.abs(circleDevice.rssi) < 65) return Theme.colorGreen
+                if (Math.abs(circleDevice.rssi) < 85) return Theme.colorOrange
+                if (Math.abs(circleDevice.rssi) < 100) return Theme.colorRed
                 return Theme.colorRed
+            }
+
+            Loader {
+                active: circleDevice.isStarred
+                asynchronous: true
+
+                sourceComponent: IconSvg {
+                    width: 32
+                    height: 32
+                    opacity: 0.33
+                    source: "qrc:/assets/icons_material/baseline-stars-24px.svg"
+                    color: "white"
+                }
             }
 
             //MouseArea {
             //    anchors.fill: parent
-            //    onClicked: boxDevice.selected = !boxDevice.selected
+            //    onClicked: circleDelegate.selected = !circleDelegate.selected
             //}
         }
     }

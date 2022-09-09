@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Layouts
 
 import ThemeEngine 1.0
 
@@ -19,6 +19,7 @@ Rectangle {
         width: 2
         height: 128
         color: Theme.colorSubText
+        opacity: 0.8
     }
 
     ////////////////
@@ -27,6 +28,8 @@ Rectangle {
         id: col
         anchors.left: parent.left
         anchors.leftMargin: 32
+        anchors.right: parent.right
+        anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: -8
 
@@ -109,19 +112,64 @@ Rectangle {
             }
         }
 
-        Row {
+        RowLayout {
+            anchors.left: parent.left
+            anchors.right: parent.right
             spacing: 4
 
             Text {
+                id: t1
+                Layout.alignment: Qt.AlignTop
+
                 text: qsTr("Value:")
+                textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorSubText
             }
             Text {
-                id: characteristicValue
-                text: modelData.characteristicValue
+                Layout.alignment: Qt.AlignTop
+
+                text: "0x"
+                textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContent
+                color: Theme.colorSubText
+            }
+            TextSelectable {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop | Qt.AlignBaseline
+
+                text: modelData.characteristicValueHex
+                font.pixelSize: Theme.fontSizeContent
+                font.family: "Monospace"
+                wrapMode: Text.WrapAnywhere
                 color: Theme.colorText
+            }
+        }
+
+        RowLayout {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            spacing: 4
+
+            visible: modelData.characteristicValueStr.length
+
+            Text {
+                id: t2
+                Layout.alignment: Qt.AlignTop
+
+                text: qsTr("Value:")
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContent
+                color: Theme.colorSubText
+            }
+            TextSelectable {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop | Qt.AlignBaseline
+
+                text: modelData.characteristicValueStr
+                color: Theme.colorText
+                wrapMode: Text.WrapAnywhere
+                //font.capitalization: Font.AllUppercase
             }
         }
     }

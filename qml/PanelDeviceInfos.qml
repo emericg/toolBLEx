@@ -1,13 +1,15 @@
 import QtQuick
 import QtQuick.Controls
 
+import Qt.labs.platform
+
 import ThemeEngine 1.0
 import DeviceUtils 1.0
 
 import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
 import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
 
-Item {
+Flickable {
     id: panelDeviceInfos
     anchors.top: (selectedDevice && selectedDevice.isLowEnergy) ? actionBar.bottom : parent.top
     anchors.left: parent.left
@@ -15,10 +17,16 @@ Item {
     anchors.bottom: parent.bottom
     anchors.margins: 20
 
-    visible: (deviceMenu.currentSelection === 1)
+    contentWidth: -1
+    contentHeight: inflow.height
+
+    boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
+    ScrollBar.vertical: ScrollBar { visible: false }
 
     Flow {
-        anchors.fill: parent
+        id: inflow
+        anchors.left: parent.left
+        anchors.right: parent.right
         spacing: 20
 
         ////////
@@ -185,7 +193,7 @@ Item {
             Row {
                 anchors.centerIn: parent
                 height: 32
-                spacing: 24
+                spacing: 20
 
                 ButtonWireframeIcon {
                     fullColor: true
@@ -194,9 +202,9 @@ Item {
                             return qsTr("scan services")
                         else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
                             return qsTr("connecting...")
-                        else if (selectedDevice.status <= DeviceUtils.DEVICE_WORKING)
+                        else if (selectedDevice.status === DeviceUtils.DEVICE_WORKING)
                             return qsTr("scanning...")
-                        else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTED)
+                        else if (selectedDevice.status >= DeviceUtils.DEVICE_CONNECTED)
                             return qsTr("disconnect")
                     }
                     source: {
@@ -204,9 +212,9 @@ Item {
                             return "qrc:/assets/icons_material/baseline-bluetooth-24px.svg"
                         else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
                             return "qrc:/assets/icons_material/duotone-bluetooth_connected-24px.svg"
-                        else if (selectedDevice.status <= DeviceUtils.DEVICE_WORKING)
+                        else if (selectedDevice.status === DeviceUtils.DEVICE_WORKING)
                             return "qrc:/assets/icons_material/duotone-bluetooth_searching-24px.svg"
-                        else //if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
+                        else
                             return "qrc:/assets/icons_material/duotone-settings_bluetooth-24px.svg"
                     }
                     onClicked: {
@@ -250,6 +258,49 @@ Item {
                                 "qrc:/assets/icons_material/outline-add_circle-24px.svg" :
                                 "qrc:/assets/icons_material/baseline-cancel-24px.svg"
                     onClicked: selectedDevice.blacklist(!selectedDevice.isBlacklisted)
+                }
+            }
+        }
+
+        ////////
+
+        Item {
+            width: detailView.ww
+            height: Theme.componentHeight
+
+            TextFieldThemed { // user comment
+                width: detailView.ww - 48
+                height: Theme.componentHeight
+                anchors.verticalCenter: parent.verticalCenter
+
+                colorBackground: Theme.colorBox
+                placeholderText: qsTr("Comment")
+                text: selectedDevice.userComment
+                onTextEdited: selectedDevice.userComment = text
+            }
+
+            Rectangle { // user color
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                width: Theme.componentHeight
+                height: Theme.componentHeight
+                radius: Theme.componentRadius
+
+                color: selectedDevice.userColor
+                border.width: 2
+                border.color: Qt.darker(selectedDevice.userColor, 1.1)
+
+                ColorDialog {
+                    id: colorDialog
+                    currentColor: selectedDevice.userColor
+                    onAccepted: {
+                        selectedDevice.userColor = colorDialog.color
+                    }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: colorDialog.open()
                 }
             }
         }
@@ -642,6 +693,55 @@ Item {
             }
         }
 
-        ////
+        ////////
+
+        Rectangle {
+            width: detailView.ww
+            height: box5.height + 24
+            radius: 4
+
+            visible: (selectedDevice.servicesAdvertisedCount !== 0)
+            color: Theme.colorBox
+            clip: true
+
+            Column {
+                id: box5
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.margins: 16
+                spacing: 8
+
+                ////
+
+                Text {
+                    text: qsTr("Service(s) advertised")
+                    textFormat: Text.PlainText
+                    font.pixelSize: Theme.fontSizeContentBig
+                    color: Theme.colorText
+                }
+
+                Column {
+                    anchors.left: parent.left
+                    anchors.leftMargin: 4
+                    anchors.right: parent.right
+
+                    Repeater {
+                        model: selectedDevice.servicesAdvertised
+
+                        TextSelectable {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+
+                            text: modelData
+                            color: Theme.colorSubText
+                            font.family: "Monospace"
+                        }
+                    }
+                }
+            }
+        }
+
+        ////////
     }
 }

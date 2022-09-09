@@ -38,23 +38,23 @@ QString DeviceManager::getAvailableColor()
     return clr_str;
 }
 
-void DeviceManager::getRssiGraphData(QLineSeries *one, int index)
+void DeviceManager::getRssiGraphData(QLineSeries *serie, int index)
 {
-    if (!one) return;
+    if (!serie) return;
     if (m_devices_model->m_devices.size() < index) return;
     //qDebug() << "DeviceManager::getRssiGraphData()" << one << index;
 
-    one->clear();
+    serie->clear();
 
     DeviceToolBLEx *dd = qobject_cast<DeviceToolBLEx *>(m_devices_model->m_devices.at(index));
     if (dd)
     {
-        one->setColor(dd->getDeviceColor());
+        serie->setColor(dd->getUserColor());
 
         const QList <AdvertisementEntry *> & l = dd->getRssiHistory2();
         for (auto a: l)
         {
-            one->append(a->getTimestamp().toMSecsSinceEpoch(), a->getRssi());
+            serie->append(a->getTimestamp().toMSecsSinceEpoch(), a->getRssi());
             //qDebug() << "point:" << a->getTimestamp().toMSecsSinceEpoch() << a->getRssi();
         }
     }

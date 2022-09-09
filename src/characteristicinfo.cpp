@@ -80,12 +80,12 @@ QString CharacteristicInfo::getUuid() const
     if (success)
         return QStringLiteral("0x") + QString::number(result32, 16).toUpper().rightJustified(8, '0');
 
-    return uuid.toString().remove(QLatin1Char('{')).remove(QLatin1Char('}'));
+    return uuid.toString().toUpper().remove(QLatin1Char('{')).remove(QLatin1Char('}'));
 }
 
 QString CharacteristicInfo::getUuidFull() const
 {
-    return m_characteristic.uuid().toString();
+    return m_characteristic.uuid().toString().toUpper();
 }
 
 QString CharacteristicInfo::getHandle() const

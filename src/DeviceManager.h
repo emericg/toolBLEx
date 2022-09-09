@@ -183,7 +183,7 @@ public:
 
     // RSSI graph
     Q_INVOKABLE void getRssiGraphAxis(QDateTimeAxis *axis);
-    Q_INVOKABLE void getRssiGraphData(QLineSeries *one, int index);
+    Q_INVOKABLE void getRssiGraphData(QLineSeries *serie, int index);
 
     // Devices list management
     Q_INVOKABLE bool areDevicesAvailable() const { return m_devices_model->hasDevices(); }

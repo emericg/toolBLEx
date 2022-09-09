@@ -154,8 +154,12 @@ class DeviceToolBLEx: public Device
     Q_PROPERTY(bool isClassic READ isBluetoothClassic NOTIFY boolChanged)
 
     Q_PROPERTY(bool hasCache READ hasCache NOTIFY cacheChanged)
-    Q_PROPERTY(bool isStarred READ isStarred WRITE setStarred NOTIFY starChanged)
+    Q_PROPERTY(bool isStarred READ isStarred WRITE setUserStar NOTIFY starChanged)
     Q_PROPERTY(QString color READ getDeviceColor CONSTANT)
+
+    Q_PROPERTY(bool userStar READ getUserStar WRITE setUserStar NOTIFY starChanged)
+    Q_PROPERTY(QString userColor READ getUserColor WRITE setUserColor NOTIFY colorChanged)
+    Q_PROPERTY(QString userComment READ getUserComment WRITE setUserComment NOTIFY commentChanged)
 
     Q_PROPERTY(QDateTime firstSeen READ getFirstSeen CONSTANT)
     Q_PROPERTY(QDateTime lastSeen READ getLastSeen NOTIFY seenChanged)
@@ -169,6 +173,9 @@ class DeviceToolBLEx: public Device
     // Advertisement
     Q_PROPERTY(bool hasAdvertisement READ hasAdvertisement NOTIFY advertisementChanged)
 
+    Q_PROPERTY(QStringList servicesAdvertised READ getAdvertisedServices NOTIFY servicesAdvertisedChanged)
+    Q_PROPERTY(int servicesAdvertisedCount READ getAdvertisedServicesCount NOTIFY servicesAdvertisedChanged)
+
     Q_PROPERTY(QVariant adv READ getAdvertisementData NOTIFY advertisementFilteredChanged)
     Q_PROPERTY(int advCount READ getAdvertisementDataCount NOTIFY advertisementFilteredChanged)
 
@@ -181,8 +188,12 @@ class DeviceToolBLEx: public Device
     Q_PROPERTY(QVariant last_mfd READ getLastManufacturerData NOTIFY advertisementChanged)
 
     // Services
-    Q_PROPERTY(QVariant servicesList READ getServices NOTIFY servicesUpdated)
-    Q_PROPERTY(int servicesCount READ getServicesCount NOTIFY servicesUpdated)
+    Q_PROPERTY(QVariant servicesList READ getServices NOTIFY servicesChanged)
+    Q_PROPERTY(int servicesCount READ getServicesCount NOTIFY servicesChanged)
+
+    static const int s_min_entries_advertisement = 60;
+    static const int s_max_entries_advertisement = 180;
+    static const int s_max_entries_packets = 12;
 
     bool m_isBeacon = false;
     bool m_isCached = false;
@@ -201,6 +212,8 @@ class DeviceToolBLEx: public Device
     bool m_hasCache = false;
     bool m_hasAdvertisement = false;
     int m_advertisementInterval = 0;
+
+    QStringList m_advertised_services;
 
     QList <AdvertisementEntry *> m_advertisementEntries;
 
@@ -231,9 +244,9 @@ class DeviceToolBLEx: public Device
     QVariant getManufacturerUuid() const { return QVariant::fromValue(m_mfd_uuid); }
     int getManufacturerUuidCount() const { return m_mfd_uuid.count(); }
 
-private:
     void updateCache();
 
+private:
     // QLowEnergyController related
     void deviceConnected();
     void addLowEnergyService(const QBluetoothUuid &uuid);
@@ -242,10 +255,13 @@ private:
 Q_SIGNALS:
     void advertisementChanged();
     void advertisementFilteredChanged();
-    void servicesUpdated();
+    void servicesAdvertisedChanged();
+    void servicesChanged();
     void boolChanged();
     void cacheChanged();
     void starChanged();
+    void commentChanged();
+    void colorChanged();
     void seenChanged();
 
 public:
@@ -259,53 +275,65 @@ public:
     virtual void setCoreConfiguration(const int bleconf);
 
     // toolBLEx
-    QVariant getServices() { return QVariant::fromValue(m_services); }
-    int getServicesCount() { return m_services.count(); }
+    QVariant getServices() const { return QVariant::fromValue(m_services); }
+    int getServicesCount() const { return m_services.count(); }
 
-     bool parseAdvertisementToolBLEx(uint16_t mode,
-                                     uint16_t id, const QBluetoothUuid &uuid,
-                                     const QByteArray &data);
+    int getAdvertisedServicesCount() const { return m_advertised_services.count(); }
+    QStringList getAdvertisedServices() const { return m_advertised_services; };
+    void setAdvertisedServices(const QList<QBluetoothUuid> &services);
 
-     bool isAvailable() const { return (m_rssi < 0); }
-     QVariant getRssiHistory() const { return QVariant::fromValue(m_advertisementEntries); }
-     const QList <AdvertisementEntry *> &getRssiHistory2() const { return m_advertisementEntries; }
+    bool parseAdvertisementToolBLEx(uint16_t mode,
+                                    uint16_t id, const QBluetoothUuid &uuid,
+                                    const QByteArray &data);
 
-     void addAdvertisementEntry(const int rssi, const bool hasMFD = false, const bool hasSVD = false);
-     void cleanAdvertisementEntries();
+    bool isAvailable() const { return (m_rssi < 0); }
+    QVariant getRssiHistory() const { return QVariant::fromValue(m_advertisementEntries); }
+    const QList <AdvertisementEntry *> &getRssiHistory2() const { return m_advertisementEntries; }
 
-     int getAdvertisementInterval() const { return m_advertisementInterval; }
+    void addAdvertisementEntry(const int rssi, const bool hasMFD = false, const bool hasSVD = false);
+    void cleanAdvertisementEntries();
 
-     void setStarred(bool v);
-     void setBeacon(bool v);
-     void setBlacklisted(bool v);
-     void setCached(bool v);
-     void setCache(bool v);
+    int getAdvertisementInterval() const { return m_advertisementInterval; }
 
-     void setDeviceColor(const QString &color);
-     QString getDeviceColor() const { return m_color; }
+    void setStarred(bool v);
+    void setBeacon(bool v);
+    void setBlacklisted(bool v);
+    void setCached(bool v);
+    void setCache(bool v);
 
-     QString getUserComment() const { return m_userComment; }
-     void setUserComment(const QString &name);
+    void setDeviceColor(const QString &color);
+    QString getDeviceColor() const { return m_color; }
 
-     QDateTime getFirstSeen() const { return m_firstSeen; }
-     QDateTime getLastSeen() const { return m_lastSeen; }
-     void setLastSeen(const QDateTime &dt);
+    bool getUserStar() const { return m_userStarred; }
+    void setUserStar(bool star);
 
-     bool hasAdvertisement() const { return m_hasAdvertisement; }
-     bool hasCache() const { return m_hasCache; }
-     bool isBeacon() const { return m_isBeacon; }
-     bool isBlacklisted() const { return m_isBlacklisted; }
-     bool isCached() const { return m_isCached; }
-     bool isStarred() const { return m_userStarred; }
-     bool isBluetoothClassic() const { return m_isClassic; }
-     bool isBluetoothLowEnergy() const { return m_isBLE; }
+    QString getUserComment() const { return m_userComment; }
+    void setUserComment(const QString &comment);
 
-     Q_INVOKABLE void blacklist(bool blacklist);
-     Q_INVOKABLE void cache(bool cache);
+    QString getUserColor() const { if (!m_userColor.isEmpty()) return m_userColor; return m_color; }
+    void setUserColor(const QString &color);
 
-     Q_INVOKABLE void mfdFilterUpdate();
-     Q_INVOKABLE void svdFilterUpdate();
-     Q_INVOKABLE void advertisementFilterUpdate();
+    QDateTime getFirstSeen() const { return m_firstSeen; }
+    QDateTime getLastSeen() const { return m_lastSeen; }
+    void setLastSeen(const QDateTime &dt);
+
+    bool hasAdvertisement() const { return m_hasAdvertisement; }
+    bool hasCache() const { return m_hasCache; }
+    bool isStarred() const { return m_userStarred; }
+    bool isBeacon() const { return m_isBeacon; }
+    bool isBlacklisted() const { return m_isBlacklisted; }
+    bool isCached() const { return m_isCached; }
+    bool isBluetoothClassic() const { return m_isClassic; }
+    bool isBluetoothLowEnergy() const { return m_isBLE; }
+
+    Q_INVOKABLE void blacklist(bool blacklist);
+    Q_INVOKABLE void cache(bool cache);
+
+    Q_INVOKABLE void mfdFilterUpdate();
+    Q_INVOKABLE void svdFilterUpdate();
+    Q_INVOKABLE void advertisementFilterUpdate();
+
+    Q_INVOKABLE bool exportDeviceInfo();
 };
 
 /* ************************************************************************** */

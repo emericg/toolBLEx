@@ -92,7 +92,7 @@ Item {
                 width: 8
                 height: 24
                 radius: 2
-                color: boxDevice.color
+                color: boxDevice.userColor
             }
         }
 

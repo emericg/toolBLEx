@@ -71,7 +71,8 @@ Item {
         visible: (hostMenu.currentSelection === 1)
 
         Flow {
-            anchors.fill: parent
+            anchors.left: parent.left
+            anchors.right: parent.right
             spacing: 20
 
             Repeater {

@@ -6,8 +6,9 @@ import ThemeEngine 1.0
 Rectangle {
     id: bleServiceWidget
 
-    //height: extended ? (80 + characteristicview.count * 150) : 80
-    height: extended ? (80 + characteristicview.contentHeight) : 80
+    property bool extended: false
+
+    height: extended ? (servicewiew.height + characteristicview.contentHeight) : servicewiew.height
     Behavior on height { NumberAnimation { duration: 233 } }
 
     color: Theme.colorBox
@@ -15,20 +16,18 @@ Rectangle {
 
     //////////
 
-    property bool extended: false
-
-    MouseArea {
-        anchors.fill: parent
-        onClicked: extended = !extended
-    }
-
-    //////////
-
     Item {
-        height: 80
+        id: servicewiew
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
+
+        height: 88
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: bleServiceWidget.extended = !bleServiceWidget.extended
+        }
 
         Column {
             anchors.left: parent.left
@@ -41,9 +40,10 @@ Rectangle {
 
             Item {
                 width: parent.width
-                height: 32
+                height: serviceName.height
 
-                Text { // serviceName
+                Text {
+                    id: serviceName
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
 
@@ -100,7 +100,7 @@ Rectangle {
     ListView {
         id: characteristicview
         anchors.top: parent.top
-        anchors.topMargin: 80
+        anchors.topMargin: servicewiew.height
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
@@ -118,7 +118,7 @@ Rectangle {
     Rectangle {
         anchors.bottom: parent.bottom
         width: parent.width
-        height: 1
+        height: 2
         opacity: 0.1
         color: Theme.colorHeaderContent
     }

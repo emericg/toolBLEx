@@ -48,7 +48,7 @@ Column {
 
                 text: packet.advUUIDstr
                 color: Theme.colorText
-                font.family: "monospace"
+                font.family: "Monospace"
                 //font.capitalization: Font.AllUppercase
             }
         }
@@ -106,7 +106,7 @@ Column {
 
                 text: packet.advDataSize
                 textFormat: Text.PlainText
-                font.family: "monospace"
+                font.family: "Monospace"
                 font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorText
             }
@@ -157,24 +157,18 @@ Column {
             color: Theme.colorSubText
         }
 
-        TextArea {
+        TextSelectable {
             id: advdata
             height: 24
-            padding: 0
+            leftPadding: 4
 
             Layout.alignment: Qt.AlignBaseline
             Layout.fillWidth: true
 
-            selectByMouse: true
-            selectionColor: Theme.colorPrimary
-            readOnly: true
-            color: Theme.colorText
-
             text: packet.advDataString
             wrapMode: Text.WrapAnywhere
-            font.family: "monospace"
-            font.capitalization: Font.AllUppercase
-            font.pixelSize: Theme.fontSizeContent
+            font.family: "Monospace"
+            //font.capitalization: Font.AllUppercase
         }
     }
 

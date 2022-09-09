@@ -50,6 +50,8 @@ void DeviceManager::updateBleDevice(const QBluetoothDeviceInfo &info,
         qDebug() << "updateBleDevice() " << info.name() << info.address() << " updatedFields: " << updatedFields;
     }
 
+    //qDebug() << "updateBleDevice() serviceUuids : " << info.serviceUuids();
+
     // Supported devices ///////////////////////////////////////////////////////
 
     for (auto d: qAsConst(m_devices_model->m_devices))
@@ -64,10 +66,11 @@ void DeviceManager::updateBleDevice(const QBluetoothDeviceInfo &info,
         {
             dd->setName(info.name());
             dd->setRssi(info.rssi());
+            dd->setLastSeen(QDateTime::currentDateTime());
             dd->setCached(info.isCached() || info.rssi() >= 0);
             dd->setCoreConfiguration(info.coreConfigurations());
             dd->setDeviceClass(info.majorDeviceClass(), info.minorDeviceClass(), info.serviceClasses());
-            dd->setLastSeen(QDateTime::currentDateTime());
+            dd->setAdvertisedServices(info.serviceUuids());
 
             bool hasmfd = false;
             bool hassvd = false;

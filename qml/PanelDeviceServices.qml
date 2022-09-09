@@ -124,9 +124,9 @@ Item {
                                 return qsTr("scan services")
                             else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
                                 return qsTr("connecting...")
-                            else if (selectedDevice.status <= DeviceUtils.DEVICE_WORKING)
+                            else if (selectedDevice.status === DeviceUtils.DEVICE_WORKING)
                                 return qsTr("scanning...")
-                            else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTED)
+                            else if (selectedDevice.status >= DeviceUtils.DEVICE_CONNECTED)
                                 return qsTr("disconnect")
                         }
                         source: {
@@ -134,9 +134,9 @@ Item {
                                 return "qrc:/assets/icons_material/baseline-bluetooth-24px.svg"
                             else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
                                 return "qrc:/assets/icons_material/duotone-bluetooth_connected-24px.svg"
-                            else if (selectedDevice.status <= DeviceUtils.DEVICE_WORKING)
+                            else if (selectedDevice.status === DeviceUtils.DEVICE_WORKING)
                                 return "qrc:/assets/icons_material/duotone-bluetooth_searching-24px.svg"
-                            else //if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
+                            else
                                 return "qrc:/assets/icons_material/duotone-settings_bluetooth-24px.svg"
                         }
                         onClicked: {
@@ -169,10 +169,37 @@ Item {
 
         clip: false
         visible: (selectedDevice.servicesCount > 0)
+        onCountChanged: {
+            exportButton.text = qsTr("Export")
+            exportButton.primaryColor = Theme.colorGrey
+        }
 
         model: selectedDevice.servicesList
         delegate: BleServiceWidget {
             width: servicesView.width
+        }
+    }
+
+    ButtonWireframeIcon {
+        id: exportButton
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.margins: -4
+
+        visible: (selectedDevice.servicesCount > 0)
+
+        fullColor: true
+        primaryColor: Theme.colorGrey
+        text: qsTr("Export")
+        source: "qrc:/assets/icons_material/baseline-save-24px.svg"
+        onClicked: {
+            if (selectedDevice.exportDeviceInfo()) {
+                exportButton.text = qsTr("Exported")
+                exportButton.primaryColor = Theme.colorSuccess
+            } else {
+                exportButton.text = qsTr("Export error")
+                exportButton.primaryColor = Theme.colorWarning
+            }
         }
     }
 }

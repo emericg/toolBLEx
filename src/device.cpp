@@ -212,6 +212,8 @@ void Device::actionConnect()
     }
 }
 
+/* ************************************************************************** */
+
 void Device::actionScan()
 {
     qDebug() << "Device::actionScan()" << getAddress() << getName();
@@ -219,6 +221,18 @@ void Device::actionScan()
     if (!isBusy())
     {
         m_ble_action = DeviceUtils::ACTION_SCAN;
+        actionStarted();
+        deviceConnect();
+    }
+}
+
+void Device::actionScanWithValues()
+{
+    qDebug() << "Device::actionScanWithValues()" << getAddress() << getName();
+
+    if (!isBusy())
+    {
+        m_ble_action = DeviceUtils::ACTION_SCAN_WITH_VALUES;
         actionStarted();
         deviceConnect();
     }
@@ -651,6 +665,11 @@ void Device::deviceConnected()
     {
         m_ble_status = DeviceUtils::DEVICE_UPDATING_HISTORY;
     }
+    else if (m_ble_action == DeviceUtils::ACTION_SCAN ||
+             m_ble_action == DeviceUtils::ACTION_SCAN_WITH_VALUES)
+    {
+        m_ble_status = DeviceUtils::DEVICE_WORKING;
+    }
     else if (m_ble_action == DeviceUtils::ACTION_LED_BLINK ||
              m_ble_action == DeviceUtils::ACTION_CLEAR_HISTORY||
              m_ble_action == DeviceUtils::ACTION_WATERING)
@@ -679,6 +698,13 @@ void Device::deviceErrored(QLowEnergyController::Error error)
     qWarning() << "Device::deviceErrored(" << m_deviceAddress << ") error:" << error;
 
     m_lastError = QDateTime::currentDateTime();
+
+    if (m_ble_status < DeviceUtils::DEVICE_CONNECTED)
+    {
+        m_ble_status = DeviceUtils::DEVICE_OFFLINE;
+    }
+
+    Q_EMIT statusUpdated();
 }
 
 void Device::deviceStateChanged(QLowEnergyController::ControllerState)

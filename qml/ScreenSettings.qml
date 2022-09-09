@@ -31,6 +31,7 @@ Loader {
 
         Flickable {
             anchors.fill: parent
+
             contentWidth: -1
             contentHeight: settingsColumn.height
 

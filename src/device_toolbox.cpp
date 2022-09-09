@@ -21,6 +21,8 @@
 
 #include "device_toolbox.h"
 #include "serviceinfo.h"
+#include "characteristicinfo.h"
+
 #include "DeviceManager.h"
 #include "VendorsDatabase.h"
 
@@ -31,6 +33,11 @@
 #include <QBluetoothAddress>
 #include <QBluetoothServiceInfo>
 #include <QLowEnergyService>
+
+#include <QStandardPaths>
+#include <QDir>
+#include <QFile>
+#include <QTextStream>
 
 #include <QJsonDocument>
 #include <QSqlQuery>
@@ -262,11 +269,33 @@ void DeviceToolBLEx::setDeviceColor(const QString &color)
     m_color = color;
 }
 
-void DeviceToolBLEx::setStarred(bool v)
+void DeviceToolBLEx::setUserColor(const QString &color)
 {
-    if (m_userStarred != v)
+    if (m_userColor != color)
     {
-        m_userStarred = v;
+        m_userColor = color;
+        Q_EMIT colorChanged();
+
+        updateCache();
+    }
+}
+
+void DeviceToolBLEx::setUserComment(const QString &comment)
+{
+    if (m_userComment != comment)
+    {
+        m_userComment = comment;
+        Q_EMIT commentChanged();
+
+        updateCache();
+    }
+}
+
+void DeviceToolBLEx::setUserStar(bool star)
+{
+    if (m_userStarred != star)
+    {
+        m_userStarred = star;
         Q_EMIT starChanged();
 
         updateCache();
@@ -299,13 +328,14 @@ void DeviceToolBLEx::updateCache()
                              "deviceClass = :deviceClass, "
                              "starred = :starred, "
                              "comment = :comment, "
+                             "color = :color, "
                              "lastSeen = :lastSeen "
                             "WHERE deviceAddr = :deviceAddr");
         updateCache.bindValue(":deviceCoreConfig", m_bluetoothCoreConfiguration);
         updateCache.bindValue(":deviceClass", deviceClass);
         updateCache.bindValue(":starred", m_userStarred);
         updateCache.bindValue(":comment", m_userComment);
-        //updateCache.bindValue(":color", m_userColor);
+        updateCache.bindValue(":color", m_userColor);
         updateCache.bindValue(":lastSeen", m_lastSeen);
         updateCache.bindValue(":deviceAddr", getAddress());
 
@@ -366,7 +396,7 @@ void DeviceToolBLEx::addLowEnergyService(const QBluetoothUuid &uuid)
     auto serv = new ServiceInfo(service);
     m_services.append(serv);
 
-    Q_EMIT servicesUpdated();
+    Q_EMIT servicesChanged();
 }
 
 /* ************************************************************************** */
@@ -377,8 +407,12 @@ void DeviceToolBLEx::serviceScanDone()
 
     if (m_services.isEmpty())
     {
-        Q_EMIT servicesUpdated();
+        Q_EMIT servicesChanged();
     }
+
+    // Stay connected
+    m_ble_status = DeviceUtils::DEVICE_CONNECTED;
+    Q_EMIT statusUpdated();
 }
 
 /* ************************************************************************** */
@@ -426,7 +460,7 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
         }
 
         m_mfd.push_front(a);
-        if (m_mfd.length() >= 16)
+        if (m_mfd.length() >= s_max_entries_packets)
         {
             AdvertisementData *d = m_mfd.back();
             m_mfd.pop_back();
@@ -467,7 +501,7 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
         }
 
         m_svd.push_front(a);
-        if (m_svd.length() >= 16)
+        if (m_svd.length() >= s_max_entries_packets)
         {
             AdvertisementData *d = m_svd.back();
             m_svd.pop_back();
@@ -494,8 +528,11 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
 
 void DeviceToolBLEx::addAdvertisementEntry(const int rssi, const bool hasMFD, const bool hasSVD)
 {
+    int maxentries = s_min_entries_advertisement;
+    if (m_advertisementInterval > 0 && m_advertisementInterval < 1000) maxentries = s_max_entries_advertisement;
+
     m_advertisementEntries.push_back(new AdvertisementEntry(rssi, hasMFD, hasSVD));
-    if (m_advertisementEntries.length() > 60)
+    if (m_advertisementEntries.length() > maxentries)
     {
         delete m_advertisementEntries.at(0);
         m_advertisementEntries.pop_front();
@@ -519,6 +556,21 @@ void DeviceToolBLEx::cleanAdvertisementEntries()
 {
     qDeleteAll(m_advertisementEntries);
     m_advertisementEntries.clear();
+}
+
+/* ************************************************************************** */
+
+void DeviceToolBLEx::setAdvertisedServices(const QList <QBluetoothUuid> &services)
+{
+    if (services.size() != m_advertised_services.size())
+    {
+        m_advertised_services.clear();
+        for (auto u: services)
+        {
+            m_advertised_services.push_back(u.toString(QUuid::WithBraces).toUpper());
+        }
+        Q_EMIT servicesAdvertisedChanged();
+    }
 }
 
 /* ************************************************************************** */
@@ -609,6 +661,84 @@ void DeviceToolBLEx::advertisementFilterUpdate()
     std::sort(m_advertisementData_filtered.begin(), m_advertisementData_filtered.end(), comparefunc);
 
     Q_EMIT advertisementFilteredChanged();
+}
+
+/* ************************************************************************** */
+
+bool DeviceToolBLEx::exportDeviceInfo()
+{
+    bool status = false;
+
+    QString txt;
+    QChar endl = '\n';
+
+    txt += "Device Name: " + m_deviceName + endl;
+    txt += "Device MAC: " + m_deviceAddress + endl;
+    txt += endl;
+
+    for (auto s: m_services)
+    {
+        ServiceInfo *srv = qobject_cast<ServiceInfo *>(s);
+        if (srv)
+        {
+            txt += "Service Name: " + srv->getName() + endl;
+            txt += "Service UUID: " + srv->getUuid() + endl;
+
+            for (auto c: srv->characteristics())
+            {
+                CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
+                if (cst)
+                {
+                    txt += "Characteristic Name: " + cst->getName();
+                    txt += " - UUID: " + cst->getUuid();
+                    txt += " - Properties: " + cst->getPermission();
+                    //exp += " - Handle: " + cst->getHandle();
+
+                    if (cst->getValueStr() == "<none>")
+                        txt += " - Value: <none>";
+                    else
+                        txt += " - Value: 0x" + cst->getValueHex();
+
+                    txt += endl;
+                }
+            }
+
+            txt += endl;
+        }
+    }
+
+
+    //qDebug() << "DeviceToolBLEx::exportDeviceInfo()" << txt;
+
+
+    // Get home directory path
+    QString exportDirectoryPath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/toolBLEx";
+    QDir exportDirectory(exportDirectoryPath);
+    if (!exportDirectory.exists())
+    {
+        exportDirectory.mkpath(exportDirectoryPath);
+    }
+
+    if (exportDirectory.exists())
+    {
+        // Finish preping export path
+        QString exportFilePath = "/" + m_deviceName + ".txt";
+        exportFilePath.replace(" ", "_");
+        exportFilePath = exportDirectoryPath + exportFilePath;
+
+        // Open file and save content
+        QFile efile(exportFilePath);
+        if (efile.open(QFile::WriteOnly | QIODevice::Text))
+        {
+            QTextStream eout(&efile);
+            eout << txt;
+
+            status = true;
+            efile.close();
+        }
+    }
+
+    return status;
 }
 
 /* ************************************************************************** */
