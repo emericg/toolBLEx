@@ -126,6 +126,13 @@ bool SettingsManager::readSettings()
         if (settings.contains("settings/scanSplitviewSize"))
             m_scanviewSize = settings.value("settings/scanSplitviewSize").toByteArray();
 
+        if (settings.contains("settings/ubertooth_path"))
+            m_ubertooth_path = settings.value("settings/ubertooth_path").toString();
+        if (settings.contains("settings/ubertooth_freqMin"))
+            m_ubertooth_freqMin = settings.value("settings/ubertooth_freqMin").toInt();
+        if (settings.contains("settings/ubertooth_freqMax"))
+            m_ubertooth_freqMax = settings.value("settings/ubertooth_freqMax").toInt();
+
         status = true;
     }
     else
@@ -162,6 +169,10 @@ bool SettingsManager::writeSettings()
         settings.setValue("settings/scanShowLowEnergy", m_scanShowLowEnergy);
         settings.setValue("settings/scanSplitviewOrientation", m_scanviewOrientation);
         settings.setValue("settings/scanSplitviewSize", m_scanviewSize);
+
+        settings.setValue("settings/ubertooth_path", m_ubertooth_path);
+        settings.setValue("settings/ubertooth_freqMin", m_ubertooth_freqMin);
+        settings.setValue("settings/ubertooth_freqMax", m_ubertooth_freqMax);
 
         if (settings.status() == QSettings::NoError)
         {
@@ -337,6 +348,8 @@ void SettingsManager::setScanShowLowEnergy(const bool value)
     }
 }
 
+/* ************************************************************************** */
+
 void SettingsManager::setScanviewOrientation(const int value)
 {
     if (m_scanviewOrientation != value)
@@ -354,6 +367,38 @@ void SettingsManager::setScanviewSize(const QByteArray &value)
         m_scanviewSize = value;
         writeSettings();
         Q_EMIT scanviewChanged();
+    }
+}
+
+/* ************************************************************************** */
+
+void SettingsManager::setUbertoothPath(const QString &value)
+{
+    if (m_ubertooth_path != value)
+    {
+        m_ubertooth_path = value;
+        writeSettings();
+        Q_EMIT ubertoothPathChanged();
+    }
+}
+
+void SettingsManager::setUbertoothFreqMin(const int value)
+{
+    if (m_ubertooth_freqMin != value)
+    {
+        m_ubertooth_freqMin = value;
+        writeSettings();
+        Q_EMIT ubertoothFreqChanged();
+    }
+}
+
+void SettingsManager::setUbertoothFreqMax(const int value)
+{
+    if (m_ubertooth_freqMax != value)
+    {
+        m_ubertooth_freqMax = value;
+        writeSettings();
+        Q_EMIT ubertoothFreqChanged();
     }
 }
 

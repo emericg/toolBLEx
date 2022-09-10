@@ -505,6 +505,7 @@ Loader {
                                 anchors.right: parent.right
                                 anchors.rightMargin: 8
                                 anchors.verticalCenter: parent.verticalCenter
+                                width: 140
 
                                 editable: false
                                 legend: "m"
@@ -540,6 +541,7 @@ Loader {
                                 anchors.right: parent.right
                                 anchors.rightMargin: 8
                                 anchors.verticalCenter: parent.verticalCenter
+                                width: 140
 
                                 editable: false
                                 legend: "ms"
@@ -552,6 +554,125 @@ Loader {
                             }
                         }
                     }
+
+                    ////
+
+                    Column {
+                        width: settingsColumn.flowElementWidth
+                        spacing: 2
+
+                        visible: Qt.platform.os === "linux" || Qt.platform.os === "osx"
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 48
+                            color: Theme.colorActionbar
+
+                            Text {
+                                anchors.left: parent.left
+                                anchors.leftMargin: 20
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                text: qsTr("Ubertooth")
+                                textFormat: Text.PlainText
+                                font.pixelSize: Theme.fontSizeContentVeryBig
+                                font.bold: false
+                                color: Theme.colorText
+                                wrapMode: Text.WordWrap
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                        }
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 48
+                            color: Theme.colorForeground
+
+                            TextFieldThemed {
+                                anchors.left: parent.left
+                                anchors.leftMargin: 12
+                                anchors.right: parent.right
+                                anchors.rightMargin: 12
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                text: settingsManager.ubertooth_path
+                            }
+                        }
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 48
+                            color: Theme.colorForeground
+
+                            Text {
+                                anchors.left: parent.left
+                                anchors.leftMargin: 20
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                text: qsTr("Min frequency")
+                                textFormat: Text.PlainText
+                                font.pixelSize: Theme.fontSizeContentBig
+                                font.bold: false
+                                color: Theme.colorText
+                                wrapMode: Text.WordWrap
+                                verticalAlignment: Text.AlignVCenter
+                            }
+
+                            SpinBoxThemed {
+                                anchors.right: parent.right
+                                anchors.rightMargin: 8
+                                anchors.verticalCenter: parent.verticalCenter
+                                width: 140
+
+                                editable: true
+                                from: 2400
+                                to: 2500
+
+                                value: settingsManager.ubertooth_freqMin
+                                onValueModified: settingsManager.ubertooth_freqMin = value
+                            }
+                        }
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 48
+                            color: Theme.colorForeground
+
+                            Text {
+                                anchors.left: parent.left
+                                anchors.leftMargin: 20
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                text: qsTr("Max frequency")
+                                textFormat: Text.PlainText
+                                font.pixelSize: Theme.fontSizeContentBig
+                                font.bold: false
+                                color: Theme.colorText
+                                wrapMode: Text.WordWrap
+                                verticalAlignment: Text.AlignVCenter
+                            }
+
+                            SpinBoxThemed {
+                                anchors.right: parent.right
+                                anchors.rightMargin: 8
+                                anchors.verticalCenter: parent.verticalCenter
+                                width: 140
+
+                                editable: true
+                                from: 2400
+                                to: 2500
+
+                                value: settingsManager.ubertooth_freqMax
+                                onValueModified: settingsManager.ubertooth_freqMax = value
+                            }
+                        }
+                    }
+
+                    ////
                 }
 
                 ////////////////////////

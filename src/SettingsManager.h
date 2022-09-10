@@ -64,6 +64,10 @@ class SettingsManager: public QObject
     Q_PROPERTY(int scanviewOrientation READ getScanviewOrientation WRITE setScanviewOrientation NOTIFY scanviewChanged)
     Q_PROPERTY(QByteArray scanviewSize READ getScanviewSize WRITE setScanviewSize NOTIFY scanviewChanged)
 
+    Q_PROPERTY(QString ubertooth_path READ getUbertoothPath WRITE setUbertoothPath NOTIFY ubertoothPathChanged)
+    Q_PROPERTY(int ubertooth_freqMin READ getUbertoothFreqMin WRITE setUbertoothFreqMin NOTIFY ubertoothFreqChanged)
+    Q_PROPERTY(int ubertooth_freqMax READ getUbertoothFreqMax WRITE setUbertoothFreqMax NOTIFY ubertoothFreqChanged)
+
     bool m_firstlaunch = true;
 
     // Application window
@@ -92,6 +96,10 @@ class SettingsManager: public QObject
     int m_scanviewOrientation = Qt::Horizontal;
     QByteArray m_scanviewSize;
 
+    QString m_ubertooth_path = "ubertooth-specan";
+    int m_ubertooth_freqMin = 2400;
+    int m_ubertooth_freqMax = 2483;
+
     // Singleton
     static SettingsManager *instance;
     SettingsManager();
@@ -115,6 +123,8 @@ Q_SIGNALS:
     void scanRssiIntervalChanged();
     void scanShowChanged();
     void scanviewChanged();
+    void ubertoothPathChanged();
+    void ubertoothFreqChanged();
 
 public:
     static SettingsManager *getInstance();
@@ -171,6 +181,13 @@ public:
     void setScanviewOrientation(const int value);
     QByteArray getScanviewSize() const { return m_scanviewSize; }
     void setScanviewSize(const QByteArray &value);
+
+    QString getUbertoothPath() const { return m_ubertooth_path; }
+    void setUbertoothPath(const QString &value);
+    int getUbertoothFreqMin() const { return m_ubertooth_freqMin; }
+    void setUbertoothFreqMin(const int value);
+    int getUbertoothFreqMax() const { return m_ubertooth_freqMax; }
+    void setUbertoothFreqMax(const int value);
 
     ////
 

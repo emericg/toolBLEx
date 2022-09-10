@@ -47,7 +47,7 @@ Loader {
             ////////////////
 
             Rectangle { // no adapter
-                width: screenScanner.width * 0.66
+                width: screenBluetooth.width * 0.66
                 height: 128
                 radius: 4
                 color: Theme.colorBox
@@ -125,7 +125,7 @@ Loader {
             ////////////////
 
             Rectangle { // adapter disabled
-                width: screenScanner.width * 0.66
+                width: screenBluetooth.width * 0.66
                 height: 128
                 radius: 4
                 color: Theme.colorBox
@@ -203,7 +203,7 @@ Loader {
             ////////////////
 
             Rectangle { // missing permissions
-                width: screenScanner.width * 0.66
+                width: screenBluetooth.width * 0.66
                 height: 128
                 radius: 4
                 color: Theme.colorBox

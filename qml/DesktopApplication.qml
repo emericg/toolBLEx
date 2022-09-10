@@ -65,8 +65,9 @@ ApplicationWindow {
     Connections {
         target: appHeader
 
-        function onScannerButtonClicked() { appContent.state = "Scanner" }
+        function onScannerButtonClicked() { screenScanner.loadScreen() }
         function onAdvertiserButtonClicked() { screenAdvertiser.loadScreen() }
+        function onUbertoothButtonClicked() { screenUbertooth.loadScreen() }
         function onSettingsButtonClicked() { screenSettings.loadScreen() }
     }
 /*
@@ -133,6 +134,8 @@ ApplicationWindow {
             screenScanner.backAction()
         } else if (appContent.state === "Advertiser") {
             screenAdvertiser.backAction()
+        } else if (appContent.state === "Ubertooth") {
+            screenUbertooth.backAction()
         } else { // default
             if (appContent.previousStates.length) {
                 appContent.previousStates.pop()
@@ -237,6 +240,7 @@ ApplicationWindow {
             screenBluetooth.unloadScreen()
             if (appContent.state === "Scanner") screenScanner.loadScreen()
             if (appContent.state === "Advertiser") screenAdvertiser.loadScreen()
+            // otherwise, no need to change screen
         }
     }
 
@@ -265,6 +269,10 @@ ApplicationWindow {
             anchors.fill: parent
             id: screenAdvertiser
         }
+        ScreenUbertooth {
+            anchors.fill: parent
+            id: screenUbertooth
+        }
 
         ScreenBluetooth { // is on top of the scanner and advertiser tabs
             anchors.fill: parent
@@ -287,7 +295,7 @@ ApplicationWindow {
         }
 
         // Initial state
-        state: "Scanner"
+        state: ""
 
         property var previousStates: []
 
@@ -305,18 +313,28 @@ ApplicationWindow {
                 name: "Scanner"
                 PropertyChanges { target: screenScanner; visible: true; enabled: true; focus: true; }
                 PropertyChanges { target: screenAdvertiser; visible: false; enabled: false; }
+                PropertyChanges { target: screenUbertooth; visible: false; enabled: false; }
                 PropertyChanges { target: screenSettings; visible: false; enabled: false; }
             },
             State {
                 name: "Advertiser"
                 PropertyChanges { target: screenScanner; visible: false; enabled: false; }
                 PropertyChanges { target: screenAdvertiser; visible: true; enabled: true; focus: true; }
+                PropertyChanges { target: screenUbertooth; visible: false; enabled: false; }
+                PropertyChanges { target: screenSettings; visible: false; enabled: false; }
+            },
+            State {
+                name: "Ubertooth"
+                PropertyChanges { target: screenScanner; visible: false; enabled: false; }
+                PropertyChanges { target: screenAdvertiser; visible: false; enabled: false; }
+                PropertyChanges { target: screenUbertooth; visible: true; enabled: true; focus: true; }
                 PropertyChanges { target: screenSettings; visible: false; enabled: false; }
             },
             State {
                 name: "Settings"
                 PropertyChanges { target: screenScanner; visible: false; enabled: false; }
                 PropertyChanges { target: screenAdvertiser; visible: false; enabled: false; }
+                PropertyChanges { target: screenUbertooth; visible: false; enabled: false; }
                 PropertyChanges { target: screenSettings; visible: true; enabled: true; focus: true; }
             }
         ]

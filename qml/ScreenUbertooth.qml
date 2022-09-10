@@ -4,20 +4,20 @@ import QtQuick.Controls
 import ThemeEngine 1.0
 
 Loader {
-    id: screenAdvertiser
+    id: screenUbertooth
 
     ////////
 
     function loadScreen() {
-        screenAdvertiser.active = true
-        appContent.state = "Advertiser"
+        screenUbertooth.active = true
+        appContent.state = "Ubertooth"
     }
 
     ////////
 
     function backAction() {
-        if (screenAdvertiser.status === Loader.Ready)
-            screenAdvertiser.item.backAction()
+        if (screenUbertooth.status === Loader.Ready)
+            screenUbertooth.item.backAction()
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -42,7 +42,7 @@ Loader {
             ////////////////
 
             Rectangle { // not implemented
-                width: screenAdvertiser.width * 0.66
+                width: screenUbertooth.width * 0.66
                 height: 128
                 radius: 4
                 color: Theme.colorBox
@@ -93,7 +93,7 @@ Loader {
                         anchors.left: parent.left
                         anchors.right: parent.right
 
-                        text: qsTr("This is a BLE device emulator. You can broadcast Bluetooth Low Energy Advertisement virtual packets, and create virtual services and associated values.")
+                        text: qsTr("This is a spectrum analyser, using the Ubertooth One.")
                         font.pixelSize: Theme.fontSizeContentBig
                         wrapMode: Text.WordWrap
                         color: Theme.colorText

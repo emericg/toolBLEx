@@ -23,6 +23,7 @@
 #include "VendorsDatabase.h"
 
 #include <QProcess>
+#include <QDebug>
 
 /* ************************************************************************** */
 

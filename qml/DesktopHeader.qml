@@ -15,6 +15,7 @@ Rectangle {
 
     signal scannerButtonClicked()
     signal advertiserButtonClicked()
+    signal ubertoothButtonClicked()
     signal settingsButtonClicked()
 
     ////////////////////////////////////////////////////////////////////////////
@@ -175,6 +176,18 @@ Rectangle {
 
                 selected: (appContent.state === "Advertiser")
                 onClicked: advertiserButtonClicked()
+            }
+            DesktopHeaderItem {
+                id: menuUbertooth
+                width: headerHeight
+                height: headerHeight
+
+                source: "qrc:/assets/icons_material/baseline-microwave-48px.svg"
+                colorContent: Theme.colorHeaderContent
+                colorHighlight: Theme.colorHeaderHighlight
+
+                selected: (appContent.state === "Ubertooth")
+                onClicked: ubertoothButtonClicked()
             }
             DesktopHeaderItem {
                 id: menuSettings
