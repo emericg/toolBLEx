@@ -18,47 +18,35 @@ ChartView {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    property bool useOpenGL: true
-    property bool showGraphDots: false
+    property bool useOpenGL: false
     property color legendColor: Theme.colorSubText
 
     property var graphs: []
-/*
-    Connections {
-        target: deviceManager
-        function onDevicesListUpdated() {
-            //console.log("rssiGraph // onDevicesListUpdated()")
 
-            for (var i = 0; i < deviceManager.deviceCount; i++) {
-                if (graphs[i]) {
-                    //console.log("graph " + i + " already exists")
-                } else {
-                    //console.log("graph " + i + " is being created")
-                    graphs[i] = rssiGraph.createSeries(ChartView.SeriesTypeLine,
-                                                       "", axisTime, axisRSSI);
-                }
-            }
-        }
+    Component.onCompleted: {
+        deviceManager.getRssiGraphAxis(axisTime)
+
+        graphs[0] = rssiGraph.createSeries(ChartView.SeriesTypeLine, "", axisTime, axisRSSI)
+        graphs[0].useOpenGL = useOpenGL
     }
-*/
+
     function updateGraph() {
         if (!deviceManager.scanning || hostMenu.currentSelection !== 3) return
         //console.log("rssiGraph // updateGraph()")
 
-        //// DATA
-        deviceManager.getRssiGraphAxis(axisTime);
+        //// AXIS
+        deviceManager.getRssiGraphAxis(axisTime)
 
+        //// DATA
         for (var i = 0; i < deviceManager.deviceCount; i++) {
             if (!graphs[i]) {
                 //console.log("graph " + i + " is being created")
-                graphs[i] = rssiGraph.createSeries(ChartView.SeriesTypeLine,
-                                                   "", axisTime, axisRSSI)
+                graphs[i] = rssiGraph.createSeries(ChartView.SeriesTypeLine, "", axisTime, axisRSSI)
                 graphs[i].useOpenGL = useOpenGL
-                graphs[i].pointsVisible = showGraphDots
             }
             if (graphs[i]) {
                 //console.log("graph " + i + " is being updated")
-                deviceManager.getRssiGraphData(graphs[i], i);
+                deviceManager.getRssiGraphData(graphs[i], i)
             }
         }
     }
@@ -77,7 +65,7 @@ ChartView {
         visible: true
 
         min: -100
-        max: -30
+        max: -20
 
         //color: legendColor
         gridVisible: true

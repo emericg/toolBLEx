@@ -24,6 +24,7 @@
 
 #include <QObject>
 #include <QUrl>
+#include <QColor>
 #include <QString>
 #include <QStringList>
 
@@ -43,10 +44,7 @@ class UtilsApp : public QObject
 public:
     static UtilsApp *getInstance();
 
-    QString getAppPath() const { return m_appPath; }
-    void setAppPath(const QString &value);
-
-    // app related
+    // app info
 
     static Q_INVOKABLE QString appName();
     static Q_INVOKABLE QString appVersion();
@@ -57,14 +55,22 @@ public:
     static Q_INVOKABLE QString appBuildModeFull();
     static Q_INVOKABLE bool isDebugBuild();
 
-    static Q_INVOKABLE void vibrate(int ms);
-    static Q_INVOKABLE void openWith(const QString &path);
+    // tools
+    QString getAppPath() const { return m_appPath; }
+    void setAppPath(const QString &value);
+
     static Q_INVOKABLE void appExit();
+    static Q_INVOKABLE void openWith(const QString &path);
 
     static Q_INVOKABLE QUrl getStandardPath_url(const QString &type);
     static Q_INVOKABLE QString getStandardPath_string(const QString &type);
 
+    static Q_INVOKABLE bool isColorLight(const int color);
+    static Q_INVOKABLE bool isQColorLight(const QColor &color);
+
     // mobile related
+
+    static Q_INVOKABLE void vibrate(int ms);
 
     static Q_INVOKABLE int getAndroidSdkVersion();
 

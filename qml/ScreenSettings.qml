@@ -1,7 +1,9 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Dialogs
 
 import ThemeEngine 1.0
+import "qrc:/js/UtilsPath.js" as UtilsPath
 
 Loader {
     id: screenSettings
@@ -51,7 +53,7 @@ Loader {
                 bottomPadding: 0
                 spacing: 24
 
-                property int flowElementWidth: (width >= 1450) ? (width / 3) - (spacing*2) - 12
+                property int flowElementWidth: (width >= 1450) ? (width / 3) - (spacing*1) - 8
                                                                : (width / 2) - (spacing*1) - 12
 
                 ////////////////////////
@@ -259,7 +261,7 @@ Loader {
 
                                 text: qsTr("Theme")
                                 textFormat: Text.PlainText
-                                font.pixelSize: Theme.fontSizeContentBig
+                                font.pixelSize: Theme.fontSizeContent
                                 font.bold: false
                                 color: Theme.colorText
                                 wrapMode: Text.WordWrap
@@ -338,7 +340,7 @@ Loader {
 
                                 text: qsTr("Language")
                                 textFormat: Text.PlainText
-                                font.pixelSize: Theme.fontSizeContentBig
+                                font.pixelSize: Theme.fontSizeContent
                                 font.bold: false
                                 color: Theme.colorText
                                 wrapMode: Text.WordWrap
@@ -367,7 +369,7 @@ Loader {
 
                                 text: qsTr("Unit system")
                                 textFormat: Text.PlainText
-                                font.pixelSize: Theme.fontSizeContentBig
+                                font.pixelSize: Theme.fontSizeContent
                                 font.bold: false
                                 color: Theme.colorText
                                 wrapMode: Text.WordWrap
@@ -436,7 +438,7 @@ Loader {
 
                                 text: qsTr("Start scanning automatically")
                                 textFormat: Text.PlainText
-                                font.pixelSize: Theme.fontSizeContentBig
+                                font.pixelSize: Theme.fontSizeContent
                                 font.bold: false
                                 color: Theme.colorText
                                 wrapMode: Text.WordWrap
@@ -465,7 +467,7 @@ Loader {
 
                                 text: qsTr("Cache devices automatically")
                                 textFormat: Text.PlainText
-                                font.pixelSize: Theme.fontSizeContentBig
+                                font.pixelSize: Theme.fontSizeContent
                                 font.bold: false
                                 color: Theme.colorText
                                 wrapMode: Text.WordWrap
@@ -494,7 +496,7 @@ Loader {
 
                                 text: qsTr("Scanning timeout")
                                 textFormat: Text.PlainText
-                                font.pixelSize: Theme.fontSizeContentBig
+                                font.pixelSize: Theme.fontSizeContent
                                 font.bold: false
                                 color: Theme.colorText
                                 wrapMode: Text.WordWrap
@@ -530,7 +532,7 @@ Loader {
 
                                 text: qsTr("RSSI graph interval")
                                 textFormat: Text.PlainText
-                                font.pixelSize: Theme.fontSizeContentBig
+                                font.pixelSize: Theme.fontSizeContent
                                 font.bold: false
                                 color: Theme.colorText
                                 wrapMode: Text.WordWrap
@@ -561,7 +563,7 @@ Loader {
                         width: settingsColumn.flowElementWidth
                         spacing: 2
 
-                        visible: Qt.platform.os === "linux" || Qt.platform.os === "osx"
+                        visible: (Qt.platform.os === "linux" || Qt.platform.os === "osx")
 
                         Rectangle {
                             anchors.left: parent.left
@@ -596,8 +598,49 @@ Loader {
                                 anchors.right: parent.right
                                 anchors.rightMargin: 12
                                 anchors.verticalCenter: parent.verticalCenter
+                                height: 36
 
                                 text: settingsManager.ubertooth_path
+                                placeholderText: "ubertooth-specan"
+
+                                onTextEdited: {
+                                    settingsManager.ubertooth_path = text
+                                    ubertooth.checkPath()
+                                }
+
+                                FileDialog {
+                                    id: fileDialog
+                                    nameFilters: ["specan binary (ubertooth-specan)"]
+
+                                    currentFile: UtilsPath.makeUrl(settingsManager.ubertooth_path)
+                                    onAccepted: {
+                                        settingsManager.ubertooth_path = UtilsPath.cleanUrl(currentFile)
+                                        ubertooth.checkPath()
+                                    }
+                                }
+
+                                IconSvg {
+                                    anchors.right: btn.left
+                                    anchors.rightMargin: 12
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    width: 24
+                                    height: 24
+
+                                    visible: ubertooth.toolsAvailable
+                                    source: "qrc:/assets/icons_material/baseline-check-24px.svg"
+                                    color: Theme.colorSuccess
+                                }
+
+                                ButtonThemed {
+                                    id: btn
+                                    anchors.top: parent.top
+                                    anchors.right: parent.right
+                                    anchors.bottom: parent.bottom
+                                    anchors.margins: 1
+
+                                    text: qsTr("change")
+                                    onClicked: fileDialog.open()
+                                }
                             }
                         }
 
@@ -614,7 +657,7 @@ Loader {
 
                                 text: qsTr("Min frequency")
                                 textFormat: Text.PlainText
-                                font.pixelSize: Theme.fontSizeContentBig
+                                font.pixelSize: Theme.fontSizeContent
                                 font.bold: false
                                 color: Theme.colorText
                                 wrapMode: Text.WordWrap
@@ -628,8 +671,8 @@ Loader {
                                 width: 140
 
                                 editable: true
-                                from: 2400
-                                to: 2500
+                                from: 2300
+                                to: 2600
 
                                 value: settingsManager.ubertooth_freqMin
                                 onValueModified: settingsManager.ubertooth_freqMin = value
@@ -649,7 +692,7 @@ Loader {
 
                                 text: qsTr("Max frequency")
                                 textFormat: Text.PlainText
-                                font.pixelSize: Theme.fontSizeContentBig
+                                font.pixelSize: Theme.fontSizeContent
                                 font.bold: false
                                 color: Theme.colorText
                                 wrapMode: Text.WordWrap
@@ -663,8 +706,8 @@ Loader {
                                 width: 140
 
                                 editable: true
-                                from: 2400
-                                to: 2500
+                                from: 2300
+                                to: 2600
 
                                 value: settingsManager.ubertooth_freqMax
                                 onValueModified: settingsManager.ubertooth_freqMax = value

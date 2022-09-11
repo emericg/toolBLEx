@@ -186,12 +186,23 @@ Flickable {
 
         ////////
 
-        Item {
+        Column {
             width: detailView.ww
-            height: 32
+            spacing: 16
 
-            Row {
-                anchors.centerIn: parent
+            TextFieldThemed { // user comment
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: detailView.ww
+                height: 36
+
+                colorBackground: Theme.colorBox
+                placeholderText: qsTr("Comment")
+                text: selectedDevice.userComment
+                onTextEdited: selectedDevice.userComment = text
+            }
+
+            Row { // buttons row
+                anchors.horizontalCenter: parent.horizontalCenter
                 height: 32
                 spacing: 20
 
@@ -259,49 +270,43 @@ Flickable {
                                 "qrc:/assets/icons_material/baseline-cancel-24px.svg"
                     onClicked: selectedDevice.blacklist(!selectedDevice.isBlacklisted)
                 }
-            }
-        }
 
-        ////////
+                ButtonWireframe {
+                    fullColor: true
+                    primaryColor: selectedDevice.userColor
+                    fulltextColor: utilsApp.isQColorLight(selectedDevice.userColor) ? "black" : "white"
 
-        Item {
-            width: detailView.ww
-            height: Theme.componentHeight
+                    text: qsTr("color")
+                    onClicked: colorDialog.open()
 
-            TextFieldThemed { // user comment
-                width: detailView.ww - 48
-                height: Theme.componentHeight
-                anchors.verticalCenter: parent.verticalCenter
-
-                colorBackground: Theme.colorBox
-                placeholderText: qsTr("Comment")
-                text: selectedDevice.userComment
-                onTextEdited: selectedDevice.userComment = text
-            }
-
-            Rectangle { // user color
-                anchors.right: parent.right
-                anchors.verticalCenter: parent.verticalCenter
-                width: Theme.componentHeight
-                height: Theme.componentHeight
-                radius: Theme.componentRadius
-
-                color: selectedDevice.userColor
-                border.width: 2
-                border.color: Qt.darker(selectedDevice.userColor, 1.1)
-
-                ColorDialog {
-                    id: colorDialog
-                    currentColor: selectedDevice.userColor
-                    onAccepted: {
-                        selectedDevice.userColor = colorDialog.color
+                    ColorDialog {
+                        id: colorDialog
+                        currentColor: selectedDevice.userColor
+                        onAccepted: selectedDevice.userColor = colorDialog.color
                     }
                 }
+/*
+                Rectangle { // user color
+                    width: Theme.componentHeight
+                    height: Theme.componentHeight
+                    radius: Theme.componentRadius
 
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: colorDialog.open()
+                    color: selectedDevice.userColor
+                    border.width: 2
+                    border.color: Qt.darker(selectedDevice.userColor, 1.1)
+
+                    ColorDialog {
+                        id: colorDialog
+                        currentColor: selectedDevice.userColor
+                        onAccepted: selectedDevice.userColor = colorDialog.color
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: colorDialog.open()
+                    }
                 }
+*/
             }
         }
 

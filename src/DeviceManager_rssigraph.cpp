@@ -42,7 +42,7 @@ void DeviceManager::getRssiGraphData(QLineSeries *serie, int index)
 {
     if (!serie) return;
     if (m_devices_model->m_devices.size() < index) return;
-    //qDebug() << "DeviceManager::getRssiGraphData()" << one << index;
+    //qDebug() << "DeviceManager::getRssiGraphData()" << serie << index;
 
     serie->clear();
 

@@ -186,6 +186,7 @@ Rectangle {
                 colorContent: Theme.colorHeaderContent
                 colorHighlight: Theme.colorHeaderHighlight
 
+                visible: ubertooth.toolsAvailable
                 selected: (appContent.state === "Ubertooth")
                 onClicked: ubertoothButtonClicked()
             }
