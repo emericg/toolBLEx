@@ -6,10 +6,11 @@ import "qrc:/js/UtilsNumber.js" as UtilsNumber
 
 ChartView {
     id: frequencyGraph
+    anchors.margins: -16
 
     legend.visible: false
 
-    backgroundColor: Theme.colorBackground
+    backgroundColor: "transparent"
     backgroundRoundness: 0
 
     clip: false
@@ -22,9 +23,11 @@ ChartView {
     property bool useOpenGL: false
     property color legendColor: Theme.colorSubText
 
+    property int graphCount: 40
+    property int graphInterval: 100
+
     property var graphMax
     property var graphCurrent
-
     property var graphs: []
     property int graphs_idx: 0
 
@@ -45,9 +48,29 @@ ChartView {
         if (!ubertooth.running || appContent.state !== "Ubertooth") return
         //console.log("frequencyGraph // updateGraph()")
 
-        //// DATA
-        var graphCount = 64
-        for (var graphs_idx = 0; graphs_idx < graphCount; graphs_idx++) {
+        //// AXIS
+        ubertooth.getFrequencyGraphAxis(axisFrequency)
+
+/*
+        //// DATA (method 1 / yolo)
+        if (!graphs[graphs_idx]) {
+            //console.log("graph " + graphs_idx + " is being created")
+            graphs[graphs_idx] = frequencyGraph.createSeries(ChartView.SeriesTypeLine, "", axisFrequency, axisRSSI)
+            graphs[graphs_idx].useOpenGL = useOpenGL
+            graphs[graphs_idx].color = Theme.colorText
+            graphs[graphs_idx].opacity = 0.1
+            graphs[graphs_idx].width = 1
+        }
+        if (graphs[graphs_idx]) {
+            //console.log("graph " + graphs_idx + " is being updated")
+            ubertooth.getFrequencyGraphData(graphs[graphs_idx], 1)
+        }
+        graphs_idx++
+        if (graphs_idx > graphCount) graphs_idx = 0
+*/
+
+        //// DATA (method 2 / with color gradient)
+        for (var graphs_idx = 0; graphs_idx < frequencyGraph.graphCount; graphs_idx++) {
             if (!graphs[graphs_idx]) {
                 //console.log("graph " + graphs_idx + " is being created")
                 graphs[graphs_idx] = frequencyGraph.createSeries(ChartView.SeriesTypeLine, "", axisFrequency, axisRSSI)
@@ -56,8 +79,8 @@ ChartView {
             }
             if (graphs[graphs_idx]) {
                 //console.log("graph " + graphs_idx + " is being updated")
-                graphs[graphs_idx].color = Theme.colorText
-                graphs[graphs_idx].opacity = UtilsNumber.mapNumber(graphs_idx*100, 0, graphCount*10, 500, 0) / 1000
+                graphs[graphs_idx].color = Theme.colorSubText
+                graphs[graphs_idx].opacity = UtilsNumber.mapNumber(graphs_idx, 0, frequencyGraph.graphCount, 400, 100) / 1000
                 ubertooth.getFrequencyGraphData(graphs[graphs_idx], graphs_idx)
             }
         }
@@ -70,7 +93,7 @@ ChartView {
     }
 
     Timer {
-        interval: 100
+        interval: frequencyGraph.graphInterval
         running: ubertooth.running
         repeat: true
         onTriggered: updateGraph()
@@ -83,7 +106,7 @@ ChartView {
         visible: true
 
         min: -100
-        max: 0
+        max: -20
 
         //color: legendColor
         gridVisible: true
@@ -91,6 +114,7 @@ ChartView {
         labelsVisible: true
         labelsFont.pixelSize: Theme.fontSizeContentVerySmall
         labelsColor: legendColor
+        labelFormat: "%i"
     }
 
     ValueAxis {
@@ -103,6 +127,7 @@ ChartView {
         labelsVisible: true
         labelsFont.pixelSize: Theme.fontSizeContentVerySmall
         labelsColor: legendColor
+        labelFormat: "%i"
     }
 
     ////////////////////////////////////////////////////////////////////////////

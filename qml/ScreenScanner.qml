@@ -378,16 +378,6 @@ Loader {
             // prevent clicks below this area
             MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
 
-            Rectangle {
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.right: parent.right
-
-                height: 2
-                opacity: 1
-                color: Theme.colorSeparator
-            }
-
             Row { // left
                 anchors.left: parent.left
                 anchors.leftMargin: 8
@@ -443,6 +433,16 @@ Loader {
                         splitview.width = splitview.width-1
                     }
                 }
+            }
+
+            Rectangle {
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                height: 2
+                opacity: 1
+                color: Theme.colorSeparator
             }
         }
 

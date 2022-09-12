@@ -37,6 +37,7 @@ SOURCES  += src/main.cpp \
             src/DeviceManager_rssigraph.cpp \
             src/DeviceFilter.cpp \
             src/VendorsDatabase.cpp \
+            src/ubertooth.cpp \
             src/adapter.cpp \
             src/device.cpp \
             src/device_toolbox.cpp \
@@ -49,6 +50,7 @@ HEADERS  += src/SettingsManager.h \
             src/DeviceManager.h \
             src/DeviceFilter.h \
             src/VendorsDatabase.h \
+            src/ubertooth.h \
             src/adapter.h \
             src/device.h \
             src/device_utils.h \

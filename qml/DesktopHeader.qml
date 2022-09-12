@@ -213,7 +213,7 @@ Rectangle {
         anchors.bottom: parent.bottom
 
         height: 2
-        opacity: 1
+        opacity: 0.8
         color: Theme.colorHeaderHighlight
     }
 

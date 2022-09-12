@@ -246,6 +246,17 @@ Loader {
                                 wrapMode: Text.WordWrap
                                 verticalAlignment: Text.AlignVCenter
                             }
+
+                            IconSvg {
+                                width: 28
+                                height: 28
+                                anchors.right: parent.right
+                                anchors.rightMargin: 20
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                source: "qrc:/assets/icons_material/duotone-tune-24px.svg"
+                                color: Theme.colorText
+                            }
                         }
 
                         Rectangle {
@@ -423,6 +434,17 @@ Loader {
                                 wrapMode: Text.WordWrap
                                 verticalAlignment: Text.AlignVCenter
                             }
+
+                            IconSvg {
+                                width: 28
+                                height: 28
+                                anchors.right: parent.right
+                                anchors.rightMargin: 20
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                source: "qrc:/assets/icons_material/duotone-devices-24px.svg"
+                                color: Theme.colorText
+                            }
                         }
 
                         Rectangle {
@@ -583,6 +605,17 @@ Loader {
                                 color: Theme.colorText
                                 wrapMode: Text.WordWrap
                                 verticalAlignment: Text.AlignVCenter
+                            }
+
+                            IconSvg {
+                                width: 28
+                                height: 28
+                                anchors.right: parent.right
+                                anchors.rightMargin: 20
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                source: "qrc:/assets/icons_material/baseline-microwave-48px.svg"
+                                color: Theme.colorText
                             }
                         }
 

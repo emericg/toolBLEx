@@ -73,6 +73,7 @@ ChartView {
         labelsVisible: true
         labelsFont.pixelSize: Theme.fontSizeContentVerySmall
         labelsColor: legendColor
+        labelFormat: "%i"
     }
 
     DateTimeAxis {

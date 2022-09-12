@@ -15,7 +15,7 @@ T.TextField {
     text: ""
     color: Theme.colorText
     font.pixelSize: Theme.fontSizeContent
-    verticalAlignment: TextInput.AlignVCenter
+    verticalAlignment: Text.AlignVCenter
 
     readOnly: true
     selectByMouse: true

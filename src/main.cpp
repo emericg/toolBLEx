@@ -25,6 +25,7 @@
 #include "SettingsManager.h"
 #include "MenubarManager.h"
 #include "DeviceManager.h"
+#include "ubertooth.h"
 
 #include "utils_app.h"
 #include "utils_screen.h"
@@ -85,6 +86,8 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
+    Ubertooth *uber = new Ubertooth;
+
     // Init generic utils
     UtilsApp *utilsApp = UtilsApp::getInstance();
     UtilsScreen *utilsScreen = UtilsScreen::getInstance();
@@ -110,6 +113,7 @@ int main(int argc, char *argv[])
     engine_context->setContextProperty("deviceManager", dm);
     engine_context->setContextProperty("settingsManager", sm);
     engine_context->setContextProperty("menubarManager", mb);
+    engine_context->setContextProperty("ubertooth", uber);
 
     engine_context->setContextProperty("utilsApp", utilsApp);
     engine_context->setContextProperty("utilsLanguage", utilsLanguage);

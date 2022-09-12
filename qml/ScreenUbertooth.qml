@@ -34,74 +34,81 @@ Loader {
 
         ////////////////////////////////////////////////////////////////////////
 
-        Column {
-            anchors.centerIn: parent
-            anchors.verticalCenterOffset: -(appHeader.height / 2)
-            spacing: 32
+        Rectangle {
+            id: actionBar
+            anchors.left: parent.left
+            anchors.right: parent.right
 
-            ////////////////
+            z: 5
+            height: 44
+            color: Theme.colorActionbar
 
-            Rectangle { // not implemented
-                width: screenUbertooth.width * 0.66
-                height: 128
-                radius: 4
-                color: Theme.colorBox
+            // prevent clicks below this area
+            MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
 
-                Rectangle {
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.bottom: parent.bottom
+            Row { // left
+                anchors.left: parent.left
+                anchors.leftMargin: 12
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 8
 
-                    width: 8
-                    radius: 2
-                    color: Theme.colorPrimary
+
+                ButtonWireframe {
+                    fullColor: true
+                    text: "START"
+                    onClicked: ubertooth.startWork()
+                }
+                ButtonWireframe {
+                    fullColor: true
+                    text: "STOP"
+                    onClicked: ubertooth.stopWork()
                 }
 
-                Item {
-                    anchors.left: parent.left
-                    width: 128
-                    height: 128
-
-                    IconSvg {
-                        width: 96
-                        height: 96
-                        anchors.centerIn: parent
-
-                        source: "qrc:/assets/icons_material/baseline-bluetooth_disabled-24px.svg"
-                        color: Theme.colorIcon
+                ButtonWireframe {
+                    text: "check tools"
+                    onClicked: {
+                        fullColor = true
+                        var status = ubertooth.checkPath()
+                        if (status) primaryColor = Theme.colorSuccess
+                        else primaryColor = Theme.colorWarning
                     }
                 }
-
-                Column {
-                    anchors.left: parent.left
-                    anchors.leftMargin: 128
-                    anchors.right: parent.right
-                    anchors.rightMargin: 32
-                    anchors.verticalCenter: parent.verticalCenter
-                    spacing: 8
-
-                    Text {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-
-                        text: qsTr("This screen is not implemented (yet)")
-                        font.pixelSize: Theme.fontSizeContentVeryVeryBig
-                        wrapMode: Text.WordWrap
-                        color: Theme.colorText
-                    }
-                    Text {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-
-                        text: qsTr("This is a spectrum analyser, using the Ubertooth One.")
-                        font.pixelSize: Theme.fontSizeContentBig
-                        wrapMode: Text.WordWrap
-                        color: Theme.colorText
+                ButtonWireframe {
+                    text: "check hw"
+                    onClicked: {
+                        fullColor = true
+                        var status = ubertooth.checkUbertooth()
+                        if (status) primaryColor = Theme.colorSuccess
+                        else primaryColor = Theme.colorWarning
                     }
                 }
             }
 
-            ////////////////
+            Row { // right
+                anchors.right: parent.right
+                anchors.rightMargin: 12
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 8
+            }
+
+            Rectangle {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+
+                height: 2
+                opacity: 1
+                color: Theme.colorSeparator
+            }
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+
+        FrequencyGraph {
+            anchors.top: actionBar.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
         }
 
         ////////////////////////////////////////////////////////////////////////
