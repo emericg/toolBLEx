@@ -36,7 +36,7 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
         with:
-          version: '6.3.1'
+          version: '6.3.2'
           modules: qtconnectivity qtcharts qt5compat
 
       # Install dependencies (from package manager)
@@ -83,7 +83,7 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
         with:
-          version: '6.3.1'
+          version: '6.3.2'
           modules: qtconnectivity qtcharts qt5compat
 
       # Build application
@@ -126,7 +126,7 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
         with:
-          version: '6.3.1'
+          version: '6.3.2'
           modules: qtconnectivity qtcharts qt5compat
 
       # Install NSIS (already installed in 'windows-2022')
