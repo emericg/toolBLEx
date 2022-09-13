@@ -23,15 +23,18 @@ ChartView {
     property bool useOpenGL: false
     property color legendColor: Theme.colorSubText
 
-    property int graphCount: 40
-    property int graphInterval: 100
+    property int graphCount: 32
+    property int graphInterval: 120
 
     property var graphMax
     property var graphCurrent
     property var graphs: []
     property int graphs_idx: 0
 
+    property bool needforspeed: (ubertooth.freqMax - ubertooth.freqMin > 100)
+
     Component.onCompleted: {
+
         //// AXIS
         ubertooth.getFrequencyGraphAxis(axisFrequency)
 
@@ -51,37 +54,38 @@ ChartView {
         //// AXIS
         ubertooth.getFrequencyGraphAxis(axisFrequency)
 
-/*
-        //// DATA (method 1 / yolo)
-        if (!graphs[graphs_idx]) {
-            //console.log("graph " + graphs_idx + " is being created")
-            graphs[graphs_idx] = frequencyGraph.createSeries(ChartView.SeriesTypeLine, "", axisFrequency, axisRSSI)
-            graphs[graphs_idx].useOpenGL = useOpenGL
-            graphs[graphs_idx].color = Theme.colorText
-            graphs[graphs_idx].opacity = 0.1
-            graphs[graphs_idx].width = 1
-        }
-        if (graphs[graphs_idx]) {
-            //console.log("graph " + graphs_idx + " is being updated")
-            ubertooth.getFrequencyGraphData(graphs[graphs_idx], 1)
-        }
-        graphs_idx++
-        if (graphs_idx > graphCount) graphs_idx = 0
-*/
-
-        //// DATA (method 2 / with color gradient)
-        for (var graphs_idx = 0; graphs_idx < frequencyGraph.graphCount; graphs_idx++) {
+        //// DATA
+        if (needforspeed) {
+            // method 1 // yolo
             if (!graphs[graphs_idx]) {
                 //console.log("graph " + graphs_idx + " is being created")
                 graphs[graphs_idx] = frequencyGraph.createSeries(ChartView.SeriesTypeLine, "", axisFrequency, axisRSSI)
                 graphs[graphs_idx].useOpenGL = useOpenGL
+                graphs[graphs_idx].color = Theme.colorText
+                graphs[graphs_idx].opacity = 0.1
                 graphs[graphs_idx].width = 1
             }
             if (graphs[graphs_idx]) {
                 //console.log("graph " + graphs_idx + " is being updated")
-                graphs[graphs_idx].color = Theme.colorSubText
-                graphs[graphs_idx].opacity = UtilsNumber.mapNumber(graphs_idx, 0, frequencyGraph.graphCount, 400, 100) / 1000
-                ubertooth.getFrequencyGraphData(graphs[graphs_idx], graphs_idx)
+                ubertooth.getFrequencyGraphData(graphs[graphs_idx], 1)
+            }
+            graphs_idx++
+            if (graphs_idx > graphCount) graphs_idx = 0
+        } else {
+            // method 2 // with color gradient
+            for (var idx = 0; idx < frequencyGraph.graphCount; idx++) {
+                if (!graphs[idx]) {
+                    //console.log("graph " + idx + " is being created")
+                    graphs[idx] = frequencyGraph.createSeries(ChartView.SeriesTypeLine, "", axisFrequency, axisRSSI)
+                    graphs[idx].useOpenGL = useOpenGL
+                    graphs[idx].width = 1
+                }
+                if (graphs[idx]) {
+                    //console.log("graph " + idx + " is being updated")
+                    graphs[idx].color = Theme.colorSubText
+                    graphs[idx].opacity = UtilsNumber.mapNumber(idx, 0, frequencyGraph.graphCount, 400, 100) / 1000
+                    ubertooth.getFrequencyGraphData(graphs[idx], idx)
+                }
             }
         }
 
@@ -101,16 +105,33 @@ ChartView {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    Item {
+        id: legend_area
+        x: parent.plotArea.x
+        y: parent.plotArea.y
+        z: -1
+        width: parent.plotArea.width
+        height: parent.plotArea.height
+
+        FrequencyGraphLegend {
+            id: legend24
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
     ValueAxis {
         id: axisRSSI
         visible: true
 
         min: -100
         max: -20
+        tickInterval: 10
 
-        //color: legendColor
+        color: legendColor
         gridVisible: true
         gridLineColor: Theme.colorSeparator
+        minorGridLineColor: Theme.colorSeparator
         labelsVisible: true
         labelsFont.pixelSize: Theme.fontSizeContentVerySmall
         labelsColor: legendColor
@@ -121,13 +142,18 @@ ChartView {
         id: axisFrequency
         visible: true
 
-        //color: legendColor
+        color: legendColor
         gridVisible: true
         gridLineColor: Theme.colorSeparator
+        minorGridLineColor: Theme.colorSeparator
         labelsVisible: true
         labelsFont.pixelSize: Theme.fontSizeContentVerySmall
         labelsColor: legendColor
         labelFormat: "%i"
+
+        minorTickCount: 9
+        tickCount: 11
+        tickType: ValueAxis.TicksFixed
     }
 
     ////////////////////////////////////////////////////////////////////////////

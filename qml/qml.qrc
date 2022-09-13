@@ -25,6 +25,7 @@
         <file alias="RssiBar.qml">components/RssiBar.qml</file>
         <file alias="RssiGraph.qml">components/RssiGraph.qml</file>
         <file alias="FrequencyGraph.qml">components/FrequencyGraph.qml</file>
+        <file alias="FrequencyGraphLegend.qml">components/FrequencyGraphLegend.qml</file>
         <file alias="TextSelectable.qml">components/TextSelectable.qml</file>
 
         <file>ThemeEngine.qml</file>

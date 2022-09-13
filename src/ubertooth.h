@@ -40,10 +40,13 @@ class Ubertooth: public QObject
 
     Q_PROPERTY(bool toolsAvailable READ isToolsAvailable NOTIFY availableChanged)
     Q_PROPERTY(bool hardwareAvailable READ isHardwareAvailable NOTIFY availableChanged)
+
     Q_PROPERTY(bool running READ isRunning NOTIFY runningChanged)
+    Q_PROPERTY(int freqMin READ getFreqMin NOTIFY freqChanged)
+    Q_PROPERTY(int freqMax READ getFreqMax NOTIFY freqChanged)
 
     static const int s_default_raw_rssi = -128;
-    static const int s_rssi_offset = -50;
+    static const int s_rssi_offset = -52;
     static const int s_max_stack = 240;
 
     bool m_toolsAvailable = false;
@@ -68,10 +71,13 @@ class Ubertooth: public QObject
     bool isRunning() const { return m_childProcess; }
     bool isToolsAvailable() const { return m_toolsAvailable; }
     bool isHardwareAvailable() const { return m_hardwareAvailable; }
+    int getFreqMin() const { return m_freq_min; }
+    int getFreqMax() const { return m_freq_max; }
 
 Q_SIGNALS:
     void availableChanged();
     void runningChanged();
+    void freqChanged();
 
 private slots:
     void processStarted();

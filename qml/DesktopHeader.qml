@@ -29,41 +29,97 @@ Rectangle {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    Rectangle {
+        anchors.centerIn: rowleft
+        width: rowleft.width
+        height: 32
+        radius: Theme.componentRadius
+
+        visible: rowleft.visible
+        color: Theme.colorHeader
+        border.width: 2
+        border.color: Theme.colorHeaderHighlight
+    }
+
     Row { // left
+        id: rowleft
         anchors.top: parent.top
         anchors.topMargin: 0
         anchors.left: parent.left
         anchors.leftMargin: 12
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
-
         spacing: 0
-        visible: true
+
+        visible: (appContent.state === "Scanner" ||
+                  appContent.state === "Advertiser" ||
+                  appContent.state === "Ubertooth")
 
         RoundButtonIcon {
             anchors.verticalCenter: parent.verticalCenter
-            width: 48
-            height: 48
+            width: 44
+            height: 32
+            sourceSize: 28
 
-            opacity: (deviceManager.bluetooth && !deviceManager.scanning) ? 0.4 : 1
-            highlightMode: "color"
-            source: "qrc:/assets/icons_material/baseline-play_arrow-24px.svg"
-
-            enabled: deviceManager.bluetooth
-            onClicked: deviceManager.listenDevices_start()
+            background: true
+            backgroundColor: Theme.colorHeaderHighlight
+            opacity: 1
+            highlightMode: "off"
+            iconColor: Theme.colorIcon
+            source: {
+                if (appContent.state === "Advertiser") return "qrc:/assets/icons_material/duotone-wifi_tethering-24px.svg"
+                if (appContent.state === "Ubertooth") return "qrc:/assets/icons_material/duotone-microwave-48px.svg"
+                return "qrc:/assets/icons_material/duotone-devices-24px.svg"
+            }
         }
 
         RoundButtonIcon {
             anchors.verticalCenter: parent.verticalCenter
             width: 48
             height: 48
-
-            opacity: (deviceManager.bluetooth && deviceManager.scanning) ? 0.4 : 1
-            highlightMode: "color"
-            source: "qrc:/assets/icons_material/baseline-stop-24px.svg"
+            sourceSize: 32
 
             enabled: deviceManager.bluetooth
-            onClicked: deviceManager.listenDevices_stop()
+            highlightMode: "color"
+            iconColor: Theme.colorHeaderContent
+            source: "qrc:/assets/icons_material/baseline-play_arrow-24px.svg"
+
+            opacity: {
+                if (appContent.state === "Scanner" && deviceManager.scanning) return 1
+                if (appContent.state === "Advertiser" && deviceManager.advertising) return 1
+                if (appContent.state === "Ubertooth" && ubertooth.running) return 1
+                return 0.4
+            }
+            onClicked: {
+                if (appContent.state === "Scanner") deviceManager.listenDevices_start()
+                //if (appContent.state === "Advertiser") deviceManager.advertise_start()
+                if (appContent.state === "Ubertooth") ubertooth.startWork()
+            }
+        }
+
+        RoundButtonIcon {
+            anchors.verticalCenter: parent.verticalCenter
+            width: 48
+            height: 48
+            sourceSize: 32
+
+            enabled: deviceManager.bluetooth
+            highlightMode: "color"
+            iconColor: Theme.colorHeaderContent
+            source: "qrc:/assets/icons_material/baseline-stop-24px.svg"
+
+            opacity: {
+                if (appContent.state === "Scanner" && !deviceManager.scanning) return 1
+                if (appContent.state === "Advertiser" && !deviceManager.advertising) return 1
+                if (appContent.state === "Ubertooth" && !ubertooth.running) return 1
+                return 0.4
+            }
+
+            onClicked: {
+                if (appContent.state === "Scanner") deviceManager.listenDevices_stop()
+                //if (appContent.state === "Advertiser") deviceManager.advertise_stop()
+                if (appContent.state === "Ubertooth") ubertooth.stopWork()
+            }
         }
     }
 
@@ -92,8 +148,9 @@ Rectangle {
                 height: 20; width: 20;
                 anchors.verticalCenter: parent.verticalCenter
 
-                source: deviceManager.scanning ? "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
-                                               : "qrc:/assets/icons_material/baseline-pause-24px.svg"
+                source: (deviceManager.scanning)
+                            ? "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
+                            : "qrc:/assets/icons_material/baseline-pause-24px.svg"
                 color: Theme.colorText
 
                 NumberAnimation on rotation {
@@ -107,13 +164,82 @@ Rectangle {
                     easing.type: Easing.Linear
                 }
             }
-
             Text {
                 anchors.verticalCenter: parent.verticalCenter
                 text: deviceManager.scanning ? qsTr("Scanning for Bluetooth devices nearby") : qsTr("Not scanning")
                 color: Theme.colorText
             }
+
+            ////
+
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                visible: deviceManager.advertising
+                text: "  |  "
+                color: Theme.colorText
+            }
+
+            ////
+
+            IconSvg {
+                height: 20; width: 20;
+                anchors.verticalCenter: parent.verticalCenter
+
+                visible: deviceManager.advertising
+                source: "qrc:/assets/icons_material/duotone-wifi_tethering-24px.svg"
+                color: Theme.colorText
+
+                SequentialAnimation on opacity {
+                    running: deviceManager.advertising
+                    alwaysRunToEnd: true
+                    loops: Animation.Infinite
+
+                    PropertyAnimation { to: 0.5; duration: 666; }
+                    PropertyAnimation { to: 1; duration: 666; }
+                }
+            }
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                text: deviceManager.advertising ? qsTr("Virtual device is running") : ""
+                color: Theme.colorText
+            }
+
+            ////
+
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                visible: ubertooth.running
+                text: "  |  "
+                color: Theme.colorText
+            }
+
+            ////
+
+            IconSvg {
+                height: 20; width: 20;
+                anchors.verticalCenter: parent.verticalCenter
+
+                visible: ubertooth.running
+                source: "qrc:/assets/icons_material/duotone-microwave-48px.svg"
+                color: Theme.colorText
+
+                SequentialAnimation on opacity {
+                    running: ubertooth.running
+                    alwaysRunToEnd: true
+                    loops: Animation.Infinite
+
+                    PropertyAnimation { to: 0.5; duration: 666; }
+                    PropertyAnimation { to: 1; duration: 666; }
+                }
+            }
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                text: ubertooth.running ? qsTr("Ubertooth is running") : ""
+                color: Theme.colorText
+            }
         }
+
+        ////////
 
         Row {
             anchors.top: parent.top
@@ -136,6 +262,7 @@ Rectangle {
     ////////////
 
     Row { // right
+        id: rowright
         anchors.top: parent.top
         anchors.topMargin: 0
         anchors.right: parent.right
@@ -170,7 +297,7 @@ Rectangle {
                 width: headerHeight
                 height: headerHeight
 
-                source: "qrc:/assets/icons_material/baseline-wifi_tethering-24px.svg"
+                source: "qrc:/assets/icons_material/duotone-wifi_tethering-24px.svg"
                 colorContent: Theme.colorHeaderContent
                 colorHighlight: Theme.colorHeaderHighlight
 
@@ -182,7 +309,7 @@ Rectangle {
                 width: headerHeight
                 height: headerHeight
 
-                source: "qrc:/assets/icons_material/baseline-microwave-48px.svg"
+                source: "qrc:/assets/icons_material/duotone-microwave-48px.svg"
                 colorContent: Theme.colorHeaderContent
                 colorHighlight: Theme.colorHeaderHighlight
 

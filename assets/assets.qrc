@@ -59,13 +59,12 @@
         <file>icons_material/baseline-cancel-24px.svg</file>
         <file>icons_material/baseline-chevron_left-24px.svg</file>
         <file>icons_material/baseline-chevron_right-24px.svg</file>
-        <file>icons_material/baseline-check-24px.svg</file>
+        <file>icons_material/baseline-check_circle-24px.svg</file>
         <file>icons_material/baseline-close-24px.svg</file>
         <file>icons_material/baseline-help-24px.svg</file>
         <file>icons_material/baseline-insert_link-24px.svg</file>
         <file>icons_material/baseline-loupe-24px.svg</file>
         <file>icons_material/baseline-loupe_minus-24px.svg</file>
-        <file>icons_material/baseline-microwave-48px.svg</file>
         <file>icons_material/baseline-pause-24px.svg</file>
         <file>icons_material/baseline-play_arrow-24px.svg</file>
         <file>icons_material/baseline-save-24px.svg</file>
@@ -82,7 +81,6 @@
         <file>icons_material/baseline-unfold_less-24px.svg</file>
         <file>icons_material/baseline-unfold_more-24px.svg</file>
         <file>icons_material/baseline-support-24px.svg</file>
-        <file>icons_material/baseline-wifi_tethering-24px.svg</file>
         <file>icons_material/baseline-warning-24px.svg</file>
 
         <file>icons_material/outline-add_circle-24px.svg</file>
@@ -101,6 +99,7 @@
         <file>icons_material/duotone-launch-24px.svg</file>
         <file>icons_material/duotone-manage_accounts-24px.svg</file>
         <file>icons_material/duotone-memory-24px.svg</file>
+        <file>icons_material/duotone-microwave-48px.svg</file>
         <file>icons_material/duotone-minimize-24px.svg</file>
         <file>icons_material/duotone-model_training-24px.svg</file>
         <file>icons_material/duotone-pin_drop-24px.svg</file>
@@ -112,5 +111,6 @@
         <file>icons_material/duotone-timer-24px.svg</file>
         <file>icons_material/duotone-tune-24px.svg</file>
         <file>icons_material/duotone-update-24px.svg</file>
+        <file>icons_material/duotone-wifi_tethering-24px.svg</file>
     </qresource>
 </RCC>

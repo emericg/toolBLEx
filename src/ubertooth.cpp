@@ -111,6 +111,8 @@ bool Ubertooth::checkPath()
 
 bool Ubertooth::checkUbertooth()
 {
+    if (m_childProcess) return true;
+
     bool status = false;
 
     QProcess process;
@@ -118,8 +120,8 @@ bool Ubertooth::checkUbertooth()
     process.waitForFinished(8000);
 
     QString output(process.readAllStandardOutput());
-    QString err(process.readAllStandardError());
-    QProcess::ProcessError error = process.error();
+    //QString err(process.readAllStandardError());
+    //QProcess::ProcessError error = process.error();
 
     if (!output.isEmpty())
     {
@@ -177,6 +179,7 @@ void Ubertooth::startWork()
         SettingsManager *sm = SettingsManager::getInstance();
         m_freq_min = sm->getUbertoothFreqMin();
         m_freq_max = sm->getUbertoothFreqMax();
+        Q_EMIT freqChanged();
 
         QStringList args;
         args << "-l" + QString::number(m_freq_min);

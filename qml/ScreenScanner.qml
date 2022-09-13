@@ -305,12 +305,12 @@ Loader {
                             //console.log("Key_Down")
                             event.accepted = true
 
-                            for (var i = 0; i < devicesView.count; i++) {
-                                if (deviceManager.getDeviceByProxyIndex(i).selected) {
-                                    if (i+1 < devicesView.count) {
-                                        deviceManager.getDeviceByProxyIndex(i).selected = false
-                                        deviceManager.getDeviceByProxyIndex(i+1).selected = true
-                                        selectedDevice = deviceManager.getDeviceByProxyIndex(i+1)
+                            for (var ii = 0; ii < devicesView.count; ii++) {
+                                if (deviceManager.getDeviceByProxyIndex(ii).selected) {
+                                    if (ii+1 < devicesView.count) {
+                                        deviceManager.getDeviceByProxyIndex(ii).selected = false
+                                        deviceManager.getDeviceByProxyIndex(ii+1).selected = true
+                                        selectedDevice = deviceManager.getDeviceByProxyIndex(ii+1)
                                         return
                                     }
                                 }

@@ -255,7 +255,7 @@ Loader {
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 source: "qrc:/assets/icons_material/duotone-tune-24px.svg"
-                                color: Theme.colorText
+                                color: Theme.colorIcon
                             }
                         }
 
@@ -443,7 +443,7 @@ Loader {
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 source: "qrc:/assets/icons_material/duotone-devices-24px.svg"
-                                color: Theme.colorText
+                                color: Theme.colorIcon
                             }
                         }
 
@@ -598,7 +598,7 @@ Loader {
                                 anchors.leftMargin: 20
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                text: qsTr("Ubertooth")
+                                text: qsTr("Spectrum analyzer")
                                 textFormat: Text.PlainText
                                 font.pixelSize: Theme.fontSizeContentVeryBig
                                 font.bold: false
@@ -614,8 +614,44 @@ Loader {
                                 anchors.rightMargin: 20
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                source: "qrc:/assets/icons_material/baseline-microwave-48px.svg"
+                                source: "qrc:/assets/icons_material/duotone-microwave-48px.svg"
+                                color: Theme.colorIcon
+                            }
+                        }
+
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 64
+                            color: Theme.colorForeground
+
+                            IconSvg {
+                                width: 28
+                                height: 28
+                                anchors.left: parent.left
+                                anchors.leftMargin: 16
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                source: "qrc:/assets/icons_material/baseline-help-24px.svg"
+                                color: Theme.colorIcon
+                            }
+
+                            //https://greatscottgadgets.com/ubertoothone/
+
+                            Text {
+                                anchors.left: parent.left
+                                anchors.leftMargin: 56
+                                anchors.right: parent.right
+                                anchors.rightMargin: 12
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                text: qsTr("Ubertooth One is an open source 2.4 GHz wireless development platform suitable for Bluetooth experimentation.<br>This feature relies on this specific hardware.")
+                                textFormat: Text.StyledText
+                                font.pixelSize: Theme.fontSizeContent
+                                font.bold: false
                                 color: Theme.colorText
+                                wrapMode: Text.WordWrap
                             }
                         }
 
@@ -660,7 +696,7 @@ Loader {
                                     height: 24
 
                                     visible: ubertooth.toolsAvailable
-                                    source: "qrc:/assets/icons_material/baseline-check-24px.svg"
+                                    source: "qrc:/assets/icons_material/baseline-check_circle-24px.svg"
                                     color: Theme.colorSuccess
                                 }
 
