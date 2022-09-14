@@ -10,7 +10,7 @@ Unicode True
 !define COMPANYNAME                  "Emeric Grange"
 !define DESCRIPTION                  "A Bluetooth Low Energy scanner and device analyzer"
 !define VERSIONMAJOR                 0
-!define VERSIONMINOR                 1
+!define VERSIONMINOR                 2
 !define VERSIONBUILD                 0
 !define INSTALL_DIR_DEFAULT          "$PROGRAMFILES64\${APPNAME}"
 !define MUI_ABORTWARNING
@@ -20,7 +20,7 @@ Unicode True
 !define MUI_FINISHPAGE_LINK          "Visit project website"
 !define MUI_FINISHPAGE_LINK_LOCATION "https://emeric.io/${APPNAME}/"
 !define MUI_WELCOMEPAGE_TITLE        "Welcome to the ${APPNAME} installer!"
-!define MUI_ICON                     "toolBLEx.ico"
+!define MUI_ICON                     "toolblex.ico"
 !define MUI_WELCOMEFINISHPAGE_BITMAP "nsis-banner.bmp"
 
 !insertmacro MUI_PAGE_WELCOME

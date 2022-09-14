@@ -16,6 +16,7 @@
   </description>
 
   <releases>
+    <release version="0.2" date="2022-09-14" />
     <release version="0.1" date="2022-09-01" />
   </releases>
 
@@ -33,8 +34,24 @@
 
   <screenshots>
     <screenshot type="default">
-      <image>https://i.imgur.com/1F666UF.png</image>
-      <caption>Device list screen</caption>
+      <image>https://i.imgur.com/0wAUe0t.png</image>
+      <caption>Bluetooth scanner</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://i.imgur.com/5IXNUJ3.png</image>
+      <caption>RSSI graph</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://i.imgur.com/Rkb1pJX.png</image>
+      <caption>BLE device info</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://i.imgur.com/BtGO6rG.png</image>
+      <caption>BLE device advertisement</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://i.imgur.com/bv2oMz6.png</image>
+      <caption>dark mode</caption>
     </screenshot>
   </screenshots>
 

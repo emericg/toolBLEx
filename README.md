@@ -13,6 +13,7 @@ A Bluetooth Low Energy scanner and device analyzer.
 - device scanner (BLE and classic)
 - device advertisement and service explorer (BLE)
 - export device info: advertisement packets, services and characteristics (with or without walues)
+- frequency analyzer (ONLY if you have an Ubertooth One)
 
 
 ## Screenshots
@@ -63,6 +64,8 @@ Starting with macOS 11, the application will ask you for permission to use Bluet
 ##### Windows
 
 Bluetooth driver support might be a little shaky...
+
+Windows doesn't have good enough support for the Ubertooth One, and thus the frequency analyzer is disabled.
 
 #### Third party projects used by toolBLEx
 
