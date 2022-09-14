@@ -84,7 +84,7 @@ function getBluetoothMinorClassIcon(majorClass, minorClass) {
         if (minorClass === 0x30) return "qrc:/assets/icons_bootstrap/keyboard.svg"
 
         if (minorClass === 1) return "qrc:/assets/icons_bootstrap/joystick.svg"
-        if (minorClass === 2) return "qrc:/assets/icons_bootstrap/gamepad.svg"
+        if (minorClass === 2) return "qrc:/assets/icons_bootstrap/controller.svg"
         if (minorClass === 3) return "qrc:/assets/icons_bootstrap/dpad.svg"
         if (minorClass === 4) return "qrc:/assets/icons_bootstrap/thermometer-half.svg"
         if (minorClass === 5) return "qrc:/assets/icons_bootstrap/pencil.svg"

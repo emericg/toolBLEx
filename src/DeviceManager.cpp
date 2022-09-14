@@ -359,12 +359,12 @@ void DeviceManager::bluetoothStatusChanged()
 
     if (m_btA && m_btE)
     {
-        listenDevices_start();
+        scanDevices_start();
     }
     else
     {
         // Bluetooth disabled, force disconnection
-        listenDevices_stop();
+        scanDevices_stop();
     }
 }
 
@@ -381,6 +381,8 @@ void DeviceManager::startBleAgent()
         m_discoveryAgent = new QBluetoothDeviceDiscoveryAgent();
         if (m_discoveryAgent)
         {
+            qDebug() << "Scanning method supported:" << m_discoveryAgent->supportedDiscoveryMethods();
+
             connect(m_discoveryAgent, QOverload<QBluetoothDeviceDiscoveryAgent::Error>::of(&QBluetoothDeviceDiscoveryAgent::errorOccurred),
                     this, &DeviceManager::deviceDiscoveryError, Qt::UniqueConnection);
         }
@@ -531,9 +533,9 @@ void DeviceManager::bluetoothHostModeStateChangedIos()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void DeviceManager::listenDevices_start()
+void DeviceManager::scanDevices_start()
 {
-    //qDebug() << "DeviceManager::listenDevices_start()";
+    //qDebug() << "DeviceManager::scanDevices_start()";
 
     if (hasBluetooth())
     {
@@ -554,8 +556,8 @@ void DeviceManager::listenDevices_start()
             connect(m_discoveryAgent, &QBluetoothDeviceDiscoveryAgent::canceled,
                     this, &DeviceManager::deviceDiscoveryStopped, Qt::UniqueConnection);
 
-            //connect(m_discoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
-            //        this, &DeviceManager::updateBleDevice_simple, Qt::UniqueConnection);
+            connect(m_discoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
+                    this, &DeviceManager::updateBleDevice_discovery, Qt::UniqueConnection);
             connect(m_discoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceUpdated,
                     this, &DeviceManager::updateBleDevice, Qt::UniqueConnection);
 
@@ -590,9 +592,9 @@ void DeviceManager::listenDevices_start()
     }
 }
 
-void DeviceManager::listenDevices_stop()
+void DeviceManager::scanDevices_stop()
 {
-    //qDebug() << "DeviceManager::listenDevices_stop()";
+    //qDebug() << "DeviceManager::scanDevices_stop()";
 
     if (hasBluetooth())
     {

@@ -155,6 +155,7 @@ private slots:
     void addBleDevice(const QBluetoothDeviceInfo &info);
     void updateBleDevice(const QBluetoothDeviceInfo &info, QBluetoothDeviceInfo::Fields updatedFields);
     void updateBleDevice_simple(const QBluetoothDeviceInfo &info);
+    void updateBleDevice_discovery(const QBluetoothDeviceInfo &info);
     void deviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error);
     void deviceDiscoveryFinished();
     void deviceDiscoveryStopped();
@@ -176,8 +177,8 @@ public:
     // Scanning management
     static int getLastRun();
 
-    Q_INVOKABLE void listenDevices_start();
-    Q_INVOKABLE void listenDevices_stop();
+    Q_INVOKABLE void scanDevices_start();
+    Q_INVOKABLE void scanDevices_stop();
 
     Q_INVOKABLE void disconnectDevices();
 

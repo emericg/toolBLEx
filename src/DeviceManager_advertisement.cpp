@@ -28,6 +28,13 @@
 
 /* ************************************************************************** */
 
+void DeviceManager::updateBleDevice_discovery(const QBluetoothDeviceInfo &info)
+{
+    //qDebug() << "updateBleDevice_discovery() " << info.name() << info.address(); // << info.deviceUuid(); // << " updatedFields: " << updatedFields;
+
+    addBleDevice(info);
+}
+
 void DeviceManager::updateBleDevice_simple(const QBluetoothDeviceInfo &info)
 {
     updateBleDevice(info, QBluetoothDeviceInfo::Field::None);

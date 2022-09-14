@@ -172,11 +172,11 @@ ApplicationWindow {
     }
     Shortcut {
         sequences: [StandardKey.Refresh]
-        onActivated: deviceManager.listenDevices_start()
+        onActivated: deviceManager.scanDevices_start()
     }
     Shortcut {
         sequence: "Ctrl+F5"
-        onActivated: deviceManager.listenDevices_start()
+        onActivated: deviceManager.scanDevices_start()
     }
     Shortcut {
         sequence: StandardKey.Preferences
@@ -290,7 +290,7 @@ ApplicationWindow {
 
             // Start scanning?
             if (settingsManager.scanAuto) {
-                deviceManager.listenDevices_start()
+                deviceManager.scanDevices_start()
             }
         }
 

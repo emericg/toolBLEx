@@ -208,6 +208,7 @@ Flickable {
 
                 ButtonWireframeIcon {
                     fullColor: true
+                    visible: (deviceManager.bluetooth && selectedDevice.isLowEnergy)
                     text: {
                         if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
                             return qsTr("scan services")

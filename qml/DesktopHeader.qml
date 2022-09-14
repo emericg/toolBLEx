@@ -91,7 +91,7 @@ Rectangle {
                 return 0.4
             }
             onClicked: {
-                if (appContent.state === "Scanner") deviceManager.listenDevices_start()
+                if (appContent.state === "Scanner") deviceManager.scanDevices_start()
                 //if (appContent.state === "Advertiser") deviceManager.advertise_start()
                 if (appContent.state === "Ubertooth") ubertooth.startWork()
             }
@@ -116,7 +116,7 @@ Rectangle {
             }
 
             onClicked: {
-                if (appContent.state === "Scanner") deviceManager.listenDevices_stop()
+                if (appContent.state === "Scanner") deviceManager.scanDevices_stop()
                 //if (appContent.state === "Advertiser") deviceManager.advertise_stop()
                 if (appContent.state === "Ubertooth") ubertooth.stopWork()
             }

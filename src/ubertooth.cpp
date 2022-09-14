@@ -352,14 +352,14 @@ void Ubertooth::getFrequencyGraphMax(QLineSeries *serie)
 
     for (auto table: m_values)
     {
-        for (int i = 0, j = m_freq_min; j < m_freq_max; i++, j++)
+        for (int i = 0, j = m_freq_min; j <= m_freq_max; i++, j++)
         {
             if (table[i] > max[i]) max[i] = table[i];
             if (table[i] > m_max_max) m_max_max = table[i];
         }
     }
 
-    for (int i = 0, j = m_freq_min; j < m_freq_max; i++, j++)
+    for (int i = 0, j = m_freq_min; j <= m_freq_max; i++, j++)
     {
         serie->append(j, max[i]);
     }
@@ -374,7 +374,7 @@ void Ubertooth::getFrequencyGraphCurrent(QLineSeries *serie)
     if (!serie) return;
     serie->clear();
 
-    for (int i = m_freq_min; i < m_freq_max; i++)
+    for (int i = m_freq_min; i <= m_freq_max; i++)
     {
         serie->append(i, m_values_latest[i]);
     }
@@ -392,7 +392,7 @@ void Ubertooth::getFrequencyGraphData(QLineSeries *serie, int index)
     int idx = m_values.size() - index - 1;
     int *current = m_values.at(idx);
 
-    for (int i = 0, j = m_freq_min; j < m_freq_max; i++, j++)
+    for (int i = 0, j = m_freq_min; j <= m_freq_max; i++, j++)
     {
         serie->append(j, current[i]);
     }

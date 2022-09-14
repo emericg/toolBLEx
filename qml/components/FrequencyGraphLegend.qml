@@ -10,11 +10,11 @@ Item { // legend 2.4 GHz
     anchors.bottom: parent.bottom
 
     anchors.left: parent.left
-    anchors.leftMargin: UtilsNumber.mapNumber(2400,
-                                              ubertooth.freqMin, ubertooth.freqMax,
-                                              0, frequencyGraph.plotArea.width)
+    anchors.leftMargin: UtilsNumber.mapNumber_nocheck(2400,
+                                                      ubertooth.freqMin, ubertooth.freqMax,
+                                                      0, frequencyGraph.plotArea.width)
     anchors.right: parent.right
-    anchors.rightMargin: frequencyGraph.plotArea.width - UtilsNumber.mapNumber(2500,
+    anchors.rightMargin: frequencyGraph.plotArea.width - UtilsNumber.mapNumber_nocheck(2500,
                                                              ubertooth.freqMin, ubertooth.freqMax,
                                                              0, frequencyGraph.plotArea.width)
 
@@ -28,7 +28,7 @@ Item { // legend 2.4 GHz
         anchors.bottom: parent.bottom
         spacing: -(legend24.width / 100) * 17
 
-        visible: actionBar.wifi && actionBar.wifi_b
+        visible: (actionBar.wifi && actionBar.wifi_b)
 
         Repeater {
             model: 16
@@ -58,6 +58,7 @@ Item { // legend 2.4 GHz
                     anchors.bottom: parent.top
                     anchors.bottomMargin: 12
                     anchors.horizontalCenter: parent.horizontalCenter
+
                     text: {
                         if (index === 15) return "14"
                         return (index + 1)
@@ -87,7 +88,7 @@ Item { // legend 2.4 GHz
         height: 400
         spacing: -(legend24.width / 100) * 15
 
-        visible: actionBar.wifi && actionBar.wifi_gn
+        visible: (actionBar.wifi && actionBar.wifi_gn)
 
         Repeater {
             model: 16
@@ -114,6 +115,7 @@ Item { // legend 2.4 GHz
                     anchors.left: parent.left
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
+
                     text: {
                         if (index === 13 || index === 14) return ""
                         if (index === 15) return "14"
@@ -134,7 +136,7 @@ Item { // legend 2.4 GHz
         anchors.bottom: parent.bottom
         spacing: -(legend24.width / 100) * 17
 
-        visible: actionBar.wifi && actionBar.wifi_n
+        visible: (actionBar.wifi && actionBar.wifi_n)
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -145,7 +147,7 @@ Item { // legend 2.4 GHz
         anchors.bottom: parent.bottom
         spacing: (legend24.width / 100)
 
-        visible: actionBar.bluetooth && actionBar.bluetooth_lowenergy
+        visible: (actionBar.bluetooth && actionBar.bluetooth_lowenergy)
 
         Repeater {
             model: 40
@@ -168,6 +170,8 @@ Item { // legend 2.4 GHz
                     anchors.leftMargin: 4
                     anchors.right:parent.right
                     anchors.rightMargin: 4
+
+                    visible: (parent.width > 12)
 
                     text: {
                         if (index === 0) return "37"
@@ -194,7 +198,7 @@ Item { // legend 2.4 GHz
         anchors.bottom: parent.bottom
         spacing: 0
 
-        visible: actionBar.bluetooth && actionBar.bluetooth_classic
+        visible: (actionBar.bluetooth && actionBar.bluetooth_classic)
 
         Repeater {
             model: 79
@@ -205,9 +209,9 @@ Item { // legend 2.4 GHz
                 Rectangle {
                     anchors.fill: parent
                     opacity: 0.2
-                    border.width: 2
-                    border.color: Theme.colorBackground
                     color: Theme.colorBlue
+                    border.width: 1
+                    border.color: Theme.colorBackground
                 }
                 Text {
                     anchors.top: parent.top
@@ -216,6 +220,8 @@ Item { // legend 2.4 GHz
                     anchors.leftMargin: 4
                     anchors.right:parent.right
                     anchors.rightMargin: 4
+
+                    visible: (parent.width > 12)
 
                     text: (1 + index)
                     textFormat: Text.PlainText
@@ -252,12 +258,21 @@ Item { // legend 2.4 GHz
                 }
                 Text {
                     anchors.top: parent.top
-                    anchors.topMargin: 12
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.topMargin: 10
+                    anchors.left:parent.left
+                    anchors.leftMargin: 4
+                    anchors.right:parent.right
+                    anchors.rightMargin: 4
+
+                    visible: (parent.width > 16)
+
                     text: (11 + index)
                     textFormat: Text.PlainText
-                    font.pixelSize: Theme.fontSizeContentBig
                     font.bold: true
+                    font.pixelSize: Theme.fontSizeContent
+                    minimumPixelSize: Theme.fontSizeContentSmall
+                    fontSizeMode: Text.Fit
+                    horizontalAlignment: Text.AlignHCenter
                     color: "white"
                 }
             }

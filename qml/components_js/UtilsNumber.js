@@ -50,6 +50,10 @@ function mapNumber(n, a1, a2, b1, b2) {
     return (b1 + ((n-a1) * (b2-b1)) / (a2-a1))
 }
 
+function mapNumber_nocheck(n, a1, a2, b1, b2) {
+    return (b1 + ((n-a1) * (b2-b1)) / (a2-a1))
+}
+
 /*!
  * Normalize n between min and max
  */
