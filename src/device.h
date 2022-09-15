@@ -242,7 +242,7 @@ public:
     bool isUpdating() const;            //!< Is currently being updated?
     bool isErrored() const;             //!< Has emitted a BLE error
 
-    //
+    // Device associated data
     bool hasAddressMAC() const;
     QString getAddressMAC() const;
     void setAddressMAC(const QString &mac);

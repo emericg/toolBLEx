@@ -260,7 +260,7 @@ Loader {
                     height: 28
                     fullColor: true
                     primaryColor: ubertooth.hardwareAvailable ? Theme.colorSuccess: Theme.colorWarning
-                    text: ubertooth.hardwareAvailable ? qsTr("hardware ready") : qsTr("hardware")
+                    text: ubertooth.hardwareAvailable ? qsTr("hardware ready") : qsTr("hardware not ready")
                     source: ubertooth.hardwareAvailable ? "qrc:/assets/icons_material/baseline-check_circle-24px.svg" : ""
                     onClicked: ubertooth.checkUbertooth()
                 }

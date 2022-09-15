@@ -201,10 +201,9 @@ Flickable {
                 onTextEdited: selectedDevice.userComment = text
             }
 
-            Row { // buttons row
-                anchors.horizontalCenter: parent.horizontalCenter
-                height: 32
-                spacing: 20
+            Flow { // buttons row
+                width: detailView.ww
+                spacing: 12
 
                 ButtonWireframeIcon {
                     fullColor: true

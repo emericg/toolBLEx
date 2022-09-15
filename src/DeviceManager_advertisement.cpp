@@ -46,7 +46,6 @@ void DeviceManager::updateBleDevice(const QBluetoothDeviceInfo &info,
     //qDebug() << "updateBleDevice() " << info.name() << info.address(); // << info.deviceUuid(); // << " updatedFields: " << updatedFields;
 
     Q_UNUSED(updatedFields) // We don't use QBluetoothDeviceInfo::Fields, it's unreliable
-
     if (updatedFields > 1)
     {
         //QBluetoothDeviceInfo::Field::None	0x0000	None of the values changed.
@@ -54,7 +53,8 @@ void DeviceManager::updateBleDevice(const QBluetoothDeviceInfo &info,
         //QBluetoothDeviceInfo::Field::ManufacturerData	0x0002	The manufacturerData() field changed
         //QBluetoothDeviceInfo::Field::ServiceData	0x0004	The serviceData() field changed
         //QBluetoothDeviceInfo::Field::All	0x7fff	Matches every possible field.
-        qDebug() << "updateBleDevice() " << info.name() << info.address() << " updatedFields: " << updatedFields;
+
+        //qDebug() << "updateBleDevice() " << info.name() << info.address() << " updatedFields: " << updatedFields;
     }
 
     //qDebug() << "updateBleDevice() serviceUuids : " << info.serviceUuids();

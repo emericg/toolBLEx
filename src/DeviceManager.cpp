@@ -83,7 +83,7 @@ DeviceManager::DeviceManager(bool daemon)
             }
         }
 
-        // Load cached devices
+        // Load saved devices
         QSqlQuery queryDevices;
         queryDevices.exec("SELECT deviceAddr, deviceName FROM devices");
         while (queryDevices.next())
@@ -381,7 +381,7 @@ void DeviceManager::startBleAgent()
         m_discoveryAgent = new QBluetoothDeviceDiscoveryAgent();
         if (m_discoveryAgent)
         {
-            qDebug() << "Scanning method supported:" << m_discoveryAgent->supportedDiscoveryMethods();
+            //qDebug() << "Scanning method supported:" << m_discoveryAgent->supportedDiscoveryMethods();
 
             connect(m_discoveryAgent, QOverload<QBluetoothDeviceDiscoveryAgent::Error>::of(&QBluetoothDeviceDiscoveryAgent::errorOccurred),
                     this, &DeviceManager::deviceDiscoveryError, Qt::UniqueConnection);
