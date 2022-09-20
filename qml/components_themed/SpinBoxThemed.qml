@@ -138,7 +138,7 @@ T.SpinBox {
             anchors.centerIn: parent
             width: UtilsNumber.round2(parent.height * 0.4)
             height: 2
-            color: enabled ? Theme.colorComponentContent : Theme.colorSubText
+            color: Theme.colorComponentContent
         }
         Rectangle {
             anchors.centerIn: parent

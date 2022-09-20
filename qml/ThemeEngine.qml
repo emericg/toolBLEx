@@ -225,12 +225,12 @@ Item {
             componentRadius = 8
             componentBorderWidth = 2
 
-            colorComponent = "#EFEFEF"
+            colorComponent = "#eaeaea"
             colorComponentText = "black"
             colorComponentContent = "black"
-            colorComponentBorder = "#EAEAEA"
+            colorComponentBorder = "#ddd"
             colorComponentDown = "#DADADA"
-            colorComponentBackground = "#FAFAFA"
+            colorComponentBackground = "#fcfcfc"
 
         } else if (themeIndex === ThemeEngine.THEME_DESKTOP_DARK) {
 
@@ -291,7 +291,7 @@ Item {
             colorComponentContent = "white"
             colorComponentBorder = "#777"
             colorComponentDown = "#595959"
-            colorComponentBackground = "#292929"
+            colorComponentBackground = "#393939"
 
         }
 

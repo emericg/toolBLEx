@@ -107,11 +107,14 @@ ChartView {
 
     Item {
         id: legend_area
+
+        width: parent.plotArea.width
+        height: parent.plotArea.height
         x: parent.plotArea.x
         y: parent.plotArea.y
         z: -1
-        width: parent.plotArea.width
-        height: parent.plotArea.height
+
+        clip: true
 
         FrequencyGraphLegend {
             id: legend24

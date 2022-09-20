@@ -288,8 +288,7 @@ Flickable {
                 ButtonWireframe {
                     fullColor: true
                     primaryColor: selectedDevice.userColor
-                    fulltextColor: utilsApp.isQColorLight(selectedDevice.userColor) ? Theme.colorHighContrast
-                                                                                    : Theme.colorLowContrast
+                    fulltextColor: utilsApp.isQColorLight(selectedDevice.userColor) ? "#333" : "#f4f4f4"
 
                     text: qsTr("color")
                     onClicked: colorDialog.open()

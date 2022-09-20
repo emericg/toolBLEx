@@ -18,15 +18,13 @@ Item { // legend 2.4 GHz
                                                              ubertooth.freqMin, ubertooth.freqMax,
                                                              0, frequencyGraph.plotArea.width)
 
-    clip: true
-
     ////////////////////////////////////////////////////////////////////////////
 
     Row { // wifi // 802.11b
         anchors.left: parent.left
-        anchors.leftMargin: (legend24.width / 100) * 1
+        anchors.leftMargin: ((legend24.width / 100) * 1)
         anchors.bottom: parent.bottom
-        spacing: -(legend24.width / 100) * 17
+        spacing: -((legend24.width / 100) * 17)
 
         visible: (actionBar.wifi && actionBar.wifi_b)
 
@@ -35,10 +33,10 @@ Item { // legend 2.4 GHz
 
             Rectangle {
                 anchors.top: parent.top
-                anchors.topMargin: (legend24.width / 100) * 11
+                anchors.topMargin: ((legend24.width / 100) * 11)
 
-                width: (legend24.width / 100) * 22
-                height: (legend24.width / 100) * 22
+                width: ((legend24.width / 100) * 22)
+                height: ((legend24.width / 100) * 22)
                 radius: width
 
                 opacity: 0.66
@@ -82,11 +80,11 @@ Item { // legend 2.4 GHz
 
     Row { // wifi // 802.11g/n
         anchors.left: parent.left
-        anchors.leftMargin: (legend24.width / 100) * 1
+        anchors.leftMargin: ((legend24.width / 100) * 1)
         anchors.bottom: parent.bottom
 
         height: 400
-        spacing: -(legend24.width / 100) * 15
+        spacing: -((legend24.width / 100) * 15)
 
         visible: (actionBar.wifi && actionBar.wifi_gn)
 
@@ -132,7 +130,7 @@ Item { // legend 2.4 GHz
 
     Row { // wifi // 802.11n
         anchors.left: parent.left
-        anchors.leftMargin: (legend24.width / 100) * 1
+        anchors.leftMargin: ((legend24.width / 100) * 1)
         anchors.bottom: parent.bottom
         spacing: -(legend24.width / 100) * 17
 
@@ -143,11 +141,11 @@ Item { // legend 2.4 GHz
 
     Row { // bluetooth // low energy
         anchors.left: parent.left
-        anchors.leftMargin: (legend24.width / 100) * 1.5
+        anchors.leftMargin: ((legend24.width / 100) * 1.5)
         anchors.bottom: parent.bottom
-        spacing: (legend24.width / 100)
 
         visible: (actionBar.bluetooth && actionBar.bluetooth_lowenergy)
+        spacing: (legend24.width / 100)
 
         Repeater {
             model: 40
@@ -194,11 +192,11 @@ Item { // legend 2.4 GHz
 
     Row { // bluetooth // classic
         anchors.left: parent.left
-        anchors.leftMargin: (legend24.width / 100) * 1.5
+        anchors.leftMargin: ((legend24.width / 100) * 1.5)
         anchors.bottom: parent.bottom
-        spacing: 0
 
         visible: (actionBar.bluetooth && actionBar.bluetooth_classic)
+        spacing: 0
 
         Repeater {
             model: 79
@@ -239,16 +237,17 @@ Item { // legend 2.4 GHz
 
     Row { // zigbee
         anchors.left: parent.left
-        anchors.leftMargin: (legend24.width / 100) * 4
+        anchors.leftMargin: ((legend24.width / 100) * 4)
         anchors.bottom: parent.bottom
-        spacing: (legend24.width / 100) * 3
 
         visible: actionBar.zigbee
+        spacing: ((legend24.width / 100) * 3)
 
         Repeater {
             model: 16
+
             Item {
-                width: (legend24.width / 100) * 2
+                width: ((legend24.width / 100) * 2)
                 height: 256
 
                 Rectangle {

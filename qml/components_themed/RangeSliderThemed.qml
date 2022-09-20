@@ -8,6 +8,7 @@ T.RangeSlider {
     id: control
     implicitWidth: 200
     implicitHeight: Theme.componentHeight
+    padding: 8
 
     first.value: 0.25
     second.value: 0.75
@@ -19,7 +20,7 @@ T.RangeSlider {
         width: control.availableWidth
         height: 4
         radius: 2
-        color: Theme.colorForeground
+        color: Theme.colorComponentBackground
 
         Rectangle {
             x: (control.first.visualPosition * parent.width)

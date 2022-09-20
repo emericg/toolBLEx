@@ -671,6 +671,7 @@ Loader {
 
                                 text: settingsManager.ubertooth_path
                                 placeholderText: "ubertooth-specan"
+                                selectByMouse: true
 
                                 onTextEdited: {
                                     settingsManager.ubertooth_path = text
@@ -719,64 +720,67 @@ Loader {
                             height: 48
                             color: Theme.colorForeground
 
-                            Text {
+                            visible: ubertooth.toolsAvailable
+
+                            RangeSliderThemed {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 20
-                                anchors.verticalCenter: parent.verticalCenter
-
-                                text: qsTr("Min frequency")
-                                textFormat: Text.PlainText
-                                font.pixelSize: Theme.fontSizeContent
-                                font.bold: false
-                                color: Theme.colorText
-                                wrapMode: Text.WordWrap
-                                verticalAlignment: Text.AlignVCenter
-                            }
-
-                            SpinBoxThemed {
                                 anchors.right: parent.right
-                                anchors.rightMargin: 8
                                 anchors.verticalCenter: parent.verticalCenter
-                                width: 140
+                                anchors.margins: 2
 
-                                editable: true
                                 from: 2300
                                 to: 2600
-
-                                value: settingsManager.ubertooth_freqMin
-                                onValueModified: settingsManager.ubertooth_freqMin = value
+                                first.value: settingsManager.ubertooth_freqMin
+                                first.onMoved: settingsManager.ubertooth_freqMin = first.value
+                                second.value: settingsManager.ubertooth_freqMax
+                                second.onMoved: settingsManager.ubertooth_freqMax = second.value
                             }
                         }
-
                         Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
                             height: 48
                             color: Theme.colorForeground
 
-                            Text {
-                                anchors.left: parent.left
-                                anchors.leftMargin: 20
-                                anchors.verticalCenter: parent.verticalCenter
+                            visible: ubertooth.toolsAvailable
 
-                                text: qsTr("Max frequency")
-                                textFormat: Text.PlainText
-                                font.pixelSize: Theme.fontSizeContent
-                                font.bold: false
-                                color: Theme.colorText
-                                wrapMode: Text.WordWrap
-                                verticalAlignment: Text.AlignVCenter
+                            SpinBoxThemed {
+                                anchors.left: parent.left
+                                anchors.leftMargin: 8
+                                anchors.verticalCenter: parent.verticalCenter
+                                width: 150
+
+                                hoverEnabled: false
+                                editable: false
+                                from: 2300
+                                to: 2600
+                                legend: "MHz"
+
+                                value: settingsManager.ubertooth_freqMin
+                                onValueModified: settingsManager.ubertooth_freqMin = value
+                            }
+
+                            ButtonThemed {
+                                anchors.centerIn: parent
+
+                                text: qsTr("set default")
+                                onClicked: {
+                                    settingsManager.ubertooth_freqMin = 2402
+                                    settingsManager.ubertooth_freqMax = 2480
+                                }
                             }
 
                             SpinBoxThemed {
                                 anchors.right: parent.right
                                 anchors.rightMargin: 8
                                 anchors.verticalCenter: parent.verticalCenter
-                                width: 140
+                                width: 150
 
-                                editable: true
+                                hoverEnabled: false
+                                editable: false
                                 from: 2300
                                 to: 2600
+                                legend: "MHz"
 
                                 value: settingsManager.ubertooth_freqMax
                                 onValueModified: settingsManager.ubertooth_freqMax = value
