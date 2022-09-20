@@ -16,6 +16,14 @@ Rectangle {
     property var packet: null
     property int legendWidth: 56
 
+    Component.onCompleted: {
+        legendWidth = 40
+        legendWidth = Math.max(legendWidth, legendUUID.contentWidth)
+        legendWidth = Math.max(legendWidth, legendSize.contentWidth)
+        legendWidth = Math.max(legendWidth, legendData.contentWidth)
+        legendWidth += 8
+    }
+
     Rectangle {
         anchors.top: parent.top
         anchors.left: parent.left
@@ -65,8 +73,9 @@ Rectangle {
             spacing: 12
 
             Text {
-                anchors.verticalCenter: parent.verticalCenter
+                id: legendUUID
                 width: legendWidth
+                anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("UUID")
                 textFormat: Text.PlainText
@@ -132,8 +141,9 @@ Rectangle {
             spacing: 12
 
             Text {
-                anchors.verticalCenter: parent.verticalCenter
+                id: legendSize
                 width: legendWidth
+                anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Size")
                 textFormat: Text.PlainText
@@ -176,7 +186,7 @@ Rectangle {
             spacing: 0
 
             Text {
-                id: ttt
+                id: legendData
                 height: 24
 
                 Layout.alignment: Qt.AlignBaseline

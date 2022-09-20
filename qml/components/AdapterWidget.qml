@@ -39,9 +39,18 @@ Rectangle {
 
         property int legendWidth: 180
 
+        Component.onCompleted: {
+            legendWidth = 64
+            legendWidth = Math.max(legendWidth, legendHostname.contentWidth)
+            legendWidth = Math.max(legendWidth, legendAddress.contentWidth)
+            legendWidth = Math.max(legendWidth, legendMAC.contentWidth)
+            legendWidth = Math.max(legendWidth, legendBluetooth.contentWidth)
+            legendWidth += 16
+        }
+
         Text {
-            anchors.horizontalCenter: parent.horizontalCenter
             height: 32
+            anchors.horizontalCenter: parent.horizontalCenter
 
             text: qsTr("Bluetooth adapter #%1").arg(index+1)
             textFormat: Text.PlainText
@@ -57,8 +66,9 @@ Rectangle {
             spacing: 12
 
             Text {
-                anchors.verticalCenter: parent.verticalCenter
+                id: legendHostname
                 width: col.legendWidth
+                anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Hostname")
                 textFormat: Text.PlainText
@@ -78,8 +88,9 @@ Rectangle {
             spacing: 12
 
             Text {
-                anchors.verticalCenter: parent.verticalCenter
+                id: legendAddress
                 width: col.legendWidth
+                anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("MAC address")
                 textFormat: Text.PlainText
@@ -101,8 +112,9 @@ Rectangle {
             visible: modelData.manufacturer.length
 
             Text {
-                anchors.verticalCenter: parent.verticalCenter
+                id: legendMAC
                 width: col.legendWidth
+                anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("MAC vendor")
                 textFormat: Text.PlainText
@@ -124,8 +136,9 @@ Rectangle {
             visible: modelData.version.length
 
             Text {
-                anchors.verticalCenter: parent.verticalCenter
+                id: legendBluetooth
                 width: col.legendWidth
+                anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Bluetooth version")
                 textFormat: Text.PlainText

@@ -79,13 +79,23 @@ Flickable {
                 id: box1
                 anchors.verticalCenter: parent.verticalCenter
 
-                property int legendWidth: 160
+                property int legendWidth: 140
+
+                Component.onCompleted: {
+                    legendWidth = 64
+                    legendWidth = Math.max(legendWidth, legendName.contentWidth)
+                    legendWidth = Math.max(legendWidth, legendAddress.contentWidth)
+                    legendWidth = Math.max(legendWidth, legendManufacturer.contentWidth)
+                    legendWidth = Math.max(legendWidth, legendBluetooth.contentWidth)
+                    legendWidth += 20
+                }
 
                 Row {
                     height: 32
                     spacing: 12
 
                     Text {
+                        id: legendName
                         anchors.verticalCenter: parent.verticalCenter
                         width: box1.legendWidth
                         text: qsTr("Name")
@@ -110,6 +120,7 @@ Flickable {
                     spacing: 12
 
                     Text {
+                        id: legendAddress
                         anchors.verticalCenter: parent.verticalCenter
                         width: box1.legendWidth
                         text: qsTr("MAC address")
@@ -129,6 +140,7 @@ Flickable {
                     spacing: 12
 
                     Text {
+                        id: legendManufacturer
                         anchors.verticalCenter: parent.verticalCenter
                         width: box1.legendWidth
                         text: qsTr("Manufacturer")
@@ -139,6 +151,7 @@ Flickable {
                     }
 
                     TextSelectable {
+                        id: deviceManufacturer
                         anchors.verticalCenter: parent.verticalCenter
 
                         property bool manufAvailable: (selectedDevice.deviceManufacturer.length > 0)
@@ -153,6 +166,7 @@ Flickable {
                     spacing: 12
 
                     Text {
+                        id: legendBluetooth
                         anchors.verticalCenter: parent.verticalCenter
                         width: box1.legendWidth
                         text: qsTr("Bluetooth")
@@ -326,15 +340,24 @@ Flickable {
                 id: box2
                 anchors.verticalCenter: parent.verticalCenter
 
-                property int legendWidth: 160
+                property int legendWidth: 140
+
+                Component.onCompleted: {
+                    legendWidth = 64
+                    legendWidth = Math.max(legendWidth, legendCategory.contentWidth)
+                    legendWidth = Math.max(legendWidth, legendDeviceType.contentWidth)
+                    legendWidth = Math.max(legendWidth, legendService.contentWidth)
+                    legendWidth += 20
+                }
 /*
                 Row {
                     height: 32
                     spacing: 12
 
                     Text {
-                        anchors.verticalCenter: parent.verticalCenter
                         width: box2.legendWidth
+                        anchors.verticalCenter: parent.verticalCenter
+
                         text: qsTr("classes - debug")
                         textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContent
@@ -354,8 +377,10 @@ Flickable {
                     spacing: 12
 
                     Text {
-                        anchors.verticalCenter: parent.verticalCenter
+                        id: legendCategory
                         width: box2.legendWidth
+                        anchors.verticalCenter: parent.verticalCenter
+
                         text: qsTr("category")
                         textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContent
@@ -372,8 +397,10 @@ Flickable {
                     spacing: 12
 
                     Text {
-                        anchors.verticalCenter: parent.verticalCenter
+                        id: legendDeviceType
                         width: box2.legendWidth
+                        anchors.verticalCenter: parent.verticalCenter
+
                         text: qsTr("device type")
                         textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContent
@@ -390,8 +417,10 @@ Flickable {
                     spacing: 12
 
                     Text {
-                        anchors.verticalCenter: parent.verticalCenter
+                        id: legendService
                         width: box2.legendWidth
+                        anchors.verticalCenter: parent.verticalCenter
+
                         text: qsTr("service(s)")
                         textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContent
@@ -420,17 +449,25 @@ Flickable {
             Column {
                 id: box3
                 anchors.verticalCenter: parent.verticalCenter
-                anchors.verticalCenterOffset: 0
 
                 property int legendWidth: 200
+
+                Component.onCompleted: {
+                    legendWidth = 64
+                    legendWidth = Math.max(legendWidth, legendRSSI.contentWidth)
+                    legendWidth = Math.max(legendWidth, legendAdvertising.contentWidth)
+                    legendWidth += 20
+                }
 
                 Row {
                     height: 32
                     spacing: 12
 
                     Text {
-                        anchors.verticalCenter: parent.verticalCenter
+                        id: legendRSSI
                         width: box3.legendWidth
+                        anchors.verticalCenter: parent.verticalCenter
+
                         text: qsTr("RSSI")
                         textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContent
@@ -488,8 +525,10 @@ Flickable {
                     spacing: 12
 
                     Text {
-                        anchors.verticalCenter: parent.verticalCenter
+                        id: legendAdvertising
                         width: box3.legendWidth
+                        anchors.verticalCenter: parent.verticalCenter
+
                         text: qsTr("Advertising interval")
                         textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContent
@@ -595,8 +634,6 @@ Flickable {
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 12
-
-                property int legendWidth: 200
 
                 ////
 
