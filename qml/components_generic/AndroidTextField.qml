@@ -7,7 +7,6 @@ import ThemeEngine 1.0
 T.TextField {
     id: control
 
-
     implicitWidth: implicitBackgroundWidth + leftInset + rightInset
                    || Math.max(contentWidth, placeholder.implicitWidth) + leftPadding + rightPadding
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
@@ -17,8 +16,10 @@ T.TextField {
     padding: 12
     leftPadding: padding + 4
 
-    text: ""
     color: colorText
+    opacity: 1
+
+    text: ""
     font.pixelSize: Theme.fontSizeComponent
     verticalAlignment: Text.AlignVCenter
 

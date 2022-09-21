@@ -24,23 +24,19 @@ Loader {
 
         Rectangle { // button minimize
             width: 46; height: 28;
-            color: hovered ? "#33aaaaaa" : "transparent"
-
-            property bool hovered: false
+            color: mouseAreaMin.containsMouse ? "#33aaaaaa" : "transparent"
 
             Rectangle {
                 width: 10; height: 1;
                 anchors.centerIn: parent
-                color: parent.hovered ? Theme.colorHighContrast : Theme.colorIcon
+                color: mouseAreaMin.containsMouse ? Theme.colorHighContrast : Theme.colorIcon
             }
 
             MouseArea {
+                id: mouseAreaMin
                 anchors.fill: parent
 
                 hoverEnabled: true
-                onEntered: parent.hovered = true
-                onExited: parent.hovered = false
-                onCanceled: parent.hovered = false
                 onClicked: appWindow.showMinimized()
             }
         }
@@ -49,25 +45,21 @@ Loader {
 
         Rectangle { // button maximize
             width: 46; height: 28;
-            color: hovered ? "#33aaaaaa" : "transparent"
-
-            property bool hovered: false
+            color: mouseAreaMax.containsMouse ? "#33aaaaaa" : "transparent"
 
             Rectangle {
                 width: 10; height: 10;
                 anchors.centerIn: parent
                 color: "transparent"
                 border.width: 1
-                border.color: parent.hovered ? Theme.colorHighContrast : Theme.colorIcon
+                border.color: mouseAreaMax.containsMouse ? Theme.colorHighContrast : Theme.colorIcon
             }
 
             MouseArea {
+                id: mouseAreaMax
                 anchors.fill: parent
 
                 hoverEnabled: true
-                onEntered: parent.hovered = true
-                onExited: parent.hovered = false
-                onCanceled: parent.hovered = false
                 onClicked: {
                     if (appWindow.visibility === ApplicationWindow.Maximized)
                         appWindow.showNormal()
@@ -81,38 +73,34 @@ Loader {
 
         Rectangle { // button close
             width: 46; height: 28;
-            color: hovered ? "red" : "transparent"
-
-            property bool hovered: false
+            color: mouseAreaClose.containsMouse ? "red" : "transparent"
 
             IconSvg {
                 width: 16; height: 16;
                 anchors.centerIn: parent
 
                 source: "qrc:/assets/icons_material/baseline-close-24px.svg"
-                color: parent.hovered ? "white" : Theme.colorIcon
+                color: mouseAreaClose.containsMouse ? "white" : Theme.colorIcon
             }
 /*
             Rectangle {
                 width: 12; height: 1;
                 anchors.centerIn: parent
                 rotation: 45
-                color: parent.hovered ? "white" : Theme.colorIcon
+                color: mouseAreaClose.containsMouse ? "white" : Theme.colorIcon
             }
             Rectangle {
                 width: 12; height: 1;
                 anchors.centerIn: parent
                 rotation: -45
-                color: parent.hovered ? "white" : Theme.colorIcon
+                color: mouseAreaClose.containsMouse ? "white" : Theme.colorIcon
             }
 */
             MouseArea {
+                id: mouseAreaClose
                 anchors.fill: parent
 
                 hoverEnabled: true
-                onEntered: parent.hovered = true
-                onExited: parent.hovered = false
-                onCanceled: parent.hovered = false
                 onClicked: appWindow.close()
             }
         }

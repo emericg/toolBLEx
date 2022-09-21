@@ -16,18 +16,13 @@ Loader {
         implicitWidth: 48
         implicitHeight: 24
 
-        property bool hovered: false
-
         ////////
 
         MouseArea {
-            id: buttonsArea
+            id: mouseArea
             anchors.fill: buttonsRow
 
             hoverEnabled: visible
-            onEntered: csdMac.hovered = true
-            onExited: csdMac.hovered = false
-            onCanceled: csdMac.hovered = false
         }
 
         ////////
@@ -46,7 +41,7 @@ Loader {
                     width: 10; height: 10;
                     anchors.centerIn: parent
                     source: "qrc:/assets/icons_material/baseline-close-24px.svg"
-                    opacity: csdMac.hovered ? 0.6 : 0
+                    opacity: mouseArea.containsMouse ? 0.6 : 0
                     //Behavior on opacity { OpacityAnimator { duration: 133 } }
                 }
                 MouseArea {
@@ -62,7 +57,7 @@ Loader {
                     width: 8; height: 1;
                     anchors.centerIn: parent
                     color: "grey"
-                    opacity: csdMac.hovered ? 0.8 : 0
+                    opacity: mouseArea.containsMouse ? 0.8 : 0
                     //Behavior on opacity { OpacityAnimator { duration: 133 } }
                 }
                 MouseArea {

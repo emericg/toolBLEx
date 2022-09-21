@@ -12,11 +12,8 @@ Item {
 
     // actions
     signal clicked()
+    signal pressed()
     signal pressAndHold()
-
-    // states
-    property bool hovered: false
-    property bool pressed: false
 
     // image
     property url source
@@ -32,22 +29,14 @@ Item {
     ////////////////////////////////////////////////////////////////////////////
 
     MouseArea {
+        id: mouseArea
         anchors.fill: parent
         propagateComposedEvents: false
         hoverEnabled: (isDesktop && control.enabled)
 
         onClicked: control.clicked()
+        onPressed: control.pressed()
         onPressAndHold: control.pressAndHold()
-
-        onPressed: control.pressed = true
-        onReleased: control.pressed = false
-
-        onEntered: control.hovered = true
-        onExited: control.hovered = false
-        onCanceled: {
-            control.hovered = false
-            control.pressed = false
-        }
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -62,7 +51,7 @@ Item {
         radius: control.width
         color: control.highlightColor
 
-        opacity: control.hovered ? 0.33 : 0
+        opacity: mouseArea.containsMouse ? 0.33 : 0
         Behavior on opacity { OpacityAnimator { duration: 333 } }
     }
     Glow {
@@ -78,7 +67,7 @@ Item {
         //samples: 16
         transparentBorder: true
 
-        opacity: control.hovered ? 1 : 0
+        opacity: mouseArea.containsMouse ? 1 : 0
         Behavior on opacity { OpacityAnimator { duration: 333 } }
     }
 
@@ -88,8 +77,8 @@ Item {
         id: contentImage
         anchors.centerIn: parent
 
-        width: Math.round(control.sourceSize * (control.pressed ? 0.9 : 1))
-        height: Math.round(control.sourceSize * (control.pressed ? 0.9 : 1))
+        width: Math.round(control.sourceSize * (mouseArea.containsPress ? 0.9 : 1))
+        height: Math.round(control.sourceSize * (mouseArea.containsPress ? 0.9 : 1))
 
         source: control.source
         sourceSize: Qt.size(control.sourceSize, control.sourceSize)

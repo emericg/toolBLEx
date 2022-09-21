@@ -23,7 +23,7 @@ Tumbler {
         verticalAlignment: Text.AlignVCenter
 
         color: (control.currentIndex === modelData) ? Theme.colorPrimary : Theme.colorText
-        opacity: 1.0 - (Math.abs(Tumbler.displacement) / (control.visibleItemCount * 0.55))
+        opacity: (control.enabled ? 1.0 : 0.8) - (Math.abs(Tumbler.displacement) / (control.visibleItemCount * 0.55))
         font.pixelSize: (control.currentIndex === modelData) ? Theme.fontSizeComponent+2 : Theme.fontSizeComponent
         font.bold: false
     }

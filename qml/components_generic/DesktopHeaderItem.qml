@@ -13,11 +13,10 @@ Item {
 
     // actions
     signal clicked()
+    signal pressed()
     signal pressAndHold()
 
     // states
-    property bool hovered: false
-    property bool pressed: false
     property bool selected: false
 
     // settings
@@ -37,47 +36,34 @@ Item {
         hoverEnabled: true
 
         onClicked: control.clicked()
+        onPressed: control.pressed()
         onPressAndHold: control.pressAndHold()
 
-        onPressed: control.pressed = true
-        onReleased: control.pressed = false
+        Rectangle { // bgRect
+            anchors.fill: parent
 
-        onEntered: control.hovered = true
-        onExited: control.hovered = false
-        onCanceled: {
-            control.hovered = false
-            control.pressed = false
+            visible: (control.selected && control.highlightMode === "background")
+            color: control.colorHighlight
         }
-    }
 
-    ////////////////////////////////////////////////////////////////////////////
+        Rectangle { // bgFocus
+            anchors.fill: parent
 
-    Rectangle {
-        id: bgRect
-        anchors.fill: parent
+            visible: (highlightMode === "background")
+            color: control.colorHighlight
+            opacity: parent.containsMouse ? 0.5 : 0
+            Behavior on opacity { OpacityAnimator { duration: 333 } }
+        }
 
-        visible: (control.selected && control.highlightMode === "background")
-        color: control.colorHighlight
-    }
-    Rectangle {
-        id: bgFocus
-        anchors.fill: parent
+        Rectangle { //  indicator
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
 
-        visible: (highlightMode === "background")
-        color: control.colorHighlight
-        opacity: control.hovered ? 0.5 : 0
-        Behavior on opacity { OpacityAnimator { duration: 333 } }
-    }
-
-    Rectangle {
-        id: indicator
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-
-        height: 4
-        visible: (control.selected && highlightMode === "indicator")
-        color: Theme.colorPrimary
+            height: 4
+            visible: (control.selected && highlightMode === "indicator")
+            color: Theme.colorPrimary
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////

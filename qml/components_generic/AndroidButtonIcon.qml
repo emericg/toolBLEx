@@ -33,7 +33,7 @@ T.Button {
     ////////////////////////////////////////////////////////////////////////////
 
     MouseArea {
-        id: mousearea
+        id: mouseArea
         anchors.fill: control
 
         hoverEnabled: false
@@ -72,15 +72,15 @@ T.Button {
         ////////
 
         Rectangle { // mouseBackground
-            width: mousearea.pressed ? control.width*2 : 0
+            width: mouseArea.pressed ? control.width*2 : 0
             height: width
             radius: width
 
-            x: mousearea.mouseX + 4 - (width / 2)
-            y: mousearea.mouseY + 4 - (width / 2)
+            x: mouseArea.mouseX + 4 - (width / 2)
+            y: mouseArea.mouseY + 4 - (width / 2)
 
             color: "#222"
-            opacity: mousearea.pressed ? 0.1 : 0
+            opacity: mouseArea.pressed ? 0.1 : 0
             Behavior on opacity { NumberAnimation { duration: 333 } }
             Behavior on width { NumberAnimation { duration: 333 } }
         }

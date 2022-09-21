@@ -84,7 +84,7 @@ Item {
                 }
 
                 Rectangle {
-                    id: item_data
+                    id: rect_data
                     width: {
                         var res = UtilsNumber.normalize(value, valueMin, valueMax) * rect_bg.width
 
@@ -145,13 +145,12 @@ Item {
                 height: 15
                 y: -22
                 x: {
-                    if (item_data.width < ((width / 2) + 8)) { // left
+                    if (rect_data.width < ((textIndicator.width / 2) + 8)) { // left
                         return 4
-                    } else if ((item_bg.width - item_data.width) < (width / 2)) { // right
-                        return item_bg.width - width - 4
-                    } else { // whatever
-                        return item_data.width - (width / 2) - 4
+                    } else if ((rect_bg.width - rect_data.width) < (textIndicator.width / 2)) { // right
+                        return rect_bg.width - textIndicator.width - 4
                     }
+                    return rect_data.width - (textIndicator.width / 2) - 4
                 }
 
                 text: {
@@ -190,14 +189,14 @@ Item {
                         anchors.topMargin: -3
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.horizontalCenterOffset: {
-                            if (item_data.width < ((textIndicator.width / 2) + 8)) { // left
-                                if (item_data.width > 12) {
-                                    return (item_data.width - ((textIndicator.width / 2) + 8))
+                            if (rect_data.width < ((textIndicator.width / 2) + 8)) { // left
+                                if (rect_data.width > 12) {
+                                    return (rect_data.width - ((textIndicator.width / 2) + 8))
                                 } else {
                                     return -((textIndicator.width / 2) - 4)
                                 }
-                            } else if ((item_bg.width - item_data.width) < (textIndicator.width / 2)) { // right
-                                return -((item_bg.width - item_data.width) - (textIndicator.width / 2)) - 4
+                            } else if ((rect_bg.width - rect_data.width) < (textIndicator.width / 2)) { // right
+                                return -((rect_bg.width - rect_data.width) - (textIndicator.width / 2)) - 4
                             }
                             return 0
                         }

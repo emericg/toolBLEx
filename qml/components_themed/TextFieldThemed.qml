@@ -16,8 +16,10 @@ T.TextField {
     padding: 8
     leftPadding: padding + 4
 
-    text: ""
     color: colorText
+    opacity: control.enabled ? 1 : 0.66
+
+    text: ""
     font.pixelSize: Theme.fontSizeComponent
     verticalAlignment: TextInput.AlignVCenter
 

@@ -40,7 +40,6 @@ T.Button {
         enabled: control.hoverAnimation
 
         hoverEnabled: control.hoverAnimation
-        property bool hovered: false
 
         onClicked: control.clicked()
         onPressAndHold: control.pressAndHold()
@@ -48,29 +47,21 @@ T.Button {
         onPressed: {
             control.down = true
             mouseBackground.width = (control.width * 2)
-            mouseBackground.opacity = 0.16
         }
         onReleased: {
             control.down = false
-            //mouseBackground.width = 0
-            //mouseBackground.opacity = 0
+            //mouseBackground.width = 0 // let the click expand the ripple
         }
         onEntered: {
-            mousearea.hovered = true
             mouseBackground.width = 72
-            mouseBackground.opacity = 0.16
         }
         onExited: {
-            mousearea.hovered = false
             control.down = false
             mouseBackground.width = 0
-            mouseBackground.opacity = 0
         }
         onCanceled: {
-            mousearea.hovered = false
             control.down = false
             mouseBackground.width = 0
-            mouseBackground.opacity = 0
         }
     }
 
@@ -94,7 +85,7 @@ T.Button {
 
             visible: control.hoverAnimation
             color: "white"
-            opacity: 0
+            opacity: mousearea.containsMouse ? 0.16 : 0
             Behavior on opacity { NumberAnimation { duration: 333 } }
             Behavior on width { NumberAnimation { duration: 200 } }
         }

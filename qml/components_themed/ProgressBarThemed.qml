@@ -11,7 +11,7 @@ T.ProgressBar {
 
     value: 0.5
 
-    property var colorBackground: Theme.colorForeground
+    property var colorBackground: Theme.colorComponentBackground
     property var colorForeground: Theme.colorPrimary
 
     background: Rectangle {

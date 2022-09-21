@@ -16,11 +16,8 @@ Item {
 
     // actions
     signal clicked()
+    signal pressed()
     signal pressAndHold()
-
-    // states
-    property bool hovered: false
-    property bool pressed: false
 
     // settings
     property bool compact: true
@@ -45,41 +42,22 @@ Item {
     ////////////////////////////////////////////////////////////////////////////
 
     MouseArea {
-        id: mousearea
+        id: mouseArea
         anchors.fill: parent
 
         hoverEnabled: (isDesktop && control.enabled)
 
         onClicked: control.clicked()
+        onPressed: {
+            control.pressed()
+            mouseBackground.width = (control.width * 2)
+        }
         onPressAndHold: control.pressAndHold()
 
-        onPressed: {
-            control.pressed = true
-            mouseBackground.width = (control.width * 2)
-            mouseBackground.opacity = 0.16
-        }
-        onReleased: {
-            control.pressed = false
-            //mouseBackground.width = 0
-            //mouseBackground.opacity = 0
-        }
-
-        onEntered: {
-            control.hovered = true
-            mouseBackground.width = 72
-            mouseBackground.opacity = 0.16
-        }
-        onExited: {
-            control.hovered = false
-            mouseBackground.width = 0
-            mouseBackground.opacity = 0
-        }
-        onCanceled: {
-            control.hovered = false
-            control.pressed = false
-            mouseBackground.width = 0
-            mouseBackground.opacity = 0
-        }
+        //onReleased: mouseBackground.width = 0 // let the click expand the ripple
+        onEntered: mouseBackground.width = 72
+        onExited: mouseBackground.width = 0
+        onCanceled: mouseBackground.width = 0
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -90,18 +68,18 @@ Item {
 
         radius: control.compact ? (control.height / 2) : Theme.componentRadius
         color: control.backgroundColor
-        opacity: (!control.compact || control.hovered) ? 1 : 0
+        opacity: (!control.compact || mouseArea.containsMouse) ? 1 : 0
         Behavior on opacity { NumberAnimation { duration: 333 } }
 
         Rectangle {
             id: mouseBackground
             width: 0; height: width; radius: width;
-            x: mousearea.mouseX - (width / 2)
-            y: mousearea.mouseY - (width / 2)
+            x: mouseArea.mouseX - (width / 2)
+            y: mouseArea.mouseY - (width / 2)
 
             visible: !control.compact
             color: "white"
-            opacity: 0
+            opacity: mouseArea.containsMouse ? 0.16 : 0
             Behavior on opacity { NumberAnimation { duration: 333 } }
             Behavior on width { NumberAnimation { duration: 200 } }
         }
@@ -180,7 +158,7 @@ Item {
         active: control.tooltipText
 
         sourceComponent: ToolTipFlat {
-            visible: control.hovered
+            visible: mouseArea.containsMouse
             text: control.tooltipText
             textColor: control.textColor
             tooltipPosition: control.tooltipPosition

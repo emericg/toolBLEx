@@ -35,7 +35,7 @@ T.Slider {
         height: width
         radius: (width / 2)
         color: control.pressed ? Theme.colorSecondary : Theme.colorPrimary
-        border.color: control.pressed ? Theme.colorPrimary : Theme.colorPrimary
+        border.color: Theme.colorPrimary
 
         MouseArea {
             anchors.fill: parent

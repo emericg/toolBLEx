@@ -24,26 +24,22 @@ Loader {
 
         Rectangle { // button minimize
             width: 26; height: 26; radius: 26;
-            color: hovered ? "#66aaaaaa" : "#33aaaaaa"
+            color: mouseAreaMin.containsMouse ? "#66aaaaaa" : "#33aaaaaa"
             Behavior on color { ColorAnimation { duration: 233; easing.type: Easing.InOutCirc; } }
-
-            property bool hovered: false
 
             Rectangle {
                 width: 10; height: 2;
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.verticalCenterOffset: 4
-                color: parent.hovered ? Theme.colorHighContrast : Theme.colorIcon
+                color: mouseAreaMin.containsMouse ? Theme.colorHighContrast : Theme.colorIcon
             }
 
             MouseArea {
+                id: mouseAreaMin
                 anchors.fill: parent
 
                 hoverEnabled: true
-                onEntered: parent.hovered = true
-                onExited: parent.hovered = false
-                onCanceled: parent.hovered = false
                 onClicked: appWindow.showMinimized()
             }
         }
@@ -52,26 +48,22 @@ Loader {
 
         Rectangle { // button maximize
             width: 26; height: 26; radius: 26;
-            color: hovered ? "#66aaaaaa" : "#33aaaaaa"
+            color: mouseAreaMax.containsMouse ? "#66aaaaaa" : "#33aaaaaa"
             Behavior on color { ColorAnimation { duration: 233; easing.type: Easing.InOutCirc; } }
-
-            property bool hovered: false
 
             Rectangle {
                 width: 10; height: 10;
                 anchors.centerIn: parent
                 color: "transparent"
                 border.width: 2
-                border.color: parent.hovered ? Theme.colorHighContrast : Theme.colorIcon
+                border.color: mouseAreaMax.containsMouse ? Theme.colorHighContrast : Theme.colorIcon
             }
 
             MouseArea {
+                id: mouseAreaMax
                 anchors.fill: parent
 
                 hoverEnabled: true
-                onEntered: parent.hovered = true
-                onExited: parent.hovered = false
-                onCanceled: parent.hovered = false
                 onClicked: {
                     if (appWindow.visibility === ApplicationWindow.Maximized)
                         appWindow.showNormal()
@@ -85,31 +77,27 @@ Loader {
 
         Rectangle { // button close
             width: 26; height: 26; radius: 26;
-            color: hovered ? "red" : "#33aaaaaa"
+            color: mouseAreaClose.containsMouse ? "red" : "#33aaaaaa"
             Behavior on color { ColorAnimation { duration: 233; easing.type: Easing.InOutCirc; } }
-
-            property bool hovered: false
 
             Rectangle {
                 width: 13; height: 2; radius: 2;
                 anchors.centerIn: parent
                 rotation: 45
-                color: parent.hovered ? "white" : Theme.colorIcon
+                color: mouseAreaClose.containsMouse ? "white" : Theme.colorIcon
             }
             Rectangle {
                 width: 13; height: 2; radius: 2;
                 anchors.centerIn: parent
                 rotation: -45
-                color: parent.hovered ? "white" : Theme.colorIcon
+                color: mouseAreaClose.containsMouse ? "white" : Theme.colorIcon
             }
 
             MouseArea {
+                id: mouseAreaClose
                 anchors.fill: parent
 
                 hoverEnabled: true
-                onEntered: parent.hovered = true
-                onExited: parent.hovered = false
-                onCanceled: parent.hovered = false
                 onClicked: appWindow.close()
             }
         }

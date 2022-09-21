@@ -13,10 +13,10 @@ Item {
 
     // actions
     signal clicked()
+    signal pressed()
     signal pressAndHold()
 
     // states
-    property bool pressed: false
     property bool selected: false
 
     // settings
@@ -35,6 +35,7 @@ Item {
         hoverEnabled: false
 
         onClicked: control.clicked()
+        onPressed: control.pressed()
         onPressAndHold: control.pressAndHold()
     }
 

@@ -11,11 +11,10 @@ Item {
 
     // actions
     signal clicked()
+    signal pressed()
     signal pressAndHold()
 
     // states
-    property bool hovered: false
-    property bool pressed: false
     property bool selected: false
 
     // settings
@@ -32,15 +31,13 @@ Item {
     ////////////////////////////////////////////////////////////////////////////
 
     MouseArea {
+        id: mouseArea
         anchors.fill: control
         hoverEnabled: (isDesktop && control.enabled)
 
         onClicked: control.clicked()
+        onPressed: control.pressed()
         onPressAndHold: control.pressAndHold()
-
-        onEntered: control.hovered = true
-        onExited: control.hovered = false
-        onCanceled: control.hovered = false
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -52,12 +49,9 @@ Item {
 
         color: control.colorBackgroundHighlight
         opacity: {
-            if (control.selected)
-                return 1
-            else if (control.hovered)
-                return 0.2
-            else
-                return 0
+            if (control.selected) return 1
+            else if (mouseArea.containsMouse) return 0.2
+            return 0
         }
         Behavior on opacity { OpacityAnimator { duration: 133 } }
     }

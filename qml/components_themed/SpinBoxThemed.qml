@@ -88,7 +88,7 @@ T.SpinBox {
 
                 readOnly: !control.editable
                 validator: control.validator
-                inputMethodHints: Qt.ImhDigitsOnly
+                inputMethodHints: Qt.ImhFormattedNumbersOnly
 
                 onEditingFinished: {
                     var v = parseInt(text)

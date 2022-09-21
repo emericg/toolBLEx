@@ -6,7 +6,9 @@ Item {
     id: selectorMenu
     implicitWidth: 128
     implicitHeight: 32
+
     width: contentRow.width
+    opacity: enabled ? 1 : 0.4
 
     signal menuSelected(var index)
     property int currentSelection: 1

@@ -27,7 +27,11 @@ T.Button {
         implicitHeight: Theme.componentHeight
 
         radius: 2
-        opacity: (control.hovered && !control.highlighted) ? 0.3 : 1
+        opacity: {
+            if (!control.enabled) return 0.4
+            if (control.hovered && !control.highlighted) return 0.3
+            return 1
+        }
         color: {
             if (control.highlighted) return control.colorHighlighted
             if (control.hovered) return control.colorHovered
@@ -45,7 +49,7 @@ T.Button {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
 
-        opacity: 1
+        opacity: control.enabled ? 1 : 0.66
         color: control.highlighted ? "white" : Theme.colorText
     }
 }
