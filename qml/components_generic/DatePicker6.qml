@@ -24,6 +24,7 @@ Item {
     signal updateDate(var newdate)
 
     function openDate(date) {
+        //console.log("openDate(" + date + ")")
         minDate = null
         maxDate = null
 
@@ -31,6 +32,7 @@ Item {
         currentDate = date
 
         today = new Date()
+        grid.month = date.getMonth()
 
         printDate()
 
@@ -188,7 +190,7 @@ Item {
                 opacity: (model.month === grid.month ? 1 : 0.2)
                 text: model.day
                 font: grid.font
-                //font.bold: model.today
+                //font.bold: model.isToday
                 color: selected ? "white" : Theme.colorSubText
 
                 property bool selected: (model.day === currentDate.getDate() &&
@@ -203,7 +205,7 @@ Item {
                     radius: width
                     color: selected ? Theme.colorSecondary : "transparent" //Theme.colorBackground
                     border.color: Theme.colorSecondary
-                    border.width: (model.today) ? Theme.componentBorderWidth : 0
+                    border.width: model.isToday ? Theme.componentBorderWidth : 0
                 }
             }
 

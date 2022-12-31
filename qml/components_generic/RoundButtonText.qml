@@ -8,6 +8,9 @@ Item {
     implicitWidth: Theme.componentHeight
     implicitHeight: Theme.componentHeight
 
+    property string text
+    property int textSize: Math.round(width * 0.333)
+
     // actions
     signal clicked()
     signal pressed()
@@ -17,12 +20,9 @@ Item {
     property bool selected: false
 
     // settings
-    property string text
-    property int textSize: Math.round(width * 0.33)
-    property string highlightMode: "circle" // available: border, circle, color, both (circle+color), off
-
     property bool border: false
     property bool background: false
+    property string highlightMode: "circle" // available: border, circle, color, both (circle+color), off
 
     // colors
     property string textColor: Theme.colorText
@@ -57,13 +57,6 @@ Item {
         visible: (control.highlightMode === "circle" || control.highlightMode === "both" || control.background)
         color: control.backgroundColor
 
-        border.width: {
-            if (control.border || ((mouseArea.containsMouse || control.selected) && control.highlightMode === "border"))
-                return Theme.componentBorderWidth
-            return 0
-        }
-        border.color: control.borderColor
-
         opacity: {
             if (mouseArea.containsMouse) {
                return (control.highlightMode === "circle" || control.highlightMode === "both" || control.background) ? 1 : 0.75
@@ -72,6 +65,15 @@ Item {
             }
         }
         Behavior on opacity { NumberAnimation { duration: 333 } }
+    }
+    Rectangle { // border
+        anchors.fill: control
+        radius: width
+
+        visible: control.border
+        color: "transparent"
+        border.width: Theme.componentBorderWidth
+        border.color: control.borderColor
     }
 
     ////////////////////////////////////////////////////////////////////////////

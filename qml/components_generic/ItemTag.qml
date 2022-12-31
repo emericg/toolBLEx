@@ -5,9 +5,9 @@ import ThemeEngine 1.0
 Rectangle {
     id: control
     implicitWidth: 80
-    implicitHeight: 24
+    implicitHeight: 28
 
-    width: contentText.contentWidth + 16
+    width: contentText.contentWidth + 24
 
     radius: Theme.componentRadius
     color: Theme.colorForeground
@@ -25,7 +25,7 @@ Rectangle {
         textFormat: Text.PlainText
 
         color: control.textColor
-        font.bold: false
+        font.bold: true
         font.pixelSize: control.textSize
         font.capitalization: control.textCapitalization
     }

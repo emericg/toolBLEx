@@ -8,6 +8,9 @@ Item {
     implicitWidth: Theme.componentHeight
     implicitHeight: Theme.componentHeight
 
+    property url source
+    property int sourceSize: UtilsNumber.alignTo(height * 0.666, 2)
+
     // actions
     signal clicked()
     signal pressed()
@@ -17,13 +20,10 @@ Item {
     property bool selected: false
 
     // settings
-    property url source
-    property int sourceSize: UtilsNumber.alignTo(height * 0.666, 2)
-    property int rotation: 0
-    property string highlightMode: "circle" // available: border, circle, color, both (circle+color), off
-
     property bool border: false
     property bool background: false
+    property int rotation: 0
+    property string highlightMode: "circle" // available: border, circle, color, both (circle+color), off
 
     // colors
     property string iconColor: Theme.colorIcon
@@ -62,13 +62,6 @@ Item {
         visible: (control.highlightMode === "circle" || control.highlightMode === "both" || control.background)
         color: control.backgroundColor
 
-        border.width: {
-            if (control.border || ((mouseArea.containsMouse || control.selected) && control.highlightMode === "border"))
-                return Theme.componentBorderWidth
-            return 0
-        }
-        border.color: control.borderColor
-
         opacity: {
             if (mouseArea.containsMouse) {
                return (control.highlightMode === "circle" || control.highlightMode === "both" || control.background) ? 1 : 0.75
@@ -77,6 +70,15 @@ Item {
             }
         }
         Behavior on opacity { NumberAnimation { duration: 333 } }
+    }
+    Rectangle { // border
+        anchors.fill: control
+        radius: width
+
+        visible: control.border
+        color: "transparent"
+        border.width: Theme.componentBorderWidth
+        border.color: control.borderColor
     }
 
     ////////////////////////////////////////////////////////////////////////////

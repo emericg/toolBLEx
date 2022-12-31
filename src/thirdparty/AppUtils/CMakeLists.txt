@@ -31,6 +31,8 @@ set(CORE_SOURCES
     utils_bits.h
     utils_language.cpp
     utils_language.h
+    utils_log.cpp
+    utils_log.h
     utils_maths.cpp
     utils_maths.h
     utils_screen.cpp

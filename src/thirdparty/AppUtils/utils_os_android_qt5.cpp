@@ -31,7 +31,7 @@
 
 int UtilsAndroid::getSdkVersion()
 {
-    return QtAndroid::sdkVersion();
+    return QtAndroid::androidSdkVersion();
 }
 
 /* ************************************************************************** */
