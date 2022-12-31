@@ -27,7 +27,7 @@ T.ComboBox {
 
         radius: Theme.componentRadius
         color: control.down ? Theme.colorComponentDown : Theme.colorComponent
-        border.width: 1
+        border.width: 2
         border.color: Theme.colorComponentBorder
     }
 

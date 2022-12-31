@@ -200,127 +200,142 @@ Flickable {
 
         ////////
 
-        Column {
+        Rectangle {
             width: detailView.ww
-            spacing: 16
+            height: box1b.height + 24
+            radius: 4
+            color: Theme.colorBox
+            clip: true
 
-            TextFieldThemed { // user comment
-                anchors.horizontalCenter: parent.horizontalCenter
-                width: detailView.ww
-                height: 36
+            Column {
+                id: box1b
+                width: parent.width - 16
+                anchors.centerIn: parent
+                spacing: 16
 
-                colorBackground: Theme.colorBox
-                placeholderText: qsTr("Comment")
-                text: selectedDevice.userComment
-                onTextEdited: selectedDevice.userComment = text
-            }
+                Flow { // buttons row 1
+                    width: parent.width
+                    spacing: 12
 
-            Flow { // buttons row
-                width: detailView.ww
-                spacing: 12
-
-                ButtonWireframeIcon {
-                    fullColor: true
-                    visible: (deviceManager.bluetooth && selectedDevice.isLowEnergy)
-                    text: {
-                        if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
-                            return qsTr("scan services")
-                        else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
-                            return qsTr("connecting...")
-                        else if (selectedDevice.status === DeviceUtils.DEVICE_WORKING)
-                            return qsTr("scanning...")
-                        else if (selectedDevice.status >= DeviceUtils.DEVICE_CONNECTED)
-                            return qsTr("disconnect")
-                    }
-                    source: {
-                        if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
-                            return "qrc:/assets/icons_material/baseline-bluetooth-24px.svg"
-                        else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
-                            return "qrc:/assets/icons_material/duotone-bluetooth_connected-24px.svg"
-                        else if (selectedDevice.status === DeviceUtils.DEVICE_WORKING)
-                            return "qrc:/assets/icons_material/duotone-bluetooth_searching-24px.svg"
-                        else
-                            return "qrc:/assets/icons_material/duotone-settings_bluetooth-24px.svg"
-                    }
-                    onClicked: {
-                        if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
-                            selectedDevice.actionScan()
-                        else
-                            selectedDevice.deviceDisconnect()
-                    }
-                }
-
-                ButtonWireframeIcon {
-                    fullColor: true
-                    primaryColor: selectedDevice.isStarred ?Theme.colorSecondary : Theme.colorGrey
-
-                    text: selectedDevice.isStarred ? qsTr("starred") : qsTr("star")
-                    source: selectedDevice.isStarred ?
-                                "qrc:/assets/icons_material/baseline-stars-24px.svg" :
-                                "qrc:/assets/icons_material/outline-add_circle-24px.svg"
-                    onClicked: selectedDevice.isStarred = !selectedDevice.isStarred
-                }
-
-                ButtonWireframeIcon {
-                    fullColor: true
-                    primaryColor: Theme.colorGrey
-
-                    visible: (!settingsManager.scanCacheAuto && !selectedDevice.isBeacon)
-
-                    text: selectedDevice.hasCache ? qsTr("forget") : qsTr("cache")
-                    source: selectedDevice.hasCache ?
-                                "qrc:/assets/icons_material/baseline-loupe_minus-24px.svg" :
-                                "qrc:/assets/icons_material/baseline-loupe-24px.svg"
-                    onClicked: selectedDevice.cache(!selectedDevice.isCached)
-                }
-
-                ButtonWireframeIcon {
-                    fullColor: true
-                    primaryColor: Theme.colorGrey
-
-                    text: selectedDevice.isBlacklisted ? qsTr("whitelist") : qsTr("blacklist")
-                    source: selectedDevice.isBlacklisted ?
-                                "qrc:/assets/icons_material/outline-add_circle-24px.svg" :
-                                "qrc:/assets/icons_material/baseline-cancel-24px.svg"
-                    onClicked: selectedDevice.blacklist(!selectedDevice.isBlacklisted)
-                }
-
-                ButtonWireframe {
-                    fullColor: true
-                    primaryColor: selectedDevice.userColor
-                    fulltextColor: utilsApp.isQColorLight(selectedDevice.userColor) ? "#333" : "#f4f4f4"
-
-                    text: qsTr("color")
-                    onClicked: colorDialog.open()
-
-                    ColorDialog {
-                        id: colorDialog
-                        currentColor: selectedDevice.userColor
-                        onAccepted: selectedDevice.userColor = colorDialog.color
+                    ButtonWireframeIcon {
+                        fullColor: true
+                        visible: (deviceManager.bluetooth && selectedDevice.isLowEnergy)
+                        text: {
+                            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
+                                return qsTr("scan services")
+                            else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
+                                return qsTr("connecting...")
+                            else if (selectedDevice.status === DeviceUtils.DEVICE_WORKING)
+                                return qsTr("scanning...")
+                            else if (selectedDevice.status >= DeviceUtils.DEVICE_CONNECTED)
+                                return qsTr("disconnect")
+                        }
+                        source: {
+                            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
+                                return "qrc:/assets/icons_material/baseline-bluetooth-24px.svg"
+                            else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
+                                return "qrc:/assets/icons_material/duotone-bluetooth_connected-24px.svg"
+                            else if (selectedDevice.status === DeviceUtils.DEVICE_WORKING)
+                                return "qrc:/assets/icons_material/duotone-bluetooth_searching-24px.svg"
+                            else
+                                return "qrc:/assets/icons_material/duotone-settings_bluetooth-24px.svg"
+                        }
+                        onClicked: {
+                            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
+                                selectedDevice.actionScan()
+                            else
+                                selectedDevice.deviceDisconnect()
+                        }
                     }
                 }
-/*
-                Rectangle { // user color
-                    width: Theme.componentHeight
-                    height: Theme.componentHeight
-                    radius: Theme.componentRadius
 
-                    color: selectedDevice.userColor
-                    border.width: 2
-                    border.color: Qt.darker(selectedDevice.userColor, 1.1)
+                Flow { // buttons row 2
+                    width: parent.width
+                    spacing: 12
 
-                    ColorDialog {
-                        id: colorDialog
-                        currentColor: selectedDevice.userColor
-                        onAccepted: selectedDevice.userColor = colorDialog.color
+                    ButtonWireframeIcon {
+                        fullColor: true
+                        primaryColor: selectedDevice.isStarred ?Theme.colorSecondary : Theme.colorGrey
+
+                        text: selectedDevice.isStarred ? qsTr("starred") : qsTr("star")
+                        source: selectedDevice.isStarred ?
+                                    "qrc:/assets/icons_material/baseline-stars-24px.svg" :
+                                    "qrc:/assets/icons_material/outline-add_circle-24px.svg"
+                        onClicked: selectedDevice.isStarred = !selectedDevice.isStarred
                     }
 
-                    MouseArea {
-                        anchors.fill: parent
+                    ButtonWireframeIcon {
+                        fullColor: true
+                        primaryColor: Theme.colorGrey
+
+                        visible: (!settingsManager.scanCacheAuto && !selectedDevice.isBeacon)
+
+                        text: selectedDevice.hasCache ? qsTr("forget") : qsTr("cache")
+                        source: selectedDevice.hasCache ?
+                                    "qrc:/assets/icons_material/baseline-loupe_minus-24px.svg" :
+                                    "qrc:/assets/icons_material/baseline-loupe-24px.svg"
+                        onClicked: selectedDevice.cache(!selectedDevice.isCached)
+                    }
+
+                    ButtonWireframeIcon {
+                        fullColor: true
+                        primaryColor: Theme.colorGrey
+
+                        text: selectedDevice.isBlacklisted ? qsTr("whitelist") : qsTr("blacklist")
+                        source: selectedDevice.isBlacklisted ?
+                                    "qrc:/assets/icons_material/outline-add_circle-24px.svg" :
+                                    "qrc:/assets/icons_material/baseline-cancel-24px.svg"
+                        onClicked: selectedDevice.blacklist(!selectedDevice.isBlacklisted)
+                    }
+
+                    ButtonWireframe {
+                        fullColor: true
+                        primaryColor: selectedDevice.userColor
+                        fulltextColor: utilsApp.isQColorLight(selectedDevice.userColor) ? "#333" : "#f4f4f4"
+
+                        text: qsTr("color")
                         onClicked: colorDialog.open()
+
+                        ColorDialog {
+                            id: colorDialog
+                            currentColor: selectedDevice.userColor
+                            onAccepted: selectedDevice.userColor = colorDialog.color
+                        }
                     }
+    /*
+                    Rectangle { // user color
+                        width: Theme.componentHeight
+                        height: Theme.componentHeight
+                        radius: Theme.componentRadius
+
+                        color: selectedDevice.userColor
+                        border.width: 2
+                        border.color: Qt.darker(selectedDevice.userColor, 1.1)
+
+                        ColorDialog {
+                            id: colorDialog
+                            currentColor: selectedDevice.userColor
+                            onAccepted: selectedDevice.userColor = colorDialog.color
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: colorDialog.open()
+                        }
+                    }
+    */
                 }
-*/
+
+                TextFieldThemed { // user comment
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: parent.width
+                    height: 36
+
+                    colorBackground: Theme.colorBox
+                    placeholderText: qsTr("Comment")
+                    text: selectedDevice.userComment
+                    onTextEdited: selectedDevice.userComment = text
+                }
             }
         }
 

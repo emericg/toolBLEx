@@ -623,14 +623,14 @@ Loader {
                         Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
-                            height: 64
+                            height: colUbt.height + 16
                             color: Theme.colorForeground
 
                             IconSvg {
                                 width: 28
                                 height: 28
-                                anchors.left: parent.left
-                                anchors.leftMargin: 16
+                                anchors.right: parent.right
+                                anchors.rightMargin: 16
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 source: "qrc:/assets/icons_material/baseline-help-24px.svg"
@@ -639,19 +639,37 @@ Loader {
 
                             //https://greatscottgadgets.com/ubertoothone/
 
-                            Text {
+                            Column {
+                                id: colUbt
                                 anchors.left: parent.left
-                                anchors.leftMargin: 56
+                                anchors.leftMargin: 12
                                 anchors.right: parent.right
-                                anchors.rightMargin: 12
+                                anchors.rightMargin: 52
                                 anchors.verticalCenter: parent.verticalCenter
+                                spacing: 4
 
-                                text: qsTr("Ubertooth One is an open source 2.4 GHz wireless development platform suitable for Bluetooth experimentation.<br>This feature relies on this specific hardware.")
-                                textFormat: Text.StyledText
-                                font.pixelSize: Theme.fontSizeContent
-                                font.bold: false
-                                color: Theme.colorText
-                                wrapMode: Text.WordWrap
+                                Text {
+                                    anchors.left: parent.left
+                                    anchors.right: parent.right
+
+                                    text: qsTr("This feature relies on specific hardware.")
+                                    textFormat: Text.StyledText
+                                    font.pixelSize: Theme.fontSizeContent
+                                    font.bold: false
+                                    color: Theme.colorText
+                                    wrapMode: Text.WordWrap
+                                }
+                                Text {
+                                    anchors.left: parent.left
+                                    anchors.right: parent.right
+
+                                    text: qsTr("Ubertooth One is an open source 2.4 GHz wireless development platform suitable for Bluetooth experimentation.")
+                                    textFormat: Text.StyledText
+                                    font.pixelSize: Theme.fontSizeContent
+                                    font.bold: false
+                                    color: Theme.colorText
+                                    wrapMode: Text.WordWrap
+                                }
                             }
                         }
 
@@ -762,6 +780,7 @@ Loader {
 
                             ButtonThemed {
                                 anchors.centerIn: parent
+                                visible: (settingsManager.ubertooth_freqMin !== 2402 || settingsManager.ubertooth_freqMax !== 2480)
 
                                 text: qsTr("set default")
                                 onClicked: {

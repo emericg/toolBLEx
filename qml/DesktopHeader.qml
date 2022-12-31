@@ -29,96 +29,102 @@ Rectangle {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    Rectangle {
-        anchors.centerIn: rowleft
+    Rectangle { // left
+        anchors.left: parent.left
+        anchors.leftMargin: 12
+        anchors.verticalCenter: parent.verticalCenter
+
         width: rowleft.width
         height: 32
         radius: Theme.componentRadius
 
-        visible: rowleft.visible
+        clip: true
         color: Theme.colorHeader
         border.width: 2
         border.color: Theme.colorHeaderHighlight
-    }
-
-    Row { // left
-        id: rowleft
-        anchors.top: parent.top
-        anchors.topMargin: 0
-        anchors.left: parent.left
-        anchors.leftMargin: 12
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
-        spacing: 0
 
         visible: (appContent.state === "Scanner" ||
                   appContent.state === "Advertiser" ||
                   appContent.state === "Ubertooth")
 
-        RoundButtonIcon {
-            anchors.verticalCenter: parent.verticalCenter
-            width: 44
+        Row {
+            id: rowleft
             height: 32
-            sourceSize: 28
+            spacing: 0
 
-            background: true
-            backgroundColor: Theme.colorHeaderHighlight
-            opacity: 1
-            highlightMode: "off"
-            iconColor: Theme.colorIcon
-            source: {
-                if (appContent.state === "Advertiser") return "qrc:/assets/icons_material/duotone-wifi_tethering-24px.svg"
-                if (appContent.state === "Ubertooth") return "qrc:/assets/icons_material/duotone-microwave-48px.svg"
-                return "qrc:/assets/icons_material/duotone-devices-24px.svg"
-            }
-        }
+            RoundButtonIcon {
+                anchors.verticalCenter: parent.verticalCenter
+                width: 48
+                height: 48
+                sourceSize: 30
 
-        RoundButtonIcon {
-            anchors.verticalCenter: parent.verticalCenter
-            width: 48
-            height: 48
-            sourceSize: 32
-
-            enabled: deviceManager.bluetooth
-            highlightMode: "color"
-            iconColor: Theme.colorHeaderContent
-            source: "qrc:/assets/icons_material/baseline-play_arrow-24px.svg"
-
-            opacity: {
-                if (appContent.state === "Scanner" && deviceManager.scanning) return 1
-                if (appContent.state === "Advertiser" && deviceManager.advertising) return 1
-                if (appContent.state === "Ubertooth" && ubertooth.running) return 1
-                return 0.4
-            }
-            onClicked: {
-                if (appContent.state === "Scanner") deviceManager.scanDevices_start()
-                //if (appContent.state === "Advertiser") deviceManager.advertise_start()
-                if (appContent.state === "Ubertooth") ubertooth.startWork()
-            }
-        }
-
-        RoundButtonIcon {
-            anchors.verticalCenter: parent.verticalCenter
-            width: 48
-            height: 48
-            sourceSize: 32
-
-            enabled: deviceManager.bluetooth
-            highlightMode: "color"
-            iconColor: Theme.colorHeaderContent
-            source: "qrc:/assets/icons_material/baseline-stop-24px.svg"
-
-            opacity: {
-                if (appContent.state === "Scanner" && !deviceManager.scanning) return 1
-                if (appContent.state === "Advertiser" && !deviceManager.advertising) return 1
-                if (appContent.state === "Ubertooth" && !ubertooth.running) return 1
-                return 0.4
+                background: false
+                backgroundColor: Theme.colorHeaderHighlight
+                opacity: 1
+                highlightMode: "off"
+                iconColor: Theme.colorIcon
+                source: {
+                    if (appContent.state === "Advertiser") return "qrc:/assets/icons_material/duotone-wifi_tethering-24px.svg"
+                    if (appContent.state === "Ubertooth") return "qrc:/assets/icons_material/duotone-microwave-48px.svg"
+                    return "qrc:/assets/icons_material/duotone-devices-24px.svg"
+                }
             }
 
-            onClicked: {
-                if (appContent.state === "Scanner") deviceManager.scanDevices_stop()
-                //if (appContent.state === "Advertiser") deviceManager.advertise_stop()
-                if (appContent.state === "Ubertooth") ubertooth.stopWork()
+            RoundButtonIcon {
+                anchors.verticalCenter: parent.verticalCenter
+                width: 48
+                height: 48
+                sourceSize: 32
+
+                enabled: deviceManager.bluetooth
+                highlightMode: "off"
+                iconColor: Theme.colorHeaderContent
+                source: "qrc:/assets/icons_material/baseline-play_arrow-24px.svg"
+
+                background: {
+                    if (appContent.state === "Scanner" && deviceManager.scanning) return 1
+                    if (appContent.state === "Advertiser" && deviceManager.advertising) return 1
+                    if (appContent.state === "Ubertooth" && ubertooth.running) return 1
+                    return false
+                }
+                backgroundColor: Theme.colorHeaderHighlight
+
+                opacity: {
+                    if (appContent.state === "Scanner" && deviceManager.scanning) return 1
+                    if (appContent.state === "Advertiser" && deviceManager.advertising) return 1
+                    if (appContent.state === "Ubertooth" && ubertooth.running) return 1
+                    return 0.4
+                }
+                onClicked: {
+                    if (appContent.state === "Scanner") deviceManager.scanDevices_start()
+                    //if (appContent.state === "Advertiser") deviceManager.advertise_start()
+                    if (appContent.state === "Ubertooth") ubertooth.startWork()
+                }
+            }
+
+            RoundButtonIcon {
+                anchors.verticalCenter: parent.verticalCenter
+                width: 48
+                height: 48
+                sourceSize: 32
+
+                enabled: deviceManager.bluetooth
+                highlightMode: "color"
+                iconColor: Theme.colorHeaderContent
+                source: "qrc:/assets/icons_material/baseline-stop-24px.svg"
+
+                opacity: {
+                    if (appContent.state === "Scanner" && !deviceManager.scanning) return 1
+                    if (appContent.state === "Advertiser" && !deviceManager.advertising) return 1
+                    if (appContent.state === "Ubertooth" && !ubertooth.running) return 1
+                    return 0.4
+                }
+
+                onClicked: {
+                    if (appContent.state === "Scanner") deviceManager.scanDevices_stop()
+                    //if (appContent.state === "Advertiser") deviceManager.advertise_stop()
+                    if (appContent.state === "Ubertooth") ubertooth.stopWork()
+                }
             }
         }
     }
@@ -291,6 +297,20 @@ Rectangle {
 
                 selected: (appContent.state === "Scanner")
                 onClicked: scannerButtonClicked()
+
+                Rectangle {
+                    anchors.left: parent.left
+                    anchors.bottom: parent.bottom
+                    anchors.margins: 6
+
+                    width: 12
+                    height: 12
+                    radius: 12
+                    color: Theme.colorRed
+
+                    opacity: deviceManager.scanning ? 0.8 : 0
+                    Behavior on opacity { OpacityAnimator { duration: 333 } }
+                }
             }
             DesktopHeaderItem {
                 id: menuAdvertiser
@@ -303,6 +323,20 @@ Rectangle {
 
                 selected: (appContent.state === "Advertiser")
                 onClicked: advertiserButtonClicked()
+
+                Rectangle {
+                    anchors.left: parent.left
+                    anchors.bottom: parent.bottom
+                    anchors.margins: 6
+
+                    width: 12
+                    height: 12
+                    radius: 12
+                    color: Theme.colorRed
+
+                    opacity: deviceManager.advertising ? 0.8 : 0
+                    Behavior on opacity { OpacityAnimator { duration: 333 } }
+                }
             }
             DesktopHeaderItem {
                 id: menuUbertooth
@@ -316,6 +350,20 @@ Rectangle {
                 visible: ubertooth.toolsAvailable
                 selected: (appContent.state === "Ubertooth")
                 onClicked: ubertoothButtonClicked()
+
+                Rectangle {
+                    anchors.left: parent.left
+                    anchors.bottom: parent.bottom
+                    anchors.margins: 6
+
+                    width: 12
+                    height: 12
+                    radius: 12
+                    color: Theme.colorRed
+
+                    opacity: ubertooth.running ? 0.8 : 0
+                    Behavior on opacity { OpacityAnimator { duration: 333 } }
+                }
             }
             DesktopHeaderItem {
                 id: menuSettings

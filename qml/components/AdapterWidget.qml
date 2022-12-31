@@ -140,7 +140,7 @@ Rectangle {
                 width: col.legendWidth
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: qsTr("Bluetooth version")
+                text: qsTr("Bluetooth")
                 textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContent
                 horizontalAlignment: Text.AlignRight
