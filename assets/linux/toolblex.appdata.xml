@@ -16,6 +16,7 @@
   </description>
 
   <releases>
+    <release version="0.3" date="2023-01-14" />
     <release version="0.2" date="2022-09-14" />
     <release version="0.1" date="2022-09-01" />
   </releases>
