@@ -90,7 +90,7 @@ Item {
                         selected: (deviceMenu.currentSelection === index)
 
                         text: qsTr("advertisement")
-                        textBadge: selectedDevice.advCount
+                        textBadge: (selectedDevice && selectedDevice.advCount)
                         onClicked: deviceMenu.menuSelected(index)
                         sourceSize: 0
                     }
@@ -99,7 +99,7 @@ Item {
                         selected: (deviceMenu.currentSelection === index)
 
                         text: qsTr("services")
-                        textBadge: selectedDevice.servicesCount
+                        textBadge: (selectedDevice && selectedDevice.servicesCount)
                         onClicked: deviceMenu.menuSelected(index)
                         sourceSize: 0
                     }

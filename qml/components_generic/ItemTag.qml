@@ -15,7 +15,8 @@ Rectangle {
     property string text: "TAG"
     property string textColor: Theme.colorText
     property int textSize: Theme.fontSizeComponent
-    property int textCapitalization: Font.Normal // Font.AllUppercase
+    property bool textBold: false
+    property int textCapitalization: Font.Normal
 
     Text {
         id: contentText
@@ -25,7 +26,7 @@ Rectangle {
         textFormat: Text.PlainText
 
         color: control.textColor
-        font.bold: true
+        font.bold: control.textBold
         font.pixelSize: control.textSize
         font.capitalization: control.textCapitalization
     }

@@ -57,7 +57,7 @@ T.Button {
         }
         onReleased: {
             control.down = false
-            //mouseBackground.width = 0 // let the click expand the ripple
+            //mouseBackground.width = 0 // disabled, we let the click expand the ripple
         }
 
         onEntered: {
@@ -86,27 +86,31 @@ T.Button {
         border.width: Theme.componentBorderWidth
         border.color: control.fullColor ? control.primaryColor : Theme.colorComponentBorder
 
-        Rectangle { // mouseBackground
-            id: mouseBackground
-            width: 0; height: width; radius: width;
-            x: mousearea.mouseX - (width / 2)
-            y: mousearea.mouseY - (width / 2)
+        Item {
+            anchors.fill: parent
 
-            visible: control.hoverAnimation
-            color: "white"
-            opacity: mousearea.containsMouse ? 0.16 : 0
-            Behavior on opacity { NumberAnimation { duration: 333 } }
-            Behavior on width { NumberAnimation { duration: 200 } }
-        }
+            Rectangle { // mouseBackground
+                id: mouseBackground
+                width: 0; height: width; radius: width;
+                x: mousearea.mouseX - (width / 2)
+                y: mousearea.mouseY - (width / 2)
 
-        layer.enabled: control.hoverAnimation
-        layer.effect: OpacityMask {
-            maskSource: Rectangle {
-                x: background.x
-                y: background.y
-                width: background.width
-                height: background.height
-                radius: background.radius
+                visible: control.hoverAnimation
+                color: "white"
+                opacity: mousearea.containsMouse ? 0.16 : 0
+                Behavior on opacity { NumberAnimation { duration: 333 } }
+                Behavior on width { NumberAnimation { duration: 200 } }
+            }
+
+            layer.enabled: control.hoverAnimation
+            layer.effect: OpacityMask {
+                maskSource: Rectangle {
+                    x: background.x
+                    y: background.y
+                    width: background.width
+                    height: background.height
+                    radius: background.radius
+                }
             }
         }
     }

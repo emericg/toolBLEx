@@ -30,7 +30,7 @@ Flickable {
             radius: 4
             color: Theme.colorBox
 
-            visible: !selectedDevice.hasAdvertisement
+            visible: (selectedDevice && !selectedDevice.hasAdvertisement)
 
             Text {
                 anchors.left: parent.left
@@ -55,7 +55,7 @@ Flickable {
             radius: 4
             color: Theme.colorBox
 
-            visible: selectedDevice.hasAdvertisement
+            visible: (selectedDevice && selectedDevice.hasAdvertisement)
 
             Row {
                 anchors.top: parent.top
@@ -94,6 +94,7 @@ Flickable {
 
                 Repeater {
                     model: selectedDevice.svd_uuid
+
                     ButtonWireframe {
                         height: 24
                         fullColor: true
@@ -151,6 +152,7 @@ Flickable {
 
                 Repeater {
                     model: selectedDevice.mfd_uuid
+
                     ButtonWireframe {
                         height: 24
                         fullColor: true

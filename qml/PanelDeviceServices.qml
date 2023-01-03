@@ -82,7 +82,7 @@ Item {
 
         z: 5
         spacing: 20
-        visible: (selectedDevice.servicesCount === 0)
+        visible: (selectedDevice && selectedDevice.servicesCount === 0)
 
         Rectangle {
             width: detailView.ww

@@ -619,11 +619,10 @@ Loader {
                             }
                         }
 
-
                         Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
-                            height: colUbt.height + 16
+                            height: colUber.height + 16
                             color: Theme.colorForeground
 
                             IconSvg {
@@ -637,10 +636,8 @@ Loader {
                                 color: Theme.colorIcon
                             }
 
-                            //https://greatscottgadgets.com/ubertoothone/
-
                             Column {
-                                id: colUbt
+                                id: colUber
                                 anchors.left: parent.left
                                 anchors.leftMargin: 12
                                 anchors.right: parent.right
@@ -648,6 +645,7 @@ Loader {
                                 anchors.verticalCenter: parent.verticalCenter
                                 spacing: 4
 
+                                //https://greatscottgadgets.com/ubertoothone/
                                 Text {
                                     anchors.left: parent.left
                                     anchors.right: parent.right
