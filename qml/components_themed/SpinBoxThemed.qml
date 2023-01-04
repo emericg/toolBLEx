@@ -130,8 +130,10 @@ T.SpinBox {
 
         width: control.height
         height: control.height
-        anchors.verticalCenter: control.verticalCenter
         x: control.mirrored ? 0 : control.width - width
+        anchors.verticalCenter: control.verticalCenter
+
+        opacity: enabled ? 1 : 0.33
 
         Rectangle {
             anchors.centerIn: parent
@@ -155,8 +157,10 @@ T.SpinBox {
 
         width: control.height
         height: control.height
-        anchors.verticalCenter: control.verticalCenter
         x: control.mirrored ? control.width - width : 0
+        anchors.verticalCenter: control.verticalCenter
+
+        opacity: enabled ? 1 : 0.33
 
         Rectangle {
             anchors.centerIn: parent

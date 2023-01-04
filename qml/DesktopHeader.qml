@@ -29,7 +29,7 @@ Rectangle {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    Rectangle { // left
+    Rectangle { // left menus
         anchors.left: parent.left
         anchors.leftMargin: 12
         anchors.verticalCenter: parent.verticalCenter
@@ -131,15 +131,15 @@ Rectangle {
 
     ////////////
 
-    Rectangle {
+    Rectangle { // center indicator
         anchors.centerIn: parent
         width: parent.width * 0.5
         height: 32
         radius: 8
 
         color: Theme.colorHeaderHighlight
-        border.width: 1
-        border.color: Theme.colorHeaderHighlight
+        border.width: 2
+        border.color: Qt.darker(Theme.colorHeaderHighlight, 1.01)
 
         Row {
             anchors.top: parent.top
@@ -388,7 +388,7 @@ Rectangle {
         anchors.bottom: parent.bottom
 
         height: 2
-        opacity: 0.8
+        opacity: 1
         color: Theme.colorHeaderHighlight
     }
 

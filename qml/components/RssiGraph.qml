@@ -67,9 +67,10 @@ ChartView {
         min: -100
         max: -20
 
-        //color: legendColor
+        color: legendColor
         gridVisible: true
-        gridLineColor: Theme.colorSeparator
+        gridLineColor: Theme.colorGrid
+        minorGridLineColor: Theme.colorGrid
         labelsVisible: true
         labelsFont.pixelSize: Theme.fontSizeContentVerySmall
         labelsColor: legendColor
@@ -80,9 +81,10 @@ ChartView {
         id: axisTime
         visible: true
 
-        //color: legendColor
+        color: legendColor
         gridVisible: true
-        gridLineColor: Theme.colorSeparator
+        gridLineColor: Theme.colorGrid
+        minorGridLineColor: Theme.colorGrid
         labelsVisible: false
         labelsFont.pixelSize: Theme.fontSizeContentVerySmall
         labelsColor: legendColor

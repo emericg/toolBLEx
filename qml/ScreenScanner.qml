@@ -65,7 +65,7 @@ Loader {
                 implicitWidth: (splitview.orientation === Qt.Horizontal) ? 3: splitview.width
                 implicitHeight: (splitview.orientation === Qt.Horizontal) ? splitview.height : 3
                 color: SplitHandle.pressed ? Theme.colorPrimary
-                     : (SplitHandle.hovered ? Theme.colorPrimary : Theme.colorSeparator)
+                     : (SplitHandle.hovered ? Theme.colorPrimary : Theme.colorHeaderHighlight)
             }
 
             Component.onCompleted: splitview.restoreState(settingsManager.scanviewSize)
@@ -316,7 +316,6 @@ Loader {
                         }
                     }
                 }
-
             }
 
             ////////////////

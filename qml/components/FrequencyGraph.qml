@@ -133,8 +133,8 @@ ChartView {
 
         color: legendColor
         gridVisible: true
-        gridLineColor: Theme.colorSeparator
-        minorGridLineColor: Theme.colorSeparator
+        gridLineColor: Theme.colorGrid
+        minorGridLineColor: Theme.colorGrid
         labelsVisible: true
         labelsFont.pixelSize: Theme.fontSizeContentVerySmall
         labelsColor: legendColor
@@ -147,8 +147,8 @@ ChartView {
 
         color: legendColor
         gridVisible: true
-        gridLineColor: Theme.colorSeparator
-        minorGridLineColor: Theme.colorSeparator
+        gridLineColor: Theme.colorGrid
+        minorGridLineColor: Theme.colorGrid
         labelsVisible: true
         labelsFont.pixelSize: Theme.fontSizeContentVerySmall
         labelsColor: legendColor

@@ -75,7 +75,7 @@ T.Button {
         opacity: enabled ? (control.down && !control.hoverAnimation ? 0.8 : 1.0) : 0.4
         color: control.fullColor ? control.primaryColor : control.secondaryColor
         border.width: Theme.componentBorderWidth
-        border.color: Qt.darker(color, 1.05)
+        border.color: Qt.darker(color, 1.03)
 
         Item {
             anchors.fill: parent

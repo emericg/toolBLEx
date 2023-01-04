@@ -2,7 +2,11 @@ import QtQuick 2.15
 import QtQuick.Controls.impl 2.15
 import QtQuick.Templates 2.15 as T
 
+//import QtQuick.Dialogs 1.3 // Qt5
+import QtQuick.Dialogs // Qt6
+
 import ThemeEngine 1.0
+import "qrc:/js/UtilsPath.js" as UtilsPath
 
 T.TextField {
     id: control
@@ -16,6 +20,7 @@ T.TextField {
     padding: 8
     leftPadding: padding + 4
 
+    clip: false
     color: colorText
     opacity: control.enabled ? 1 : 0.66
 
@@ -32,6 +37,16 @@ T.TextField {
 
     onEditingFinished: focus = false
 
+    // settings
+    property string buttonText: qsTr("change")
+    property int buttonWidth: (buttonChange.visible ? buttonChange.width + 2 : 2)
+
+    property string dialogTitle: qsTr("Please choose a file!")
+    property var dialogFilter: ["All files (*)"]
+
+    property string statusSource: ""
+    property string statuscolor: Theme.colorPrimary
+
     // colors
     property string colorText: Theme.colorComponentText
     property string colorPlaceholderText: Theme.colorSubText
@@ -39,6 +54,30 @@ T.TextField {
     property string colorBackground: Theme.colorComponentBackground
     property string colorSelection: Theme.colorPrimary
     property string colorSelectedText: "white"
+
+    Loader {
+        id: pathDialogLoader
+
+        active: false
+        asynchronous: false
+        sourceComponent: FileDialog {
+            title: control.dialogTitle
+            nameFilters: control.dialogFilter
+
+            //currentFolder: UtilsPath.makeUrl(control.text)
+            currentFile: UtilsPath.makeUrl(control.text)
+
+            onAccepted: {
+                //console.log("fileDialog URL: " + selectedFolder)
+
+                //var f = UtilsPath.cleanUrl(selectedFolder)
+                var f = UtilsPath.cleanUrl(selectedFile)
+                if (f.slice(0, -1) !== "/") f += "/"
+
+                control.text = f
+            }
+        }
+    }
 
     PlaceholderText {
         id: placeholder
@@ -62,6 +101,26 @@ T.TextField {
 
         radius: Theme.componentRadius
         color: control.colorBackground
+    }
+
+    ButtonThemed {
+        id: buttonChange
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+
+        text: control.buttonText
+
+        onClicked: {
+            pathDialogLoader.active = true
+            pathDialogLoader.item.open()
+        }
+    }
+
+    Rectangle {
+        anchors.fill: background
+        radius: Theme.componentRadius
+        color: "transparent"
 
         border.width: 2
         border.color: control.activeFocus ? control.colorSelection : control.colorBorder

@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Dialogs
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsPath.js" as UtilsPath
@@ -288,21 +287,21 @@ Loader {
                                 spacing: 10
 
                                 Rectangle {
-                                    id: rectangleSnow
+                                    id: rectangleLight
                                     width: 80
-                                    height: 32
+                                    height: Theme.componentHeight
                                     anchors.verticalCenter: parent.verticalCenter
 
-                                    radius: 2
+                                    radius: 4
                                     color: "white"
-                                    border.color: (settingsManager.appTheme === "THEME_DESKTOP_LIGHT") ? Theme.colorSecondary : "#ddd"
+                                    border.color: (settingsManager.appTheme === "THEME_DESKTOP_LIGHT") ? Theme.colorSecondary : "#757575"
                                     border.width: 2
 
                                     Text {
                                         anchors.centerIn: parent
                                         text: qsTr("light")
                                         textFormat: Text.PlainText
-                                        color: (settingsManager.appTheme === "THEME_DESKTOP_LIGHT") ? Theme.colorPrimary : "#ccc"
+                                        color: (settingsManager.appTheme === "THEME_DESKTOP_LIGHT") ? Theme.colorPrimary : "#757575"
                                         font.bold: true
                                         font.pixelSize: Theme.fontSizeContentSmall
                                     }
@@ -312,12 +311,12 @@ Loader {
                                     }
                                 }
                                 Rectangle {
-                                    id: rectangleNight
+                                    id: rectangleDark
                                     width: 80
-                                    height: 32
+                                    height: Theme.componentHeight
                                     anchors.verticalCenter: parent.verticalCenter
 
-                                    radius: 2
+                                    radius: 4
                                     color: "#555151"
                                     border.color: Theme.colorSecondary
                                     border.width: (settingsManager.appTheme === "THEME_DESKTOP_DARK") ? 2 : 0
@@ -625,17 +624,6 @@ Loader {
                             height: colUber.height + 16
                             color: Theme.colorForeground
 
-                            IconSvg {
-                                width: 28
-                                height: 28
-                                anchors.right: parent.right
-                                anchors.rightMargin: 16
-                                anchors.verticalCenter: parent.verticalCenter
-
-                                source: "qrc:/assets/icons_material/baseline-help-24px.svg"
-                                color: Theme.colorIcon
-                            }
-
                             Column {
                                 id: colUber
                                 anchors.left: parent.left
@@ -669,6 +657,17 @@ Loader {
                                     wrapMode: Text.WordWrap
                                 }
                             }
+
+                            IconSvg {
+                                width: 28
+                                height: 28
+                                anchors.right: parent.right
+                                anchors.rightMargin: 16
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                source: "qrc:/assets/icons_material/baseline-help-24px.svg"
+                                color: Theme.colorSubText
+                            }
                         }
 
                         Rectangle {
@@ -677,37 +676,28 @@ Loader {
                             height: 48
                             color: Theme.colorForeground
 
-                            TextFieldThemed {
+                            TextFieldPathThemed {
                                 anchors.left: parent.left
                                 anchors.leftMargin: 12
                                 anchors.right: parent.right
                                 anchors.rightMargin: 12
                                 anchors.verticalCenter: parent.verticalCenter
+
                                 height: 36
+                                selectByMouse: true
 
                                 text: settingsManager.ubertooth_path
                                 placeholderText: "ubertooth-specan"
-                                selectByMouse: true
 
-                                onTextEdited: {
-                                    settingsManager.ubertooth_path = text
-                                    ubertooth.checkPath()
-                                }
+                                dialogTitle: qsTr("Please select the path to the ubertooth-specan binary")
+                                dialogFilter: ["specan binary (ubertooth-specan)"]
 
-                                FileDialog {
-                                    id: fileDialog
-                                    nameFilters: ["specan binary (ubertooth-specan)"]
-
-                                    currentFile: UtilsPath.makeUrl(settingsManager.ubertooth_path)
-                                    onAccepted: {
-                                        settingsManager.ubertooth_path = UtilsPath.cleanUrl(currentFile)
-                                        ubertooth.checkPath()
-                                    }
-                                }
+                                //statusSource: ubertooth.toolsAvailable ? "qrc:/assets/icons_material/baseline-check_circle-24px.svg" : ""
+                                //statuscolor: Theme.colorSuccess
 
                                 IconSvg {
-                                    anchors.right: btn.left
-                                    anchors.rightMargin: 12
+                                    anchors.right: parent.right
+                                    anchors.rightMargin: parent.buttonWidth+4
                                     anchors.verticalCenter: parent.verticalCenter
                                     width: 24
                                     height: 24
@@ -717,15 +707,9 @@ Loader {
                                     color: Theme.colorSuccess
                                 }
 
-                                ButtonThemed {
-                                    id: btn
-                                    anchors.top: parent.top
-                                    anchors.right: parent.right
-                                    anchors.bottom: parent.bottom
-                                    anchors.margins: 1
-
-                                    text: qsTr("change")
-                                    onClicked: fileDialog.open()
+                                onTextEdited: {
+                                    settingsManager.ubertooth_path = text
+                                    ubertooth.checkPath()
                                 }
                             }
                         }

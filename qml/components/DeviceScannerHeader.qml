@@ -443,11 +443,12 @@ Rectangle {
         }
     }
 
-    Rectangle { // bottom separator
+    Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
+
         height: 2
-        color: Theme.colorLVseparator
+        color: Qt.lighter(Theme.colorLVseparator, 1.06)
     }
 }

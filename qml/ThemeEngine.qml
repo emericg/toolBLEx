@@ -59,6 +59,7 @@ Item {
 
     // App specific
     property color colorBox
+    property color colorGrid
     property color colorLVheader
     property color colorLVpair
     property color colorLVimpair
@@ -199,7 +200,7 @@ Item {
             colorTabletmenuHighlight = "#cfcbcb"
 
             colorBackground = "#f9f8f7"
-            colorForeground = "#f5f4f3"
+            colorForeground = "#f3f2f1"
 
             colorPrimary = colorYellow
             colorSecondary = "#ffe800"
@@ -210,11 +211,12 @@ Item {
             colorText = "#373737"
             colorSubText = "#666666"
             colorIcon = "#373737"
-            colorSeparator = "#eaeaea"
+            colorSeparator = "#e8e8e8"
             colorLowContrast = "white"
             colorHighContrast = "#303030"
 
             colorBox = "white"
+            colorGrid = "#ebebeb"
             colorLVheader = "#fafafa"
             colorLVpair = "white"
             colorLVimpair = "#f5f5f5"
@@ -229,12 +231,12 @@ Item {
             colorComponentText = "black"
             colorComponentContent = "black"
             colorComponentBorder = "#ddd"
-            colorComponentDown = "#DADADA"
+            colorComponentDown = "#dadada"
             colorComponentBackground = "#fcfcfc"
 
         } else if (themeIndex === ThemeEngine.THEME_DESKTOP_DARK) {
 
-            colorGreen = "#58CF77"
+            colorGreen = "#58cf77"
             colorBlue = "#4dceeb"
             colorYellow = "#fcc632"
             colorOrange = "#ff8f35"
@@ -268,14 +270,15 @@ Item {
             colorWarning = colorOrange
             colorError = colorRed
 
-            colorText = "#EEE"
+            colorText = "#eee"
             colorSubText = "#999"
-            colorIcon = "#EEE"
+            colorIcon = "#eee"
             colorSeparator = "#333"
             colorLowContrast = "#111"
             colorHighContrast = "white"
 
             colorBox = "#252024"
+            colorGrid = "#333"
             colorLVheader = "#252024"
             colorLVpair = "#302b2e"
             colorLVimpair = "#252024"

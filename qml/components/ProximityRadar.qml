@@ -13,7 +13,7 @@ Item {
         height: width
         radius: width
         color: Theme.colorActionbar
-        opacity: 0.2
+        opacity: 0.16
         border.width: 2
         border.color: Theme.colorLowContrast
     }
@@ -23,7 +23,7 @@ Item {
         height: width
         radius: width
         color: Theme.colorActionbar
-        opacity: 0.5
+        opacity: 0.33
         border.width: 2
         border.color: Theme.colorLowContrast
     }
@@ -33,7 +33,7 @@ Item {
         height: width
         radius: width
         color: Theme.colorActionbar
-        opacity: 0.75
+        opacity: 0.6
         border.width: 2
         border.color: Theme.colorLowContrast
     }
