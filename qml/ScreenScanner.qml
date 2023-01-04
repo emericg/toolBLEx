@@ -62,10 +62,18 @@ Loader {
             orientation: settingsManager.scanviewOrientation
 
             handle: Rectangle {
-                implicitWidth: (splitview.orientation === Qt.Horizontal) ? 3: splitview.width
+                id: splithandle
+                implicitWidth: (splitview.orientation === Qt.Horizontal) ? 3 : splitview.width
                 implicitHeight: (splitview.orientation === Qt.Horizontal) ? splitview.height : 3
                 color: SplitHandle.pressed ? Theme.colorPrimary
-                     : (SplitHandle.hovered ? Theme.colorPrimary : Theme.colorHeaderHighlight)
+                     : (SplitHandle.hovered ? Theme.colorSecondary : Theme.colorHeaderHighlight)
+
+                containmentMask: Item {
+                    parent: splithandle
+                    anchors.centerIn: parent
+                    width: (splitview.orientation === Qt.Horizontal) ? 20 : splitview.width
+                    height: (splitview.orientation === Qt.Horizontal) ? splitview.height : 20
+                }
             }
 
             Component.onCompleted: splitview.restoreState(settingsManager.scanviewSize)
