@@ -268,7 +268,7 @@ Flickable {
                         fullColor: true
                         primaryColor: Theme.colorGrey
 
-                        visible: (!settingsManager.scanCacheAuto && !selectedDevice.isBeacon)
+                        visible: !selectedDevice.isBeacon
 
                         text: selectedDevice.hasCache ? qsTr("forget") : qsTr("cache")
                         source: selectedDevice.hasCache ?

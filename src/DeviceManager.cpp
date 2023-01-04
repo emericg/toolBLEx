@@ -792,9 +792,9 @@ void DeviceManager::uncacheDevice(const QString &addr)
                     qWarning() << "> uncacheDevice.exec() ERROR"
                                << uncacheDevice.lastError().type() << ":" << uncacheDevice.lastError().text();
                 }
-            }
 
-            break;
+                break;
+            }
         }
     }
 }
