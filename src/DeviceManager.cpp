@@ -100,6 +100,8 @@ DeviceManager::DeviceManager(bool daemon)
                 //qDebug() << "* Device added (from database): " << deviceName << "/" << deviceAddr;
             }
         }
+
+        checkPaired();
     }
 }
 
@@ -208,6 +210,21 @@ bool DeviceManager::checkBluetooth()
         Q_EMIT bluetoothChanged();
     }
 
+    if (m_bluetoothAdapter)
+    {
+        for (auto a: qAsConst(m_bluetoothAdapters))
+        {
+            Adapter *adp = qobject_cast<Adapter *>(a);
+            if (adp)
+            {
+                bool inuse = (adp->getAddress() == m_bluetoothAdapter->address().toString());
+                int hostmode = (inuse && m_bluetoothAdapter->hostMode());
+
+                adp->update(inuse, hostmode);
+            }
+        }
+    }
+
     return (m_btA && m_btE);
 }
 
@@ -255,10 +272,10 @@ void DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
         {
             for (const QBluetoothHostInfo &hi: adaptersList)
             {
-                bool inuse = false;
-                if (m_bluetoothAdapter) inuse = (hi.address() == m_bluetoothAdapter->address());
+                bool inuse = (m_bluetoothAdapter && hi.address() == m_bluetoothAdapter->address());
+                int hostmode = (inuse && m_bluetoothAdapter->hostMode());
 
-                Adapter *a = new Adapter(hi, inuse, this);
+                Adapter *a = new Adapter(hi, inuse, hostmode, this);
                 m_bluetoothAdapters.push_back(a);
             }
         }
@@ -303,6 +320,8 @@ void DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
                 m_bluetoothAdapter->powerOn(); // Doesn't work on all platforms...
             }
         }
+
+        checkPaired();
     }
     else
     {
@@ -341,9 +360,17 @@ void DeviceManager::bluetoothHostModeStateChanged(QBluetoothLocalDevice::HostMod
 {
     qDebug() << "DeviceManager::bluetoothHostModeStateChanged() host mode now:" << state;
 
+    if (state != m_ble_hostmode)
+    {
+        m_ble_hostmode = state;
+        Q_EMIT hostModeChanged();
+    }
+
     if (state > QBluetoothLocalDevice::HostPoweredOff)
     {
         m_btE = true;
+
+        checkPaired();
     }
     else
     {
@@ -670,6 +697,26 @@ void DeviceManager::disconnectDevices()
     {
         Device *dd = qobject_cast<Device *>(d);
         dd->deviceDisconnect();
+    }
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+void DeviceManager::checkPaired()
+{
+    if (m_bluetoothAdapter && m_bluetoothAdapter->isValid() && m_devices_model->hasDevices())
+    {
+        for (auto d: qAsConst(m_devices_model->m_devices))
+        {
+            DeviceToolBLEx *dd = qobject_cast<DeviceToolBLEx *>(d);
+
+            if (!dd->isBeacon() && dd->isBluetoothClassic()) // ?
+            {
+                //qDebug() << dd->getName() << m_bluetoothAdapter->pairingStatus(QBluetoothAddress(dd->getAddress()));
+                dd->setPairingStatus(m_bluetoothAdapter->pairingStatus(QBluetoothAddress(dd->getAddress())));
+            }
+        }
     }
 }
 

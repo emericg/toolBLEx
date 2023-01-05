@@ -31,6 +31,7 @@
 #include <QByteArray>
 
 #include <QBluetoothDeviceInfo>
+#include <QBluetoothLocalDevice>
 #include <QLowEnergyController>
 
 /* ************************************************************************** */
@@ -153,6 +154,8 @@ class DeviceToolBLEx: public Device
     Q_PROPERTY(bool isLowEnergy READ isBluetoothLowEnergy NOTIFY boolChanged)
     Q_PROPERTY(bool isClassic READ isBluetoothClassic NOTIFY boolChanged)
 
+    Q_PROPERTY(int pairingStatus READ getPairingStatus NOTIFY pairingChanged)
+
     Q_PROPERTY(bool hasCache READ hasCache NOTIFY cacheChanged)
     Q_PROPERTY(bool isStarred READ isStarred WRITE setUserStar NOTIFY starChanged)
     Q_PROPERTY(QString color READ getDeviceColor CONSTANT)
@@ -188,8 +191,9 @@ class DeviceToolBLEx: public Device
     Q_PROPERTY(QVariant last_mfd READ getLastManufacturerData NOTIFY advertisementChanged)
 
     // Services
-    Q_PROPERTY(QVariant servicesList READ getServices NOTIFY servicesChanged)
+    Q_PROPERTY(bool servicesScanned READ getServicesScanned NOTIFY servicesChanged)
     Q_PROPERTY(int servicesCount READ getServicesCount NOTIFY servicesChanged)
+    Q_PROPERTY(QVariant servicesList READ getServices NOTIFY servicesChanged)
 
     static const int s_min_entries_advertisement = 60;
     static const int s_max_entries_advertisement = 180;
@@ -198,8 +202,10 @@ class DeviceToolBLEx: public Device
     bool m_isBeacon = false;
     bool m_isCached = false;
     bool m_isBlacklisted = false;
+
     bool m_isClassic = false;
     bool m_isBLE = false;
+    int m_pairingStatus = 0;
 
     bool m_userStarred = false;
     QString m_userComment;
@@ -224,6 +230,7 @@ class DeviceToolBLEx: public Device
     QList <AdvertisementData *> m_mfd;
     QList <AdvertisementUUID *> m_mfd_uuid;
 
+    bool m_services_scanned = false;
     QList <QObject *> m_services;
 
     QVariant getLastServiceData() const { if (m_svd.empty()) return QVariant(); return QVariant::fromValue(m_svd.last()); }
@@ -257,6 +264,7 @@ Q_SIGNALS:
     void advertisementFilteredChanged();
     void servicesAdvertisedChanged();
     void servicesChanged();
+    void pairingChanged();
     void boolChanged();
     void cacheChanged();
     void starChanged();
@@ -277,6 +285,7 @@ public:
     // toolBLEx
     QVariant getServices() const { return QVariant::fromValue(m_services); }
     int getServicesCount() const { return m_services.count(); }
+    bool getServicesScanned() const { return m_services_scanned; }
 
     int getAdvertisedServicesCount() const { return m_advertised_services.count(); }
     QStringList getAdvertisedServices() const { return m_advertised_services; };
@@ -300,6 +309,9 @@ public:
     void setBlacklisted(bool v);
     void setCached(bool v);
     void setCache(bool v);
+
+    void setPairingStatus(QBluetoothLocalDevice::Pairing p);
+    int getPairingStatus() const { return m_pairingStatus; }
 
     void setDeviceColor(const QString &color);
     QString getDeviceColor() const { return m_color; }

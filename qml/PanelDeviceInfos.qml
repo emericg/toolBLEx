@@ -198,6 +198,13 @@ Flickable {
                         }
                     }
                 }
+
+                ItemTag {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: UtilsBluetooth.getBluetoothPairingText(selectedDevice.pairingStatus)
+                    color: Theme.colorForeground
+                    visible: (selectedDevice && selectedDevice.pairingStatus > 0)
+                }
             }
         }
 

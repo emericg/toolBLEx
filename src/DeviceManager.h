@@ -66,6 +66,7 @@ class DeviceManager: public QObject
     Q_PROPERTY(bool bluetoothAdapter READ hasBluetoothAdapter NOTIFY bluetoothChanged)
     Q_PROPERTY(bool bluetoothEnabled READ hasBluetoothEnabled NOTIFY bluetoothChanged)
     Q_PROPERTY(bool bluetoothPermissions READ hasBluetoothPermissions NOTIFY bluetoothChanged)
+    Q_PROPERTY(int bluetoothHostMode READ getBluetoothHostMode NOTIFY hostModeChanged)
 
     Q_PROPERTY(QString orderBy_role READ getOrderByRole NOTIFY filteringChanged)
     Q_PROPERTY(int orderBy_order READ getOrderByOrder NOTIFY filteringChanged)
@@ -82,6 +83,7 @@ class DeviceManager: public QObject
     QBluetoothLocalDevice *m_bluetoothAdapter = nullptr;
     QBluetoothDeviceDiscoveryAgent *m_discoveryAgent = nullptr;
     QLowEnergyConnectionParameters *m_ble_params = nullptr;
+    QBluetoothLocalDevice::HostMode m_ble_hostmode = QBluetoothLocalDevice::HostPoweredOff;
 
     QList <QObject *> m_bluetoothAdapters;
 
@@ -104,6 +106,8 @@ class DeviceManager: public QObject
 
     bool m_advertising = false;
     bool isAdvertising() const;
+
+    int getBluetoothHostMode() const { return m_ble_hostmode; }
 
     bool hasBluetooth() const;
     bool hasBluetoothAdapter() const;
@@ -144,6 +148,7 @@ Q_SIGNALS:
     void updatingChanged();
     void syncingChanged();
     void advertisingChanged();
+    void hostModeChanged();
 
 private slots:
     // QBluetoothLocalDevice related
@@ -181,6 +186,8 @@ public:
     Q_INVOKABLE void scanDevices_stop();
 
     Q_INVOKABLE void disconnectDevices();
+
+    Q_INVOKABLE void checkPaired();
 
     // RSSI graph
     Q_INVOKABLE void getRssiGraphAxis(QDateTimeAxis *axis);

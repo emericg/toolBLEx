@@ -27,9 +27,12 @@
 
 /* ************************************************************************** */
 
-Adapter::Adapter(const QBluetoothHostInfo &adapterInfo, bool inUse, QObject *parent) : QObject(parent)
+Adapter::Adapter(const QBluetoothHostInfo &adapterInfo,
+                 bool inUse, int hostMode,
+                 QObject *parent) : QObject(parent)
 {
     m_default = inUse;
+    m_bluetooth_host_mode = hostMode;
 
     m_hostname = adapterInfo.name();
     m_address = adapterInfo.address().toString();
@@ -71,6 +74,15 @@ Adapter::Adapter(const QBluetoothHostInfo &adapterInfo, bool inUse, QObject *par
         if (!m_bluetooth_version.isEmpty()) break;
     }
 #endif // defined(Q_OS_LINUX)
+}
+
+/* ************************************************************************** */
+
+void Adapter::update(bool inUse, int hostMode)
+{
+    m_default = inUse;
+    m_bluetooth_host_mode = hostMode;
+    Q_EMIT adapterUpdated();
 }
 
 /* ************************************************************************** */

@@ -35,30 +35,38 @@ class Adapter: public QObject
     Q_OBJECT
 
     Q_PROPERTY(bool isDefault READ isDefault NOTIFY adapterUpdated)
+    Q_PROPERTY(int mode READ getBluetoothHostMode NOTIFY adapterUpdated)
 
-    Q_PROPERTY(QString address READ getAddress NOTIFY adapterUpdated)
-    Q_PROPERTY(QString hostname READ getHostname NOTIFY adapterUpdated)
-    Q_PROPERTY(QString manufacturer READ getManufacturer NOTIFY adapterUpdated)
-    Q_PROPERTY(QString version READ getBluetoothVersion NOTIFY adapterUpdated)
+    Q_PROPERTY(QString address READ getAddress CONSTANT)
+    Q_PROPERTY(QString hostname READ getHostname CONSTANT)
+    Q_PROPERTY(QString manufacturer READ getManufacturer CONSTANT)
+    Q_PROPERTY(QString version READ getBluetoothVersion CONSTANT)
 
     bool m_default = false;
     QString m_address;
     QString m_hostname;
     QString m_mac_manufacturer;
     QString m_bluetooth_version;
+    int m_bluetooth_host_mode = 0;
+
+Q_SIGNALS:
+    void adapterUpdated();
+
+public:
+    Adapter(const QBluetoothHostInfo &adapterInfo,
+            bool inUse, int hostMode,
+            QObject *parent = nullptr);
+
+    ~Adapter() = default;
 
     bool isDefault() const { return m_default; }
     QString getAddress() const { return m_address; }
     QString getHostname() const { return m_hostname; }
     QString getManufacturer() const { return m_mac_manufacturer; }
     QString getBluetoothVersion() const { return m_bluetooth_version; }
+    int getBluetoothHostMode() const { return m_bluetooth_host_mode; }
 
-Q_SIGNALS:
-    void adapterUpdated();
-
-public:
-    Adapter(const QBluetoothHostInfo &adapterInfo, bool inUse, QObject *parent = nullptr);
-    ~Adapter() = default;
+    void update(bool inUse, int hostMode);
 };
 
 /* ************************************************************************** */

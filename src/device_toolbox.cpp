@@ -264,6 +264,15 @@ void DeviceToolBLEx::setCache(bool v)
     }
 }
 
+void DeviceToolBLEx::setPairingStatus(QBluetoothLocalDevice::Pairing p)
+{
+    if (m_pairingStatus != p)
+    {
+        m_pairingStatus = p;
+        Q_EMIT pairingChanged();
+    }
+}
+
 void DeviceToolBLEx::setDeviceColor(const QString &color)
 {
     m_color = color;

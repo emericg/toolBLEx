@@ -1,5 +1,5 @@
 // UtilsBluetooth.js
-// Version 1
+// Version 2
 
 /* ************************************************************************** */
 
@@ -8,6 +8,25 @@ function getBluetoothCoreConfigurationText(coreConfiguration) {
     if (coreConfiguration === 2) return qsTr("Classic")
     if (coreConfiguration === 3) return qsTr("Classic & Low Energy")
     return ""
+}
+
+/* ************************************************************************** */
+
+function getBluetoothAdapterModeText(mode) {
+    if (mode === 0) return qsTr("Powered down")
+    if (mode === 1) return qsTr("Connectable")
+    if (mode === 2) return qsTr("Discoverable")
+    if (mode === 3) return qsTr("Discoverable (limited)")
+    return qsTr("Unknown")
+}
+
+/* ************************************************************************** */
+
+function getBluetoothPairingText(pairing) {
+    if (pairing === 0) return qsTr("Unpaired")
+    if (pairing === 2) return qsTr("Paired")
+    if (pairing === 3) return qsTr("Paired (authorized)")
+    return qsTr("Unknown")
 }
 
 /* ************************************************************************** */

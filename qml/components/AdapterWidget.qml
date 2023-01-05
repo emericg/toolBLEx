@@ -2,6 +2,8 @@ import QtQuick
 
 import ThemeEngine 1.0
 
+import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
+
 Rectangle {
     id: adapterWidget
     height: col.height + 24
@@ -54,6 +56,7 @@ Rectangle {
             legendWidth = Math.max(legendWidth, legendAddress.contentWidth)
             legendWidth = Math.max(legendWidth, legendMAC.contentWidth)
             legendWidth = Math.max(legendWidth, legendBluetooth.contentWidth)
+            legendWidth = Math.max(legendWidth, legendHostMode.contentWidth)
         }
 
         Text {
@@ -158,6 +161,28 @@ Rectangle {
             ItemTag {
                 anchors.verticalCenter: parent.verticalCenter
                 text: modelData.version
+                color: Theme.colorForeground
+            }
+        }
+
+        Row {
+            height: 32
+            spacing: 12
+
+            Text {
+                id: legendHostMode
+                anchors.verticalCenter: parent.verticalCenter
+                width: col.legendWidth
+                text: qsTr("Host mode")
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContent
+                horizontalAlignment: Text.AlignRight
+                color: Theme.colorSubText
+            }
+
+            ItemTag {
+                anchors.verticalCenter: parent.verticalCenter
+                text: UtilsBluetooth.getBluetoothAdapterModeText(modelData.mode)
                 color: Theme.colorForeground
             }
         }
