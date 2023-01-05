@@ -76,6 +76,8 @@ Item {
         }
     }
 */
+    ////////
+
     Column {
         anchors.left: parent.left
         anchors.right: parent.right
@@ -88,12 +90,16 @@ Item {
             width: detailView.ww
             height: columnServiceScan.height + 24
             radius: 4
+
+            clip: false
             color: Theme.colorBox
+            border.width: 2
+            border.color: Theme.colorBoxBorder
 
             Column {
                 id: columnServiceScan
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: 20
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 0
@@ -120,6 +126,7 @@ Item {
 
                         fullColor: true
                         text: {
+                            if (!selectedDevice) return ""
                             if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
                                 return qsTr("scan services")
                             else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
@@ -130,6 +137,7 @@ Item {
                                 return qsTr("disconnect")
                         }
                         source: {
+                            if (!selectedDevice) return ""
                             if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
                                 return "qrc:/assets/icons_material/baseline-bluetooth-24px.svg"
                             else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
@@ -162,23 +170,28 @@ Item {
         }
     }
 
+    ////////
+
     ListView {
         id: servicesView
         anchors.fill: parent
-        anchors.margins: -20
+        anchors.margins: -16
 
         clip: false
-        visible: (selectedDevice.servicesCount > 0)
+        visible: (selectedDevice && selectedDevice.servicesCount > 0)
+
         onCountChanged: {
             exportButton.text = qsTr("Export")
             exportButton.primaryColor = Theme.colorGrey
         }
 
-        model: selectedDevice.servicesList
+        model: (selectedDevice && selectedDevice.servicesList)
         delegate: BleServiceWidget {
             width: servicesView.width
         }
     }
+
+    ////////
 
     ButtonWireframeIcon {
         id: exportButton
@@ -186,7 +199,7 @@ Item {
         anchors.bottom: parent.bottom
         anchors.margins: -4
 
-        visible: (selectedDevice.servicesCount > 0)
+        visible: (selectedDevice && selectedDevice.servicesCount > 0)
 
         fullColor: true
         primaryColor: Theme.colorGrey
@@ -202,4 +215,6 @@ Item {
             }
         }
     }
+
+    ////////
 }

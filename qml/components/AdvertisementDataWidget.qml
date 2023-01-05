@@ -8,17 +8,17 @@ import DeviceUtils 1.0
 Column {
     id: advDataWidget
     anchors.left: parent.left
+    anchors.leftMargin: 16
     anchors.right: parent.right
 
     property var packet: null
-    property int legendWidth: 72
+    property int legendWidth: 48
 
     Component.onCompleted: {
-        legendWidth = 40
+        legendWidth = 48
         legendWidth = Math.max(legendWidth, legendUUID.contentWidth)
         legendWidth = Math.max(legendWidth, legendSize.contentWidth)
         legendWidth = Math.max(legendWidth, legendData.contentWidth)
-        legendWidth += 16
     }
 
     ////////

@@ -11,8 +11,8 @@ Rectangle {
     height: extended ? (servicewiew.height + characteristicview.contentHeight) : servicewiew.height
     Behavior on height { NumberAnimation { duration: 233 } }
 
-    color: Theme.colorBox
     clip: true
+    color: Theme.colorBox
 
     //////////
 

@@ -66,7 +66,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.margins: 20
+        anchors.margins: 16
 
         visible: (hostMenu.currentSelection === 1)
 

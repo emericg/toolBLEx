@@ -121,7 +121,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.margins: 20
+        anchors.margins: 16
 
         visible: (deviceMenu.currentSelection === 1)
     }
@@ -133,7 +133,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.margins: 20
+        anchors.margins: 16
 
         visible: (deviceMenu.currentSelection === 2)
     }
@@ -145,7 +145,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.margins: 20
+        anchors.margins: 16
 
         visible: (deviceMenu.currentSelection === 3)
     }

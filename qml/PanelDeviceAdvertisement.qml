@@ -28,7 +28,11 @@ Flickable {
             width: detailView.ww
             height: 32 + 24
             radius: 4
+
+            clip: false
             color: Theme.colorBox
+            border.width: 2
+            border.color: Theme.colorBoxBorder
 
             visible: (selectedDevice && !selectedDevice.hasAdvertisement)
 
@@ -50,10 +54,15 @@ Flickable {
         ////////
 
         Rectangle {
-            width: detailView.ww
-            height: 32 + 24 + 24
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 32 + 32 + 24
             radius: 4
+
+            clip: false
             color: Theme.colorBox
+            border.width: 2
+            border.color: Theme.colorBoxBorder
 
             visible: (selectedDevice && selectedDevice.hasAdvertisement)
 
@@ -88,15 +97,15 @@ Flickable {
                 anchors.left: parent.left
                 anchors.leftMargin: 16
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 12
-                height: 24
+                anchors.bottomMargin: 14
+                height: 28
                 spacing: 12
 
                 Repeater {
-                    model: selectedDevice.svd_uuid
+                    model: (selectedDevice && selectedDevice.svd_uuid)
 
                     ButtonWireframe {
-                        height: 24
+                        height: 28
                         fullColor: true
                         fulltextColor: Theme.colorText
                         primaryColor: Theme.colorComponent
@@ -146,15 +155,15 @@ Flickable {
                 anchors.right: parent.right
                 anchors.rightMargin: 16
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 12
-                height: 24
+                anchors.bottomMargin: 14
+                height: 28
                 spacing: 12
 
                 Repeater {
-                    model: selectedDevice.mfd_uuid
+                    model: (selectedDevice && selectedDevice.mfd_uuid)
 
                     ButtonWireframe {
-                        height: 24
+                        height: 28
                         fullColor: true
                         fulltextColor: Theme.colorText
                         primaryColor: Theme.colorComponent
@@ -174,10 +183,8 @@ Flickable {
 
         ////////
 
-        Repeater {
-            id: advDataRepeater
-
-            model: selectedDevice.adv
+        Repeater { // advertisement packets
+            model: (selectedDevice && selectedDevice.adv)
 
             AdvertisementDataWidgetAdvanced {
                 anchors.left: parent.left

@@ -59,6 +59,7 @@ Item {
 
     // App specific
     property color colorBox
+    property color colorBoxBorder
     property color colorGrid
     property color colorLVheader
     property color colorLVpair
@@ -81,15 +82,15 @@ Item {
     ////////////////
 
     // Palette colors
-    property color colorLightGreen: "#09debc" // unused
+    property color colorLightGreen: "#09debc"
     property color colorGreen
-    property color colorDarkGreen: "#1ea892" // unused
+    property color colorDarkGreen: "#1ea892"
     property color colorBlue
     property color colorYellow
     property color colorOrange
     property color colorRed
-    property color colorGrey: "#555151" // unused
-    property color colorLightGrey: "#a9bcb8" // unused
+    property color colorGrey: "#5c5c5c"
+    property color colorLightGrey: "#7f7f7f"
 
     // Fixed colors
     readonly property color colorMaterialBlue: "#2196f3"
@@ -216,6 +217,7 @@ Item {
             colorHighContrast = "#303030"
 
             colorBox = "white"
+            colorBoxBorder = "#f4f4f4"
             colorGrid = "#ebebeb"
             colorLVheader = "#fafafa"
             colorLVpair = "white"
@@ -262,7 +264,7 @@ Item {
             colorTabletmenuHighlight = "#bb86fc"
 
             colorBackground = "#2e2a2e"
-            colorForeground = "#262626"
+            colorForeground = "#353030"
 
             colorPrimary = "#bb86fc"
             colorSecondary = "#b16bee"
@@ -278,6 +280,7 @@ Item {
             colorHighContrast = "white"
 
             colorBox = "#252024"
+            colorBoxBorder = "#333"
             colorGrid = "#333"
             colorLVheader = "#252024"
             colorLVpair = "#302b2e"

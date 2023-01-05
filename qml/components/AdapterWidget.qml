@@ -6,8 +6,13 @@ Rectangle {
     id: adapterWidget
     height: col.height + 24
     radius: 4
+
+    clip: false
     color: Theme.colorBox
-    clip: true
+    border.width: 2
+    border.color: Theme.colorBoxBorder
+
+    ////////
 
     Rectangle {
         anchors.top: parent.top
@@ -22,7 +27,7 @@ Rectangle {
 
     IconSvg {
         anchors.right: parent.right
-        anchors.rightMargin: 24
+        anchors.rightMargin: 20
         anchors.verticalCenter: parent.verticalCenter
         width: 64
         height: 64
@@ -30,22 +35,25 @@ Rectangle {
         visible: (adapterWidget.width > col.legendWidth*2.5)
 
         source: "qrc:/assets/icons_bootstrap/bluetooth.svg"
-        color: Theme.colorIcon
+        color: Theme.colorSubText
     }
+
+    ////////
 
     Column {
         id: col
+        anchors.left: parent.left
+        anchors.leftMargin: 24
         anchors.verticalCenter: parent.verticalCenter
 
-        property int legendWidth: 180
+        property int legendWidth: 80
 
         Component.onCompleted: {
-            legendWidth = 64
+            legendWidth = 80
             legendWidth = Math.max(legendWidth, legendHostname.contentWidth)
             legendWidth = Math.max(legendWidth, legendAddress.contentWidth)
             legendWidth = Math.max(legendWidth, legendMAC.contentWidth)
             legendWidth = Math.max(legendWidth, legendBluetooth.contentWidth)
-            legendWidth += 16
         }
 
         Text {
@@ -150,8 +158,10 @@ Rectangle {
             ItemTag {
                 anchors.verticalCenter: parent.verticalCenter
                 text: modelData.version
-                color: Theme.colorComponent
+                color: Theme.colorForeground
             }
         }
     }
+
+    ////////
 }

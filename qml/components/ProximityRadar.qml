@@ -5,7 +5,7 @@ import ThemeEngine 1.0
 Item {
     id: proximityRadar
 
-    clip: false
+    clip: true
 
     Rectangle {
         anchors.centerIn: cc

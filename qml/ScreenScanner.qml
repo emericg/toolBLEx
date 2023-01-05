@@ -85,7 +85,7 @@ Loader {
                 SplitView.fillHeight: true
                 SplitView.fillWidth: true
 
-                clip: true
+                clip: false
                 color: Theme.colorLVpair
 
                 Rectangle {
@@ -344,10 +344,10 @@ Loader {
 
                 ////
 
-                property int flowElementWidth: (width >= 1450) ? (width / 3) - 10 - 10
-                                                               : (width / 2) - 20 - 10
+                property int flowElementWidth: (width >= 1440) ? (width / 3) - 24
+                                                               : (width / 2) - 28
 
-                property int ww: (settingsManager.scanviewOrientation === Qt.Horizontal) ? width - 40
+                property int ww: (settingsManager.scanviewOrientation === Qt.Horizontal) ? width - 32
                                                                                          : flowElementWidth
 
                 ////

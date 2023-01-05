@@ -42,10 +42,14 @@ Loader {
             ////////////////
 
             Rectangle { // not implemented
-                width: screenAdvertiser.width * 0.66
+                width: screenAdvertiser.width * 0.666
                 height: 128
                 radius: 4
+
+                clip: false
                 color: Theme.colorBox
+                border.width: 2
+                border.color: Theme.colorBoxBorder
 
                 Rectangle {
                     anchors.top: parent.top
@@ -68,7 +72,7 @@ Loader {
                         anchors.centerIn: parent
 
                         source: "qrc:/assets/icons_material/baseline-bluetooth_disabled-24px.svg"
-                        color: Theme.colorIcon
+                        color: Theme.colorSubText
                     }
                 }
 

@@ -140,7 +140,7 @@ Item {
                     return ""
                 }
                 opacity: 0.8
-                color: Theme.colorIcon
+                color: isSelected ? "white" : Theme.colorIcon
             }
 
             Text { // name
@@ -162,7 +162,7 @@ Item {
             //    visible: (boxDevice.hasBattery && boxDevice.deviceBattery >= 0)
             //
             //    source: UtilsDeviceSensors.getDeviceBatteryIcon(boxDevice.deviceBattery)
-            //    color: Theme.colorIcon
+            //    color: isSelected ? "white" : Theme.colorIcon
             //    rotation: 90
             //    fillMode: Image.PreserveAspectCrop
             //}
@@ -175,7 +175,7 @@ Item {
 
                 opacity: 0.8
                 source: "qrc:/assets/icons_material/baseline-stars-24px.svg"
-                color: Theme.colorIcon
+                color: isSelected ? "white" : Theme.colorIcon
             }
         }
 

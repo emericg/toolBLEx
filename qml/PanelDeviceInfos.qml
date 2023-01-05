@@ -15,7 +15,7 @@ Flickable {
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.bottom: parent.bottom
-    anchors.margins: 20
+    anchors.margins: 16
 
     contentWidth: -1
     contentHeight: inflow.height
@@ -35,8 +35,11 @@ Flickable {
             width: detailView.ww
             height: box1.height + 24
             radius: 4
+
+            clip: false
             color: Theme.colorBox
-            clip: true
+            border.width: 2
+            border.color: Theme.colorBoxBorder
 
             Rectangle {
                 anchors.top: parent.top
@@ -48,46 +51,20 @@ Flickable {
                 color: Theme.colorPrimary
             }
 
-            IconSvg {
-                anchors.right: parent.right
-                anchors.rightMargin: 24
-                anchors.verticalCenter: parent.verticalCenter
-                width: 64
-                height: 64
-                color: Theme.colorIcon
-
-                source: {
-                    if (selectedDevice) {
-                        if (selectedDevice.isBeacon) return "qrc:/assets/icons_bootstrap/tags.svg"
-                        return UtilsBluetooth.getBluetoothMinorClassIcon(selectedDevice.majorClass, selectedDevice.minorClass)
-                    }
-                    return ""
-                }
-/*
-                Rectangle {
-                    anchors.fill: parent
-                    anchors.margins: -12
-                    radius: 64
-                    z: -1
-                    visible: parent.source.length
-                    color: Theme.colorForeground
-                }
-*/
-            }
-
             Column {
                 id: box1
+                anchors.left: parent.left
+                anchors.leftMargin: 24
                 anchors.verticalCenter: parent.verticalCenter
 
-                property int legendWidth: 140
+                property int legendWidth: 80
 
                 Component.onCompleted: {
-                    legendWidth = 64
+                    legendWidth = 80
                     legendWidth = Math.max(legendWidth, legendName.contentWidth)
                     legendWidth = Math.max(legendWidth, legendAddress.contentWidth)
                     legendWidth = Math.max(legendWidth, legendManufacturer.contentWidth)
                     legendWidth = Math.max(legendWidth, legendBluetooth.contentWidth)
-                    legendWidth += 20
                 }
 
                 Row {
@@ -108,7 +85,7 @@ Flickable {
                     TextSelectable {
                         anchors.verticalCenter: parent.verticalCenter
 
-                        property bool nameAvailable: (selectedDevice.deviceName.length > 0)
+                        property bool nameAvailable: (selectedDevice && selectedDevice.deviceName.length > 0)
 
                         selectByMouse: nameAvailable
                         color: nameAvailable ? Theme.colorText : Theme.colorSubText
@@ -132,7 +109,7 @@ Flickable {
 
                     TextSelectable {
                         anchors.verticalCenter: parent.verticalCenter
-                        text: selectedDevice.deviceAddress
+                        text: (selectedDevice && selectedDevice.deviceAddress)
                     }
                 }
                 Row {
@@ -154,7 +131,7 @@ Flickable {
                         id: deviceManufacturer
                         anchors.verticalCenter: parent.verticalCenter
 
-                        property bool manufAvailable: (selectedDevice.deviceManufacturer.length > 0)
+                        property bool manufAvailable: (selectedDevice && selectedDevice.deviceManufacturer.length > 0)
 
                         selectByMouse: manufAvailable
                         color: manufAvailable ? Theme.colorText : Theme.colorSubText
@@ -178,16 +155,16 @@ Flickable {
 
                     ItemTag {
                         anchors.verticalCenter: parent.verticalCenter
-                        visible: selectedDevice.isClassic
+                        visible: (selectedDevice && selectedDevice.isClassic)
                         text: qsTr("Classic")
-                        color: Theme.colorComponent
+                        color: Theme.colorForeground
                     }
 
                     ItemTag {
                         anchors.verticalCenter: parent.verticalCenter
-                        visible: selectedDevice.isLowEnergy
+                        visible: (selectedDevice && selectedDevice.isLowEnergy)
                         text: qsTr("Low Energy")
-                        color: Theme.colorComponent
+                        color: Theme.colorForeground
                     }
 
                     //TextSelectable {
@@ -196,145 +173,30 @@ Flickable {
                     //}
                 }
             }
-        }
-
-        ////////
-
-        Rectangle {
-            width: detailView.ww
-            height: box1b.height + 24
-            radius: 4
-            color: Theme.colorBox
-            clip: true
 
             Column {
-                id: box1b
-                width: parent.width - 16
-                anchors.centerIn: parent
-                spacing: 16
+                anchors.right: parent.right
+                anchors.rightMargin: 16
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 8
 
-                Flow { // buttons row 1
-                    width: parent.width
-                    spacing: 12
+                Rectangle {
+                    width: 92; height: 92; radius: 92;
+                    color: Theme.colorForeground
+                    visible: (selectedDevice && selectedDevice.isClassic)
 
-                    ButtonWireframeIcon {
-                        fullColor: true
-                        visible: (deviceManager.bluetooth && selectedDevice.isLowEnergy)
-                        text: {
-                            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
-                                return qsTr("scan services")
-                            else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
-                                return qsTr("connecting...")
-                            else if (selectedDevice.status === DeviceUtils.DEVICE_WORKING)
-                                return qsTr("scanning...")
-                            else if (selectedDevice.status >= DeviceUtils.DEVICE_CONNECTED)
-                                return qsTr("disconnect")
-                        }
+                    IconSvg {
+                        anchors.centerIn: parent
+                        width: 64; height: 64;
+                        color: Theme.colorSubText
                         source: {
-                            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
-                                return "qrc:/assets/icons_material/baseline-bluetooth-24px.svg"
-                            else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
-                                return "qrc:/assets/icons_material/duotone-bluetooth_connected-24px.svg"
-                            else if (selectedDevice.status === DeviceUtils.DEVICE_WORKING)
-                                return "qrc:/assets/icons_material/duotone-bluetooth_searching-24px.svg"
-                            else
-                                return "qrc:/assets/icons_material/duotone-settings_bluetooth-24px.svg"
-                        }
-                        onClicked: {
-                            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
-                                selectedDevice.actionScan()
-                            else
-                                selectedDevice.deviceDisconnect()
+                            if (selectedDevice) {
+                                if (selectedDevice.isBeacon) return "qrc:/assets/icons_bootstrap/tags.svg"
+                                return UtilsBluetooth.getBluetoothMinorClassIcon(selectedDevice.majorClass, selectedDevice.minorClass)
+                            }
+                            return ""
                         }
                     }
-                }
-
-                Flow { // buttons row 2
-                    width: parent.width
-                    spacing: 12
-
-                    ButtonWireframeIcon {
-                        fullColor: true
-                        primaryColor: selectedDevice.isStarred ?Theme.colorSecondary : Theme.colorGrey
-
-                        text: selectedDevice.isStarred ? qsTr("starred") : qsTr("star")
-                        source: selectedDevice.isStarred ?
-                                    "qrc:/assets/icons_material/baseline-stars-24px.svg" :
-                                    "qrc:/assets/icons_material/outline-add_circle-24px.svg"
-                        onClicked: selectedDevice.isStarred = !selectedDevice.isStarred
-                    }
-
-                    ButtonWireframeIcon {
-                        fullColor: true
-                        primaryColor: Theme.colorGrey
-
-                        visible: !selectedDevice.isBeacon
-
-                        text: selectedDevice.hasCache ? qsTr("forget") : qsTr("cache")
-                        source: selectedDevice.hasCache ?
-                                    "qrc:/assets/icons_material/baseline-loupe_minus-24px.svg" :
-                                    "qrc:/assets/icons_material/baseline-loupe-24px.svg"
-                        onClicked: selectedDevice.cache(!selectedDevice.isCached)
-                    }
-
-                    ButtonWireframeIcon {
-                        fullColor: true
-                        primaryColor: Theme.colorGrey
-
-                        text: selectedDevice.isBlacklisted ? qsTr("whitelist") : qsTr("blacklist")
-                        source: selectedDevice.isBlacklisted ?
-                                    "qrc:/assets/icons_material/outline-add_circle-24px.svg" :
-                                    "qrc:/assets/icons_material/baseline-cancel-24px.svg"
-                        onClicked: selectedDevice.blacklist(!selectedDevice.isBlacklisted)
-                    }
-
-                    ButtonWireframe {
-                        fullColor: true
-                        primaryColor: selectedDevice.userColor
-                        fulltextColor: utilsApp.isQColorLight(selectedDevice.userColor) ? "#333" : "#f4f4f4"
-
-                        text: qsTr("color")
-                        onClicked: colorDialog.open()
-
-                        ColorDialog {
-                            id: colorDialog
-                            currentColor: selectedDevice.userColor
-                            onAccepted: selectedDevice.userColor = colorDialog.color
-                        }
-                    }
-    /*
-                    Rectangle { // user color
-                        width: Theme.componentHeight
-                        height: Theme.componentHeight
-                        radius: Theme.componentRadius
-
-                        color: selectedDevice.userColor
-                        border.width: 2
-                        border.color: Qt.darker(selectedDevice.userColor, 1.1)
-
-                        ColorDialog {
-                            id: colorDialog
-                            currentColor: selectedDevice.userColor
-                            onAccepted: selectedDevice.userColor = colorDialog.color
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: colorDialog.open()
-                        }
-                    }
-    */
-                }
-
-                TextFieldThemed { // user comment
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    width: parent.width
-                    height: 36
-
-                    colorBackground: Theme.colorBox
-                    placeholderText: qsTr("Comment")
-                    text: selectedDevice.userComment
-                    onTextEdited: selectedDevice.userComment = text
                 }
             }
         }
@@ -345,23 +207,27 @@ Flickable {
             width: detailView.ww
             height: box2.height + 24
             radius: 4
-            color: Theme.colorBox
-            clip: true
 
-            visible: (selectedDevice.majorClass !== 0)
+            clip: false
+            color: Theme.colorBox
+            border.width: 2
+            border.color: Theme.colorBoxBorder
+
+            visible: (selectedDevice && selectedDevice.majorClass !== 0)
 
             Column {
                 id: box2
+                anchors.left: parent.left
+                anchors.leftMargin: 24
                 anchors.verticalCenter: parent.verticalCenter
 
-                property int legendWidth: 140
+                property int legendWidth: 80
 
                 Component.onCompleted: {
-                    legendWidth = 64
+                    legendWidth = 80
                     legendWidth = Math.max(legendWidth, legendCategory.contentWidth)
                     legendWidth = Math.max(legendWidth, legendDeviceType.contentWidth)
                     legendWidth = Math.max(legendWidth, legendService.contentWidth)
-                    legendWidth += 20
                 }
 /*
                 Row {
@@ -395,7 +261,7 @@ Flickable {
                         width: box2.legendWidth
                         anchors.verticalCenter: parent.verticalCenter
 
-                        text: qsTr("category")
+                        text: qsTr("Category")
                         textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContent
                         horizontalAlignment: Text.AlignRight
@@ -415,7 +281,7 @@ Flickable {
                         width: box2.legendWidth
                         anchors.verticalCenter: parent.verticalCenter
 
-                        text: qsTr("device type")
+                        text: qsTr("Device type")
                         textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContent
                         horizontalAlignment: Text.AlignRight
@@ -435,7 +301,7 @@ Flickable {
                         width: box2.legendWidth
                         anchors.verticalCenter: parent.verticalCenter
 
-                        text: qsTr("service(s)")
+                        text: qsTr("Service(s)")
                         textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContent
                         horizontalAlignment: Text.AlignRight
@@ -453,24 +319,137 @@ Flickable {
 
         Rectangle {
             width: detailView.ww
-            height: box3.height + 24
+            height: box1b.height + 32
             radius: 4
 
-            visible: (selectedDevice.rssi !== 0)
+            clip: false
             color: Theme.colorBox
-            clip: true
+            border.width: 2
+            border.color: Theme.colorBoxBorder
+
+            Column {
+                id: box1b
+                width: parent.width - 32
+                anchors.centerIn: parent
+                spacing: 12
+
+                Flow { // buttons row
+                    width: parent.width
+                    spacing: 12
+
+                    ButtonWireframeIcon {
+                        fullColor: true
+                        primaryColor: (selectedDevice && selectedDevice.isStarred) ? Theme.colorPrimary : Theme.colorLightGrey
+
+                        text: (selectedDevice && selectedDevice.isStarred) ? qsTr("starred") : qsTr("star")
+                        source: (selectedDevice && selectedDevice.isStarred) ?
+                                    "qrc:/assets/icons_material/baseline-stars-24px.svg" :
+                                    "qrc:/assets/icons_material/outline-add_circle-24px.svg"
+                        onClicked: selectedDevice.isStarred = !selectedDevice.isStarred
+                    }
+
+                    ButtonWireframeIcon {
+                        fullColor: true
+                        primaryColor: Theme.colorLightGrey
+
+                        visible: (selectedDevice && !selectedDevice.isBeacon)
+
+                        text: (selectedDevice && selectedDevice.hasCache) ? qsTr("forget") : qsTr("cache")
+                        source: (selectedDevice && selectedDevice.hasCache) ?
+                                    "qrc:/assets/icons_material/baseline-loupe_minus-24px.svg" :
+                                    "qrc:/assets/icons_material/baseline-loupe-24px.svg"
+                        onClicked: selectedDevice.cache(!selectedDevice.isCached)
+                    }
+
+                    ButtonWireframeIcon {
+                        fullColor: true
+                        primaryColor: Theme.colorLightGrey
+
+                        text: (selectedDevice && selectedDevice.isBlacklisted) ? qsTr("whitelist") : qsTr("blacklist")
+                        source: (selectedDevice && selectedDevice.isBlacklisted) ?
+                                    "qrc:/assets/icons_material/outline-add_circle-24px.svg" :
+                                    "qrc:/assets/icons_material/baseline-cancel-24px.svg"
+                        onClicked: selectedDevice.blacklist(!selectedDevice.isBlacklisted)
+                    }
+
+                    ButtonWireframe {
+                        fullColor: true
+                        primaryColor: selectedDevice.userColor
+                        fulltextColor: (selectedDevice && utilsApp.isQColorLight(selectedDevice.userColor)) ? "#333" : "#f4f4f4"
+
+                        text: qsTr("color")
+                        onClicked: colorDialog.open()
+
+                        ColorDialog {
+                            id: colorDialog
+                            currentColor: selectedDevice.userColor
+                            onAccepted: selectedDevice.userColor = colorDialog.color
+                        }
+                    }
+/*
+                    Rectangle { // user color
+                        width: Theme.componentHeight
+                        height: Theme.componentHeight
+                        radius: Theme.componentRadius
+
+                        color: selectedDevice.userColor
+                        border.width: 2
+                        border.color: Qt.darker(selectedDevice.userColor, 1.1)
+
+                        ColorDialog {
+                            id: colorDialog
+                            currentColor: selectedDevice.userColor
+                            onAccepted: selectedDevice.userColor = colorDialog.color
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: colorDialog.open()
+                        }
+                    }
+*/
+                }
+
+                TextFieldThemed { // user comment
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: parent.width
+                    height: 36
+
+                    colorBackground: Theme.colorBox
+                    placeholderText: qsTr("Comment")
+                    text: selectedDevice.userComment
+                    onTextEdited: selectedDevice.userComment = text
+                }
+            }
+        }
+
+        ////////
+
+        Rectangle {
+            width: detailView.ww
+            height: box3.height + 32
+            radius: 4
+
+            clip: false
+            color: Theme.colorBox
+            border.width: 2
+            border.color: Theme.colorBoxBorder
+
+            visible: (selectedDevice && selectedDevice.rssi !== 0)
 
             Column {
                 id: box3
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.top: parent.top
+                anchors.topMargin: 12
+                anchors.left: parent.left
+                anchors.leftMargin: 24
 
-                property int legendWidth: 200
+                property int legendWidth: 80
 
                 Component.onCompleted: {
-                    legendWidth = 64
+                    legendWidth = 80
                     legendWidth = Math.max(legendWidth, legendRSSI.contentWidth)
                     legendWidth = Math.max(legendWidth, legendAdvertising.contentWidth)
-                    legendWidth += 20
                 }
 
                 Row {
@@ -491,7 +470,7 @@ Flickable {
 
                     Row {
                         anchors.verticalCenter: parent.verticalCenter
-                        visible: (selectedDevice.rssi !== 0)
+                        visible: (selectedDevice && selectedDevice.rssi !== 0)
                         spacing: 4
 
                         Item {
@@ -503,8 +482,9 @@ Flickable {
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
                                 anchors.verticalCenterOffset: -1
-                                source: (selectedDevice.rssi < 0) ? "qrc:/assets/icons_material/baseline-signal_cellular_full-24px.svg"
-                                                                  : "qrc:/assets/icons_material/baseline-signal_cellular_off-24px.svg"
+                                source: (selectedDevice && selectedDevice.rssi < 0) ?
+                                            "qrc:/assets/icons_material/baseline-signal_cellular_full-24px.svg" :
+                                            "qrc:/assets/icons_material/baseline-signal_cellular_off-24px.svg"
                                 color: Theme.colorIcon
                             }
                         }
@@ -523,7 +503,7 @@ Flickable {
 
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
-                        visible: (selectedDevice.rssi === 0)
+                        visible: (selectedDevice && selectedDevice.rssi === 0)
 
                         text: qsTr("Unknown")
                         textFormat: Text.PlainText
@@ -552,7 +532,7 @@ Flickable {
 
                     Row {
                         anchors.verticalCenter: parent.verticalCenter
-                        visible: (selectedDevice.advInterval !== 0)
+                        visible: (selectedDevice && selectedDevice.advInterval !== 0)
                         spacing: 4
 
                         IconSvg {
@@ -580,7 +560,7 @@ Flickable {
 
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
-                        visible: (selectedDevice.advInterval === 0)
+                        visible: (selectedDevice && selectedDevice.advInterval === 0)
 
                         text: qsTr("Unknown")
                         textFormat: Text.PlainText
@@ -601,13 +581,15 @@ Flickable {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
+                anchors.margins: 2
                 spacing: 2
 
                 Repeater {
-                    model: selectedDevice.rssiHistory
+                    model: (selectedDevice && selectedDevice.rssiHistory)
 
                     Rectangle {
-                        width: ((detailView.ww - 59*2) / 60); height: 28;
+                        width: ((detailView.ww - 59*2) / 60)
+                        height: 40
                         radius: 2
                         color: Theme.colorForeground
 
@@ -638,9 +620,12 @@ Flickable {
             height: box4.height + 24
             radius: 4
 
-            visible: (selectedDevice.rssi !== 0)
+            clip: false
             color: Theme.colorBox
-            clip: true
+            border.width: 2
+            border.color: Theme.colorBoxBorder
+
+            visible: (selectedDevice && selectedDevice.rssi !== 0)
 
             Column {
                 id: box4
@@ -656,7 +641,7 @@ Flickable {
                     anchors.leftMargin: 24
                     height: 32
 
-                    visible: !selectedDevice.hasAdvertisement
+                    visible: (selectedDevice && !selectedDevice.hasAdvertisement)
 
                     text: qsTr("No advertisement data...")
                     textFormat: Text.PlainText
@@ -670,7 +655,7 @@ Flickable {
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    visible: selectedDevice.svd.length
+                    visible: (selectedDevice && selectedDevice.svd.length)
 
                     Row {
                         anchors.left: parent.left
@@ -688,7 +673,7 @@ Flickable {
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
 
-                            text: qsTr("Service data")
+                            text: qsTr("Latest service data")
                             textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContentBig
                             color: Theme.colorText
@@ -696,8 +681,7 @@ Flickable {
                     }
 
                     Repeater {
-                        model: selectedDevice.last_svd
-
+                        model: (selectedDevice && selectedDevice.last_svd)
                         AdvertisementDataWidget {
                             anchors.left: parent.left
                             anchors.right: parent.right
@@ -712,7 +696,7 @@ Flickable {
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    visible: selectedDevice.mfd.length
+                    visible: (selectedDevice && selectedDevice.mfd.length)
 
                     Row {
                         anchors.left: parent.left
@@ -730,7 +714,7 @@ Flickable {
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
 
-                            text: qsTr("Manufacturer data")
+                            text: qsTr("Latest manufacturer data")
                             textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContentBig
                             color: Theme.colorText
@@ -738,8 +722,7 @@ Flickable {
                     }
 
                     Repeater {
-                        model: selectedDevice.last_mfd
-
+                        model: (selectedDevice && selectedDevice.last_mfd)
                         AdvertisementDataWidget {
                             anchors.left: parent.left
                             anchors.right: parent.right
@@ -757,9 +740,12 @@ Flickable {
             height: box5.height + 24
             radius: 4
 
-            visible: (selectedDevice.servicesAdvertisedCount !== 0)
+            clip: false
             color: Theme.colorBox
-            clip: true
+            border.width: 2
+            border.color: Theme.colorBoxBorder
+
+            visible: (selectedDevice && selectedDevice.servicesAdvertisedCount !== 0)
 
             Column {
                 id: box5
@@ -784,8 +770,7 @@ Flickable {
                     anchors.right: parent.right
 
                     Repeater {
-                        model: selectedDevice.servicesAdvertised
-
+                        model: (selectedDevice && selectedDevice.servicesAdvertised)
                         TextSelectable {
                             anchors.left: parent.left
                             anchors.right: parent.right

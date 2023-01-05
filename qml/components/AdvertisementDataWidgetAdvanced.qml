@@ -7,21 +7,22 @@ import DeviceUtils 1.0
 
 Rectangle {
     id: advDataWidget
-
     height: col.height + 24
     radius: 4
+
+    clip: false
     color: Theme.colorBox
-    clip: true
+    border.width: 2
+    border.color: Theme.colorBoxBorder
 
     property var packet: null
-    property int legendWidth: 56
+    property int legendWidth: 48
 
     Component.onCompleted: {
-        legendWidth = 40
+        legendWidth = 48
         legendWidth = Math.max(legendWidth, legendUUID.contentWidth)
         legendWidth = Math.max(legendWidth, legendSize.contentWidth)
         legendWidth = Math.max(legendWidth, legendData.contentWidth)
-        legendWidth += 8
     }
 
     Rectangle {
@@ -54,7 +55,7 @@ Rectangle {
             anchors.bottomMargin: -4
             radius: 2
             z: -1
-            color: Theme.colorSeparator
+            color: Theme.colorBoxBorder
         }
     }
 

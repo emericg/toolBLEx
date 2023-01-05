@@ -107,7 +107,7 @@ Rectangle {
                 ItemTag {
                     anchors.verticalCenter: parent.verticalCenter
                     text: modelData
-                    color: Theme.colorComponent
+                    color: Theme.colorForeground
                 }
             }
         }
