@@ -269,14 +269,14 @@ ApplicationWindow {
             anchors.fill: parent
             id: screenAdvertiser
         }
-        ScreenUbertooth {
-            anchors.fill: parent
-            id: screenUbertooth
-        }
-
         ScreenBluetooth { // is on top of the scanner and advertiser tabs
             anchors.fill: parent
             id: screenBluetooth
+        }
+
+        ScreenUbertooth {
+            anchors.fill: parent
+            id: screenUbertooth
         }
 
         ScreenSettings {

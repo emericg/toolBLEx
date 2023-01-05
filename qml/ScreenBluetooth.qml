@@ -28,13 +28,18 @@ Loader {
     active: false
     asynchronous: true
 
+    onStatusChanged: if (screenBluetooth.status === Loader.Ready) screenBluetooth.item.opacity = 1
+
     sourceComponent: Rectangle {
         anchors.fill: parent
+
         color: Theme.colorBackground
-        z: 10
+
+        opacity: 0
+        Behavior on opacity { OpacityAnimator { duration: 233 } }
 
         function backAction() {
-            // no action
+            // no action?
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -107,14 +112,20 @@ Loader {
                     }
                 }
 
-                Item {
+                Row {
                     anchors.right: parent.right
-                    width: 128
-                    height: 128
+                    anchors.rightMargin: 24
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 16
 
                     ButtonWireframe {
-                        anchors.centerIn: parent
+                        text: qsTr("Ignore")
+                        fullColor: true
+                        primaryColor: Theme.colorSecondary
+                        onClicked: screenBluetooth.unloadScreen()
+                    }
 
+                    ButtonWireframe {
                         text: qsTr("Retry")
                         fullColor: true
                         onClicked: deviceManager.enableBluetooth()
@@ -130,7 +141,7 @@ Loader {
                 radius: 4
                 color: Theme.colorBox
 
-                visible: !deviceManager.btE
+                visible: (deviceManager.hasAdapters && !deviceManager.bluetooth)
 
                 Rectangle {
                     anchors.top: parent.top
@@ -185,14 +196,20 @@ Loader {
                     }
                 }
 
-                Item {
+                Row {
                     anchors.right: parent.right
-                    width: 128
-                    height: 128
+                    anchors.rightMargin: 24
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 16
 
                     ButtonWireframe {
-                        anchors.centerIn: parent
+                        text: qsTr("Ignore")
+                        fullColor: true
+                        primaryColor: Theme.colorSecondary
+                        onClicked: screenBluetooth.unloadScreen()
+                    }
 
+                    ButtonWireframe {
                         text: qsTr("Retry")
                         fullColor: true
                         onClicked: deviceManager.enableBluetooth()
@@ -208,7 +225,7 @@ Loader {
                 radius: 4
                 color: Theme.colorBox
 
-                visible: !deviceManager.btP
+                visible: (deviceManager.hasAdapters && !deviceManager.bluetoothPermissions)
 
                 Rectangle {
                     anchors.top: parent.top
@@ -263,14 +280,20 @@ Loader {
                     }
                 }
 
-                Item {
+                Row {
                     anchors.right: parent.right
-                    width: 128
-                    height: 128
+                    anchors.rightMargin: 24
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 16
 
                     ButtonWireframe {
-                        anchors.centerIn: parent
+                        text: qsTr("Ignore")
+                        fullColor: true
+                        primaryColor: Theme.colorSecondary
+                        onClicked: screenBluetooth.unloadScreen()
+                    }
 
+                    ButtonWireframe {
                         text: qsTr("Retry")
                         fullColor: true
                         onClicked: deviceManager.enableBluetooth()
@@ -278,5 +301,7 @@ Loader {
                 }
             }
         }
+
+        ////////////////////////////////////////////////////////////////////////
     }
 }
