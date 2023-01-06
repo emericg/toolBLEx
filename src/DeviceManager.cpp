@@ -667,6 +667,7 @@ void DeviceManager::addBleDevice(const QBluetoothDeviceInfo &info)
     DeviceToolBLEx *d = new DeviceToolBLEx(info, this);
     if (d)
     {
+        if (info.name().isEmpty()) d->setBeacon(true);
         if (info.name().replace('-', ':') == info.address().toString()) d->setBeacon(true);
         if (info.isCached() || info.rssi() == 0) d->setCached(true);
         if (m_devices_blacklist.contains(info.address().toString())) d->setBlacklisted(true);

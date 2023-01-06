@@ -344,7 +344,7 @@ Loader {
 
                 ////
 
-                property int flowElementWidth: (width >= 1440) ? (width / 3) - 24
+                property int flowElementWidth: (width >= 1080) ? (width / 3) - 24
                                                                : (width / 2) - 28
 
                 property int ww: (settingsManager.scanviewOrientation === Qt.Horizontal) ? width - 32

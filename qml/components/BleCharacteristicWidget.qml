@@ -140,7 +140,7 @@ Rectangle {
 
                 text: modelData.characteristicValueHex
                 font.pixelSize: Theme.fontSizeContent
-                font.family: "Monospace"
+                font.family: fontMonospace
                 wrapMode: Text.WrapAnywhere
                 color: Theme.colorText
             }

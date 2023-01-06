@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 import QtQuick.Controls
 
 import Qt.labs.platform
@@ -6,7 +7,6 @@ import Qt.labs.platform
 import ThemeEngine 1.0
 import DeviceUtils 1.0
 
-import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
 import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
 
 Flickable {
@@ -55,6 +55,8 @@ Flickable {
                 id: box1
                 anchors.left: parent.left
                 anchors.leftMargin: 24
+                anchors.right: parent.right
+                anchors.rightMargin: 8
                 anchors.verticalCenter: parent.verticalCenter
 
                 property int legendWidth: 80
@@ -62,82 +64,123 @@ Flickable {
                 Component.onCompleted: {
                     legendWidth = 80
                     legendWidth = Math.max(legendWidth, legendName.contentWidth)
-                    legendWidth = Math.max(legendWidth, legendAddress.contentWidth)
+                    legendWidth = Math.max(legendWidth, legendAddressMAC.contentWidth)
+                    legendWidth = Math.max(legendWidth, legendAddressUUID.contentWidth)
                     legendWidth = Math.max(legendWidth, legendManufacturer.contentWidth)
                     legendWidth = Math.max(legendWidth, legendBluetooth.contentWidth)
                 }
 
-                Row {
-                    height: 32
+                RowLayout {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     spacing: 12
 
                     Text {
                         id: legendName
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: box1.legendWidth
+                        Layout.preferredWidth: box1.legendWidth
+                        Layout.alignment: Qt.AlignCenter
+
                         text: qsTr("Name")
                         textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContent
                         horizontalAlignment: Text.AlignRight
                         color: Theme.colorSubText
                     }
-
                     TextSelectable {
-                        anchors.verticalCenter: parent.verticalCenter
+                        Layout.fillWidth: true
+                        Layout.minimumHeight: 32
 
                         property bool nameAvailable: (selectedDevice && selectedDevice.deviceName.length > 0)
-
                         selectByMouse: nameAvailable
                         color: nameAvailable ? Theme.colorText : Theme.colorSubText
                         text: nameAvailable ? selectedDevice.deviceName : qsTr("Unavailable")
+                        wrapMode: Text.WrapAnywhere
                     }
                 }
-                Row {
-                    height: 32
+
+                RowLayout {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     spacing: 12
 
+                    visible: (selectedDevice && selectedDevice.deviceAddressMAC.length)
+
                     Text {
-                        id: legendAddress
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: box1.legendWidth
+                        id: legendAddressMAC
+                        Layout.preferredWidth: box1.legendWidth
+                        Layout.alignment: Qt.AlignCenter
+
                         text: qsTr("MAC address")
                         textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContent
                         horizontalAlignment: Text.AlignRight
                         color: Theme.colorSubText
                     }
-
                     TextSelectable {
-                        anchors.verticalCenter: parent.verticalCenter
-                        text: (selectedDevice && selectedDevice.deviceAddress)
+                        Layout.fillWidth: true
+                        Layout.minimumHeight: 32
+
+                        text: (selectedDevice && selectedDevice.deviceAddressMAC)
+                        wrapMode: Text.WrapAnywhere
                     }
                 }
-                Row {
-                    height: 32
+
+                RowLayout {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    spacing: 12
+
+                    //visible: (selectedDevice && !selectedDevice.deviceAddressMAC.length)
+
+                    Text {
+                        id: legendAddressUUID
+                        Layout.preferredWidth: box1.legendWidth
+                        Layout.alignment: Qt.AlignCenter
+
+                        text: qsTr("UUID")
+                        textFormat: Text.PlainText
+                        font.pixelSize: Theme.fontSizeContent
+                        horizontalAlignment: Text.AlignRight
+                        color: Theme.colorSubText
+                    }
+                    TextSelectable {
+                        Layout.fillWidth: true
+                        Layout.minimumHeight: 32
+
+                        text: "{0000FE95-0000-1000-8000-00805F9B34FB}"
+                        //text: (selectedDevice && selectedDevice.deviceAddress)
+                        wrapMode: Text.WrapAnywhere
+                    }
+                }
+
+                RowLayout {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     spacing: 12
 
                     Text {
                         id: legendManufacturer
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: box1.legendWidth
+                        Layout.preferredWidth: box1.legendWidth
+                        Layout.alignment: Qt.AlignCenter
+
                         text: qsTr("Manufacturer")
                         textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContent
                         horizontalAlignment: Text.AlignRight
                         color: Theme.colorSubText
                     }
-
                     TextSelectable {
-                        id: deviceManufacturer
-                        anchors.verticalCenter: parent.verticalCenter
+                        Layout.fillWidth: true
+                        Layout.minimumHeight: 32
 
                         property bool manufAvailable: (selectedDevice && selectedDevice.deviceManufacturer.length > 0)
-
                         selectByMouse: manufAvailable
                         color: manufAvailable ? Theme.colorText : Theme.colorSubText
                         text: manufAvailable ? selectedDevice.deviceManufacturer : qsTr("Unknown")
+                        wrapMode: Text.WrapAnywhere
                     }
                 }
+
                 Row {
                     height: 32
                     spacing: 12
@@ -152,21 +195,18 @@ Flickable {
                         horizontalAlignment: Text.AlignRight
                         color: Theme.colorSubText
                     }
-
                     ItemTag {
                         anchors.verticalCenter: parent.verticalCenter
                         visible: (selectedDevice && selectedDevice.isClassic)
                         text: qsTr("Classic")
                         color: Theme.colorForeground
                     }
-
                     ItemTag {
                         anchors.verticalCenter: parent.verticalCenter
                         visible: (selectedDevice && selectedDevice.isLowEnergy)
                         text: qsTr("Low Energy")
                         color: Theme.colorForeground
                     }
-
                     //TextSelectable {
                     //    anchors.verticalCenter: parent.verticalCenter
                     //    text: UtilsBluetooth.getBluetoothCoreConfigurationText(selectedDevice.bluetoothConfiguration)
@@ -226,6 +266,8 @@ Flickable {
                 id: box2
                 anchors.left: parent.left
                 anchors.leftMargin: 24
+                anchors.right: parent.right
+                anchors.rightMargin: 8
                 anchors.verticalCenter: parent.verticalCenter
 
                 property int legendWidth: 80
@@ -259,14 +301,15 @@ Flickable {
                     }
                 }
 */
-                Row {
-                    height: 32
+                RowLayout {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     spacing: 12
 
                     Text {
                         id: legendCategory
-                        width: box2.legendWidth
-                        anchors.verticalCenter: parent.verticalCenter
+                        Layout.preferredWidth: box2.legendWidth
+                        Layout.alignment: Qt.AlignCenter
 
                         text: qsTr("Category")
                         textFormat: Text.PlainText
@@ -275,18 +318,23 @@ Flickable {
                         color: Theme.colorSubText
                     }
                     TextSelectable {
-                        anchors.verticalCenter: parent.verticalCenter
+                        Layout.fillWidth: true
+                        Layout.minimumHeight: 32
+
                         text: UtilsBluetooth.getBluetoothMajorClassText(selectedDevice.majorClass)
+                        wrapMode: Text.WrapAnywhere
                     }
                 }
-                Row {
-                    height: 32
+
+                RowLayout {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     spacing: 12
 
                     Text {
                         id: legendDeviceType
-                        width: box2.legendWidth
-                        anchors.verticalCenter: parent.verticalCenter
+                        Layout.preferredWidth: box2.legendWidth
+                        Layout.alignment: Qt.AlignCenter
 
                         text: qsTr("Device type")
                         textFormat: Text.PlainText
@@ -295,18 +343,23 @@ Flickable {
                         color: Theme.colorSubText
                     }
                     TextSelectable {
-                        anchors.verticalCenter: parent.verticalCenter
+                        Layout.fillWidth: true
+                        Layout.minimumHeight: 32
+
                         text: UtilsBluetooth.getBluetoothMinorClassText(selectedDevice.majorClass, selectedDevice.minorClass)
+                        wrapMode: Text.WrapAnywhere
                     }
                 }
-                Row {
-                    height: 32
+
+                RowLayout {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     spacing: 12
 
                     Text {
                         id: legendService
-                        width: box2.legendWidth
-                        anchors.verticalCenter: parent.verticalCenter
+                        Layout.preferredWidth: box2.legendWidth
+                        Layout.alignment: Qt.AlignCenter
 
                         text: qsTr("Service(s)")
                         textFormat: Text.PlainText
@@ -315,8 +368,11 @@ Flickable {
                         color: Theme.colorSubText
                     }
                     TextSelectable {
-                        anchors.verticalCenter: parent.verticalCenter
+                        Layout.fillWidth: true
+                        Layout.minimumHeight: 32
+
                         text: UtilsBluetooth.getBluetoothServiceClassText(selectedDevice.serviceClass)
+                        wrapMode: Text.WrapAnywhere
                     }
                 }
             }
@@ -381,7 +437,7 @@ Flickable {
 
                     ButtonWireframe {
                         fullColor: true
-                        primaryColor: selectedDevice.userColor
+                        primaryColor: (selectedDevice && selectedDevice.userColor)
                         fulltextColor: (selectedDevice && utilsApp.isQColorLight(selectedDevice.userColor)) ? "#333" : "#f4f4f4"
 
                         text: qsTr("color")
@@ -424,7 +480,7 @@ Flickable {
 
                     colorBackground: Theme.colorBox
                     placeholderText: qsTr("Comment")
-                    text: selectedDevice.userComment
+                    text: (selectedDevice && selectedDevice.userComment)
                     onTextEdited: selectedDevice.userComment = text
                 }
             }
@@ -450,6 +506,8 @@ Flickable {
                 anchors.topMargin: 12
                 anchors.left: parent.left
                 anchors.leftMargin: 24
+                anchors.right: parent.right
+                anchors.rightMargin: 8
 
                 property int legendWidth: 80
 
@@ -551,7 +609,7 @@ Flickable {
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
 
-                            text: selectedDevice.advInterval
+                            text: (selectedDevice && selectedDevice.advInterval)
                             textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorText
@@ -784,7 +842,8 @@ Flickable {
 
                             text: modelData
                             color: Theme.colorSubText
-                            font.family: "Monospace"
+                            font.family: fontMonospace
+                            wrapMode: Text.WrapAnywhere
                         }
                     }
                 }

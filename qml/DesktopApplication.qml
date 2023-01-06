@@ -212,15 +212,11 @@ ApplicationWindow {
     property bool wideWideMode: (width >= 640)
 
     // Fonts ///////////////////////////////////////////////////////////////////
-/*
+
     Text { id: defdefdef; }
     property string fontDefault: defdefdef.font.family
-    property string fontMonospace: defdefdef.font.family
+    property string fontMonospace: "Courier New" // "Monospace" // "Consolas"
 
-    FontLoader { id: fontNunitoBold; source: "qrc:/assets/fonts/Nunito-Bold.ttf" }
-    FontLoader { id: fontNotoSans; source: "qrc:/assets/fonts/NotoSans-Regular.ttf" }
-    FontLoader { id: fontNickson; source: "qrc:/assets/fonts/SS-Nickson-One.otf" }
-*/
     // Bluetooth ///////////////////////////////////////////////////////////////
 
     property bool bluetooth: deviceManager.bluetooth
@@ -238,9 +234,6 @@ ApplicationWindow {
             screenBluetooth.loadScreen()
         } else {
             screenBluetooth.unloadScreen()
-            if (appContent.state === "Scanner") screenScanner.loadScreen()
-            if (appContent.state === "Advertiser") screenAdvertiser.loadScreen()
-            // otherwise, no need to change screen
         }
     }
 

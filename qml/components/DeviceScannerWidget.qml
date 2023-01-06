@@ -106,7 +106,7 @@ Item {
 
             text: boxDevice.deviceAddress
             textFormat: Text.PlainText
-            font.family: "Monospace"
+            font.family: fontMonospace
             color: isSelected ? "white" : Theme.colorText
             elide: Text.ElideMiddle
 
@@ -117,7 +117,7 @@ Item {
                           "329562a2-d357-470a-862c-6f6b73397607" :
                           "00:11:22:33:44:55"
                 textFormat: Text.PlainText
-                font.family: "Monospace"
+                font.family: fontMonospace
             }
         }
 
@@ -229,8 +229,8 @@ Item {
                 width: 105
 
                 visible: (boxDevice.rssi !== 0)
-                value: boxDevice.rssi
-                value2: boxDevice.rssiMax
+                value: -Math.abs(boxDevice.rssi)
+                value2: -Math.abs(boxDevice.rssiMax)
             }
         }
 

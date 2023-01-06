@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 
 import ThemeEngine 1.0
 
@@ -6,7 +7,7 @@ import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
 
 Rectangle {
     id: adapterWidget
-    height: col.height + 24
+    height: box.height + 24
     radius: 4
 
     clip: false
@@ -34,7 +35,7 @@ Rectangle {
         width: 64
         height: 64
 
-        visible: (adapterWidget.width > col.legendWidth*2.5)
+        visible: (adapterWidget.width > box.legendWidth*4)
 
         source: "qrc:/assets/icons_bootstrap/bluetooth.svg"
         color: Theme.colorSubText
@@ -43,9 +44,11 @@ Rectangle {
     ////////
 
     Column {
-        id: col
+        id: box
         anchors.left: parent.left
         anchors.leftMargin: 24
+        anchors.right: parent.right
+        anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
 
         property int legendWidth: 80
@@ -60,8 +63,9 @@ Rectangle {
         }
 
         Text {
+            anchors.left: parent.left
+            anchors.leftMargin: 16
             height: 32
-            anchors.horizontalCenter: parent.horizontalCenter
 
             text: qsTr("Bluetooth adapter #%1").arg(index+1)
             textFormat: Text.PlainText
@@ -72,14 +76,15 @@ Rectangle {
             color: Theme.colorText
         }
 
-        Row {
-            height: 32
+        RowLayout {
+            anchors.left: parent.left
+            anchors.right: parent.right
             spacing: 12
 
             Text {
                 id: legendHostname
-                width: col.legendWidth
-                anchors.verticalCenter: parent.verticalCenter
+                Layout.preferredWidth: box.legendWidth
+                Layout.alignment: Qt.AlignCenter
 
                 text: qsTr("Hostname")
                 textFormat: Text.PlainText
@@ -89,19 +94,23 @@ Rectangle {
             }
 
             TextSelectable {
-                anchors.verticalCenter: parent.verticalCenter
+                Layout.fillWidth: true
+                Layout.minimumHeight: 32
+
                 text: modelData.hostname
+                wrapMode: Text.WrapAnywhere
             }
         }
 
-        Row {
-            height: 32
+        RowLayout {
+            anchors.left: parent.left
+            anchors.right: parent.right
             spacing: 12
 
             Text {
                 id: legendAddress
-                width: col.legendWidth
-                anchors.verticalCenter: parent.verticalCenter
+                Layout.preferredWidth: box.legendWidth
+                Layout.alignment: Qt.AlignCenter
 
                 text: qsTr("MAC address")
                 textFormat: Text.PlainText
@@ -111,21 +120,25 @@ Rectangle {
             }
 
             TextSelectable {
-                anchors.verticalCenter: parent.verticalCenter
+                Layout.fillWidth: true
+                Layout.minimumHeight: 32
+
                 text: modelData.address
+                wrapMode: Text.WrapAnywhere
             }
         }
 
-        Row {
-            height: 32
+        RowLayout {
+            anchors.left: parent.left
+            anchors.right: parent.right
             spacing: 12
 
             visible: modelData.manufacturer.length
 
             Text {
                 id: legendMAC
-                width: col.legendWidth
-                anchors.verticalCenter: parent.verticalCenter
+                Layout.preferredWidth: box.legendWidth
+                Layout.alignment: Qt.AlignCenter
 
                 text: qsTr("MAC vendor")
                 textFormat: Text.PlainText
@@ -135,8 +148,11 @@ Rectangle {
             }
 
             TextSelectable {
-                anchors.verticalCenter: parent.verticalCenter
+                Layout.fillWidth: true
+                Layout.minimumHeight: 32
+
                 text: modelData.manufacturer
+                wrapMode: Text.WrapAnywhere
             }
         }
 
@@ -148,8 +164,8 @@ Rectangle {
 
             Text {
                 id: legendBluetooth
-                width: col.legendWidth
                 anchors.verticalCenter: parent.verticalCenter
+                width: box.legendWidth
 
                 text: qsTr("Bluetooth")
                 textFormat: Text.PlainText
@@ -172,7 +188,8 @@ Rectangle {
             Text {
                 id: legendHostMode
                 anchors.verticalCenter: parent.verticalCenter
-                width: col.legendWidth
+                width: box.legendWidth
+
                 text: qsTr("Host mode")
                 textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContent

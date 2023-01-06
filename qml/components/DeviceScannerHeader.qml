@@ -51,7 +51,7 @@ Rectangle {
                           "329562a2-d357-470a-862c-6f6b73397607" :
                           "00:11:22:33:44:55"
                 textFormat: Text.PlainText
-                font.family: "Monospace"
+                font.family: fontMonospace
             }
 
             MouseArea {

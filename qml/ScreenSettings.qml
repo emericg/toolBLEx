@@ -52,7 +52,7 @@ Loader {
                 bottomPadding: 0
                 spacing: 24
 
-                property int flowElementWidth: (width >= 1450) ? (width / 3) - (spacing*1) - 8
+                property int flowElementWidth: (width >= 1080) ? (width / 3) - (spacing*1) - 8
                                                                : (width / 2) - (spacing*1) - 12
 
                 ////////////////////////

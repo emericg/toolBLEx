@@ -57,7 +57,7 @@ Column {
 
                 text: packet.advUUIDstr
                 color: Theme.colorText
-                font.family: "Monospace"
+                font.family: fontMonospace
                 //font.capitalization: Font.AllUppercase
             }
         }
@@ -116,7 +116,7 @@ Column {
 
                 text: packet.advDataSize
                 textFormat: Text.PlainText
-                font.family: "Monospace"
+                font.family: fontMonospace
                 font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorText
             }
@@ -177,7 +177,7 @@ Column {
 
             text: packet.advDataString
             wrapMode: Text.WrapAnywhere
-            font.family: "Monospace"
+            font.family: fontMonospace
             //font.capitalization: Font.AllUppercase
         }
     }
