@@ -362,6 +362,7 @@ Loader {
                                 anchors.rightMargin: 8
                                 anchors.verticalCenter: parent.verticalCenter
 
+                                enabled: false
                                 model: ["auto"]
                             }
                         }
@@ -455,6 +456,8 @@ Loader {
                             Text {
                                 anchors.left: parent.left
                                 anchors.leftMargin: 20
+                                anchors.right: parent.right
+                                anchors.rightMargin: 64
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 text: qsTr("Start scanning automatically")
@@ -484,6 +487,8 @@ Loader {
                             Text {
                                 anchors.left: parent.left
                                 anchors.leftMargin: 20
+                                anchors.right: parent.right
+                                anchors.rightMargin: 64
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 text: qsTr("Cache devices automatically")

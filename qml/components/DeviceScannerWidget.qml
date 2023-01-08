@@ -156,26 +156,49 @@ Item {
                 }
             }
 
-            //IconSvg { // battery
-            //    Layout.preferredWidth: 18
-            //    Layout.preferredHeight: 20
-            //    visible: (boxDevice.hasBattery && boxDevice.deviceBattery >= 0)
-            //
-            //    source: UtilsDeviceSensors.getDeviceBatteryIcon(boxDevice.deviceBattery)
-            //    color: isSelected ? "white" : Theme.colorIcon
-            //    rotation: 90
-            //    fillMode: Image.PreserveAspectCrop
-            //}
-
-            IconSvg { // starred
+            Row { // status icons
                 Layout.preferredWidth: 20
                 Layout.preferredHeight: 20
                 Layout.alignment: Qt.AlignRight
-                visible: (boxDevice.isStarred)
-
                 opacity: 0.8
-                source: "qrc:/assets/icons_material/baseline-stars-24px.svg"
-                color: isSelected ? "white" : Theme.colorIcon
+
+                //IconSvg { // battery
+                //    Layout.preferredWidth: 18
+                //    Layout.preferredHeight: 20
+                //    visible: (boxDevice.hasBattery && boxDevice.deviceBattery >= 0)
+                //
+                //    source: UtilsDeviceSensors.getDeviceBatteryIcon(boxDevice.deviceBattery)
+                //    color: isSelected ? "white" : Theme.colorIcon
+                //    rotation: 90
+                //    fillMode: Image.PreserveAspectCrop
+                //}
+
+                //IconSvg { // connected
+                //    width: 20
+                //    height: 20
+                //    visible: (boxDevice.hasBattery)
+
+                //    source: "qrc:/assets/icons_material/baseline-stars-24px.svg"
+                //    color: isSelected ? "white" : Theme.colorIcon
+                //}
+
+                IconSvg { // starred
+                    width: 20
+                    height: 20
+                    visible: (boxDevice.isStarred)
+
+                    source: "qrc:/assets/icons_material/baseline-stars-24px.svg"
+                    color: isSelected ? "white" : Theme.colorIcon
+                }
+
+                IconSvg { // paired
+                    width: 20
+                    height: 20
+                    visible: (boxDevice.isPaired)
+
+                    source: "qrc:/assets/icons_material/baseline-check_circle-24px.svg"
+                    color: isSelected ? "white" : Theme.colorIcon
+                }
             }
         }
 
@@ -274,7 +297,9 @@ Item {
             Text {
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: boxDevice.lastSeen.toLocaleTimeString(locale, "hh:mm")
+                text: boxDevice.lastSeenToday ?
+                          boxDevice.lastSeen.toLocaleTimeString(locale, "hh:mm") :
+                          boxDevice.lastSeen.toLocaleString(locale, "dd/MM hh:mm")
                 textFormat: Text.PlainText
                 color: isSelected ? "white" : Theme.colorText
             }

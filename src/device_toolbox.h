@@ -154,6 +154,7 @@ class DeviceToolBLEx: public Device
     Q_PROPERTY(bool isLowEnergy READ isBluetoothLowEnergy NOTIFY boolChanged)
     Q_PROPERTY(bool isClassic READ isBluetoothClassic NOTIFY boolChanged)
 
+    Q_PROPERTY(bool isPaired READ isPaired NOTIFY pairingChanged)
     Q_PROPERTY(int pairingStatus READ getPairingStatus NOTIFY pairingChanged)
 
     Q_PROPERTY(bool hasCache READ hasCache NOTIFY cacheChanged)
@@ -166,6 +167,7 @@ class DeviceToolBLEx: public Device
 
     Q_PROPERTY(QDateTime firstSeen READ getFirstSeen CONSTANT)
     Q_PROPERTY(QDateTime lastSeen READ getLastSeen NOTIFY seenChanged)
+    Q_PROPERTY(bool lastSeenToday READ isLastSeenToday NOTIFY seenChanged)
 
     // RSSI
     Q_PROPERTY(int rssiMin READ getRssiMin NOTIFY rssiUpdated)
@@ -310,11 +312,12 @@ public:
     void setCached(bool v);
     void setCache(bool v);
 
-    void setPairingStatus(QBluetoothLocalDevice::Pairing p);
+    bool isPaired() const { return m_pairingStatus; }
     int getPairingStatus() const { return m_pairingStatus; }
+    void setPairingStatus(QBluetoothLocalDevice::Pairing p);
 
-    void setDeviceColor(const QString &color);
     QString getDeviceColor() const { return m_color; }
+    void setDeviceColor(const QString &color);
 
     bool getUserStar() const { return m_userStarred; }
     void setUserStar(bool star);
@@ -328,6 +331,7 @@ public:
     QDateTime getFirstSeen() const { return m_firstSeen; }
     QDateTime getLastSeen() const { return m_lastSeen; }
     void setLastSeen(const QDateTime &dt);
+    bool isLastSeenToday();
 
     bool hasAdvertisement() const { return m_hasAdvertisement; }
     bool hasCache() const { return m_hasCache; }

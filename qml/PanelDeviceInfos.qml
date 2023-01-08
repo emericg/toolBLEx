@@ -130,7 +130,7 @@ Flickable {
                     anchors.right: parent.right
                     spacing: 12
 
-                    //visible: (selectedDevice && !selectedDevice.deviceAddressMAC.length)
+                    visible: (selectedDevice && !selectedDevice.deviceAddressMAC.length)
 
                     Text {
                         id: legendAddressUUID
@@ -147,8 +147,7 @@ Flickable {
                         Layout.fillWidth: true
                         Layout.minimumHeight: 32
 
-                        text: "{0000FE95-0000-1000-8000-00805F9B34FB}"
-                        //text: (selectedDevice && selectedDevice.deviceAddress)
+                        text: (selectedDevice && selectedDevice.deviceAddress)
                         wrapMode: Text.WrapAnywhere
                     }
                 }
@@ -223,16 +222,18 @@ Flickable {
                 Rectangle {
                     width: 92; height: 92; radius: 92;
                     color: Theme.colorForeground
-                    visible: (selectedDevice && selectedDevice.isClassic)
+                    visible: (selectedDevice && selectedDevice.isClassic && deviceIcon.source.toString().length)
 
                     IconSvg {
+                        id: deviceIcon
                         anchors.centerIn: parent
                         width: 64; height: 64;
+
                         color: Theme.colorSubText
                         source: {
                             if (selectedDevice) {
                                 if (selectedDevice.isBeacon) return "qrc:/assets/icons_bootstrap/tags.svg"
-                                return UtilsBluetooth.getBluetoothMinorClassIcon(selectedDevice.majorClass, selectedDevice.minorClass)
+                                if (selectedDevice.majorClass) return UtilsBluetooth.getBluetoothMinorClassIcon(selectedDevice.majorClass, selectedDevice.minorClass)
                             }
                             return ""
                         }

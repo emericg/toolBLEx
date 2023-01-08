@@ -317,6 +317,11 @@ void DeviceToolBLEx::setLastSeen(const QDateTime &dt)
     Q_EMIT seenChanged();
 }
 
+bool DeviceToolBLEx::isLastSeenToday()
+{
+    return (m_lastSeen.secsTo(QDateTime(QDate::currentDate(), QTime(0, 0, 0))) <= 0);
+}
+
 /* ************************************************************************** */
 
 void DeviceToolBLEx::updateCache()

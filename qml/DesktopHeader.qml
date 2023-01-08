@@ -137,6 +137,7 @@ Rectangle {
         height: 32
         radius: 8
 
+        clip: true
         color: Theme.colorHeaderHighlight
         border.width: 2
         border.color: Qt.darker(Theme.colorHeaderHighlight, 1.01)
