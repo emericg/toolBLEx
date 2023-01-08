@@ -52,7 +52,7 @@ class AdvertisementEntry: public QObject
     bool m_hasSVD = false;
 
 public:
-    AdvertisementEntry(int r, bool m, bool s, QObject *parent = nullptr) : QObject(parent) {
+    AdvertisementEntry(int r, bool m, bool s, QObject *parent) : QObject(parent) {
         m_timestamp = QDateTime::currentDateTime();
         m_rssi = r;
         m_hasMFD = m;
@@ -117,25 +117,25 @@ class AdvertisementData: public QObject
     QString advUUIDvendor;
     QByteArray advData;
 
-    int getMode() const { return advMode; }
-    QString getUUID_str() const { return advUUIDstr; }
-    QString getUUID_vendor() const { return advUUIDvendor; }
-
-    QVariant getData() const { return QVariant::fromValue(advData); }
-    int getDataSize() const { return advData.size(); }
-    QString getDataString() const { return QString::fromStdString(advData.toHex().toStdString()); }
-
 public:
     AdvertisementData(const uint16_t adv_mode, const uint16_t adv_id,
-                      const QByteArray &data, QObject *parent = nullptr);
+                      const QByteArray &data, QObject *parent);
     ~AdvertisementData() = default;
 
     bool compare(const QByteArray &data) { return (advData.compare(data) != 0); }
 
     QDateTime getTimestamp() const { return m_timestamp; }
 
+    int getMode() const { return advMode; }
+
+    QString getUUID_str() const { return advUUIDstr; }
+    QString getUUID_vendor() const { return advUUIDvendor; }
     int getUUID_int() const { return advUUID; }
     uint16_t getUUID_uint() const { return advUUID; }
+
+    QVariant getData() const { return QVariant::fromValue(advData); }
+    int getDataSize() const { return advData.size(); }
+    QString getDataString() const { return QString::fromStdString(advData.toHex().toStdString()); }
 };
 
 /* ************************************************************************** */
@@ -199,7 +199,7 @@ class DeviceToolBLEx: public Device
 
     static const int s_min_entries_advertisement = 60;
     static const int s_max_entries_advertisement = 180;
-    static const int s_max_entries_packets = 12;
+    static const int s_max_entries_packets = 24;
 
     bool m_isBeacon = false;
     bool m_isCached = false;
@@ -225,6 +225,7 @@ class DeviceToolBLEx: public Device
 
     QList <AdvertisementEntry *> m_advertisementEntries;
 
+    QList <AdvertisementData *> m_advertisementData;
     QList <AdvertisementData *> m_advertisementData_filtered;
 
     QList <AdvertisementData *> m_svd;
@@ -349,7 +350,7 @@ public:
     Q_INVOKABLE void svdFilterUpdate();
     Q_INVOKABLE void advertisementFilterUpdate();
 
-    Q_INVOKABLE bool exportDeviceInfo();
+    Q_INVOKABLE bool exportDeviceInfo(bool withAdvertisements = true, bool withServices = true, bool withValues = true);
 };
 
 /* ************************************************************************** */

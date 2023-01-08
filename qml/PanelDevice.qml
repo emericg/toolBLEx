@@ -85,7 +85,7 @@ Item {
                     selected: (deviceMenu.currentSelection === index)
 
                     text: qsTr("services")
-                    textBadge: (selectedDevice && selectedDevice.servicesCount)
+                    textBadge: (selectedDevice && selectedDevice.servicesScanned) ? selectedDevice.servicesCount : "?"
                     onClicked: deviceMenu.menuSelected(index)
                     sourceSize: 0
                 }
