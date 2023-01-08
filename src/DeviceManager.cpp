@@ -28,6 +28,7 @@
 #include "device_toolbox.h"
 
 #include "utils_app.h"
+#include "utils_log.h"
 
 #include <QList>
 #include <QDateTime>
@@ -143,12 +144,17 @@ bool DeviceManager::hasBluetoothPermissions() const
 
 bool DeviceManager::isListening() const
 {
-    return m_listening;
+    return false;
 }
 
 bool DeviceManager::isScanning() const
 {
     return m_scanning;
+}
+
+bool DeviceManager::isScanningPaused() const
+{
+    return m_scanning_paused;
 }
 
 bool DeviceManager::isUpdating() const
@@ -244,6 +250,7 @@ void DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
     // Invalid adapter? (ex: plugged off)
     if (m_bluetoothAdapter && !m_bluetoothAdapter->isValid())
     {
+        qDebug() << "DeviceManager::enableBluetooth() deleting current adapter";
         delete m_bluetoothAdapter;
         m_bluetoothAdapter = nullptr;
     }
@@ -294,11 +301,6 @@ void DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
         if (m_bluetoothAdapter->hostMode() > QBluetoothLocalDevice::HostMode::HostPoweredOff)
         {
             m_btE = true; // was already activated
-
-#if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
-            // Already powered on? Power on again anyway. It helps on android...
-            //m_bluetoothAdapter->powerOn();
-#endif
         }
         else // Try to activate the adapter
         {
@@ -343,7 +345,14 @@ bool DeviceManager::checkBluetoothPermissions()
     bool btP_was = m_btP;
 
     UtilsApp *utilsApp = UtilsApp::getInstance();
-    m_btP = utilsApp->checkMobileBleLocationPermission();
+    if (m_daemonMode)
+    {
+        m_btP = utilsApp->checkMobileBackgroundLocationPermission();
+    }
+    else
+    {
+        m_btP = utilsApp->checkMobileBleLocationPermission();
+    }
 
     if (btP_was != m_btP)
     {
@@ -410,8 +419,8 @@ void DeviceManager::startBleAgent()
         {
             //qDebug() << "Scanning method supported:" << m_discoveryAgent->supportedDiscoveryMethods();
 
-            connect(m_discoveryAgent, QOverload<QBluetoothDeviceDiscoveryAgent::Error>::of(&QBluetoothDeviceDiscoveryAgent::errorOccurred),
-                    this, &DeviceManager::deviceDiscoveryError, Qt::UniqueConnection);
+            connect(m_discoveryAgent, &QBluetoothDeviceDiscoveryAgent::errorOccurred,
+                    this, &DeviceManager::deviceDiscoveryError);
         }
         else
         {
@@ -438,10 +447,10 @@ void DeviceManager::checkBluetoothIos()
         disconnect(m_discoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceUpdated,
                    this, &DeviceManager::updateBleDevice);
 
-        disconnect(m_discoveryAgent, &QBluetoothDeviceDiscoveryAgent::finished,
-                   this, &DeviceManager::deviceDiscoveryFinished);
         connect(m_discoveryAgent, &QBluetoothDeviceDiscoveryAgent::finished,
-                this, &DeviceManager::bluetoothHostModeStateChangedIos, Qt::UniqueConnection);
+                this, &DeviceManager::deviceDiscoveryFinished, Qt::UniqueConnection);
+        connect(m_discoveryAgent, &QBluetoothDeviceDiscoveryAgent::canceled,
+                this, &DeviceManager::deviceDiscoveryStopped, Qt::UniqueConnection);
 
         m_discoveryAgent->setLowEnergyDiscoveryTimeout(8); // 8ms
         m_discoveryAgent->start();
@@ -462,7 +471,6 @@ void DeviceManager::deviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error e
         if (m_btE)
         {
             m_btE = false;
-            //refreshDevices_stop();
             Q_EMIT bluetoothChanged();
         }
     }
@@ -472,7 +480,6 @@ void DeviceManager::deviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error e
 
         m_btA = false;
         m_btE = false;
-        //refreshDevices_stop();
         Q_EMIT bluetoothChanged();
     }
     else if (error == QBluetoothDeviceDiscoveryAgent::InvalidBluetoothAdapterError)
@@ -484,7 +491,6 @@ void DeviceManager::deviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error e
         if (m_btE)
         {
             m_btE = false;
-            //refreshDevices_stop();
             Q_EMIT bluetoothChanged();
         }
     }
@@ -494,7 +500,6 @@ void DeviceManager::deviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error e
 
         m_btA = false;
         m_btE = false;
-        //refreshDevices_stop();
         Q_EMIT bluetoothChanged();
     }
     else if (error == QBluetoothDeviceDiscoveryAgent::UnsupportedDiscoveryMethod)
@@ -503,7 +508,6 @@ void DeviceManager::deviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error e
 
         m_btE = false;
         m_btP = false;
-        //refreshDevices_stop();
         Q_EMIT bluetoothChanged();
     }
     else
@@ -512,14 +516,20 @@ void DeviceManager::deviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error e
 
         m_btA = false;
         m_btE = false;
-        //refreshDevices_stop();
         Q_EMIT bluetoothChanged();
     }
+
+    scanDevices_stop();
 
     if (m_scanning)
     {
         m_scanning = false;
         Q_EMIT scanningChanged();
+    }
+    if (m_listening)
+    {
+        m_listening = false;
+        Q_EMIT listeningChanged();
     }
 }
 
@@ -532,6 +542,19 @@ void DeviceManager::deviceDiscoveryFinished()
         m_scanning = false;
         Q_EMIT scanningChanged();
     }
+    if (m_listening)
+    {
+        m_listening = false;
+        Q_EMIT listeningChanged();
+    }
+
+#if defined(Q_OS_IOS)
+    if (!m_btE)
+    {
+        m_btE = true;
+        Q_EMIT bluetoothChanged();
+    }
+#endif
 }
 
 void DeviceManager::deviceDiscoveryStopped()
@@ -543,17 +566,10 @@ void DeviceManager::deviceDiscoveryStopped()
         m_scanning = false;
         Q_EMIT scanningChanged();
     }
-}
-
-void DeviceManager::bluetoothHostModeStateChangedIos()
-{
-    //qDebug() << "DeviceManager::bluetoothHostModeStateChangedIos()";
-
-    if (!m_btE)
+    if (m_listening)
     {
-        m_btA = true;
-        m_btE = true;
-        Q_EMIT bluetoothChanged();
+        m_listening = false;
+        Q_EMIT listeningChanged();
     }
 }
 
@@ -601,7 +617,6 @@ void DeviceManager::scanDevices_start()
 
             if (hasBluetoothPermissions())
             {
-                //NoMethod = 0x0 // ClassicMethod = 0x01 // LowEnergyMethod = 0x02,
                 m_discoveryAgent->start(static_cast<QBluetoothDeviceDiscoveryAgent::DiscoveryMethod>(scanningMethod));
 
                 if (m_discoveryAgent->isActive())
@@ -619,6 +634,72 @@ void DeviceManager::scanDevices_start()
     }
 }
 
+void DeviceManager::scanDevices_pause()
+{
+    //qDebug() << "DeviceManager::scanDevices_pause()";
+
+    if (!SettingsManager::getInstance()->getScanPause()) return;
+
+    if (hasBluetooth())
+    {
+        if (m_discoveryAgent)
+        {
+            if (m_discoveryAgent->isActive())
+            {
+                m_discoveryAgent->stop();
+
+                m_scanning = true;
+                m_scanning_paused = true;
+                Q_EMIT scanningChanged();
+            }
+        }
+    }
+
+    for (auto d: qAsConst(m_devices_model->m_devices))
+    {
+        Device *dd = qobject_cast<Device *>(d);
+        if (dd) dd->cleanRssi();
+    }
+}
+
+void DeviceManager::scanDevices_resume()
+{
+    //qDebug() << "DeviceManager::scanDevices_resume()";
+
+    // Are we really paused?
+    if (!m_scanning_paused) return;
+    if (!SettingsManager::getInstance()->getScanPause()) return;
+
+    if (hasBluetooth())
+    {
+        if (!m_discoveryAgent)
+        {
+            startBleAgent();
+        }
+
+        if (m_discoveryAgent && !m_discoveryAgent->isActive())
+        {
+            int scanningDuration = SettingsManager::getInstance()->getScanTimeout() * 60 * 1000;
+            int scanningMethod = QBluetoothDeviceDiscoveryAgent::ClassicMethod | QBluetoothDeviceDiscoveryAgent::LowEnergyMethod;
+
+            m_discoveryAgent->setLowEnergyDiscoveryTimeout(scanningDuration);
+
+            if (hasBluetoothPermissions())
+            {
+                m_discoveryAgent->start(static_cast<QBluetoothDeviceDiscoveryAgent::DiscoveryMethod>(scanningMethod));
+
+                if (m_discoveryAgent->isActive())
+                {
+                    m_scanning = true;
+                    m_scanning_paused = false;
+                    Q_EMIT scanningChanged();
+                }
+            }
+        }
+    }
+
+}
+
 void DeviceManager::scanDevices_stop()
 {
     //qDebug() << "DeviceManager::scanDevices_stop()";
@@ -633,7 +714,6 @@ void DeviceManager::scanDevices_stop()
 
                 m_scanning = false;
                 Q_EMIT scanningChanged();
-                qDebug() << "Listening for BLE advertisement devices...";
             }
         }
     }
@@ -726,6 +806,8 @@ void DeviceManager::checkPaired()
 
 void DeviceManager::blacklistDevice(const QString &addr)
 {
+    qDebug() << "DeviceManager::blacklistDevice(" << addr << ")";
+
     if (m_dbInternal || m_dbExternal)
     {
         // if
@@ -754,10 +836,10 @@ void DeviceManager::blacklistDevice(const QString &addr)
 
 void DeviceManager::whitelistDevice(const QString &addr)
 {
+    qDebug() << "DeviceManager::whitelistDevice(" << addr << ")";
+
     if (m_dbInternal || m_dbExternal)
     {
-        qDebug() << "+ Whitelisting device: " << addr;
-
         QSqlQuery whitelistDevice;
         whitelistDevice.prepare("DELETE FROM devicesBlacklist WHERE deviceAddr = :deviceAddr");
         whitelistDevice.bindValue(":deviceAddr", addr);
@@ -768,6 +850,23 @@ void DeviceManager::whitelistDevice(const QString &addr)
             Q_EMIT devicesBlacklistUpdated();
         }
     }
+}
+
+bool DeviceManager::isDeviceBlacklisted(const QString &addr)
+{
+    if (m_dbInternal || m_dbExternal)
+    {
+        // if
+        QSqlQuery queryDevice;
+        queryDevice.prepare("SELECT deviceAddr FROM devicesBlacklist WHERE deviceAddr = :deviceAddr");
+        queryDevice.bindValue(":deviceAddr", addr);
+        queryDevice.exec();
+
+        // then
+        return queryDevice.last();
+    }
+
+    return false;
 }
 
 /* ************************************************************************** */
@@ -845,6 +944,23 @@ void DeviceManager::uncacheDevice(const QString &addr)
             }
         }
     }
+}
+
+bool DeviceManager::isDeviceCached(const QString &addr)
+{
+    if (m_dbInternal || m_dbExternal)
+    {
+        // if
+        QSqlQuery queryDevice;
+        queryDevice.prepare("SELECT deviceAddr FROM devices WHERE deviceAddr = :deviceAddr");
+        queryDevice.bindValue(":deviceAddr", addr);
+        queryDevice.exec();
+
+        // then
+        return queryDevice.last();
+    }
+
+    return false;
 }
 
 /* ************************************************************************** */

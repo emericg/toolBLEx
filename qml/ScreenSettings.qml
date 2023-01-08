@@ -491,6 +491,37 @@ Loader {
                                 anchors.rightMargin: 64
                                 anchors.verticalCenter: parent.verticalCenter
 
+                                text: qsTr("Pause scanning while in the background")
+                                textFormat: Text.PlainText
+                                font.pixelSize: Theme.fontSizeContent
+                                font.bold: false
+                                color: Theme.colorText
+                                wrapMode: Text.WordWrap
+                                verticalAlignment: Text.AlignVCenter
+                            }
+
+                            SwitchThemedDesktop {
+                                anchors.right: parent.right
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                checked: settingsManager.scanPause
+                                onClicked: settingsManager.scanPause = checked
+                            }
+                        }
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 48
+                            color: Theme.colorForeground
+
+                            Text {
+                                anchors.left: parent.left
+                                anchors.leftMargin: 20
+                                anchors.right: parent.right
+                                anchors.rightMargin: 64
+                                anchors.verticalCenter: parent.verticalCenter
+
                                 text: qsTr("Cache devices automatically")
                                 textFormat: Text.PlainText
                                 font.pixelSize: Theme.fontSizeContent

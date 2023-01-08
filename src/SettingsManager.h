@@ -51,6 +51,7 @@ class SettingsManager: public QObject
     Q_PROPERTY(QString appLanguage READ getAppLanguage WRITE setAppLanguage NOTIFY appLanguageChanged)
 
     Q_PROPERTY(bool scanAuto READ getScanAuto WRITE setScanAuto NOTIFY scanAutoChanged)
+    Q_PROPERTY(bool scanPause READ getScanPause WRITE setScanPause NOTIFY scanPauseChanged)
     Q_PROPERTY(bool scanCacheAuto READ getScanCacheAuto WRITE setScanCacheAuto NOTIFY scanCacheAutoChanged)
     Q_PROPERTY(int scanTimeout READ getScanTimeout WRITE setScanTimeout NOTIFY scanTimeoutChanged)
     Q_PROPERTY(int scanRssiInterval READ getScanRssiInterval WRITE setScanRssiInterval NOTIFY scanRssiIntervalChanged)
@@ -63,6 +64,9 @@ class SettingsManager: public QObject
 
     Q_PROPERTY(int scanviewOrientation READ getScanviewOrientation WRITE setScanviewOrientation NOTIFY scanviewChanged)
     Q_PROPERTY(QByteArray scanviewSize READ getScanviewSize WRITE setScanviewSize NOTIFY scanviewChanged)
+
+    Q_PROPERTY(QString preferedAdapter_scan READ getPreferedAdapter_scan WRITE setPreferedAdapter_scan NOTIFY preferedAdapterScanChanged)
+    Q_PROPERTY(QString preferedAdapter_adv READ getPreferedAdapter_adv WRITE setPreferedAdapter_adv NOTIFY preferedAdapterAdvChanged)
 
     Q_PROPERTY(QString ubertooth_path READ getUbertoothPath WRITE setUbertoothPath NOTIFY ubertoothPathChanged)
     Q_PROPERTY(int ubertooth_freqMin READ getUbertoothFreqMin WRITE setUbertoothFreqMin NOTIFY ubertoothFreqChanged)
@@ -86,6 +90,7 @@ class SettingsManager: public QObject
     int m_scanTimeout = 5;
     int m_scanRssiInterval = 1000;
     bool m_scanAuto = true;
+    bool m_scanPause = false;
     bool m_scanCacheAuto = true;
     bool m_scanShowBeacon = true;
     bool m_scanShowBlacklisted = false;
@@ -95,6 +100,9 @@ class SettingsManager: public QObject
 
     int m_scanviewOrientation = Qt::Horizontal;
     QByteArray m_scanviewSize;
+
+    QString m_preferedAdapter_scan;
+    QString m_preferedAdapter_adv;
 
     QString m_ubertooth_path = "ubertooth-specan";
     int m_ubertooth_freqMin = 2400;
@@ -118,11 +126,14 @@ Q_SIGNALS:
     void appLanguageChanged();
 
     void scanAutoChanged();
+    void scanPauseChanged();
     void scanCacheAutoChanged();
     void scanTimeoutChanged();
     void scanRssiIntervalChanged();
     void scanShowChanged();
     void scanviewChanged();
+    void preferedAdapterScanChanged();
+    void preferedAdapterAdvChanged();
     void ubertoothPathChanged();
     void ubertoothFreqChanged();
 
@@ -157,6 +168,9 @@ public:
     bool getScanAuto() const { return m_scanAuto; }
     void setScanAuto(const bool value);
 
+    bool getScanPause() const { return m_scanPause; }
+    void setScanPause(const bool value);
+
     bool getScanCacheAuto() const { return m_scanCacheAuto; }
     void setScanCacheAuto(const bool value);
 
@@ -181,6 +195,11 @@ public:
     void setScanviewOrientation(const int value);
     QByteArray getScanviewSize() const { return m_scanviewSize; }
     void setScanviewSize(const QByteArray &value);
+
+    QString getPreferedAdapter_scan() const { return m_preferedAdapter_scan; }
+    void setPreferedAdapter_scan(const QString &value);
+    QString getPreferedAdapter_adv() const { return m_preferedAdapter_adv; }
+    void setPreferedAdapter_adv(const QString &value);
 
     QString getUbertoothPath() const { return m_ubertooth_path; }
     void setUbertoothPath(const QString &value);

@@ -83,16 +83,28 @@ ApplicationWindow {
         function onStateChanged() {
             switch (Qt.application.state) {
 
-                case Qt.ApplicationInactive:
+                case Qt.ApplicationInactive: {
                     //console.log("Qt.ApplicationInactive")
-                    break
 
-                case Qt.ApplicationActive:
+                    // Pause scanning (if needed)
+                    pauseTimer.start()
+
+                    break
+                }
+
+                case Qt.ApplicationActive: {
                     //console.log("Qt.ApplicationActive")
+
+                    // Resume scanning (if needed)
+                    pauseTimer.stop()
+                    deviceManager.scanDevices_resume();
 
                     // Check Bluetooth anyway (on macOS)
                     //if (Qt.platform.os === "osx") deviceManager.checkBluetooth()
+
                     break
+                }
+
             }
         }
     }
@@ -125,6 +137,13 @@ ApplicationWindow {
             close.accepted = false
             appWindow.hide()
         }
+    }
+
+    Timer {
+        id: pauseTimer
+        interval: 3333
+        repeat: false
+        onTriggered: deviceManager.scanDevices_pause()
     }
 
     // User generated events handling //////////////////////////////////////////

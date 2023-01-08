@@ -102,6 +102,9 @@ bool SettingsManager::readSettings()
         if (settings.contains("settings/scanAuto"))
             m_scanAuto = settings.value("settings/scanAuto").toBool();
 
+        if (settings.contains("settings/scanPause"))
+            m_scanPause = settings.value("settings/scanPause").toBool();
+
         if (settings.contains("settings/scanCacheAuto"))
             m_scanCacheAuto = settings.value("settings/scanCacheAuto").toBool();
 
@@ -125,6 +128,11 @@ bool SettingsManager::readSettings()
             m_scanviewOrientation = settings.value("settings/scanSplitviewOrientation").toInt();
         if (settings.contains("settings/scanSplitviewSize"))
             m_scanviewSize = settings.value("settings/scanSplitviewSize").toByteArray();
+
+        if (settings.contains("settings/preferedAdapter_scan"))
+            m_preferedAdapter_scan = settings.value("settings/preferedAdapter_scan").toString();
+        if (settings.contains("settings/preferedAdapter_adv"))
+            m_preferedAdapter_adv = settings.value("settings/preferedAdapter_adv").toString();
 
         if (settings.contains("settings/ubertooth_path"))
             m_ubertooth_path = settings.value("settings/ubertooth_path").toString();
@@ -159,6 +167,7 @@ bool SettingsManager::writeSettings()
         settings.setValue("settings/appUnits", m_appUnits);
 
         settings.setValue("settings/scanAuto", m_scanAuto);
+        settings.setValue("settings/scanPause", m_scanPause);
         settings.setValue("settings/scanCacheAuto", m_scanCacheAuto);
         settings.setValue("settings/scanTimeout", m_scanTimeout);
         settings.setValue("settings/scanRssiInterval", m_scanRssiInterval);
@@ -169,6 +178,9 @@ bool SettingsManager::writeSettings()
         settings.setValue("settings/scanShowLowEnergy", m_scanShowLowEnergy);
         settings.setValue("settings/scanSplitviewOrientation", m_scanviewOrientation);
         settings.setValue("settings/scanSplitviewSize", m_scanviewSize);
+
+        settings.setValue("settings/preferedAdapter_scan", m_preferedAdapter_scan);
+        settings.setValue("settings/preferedAdapter_adv", m_preferedAdapter_adv);
 
         settings.setValue("settings/ubertooth_path", m_ubertooth_path);
         settings.setValue("settings/ubertooth_freqMin", m_ubertooth_freqMin);
@@ -272,6 +284,16 @@ void SettingsManager::setScanAuto(const bool value)
     }
 }
 
+void SettingsManager::setScanPause(const bool value)
+{
+    if (m_scanPause != value)
+    {
+        m_scanPause = value;
+        writeSettings();
+        Q_EMIT scanPauseChanged();
+    }
+}
+
 void SettingsManager::setScanCacheAuto(const bool value)
 {
     if (m_scanCacheAuto != value)
@@ -367,6 +389,28 @@ void SettingsManager::setScanviewSize(const QByteArray &value)
         m_scanviewSize = value;
         writeSettings();
         Q_EMIT scanviewChanged();
+    }
+}
+
+/* ************************************************************************** */
+
+void SettingsManager::setPreferedAdapter_scan(const QString &value)
+{
+    if (m_preferedAdapter_scan != value)
+    {
+        m_preferedAdapter_scan = value;
+        writeSettings();
+        Q_EMIT preferedAdapterScanChanged();
+    }
+}
+
+void SettingsManager::setPreferedAdapter_adv(const QString &value)
+{
+    if (m_preferedAdapter_adv != value)
+    {
+        m_preferedAdapter_adv = value;
+        writeSettings();
+        Q_EMIT preferedAdapterAdvChanged();
     }
 }
 

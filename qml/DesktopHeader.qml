@@ -79,7 +79,9 @@ Rectangle {
                 enabled: deviceManager.bluetooth
                 highlightMode: "off"
                 iconColor: Theme.colorHeaderContent
-                source: "qrc:/assets/icons_material/baseline-play_arrow-24px.svg"
+                source: (deviceManager.scanningPaused) ?
+                            "qrc:/assets/icons_material/baseline-play_arrow-24px.svg" :
+                            "qrc:/assets/icons_material/baseline-play_arrow-24px.svg"
 
                 background: {
                     if (appContent.state === "Scanner" && deviceManager.scanning) return 1
@@ -155,13 +157,15 @@ Rectangle {
                 height: 20; width: 20;
                 anchors.verticalCenter: parent.verticalCenter
 
-                source: (deviceManager.scanning)
-                            ? "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
-                            : "qrc:/assets/icons_material/baseline-pause-24px.svg"
+                source: {
+                    if (deviceManager.scanningPaused) return "qrc:/assets/icons_material/baseline-pause-24px.svg"
+                    if (deviceManager.scanning) return "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
+                    return "qrc:/assets/icons_material/baseline-stop-24px.svg"
+                }
                 color: Theme.colorText
 
                 NumberAnimation on rotation {
-                    running: deviceManager.scanning
+                    running: (deviceManager.scanning && !deviceManager.scanningPaused)
                     alwaysRunToEnd: true
                     loops: Animation.Infinite
 
@@ -173,7 +177,11 @@ Rectangle {
             }
             Text {
                 anchors.verticalCenter: parent.verticalCenter
-                text: deviceManager.scanning ? qsTr("Scanning for Bluetooth devices nearby") : qsTr("Not scanning")
+                text: {
+                    if (deviceManager.scanningPaused) return qsTr("Scanning paused")
+                    if (deviceManager.scanning) return qsTr("Scanning for Bluetooth devices nearby")
+                    return qsTr("Not scanning")
+                }
                 color: Theme.colorText
             }
 

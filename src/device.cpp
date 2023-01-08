@@ -394,10 +394,7 @@ bool Device::hasAddressMAC() const
     return true;
 #endif
 
-    if (m_deviceAddressMAC.isEmpty())
-        return false;
-
-    return true;
+    return !m_deviceAddressMAC.isEmpty();
 }
 
 QString Device::getAddressMAC() const

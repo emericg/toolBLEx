@@ -58,6 +58,7 @@ class DeviceManager: public QObject
 
     Q_PROPERTY(bool listening READ isListening NOTIFY listeningChanged)
     Q_PROPERTY(bool scanning READ isScanning NOTIFY scanningChanged)
+    Q_PROPERTY(bool scanningPaused READ isScanningPaused NOTIFY scanningChanged)
     Q_PROPERTY(bool updating READ isUpdating NOTIFY updatingChanged)
     Q_PROPERTY(bool syncing READ isSyncing NOTIFY syncingChanged)
     Q_PROPERTY(bool advertising READ isAdvertising NOTIFY advertisingChanged)
@@ -97,6 +98,9 @@ class DeviceManager: public QObject
 
     bool m_scanning = false;
     bool isScanning() const;
+
+    bool m_scanning_paused = false;
+    bool isScanningPaused() const;
 
     bool m_updating = false;
     bool isUpdating() const;
@@ -156,7 +160,6 @@ private slots:
     void bluetoothStatusChanged();
 
     // QBluetoothDeviceDiscoveryAgent related
-    void bluetoothHostModeStateChangedIos();
     void addBleDevice(const QBluetoothDeviceInfo &info);
     void updateBleDevice(const QBluetoothDeviceInfo &info, QBluetoothDeviceInfo::Fields updatedFields);
     void updateBleDevice_simple(const QBluetoothDeviceInfo &info);
@@ -183,11 +186,15 @@ public:
     static int getLastRun();
 
     Q_INVOKABLE void scanDevices_start();
+    Q_INVOKABLE void scanDevices_pause();
+    Q_INVOKABLE void scanDevices_resume();
     Q_INVOKABLE void scanDevices_stop();
 
     Q_INVOKABLE void disconnectDevices();
 
     Q_INVOKABLE void checkPaired();
+
+    // Device management
 
     // RSSI graph
     Q_INVOKABLE void getRssiGraphAxis(QDateTimeAxis *axis);
@@ -200,9 +207,11 @@ public:
 
     void blacklistDevice(const QString &addr);
     void whitelistDevice(const QString &addr);
+    bool isDeviceBlacklisted(const QString &addr);
 
     void cacheDevice(const QString &addr);
     void uncacheDevice(const QString &addr);
+    bool isDeviceCached(const QString &addr);
 
     Q_INVOKABLE void orderby_address();
     Q_INVOKABLE void orderby_name();
