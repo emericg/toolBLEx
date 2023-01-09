@@ -719,7 +719,7 @@ bool DeviceToolBLEx::exportDeviceInfo(bool withAdvertisements, bool withServices
                 txt += adv->getTimestamp().toString("hh:mm:ss.zzz") + " > ";
                 txt += "0x" + adv->getUUID_str() + " (" + adv->getUUID_vendor() + ")" + " > ";
                 txt += "(" + QString::number(adv->getDataSize()).rightJustified(3, ' ') + " bytes) ";
-                txt += "0x" + adv->getDataString();
+                txt += "0x" + adv->getDataHexString();
             }
             else if (adv->getMode() == DeviceUtils::BLE_ADV_SERVICEDATA)
             {
@@ -727,7 +727,7 @@ bool DeviceToolBLEx::exportDeviceInfo(bool withAdvertisements, bool withServices
                 txt += adv->getTimestamp().toString("hh:mm:ss.zzz") + " > ";
                 txt += "0x" + adv->getUUID_str() + " > ";
                 txt += "(" + QString::number(adv->getDataSize()).rightJustified(3, ' ') + " bytes) ";
-                txt += "0x" + adv->getDataString();
+                txt += "0x" + adv->getDataHexString();
             }
             else
             {

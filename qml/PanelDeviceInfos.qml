@@ -215,13 +215,13 @@ Flickable {
 
             Column {
                 anchors.right: parent.right
-                anchors.rightMargin: 16
+                anchors.rightMargin: 20
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 8
 
                 Rectangle {
-                    width: 92; height: 92; radius: 92;
-                    color: Theme.colorForeground
+                    width: 96; height: 96; radius: 96;
+                    color: Theme.colorBackground
                     visible: (selectedDevice && selectedDevice.isClassic && deviceIcon.source.toString().length)
 
                     IconSvg {
@@ -243,7 +243,7 @@ Flickable {
                 ItemTag {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: UtilsBluetooth.getBluetoothPairingText(selectedDevice.pairingStatus)
-                    color: Theme.colorForeground
+                    color: Theme.colorBackground
                     visible: (selectedDevice && selectedDevice.pairingStatus > 0)
                 }
             }

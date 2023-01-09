@@ -221,7 +221,7 @@ Rectangle {
                 Layout.alignment: Qt.AlignBaseline
                 Layout.fillWidth: true
 
-                text: packet.advDataString
+                text: packet.advDataHexString
                 wrapMode: Text.WrapAnywhere
                 font.family: fontMonospace
                 //font.capitalization: Font.AllUppercase

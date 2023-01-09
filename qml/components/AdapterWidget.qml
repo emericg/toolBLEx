@@ -17,7 +17,7 @@ Rectangle {
 
     ////////
 
-    Rectangle {
+    Rectangle { // yellow bar
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.bottom: parent.bottom
@@ -28,17 +28,45 @@ Rectangle {
         visible: modelData.isDefault
     }
 
-    IconSvg {
+    Rectangle { // scanning indicator
         anchors.right: parent.right
         anchors.rightMargin: 20
         anchors.verticalCenter: parent.verticalCenter
-        width: 64
-        height: 64
+        width: 96
+        height: 96
+        radius: 96
+        color: Theme.colorBackground
+/*
+        Rectangle {
+            id: circlePulseAnimation
+            anchors.centerIn: parent
+            width: 64
+            height: 64
+            radius: 64
+            color: Theme.colorBox
 
-        visible: (adapterWidget.width > box.legendWidth*4)
+            ParallelAnimation {
+                running: (deviceManager.scanning && !deviceManager.scanningPaused &&
+                          appContent.state === "Scanner" && hostMenu.currentSelection === 1)
+                alwaysRunToEnd: true
+                loops: Animation.Infinite
 
-        source: "qrc:/assets/icons_bootstrap/bluetooth.svg"
-        color: Theme.colorSubText
+                NumberAnimation { target: circlePulseAnimation; property: "width"; from: 40; to: 96; duration: 1500; }
+                NumberAnimation { target: circlePulseAnimation; property: "height"; from: 40; to: 96; duration: 1500; }
+                OpacityAnimator { target: circlePulseAnimation; from: 1; to: 0; duration: 1500; }
+            }
+        }
+*/
+        IconSvg {
+            anchors.centerIn: parent
+            width: 64
+            height: 64
+
+            visible: (adapterWidget.width > box.legendWidth*4)
+
+            source: "qrc:/assets/icons_bootstrap/bluetooth.svg"
+            color: Theme.colorSubText
+        }
     }
 
     ////////
