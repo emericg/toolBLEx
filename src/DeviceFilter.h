@@ -87,15 +87,16 @@ public:
     QList <Device *> m_devices;
 
     enum DeviceRoles {
-        DeviceAddressRole = Qt::UserRole+1,
+        Default = Qt::UserRole+1,
+
+        DeviceAddressRole,
         DeviceNameRole,
+        DeviceModelRole,
         DeviceManufacturerRole,
         DeviceRssiRole,
         DeviceIntervalRole,
         DeviceFirstSeenRole,
         DeviceLastSeenRole,
-
-        DeviceModelRole,
 
         PointerRole,
     };

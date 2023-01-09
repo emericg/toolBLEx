@@ -1009,7 +1009,12 @@ void DeviceManager::orderby(int role, Qt::SortOrder order)
 
     m_devices_filter->setSortRole(m_orderBy_role);
     m_devices_filter->sort(0, m_orderBy_order);
-    m_devices_filter->invalidate();
+    //m_devices_filter->invalidate();
+}
+
+void DeviceManager::orderby_default()
+{
+    orderby(DeviceModel::Default, Qt::AscendingOrder);
 }
 
 void DeviceManager::orderby_address()

@@ -56,7 +56,15 @@ Rectangle {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: deviceManager.orderby_address()
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                onClicked: (mouse) => {
+                    if (mouse.button === Qt.LeftButton) {
+                        deviceManager.orderby_address()
+                    } else if (mouse.button === Qt.RightButton) {
+                        if (deviceManager.orderBy_role === "address")
+                            deviceManager.orderby_default()
+                    }
+                }
             }
 
             Canvas {
@@ -107,7 +115,15 @@ Rectangle {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: deviceManager.orderby_name()
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                onClicked: (mouse) => {
+                    if (mouse.button === Qt.LeftButton) {
+                        deviceManager.orderby_name()
+                    } else if (mouse.button === Qt.RightButton) {
+                        if (deviceManager.orderBy_role === "name")
+                            deviceManager.orderby_default()
+                    }
+                }
             }
 
             Canvas {
@@ -161,7 +177,15 @@ Rectangle {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: deviceManager.orderby_manufacturer()
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                onClicked: (mouse) => {
+                    if (mouse.button === Qt.LeftButton) {
+                        deviceManager.orderby_manufacturer()
+                    } else if (mouse.button === Qt.RightButton) {
+                        if (deviceManager.orderBy_role === "manufacturer")
+                            deviceManager.orderby_default()
+                    }
+                }
             }
 
             Canvas {
@@ -231,7 +255,15 @@ Rectangle {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: deviceManager.orderby_rssi()
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                onClicked: (mouse) => {
+                    if (mouse.button === Qt.LeftButton) {
+                        deviceManager.orderby_rssi()
+                    } else if (mouse.button === Qt.RightButton) {
+                        if (deviceManager.orderBy_role === "rssi")
+                            deviceManager.orderby_default()
+                    }
+                }
             }
 
             Canvas {
@@ -299,7 +331,15 @@ Rectangle {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: deviceManager.orderby_interval()
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                onClicked: (mouse) => {
+                    if (mouse.button === Qt.LeftButton) {
+                        deviceManager.orderby_interval()
+                    } else if (mouse.button === Qt.RightButton) {
+                        if (deviceManager.orderBy_role === "interval")
+                            deviceManager.orderby_default()
+                    }
+                }
             }
 
             Canvas {
@@ -350,7 +390,15 @@ Rectangle {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: deviceManager.orderby_lastseen()
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                onClicked: (mouse) => {
+                    if (mouse.button === Qt.LeftButton) {
+                        deviceManager.orderby_lastseen()
+                    } else if (mouse.button === Qt.RightButton) {
+                        if (deviceManager.orderBy_role === "lastseen")
+                            deviceManager.orderby_default()
+                    }
+                }
             }
 
             Canvas {
@@ -401,7 +449,15 @@ Rectangle {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: deviceManager.orderby_firstseen()
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                onClicked: (mouse) => {
+                    if (mouse.button === Qt.LeftButton) {
+                        deviceManager.orderby_firstseen()
+                    } else if (mouse.button === Qt.RightButton) {
+                        if (deviceManager.orderBy_role === "firstseen")
+                            deviceManager.orderby_default()
+                    }
+                }
             }
 
             Canvas {

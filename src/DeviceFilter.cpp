@@ -127,15 +127,16 @@ QHash <int, QByteArray> DeviceModel::roleNames() const
 {
     QHash <int, QByteArray> roles;
 
+    roles[Default] = "default";
     roles[DeviceAddressRole] = "address";
     roles[DeviceNameRole] = "name";
+    roles[DeviceModelRole] = "model";
     roles[DeviceManufacturerRole] = "manufacturer";
     roles[DeviceRssiRole] = "rssi";
     roles[DeviceIntervalRole] = "interval";
     roles[DeviceFirstSeenRole] = "first seen";
     roles[DeviceLastSeenRole] = "last seen";
 
-    roles[DeviceModelRole] = "model";
 
     roles[PointerRole] = "pointer";
 
@@ -151,7 +152,7 @@ int DeviceModel::rowCount(const QModelIndex &parent) const
 int DeviceModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
-    return 6;
+    return 1;
 }
 
 Device * DeviceModel::device(const QModelIndex &index) const
@@ -169,6 +170,10 @@ QVariant DeviceModel::data(const QModelIndex &index, int role) const
     DeviceToolBLEx *device = static_cast<DeviceToolBLEx *>(m_devices[index.row()]);
     if (device)
     {
+        if (role == Default)
+        {
+            return index.row();
+        }
         if (role == DeviceAddressRole)
         {
             return device->getAddress();
@@ -177,13 +182,13 @@ QVariant DeviceModel::data(const QModelIndex &index, int role) const
         {
             return device->getName();
         }
-        if (role == DeviceManufacturerRole)
-        {
-            return device->getManufacturer();
-        }
         if (role == DeviceModelRole)
         {
             return device->getModel();
+        }
+        if (role == DeviceManufacturerRole)
+        {
+            return device->getManufacturer();
         }
         if (role == DeviceRssiRole)
         {
@@ -195,11 +200,11 @@ QVariant DeviceModel::data(const QModelIndex &index, int role) const
         }
         if (role == DeviceFirstSeenRole)
         {
-            return 0;
+            return device->getFirstSeen().toMSecsSinceEpoch();
         }
         if (role == DeviceLastSeenRole)
         {
-            return 0;
+            return device->getLastSeen().toMSecsSinceEpoch();
         }
 
         if (role == PointerRole)

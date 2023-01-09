@@ -213,6 +213,7 @@ public:
     void uncacheDevice(const QString &addr);
     bool isDeviceCached(const QString &addr);
 
+    Q_INVOKABLE void orderby_default();
     Q_INVOKABLE void orderby_address();
     Q_INVOKABLE void orderby_name();
     Q_INVOKABLE void orderby_manufacturer();
