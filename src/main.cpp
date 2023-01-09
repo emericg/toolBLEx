@@ -80,13 +80,18 @@ int main(int argc, char *argv[])
     SettingsManager *sm = SettingsManager::getInstance();
     MenubarManager *mb = MenubarManager::getInstance();
     DeviceManager *dm = new DeviceManager;
-    if (!sm ||!mb || !dm)
+    Ubertooth *uber = new Ubertooth;
+    if (!sm ||!mb || !dm || !uber)
     {
         qWarning() << "Cannot init toolBLEx components!";
         return EXIT_FAILURE;
     }
 
-    Ubertooth *uber = new Ubertooth;
+    // Start scanning?
+    if (sm->getScanAuto())
+    {
+        dm->scanDevices_start();
+    }
 
     // Init generic utils
     UtilsApp *utilsApp = UtilsApp::getInstance();
@@ -110,9 +115,9 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     QQmlContext *engine_context = engine.rootContext();
 
-    engine_context->setContextProperty("deviceManager", dm);
     engine_context->setContextProperty("settingsManager", sm);
     engine_context->setContextProperty("menubarManager", mb);
+    engine_context->setContextProperty("deviceManager", dm);
     engine_context->setContextProperty("ubertooth", uber);
 
     engine_context->setContextProperty("utilsApp", utilsApp);
@@ -131,13 +136,10 @@ int main(int argc, char *argv[])
     // For i18n retranslate
     utilsLanguage->setQmlEngine(&engine);
 
-    // Notch handling // QQuickWindow must be valid at this point
-    QQuickWindow *window = qobject_cast<QQuickWindow *>(engine.rootObjects().value(0));
-    engine_context->setContextProperty("quickWindow", window);
-
 #if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS) // desktop section
 
-    // React to secondary instances
+    // React to secondary instances // QQuickWindow must be valid at this point
+    QQuickWindow *window = qobject_cast<QQuickWindow *>(engine.rootObjects().value(0));
     QObject::connect(&app, &SingleApplication::instanceStarted, window, &QQuickWindow::show);
     QObject::connect(&app, &SingleApplication::instanceStarted, window, &QQuickWindow::raise);
 
@@ -145,11 +147,11 @@ int main(int argc, char *argv[])
     // Menu bar
     mb->setupMenubar(window, dm);
 
-    // dock
+    // Dock
     MacOSDockHandler *dockIconHandler = MacOSDockHandler::getInstance();
     dockIconHandler->setupDock(window);
     engine_context->setContextProperty("utilsDock", dockIconHandler);
-#endif
+#endif // Q_OS_MACOS
 
 #endif // desktop section
 

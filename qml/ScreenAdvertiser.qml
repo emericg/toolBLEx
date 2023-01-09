@@ -32,8 +32,6 @@ Loader {
             screenScanner.loadScreen()
         }
 
-        ////////////////////////////////////////////////////////////////////////
-
         Column {
             anchors.centerIn: parent
             anchors.verticalCenterOffset: -(appHeader.height / 2)
@@ -107,7 +105,5 @@ Loader {
 
             ////////////////
         }
-
-        ////////////////////////////////////////////////////////////////////////
     }
 }

@@ -59,7 +59,11 @@ ApplicationWindow {
     // Events handling /////////////////////////////////////////////////////////
 
     Component.onCompleted: {
-        //
+        // Load scanner
+        screenScanner.loadScreen()
+
+        // Start scanning?
+        //if (settingsManager.scanAuto) deviceManager.scanDevices_start()
     }
 
     Connections {
@@ -141,8 +145,9 @@ ApplicationWindow {
 
     Timer {
         id: pauseTimer
-        interval: 3333
+        running: false
         repeat: false
+        interval: 3333
         onTriggered: deviceManager.scanDevices_pause()
     }
 
@@ -155,6 +160,8 @@ ApplicationWindow {
             screenAdvertiser.backAction()
         } else if (appContent.state === "Ubertooth") {
             screenUbertooth.backAction()
+        } else if (appContent.state === "Settings") {
+            screenSettings.backAction()
         } else { // default
             if (appContent.previousStates.length) {
                 appContent.previousStates.pop()
@@ -296,16 +303,6 @@ ApplicationWindow {
             id: screenSettings
         }
 
-        Component.onCompleted: {
-            // Load scanner
-            screenScanner.loadScreen()
-
-            // Start scanning?
-            if (settingsManager.scanAuto) {
-                deviceManager.scanDevices_start()
-            }
-        }
-
         // Initial state
         state: ""
 
@@ -350,5 +347,65 @@ ApplicationWindow {
                 PropertyChanges { target: screenSettings; visible: true; enabled: true; focus: true; }
             }
         ]
+    }
+
+    // Loading screen //////////////////////////////////////////////////////////
+
+    Loader {
+        id: appSplashLoader
+        anchors.centerIn: parent
+
+        z: 20
+        active: false
+        asynchronous: false
+
+        Component.onCompleted: {
+            // Load splash screen?
+            appSplashLoader.active = settingsManager.appSplashScreen
+        }
+
+        sourceComponent: Rectangle {
+            id: appSplash
+            anchors.centerIn: parent
+            color: Theme.colorBackground
+
+            Timer {
+                id: splashTimer_fadeout
+                running: true
+                repeat: false
+                interval: 333
+                onTriggered: {
+                    appSplash.width = 0
+                    appSplashImage.opacity = 0
+                    splashTimer_unload.start()
+                }
+            }
+            Timer {
+                id: splashTimer_unload
+                running: false
+                repeat: false
+                interval: 1000
+                onTriggered: {
+                    appSplashLoader.sourceComponent = undefined
+                }
+            }
+
+
+            width: appWindow.width*2
+            height: width
+            radius: width
+            Behavior on width { NumberAnimation { duration: 500; } }
+
+            Image {
+                id: appSplashImage
+                anchors.centerIn: parent
+                width: 256
+                height: 256
+                source: "qrc:/assets/logos/logo.svg"
+                sourceSize: Qt.size(width, height)
+
+                Behavior on opacity { OpacityAnimator { duration: 500; } }
+            }
+        }
     }
 }

@@ -34,7 +34,6 @@ ChartView {
     property bool needforspeed: (ubertooth.freqMax - ubertooth.freqMin > 100)
 
     Component.onCompleted: {
-
         //// AXIS
         ubertooth.getFrequencyGraphAxis(axisFrequency)
 

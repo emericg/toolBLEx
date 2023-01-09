@@ -9,7 +9,7 @@ RadioButton {
     id: control
 
     padding: 4
-    spacing: 12
+    spacing: 8
     font.pixelSize: Theme.fontSizeComponent
 
     indicator: Rectangle {

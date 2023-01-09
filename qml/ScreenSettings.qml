@@ -26,9 +26,17 @@ Loader {
     active: false
     asynchronous: true
 
-    sourceComponent: Rectangle {
+    sourceComponent: Item {
         anchors.fill: parent
-        color: Theme.colorBackground
+
+        function backAction() {
+            if (ubertoothPath.focus) {
+                ubertoothPath.focus = false
+                return
+            }
+
+            screenScanner.loadScreen()
+        }
 
         Flickable {
             anchors.fill: parent
@@ -38,10 +46,6 @@ Loader {
 
             boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
             ScrollBar.vertical: ScrollBar { visible: false }
-
-            function backAction() {
-                screenScanner.loadScreen()
-            }
 
             Column {
                 id: settingsColumn
@@ -393,7 +397,7 @@ Loader {
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 z: 1
-                                spacing: 10
+                                spacing: 12
 
                                 RadioButtonThemed {
                                     checked: (settingsManager.appUnits === 0)
@@ -405,6 +409,37 @@ Loader {
                                     onClicked: settingsManager.appUnits = 1
                                     text: qsTr("imperial")
                                 }
+                            }
+                        }
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 48
+                            color: Theme.colorForeground
+
+                            Text {
+                                anchors.left: parent.left
+                                anchors.leftMargin: 20
+                                anchors.right: parent.right
+                                anchors.rightMargin: 64
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                text: qsTr("Show splashscreen on startup")
+                                textFormat: Text.PlainText
+                                font.pixelSize: Theme.fontSizeContent
+                                font.bold: false
+                                color: Theme.colorText
+                                wrapMode: Text.WordWrap
+                                verticalAlignment: Text.AlignVCenter
+                            }
+
+                            SwitchThemedDesktop {
+                                anchors.right: parent.right
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                checked: settingsManager.appSplashScreen
+                                onClicked: settingsManager.appSplashScreen = checked
                             }
                         }
                     }
@@ -713,6 +748,7 @@ Loader {
                             color: Theme.colorForeground
 
                             TextFieldPathThemed {
+                                id: ubertoothPath
                                 anchors.left: parent.left
                                 anchors.leftMargin: 12
                                 anchors.right: parent.right

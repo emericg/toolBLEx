@@ -47,6 +47,7 @@ class SettingsManager: public QObject
     Q_PROPERTY(QString appTheme READ getAppTheme WRITE setAppTheme NOTIFY appThemeChanged)
     Q_PROPERTY(bool appThemeAuto READ getAppThemeAuto WRITE setAppThemeAuto NOTIFY appThemeAutoChanged)
     Q_PROPERTY(bool appThemeCSD READ getAppThemeCSD WRITE setAppThemeCSD NOTIFY appThemeCSDChanged)
+    Q_PROPERTY(bool appSplashScreen READ getAppSplashScreen WRITE setAppSplashScreen NOTIFY appSplashScreenChanged)
     Q_PROPERTY(uint appUnits READ getAppUnits WRITE setAppUnits NOTIFY appUnitsChanged)
     Q_PROPERTY(QString appLanguage READ getAppLanguage WRITE setAppLanguage NOTIFY appLanguageChanged)
 
@@ -83,6 +84,7 @@ class SettingsManager: public QObject
     QString m_appTheme = "THEME_DESKTOP_LIGHT";
     bool m_appThemeAuto = false;
     bool m_appThemeCSD = false;
+    bool m_appSplashScreen = true;
     unsigned m_appUnits = QLocale::MetricSystem;    //!< QLocale::MeasurementSystem
     QString m_appLanguage = "auto";
 
@@ -122,6 +124,7 @@ Q_SIGNALS:
     void appThemeChanged();
     void appThemeAutoChanged();
     void appThemeCSDChanged();
+    void appSplashScreenChanged();
     void appUnitsChanged();
     void appLanguageChanged();
 
@@ -156,6 +159,9 @@ public:
 
     bool getAppThemeCSD() const { return m_appThemeCSD; }
     void setAppThemeCSD(const bool value);
+
+    bool getAppSplashScreen() const { return m_appSplashScreen; }
+    void setAppSplashScreen(const bool value);
 
     unsigned getAppUnits() const { return m_appUnits; }
     void setAppUnits(unsigned value);

@@ -91,6 +91,9 @@ bool SettingsManager::readSettings()
         if (settings.contains("settings/appThemeAuto"))
             m_appThemeAuto = settings.value("settings/appThemeAuto").toBool();
 
+        if (settings.contains("settings/appSplashScreen"))
+            m_appSplashScreen = settings.value("settings/appSplashScreen").toBool();
+
         if (settings.contains("settings/appLanguage"))
             m_appLanguage = settings.value("settings/appLanguage").toString();
 
@@ -163,6 +166,7 @@ bool SettingsManager::writeSettings()
     {
         settings.setValue("settings/appTheme", m_appTheme);
         settings.setValue("settings/appThemeAuto", m_appThemeAuto);
+        settings.setValue("settings/appSplashScreen", m_appSplashScreen);
         settings.setValue("settings/appLanguage", m_appLanguage);
         settings.setValue("settings/appUnits", m_appUnits);
 
@@ -213,6 +217,8 @@ void SettingsManager::resetSettings()
     Q_EMIT appThemeAutoChanged();
     m_appThemeCSD = false;
     Q_EMIT appThemeCSDChanged();
+    m_appSplashScreen = true;
+    Q_EMIT appSplashScreenChanged();
     m_appUnits = 0;
     Q_EMIT appUnitsChanged();
     m_appLanguage = "auto";
@@ -249,6 +255,16 @@ void SettingsManager::setAppThemeCSD(const bool value)
         m_appThemeCSD = value;
         writeSettings();
         Q_EMIT appThemeCSDChanged();
+    }
+}
+
+void SettingsManager::setAppSplashScreen(const bool value)
+{
+    if (m_appSplashScreen != value)
+    {
+        m_appSplashScreen = value;
+        writeSettings();
+        Q_EMIT appSplashScreenChanged();
     }
 }
 
