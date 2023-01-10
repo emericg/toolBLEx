@@ -84,7 +84,7 @@ void DeviceManager::updateBleDevice(const QBluetoothDeviceInfo &info,
 
             // Handle advertisement //
 
-            const QList<quint16> &manufacturerIds = info.manufacturerIds();
+            const QList <quint16> &manufacturerIds = info.manufacturerIds();
             for (const auto id: manufacturerIds)
             {
                 //qDebug() << info.name() << info.address() << Qt::hex
@@ -97,7 +97,7 @@ void DeviceManager::updateBleDevice(const QBluetoothDeviceInfo &info,
                                                          info.manufacturerData(id));
             }
 
-            const QList<QBluetoothUuid> &serviceIds = info.serviceIds();
+            const QList <QBluetoothUuid> &serviceIds = info.serviceIds();
             for (const auto id: serviceIds)
             {
                 //qDebug() << info.name() << info.address() << Qt::hex

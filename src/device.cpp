@@ -238,6 +238,18 @@ void Device::actionScanWithValues()
     }
 }
 
+void Device::actionScanWithoutValues()
+{
+    qDebug() << "Device::actionScanWithoutValues()" << getAddress() << getName();
+
+    if (!isBusy())
+    {
+        m_ble_action = DeviceUtils::ACTION_SCAN_WITHOUT_VALUES;
+        actionStarted();
+        deviceConnect();
+    }
+}
+
 /* ************************************************************************** */
 
 void Device::refreshQueued()
@@ -663,7 +675,8 @@ void Device::deviceConnected()
         m_ble_status = DeviceUtils::DEVICE_UPDATING_HISTORY;
     }
     else if (m_ble_action == DeviceUtils::ACTION_SCAN ||
-             m_ble_action == DeviceUtils::ACTION_SCAN_WITH_VALUES)
+             m_ble_action == DeviceUtils::ACTION_SCAN_WITH_VALUES ||
+             m_ble_action == DeviceUtils::ACTION_SCAN_WITHOUT_VALUES)
     {
         m_ble_status = DeviceUtils::DEVICE_WORKING;
     }

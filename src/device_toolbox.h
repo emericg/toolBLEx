@@ -248,8 +248,8 @@ class DeviceToolBLEx: public Device
     Q_PROPERTY(QVariant servicesList READ getServices NOTIFY servicesChanged)
 
     static const int s_min_entries_advertisement = 60;
-    static const int s_max_entries_advertisement = 180;
-    static const int s_max_entries_packets = 24;
+    static const int s_max_entries_advertisement = 60;
+    static const int s_max_entries_packets = 20;
 
     bool m_isBeacon = false;
     bool m_isCached = false;
@@ -342,7 +342,7 @@ public:
 
     int getAdvertisedServicesCount() const { return m_advertised_services.count(); }
     QStringList getAdvertisedServices() const { return m_advertised_services; };
-    void setAdvertisedServices(const QList<QBluetoothUuid> &services);
+    void setAdvertisedServices(const QList <QBluetoothUuid> &services);
 
     bool parseAdvertisementToolBLEx(uint16_t mode,
                                     uint16_t id, const QBluetoothUuid &uuid,

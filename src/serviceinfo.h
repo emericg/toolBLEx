@@ -38,6 +38,8 @@ class ServiceInfo: public QObject
 
     Q_PROPERTY(QVariant characteristicList READ getCharacteristics NOTIFY characteristicsUpdated)
 
+    QLowEnergyService::DiscoveryMode m_scanmode = QLowEnergyService::FullDiscovery;
+
     QLowEnergyService *m_service = nullptr;
 
     QList <QObject *> m_characteristics;
@@ -54,11 +56,13 @@ private slots:
 
 public:
     ServiceInfo() = default;
-    ServiceInfo(QLowEnergyService *service);
+    ServiceInfo(QLowEnergyService *service,
+                QLowEnergyService::DiscoveryMode scanmode,
+                QObject *parent = nullptr);
     ~ServiceInfo();
 
     const QLowEnergyService *service() const;
-    const QList<QObject *> characteristics() const;
+    const QList <QObject *> characteristics() const;
 
     QString getUuid() const;
     QString getUuidFull() const;

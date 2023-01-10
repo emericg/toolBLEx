@@ -30,10 +30,14 @@
 
 /* ************************************************************************** */
 
-ServiceInfo::ServiceInfo(QLowEnergyService *service):
-    m_service(service)
+ServiceInfo::ServiceInfo(QLowEnergyService *service,
+                         QLowEnergyService::DiscoveryMode scanmode,
+                         QObject *parent) : QObject(parent)
 {
+    m_service = service;
     m_service->setParent(this);
+
+    m_scanmode = scanmode;
 
     connectToService();
 }
@@ -117,13 +121,13 @@ void ServiceInfo::connectToService()
     if (service->state() == QLowEnergyService::RemoteService)
     {
         connect(service, &QLowEnergyService::stateChanged, this, &ServiceInfo::serviceDetailsDiscovered);
-        QTimer::singleShot(0, [=] () { service->discoverDetails(); });
+        QTimer::singleShot(0, [=] () { service->discoverDetails(m_scanmode); });
 
         return;
     }
 
     // discovery already done
-    const QList<QLowEnergyCharacteristic> chars = service->characteristics();
+    const QList <QLowEnergyCharacteristic> chars = service->characteristics();
     for (const QLowEnergyCharacteristic &ch : chars)
     {
         auto cInfo = new CharacteristicInfo(ch);
@@ -139,15 +143,13 @@ void ServiceInfo::serviceDetailsDiscovered(QLowEnergyService::ServiceState newSt
 
     if (newState != QLowEnergyService::RemoteServiceDiscovered)
     {
-/*
-        // QT6 // do not hang in "Scanning for characteristics" mode forever
+        // do not hang in "Scanning for characteristics" mode forever
         // in case the service discovery failed
         // We have to queue the signal up to give UI time to even enter the above mode
-        if (newState != QLowEnergyService::DiscoveringServices)
+        if (newState != QLowEnergyService::RemoteServiceDiscovering)
         {
             QMetaObject::invokeMethod(this, "characteristicsUpdated", Qt::QueuedConnection);
         }
-*/
         return;
     }
 
@@ -155,7 +157,7 @@ void ServiceInfo::serviceDetailsDiscovered(QLowEnergyService::ServiceState newSt
     if (!service)
         return;
 
-    const QList<QLowEnergyCharacteristic> chars = service->characteristics();
+    const QList <QLowEnergyCharacteristic> chars = service->characteristics();
     for (const QLowEnergyCharacteristic &ch : chars)
     {
         auto cInfo = new CharacteristicInfo(ch);

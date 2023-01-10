@@ -383,7 +383,7 @@ Flickable {
 
         Rectangle {
             width: detailView.ww
-            height: box1b.height + 32
+            height: boxA.height + 32
             radius: 4
 
             clip: false
@@ -392,7 +392,7 @@ Flickable {
             border.color: Theme.colorBoxBorder
 
             Column {
-                id: box1b
+                id: boxA
                 width: parent.width - 32
                 anchors.centerIn: parent
                 spacing: 12
@@ -654,7 +654,7 @@ Flickable {
                     model: (selectedDevice && selectedDevice.rssiHistory)
 
                     Rectangle {
-                        width: ((detailView.ww - 59*2) / 60)
+                        width: ((detailView.ww - 59*2 - 2*2) / 60)
                         height: 40
                         radius: 2
                         color: Theme.colorForeground

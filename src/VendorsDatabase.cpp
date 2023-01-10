@@ -182,7 +182,7 @@ void VendorsDatabase::getVendor(const QString &device_mac, QString &device_vendo
 {
     for (auto v: qAsConst(m_vendors))
     {
-        VendorEntry *mac = qobject_cast<VendorEntry*>(v);
+        VendorEntry *mac = qobject_cast<VendorEntry *>(v);
 
         if (device_mac.startsWith(mac->m_prefix))
         {

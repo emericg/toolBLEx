@@ -48,7 +48,7 @@ Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: modelData.serviceName
-                    font.pixelSize: 20
+                    font.pixelSize: Theme.fontSizeContentVeryBig
                     font.bold: true
                     color: Theme.colorSubText
                 }
@@ -61,7 +61,7 @@ Rectangle {
                     Text { // serviceType
                         anchors.verticalCenter: parent.verticalCenter
                         text: modelData.serviceType
-                        font.pixelSize: 14
+                        font.pixelSize: Theme.fontSizeComponent
                         color: Theme.colorSubText
                     }
                     IconSvg { // expandIcon
@@ -109,7 +109,7 @@ Rectangle {
 
         model: modelData.characteristicList
         delegate: BleCharacteristicWidget {
-            width: parent.width
+            width: characteristicview.width
         }
     }
 

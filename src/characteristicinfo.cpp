@@ -50,16 +50,17 @@ QString CharacteristicInfo::getName() const
 {
     QString name = m_characteristic.name();
     if (!name.isEmpty()) return name;
-/*
-    // QT6 // find descriptor with CharacteristicUserDescription
-    const QList<QLowEnergyDescriptor> descriptors = m_characteristic.descriptors();
+
+    // find descriptor with CharacteristicUserDescription
+    const QList <QLowEnergyDescriptor> descriptors = m_characteristic.descriptors();
     for (const QLowEnergyDescriptor &descriptor : descriptors) {
-        if (descriptor.type() == QBluetoothUuid::CharacteristicUserDescription) {
+        if (descriptor.type() == QBluetoothUuid::DescriptorType::CharacteristicUserDescription) {
             name = descriptor.value();
+            qDebug() << "- name from descriptor " << name;
             break;
         }
     }
-*/
+
     if (name.isEmpty())
         name = "Unknown Characteristic";
 

@@ -217,7 +217,7 @@ QVariant DeviceModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-void DeviceModel::getDevices(QList<Device *> &device)
+void DeviceModel::getDevices(QList <Device *> &device)
 {
     for (auto d: qAsConst(m_devices))
     {

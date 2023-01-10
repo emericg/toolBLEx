@@ -154,7 +154,8 @@ public:
         ACTION_CALIBRATE,
 
         ACTION_SCAN = 64,                 //!< Scan for services and their characteristics
-        ACTION_SCAN_WITH_VALUES,          //!< Scan for services and their characteristics and associated values
+        ACTION_SCAN_WITH_VALUES,          //!< Scan for services and their characteristics (and associated values)
+        ACTION_SCAN_WITHOUT_VALUES,       //!< Scan for services and their characteristics (without associated values)
 
         ACTION_REBOOT = 256,
         ACTION_SHUTDOWN,

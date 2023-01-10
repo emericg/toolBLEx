@@ -407,7 +407,10 @@ void DeviceToolBLEx::addLowEnergyService(const QBluetoothUuid &uuid)
         return;
     }
 
-    auto serv = new ServiceInfo(service);
+    QLowEnergyService::DiscoveryMode scanmode = QLowEnergyService::FullDiscovery;
+    if (m_ble_action == DeviceUtils::ACTION_SCAN_WITHOUT_VALUES) scanmode = QLowEnergyService::SkipValueDiscovery;
+
+    auto serv = new ServiceInfo(service, scanmode, this);
     m_services.append(serv);
 
     m_services_scanned = true;
