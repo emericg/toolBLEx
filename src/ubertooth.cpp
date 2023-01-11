@@ -72,7 +72,7 @@ bool Ubertooth::checkPath()
         }
 
         QProcess process;
-        process.start(path_util, QStringList("-v"), QFile::ReadOnly);
+        process.start(path_util, QStringList("-v"), QIODevice::ReadOnly);
         process.waitForFinished(8000);
 
         QString out(process.readAllStandardOutput());
@@ -116,7 +116,7 @@ bool Ubertooth::checkUbertooth()
     bool status = false;
 
     QProcess process;
-    process.start(m_path_util, QStringList("-v"), QFile::ReadOnly);
+    process.start(m_path_util, QStringList("-v"), QIODevice::ReadOnly);
     process.waitForFinished(8000);
 
     QString output(process.readAllStandardOutput());

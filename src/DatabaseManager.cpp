@@ -193,8 +193,7 @@ void DatabaseManager::resetDatabase()
         m_dbExternalOpen = false;
 
         // remove db file
-        QFile dbFile(dbName);
-        dbFile.remove();
+        QFile::remove(dbName);
     }
 }
 

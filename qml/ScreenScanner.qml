@@ -152,7 +152,7 @@ Loader {
                             opacity: settingsManager.scanShowBlacklisted ? 1 : 0.5
                             font.bold: false
 
-                            text: qsTr("blacklisted")
+                            text: qsTr("hidden")
                             onClicked: {
                                 settingsManager.scanShowBlacklisted = !settingsManager.scanShowBlacklisted
                                 deviceManager.updateBoolFilters()

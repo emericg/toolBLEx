@@ -50,7 +50,7 @@ Rectangle {
                     text: modelData.serviceName
                     font.pixelSize: Theme.fontSizeContentVeryBig
                     font.bold: true
-                    color: Theme.colorSubText
+                    color: Theme.colorText
                 }
 
                 Row {
@@ -69,7 +69,7 @@ Rectangle {
                         height: 24
                         anchors.verticalCenter: parent.verticalCenter
 
-                        color: Theme.colorSubText
+                        color: Theme.colorIcon
                         source: bleServiceWidget.extended ?
                                     "qrc:/assets/icons_material/baseline-unfold_less-24px.svg" :
                                     "qrc:/assets/icons_material/baseline-unfold_more-24px.svg"

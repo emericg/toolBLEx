@@ -59,7 +59,7 @@ Item {
         ParallelAnimation {
             alwaysRunToEnd: true
             loops: Animation.Infinite
-            running: (deviceManager.scanning && hostMenu.currentSelection === 2)
+            running: (deviceManager.scanning && !deviceManager.scanningPaused && hostMenu.currentSelection === 2)
             NumberAnimation { target: ra; property: "width"; from: 0; to: proximityRadar.width*3; duration: 2500; }
             NumberAnimation { target: ra; property: "opacity"; from: 0.85; to: 0; duration: 2500; }
         }
@@ -90,7 +90,7 @@ Item {
         anchors.fill: parent
         anchors.margins: 24
 
-        enabled: (deviceManager.scanning && hostMenu.currentSelection === 2)
+        enabled: (deviceManager.scanning && !deviceManager.scanningPaused && hostMenu.currentSelection === 2)
 
         model: deviceManager.devicesList
         delegate: Rectangle {

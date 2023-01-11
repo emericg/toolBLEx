@@ -147,6 +147,7 @@ Item {
                             else
                                 return "qrc:/assets/icons_material/duotone-settings_bluetooth-24px.svg"
                         }
+
                         onClicked: {
                             if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
                                 selectedDevice.actionScan()
@@ -161,6 +162,7 @@ Item {
                         enabled: false
                         fullColor: true
                         primaryColor: Theme.colorGrey
+
                         text: qsTr("load from cache")
                         source: "qrc:/assets/icons_material/baseline-save-24px.svg"
                         //onClicked: selectedDevice.actionScan()

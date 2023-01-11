@@ -31,7 +31,7 @@ ChartView {
     }
 
     function updateGraph() {
-        if (!deviceManager.scanning || hostMenu.currentSelection !== 3) return
+        if (!deviceManager.scanning || deviceManager.scanningPaused || hostMenu.currentSelection !== 3) return
         //console.log("rssiGraph // updateGraph()")
 
         //// AXIS
@@ -53,7 +53,7 @@ ChartView {
 
     Timer {
         interval: settingsManager.scanRssiInterval
-        running: (deviceManager.scanning && hostMenu.currentSelection === 3)
+        running: (deviceManager.scanning && !deviceManager.scanningPaused && hostMenu.currentSelection === 3)
         repeat: true
         onTriggered: updateGraph()
     }

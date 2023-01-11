@@ -107,7 +107,7 @@ Loader {
                                 color: Theme.colorBackground
 
                                 ParallelAnimation {
-                                    running: (deviceManager.scanning && appContent.state === "Settings")
+                                    running: (deviceManager.scanning && !deviceManager.scanningPaused && appContent.state === "Settings")
                                     alwaysRunToEnd: true
                                     loops: Animation.Infinite
 

@@ -429,7 +429,7 @@ Flickable {
                         fullColor: true
                         primaryColor: Theme.colorLightGrey
 
-                        text: (selectedDevice && selectedDevice.isBlacklisted) ? qsTr("whitelist") : qsTr("blacklist")
+                        text: (selectedDevice && selectedDevice.isBlacklisted) ? qsTr("show") : qsTr("hide")
                         source: (selectedDevice && selectedDevice.isBlacklisted) ?
                                     "qrc:/assets/icons_material/outline-add_circle-24px.svg" :
                                     "qrc:/assets/icons_material/baseline-cancel-24px.svg"

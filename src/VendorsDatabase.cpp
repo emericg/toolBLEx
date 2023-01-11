@@ -63,7 +63,7 @@ bool VendorsDatabase::loadDb()
         ////////
 
         QFile vendorsDB(":/vendors/mac-vendors.csv");
-        if (vendorsDB.open(QFile::ReadOnly))
+        if (vendorsDB.open(QFile::ReadOnly | QFile::Text))
         {
             QTextStream vendors(&vendorsDB);
             vendors.readLine(); // ignore first line, its the legend
@@ -140,7 +140,7 @@ bool VendorsDatabase::loadDb()
         ////////
 
         QFile serviceUuidDB(":/vendors/ble-service-uuids.csv");
-        if (serviceUuidDB.open(QFile::ReadOnly))
+        if (serviceUuidDB.open(QFile::ReadOnly | QFile::Text))
         {
             QTextStream vendors(&serviceUuidDB);
             vendors.readLine(); // ignore first line, its the legend

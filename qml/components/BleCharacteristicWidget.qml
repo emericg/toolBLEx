@@ -40,7 +40,7 @@ Rectangle {
             text: modelData.characteristicName
             font.pixelSize: Theme.fontSizeContentBig
             font.bold: true
-            color: Theme.colorSubText
+            color: Theme.colorText
         }
 
         Row {
