@@ -122,6 +122,117 @@ ChartView {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    MouseArea {
+        id: clickableGraphArea
+        anchors.fill: legend_area
+
+        enabled: false
+        acceptedButtons: (Qt.LeftButton | Qt.RightButton)
+
+        property var lastMouse1: null
+        property var lastMouse2: null
+
+        onPressed: (mouse) => {
+            if (mouse.button === Qt.LeftButton) {
+                if (lastMouse1 && lastMouse1 === Qt.point(mouse.x, mouse.y)) {
+                    lastMouse1 = null
+                    h1.visible = false
+                    v1.visible = false
+                } else {
+                    lastMouse1 = Qt.point(mouse.x, mouse.y)
+                    lastMouse2 = null
+                    moveIndicator(mouse, 1)
+                }
+            } else if (mouse.button === Qt.RightButton) {
+                if (lastMouse2 && lastMouse2 === Qt.point(mouse.x, mouse.y)) {
+                    lastMouse2 = null
+                    h2.visible = false
+                    v2.visible = false
+                } else {
+                    lastMouse1 = null
+                    lastMouse2 = Qt.point(mouse.x, mouse.y)
+                    moveIndicator(mouse, 2)
+                }
+            }
+        }
+        onPositionChanged: (mouse) => {
+           if (lastMouse1) {
+               moveIndicator(mouse, 1)
+            } else if (lastMouse2) {
+               moveIndicator(mouse, 2)
+            }
+        }
+
+        Rectangle {
+            id: h1
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 2
+            visible: false
+            color: Theme.colorYellow
+        }
+        Rectangle {
+            id: v1
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            width: 2
+            visible: false
+            color: Theme.colorYellow
+        }
+
+        Rectangle {
+            id: h2
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 2
+            visible: false
+            color: Theme.colorOrange
+        }
+        Rectangle {
+            id: v2
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            width: 2
+            visible: false
+            color: Theme.colorOrange
+        }
+    }
+
+    function hasIndicators() {
+        return (h1.visible || h2.visible)
+    }
+
+    function moveIndicator(mouse, idx) {
+        var mmm = Qt.point(mouse.x, mouse.y)
+
+        if (idx === 1) {
+            h1.visible = true
+            v1.visible = true
+            h1.y = mouse.y
+            v1.x = mouse.x
+        } else if (idx === 2) {
+            h2.visible = true
+            v2.visible = true
+            h2.y = mouse.y
+            v2.x = mouse.x
+        }
+
+        console.log("clicked " + mouse.x + " " + mouse.y)
+        console.log("freq: " + UtilsNumber.mapNumber(mouse.x, 0, width, ubertooth.freqMin, ubertooth.freqMax))
+        console.log("rssi: " + UtilsNumber.mapNumber(mouse.y, 0, height, -20, -100))
+    }
+
+    function resetIndicators() {
+        h1.visible = false
+        v1.visible = false
+        h2.visible = false
+        v2.visible = false
+        lastMouse1 = null
+        lastMouse2 = null
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
     ValueAxis {
         id: axisRSSI
         visible: true

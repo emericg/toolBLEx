@@ -40,6 +40,11 @@ Loader {
         }
 
         function backAction() {
+            if (frequencyGraph.hasIndicators()) {
+                frequencyGraph.resetIndicators()
+                return
+            }
+
             screenScanner.loadScreen()
         }
 
@@ -171,7 +176,7 @@ Loader {
                     opacity: actionBar.wifi_n ? 1 : 0.5
                     font.bold: false
 
-                    visible: actionBar.wifi
+                    visible: false // actionBar.wifi
                     text: qsTr("802.11 n")
                     onClicked: {
                         actionBar.wifi_b = false
