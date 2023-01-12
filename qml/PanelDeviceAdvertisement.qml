@@ -20,7 +20,7 @@ Flickable {
         id: columnDeviceAdvertisement
         anchors.left: parent.left
         anchors.right: parent.right
-        spacing: 20
+        spacing: 12
 
         ////////
 

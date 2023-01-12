@@ -19,12 +19,11 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#include "device_toolbox.h"
+#include "device_toolblex.h"
 #include "serviceinfo.h"
 #include "characteristicinfo.h"
 
 #include "DeviceManager.h"
-#include "VendorsDatabase.h"
 
 #include <cstdlib>
 #include <cmath>
@@ -40,6 +39,9 @@
 #include <QTextStream>
 
 #include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+
 #include <QSqlQuery>
 #include <QSqlError>
 
@@ -47,28 +49,6 @@
 #include <QTimer>
 #include <QDebug>
 
-/* ************************************************************************** */
-
-AdvertisementData::AdvertisementData(const uint16_t adv_mode, const uint16_t adv_id,
-                                     const QByteArray &data,
-                                     QObject *parent): QObject(parent)
-{
-    m_timestamp = QDateTime::currentDateTime();
-    advMode = adv_mode;
-    advUUID = adv_id;
-
-    advUUIDstr = QString::number(advUUID, 16).toUpper().rightJustified(4, '0');
-
-    VendorsDatabase *v = VendorsDatabase::getInstance();
-    if (adv_mode == DeviceUtils::BLE_ADV_MANUFACTURERDATA)
-        v->getVendor_manufacturerID(advUUIDstr, advUUIDvendor);
-    else if (adv_mode == DeviceUtils::BLE_ADV_SERVICEDATA)
-        v->getVendor_serviceUUID(advUUIDstr, advUUIDvendor);
-
-    advData = data;
-}
-
-/* ************************************************************************** */
 /* ************************************************************************** */
 
 DeviceToolBLEx::DeviceToolBLEx(const QString &deviceAddr, const QString &deviceName,
@@ -389,8 +369,44 @@ void DeviceToolBLEx::cache(bool c)
 /* ************************************************************************** */
 /* ************************************************************************** */
 
+void DeviceToolBLEx::actionScanWithValues()
+{
+    qDebug() << "DeviceToolBLEx::actionScanWithValues()" << getAddress() << getName();
+
+    if (!isBusy())
+    {
+        m_ble_action = DeviceUtils::ACTION_SCAN_WITH_VALUES;
+        actionStarted();
+        deviceConnect();
+    }
+}
+
+void DeviceToolBLEx::actionScanWithoutValues()
+{
+    qDebug() << "DeviceToolBLEx::actionScanWithoutValues()" << getAddress() << getName();
+
+    if (!isBusy())
+    {
+        m_ble_action = DeviceUtils::ACTION_SCAN_WITHOUT_VALUES;
+        actionStarted();
+        deviceConnect();
+    }
+}
+
+/* ************************************************************************** */
+
 void DeviceToolBLEx::deviceConnected()
 {
+    qDebug() << "DeviceToolBLEx::deviceConnected(" << m_deviceAddress << ")";
+
+    if (m_ble_action == DeviceUtils::ACTION_SCAN ||
+        m_ble_action == DeviceUtils::ACTION_SCAN_WITH_VALUES ||
+        m_ble_action == DeviceUtils::ACTION_SCAN_WITHOUT_VALUES)
+    {
+        qDeleteAll(m_services);
+        m_services.clear();
+    }
+
     Device::deviceConnected();
 }
 
@@ -408,12 +424,20 @@ void DeviceToolBLEx::addLowEnergyService(const QBluetoothUuid &uuid)
     }
 
     QLowEnergyService::DiscoveryMode scanmode = QLowEnergyService::FullDiscovery;
-    if (m_ble_action == DeviceUtils::ACTION_SCAN_WITHOUT_VALUES) scanmode = QLowEnergyService::SkipValueDiscovery;
+    if (m_ble_action == DeviceUtils::ACTION_SCAN_WITHOUT_VALUES)
+    {
+        m_services_scanmode = 2;
+        scanmode = QLowEnergyService::SkipValueDiscovery;
+    }
+    else if (m_ble_action == DeviceUtils::ACTION_SCAN_WITH_VALUES)
+    {
+        m_services_scanmode = 3;
+        scanmode = QLowEnergyService::FullDiscovery;
+    }
 
     auto serv = new ServiceInfo(service, scanmode, this);
     m_services.append(serv);
 
-    m_services_scanned = true;
     Q_EMIT servicesChanged();
 }
 
@@ -425,7 +449,6 @@ void DeviceToolBLEx::serviceScanDone()
 
     if (m_services.isEmpty())
     {
-        m_services_scanned = true;
         Q_EMIT servicesChanged();
     }
 
@@ -688,6 +711,110 @@ void DeviceToolBLEx::advertisementFilterUpdate()
 
 /* ************************************************************************** */
 
+bool DeviceToolBLEx::saveServiceCache()
+{
+    bool status = false;
+
+    // Services
+    QJsonArray servicesArray;
+    for (auto s: m_services)
+    {
+        ServiceInfo *srv = qobject_cast<ServiceInfo *>(s);
+        if (srv)
+        {
+            // Characteristics
+            QJsonArray characteristicsArray;
+            for (auto c: srv->characteristics())
+            {
+                CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
+                if (cst)
+                {
+                    QJsonObject characteristicObject;
+                    characteristicObject.insert("name", QJsonValue::fromVariant(cst->getName()));
+                    characteristicObject.insert("uuid", QJsonValue::fromVariant(cst->getUuidFull()));
+                    characteristicObject.insert("properties", QJsonValue::fromVariant(cst->getPropertyList()));
+
+                    characteristicsArray.append(characteristicObject);
+                }
+            }
+
+            QJsonObject serviceObject;
+            serviceObject.insert("name", QJsonValue::fromVariant(srv->getName()));
+            serviceObject.insert("uuid", QJsonValue::fromVariant(srv->getUuidFull()));
+            serviceObject.insert("type", QJsonValue::fromVariant(srv->getTypeList()));
+            serviceObject.insert("characteristics", characteristicsArray);
+
+            servicesArray.append(serviceObject);
+        }
+    }
+
+    QJsonObject root;
+    root.insert("address", QJsonValue::fromVariant(getAddress()));
+    root.insert("services", servicesArray);
+
+    // Get cache directory path
+    QString exportDirectoryPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/devices";
+    QDir exportDirectory(exportDirectoryPath);
+    if (!exportDirectory.exists())
+    {
+        exportDirectory.mkpath(exportDirectoryPath);
+    }
+
+    qDebug() << "EXPORT DIRECTORY" << exportDirectory;
+
+    if (exportDirectory.exists())
+    {
+        // Finish preping export path
+        QString exportFilePath = "/" + m_deviceAddress + ".cache";
+        exportFilePath = exportDirectoryPath + exportFilePath;
+
+        // Open file and save content
+        QFile efile(exportFilePath);
+        if (efile.open(QFile::WriteOnly | QIODevice::Text))
+        {
+            QJsonDocument cacheJsonDoc(root);
+            efile.write(cacheJsonDoc.toJson());
+            efile.close();
+
+            status = true;
+        }
+    }
+
+    return status;
+}
+
+void DeviceToolBLEx::restoreServiceCache()
+{
+    QString exportDirectoryPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    exportDirectoryPath += "/devices/" + m_deviceAddress + ".cache";
+
+    QFile file(exportDirectoryPath);
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QJsonDocument cacheJsonDoc = QJsonDocument().fromJson(file.readAll());
+        QJsonObject root = cacheJsonDoc.object();
+        file.close();
+
+        qDeleteAll(m_services);
+        m_services.clear();
+        m_services_scanmode = 1;
+
+        QJsonArray servicesArray = root["services"].toArray();
+        for (const auto &srv: servicesArray)
+        {
+            QJsonObject obj = srv.toObject();
+            qDebug() << "+ SERVICE >" << obj["name"].toString() << obj["uuid"].toString();
+
+            auto serv = new ServiceInfo(obj, this);
+            m_services.append(serv);
+        }
+
+        Q_EMIT servicesChanged();
+    }
+}
+
+/* ************************************************************************** */
+
 bool DeviceToolBLEx::exportDeviceInfo(bool withAdvertisements, bool withServices, bool withValues)
 {
     bool status = false;
@@ -708,36 +835,37 @@ bool DeviceToolBLEx::exportDeviceInfo(bool withAdvertisements, bool withServices
         if (m_advertisementData.size() == 0)
         {
             txt += "> No advertisement packets." + endl;
+            txt += endl;
         }
         else
         {
             txt += "Advertisement packets:" + endl;
-        }
 
-        for (auto adv: m_advertisementData)
-        {
-            if (adv->getMode() == DeviceUtils::BLE_ADV_MANUFACTURERDATA)
+            for (auto adv: m_advertisementData)
             {
-                txt += "> MFD > ";
-                txt += adv->getTimestamp().toString("hh:mm:ss.zzz") + " > ";
-                txt += "0x" + adv->getUUID_str() + " (" + adv->getUUID_vendor() + ")" + " > ";
-                txt += "(" + QString::number(adv->getDataSize()).rightJustified(3, ' ') + " bytes) ";
-                txt += "0x" + adv->getDataHexString();
-            }
-            else if (adv->getMode() == DeviceUtils::BLE_ADV_SERVICEDATA)
-            {
-                txt += "> SVD > ";
-                txt += adv->getTimestamp().toString("hh:mm:ss.zzz") + " > ";
-                txt += "0x" + adv->getUUID_str() + " > ";
-                txt += "(" + QString::number(adv->getDataSize()).rightJustified(3, ' ') + " bytes) ";
-                txt += "0x" + adv->getDataHexString();
-            }
-            else
-            {
-                txt += "> ??? > ";
-            }
+                if (adv->getMode() == DeviceUtils::BLE_ADV_MANUFACTURERDATA)
+                {
+                    txt += "> MFD > ";
+                    txt += adv->getTimestamp().toString("hh:mm:ss.zzz") + " > ";
+                    txt += "0x" + adv->getUUID_str() + " (" + adv->getUUID_vendor() + ")" + " > ";
+                    txt += "(" + QString::number(adv->getDataSize()).rightJustified(3, ' ') + " bytes) ";
+                    txt += "0x" + adv->getDataHexString();
+                }
+                else if (adv->getMode() == DeviceUtils::BLE_ADV_SERVICEDATA)
+                {
+                    txt += "> SVD > ";
+                    txt += adv->getTimestamp().toString("hh:mm:ss.zzz") + " > ";
+                    txt += "0x" + adv->getUUID_str() + " > ";
+                    txt += "(" + QString::number(adv->getDataSize()).rightJustified(3, ' ') + " bytes) ";
+                    txt += "0x" + adv->getDataHexString();
+                }
+                else
+                {
+                    txt += "> ??? > ";
+                }
 
-            txt += endl;
+                txt += endl;
+            }
         }
     }
 
@@ -759,7 +887,7 @@ bool DeviceToolBLEx::exportDeviceInfo(bool withAdvertisements, bool withServices
                     {
                         txt += "Characteristic Name: " + cst->getName();
                         txt += " - UUID: " + cst->getUuid();
-                        txt += " - Properties: " + cst->getPermission();
+                        txt += " - Properties: " + cst->getProperty();
                         //exp += " - Handle: " + cst->getHandle();
 
                         if (withValues)

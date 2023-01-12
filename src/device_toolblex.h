@@ -24,6 +24,7 @@
 /* ************************************************************************** */
 
 #include "device.h"
+#include "device_toolblex_adv.h"
 
 #include <QObject>
 #include <QList>
@@ -33,160 +34,6 @@
 #include <QBluetoothDeviceInfo>
 #include <QBluetoothLocalDevice>
 #include <QLowEnergyController>
-
-/* ************************************************************************** */
-
-class AdvertisementEntry: public QObject
-{
-    Q_OBJECT
-
-    Q_PROPERTY(QDateTime timestamp READ getTimestamp CONSTANT)
-    Q_PROPERTY(int rssi READ getRssi CONSTANT)
-    Q_PROPERTY(bool hasMFD READ hasMFD CONSTANT)
-    Q_PROPERTY(bool hasSVD READ hasSVD CONSTANT)
-
-    QDateTime m_timestamp;
-
-    int m_rssi = 0;
-    bool m_hasMFD = false;
-    bool m_hasSVD = false;
-
-public:
-    AdvertisementEntry(int r, bool m, bool s, QObject *parent) : QObject(parent) {
-        m_timestamp = QDateTime::currentDateTime();
-        m_rssi = r;
-        m_hasMFD = m;
-        m_hasSVD = s;
-    }
-    ~AdvertisementEntry() = default;
-
-    QDateTime getTimestamp() const { return m_timestamp; }
-    int getRssi() const { return m_rssi; }
-    bool hasMFD() const { return m_hasMFD; }
-    bool hasSVD() const { return m_hasSVD; }
-};
-
-/* ************************************************************************** */
-
-class AdvertisementUUID: public QObject
-{
-    Q_OBJECT
-    Q_PROPERTY(QString uuid READ getUuidStr CONSTANT)
-    Q_PROPERTY(bool selected READ getSelected WRITE setSelected NOTIFY selectedChanged)
-
-    uint16_t m_uuid;
-    bool m_selected = true;
-
-Q_SIGNALS:
-    void selectedChanged();
-
-public:
-    AdvertisementUUID(const uint16_t uuid, const bool selected,
-              QObject *parent = nullptr): QObject(parent) {
-        m_uuid = uuid;
-        m_selected = selected;
-    }
-    ~AdvertisementUUID() = default;
-
-    uint16_t getUuid() const { return m_uuid; }
-    QString getUuidStr() const { return QString::number(m_uuid, 16).rightJustified(4, '0'); }
-    bool getSelected() const { return m_selected; }
-    void setSelected(bool s) { if (m_selected != s) { m_selected = s; Q_EMIT selectedChanged(); } }
-};
-
-/* ************************************************************************** */
-
-class AdvertisementData: public QObject
-{
-    Q_OBJECT
-
-    Q_PROPERTY(QDateTime timestamp READ getTimestamp CONSTANT)
-    Q_PROPERTY(int advMode READ getMode CONSTANT)
-    Q_PROPERTY(int advUUID READ getUUID_int CONSTANT)
-    Q_PROPERTY(QString advUUIDstr READ getUUID_str CONSTANT)
-    Q_PROPERTY(QString advUUIDmanuf READ getUUID_vendor CONSTANT)
-
-    Q_PROPERTY(int advDataSize READ getDataSize CONSTANT)
-    Q_PROPERTY(QVariant advData READ getData CONSTANT)
-    Q_PROPERTY(QString advDataHexString READ getDataHexString CONSTANT)
-    Q_PROPERTY(QString advDataAsciiString READ getDataAsciiString CONSTANT)
-
-    Q_PROPERTY(QString advDataHexString2 READ getDataHexString2 CONSTANT)
-    Q_PROPERTY(QString advDataAsciiString2 READ getDataAsciiString2 CONSTANT)
-    Q_PROPERTY(QStringList advDataHexString3 READ getDataHexString3 CONSTANT)
-    Q_PROPERTY(QStringList advDataAsciiString3 READ getDataAsciiString3 CONSTANT)
-
-    QDateTime m_timestamp;
-    int advMode;
-    int advUUID;
-    QString advUUIDstr;
-    QString advUUIDvendor;
-    QByteArray advData;
-
-public:
-    AdvertisementData(const uint16_t adv_mode, const uint16_t adv_id,
-                      const QByteArray &data, QObject *parent);
-    ~AdvertisementData() = default;
-
-    bool compare(const QByteArray &data) { return (advData.compare(data) != 0); }
-
-    QDateTime getTimestamp() const { return m_timestamp; }
-
-    int getMode() const { return advMode; }
-
-    QString getUUID_str() const { return advUUIDstr; }
-    QString getUUID_vendor() const { return advUUIDvendor; }
-    int getUUID_int() const { return advUUID; }
-    uint16_t getUUID_uint() const { return advUUID; }
-
-    QVariant getData() const { return QVariant::fromValue(advData); }
-    int getDataSize() const { return advData.size(); }
-
-    QString getDataHexString() const { return QString::fromStdString(advData.toHex().toStdString()); }
-    QString getDataAsciiString() const { return QString::fromStdString(advData.toStdString()); }
-
-    QString getDataHexString2() const {
-        QString out;
-        for (int i = 0; i < advData.size(); i++)
-        {
-            if (!out.isEmpty()) out += " ";
-
-            QByteArray duo; duo += advData.at(i);
-            out += duo.toHex();
-        }
-        return out;
-    }
-    QString getDataAsciiString2() const {
-        QString out;
-        for (int i = 0; i < advData.size(); i++)
-        {
-            if (!out.isEmpty()) out += " ";
-
-            QByteArray duo; duo += advData.at(i);
-            out += " " + QString::fromStdString(duo.toStdString());
-        }
-        return out;
-    }
-
-    QStringList getDataHexString3() const {
-        QStringList out;
-        for (int i = 0; i < advData.size(); i++)
-        {
-            QByteArray duo; duo += advData.at(i);
-            out += duo.toHex();
-        }
-        return out;
-    }
-    QStringList getDataAsciiString3() const {
-        QStringList out;
-        for (int i = 0; i < advData.size(); i++)
-        {
-            QByteArray duo; duo += advData.at(i);
-            out += QString::fromStdString(duo.toStdString());
-        }
-        return out;
-    }
-};
 
 /* ************************************************************************** */
 
@@ -244,6 +91,7 @@ class DeviceToolBLEx: public Device
 
     // Services
     Q_PROPERTY(bool servicesScanned READ getServicesScanned NOTIFY servicesChanged)
+    Q_PROPERTY(int servicesScanMode READ getServicesScanMode NOTIFY servicesChanged)
     Q_PROPERTY(int servicesCount READ getServicesCount NOTIFY servicesChanged)
     Q_PROPERTY(QVariant servicesList READ getServices NOTIFY servicesChanged)
 
@@ -283,7 +131,7 @@ class DeviceToolBLEx: public Device
     QList <AdvertisementData *> m_mfd;
     QList <AdvertisementUUID *> m_mfd_uuid;
 
-    bool m_services_scanned = false;
+    int m_services_scanmode = 0; //!< 0: not scanned, 1: cache, 2: scan, 3: scan with values
     QList <QObject *> m_services;
 
     QVariant getLastServiceData() const { if (m_svd.empty()) return QVariant(); return QVariant::fromValue(m_svd.last()); }
@@ -338,7 +186,8 @@ public:
     // toolBLEx
     QVariant getServices() const { return QVariant::fromValue(m_services); }
     int getServicesCount() const { return m_services.count(); }
-    bool getServicesScanned() const { return m_services_scanned; }
+    bool getServicesScanned() const { return (m_services_scanmode > 0); }
+    int getServicesScanMode() const { return m_services_scanmode; }
 
     int getAdvertisedServicesCount() const { return m_advertised_services.count(); }
     QStringList getAdvertisedServices() const { return m_advertised_services; };
@@ -399,6 +248,12 @@ public:
     Q_INVOKABLE void mfdFilterUpdate();
     Q_INVOKABLE void svdFilterUpdate();
     Q_INVOKABLE void advertisementFilterUpdate();
+
+    Q_INVOKABLE void actionScanWithValues();
+    Q_INVOKABLE void actionScanWithoutValues();
+
+    Q_INVOKABLE bool saveServiceCache();
+    Q_INVOKABLE void restoreServiceCache();
 
     Q_INVOKABLE bool exportDeviceInfo(bool withAdvertisements = true, bool withServices = true, bool withValues = true);
 };

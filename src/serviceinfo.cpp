@@ -24,6 +24,7 @@
 
 #include <QBluetoothServiceInfo>
 #include <QLowEnergyCharacteristic>
+#include <QJsonArray>
 
 #include <QTimer>
 #include <QDebug>
@@ -34,12 +35,37 @@ ServiceInfo::ServiceInfo(QLowEnergyService *service,
                          QLowEnergyService::DiscoveryMode scanmode,
                          QObject *parent) : QObject(parent)
 {
-    m_service = service;
-    m_service->setParent(this);
+    if (service)
+    {
+        // Make sure we won't use the cache
+        m_service_cache.empty();
+        qDeleteAll(m_characteristics);
+        m_characteristics.clear();
 
-    m_scanmode = scanmode;
+        // Set and connect to the BLE service
+        m_service = service;
+        m_service->setParent(this);
+        connectToService(scanmode);
+    }
+}
 
-    connectToService();
+ServiceInfo::ServiceInfo(const QJsonObject &servicecache,
+                         QObject *parent) : QObject(parent)
+{
+    if (!m_service)
+    {
+        m_service_cache = servicecache;
+
+        QJsonArray characteristicsArray = m_service_cache["characteristics"].toArray();
+        for (const auto &car: characteristicsArray)
+        {
+            QJsonObject obj = car.toObject();
+            qDebug() << "+ CHARACTERISTIC >" << obj["name"].toString() << obj["uuid"].toString();
+
+            auto cInfo = new CharacteristicInfo(obj, this);
+            m_characteristics.append(cInfo);
+        }
+    }
 }
 
 ServiceInfo::~ServiceInfo()
@@ -60,58 +86,9 @@ const QList <QObject *> ServiceInfo::characteristics() const
     return m_characteristics;
 }
 
-QString ServiceInfo::getName() const
-{
-    if (!m_service) return QString();
-
-    return m_service->serviceName();
-}
-
-QString ServiceInfo::getType() const
-{
-    if (!m_service) return QString();
-
-    QString result;
-    if (m_service->type() & QLowEnergyService::PrimaryService)
-        result += QStringLiteral("primary");
-    else
-        result += QStringLiteral("secondary");
-
-    if (m_service->type() & QLowEnergyService::IncludedService)
-        result += QStringLiteral(" included");
-
-    result.prepend('<').append('>');
-
-    return result;
-}
-
-QString ServiceInfo::getUuid() const
-{
-    if (!m_service) return QString();
-
-    const QBluetoothUuid uuid = m_service->serviceUuid();
-    bool success = false;
-
-    quint16 result16 = uuid.toUInt16(&success);
-    if (success)
-        return QStringLiteral("0x") + QString::number(result16, 16).toUpper().rightJustified(4, '0');
-
-    quint32 result32 = uuid.toUInt32(&success);
-    if (success)
-        return QStringLiteral("0x") + QString::number(result32, 16).toUpper().rightJustified(8, '0');
-
-    return uuid.toString().toUpper().remove(QLatin1Char('{')).remove(QLatin1Char('}'));
-}
-
-QString ServiceInfo::getUuidFull() const
-{
-    if (!m_service) return QString();
-    return m_service->serviceUuid().toString().toUpper();
-}
-
 /* ************************************************************************** */
 
-void ServiceInfo::connectToService()
+void ServiceInfo::connectToService(QLowEnergyService::DiscoveryMode scanmode)
 {
     QLowEnergyService *service = m_service;
 
@@ -121,16 +98,15 @@ void ServiceInfo::connectToService()
     if (service->state() == QLowEnergyService::RemoteService)
     {
         connect(service, &QLowEnergyService::stateChanged, this, &ServiceInfo::serviceDetailsDiscovered);
-        QTimer::singleShot(0, [=] () { service->discoverDetails(m_scanmode); });
-
+        QTimer::singleShot(0, [=] () { service->discoverDetails(scanmode); });
         return;
     }
 
     // discovery already done
     const QList <QLowEnergyCharacteristic> chars = service->characteristics();
-    for (const QLowEnergyCharacteristic &ch : chars)
+    for (const QLowEnergyCharacteristic &ch: chars)
     {
-        auto cInfo = new CharacteristicInfo(ch);
+        auto cInfo = new CharacteristicInfo(ch, this);
         m_characteristics.append(cInfo);
     }
 
@@ -154,17 +130,135 @@ void ServiceInfo::serviceDetailsDiscovered(QLowEnergyService::ServiceState newSt
     }
 
     auto service = qobject_cast<QLowEnergyService *>(sender());
-    if (!service)
-        return;
+    if (!service) return;
 
     const QList <QLowEnergyCharacteristic> chars = service->characteristics();
-    for (const QLowEnergyCharacteristic &ch : chars)
+    for (const QLowEnergyCharacteristic &ch: chars)
     {
-        auto cInfo = new CharacteristicInfo(ch);
+        auto cInfo = new CharacteristicInfo(ch, this);
         m_characteristics.append(cInfo);
     }
 
     Q_EMIT characteristicsUpdated();
+}
+
+/* ************************************************************************** */
+
+QString ServiceInfo::getName() const
+{
+    if (m_service)
+    {
+        return m_service->serviceName();
+    }
+    else if (!m_service_cache.isEmpty())
+    {
+        return m_service_cache["name"].toString();
+    }
+
+    return QString();
+}
+
+QString ServiceInfo::getType() const
+{
+    QString result;
+
+    if (m_service)
+    {
+        if (m_service->type() & QLowEnergyService::PrimaryService)
+            result += QStringLiteral("primary");
+        else
+            result += QStringLiteral("secondary");
+
+        if (m_service->type() & QLowEnergyService::IncludedService)
+            result += QStringLiteral(" included");
+
+        result.prepend('<').append('>');
+        return result;
+    }
+    else if (!m_service_cache.isEmpty())
+    {
+        QJsonArray types = m_service_cache["type"].toArray();
+        for (const auto &t: types)
+        {
+            if (!result.isEmpty()) result += QStringLiteral(" ");
+            result += t.toString();
+        }
+    }
+
+    return result;
+}
+
+QStringList ServiceInfo::getTypeList() const
+{
+    QStringList tlist;
+
+    if (m_service)
+    {
+        uint tflag = m_service->type();
+
+        if (tflag & QLowEnergyService::PrimaryService)
+        {
+            tlist += QStringLiteral("primary");
+        }
+        else
+        {
+            tlist += QStringLiteral("primary");
+        }
+        if (tflag & QLowEnergyService::IncludedService)
+        {
+            tlist += QStringLiteral("included");
+        }
+    }
+    else if (!m_service_cache.isEmpty())
+    {
+        QJsonArray types = m_service_cache["type"].toArray();
+        for (const auto &t: types)
+        {
+            tlist += t.toString();
+        }
+    }
+
+    return tlist;
+}
+
+QString ServiceInfo::getUuid() const
+{
+    QBluetoothUuid uuid;
+
+    if (m_service)
+    {
+        uuid = m_service->serviceUuid();
+    }
+    else if (!m_service_cache.isEmpty())
+    {
+        uuid = QBluetoothUuid(m_service_cache["uuid"].toString());
+    }
+
+    bool success = false;
+
+    quint16 result16 = uuid.toUInt16(&success);
+    if (success)
+        return QStringLiteral("0x") + QString::number(result16, 16).toUpper().rightJustified(4, '0');
+
+    quint32 result32 = uuid.toUInt32(&success);
+    if (success)
+        return QStringLiteral("0x") + QString::number(result32, 16).toUpper().rightJustified(8, '0');
+
+    return uuid.toString().toUpper().remove(QLatin1Char('{')).remove(QLatin1Char('}'));
+}
+
+QString ServiceInfo::getUuidFull() const
+{
+    if (m_service)
+    {
+        return m_service->serviceUuid().toString().toUpper();
+    }
+    else if (!m_service_cache.isEmpty())
+    {
+        return m_service_cache["uuid"].toString();
+    }
+
+    return QString();
 }
 
 /* ************************************************************************** */

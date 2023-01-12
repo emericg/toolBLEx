@@ -23,7 +23,12 @@
 #define SERVICE_INFO_H
 /* ****************************************************************************/
 
-#include <QtBluetooth/QLowEnergyService>
+#include <QObject>
+#include <QString>
+#include <QStringList>
+
+#include <QLowEnergyService>
+#include <QJsonObject>
 
 /* ****************************************************************************/
 
@@ -35,17 +40,21 @@ class ServiceInfo: public QObject
     Q_PROPERTY(QString serviceUuid READ getUuid NOTIFY serviceUpdated)
     Q_PROPERTY(QString serviceUuidFull READ getUuidFull NOTIFY serviceUpdated)
     Q_PROPERTY(QString serviceType READ getType NOTIFY serviceUpdated)
+    Q_PROPERTY(QStringList serviceTypeList READ getTypeList NOTIFY serviceUpdated)
 
     Q_PROPERTY(QVariant characteristicList READ getCharacteristics NOTIFY characteristicsUpdated)
 
-    QLowEnergyService::DiscoveryMode m_scanmode = QLowEnergyService::FullDiscovery;
+    ////
 
     QLowEnergyService *m_service = nullptr;
+    void connectToService(QLowEnergyService::DiscoveryMode scanmode);
 
     QList <QObject *> m_characteristics;
     QVariant getCharacteristics() { return QVariant::fromValue(m_characteristics); }
 
-    void connectToService();
+    ////
+
+    QJsonObject m_service_cache;
 
 Q_SIGNALS:
     void serviceUpdated();
@@ -56,9 +65,8 @@ private slots:
 
 public:
     ServiceInfo() = default;
-    ServiceInfo(QLowEnergyService *service,
-                QLowEnergyService::DiscoveryMode scanmode,
-                QObject *parent = nullptr);
+    ServiceInfo(QLowEnergyService *service, QLowEnergyService::DiscoveryMode scanmode, QObject *parent);
+    ServiceInfo(const QJsonObject &servicecache, QObject *parent);
     ~ServiceInfo();
 
     const QLowEnergyService *service() const;
@@ -68,6 +76,7 @@ public:
     QString getUuidFull() const;
     QString getName() const;
     QString getType() const;
+    QStringList getTypeList() const;
 };
 
 /* ****************************************************************************/

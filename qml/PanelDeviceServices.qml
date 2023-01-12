@@ -78,6 +78,13 @@ Item {
 */
     ////////
 
+    function resetButtons() {
+        exportButton.text = qsTr("Export")
+        exportButton.primaryColor = Theme.colorGrey
+    }
+
+    ////////
+
     Column {
         anchors.left: parent.left
         anchors.right: parent.right
@@ -159,13 +166,15 @@ Item {
                     ButtonWireframeIcon {
                         anchors.verticalCenter: parent.verticalCenter
 
-                        enabled: false
                         fullColor: true
-                        primaryColor: Theme.colorGrey
+                        primaryColor: Theme.colorLightGrey
 
                         text: qsTr("load from cache")
                         source: "qrc:/assets/icons_material/baseline-save-24px.svg"
-                        //onClicked: selectedDevice.actionScan()
+
+                        onClicked: {
+                            selectedDevice.restoreServiceCache()
+                        }
                     }
                 }
             }
@@ -182,11 +191,6 @@ Item {
         clip: false
         visible: (selectedDevice && selectedDevice.servicesCount > 0)
 
-        onCountChanged: {
-            exportButton.text = qsTr("Export")
-            exportButton.primaryColor = Theme.colorGrey
-        }
-
         model: (selectedDevice && selectedDevice.servicesList)
         delegate: BleServiceWidget {
             width: servicesView.width
@@ -195,25 +199,47 @@ Item {
 
     ////////
 
-    ButtonWireframeIcon {
-        id: exportButton
+    Row {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.margins: -4
+        spacing: 8
 
-        visible: (selectedDevice && selectedDevice.servicesCount > 0)
+        ButtonWireframeIcon {
+            id: cacheButton
+            fullColor: true
+            primaryColor: Theme.colorLightGrey
 
-        fullColor: true
-        primaryColor: Theme.colorGrey
-        text: qsTr("Export")
-        source: "qrc:/assets/icons_material/baseline-save-24px.svg"
-        onClicked: {
-            if (selectedDevice.exportDeviceInfo()) {
-                exportButton.text = qsTr("Exported")
-                exportButton.primaryColor = Theme.colorSuccess
-            } else {
-                exportButton.text = qsTr("Export error")
-                exportButton.primaryColor = Theme.colorWarning
+            visible: (selectedDevice && selectedDevice.servicesCount > 1)
+            enabled: (selectedDevice && selectedDevice.servicesScanMode > 1)
+
+            text: qsTr("Cache")
+            source: "qrc:/assets/icons_material/baseline-save-24px.svg"
+
+            onClicked: {
+                selectedDevice.saveServiceCache()
+            }
+        }
+
+        ButtonWireframeIcon {
+            id: exportButton
+            fullColor: true
+            primaryColor: Theme.colorGrey
+
+            visible: (selectedDevice && selectedDevice.servicesCount > 0)
+            enabled: (selectedDevice && selectedDevice.servicesScanMode > 1)
+
+            text: qsTr("Export")
+            source: "qrc:/assets/icons_material/baseline-save-24px.svg"
+
+            onClicked: {
+                if (selectedDevice.exportDeviceInfo()) {
+                    exportButton.text = qsTr("Exported")
+                    exportButton.primaryColor = Theme.colorSuccess
+                } else {
+                    exportButton.text = qsTr("Export error")
+                    exportButton.primaryColor = Theme.colorWarning
+                }
             }
         }
     }

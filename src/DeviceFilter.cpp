@@ -23,7 +23,7 @@
 #include "SettingsManager.h"
 
 #include "device.h"
-#include "device_toolbox.h"
+#include "device_toolblex.h"
 
 #include <cstdlib>
 #include <cmath>

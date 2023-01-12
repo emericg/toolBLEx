@@ -23,20 +23,27 @@
 
 #include <QBluetoothUuid>
 #include <QByteArray>
+#include <QJsonArray>
 #include <QDebug>
 
 /* ************************************************************************** */
 
-CharacteristicInfo::CharacteristicInfo(const QLowEnergyCharacteristic &characteristic):
-    m_characteristic(characteristic)
+CharacteristicInfo::CharacteristicInfo(const QLowEnergyCharacteristic &characteristic,
+                                       QObject *parent) : QObject(parent)
 {
-    //
+    if (characteristic.isValid())
+    {
+        m_characteristic = characteristic;
+    }
 }
 
-void CharacteristicInfo::setCharacteristic(const QLowEnergyCharacteristic &characteristic)
+CharacteristicInfo::CharacteristicInfo(const QJsonObject &characteristiccache,
+                                       QObject *parent) : QObject(parent)
 {
-    m_characteristic = characteristic;
-    Q_EMIT characteristicChanged();
+    if (!m_characteristic.isValid())
+    {
+        m_characteristic_cache = characteristiccache;
+    }
 }
 
 /* ************************************************************************** */
@@ -46,30 +53,67 @@ QLowEnergyCharacteristic CharacteristicInfo::getCharacteristic() const
     return m_characteristic;
 }
 
+void CharacteristicInfo::setCharacteristic(const QLowEnergyCharacteristic &characteristic)
+{
+    if (characteristic.isValid())
+    {
+        // Make sure we won't use the cache
+        m_characteristic_cache.empty();
+
+        // Set the BLE characteristic
+        m_characteristic = characteristic;
+        Q_EMIT characteristicChanged();
+    }
+}
+
+/* ************************************************************************** */
+
 QString CharacteristicInfo::getName() const
 {
-    QString name = m_characteristic.name();
-    if (!name.isEmpty()) return name;
+    QString name;
 
-    // find descriptor with CharacteristicUserDescription
-    const QList <QLowEnergyDescriptor> descriptors = m_characteristic.descriptors();
-    for (const QLowEnergyDescriptor &descriptor : descriptors) {
-        if (descriptor.type() == QBluetoothUuid::DescriptorType::CharacteristicUserDescription) {
-            name = descriptor.value();
-            qDebug() << "- name from descriptor " << name;
-            break;
+    if (m_characteristic.isValid())
+    {
+        name = m_characteristic.name();
+        if (!name.isEmpty()) return name;
+
+        // find descriptor with CharacteristicUserDescription
+        const QList <QLowEnergyDescriptor> descriptors = m_characteristic.descriptors();
+        for (const QLowEnergyDescriptor &descriptor: descriptors)
+        {
+            if (descriptor.type() == QBluetoothUuid::DescriptorType::CharacteristicUserDescription)
+            {
+                name = descriptor.value();
+                qDebug() << "- name from descriptor " << name;
+                break;
+            }
         }
+    }
+    else if (!m_characteristic_cache.isEmpty())
+    {
+        name = m_characteristic_cache[name].toString();
     }
 
     if (name.isEmpty())
-        name = "Unknown Characteristic";
+    {
+        name = QStringLiteral("Unknown Characteristic");
+    }
 
     return name;
 }
 
 QString CharacteristicInfo::getUuid() const
 {
-    const QBluetoothUuid uuid = m_characteristic.uuid();
+    QBluetoothUuid uuid;
+
+    if (m_characteristic.isValid())
+    {
+        uuid = m_characteristic.uuid();
+    }
+    else if (!m_characteristic_cache.isEmpty())
+    {
+        uuid = QBluetoothUuid(m_characteristic_cache["uuid"].toString());
+    }
 
     bool success = false;
 
@@ -86,117 +130,161 @@ QString CharacteristicInfo::getUuid() const
 
 QString CharacteristicInfo::getUuidFull() const
 {
-    return m_characteristic.uuid().toString().toUpper();
+    QBluetoothUuid uuid;
+
+    if (m_characteristic.isValid())
+    {
+        uuid = m_characteristic.uuid();
+    }
+    else if (!m_characteristic_cache.isEmpty())
+    {
+        uuid = QBluetoothUuid(m_characteristic_cache["uuid"].toString());
+    }
+
+    return uuid.toString().toUpper();
 }
 
 QString CharacteristicInfo::getHandle() const
 {
-    QByteArray v;
-    //v.setNum(m_characteristic.handle());
-    const quint8 *data = reinterpret_cast<const quint8 *>(v.constData());
-/*
-    qDebug() << "- size " << v.size();
-    qDebug() << "- part1 " << QString::number(data[1], 16).rightJustified(2, '0', false);
-    qDebug() << "- part0 " << QString::number(data[0], 16).rightJustified(2, '0', false);
-*/
-    if (v.size() == 1 || data[1] == 0)
-        return QStringLiteral("0x") +
-                QString::number(data[0], 16).rightJustified(2, '0', false);
+    return QString();
+}
 
-    return QStringLiteral("0x") +
-            QString::number(data[1], 16).rightJustified(2, '0', false) +
-            QString::number(data[0], 16).rightJustified(2, '0', false);
+/* ************************************************************************** */
+
+QString CharacteristicInfo::getProperty() const
+{
+    QString properties;
+
+    if (m_characteristic.isValid())
+    {
+        uint pflag = m_characteristic.properties();
+
+        if (pflag & QLowEnergyCharacteristic::Broadcasting)
+        {
+            if (!properties.isEmpty()) properties += " / ";
+            properties += QStringLiteral("Broadcast");
+        }
+        if (pflag & QLowEnergyCharacteristic::Read)
+        {
+            if (!properties.isEmpty()) properties += " / ";
+            properties += QStringLiteral("Read");
+        }
+        if (pflag & QLowEnergyCharacteristic::WriteNoResponse)
+        {
+            if (!properties.isEmpty()) properties += " / ";
+            properties += QStringLiteral("WriteNoResp");
+        }
+        if (pflag & QLowEnergyCharacteristic::Write)
+        {
+            if (!properties.isEmpty()) properties += " / ";
+            properties += QStringLiteral("Write");
+        }
+        if (pflag & QLowEnergyCharacteristic::Notify)
+        {
+            if (!properties.isEmpty()) properties += " / ";
+            properties += QStringLiteral("Notify");
+        }
+        if (pflag & QLowEnergyCharacteristic::Indicate)
+        {
+            if (!properties.isEmpty()) properties += " / ";
+            properties += QStringLiteral("Indicate");
+        }
+        if (pflag & QLowEnergyCharacteristic::WriteSigned)
+        {
+            if (!properties.isEmpty()) properties += " / ";
+            properties += QStringLiteral("WriteSigned");
+        }
+        if (pflag & QLowEnergyCharacteristic::ExtendedProperty)
+        {
+            if (!properties.isEmpty()) properties += " / ";
+            properties += QStringLiteral("ExtendedProperty");
+        }
+    }
+    else if (!m_characteristic_cache.isEmpty())
+    {
+        QJsonArray props = m_characteristic_cache["properties"].toArray();
+        for (const auto &p: props)
+        {
+            if (!properties.isEmpty()) properties += " / ";
+            properties += p.toString();
+        }
+    }
+
+    // TODO // Extended Properties
+    // Queued Write
+    // Writable Auxiliaries
+
+    return properties;
+}
+
+QStringList CharacteristicInfo::getPropertyList() const
+{
+    QStringList plist;
+
+    if (m_characteristic.isValid())
+    {
+        uint pflag = m_characteristic.properties();
+
+        if (pflag & QLowEnergyCharacteristic::Broadcasting)
+        {
+            plist += QStringLiteral("Broadcast");
+        }
+        if (pflag & QLowEnergyCharacteristic::Read)
+        {
+            plist += QStringLiteral("Read");
+        }
+        if (pflag & QLowEnergyCharacteristic::WriteNoResponse)
+        {
+            plist += QStringLiteral("WriteNoResp");
+        }
+        if (pflag & QLowEnergyCharacteristic::Write)
+        {
+            plist += QStringLiteral("Write");
+        }
+        if (pflag & QLowEnergyCharacteristic::Notify)
+        {
+            plist += QStringLiteral("Notify");
+        }
+        if (pflag & QLowEnergyCharacteristic::Indicate)
+        {
+            plist += QStringLiteral("Indicate");
+        }
+        if (pflag & QLowEnergyCharacteristic::WriteSigned)
+        {
+            plist += QStringLiteral("WriteSigned");
+        }
+        if (pflag & QLowEnergyCharacteristic::ExtendedProperty)
+        {
+            plist += QStringLiteral("ExtendedProperty");
+        }
+    }
+    else if (!m_characteristic_cache.isEmpty())
+    {
+        QJsonArray props = m_characteristic_cache["properties"].toArray();
+        for (const auto &t: props)
+        {
+            plist += t.toString();
+        }
+    }
+
+    // TODO // Extended Properties
+    // Queued Write
+    // Writable Auxiliaries
+
+    return plist;
 }
 
 QString CharacteristicInfo::getPermission() const
 {
-    uint permission = m_characteristic.properties();
-    QString properties;
-
-    if (permission & QLowEnergyCharacteristic::Read)
-    {
-        if (!properties.isEmpty()) properties += " / ";
-        properties += QStringLiteral("Read");
-    }
-    if (permission & QLowEnergyCharacteristic::Write)
-    {
-        if (!properties.isEmpty()) properties += " / ";
-        properties += QStringLiteral("Write");
-    }
-    if (permission & QLowEnergyCharacteristic::Notify)
-    {
-        if (!properties.isEmpty()) properties += " / ";
-        properties += QStringLiteral("Notify");
-    }
-    if (permission & QLowEnergyCharacteristic::Indicate)
-    {
-        if (!properties.isEmpty()) properties += " / ";
-        properties += QStringLiteral("Indicate");
-    }
-    if (permission & QLowEnergyCharacteristic::ExtendedProperty)
-    {
-        if (!properties.isEmpty()) properties += " / ";
-        properties += QStringLiteral("ExtendedProperty");
-    }
-    if (permission & QLowEnergyCharacteristic::Broadcasting)
-    {
-        if (!properties.isEmpty()) properties += " / ";
-        properties += QStringLiteral("Broadcast");
-    }
-    if (permission & QLowEnergyCharacteristic::WriteNoResponse)
-    {
-        if (!properties.isEmpty()) properties += " / ";
-        properties += QStringLiteral("WriteNoResp");
-    }
-    if (permission & QLowEnergyCharacteristic::WriteSigned)
-    {
-        if (!properties.isEmpty()) properties += " / ";
-        properties += QStringLiteral("WriteSigned");
-    }
-
-    return properties;
+    return QString();
 }
 
 QStringList CharacteristicInfo::getPermissionList() const
 {
-    uint permission = m_characteristic.properties();
-    QStringList properties;
-
-    if (permission & QLowEnergyCharacteristic::Read)
-    {
-        properties += QStringLiteral("Read");
-    }
-    if (permission & QLowEnergyCharacteristic::Write)
-    {
-        properties += QStringLiteral("Write");
-    }
-    if (permission & QLowEnergyCharacteristic::Notify)
-    {
-        properties += QStringLiteral("Notify");
-    }
-    if (permission & QLowEnergyCharacteristic::Indicate)
-    {
-        properties += QStringLiteral("Indicate");
-    }
-    if (permission & QLowEnergyCharacteristic::ExtendedProperty)
-    {
-        properties += QStringLiteral("ExtendedProperty");
-    }
-    if (permission & QLowEnergyCharacteristic::Broadcasting)
-    {
-        properties += QStringLiteral("Broadcast");
-    }
-    if (permission & QLowEnergyCharacteristic::WriteNoResponse)
-    {
-        properties += QStringLiteral("WriteNoResp");
-    }
-    if (permission & QLowEnergyCharacteristic::WriteSigned)
-    {
-        properties += QStringLiteral("WriteSigned");
-    }
-
-    return properties;
+    return QStringList();
 }
+
+/* ************************************************************************** */
 
 QString CharacteristicInfo::getValue() const
 {
@@ -219,36 +307,26 @@ QString CharacteristicInfo::getValue() const
 
 QString CharacteristicInfo::getValueStr() const
 {
-    // Show raw string first and hex value below
     QByteArray a = m_characteristic.value();
 
-    QString result;
     if (a.isEmpty())
     {
-        result = QStringLiteral("<none>");
-        return result;
+        return QStringLiteral("<none>");
     }
 
-    result = a;
-
-    return result;
+    return a;
 }
 
 QString CharacteristicInfo::getValueHex() const
 {
-    // Show raw string first and hex value below
     QByteArray a = m_characteristic.value();
 
-    QString result;
     if (a.isEmpty())
     {
-        result = QStringLiteral("<none>");
-        return result;
+        return QStringLiteral("<none>");
     }
 
-    result = a.toHex().toUpper();
-
-    return result;
+    return a.toHex().toUpper();
 }
 
 /* ************************************************************************** */

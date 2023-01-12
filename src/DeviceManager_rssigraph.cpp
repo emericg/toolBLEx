@@ -20,7 +20,7 @@
  */
 
 #include "DeviceManager.h"
-#include "device_toolbox.h"
+#include "device_toolblex.h"
 
 #include <QList>
 #include <QDateTime>

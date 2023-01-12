@@ -27,7 +27,7 @@ Flickable {
         id: inflow
         anchors.left: parent.left
         anchors.right: parent.right
-        spacing: 20
+        spacing: 12
 
         ////////
 
@@ -390,9 +390,90 @@ Flickable {
             color: Theme.colorBox
             border.width: 2
             border.color: Theme.colorBoxBorder
+            visible: (selectedDevice && selectedDevice.isLowEnergy)
 
             Column {
                 id: boxA
+                width: parent.width - 32
+                anchors.centerIn: parent
+                spacing: 12
+
+                Flow { // status row
+                    width: parent.width
+                    spacing: 12
+                }
+
+                Flow { // buttons row
+                    width: parent.width
+                    spacing: 12
+
+                    ButtonWireframeIcon {
+                        fullColor: true
+                        text: {
+                            if (!selectedDevice) return ""
+                            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
+                                return qsTr("scan services")
+                            else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
+                                return qsTr("connecting...")
+                            else if (selectedDevice.status === DeviceUtils.DEVICE_WORKING)
+                                return qsTr("scanning...")
+                            else if (selectedDevice.status >= DeviceUtils.DEVICE_CONNECTED)
+                                return qsTr("disconnect")
+                        }
+                        source: {
+                            if (!selectedDevice) return ""
+                            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
+                                return "qrc:/assets/icons_material/baseline-bluetooth-24px.svg"
+                            else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
+                                return "qrc:/assets/icons_material/duotone-bluetooth_connected-24px.svg"
+                            else if (selectedDevice.status === DeviceUtils.DEVICE_WORKING)
+                                return "qrc:/assets/icons_material/duotone-bluetooth_searching-24px.svg"
+                            else
+                                return "qrc:/assets/icons_material/duotone-settings_bluetooth-24px.svg"
+                        }
+                        onClicked: {
+                            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
+                                selectedDevice.actionScanWithValues()
+                        }
+                    }
+
+                    ButtonWireframeIcon {
+                        id: exportButton
+                        fullColor: true
+                        primaryColor: Theme.colorGrey
+
+                        //enabled: (selectedDevice && selectedDevice.servicesCount > 0)
+                        text: qsTr("export available data")
+                        source: "qrc:/assets/icons_material/baseline-save-24px.svg"
+
+                        onClicked: {
+                            if (selectedDevice.exportDeviceInfo()) {
+                                exportButton.text = qsTr("Exported")
+                                exportButton.primaryColor = Theme.colorSuccess
+                            } else {
+                                exportButton.text = qsTr("Export error")
+                                exportButton.primaryColor = Theme.colorWarning
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        ////////
+
+        Rectangle {
+            width: detailView.ww
+            height: boxB.height + 32
+            radius: 4
+
+            clip: false
+            color: Theme.colorBox
+            border.width: 2
+            border.color: Theme.colorBoxBorder
+
+            Column {
+                id: boxB
                 width: parent.width - 32
                 anchors.centerIn: parent
                 spacing: 12

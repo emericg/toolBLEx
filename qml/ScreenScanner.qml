@@ -46,7 +46,7 @@ Loader {
 
         onSelectedDeviceChanged: {
             if (selectedDevice) {
-                panelDevice.checkMenuSelection()
+                panelDevice.resetState()
             }
         }
 

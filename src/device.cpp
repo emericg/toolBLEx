@@ -226,30 +226,6 @@ void Device::actionScan()
     }
 }
 
-void Device::actionScanWithValues()
-{
-    qDebug() << "Device::actionScanWithValues()" << getAddress() << getName();
-
-    if (!isBusy())
-    {
-        m_ble_action = DeviceUtils::ACTION_SCAN_WITH_VALUES;
-        actionStarted();
-        deviceConnect();
-    }
-}
-
-void Device::actionScanWithoutValues()
-{
-    qDebug() << "Device::actionScanWithoutValues()" << getAddress() << getName();
-
-    if (!isBusy())
-    {
-        m_ble_action = DeviceUtils::ACTION_SCAN_WITHOUT_VALUES;
-        actionStarted();
-        deviceConnect();
-    }
-}
-
 /* ************************************************************************** */
 
 void Device::refreshQueued()

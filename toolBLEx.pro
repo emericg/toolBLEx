@@ -40,7 +40,8 @@ SOURCES  += src/main.cpp \
             src/ubertooth.cpp \
             src/adapter.cpp \
             src/device.cpp \
-            src/device_toolbox.cpp \
+            src/device_toolblex.cpp \
+            src/device_toolblex_adv.cpp \
             src/serviceinfo.cpp \
             src/characteristicinfo.cpp
 
@@ -54,7 +55,8 @@ HEADERS  += src/SettingsManager.h \
             src/adapter.h \
             src/device.h \
             src/device_utils.h \
-            src/device_toolbox.h \
+            src/device_toolblex.h \
+            src/device_toolblex_adv.h \
             src/serviceinfo.h \
             src/characteristicinfo.h
 

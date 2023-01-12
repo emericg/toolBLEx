@@ -35,9 +35,8 @@ Rectangle {
 
         spacing: 4
 
-        Text {
-            id: characteristicName
-            text: modelData.characteristicName
+        Text { // characteristic name
+            text: modelData.name
             font.pixelSize: Theme.fontSizeContentBig
             font.bold: true
             color: Theme.colorText
@@ -51,47 +50,13 @@ Rectangle {
                 font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorSubText
             }
-            TextSelectable {
-                id: characteristicUuid
-                text: modelData.characteristicUuid
-                font.pixelSize: Theme.fontSizeContent
-                //font.capitalization: Font.AllUppercase
-                color: Theme.colorText
-            }
-        }
-/*
-        Row {
-            spacing: 4
-
-            Text {
-                text: qsTr("HANDLE:")
-                font.pixelSize: Theme.fontSizeContent
-                color: Theme.colorSubText
-            }
-            Text {
-                id: characteristicHandle
-                text: modelData.characteristicHandle
+            TextSelectable { // characteristic uuid
+                text: modelData.uuid_full
                 font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorText
             }
         }
 
-        Row {
-            spacing: 4
-
-            Text {
-                text: qsTr("Properties:")
-                font.pixelSize: Theme.fontSizeContent
-                color: Theme.colorSubText
-            }
-            Text {
-                id: characteristicPermission
-                text: modelData.characteristicPermission
-                font.pixelSize: Theme.fontSizeContent
-                color: Theme.colorText
-            }
-        }
-*/
         Row {
             spacing: 4
 
@@ -101,9 +66,9 @@ Rectangle {
                 font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorSubText
             }
-            Repeater {
+            Repeater { // characteristic properties
                 anchors.verticalCenter: parent.verticalCenter
-                model: modelData.characteristicPermissionList
+                model: modelData.propertiesList
                 ItemTag {
                     anchors.verticalCenter: parent.verticalCenter
                     text: modelData
@@ -138,7 +103,7 @@ Rectangle {
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignTop | Qt.AlignBaseline
 
-                text: modelData.characteristicValueHex
+                text: modelData.valueHex
                 font.pixelSize: Theme.fontSizeContent
                 font.family: fontMonospace
                 wrapMode: Text.WrapAnywhere
@@ -151,7 +116,7 @@ Rectangle {
             anchors.right: parent.right
             spacing: 4
 
-            visible: modelData.characteristicValueStr.length
+            visible: modelData.valueStr.length
 
             Text {
                 id: t2
@@ -166,10 +131,9 @@ Rectangle {
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignTop | Qt.AlignBaseline
 
-                text: modelData.characteristicValueStr
+                text: modelData.valueStr
                 color: Theme.colorText
                 wrapMode: Text.WrapAnywhere
-                //font.capitalization: Font.AllUppercase
             }
         }
     }

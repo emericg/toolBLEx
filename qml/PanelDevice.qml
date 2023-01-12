@@ -8,12 +8,15 @@ Item {
     id: panelDevice
     anchors.fill: parent
 
-    function checkMenuSelection() {
+    function resetState() {
         if (selectedDevice) {
             // Make sure we switch back to the first tab
             if (!selectedDevice.isLowEnergy) {
                 deviceMenu.currentSelection = 1
             }
+
+            // Reset buttons
+            panelDeviceServices.resetButtons()
         }
     }
 
@@ -117,6 +120,7 @@ Item {
     ////////////////////////////////////////////////////////////////////////////
 
     PanelDeviceInfos {
+        id: panelDeviceInfos
         anchors.top: actionBar.bottom
         anchors.left: parent.left
         anchors.right: parent.right
@@ -129,6 +133,7 @@ Item {
     ////////////////////////////////////////////////////////////////////////////
 
     PanelDeviceAdvertisement {
+        id: panelDeviceAdvertisement
         anchors.top: actionBar.bottom
         anchors.left: parent.left
         anchors.right: parent.right
@@ -141,6 +146,7 @@ Item {
     ////////////////////////////////////////////////////////////////////////////
 
     PanelDeviceServices {
+        id: panelDeviceServices
         anchors.top: actionBar.bottom
         anchors.left: parent.left
         anchors.right: parent.right

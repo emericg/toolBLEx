@@ -25,41 +25,51 @@
 
 #include <QObject>
 #include <QString>
-#include <QtBluetooth/QLowEnergyCharacteristic>
+#include <QStringList>
+
+#include <QLowEnergyCharacteristic>
+#include <QJsonObject>
 
 /* ************************************************************************** */
 
 class CharacteristicInfo: public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString characteristicName READ getName NOTIFY characteristicChanged)
-    Q_PROPERTY(QString characteristicUuid READ getUuid NOTIFY characteristicChanged)
-    Q_PROPERTY(QString characteristicUuidFull READ getUuidFull NOTIFY characteristicChanged)
-    Q_PROPERTY(QString characteristicHandle READ getHandle NOTIFY characteristicChanged)
-    Q_PROPERTY(QString characteristicPermission READ getPermission NOTIFY characteristicChanged)
-    Q_PROPERTY(QStringList characteristicPermissionList READ getPermissionList NOTIFY characteristicChanged)
-
-    Q_PROPERTY(QString characteristicValueStr READ getValueStr NOTIFY characteristicChanged)
-    Q_PROPERTY(QString characteristicValueHex READ getValueHex NOTIFY characteristicChanged)
+    Q_PROPERTY(QString name READ getName NOTIFY characteristicChanged)
+    Q_PROPERTY(QString uuid READ getUuid NOTIFY characteristicChanged)
+    Q_PROPERTY(QString uuid_full READ getUuidFull NOTIFY characteristicChanged)
+    Q_PROPERTY(QString properties READ getProperty NOTIFY characteristicChanged)
+    Q_PROPERTY(QStringList propertiesList READ getPropertyList NOTIFY characteristicChanged)
+    Q_PROPERTY(QString permissions READ getPermission NOTIFY characteristicChanged)
+    Q_PROPERTY(QStringList permissionsList READ getPermissionList NOTIFY characteristicChanged)
+    Q_PROPERTY(QString valueStr READ getValueStr NOTIFY characteristicChanged)
+    Q_PROPERTY(QString valueHex READ getValueHex NOTIFY characteristicChanged)
 
     QLowEnergyCharacteristic m_characteristic;
+
+    QJsonObject m_characteristic_cache;
 
 Q_SIGNALS:
     void characteristicChanged();
 
 public:
     CharacteristicInfo() = default;
-    CharacteristicInfo(const QLowEnergyCharacteristic &characteristic);
+    CharacteristicInfo(const QLowEnergyCharacteristic &characteristic, QObject *parent);
+    CharacteristicInfo(const QJsonObject &characteristiccache, QObject *parent);
 
-    void setCharacteristic(const QLowEnergyCharacteristic &characteristic);
     QLowEnergyCharacteristic getCharacteristic() const;
+    void setCharacteristic(const QLowEnergyCharacteristic &characteristic);
 
     QString getName() const;
     QString getUuid() const;
     QString getUuidFull() const;
-    QString getHandle() const;
-    QString getPermission() const;
-    QStringList getPermissionList() const;
+    QString getHandle() const; // TODO // deprecated?
+
+    QString getProperty() const;
+    QStringList getPropertyList() const;
+
+    QString getPermission() const; // TODO
+    QStringList getPermissionList() const; // TODO
 
     QString getValue() const;
     QString getValueStr() const;

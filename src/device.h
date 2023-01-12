@@ -255,8 +255,6 @@ public:
     // Start actions
     Q_INVOKABLE void actionConnect();
     Q_INVOKABLE void actionScan();
-    Q_INVOKABLE void actionScanWithValues();
-    Q_INVOKABLE void actionScanWithoutValues();
 
     // BLE advertisement
     virtual void parseAdvertisementData(const uint16_t adv_mode,
