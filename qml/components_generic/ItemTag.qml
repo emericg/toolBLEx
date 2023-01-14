@@ -12,11 +12,12 @@ Rectangle {
     radius: Theme.componentRadius
     color: Theme.colorForeground
 
+    // settings
     property string text: "TAG"
     property string textColor: Theme.colorText
     property int textSize: Theme.fontSizeComponent
-    property bool textBold: false
     property int textCapitalization: Font.Normal
+    property bool textBold: false
 
     Text {
         id: contentText

@@ -46,7 +46,7 @@ class ServiceInfo: public QObject
 
     ////
 
-    QLowEnergyService *m_service = nullptr;
+    QLowEnergyService *m_ble_service = nullptr;
     void connectToService(QLowEnergyService::DiscoveryMode scanmode);
 
     QList <QObject *> m_characteristics;

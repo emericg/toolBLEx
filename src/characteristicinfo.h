@@ -45,7 +45,7 @@ class CharacteristicInfo: public QObject
     Q_PROPERTY(QString valueStr READ getValueStr NOTIFY characteristicChanged)
     Q_PROPERTY(QString valueHex READ getValueHex NOTIFY characteristicChanged)
 
-    QLowEnergyCharacteristic m_characteristic;
+    QLowEnergyCharacteristic m_ble_characteristic;
 
     QJsonObject m_characteristic_cache;
 

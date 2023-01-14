@@ -43,8 +43,8 @@ ServiceInfo::ServiceInfo(QLowEnergyService *service,
         m_characteristics.clear();
 
         // Set and connect to the BLE service
-        m_service = service;
-        m_service->setParent(this);
+        m_ble_service = service;
+        m_ble_service->setParent(this);
         connectToService(scanmode);
     }
 }
@@ -52,7 +52,7 @@ ServiceInfo::ServiceInfo(QLowEnergyService *service,
 ServiceInfo::ServiceInfo(const QJsonObject &servicecache,
                          QObject *parent) : QObject(parent)
 {
-    if (!m_service)
+    if (!m_ble_service)
     {
         m_service_cache = servicecache;
 
@@ -78,7 +78,7 @@ ServiceInfo::~ServiceInfo()
 
 const QLowEnergyService *ServiceInfo::service() const
 {
-    return m_service;
+    return m_ble_service;
 }
 
 const QList <QObject *> ServiceInfo::characteristics() const
@@ -90,7 +90,9 @@ const QList <QObject *> ServiceInfo::characteristics() const
 
 void ServiceInfo::connectToService(QLowEnergyService::DiscoveryMode scanmode)
 {
-    QLowEnergyService *service = m_service;
+    //qDebug() << "ServiceInfo::connectToService()";
+
+    QLowEnergyService *service = m_ble_service;
 
     qDeleteAll(m_characteristics);
     m_characteristics.clear();
@@ -112,6 +114,8 @@ void ServiceInfo::connectToService(QLowEnergyService::DiscoveryMode scanmode)
 
     QTimer::singleShot(0, this, &ServiceInfo::characteristicsUpdated);
 }
+
+/* ************************************************************************** */
 
 void ServiceInfo::serviceDetailsDiscovered(QLowEnergyService::ServiceState newState)
 {
@@ -146,9 +150,9 @@ void ServiceInfo::serviceDetailsDiscovered(QLowEnergyService::ServiceState newSt
 
 QString ServiceInfo::getName() const
 {
-    if (m_service)
+    if (m_ble_service)
     {
-        return m_service->serviceName();
+        return m_ble_service->serviceName();
     }
     else if (!m_service_cache.isEmpty())
     {
@@ -162,14 +166,14 @@ QString ServiceInfo::getType() const
 {
     QString result;
 
-    if (m_service)
+    if (m_ble_service)
     {
-        if (m_service->type() & QLowEnergyService::PrimaryService)
+        if (m_ble_service->type() & QLowEnergyService::PrimaryService)
             result += QStringLiteral("primary");
         else
             result += QStringLiteral("secondary");
 
-        if (m_service->type() & QLowEnergyService::IncludedService)
+        if (m_ble_service->type() & QLowEnergyService::IncludedService)
             result += QStringLiteral(" included");
 
         result.prepend('<').append('>');
@@ -192,9 +196,9 @@ QStringList ServiceInfo::getTypeList() const
 {
     QStringList tlist;
 
-    if (m_service)
+    if (m_ble_service)
     {
-        uint tflag = m_service->type();
+        uint tflag = m_ble_service->type();
 
         if (tflag & QLowEnergyService::PrimaryService)
         {
@@ -225,9 +229,9 @@ QString ServiceInfo::getUuid() const
 {
     QBluetoothUuid uuid;
 
-    if (m_service)
+    if (m_ble_service)
     {
-        uuid = m_service->serviceUuid();
+        uuid = m_ble_service->serviceUuid();
     }
     else if (!m_service_cache.isEmpty())
     {
@@ -249,9 +253,9 @@ QString ServiceInfo::getUuid() const
 
 QString ServiceInfo::getUuidFull() const
 {
-    if (m_service)
+    if (m_ble_service)
     {
-        return m_service->serviceUuid().toString().toUpper();
+        return m_ble_service->serviceUuid().toString().toUpper();
     }
     else if (!m_service_cache.isEmpty())
     {

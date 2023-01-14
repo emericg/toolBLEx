@@ -169,6 +169,7 @@ Item {
                         fullColor: true
                         primaryColor: Theme.colorLightGrey
 
+                        enabled: (selectedDevice && selectedDevice.hasServiceCache())
                         text: qsTr("load from cache")
                         source: "qrc:/assets/icons_material/baseline-save-24px.svg"
 

@@ -33,14 +33,14 @@ CharacteristicInfo::CharacteristicInfo(const QLowEnergyCharacteristic &character
 {
     if (characteristic.isValid())
     {
-        m_characteristic = characteristic;
+        m_ble_characteristic = characteristic;
     }
 }
 
 CharacteristicInfo::CharacteristicInfo(const QJsonObject &characteristiccache,
                                        QObject *parent) : QObject(parent)
 {
-    if (!m_characteristic.isValid())
+    if (!m_ble_characteristic.isValid())
     {
         m_characteristic_cache = characteristiccache;
     }
@@ -50,7 +50,7 @@ CharacteristicInfo::CharacteristicInfo(const QJsonObject &characteristiccache,
 
 QLowEnergyCharacteristic CharacteristicInfo::getCharacteristic() const
 {
-    return m_characteristic;
+    return m_ble_characteristic;
 }
 
 void CharacteristicInfo::setCharacteristic(const QLowEnergyCharacteristic &characteristic)
@@ -61,7 +61,7 @@ void CharacteristicInfo::setCharacteristic(const QLowEnergyCharacteristic &chara
         m_characteristic_cache.empty();
 
         // Set the BLE characteristic
-        m_characteristic = characteristic;
+        m_ble_characteristic = characteristic;
         Q_EMIT characteristicChanged();
     }
 }
@@ -72,13 +72,13 @@ QString CharacteristicInfo::getName() const
 {
     QString name;
 
-    if (m_characteristic.isValid())
+    if (m_ble_characteristic.isValid())
     {
-        name = m_characteristic.name();
+        name = m_ble_characteristic.name();
         if (!name.isEmpty()) return name;
 
         // find descriptor with CharacteristicUserDescription
-        const QList <QLowEnergyDescriptor> descriptors = m_characteristic.descriptors();
+        const QList <QLowEnergyDescriptor> descriptors = m_ble_characteristic.descriptors();
         for (const QLowEnergyDescriptor &descriptor: descriptors)
         {
             if (descriptor.type() == QBluetoothUuid::DescriptorType::CharacteristicUserDescription)
@@ -106,9 +106,9 @@ QString CharacteristicInfo::getUuid() const
 {
     QBluetoothUuid uuid;
 
-    if (m_characteristic.isValid())
+    if (m_ble_characteristic.isValid())
     {
-        uuid = m_characteristic.uuid();
+        uuid = m_ble_characteristic.uuid();
     }
     else if (!m_characteristic_cache.isEmpty())
     {
@@ -132,9 +132,9 @@ QString CharacteristicInfo::getUuidFull() const
 {
     QBluetoothUuid uuid;
 
-    if (m_characteristic.isValid())
+    if (m_ble_characteristic.isValid())
     {
-        uuid = m_characteristic.uuid();
+        uuid = m_ble_characteristic.uuid();
     }
     else if (!m_characteristic_cache.isEmpty())
     {
@@ -155,9 +155,9 @@ QString CharacteristicInfo::getProperty() const
 {
     QString properties;
 
-    if (m_characteristic.isValid())
+    if (m_ble_characteristic.isValid())
     {
-        uint pflag = m_characteristic.properties();
+        uint pflag = m_ble_characteristic.properties();
 
         if (pflag & QLowEnergyCharacteristic::Broadcasting)
         {
@@ -221,9 +221,9 @@ QStringList CharacteristicInfo::getPropertyList() const
 {
     QStringList plist;
 
-    if (m_characteristic.isValid())
+    if (m_ble_characteristic.isValid())
     {
-        uint pflag = m_characteristic.properties();
+        uint pflag = m_ble_characteristic.properties();
 
         if (pflag & QLowEnergyCharacteristic::Broadcasting)
         {
@@ -289,7 +289,7 @@ QStringList CharacteristicInfo::getPermissionList() const
 QString CharacteristicInfo::getValue() const
 {
     // Show raw string first and hex value below
-    QByteArray a = m_characteristic.value();
+    QByteArray a = m_ble_characteristic.value();
 
     QString result;
     if (a.isEmpty())
@@ -307,7 +307,7 @@ QString CharacteristicInfo::getValue() const
 
 QString CharacteristicInfo::getValueStr() const
 {
-    QByteArray a = m_characteristic.value();
+    QByteArray a = m_ble_characteristic.value();
 
     if (a.isEmpty())
     {
@@ -319,7 +319,7 @@ QString CharacteristicInfo::getValueStr() const
 
 QString CharacteristicInfo::getValueHex() const
 {
-    QByteArray a = m_characteristic.value();
+    QByteArray a = m_ble_characteristic.value();
 
     if (a.isEmpty())
     {

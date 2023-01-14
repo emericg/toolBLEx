@@ -411,6 +411,7 @@ void DeviceToolBLEx::deviceConnected()
 }
 
 /* ************************************************************************** */
+/* ************************************************************************** */
 
 void DeviceToolBLEx::addLowEnergyService(const QBluetoothUuid &uuid)
 {
@@ -446,11 +447,6 @@ void DeviceToolBLEx::addLowEnergyService(const QBluetoothUuid &uuid)
 void DeviceToolBLEx::serviceScanDone()
 {
     qDebug() << "DeviceToolbox::serviceScanDone(" << m_deviceAddress << ")";
-
-    if (m_services.isEmpty())
-    {
-        Q_EMIT servicesChanged();
-    }
 
     // Stay connected
     m_ble_status = DeviceUtils::DEVICE_CONNECTED;
@@ -711,6 +707,14 @@ void DeviceToolBLEx::advertisementFilterUpdate()
 
 /* ************************************************************************** */
 
+bool DeviceToolBLEx::hasServiceCache() const
+{
+    QString cachePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    cachePath += "/devices/" + m_deviceAddress + ".cache";
+
+    return QFile::exists(cachePath);
+}
+
 bool DeviceToolBLEx::saveServiceCache()
 {
     bool status = false;
@@ -753,23 +757,23 @@ bool DeviceToolBLEx::saveServiceCache()
     root.insert("services", servicesArray);
 
     // Get cache directory path
-    QString exportDirectoryPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/devices";
-    QDir exportDirectory(exportDirectoryPath);
-    if (!exportDirectory.exists())
+    QString cacheDirectoryPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/devices";
+    QDir cacheDirectory(cacheDirectoryPath);
+    if (!cacheDirectory.exists())
     {
-        exportDirectory.mkpath(exportDirectoryPath);
+        cacheDirectory.mkpath(cacheDirectoryPath);
     }
 
-    qDebug() << "EXPORT DIRECTORY" << exportDirectory;
+    qDebug() << "CACHE DIRECTORY" << cacheDirectory;
 
-    if (exportDirectory.exists())
+    if (cacheDirectory.exists())
     {
-        // Finish preping export path
-        QString exportFilePath = "/" + m_deviceAddress + ".cache";
-        exportFilePath = exportDirectoryPath + exportFilePath;
+        // Finish preping cache path
+        QString cacheFilePath = "/" + m_deviceAddress + ".cache";
+        cacheFilePath = cacheDirectoryPath + cacheFilePath;
 
         // Open file and save content
-        QFile efile(exportFilePath);
+        QFile efile(cacheFilePath);
         if (efile.open(QFile::WriteOnly | QIODevice::Text))
         {
             QJsonDocument cacheJsonDoc(root);
@@ -785,10 +789,10 @@ bool DeviceToolBLEx::saveServiceCache()
 
 void DeviceToolBLEx::restoreServiceCache()
 {
-    QString exportDirectoryPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    exportDirectoryPath += "/devices/" + m_deviceAddress + ".cache";
+    QString cacheDirectoryPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    cacheDirectoryPath += "/devices/" + m_deviceAddress + ".cache";
 
-    QFile file(exportDirectoryPath);
+    QFile file(cacheDirectoryPath);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         QJsonDocument cacheJsonDoc = QJsonDocument().fromJson(file.readAll());
@@ -814,6 +818,11 @@ void DeviceToolBLEx::restoreServiceCache()
 }
 
 /* ************************************************************************** */
+
+QString DeviceToolBLEx::getExportPath() const
+{
+    return QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/toolBLEx";
+}
 
 bool DeviceToolBLEx::exportDeviceInfo(bool withAdvertisements, bool withServices, bool withValues)
 {

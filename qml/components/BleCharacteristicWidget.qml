@@ -9,6 +9,8 @@ Rectangle {
     height: col.height + 16
     color: Theme.colorBox
 
+    property string uuiidd: modelData.uuid_full
+
     ////////////////
 
     Rectangle {

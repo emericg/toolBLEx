@@ -37,8 +37,8 @@ T.Button {
     MouseArea {
         id: mousearea
         anchors.fill: parent
-        enabled: control.hoverAnimation
 
+        enabled: control.hoverAnimation
         hoverEnabled: control.hoverAnimation
 
         onClicked: control.clicked()

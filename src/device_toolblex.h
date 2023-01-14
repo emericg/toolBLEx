@@ -252,9 +252,11 @@ public:
     Q_INVOKABLE void actionScanWithValues();
     Q_INVOKABLE void actionScanWithoutValues();
 
+    Q_INVOKABLE bool hasServiceCache() const;
     Q_INVOKABLE bool saveServiceCache();
     Q_INVOKABLE void restoreServiceCache();
 
+    Q_INVOKABLE QString getExportPath() const;
     Q_INVOKABLE bool exportDeviceInfo(bool withAdvertisements = true, bool withServices = true, bool withValues = true);
 };
 
