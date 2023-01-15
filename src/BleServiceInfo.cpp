@@ -19,8 +19,8 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#include "serviceinfo.h"
-#include "characteristicinfo.h"
+#include "BleServiceInfo.h"
+#include "BleCharacteristicInfo.h"
 
 #include <QBluetoothServiceInfo>
 #include <QLowEnergyCharacteristic>
@@ -76,12 +76,12 @@ ServiceInfo::~ServiceInfo()
 
 /* ************************************************************************** */
 
-const QLowEnergyService *ServiceInfo::service() const
+QLowEnergyService *ServiceInfo::getService()
 {
     return m_ble_service;
 }
 
-const QList <QObject *> ServiceInfo::characteristics() const
+QList <QObject *> ServiceInfo::getCharacteristicsInfos()
 {
     return m_characteristics;
 }
@@ -92,20 +92,24 @@ void ServiceInfo::connectToService(QLowEnergyService::DiscoveryMode scanmode)
 {
     //qDebug() << "ServiceInfo::connectToService()";
 
-    QLowEnergyService *service = m_ble_service;
+    if (!m_ble_service) return;
 
     qDeleteAll(m_characteristics);
     m_characteristics.clear();
 
-    if (service->state() == QLowEnergyService::RemoteService)
+    if (m_ble_service->state() == QLowEnergyService::RemoteService)
     {
-        connect(service, &QLowEnergyService::stateChanged, this, &ServiceInfo::serviceDetailsDiscovered);
-        QTimer::singleShot(0, [=] () { service->discoverDetails(scanmode); });
+        connect(m_ble_service, &QLowEnergyService::stateChanged, this, &ServiceInfo::serviceDetailsDiscovered);
+        connect(m_ble_service, &QLowEnergyService::characteristicRead, this, &ServiceInfo::bleReadDone);
+        connect(m_ble_service, &QLowEnergyService::characteristicWritten, this, &ServiceInfo::bleWriteDone);
+        connect(m_ble_service, &QLowEnergyService::characteristicChanged, this, &ServiceInfo::bleReadNotify);
+
+        QTimer::singleShot(0, [=] () { m_ble_service->discoverDetails(scanmode); });
         return;
     }
 
     // discovery already done
-    const QList <QLowEnergyCharacteristic> chars = service->characteristics();
+    const QList <QLowEnergyCharacteristic> chars = m_ble_service->characteristics();
     for (const QLowEnergyCharacteristic &ch: chars)
     {
         auto cInfo = new CharacteristicInfo(ch, this);
@@ -144,6 +148,94 @@ void ServiceInfo::serviceDetailsDiscovered(QLowEnergyService::ServiceState newSt
     }
 
     Q_EMIT characteristicsUpdated();
+}
+
+/* ************************************************************************** */
+
+void ServiceInfo::askForNotify(const QString &uuid)
+{
+    if (m_ble_service)
+    {
+        qDebug() << "ServiceInfo::askForNotify(" << uuid << ")";
+
+        QBluetoothUuid toread(uuid);
+        QLowEnergyCharacteristic crst = m_ble_service->characteristic(toread);
+        QLowEnergyDescriptor desc = crst.clientCharacteristicConfiguration();
+        m_ble_service->writeDescriptor(desc, QByteArray::fromHex("0100"));
+    }
+}
+
+void ServiceInfo::askForRead(const QString &uuid)
+{
+    if (m_ble_service)
+    {
+        qDebug() << "ServiceInfo::askForRead(" << uuid << ")";
+
+        QBluetoothUuid toread(uuid);
+        QLowEnergyCharacteristic crst = m_ble_service->characteristic(toread);
+        m_ble_service->readCharacteristic(crst);
+    }
+}
+
+void ServiceInfo::askForWrite(const QString &uuid, const QString &value)
+{
+    if (m_ble_service)
+    {
+        qDebug() << "ServiceInfo::askForWrite(" << uuid << ") > value:" << value;
+    }
+}
+
+/* ************************************************************************** */
+
+void ServiceInfo::bleReadDone(const QLowEnergyCharacteristic &c, const QByteArray &v)
+{
+    qDebug() << "ServiceInfo::bleReadDone()";
+    qDebug() << "- service" << getUuidFull() << " - characteristic" << c.uuid().toString();
+    qDebug() << "- DATA: 0x" << v.toHex();
+
+    for (auto cc: m_characteristics)
+    {
+        CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(cc);
+        if (cst && cst->getUuidFull() == c.uuid().toString())
+        {
+            // update characteristic value
+            cst->setValue(v);
+        }
+    }
+}
+
+void ServiceInfo::bleReadNotify(const QLowEnergyCharacteristic &c, const QByteArray &v)
+{
+    qDebug() << "ServiceInfo::bleReadNotify()";
+    qDebug() << "- service" << getUuidFull() << " - characteristic" << c.uuid().toString();
+    qDebug() << "- DATA: 0x" << v.toHex();
+
+    for (auto cc: m_characteristics)
+    {
+        CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(cc);
+        if (cst && cst->getUuidFull() == c.uuid().toString())
+        {
+            // update characteristic value
+            cst->setValue(v);
+        }
+    }
+}
+
+void ServiceInfo::bleWriteDone(const QLowEnergyCharacteristic &c, const QByteArray &v)
+{
+    qDebug() << "ServiceInfo::bleWriteDone()";
+    qDebug() << "- service" << getUuidFull() << " - characteristic" << c.uuid().toString();
+    qDebug() << "- DATA: 0x" << v.toHex();
+
+    for (auto cc: m_characteristics)
+    {
+        CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(cc);
+        if (cst && cst->getUuidFull() == c.uuid().toString())
+        {
+            // update characteristic value
+            cst->setValue(v);
+        }
+    }
 }
 
 /* ************************************************************************** */
@@ -225,7 +317,21 @@ QStringList ServiceInfo::getTypeList() const
     return tlist;
 }
 
-QString ServiceInfo::getUuid() const
+QString ServiceInfo::getUuidFull() const
+{
+    if (m_ble_service)
+    {
+        return m_ble_service->serviceUuid().toString().toUpper();
+    }
+    else if (!m_service_cache.isEmpty())
+    {
+        return m_service_cache["uuid"].toString();
+    }
+
+    return QString();
+}
+
+QString ServiceInfo::getUuidShort() const
 {
     QBluetoothUuid uuid;
 
@@ -251,18 +357,5 @@ QString ServiceInfo::getUuid() const
     return uuid.toString().toUpper().remove(QLatin1Char('{')).remove(QLatin1Char('}'));
 }
 
-QString ServiceInfo::getUuidFull() const
-{
-    if (m_ble_service)
-    {
-        return m_ble_service->serviceUuid().toString().toUpper();
-    }
-    else if (!m_service_cache.isEmpty())
-    {
-        return m_service_cache["uuid"].toString();
-    }
-
-    return QString();
-}
 
 /* ************************************************************************** */

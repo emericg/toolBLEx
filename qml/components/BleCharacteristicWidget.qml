@@ -13,6 +13,23 @@ Rectangle {
 
     ////////////////
 
+    Loader {
+        id: popupLoader
+
+        active: false
+        asynchronous: false
+        sourceComponent: PopupWriteCharacteristic {
+            id: popupWriteCharacteristic
+            parent: appContent
+
+            onConfirmed: {
+                //selectedDevice.askForWrite(bleCharacteristicWidget.uuiidd, "wat")
+            }
+        }
+    }
+
+    ////////////////
+
     Rectangle {
         anchors.top: col.top
         anchors.left: parent.left
@@ -71,10 +88,24 @@ Rectangle {
             Repeater { // characteristic properties
                 anchors.verticalCenter: parent.verticalCenter
                 model: modelData.propertiesList
-                ItemTag {
+                ItemActionTag {
                     anchors.verticalCenter: parent.verticalCenter
+                    enabled: (selectedDevice && selectedDevice.servicesScanMode > 1)
                     text: modelData
-                    color: Theme.colorForeground
+                    onClicked: {
+                        if (selectedDevice && selectedDevice.servicesScanMode > 1) {
+                            if (text === "Notify") {
+                                selectedDevice.askForNotify(bleCharacteristicWidget.uuiidd)
+                            }
+                            if (text === "Read") {
+                                selectedDevice.askForRead(bleCharacteristicWidget.uuiidd)
+                            }
+                            if (text === "Write" || text === "WriteNoResp") {
+                                popupLoader.active = true
+                                popupLoader.item.openU(bleCharacteristicWidget.uuiidd)
+                            }
+                        }
+                    }
                 }
             }
         }

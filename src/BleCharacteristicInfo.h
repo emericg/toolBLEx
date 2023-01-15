@@ -36,44 +36,62 @@ class CharacteristicInfo: public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString name READ getName NOTIFY characteristicChanged)
-    Q_PROPERTY(QString uuid READ getUuid NOTIFY characteristicChanged)
+    Q_PROPERTY(QString uuid READ getUuidFull NOTIFY characteristicChanged)
     Q_PROPERTY(QString uuid_full READ getUuidFull NOTIFY characteristicChanged)
+    Q_PROPERTY(QString uuid_short READ getUuidShort NOTIFY characteristicChanged)
     Q_PROPERTY(QString properties READ getProperty NOTIFY characteristicChanged)
     Q_PROPERTY(QStringList propertiesList READ getPropertyList NOTIFY characteristicChanged)
     Q_PROPERTY(QString permissions READ getPermission NOTIFY characteristicChanged)
     Q_PROPERTY(QStringList permissionsList READ getPermissionList NOTIFY characteristicChanged)
-    Q_PROPERTY(QString valueStr READ getValueStr NOTIFY characteristicChanged)
-    Q_PROPERTY(QString valueHex READ getValueHex NOTIFY characteristicChanged)
 
-    QLowEnergyCharacteristic m_ble_characteristic;
+    Q_PROPERTY(bool readInProgress READ getReadInProgress NOTIFY valueChanged)
+    Q_PROPERTY(bool writeInProgress READ getWriteInProgress NOTIFY valueChanged)
+    Q_PROPERTY(bool notifyInProgress READ getNotifyInProgress NOTIFY valueChanged)
 
-    QJsonObject m_characteristic_cache;
+    Q_PROPERTY(QString valueStr READ getValueStr NOTIFY valueChanged)
+    Q_PROPERTY(QString valueHex READ getValueHex NOTIFY valueChanged)
+
+    QString m_name;
+    QBluetoothUuid m_uuid;
+    QStringList m_properties;
+    QStringList m_permissions; // TODO
+    QByteArray m_value;
+
+    bool m_read_inprogress = false;
+    bool m_write_inprogress = false;
+    bool m_notify_inprogress = false;
 
 Q_SIGNALS:
     void characteristicChanged();
+    void valueChanged();
 
 public:
-    CharacteristicInfo() = default;
-    CharacteristicInfo(const QLowEnergyCharacteristic &characteristic, QObject *parent);
-    CharacteristicInfo(const QJsonObject &characteristiccache, QObject *parent);
+    CharacteristicInfo(const QLowEnergyCharacteristic &characteristic_ble, QObject *parent);
+    CharacteristicInfo(const QJsonObject &characteristic_cache, QObject *parent);
 
-    QLowEnergyCharacteristic getCharacteristic() const;
-    void setCharacteristic(const QLowEnergyCharacteristic &characteristic);
+    void setCharacteristic(const QLowEnergyCharacteristic &characteristic_ble);
+    void setCharacteristic(const QJsonObject &characteristic_cache);
 
     QString getName() const;
-    QString getUuid() const;
     QString getUuidFull() const;
+    QString getUuidShort() const;
     QString getHandle() const; // TODO // deprecated?
 
     QString getProperty() const;
     QStringList getPropertyList() const;
 
-    QString getPermission() const; // TODO
+    QString getPermission() const;
     QStringList getPermissionList() const; // TODO
+
+    bool getReadInProgress() const { return m_read_inprogress; };
+    bool getWriteInProgress() const { return m_write_inprogress; };
+    bool getNotifyInProgress() const { return m_notify_inprogress; };
 
     QString getValue() const;
     QString getValueStr() const;
     QString getValueHex() const;
+
+    void setValue(const QByteArray &v);
 };
 
 /* ************************************************************************** */

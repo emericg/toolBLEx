@@ -19,8 +19,8 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#ifndef SERVICE_INFO_H
-#define SERVICE_INFO_H
+#ifndef BLE_SERVICE_INFO_H
+#define BLE_SERVICE_INFO_H
 /* ****************************************************************************/
 
 #include <QObject>
@@ -37,24 +37,21 @@ class ServiceInfo: public QObject
     Q_OBJECT
 
     Q_PROPERTY(QString serviceName READ getName NOTIFY serviceUpdated)
-    Q_PROPERTY(QString serviceUuid READ getUuid NOTIFY serviceUpdated)
+    Q_PROPERTY(QString serviceUuid READ getUuidFull NOTIFY serviceUpdated)
     Q_PROPERTY(QString serviceUuidFull READ getUuidFull NOTIFY serviceUpdated)
+    Q_PROPERTY(QString serviceUuidShort READ getUuidShort NOTIFY serviceUpdated)
     Q_PROPERTY(QString serviceType READ getType NOTIFY serviceUpdated)
     Q_PROPERTY(QStringList serviceTypeList READ getTypeList NOTIFY serviceUpdated)
 
     Q_PROPERTY(QVariant characteristicList READ getCharacteristics NOTIFY characteristicsUpdated)
 
-    ////
-
     QLowEnergyService *m_ble_service = nullptr;
     void connectToService(QLowEnergyService::DiscoveryMode scanmode);
 
+    QJsonObject m_service_cache;
+
     QList <QObject *> m_characteristics;
     QVariant getCharacteristics() { return QVariant::fromValue(m_characteristics); }
-
-    ////
-
-    QJsonObject m_service_cache;
 
 Q_SIGNALS:
     void serviceUpdated();
@@ -63,21 +60,29 @@ Q_SIGNALS:
 private slots:
     void serviceDetailsDiscovered(QLowEnergyService::ServiceState newState);
 
+    void bleReadDone(const QLowEnergyCharacteristic &c, const QByteArray &value);
+    void bleReadNotify(const QLowEnergyCharacteristic &c, const QByteArray &value);
+    void bleWriteDone(const QLowEnergyCharacteristic &c, const QByteArray &value);
+
 public:
     ServiceInfo() = default;
     ServiceInfo(QLowEnergyService *service, QLowEnergyService::DiscoveryMode scanmode, QObject *parent);
     ServiceInfo(const QJsonObject &servicecache, QObject *parent);
     ~ServiceInfo();
 
-    const QLowEnergyService *service() const;
-    const QList <QObject *> characteristics() const;
+    QLowEnergyService *getService();
+    QList <QObject *> getCharacteristicsInfos();
 
-    QString getUuid() const;
-    QString getUuidFull() const;
     QString getName() const;
+    QString getUuidFull() const;
+    QString getUuidShort() const;
     QString getType() const;
     QStringList getTypeList() const;
+
+    void askForNotify(const QString &uuid);
+    void askForRead(const QString &uuid);
+    void askForWrite(const QString &uuid, const QString &value);
 };
 
 /* ****************************************************************************/
-#endif // SERVICE_INFO_H
+#endif // BLE_SERVICE_INFO_H

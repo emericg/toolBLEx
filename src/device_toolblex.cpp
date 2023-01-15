@@ -20,8 +20,8 @@
  */
 
 #include "device_toolblex.h"
-#include "serviceinfo.h"
-#include "characteristicinfo.h"
+#include "BleServiceInfo.h"
+#include "BleCharacteristicInfo.h"
 
 #include "DeviceManager.h"
 
@@ -395,6 +395,71 @@ void DeviceToolBLEx::actionScanWithoutValues()
 
 /* ************************************************************************** */
 
+void DeviceToolBLEx::askForNotify(const QString &uuid)
+{
+    // Iterate through services, until we find the characteristic we want to read
+    for (auto s: m_services)
+    {
+        ServiceInfo *srv = qobject_cast<ServiceInfo *>(s);
+        if (srv)
+        {
+            for (auto c: srv->getCharacteristicsInfos())
+            {
+                CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
+                if (cst && cst->getUuidFull() == uuid)
+                {
+                    srv->askForNotify(uuid);
+                    return;
+                }
+            }
+        }
+    }
+}
+
+void DeviceToolBLEx::askForRead(const QString &uuid)
+{
+    // Iterate through services, until we find the characteristic we want to read
+    for (auto s: m_services)
+    {
+        ServiceInfo *srv = qobject_cast<ServiceInfo *>(s);
+        if (srv)
+        {
+            for (auto c: srv->getCharacteristicsInfos())
+            {
+                CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
+                if (cst && cst->getUuidFull() == uuid)
+                {
+                    srv->askForRead(uuid);
+                    return;
+                }
+            }
+        }
+    }
+}
+
+void DeviceToolBLEx::askForWrite(const QString &uuid, const QString &value)
+{
+    // Iterate through services, until we find the characteristic we want to write
+    for (auto s: m_services)
+    {
+        ServiceInfo *srv = qobject_cast<ServiceInfo *>(s);
+        if (srv)
+        {
+            for (auto c: srv->getCharacteristicsInfos())
+            {
+                CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
+                if (cst && cst->getUuidFull() == uuid)
+                {
+                    srv->askForWrite(uuid, value);
+                    return;
+                }
+            }
+        }
+    }
+}
+
+/* ************************************************************************** */
+
 void DeviceToolBLEx::deviceConnected()
 {
     qDebug() << "DeviceToolBLEx::deviceConnected(" << m_deviceAddress << ")";
@@ -728,7 +793,7 @@ bool DeviceToolBLEx::saveServiceCache()
         {
             // Characteristics
             QJsonArray characteristicsArray;
-            for (auto c: srv->characteristics())
+            for (auto c: srv->getCharacteristicsInfos())
             {
                 CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
                 if (cst)
@@ -887,15 +952,15 @@ bool DeviceToolBLEx::exportDeviceInfo(bool withAdvertisements, bool withServices
             if (srv)
             {
                 txt += "Service Name: " + srv->getName() + endl;
-                txt += "Service UUID: " + srv->getUuid() + endl;
+                txt += "Service UUID: " + srv->getUuidFull() + endl;
 
-                for (auto c: srv->characteristics())
+                for (auto c: srv->getCharacteristicsInfos())
                 {
                     CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
                     if (cst)
                     {
                         txt += "Characteristic Name: " + cst->getName();
-                        txt += " - UUID: " + cst->getUuid();
+                        txt += " - UUID: " + cst->getUuidFull();
                         txt += " - Properties: " + cst->getProperty();
                         //exp += " - Handle: " + cst->getHandle();
 

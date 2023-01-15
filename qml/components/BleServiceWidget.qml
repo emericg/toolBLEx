@@ -86,7 +86,7 @@ Rectangle {
                 }
                 TextSelectable {
                     id: serviceUuid
-                    text: modelData.serviceUuidFull
+                    text: modelData.serviceUuid
                     font.pixelSize: Theme.fontSizeContent
                     //font.capitalization: Font.AllUppercase
                     color: Theme.colorText

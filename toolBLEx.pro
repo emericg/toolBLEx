@@ -42,8 +42,8 @@ SOURCES  += src/main.cpp \
             src/device.cpp \
             src/device_toolblex.cpp \
             src/device_toolblex_adv.cpp \
-            src/serviceinfo.cpp \
-            src/characteristicinfo.cpp
+            src/BleServiceInfo.cpp \
+            src/BleCharacteristicInfo.cpp
 
 HEADERS  += src/SettingsManager.h \
             src/MenubarManager.h \
@@ -57,8 +57,8 @@ HEADERS  += src/SettingsManager.h \
             src/device_utils.h \
             src/device_toolblex.h \
             src/device_toolblex_adv.h \
-            src/serviceinfo.h \
-            src/characteristicinfo.h
+            src/BleServiceInfo.h \
+            src/BleCharacteristicInfo.h
 
 INCLUDEPATH += src/ src/thirdparty/
 

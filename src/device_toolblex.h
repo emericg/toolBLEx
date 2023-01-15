@@ -131,7 +131,15 @@ class DeviceToolBLEx: public Device
     QList <AdvertisementData *> m_mfd;
     QList <AdvertisementUUID *> m_mfd_uuid;
 
-    int m_services_scanmode = 0; //!< 0: not scanned, 1: cache, 2: scan, 3: scan with values
+    /*!
+     * - 0: not scanned
+     * - 1: cache
+     * - 2: scan
+     * - 3: scan (with values)
+     * - 4: incomplete scan
+     * - 5: incomplete scan (with values)
+     */
+    int m_services_scanmode = 0;
     QList <QObject *> m_services;
 
     QVariant getLastServiceData() const { if (m_svd.empty()) return QVariant(); return QVariant::fromValue(m_svd.last()); }
@@ -251,6 +259,10 @@ public:
 
     Q_INVOKABLE void actionScanWithValues();
     Q_INVOKABLE void actionScanWithoutValues();
+
+    Q_INVOKABLE void askForNotify(const QString &uuid);
+    Q_INVOKABLE void askForRead(const QString &uuid);
+    Q_INVOKABLE void askForWrite(const QString &uuid, const QString &value);
 
     Q_INVOKABLE bool hasServiceCache() const;
     Q_INVOKABLE bool saveServiceCache();
