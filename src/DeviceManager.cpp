@@ -464,6 +464,8 @@ void DeviceManager::checkBluetoothIos()
 
 void DeviceManager::deviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error error)
 {
+    if (error <= QBluetoothDeviceDiscoveryAgent::NoError) return;
+
     if (error == QBluetoothDeviceDiscoveryAgent::PoweredOffError)
     {
         qWarning() << "The Bluetooth adaptor is powered off, power it on before doing discovery.";
@@ -496,7 +498,7 @@ void DeviceManager::deviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error e
     }
     else if (error == QBluetoothDeviceDiscoveryAgent::UnsupportedPlatformError)
     {
-        qWarning() << "deviceDiscoveryError() Unsupported platform.";
+        qWarning() << "deviceDiscoveryError() Unsupported Platform.";
 
         m_btA = false;
         m_btE = false;
@@ -505,6 +507,22 @@ void DeviceManager::deviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error e
     else if (error == QBluetoothDeviceDiscoveryAgent::UnsupportedDiscoveryMethod)
     {
         qWarning() << "deviceDiscoveryError() Unsupported Discovery Method.";
+
+        m_btE = false;
+        m_btP = false;
+        Q_EMIT bluetoothChanged();
+    }
+    else if (error == QBluetoothDeviceDiscoveryAgent::LocationServiceTurnedOffError)
+    {
+        qWarning() << "deviceDiscoveryError() Location Service Turned Off Error.";
+
+        m_btE = false;
+        m_btP = false;
+        Q_EMIT bluetoothChanged();
+    }
+    else if (error == QBluetoothDeviceDiscoveryAgent::MissingPermissionsError)
+    {
+        qWarning() << "deviceDiscoveryError() Missing Permissions Error.";
 
         m_btE = false;
         m_btP = false;

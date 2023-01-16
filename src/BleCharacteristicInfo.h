@@ -48,14 +48,19 @@ class CharacteristicInfo: public QObject
     Q_PROPERTY(bool writeInProgress READ getWriteInProgress NOTIFY valueChanged)
     Q_PROPERTY(bool notifyInProgress READ getNotifyInProgress NOTIFY valueChanged)
 
-    Q_PROPERTY(QString valueStr READ getValueStr NOTIFY valueChanged)
+    Q_PROPERTY(int dataSize READ getDataSize NOTIFY valueChanged)
+    Q_PROPERTY(QVariant data READ getData NOTIFY valueChanged)
+
+    Q_PROPERTY(QString valueAscii READ getValueAscii NOTIFY valueChanged)
     Q_PROPERTY(QString valueHex READ getValueHex NOTIFY valueChanged)
+    Q_PROPERTY(QStringList valueHex_list READ getValueHex_list NOTIFY valueChanged)
+    Q_PROPERTY(QStringList valueAscii_list READ getValueAscii_list NOTIFY valueChanged)
 
     QString m_name;
     QBluetoothUuid m_uuid;
     QStringList m_properties;
     QStringList m_permissions; // TODO
-    QByteArray m_value;
+    QByteArray m_data;
 
     bool m_read_inprogress = false;
     bool m_write_inprogress = false;
@@ -87,9 +92,14 @@ public:
     bool getWriteInProgress() const { return m_write_inprogress; };
     bool getNotifyInProgress() const { return m_notify_inprogress; };
 
+    QVariant getData() const { return QVariant::fromValue(m_data); }
+    int getDataSize() const { return m_data.size(); }
+
     QString getValue() const;
-    QString getValueStr() const;
     QString getValueHex() const;
+    QString getValueAscii() const;
+    QStringList getValueHex_list() const;
+    QStringList getValueAscii_list() const;
 
     void setValue(const QByteArray &v);
 };

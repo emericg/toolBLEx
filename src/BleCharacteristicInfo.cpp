@@ -95,7 +95,7 @@ void CharacteristicInfo::setCharacteristic(const QLowEnergyCharacteristic &chara
             m_properties += QStringLiteral("ExtendedProperty");
         }
 
-        m_value = characteristic_ble.value();
+        m_data = characteristic_ble.value();
     }
 }
 
@@ -198,44 +198,66 @@ QString CharacteristicInfo::getValue() const
     // Show raw string first and hex value below
     QString result;
 
-    if (m_value.isEmpty())
+    if (m_data.isEmpty())
     {
         result = QStringLiteral("<none>");
         return result;
     }
 
-    result = m_value;
+    result = m_data;
     result += QLatin1Char('\n');
-    result += m_value.toHex();
+    result += m_data.toHex();
 
     return result;
 }
 
-QString CharacteristicInfo::getValueStr() const
-{
-    if (m_value.isEmpty())
-    {
-        return QStringLiteral("<none>");
-    }
-
-    return m_value;
-}
-
 QString CharacteristicInfo::getValueHex() const
 {
-    if (m_value.isEmpty())
+    if (m_data.isEmpty())
     {
         return QStringLiteral("<none>");
     }
 
-    return m_value.toHex().toUpper();
+    return m_data.toHex().toUpper();
+}
+
+QString CharacteristicInfo::getValueAscii() const
+{
+    if (m_data.isEmpty())
+    {
+        return QStringLiteral("<none>");
+    }
+
+    return m_data;
+}
+
+QStringList CharacteristicInfo::getValueHex_list() const
+{
+    QStringList out;
+    for (int i = 0; i < m_data.size(); i++)
+    {
+        QByteArray duo; duo += m_data.at(i);
+        out += duo.toHex();
+    }
+    return out;
+}
+
+QStringList CharacteristicInfo::getValueAscii_list() const
+{
+    QStringList out;
+    for (int i = 0; i < m_data.size(); i++)
+    {
+        QByteArray duo; duo += m_data.at(i);
+        out += QString::fromStdString(duo.toStdString());
+    }
+    return out;
 }
 
 /* ************************************************************************** */
 
 void CharacteristicInfo::setValue(const QByteArray &v)
 {
-    m_value = v;
+    m_data = v;
     Q_EMIT valueChanged();
 }
 

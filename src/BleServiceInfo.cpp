@@ -86,6 +86,20 @@ QList <QObject *> ServiceInfo::getCharacteristicsInfos()
     return m_characteristics;
 }
 
+bool ServiceInfo::containsCharacteristic(const QString &uuid)
+{
+    for (auto c: m_characteristics)
+    {
+        CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
+        if (cst && cst->getUuidFull() == uuid)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 /* ************************************************************************** */
 
 void ServiceInfo::connectToService(QLowEnergyService::DiscoveryMode scanmode)
@@ -123,7 +137,7 @@ void ServiceInfo::connectToService(QLowEnergyService::DiscoveryMode scanmode)
 
 void ServiceInfo::serviceDetailsDiscovered(QLowEnergyService::ServiceState newState)
 {
-    //qDebug() << "ServiceInfo::serviceDetailsDiscovered()";
+    qDebug() << "ServiceInfo::serviceDetailsDiscovered(" << getUuidFull() << ")";
 
     if (newState != QLowEnergyService::RemoteServiceDiscovered)
     {

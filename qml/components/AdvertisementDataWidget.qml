@@ -163,7 +163,7 @@ Column {
             spacing: 0
 
             Repeater {
-                model: packet.advDataHexString3
+                model: packet.advDataHex_list
 
                 Rectangle {
                     width: 26
@@ -217,7 +217,7 @@ Column {
             spacing: 0
 
             Repeater {
-                model: packet.advDataAsciiString3
+                model: packet.advDataAscii_list
 
                 Rectangle {
                     width: 26

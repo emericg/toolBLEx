@@ -216,7 +216,7 @@ Rectangle {
                 spacing: 0
 
                 Repeater {
-                    model: packet.advDataHexString3
+                    model: packet.advDataHex_list
 
                     Rectangle {
                         width: 26
@@ -272,7 +272,7 @@ Rectangle {
                 spacing: 0
 
                 Repeater {
-                    model: packet.advDataAsciiString3
+                    model: packet.advDataAscii_list
 
                     Rectangle {
                         width: 26
@@ -340,7 +340,7 @@ Rectangle {
                 Layout.alignment: Qt.AlignBaseline
                 Layout.fillWidth: true
 
-                text: packet.advDataHexString
+                text: packet.advDataHex
                 wrapMode: Text.WrapAnywhere
                 font.family: fontMonospace
                 //font.capitalization: Font.AllUppercase
@@ -378,7 +378,7 @@ Rectangle {
                 Layout.alignment: Qt.AlignBaseline
                 Layout.fillWidth: true
 
-                text: packet.advDataAsciiString
+                text: packet.advDataAscii
                 font.pixelSize: Theme.fontSizeContent
                 wrapMode: Text.WrapAnywhere
                 font.family: fontMonospace

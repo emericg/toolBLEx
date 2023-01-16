@@ -492,12 +492,12 @@ void DeviceToolBLEx::addLowEnergyService(const QBluetoothUuid &uuid)
     QLowEnergyService::DiscoveryMode scanmode = QLowEnergyService::FullDiscovery;
     if (m_ble_action == DeviceUtils::ACTION_SCAN_WITHOUT_VALUES)
     {
-        m_services_scanmode = 2;
+        m_services_scanmode = 2; // incomplete scan
         scanmode = QLowEnergyService::SkipValueDiscovery;
     }
     else if (m_ble_action == DeviceUtils::ACTION_SCAN_WITH_VALUES)
     {
-        m_services_scanmode = 3;
+        m_services_scanmode = 3; // incomplete scan (with values)
         scanmode = QLowEnergyService::FullDiscovery;
     }
 
@@ -512,6 +512,16 @@ void DeviceToolBLEx::addLowEnergyService(const QBluetoothUuid &uuid)
 void DeviceToolBLEx::serviceScanDone()
 {
     qDebug() << "DeviceToolbox::serviceScanDone(" << m_deviceAddress << ")";
+
+    if (m_services_scanmode == 2) // "incomplete scan"
+    {
+        m_services_scanmode = 4; // now "scanned"
+    }
+    else if (m_services_scanmode == 3) // "incomplete scan (with values)"
+    {
+        m_services_scanmode = 5; // now "scanned (with values)"
+    }
+    Q_EMIT servicesChanged();
 
     // Stay connected
     m_ble_status = DeviceUtils::DEVICE_CONNECTED;
@@ -866,7 +876,7 @@ void DeviceToolBLEx::restoreServiceCache()
 
         qDeleteAll(m_services);
         m_services.clear();
-        m_services_scanmode = 1;
+        m_services_scanmode = 1; // cache
 
         QJsonArray servicesArray = root["services"].toArray();
         for (const auto &srv: servicesArray)
@@ -923,7 +933,7 @@ bool DeviceToolBLEx::exportDeviceInfo(bool withAdvertisements, bool withServices
                     txt += adv->getTimestamp().toString("hh:mm:ss.zzz") + " > ";
                     txt += "0x" + adv->getUUID_str() + " (" + adv->getUUID_vendor() + ")" + " > ";
                     txt += "(" + QString::number(adv->getDataSize()).rightJustified(3, ' ') + " bytes) ";
-                    txt += "0x" + adv->getDataHexString();
+                    txt += "0x" + adv->getDataHex();
                 }
                 else if (adv->getMode() == DeviceUtils::BLE_ADV_SERVICEDATA)
                 {
@@ -931,7 +941,7 @@ bool DeviceToolBLEx::exportDeviceInfo(bool withAdvertisements, bool withServices
                     txt += adv->getTimestamp().toString("hh:mm:ss.zzz") + " > ";
                     txt += "0x" + adv->getUUID_str() + " > ";
                     txt += "(" + QString::number(adv->getDataSize()).rightJustified(3, ' ') + " bytes) ";
-                    txt += "0x" + adv->getDataHexString();
+                    txt += "0x" + adv->getDataHex();
                 }
                 else
                 {
@@ -951,7 +961,7 @@ bool DeviceToolBLEx::exportDeviceInfo(bool withAdvertisements, bool withServices
             ServiceInfo *srv = qobject_cast<ServiceInfo *>(s);
             if (srv)
             {
-                txt += "Service Name: " + srv->getName() + endl;
+                txt += "Service Name: \"" + srv->getName() + "\"" + endl;
                 txt += "Service UUID: " + srv->getUuidFull() + endl;
 
                 for (auto c: srv->getCharacteristicsInfos())
@@ -966,7 +976,7 @@ bool DeviceToolBLEx::exportDeviceInfo(bool withAdvertisements, bool withServices
 
                         if (withValues)
                         {
-                            if (cst->getValueStr() == "<none>")
+                            if (cst->getValue() == "<none>")
                                 txt += " - Value: <none>";
                             else
                                 txt += " - Value: 0x" + cst->getValueHex();

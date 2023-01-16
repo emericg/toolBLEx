@@ -134,10 +134,10 @@ class DeviceToolBLEx: public Device
     /*!
      * - 0: not scanned
      * - 1: cache
-     * - 2: scan
-     * - 3: scan (with values)
-     * - 4: incomplete scan
-     * - 5: incomplete scan (with values)
+     * - 2: incomplete scan
+     * - 3: incomplete scan (with values)
+     * - 4: scanned
+     * - 5: scanned (with values)
      */
     int m_services_scanmode = 0;
     QList <QObject *> m_services;

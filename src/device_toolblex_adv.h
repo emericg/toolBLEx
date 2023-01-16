@@ -102,13 +102,11 @@ class AdvertisementData: public QObject
 
     Q_PROPERTY(int advDataSize READ getDataSize CONSTANT)
     Q_PROPERTY(QVariant advData READ getData CONSTANT)
-    Q_PROPERTY(QString advDataHexString READ getDataHexString CONSTANT)
-    Q_PROPERTY(QString advDataAsciiString READ getDataAsciiString CONSTANT)
 
-    Q_PROPERTY(QString advDataHexString2 READ getDataHexString2 CONSTANT)
-    Q_PROPERTY(QString advDataAsciiString2 READ getDataAsciiString2 CONSTANT)
-    Q_PROPERTY(QStringList advDataHexString3 READ getDataHexString3 CONSTANT)
-    Q_PROPERTY(QStringList advDataAsciiString3 READ getDataAsciiString3 CONSTANT)
+    Q_PROPERTY(QString advDataHex READ getDataHex CONSTANT)
+    Q_PROPERTY(QString advDataAscii READ getDataAscii CONSTANT)
+    Q_PROPERTY(QStringList advDataHex_list READ getDataHex_list CONSTANT)
+    Q_PROPERTY(QStringList advDataAscii_list READ getDataAscii_list CONSTANT)
 
     QDateTime m_timestamp;
     int advMode;
@@ -136,33 +134,10 @@ public:
     QVariant getData() const { return QVariant::fromValue(advData); }
     int getDataSize() const { return advData.size(); }
 
-    QString getDataHexString() const { return QString::fromStdString(advData.toHex().toStdString()); }
-    QString getDataAsciiString() const { return QString::fromStdString(advData.toStdString()); }
+    QString getDataHex() const { return QString::fromStdString(advData.toHex().toStdString()); }
+    QString getDataAscii() const { return QString::fromStdString(advData.toStdString()); }
 
-    QString getDataHexString2() const {
-        QString out;
-        for (int i = 0; i < advData.size(); i++)
-        {
-            if (!out.isEmpty()) out += " ";
-
-            QByteArray duo; duo += advData.at(i);
-            out += duo.toHex();
-        }
-        return out;
-    }
-    QString getDataAsciiString2() const {
-        QString out;
-        for (int i = 0; i < advData.size(); i++)
-        {
-            if (!out.isEmpty()) out += " ";
-
-            QByteArray duo; duo += advData.at(i);
-            out += " " + QString::fromStdString(duo.toStdString());
-        }
-        return out;
-    }
-
-    QStringList getDataHexString3() const {
+    QStringList getDataHex_list() const {
         QStringList out;
         for (int i = 0; i < advData.size(); i++)
         {
@@ -171,7 +146,7 @@ public:
         }
         return out;
     }
-    QStringList getDataAsciiString3() const {
+    QStringList getDataAscii_list() const {
         QStringList out;
         for (int i = 0; i < advData.size(); i++)
         {

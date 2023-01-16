@@ -72,6 +72,7 @@ public:
 
     QLowEnergyService *getService();
     QList <QObject *> getCharacteristicsInfos();
+    bool containsCharacteristic(const QString &uuid);
 
     QString getName() const;
     QString getUuidFull() const;
