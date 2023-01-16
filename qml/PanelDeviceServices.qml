@@ -234,6 +234,11 @@ Item {
             source: "qrc:/assets/icons_material/baseline-save-24px.svg"
 
             onClicked: {
+                if (exportButton.text === qsTr("Exported")) {
+                    utilsApp.openWith(selectedDevice.getExportPath())
+                    return
+                }
+
                 if (selectedDevice.exportDeviceInfo()) {
                     exportButton.text = qsTr("Exported")
                     exportButton.primaryColor = Theme.colorSuccess

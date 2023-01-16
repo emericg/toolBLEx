@@ -51,8 +51,9 @@ Rectangle {
         anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: -8
-
         spacing: 4
+
+        ////////
 
         Text { // characteristic name
             text: modelData.name
@@ -60,6 +61,8 @@ Rectangle {
             font.bold: true
             color: Theme.colorText
         }
+
+        ////////
 
         Row {
             spacing: 4
@@ -75,6 +78,8 @@ Rectangle {
                 color: Theme.colorText
             }
         }
+
+        ////////
 
         Row {
             spacing: 4

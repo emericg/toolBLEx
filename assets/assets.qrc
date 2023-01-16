@@ -86,7 +86,6 @@
         <file>icons_material/outline-add_circle-24px.svg</file>
         <file>icons_material/outline-info-24px.svg</file>
         <file>icons_material/outline-lock-24px.svg</file>
-        <file>icons_material/outline-new_releases-24px.svg</file>
         <file>icons_material/outline-remove_circle-24px.svg</file>
         <file>icons_material/outline-settings_remote-24px.svg</file>
 
@@ -101,12 +100,10 @@
         <file>icons_material/duotone-memory-24px.svg</file>
         <file>icons_material/duotone-microwave-48px.svg</file>
         <file>icons_material/duotone-minimize-24px.svg</file>
-        <file>icons_material/duotone-model_training-24px.svg</file>
         <file>icons_material/duotone-pin_drop-24px.svg</file>
         <file>icons_material/duotone-restart_alt-24px.svg</file>
         <file>icons_material/duotone-schedule-24px.svg</file>
         <file>icons_material/duotone-settings_bluetooth-24px.svg</file>
-        <file>icons_material/duotone-speed-24px.svg</file>
         <file>icons_material/duotone-style-24px.svg</file>
         <file>icons_material/duotone-timer-24px.svg</file>
         <file>icons_material/duotone-tune-24px.svg</file>

@@ -167,20 +167,20 @@ Item {
                 //    Layout.preferredHeight: 20
                 //    visible: (boxDevice.hasBattery && boxDevice.deviceBattery >= 0)
                 //
-                //    source: UtilsDeviceSensors.getDeviceBatteryIcon(boxDevice.deviceBattery)
+                //    source: UtilsDeviceSensors.getDeviceBatteryIcon(boxDevice?.deviceBattery)
                 //    color: isSelected ? "white" : Theme.colorIcon
                 //    rotation: 90
                 //    fillMode: Image.PreserveAspectCrop
                 //}
 
-                //IconSvg { // connected
-                //    width: 20
-                //    height: 20
-                //    visible: (boxDevice.hasBattery)
+                IconSvg { // connected
+                    width: 20
+                    height: 20
+                    visible: (boxDevice.status >= DeviceUtils.DEVICE_CONNECTED)
 
-                //    source: "qrc:/assets/icons_material/baseline-stars-24px.svg"
-                //    color: isSelected ? "white" : Theme.colorIcon
-                //}
+                    source: "qrc:/assets/icons_material/duotone-bluetooth_connected-24px.svg"
+                    color: isSelected ? "white" : Theme.colorIcon
+                }
 
                 IconSvg { // starred
                     width: 20
@@ -196,7 +196,7 @@ Item {
                     height: 20
                     visible: (boxDevice.isPaired)
 
-                    source: "qrc:/assets/icons_material/baseline-check_circle-24px.svg"
+                    source: "qrc:/assets/icons_material/baseline-insert_link-24px.svg"
                     color: isSelected ? "white" : Theme.colorIcon
                 }
             }

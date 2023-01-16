@@ -3,6 +3,9 @@ import QtQuick.Controls
 import Qt5Compat.GraphicalEffects
 
 import ThemeEngine 1.0
+import DeviceUtils 1.0
+
+import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
 
 Item {
     id: panelDevice
@@ -16,6 +19,7 @@ Item {
             }
 
             // Reset buttons
+            panelDeviceInfos.resetButtons()
             panelDeviceServices.resetButtons()
         }
     }
@@ -36,6 +40,31 @@ Item {
 
         // only make sense for BLE device?
         //visible: (selectedDevice && selectedDevice.isLowEnergy)
+
+        Rectangle {
+            anchors.left: parent.left
+            anchors.leftMargin: 12
+            anchors.verticalCenter: parent.verticalCenter
+            width: 32
+            height: 32
+            radius: 32
+
+            opacity: (selectedDevice?.status >= DeviceUtils.DEVICE_CONNECTING)
+            Behavior on opacity { OpacityAnimator { duration: 233 } }
+
+            color: Theme.colorComponentBackground
+            border.width: Theme.componentBorderWidth
+            border.color: Theme.colorComponentBorder
+
+            IconSvg {
+                anchors.centerIn: parent
+                width: 24
+                height: 24
+
+                source: UtilsDeviceSensors.getDeviceStatusIcon(selectedDevice?.status)
+                color: Theme.colorIcon
+            }
+        }
 
         Item {
             id: deviceMenu

@@ -22,8 +22,11 @@ Rectangle {
         legendWidth = 48
         legendWidth = Math.max(legendWidth, legendUUID.contentWidth)
         legendWidth = Math.max(legendWidth, legendSize.contentWidth)
-        legendWidth = Math.max(legendWidth, legendData.contentWidth)
+        legendWidth = Math.max(legendWidth, legendData_hex.contentWidth)
+        legendWidth = Math.max(legendWidth, legendData_str.contentWidth)
     }
+
+    ////////////////
 
     Rectangle {
         anchors.top: parent.top
@@ -34,6 +37,8 @@ Rectangle {
         radius: 2
         color: (packet.advMode == 0) ? Theme.colorGreen : Theme.colorBlue
     }
+
+    ////////////////
 
     Text {
         anchors.top: parent.top
@@ -59,6 +64,8 @@ Rectangle {
         }
     }
 
+    ////////////////
+
     Column {
         id: col
         anchors.left: parent.left
@@ -66,6 +73,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.rightMargin: 16
         anchors.verticalCenter: parent.verticalCenter
+        spacing: 0
 
         ////////
 
@@ -80,7 +88,7 @@ Rectangle {
 
                 text: qsTr("UUID")
                 textFormat: Text.PlainText
-                font.pixelSize: Theme.fontSizeContent
+                font.pixelSize: Theme.fontSizeContent-1
                 horizontalAlignment: Text.AlignRight
                 color: Theme.colorSubText
             }
@@ -95,7 +103,7 @@ Rectangle {
 
                     text: "0x"
                     textFormat: Text.PlainText
-                    font.pixelSize: Theme.fontSizeContent
+                    font.pixelSize: Theme.fontSizeContent-1
                     color: Theme.colorSubText
                 }
                 TextSelectable {
@@ -146,7 +154,7 @@ Rectangle {
                 width: legendWidth
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: qsTr("Size")
+                text: qsTr("Data")
                 textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContent
                 horizontalAlignment: Text.AlignRight
@@ -182,20 +190,131 @@ Rectangle {
         RowLayout {
             anchors.left: parent.left
             anchors.right: parent.right
+            spacing: 12
+
+            Item {
+                height: 26
+                Layout.alignment: Qt.AlignTop
+                Layout.preferredWidth: legendWidth
+
+                Text {
+                    id: legendData_hex
+                    width: legendWidth
+                    height: 26
+
+                    text: qsTr("(hex)")
+                    textFormat: Text.PlainText
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    horizontalAlignment: Text.AlignRight
+                    verticalAlignment: Text.AlignVCenter
+                    color: Theme.colorSubText
+                }
+            }
+            Flow {
+                Layout.alignment: Qt.AlignVCenter
+                Layout.fillWidth: true
+                spacing: 0
+
+                Repeater {
+                    model: packet.advDataHexString3
+
+                    Rectangle {
+                        width: 26
+                        height: 26
+                        color: (index % 2 === 0) ? Theme.colorForeground : Theme.colorBox
+                        border.width: 0
+                        border.color: Theme.colorForeground
+
+                        Text {
+                            height: 26
+                            anchors.horizontalCenter: parent.horizontalCenter
+
+                            text: modelData
+                            textFormat: Text.PlainText
+                            font.pixelSize: Theme.fontSizeContent-1
+                            verticalAlignment: Text.AlignVCenter
+                            color: Theme.colorText
+                            font.family: fontMonospace
+                        }
+                    }
+                }
+            }
+        }
+
+        ////////
+
+        RowLayout {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            spacing: 12
+
+            Item {
+                height: 26
+                Layout.alignment: Qt.AlignTop
+                Layout.preferredWidth: legendWidth
+
+                Text {
+                    id: legendData_str
+                    width: legendWidth
+                    height: 26
+
+                    text: qsTr("(str)")
+                    textFormat: Text.PlainText
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    horizontalAlignment: Text.AlignRight
+                    verticalAlignment: Text.AlignVCenter
+                    color: Theme.colorSubText
+                }
+            }
+            Flow {
+                Layout.alignment: Qt.AlignVCenter
+                Layout.fillWidth: true
+                spacing: 0
+
+                Repeater {
+                    model: packet.advDataAsciiString3
+
+                    Rectangle {
+                        width: 26
+                        height: 26
+                        color: (index % 2 === 0) ? Theme.colorForeground : Theme.colorBox
+                        border.width: 0
+                        border.color: Theme.colorForeground
+
+                        Text {
+                            height: 26
+                            anchors.horizontalCenter: parent.horizontalCenter
+
+                            text: modelData
+                            textFormat: Text.PlainText
+                            font.pixelSize: Theme.fontSizeContent-1
+                            verticalAlignment: Text.AlignVCenter
+                            color: Theme.colorText
+                            font.family: fontMonospace
+                        }
+                    }
+                }
+            }
+        }
+
+        ////////
+/*
+        RowLayout { // DEPRECATED // old way to present advertisement data
+            anchors.left: parent.left
+            anchors.right: parent.right
             anchors.rightMargin: 8
-            id: rrr
             spacing: 0
 
             Text {
-                id: legendData
+                id: legendData_hex
                 height: 24
 
                 Layout.alignment: Qt.AlignBaseline
                 Layout.preferredWidth: legendWidth
 
-                text: qsTr("Data")
+                text: qsTr("(hex)")
                 textFormat: Text.PlainText
-                font.pixelSize: Theme.fontSizeContent
+                font.pixelSize: Theme.fontSizeContent-1
                 horizontalAlignment: Text.AlignRight
                 color: Theme.colorSubText
             }
@@ -228,6 +347,44 @@ Rectangle {
             }
         }
 
+        ////////
+
+        RowLayout {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.rightMargin: 8
+            spacing: 0
+
+            Text {
+                id: legendData_str
+                height: 24
+
+                Layout.alignment: Qt.AlignBaseline
+                Layout.preferredWidth: legendWidth
+
+                text: qsTr("(str)")
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContent-1
+                horizontalAlignment: Text.AlignRight
+                color: Theme.colorSubText
+            }
+
+            Item { width: 12; height: 12; }
+
+            TextSelectable {
+                height: 24
+                leftPadding: 4
+
+                Layout.alignment: Qt.AlignBaseline
+                Layout.fillWidth: true
+
+                text: packet.advDataAsciiString
+                font.pixelSize: Theme.fontSizeContent
+                wrapMode: Text.WrapAnywhere
+                font.family: fontMonospace
+            }
+        }
+*/
         ////////
     }
 }

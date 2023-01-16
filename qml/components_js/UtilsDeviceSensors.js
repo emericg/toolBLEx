@@ -52,6 +52,27 @@ function getDeviceStatusColor(deviceStatus) {
     return clr
 }
 
+function getDeviceStatusIcon(deviceStatus) {
+    var src = "qrc:/assets/icons_material/baseline-bluetooth-24px.svg"
+
+    if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_OFFLINE) {
+        src = "qrc:/assets/icons_material/baseline-bluetooth_disabled-24px.svg"
+    } else if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_QUEUED) {
+        src = "qrc:/assets/icons_material/duotone-settings_bluetooth-24px.svg"
+    } else if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_CONNECTING) {
+        src = "qrc:/assets/icons_material/duotone-bluetooth_searching-24px.svg"
+    } else if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_CONNECTED) {
+        src = "qrc:/assets/icons_material/duotone-bluetooth_connected-24px.svg"
+    } else if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_WORKING ||
+               deviceStatus === DeviceUtils.DeviceUtils.DEVICE_UPDATING ||
+               deviceStatus === DeviceUtils.DeviceUtils.DEVICE_UPDATING_HISTORY ||
+               deviceStatus === DeviceUtils.DeviceUtils.DEVICE_UPDATING_REALTIME) {
+        src = "qrc:/assets/icons_material/duotone-settings_bluetooth-24px.svg"
+    }
+
+    return src
+}
+
 /* ************************************************************************** */
 
 function getDeviceBatteryIcon(batteryLevel) {

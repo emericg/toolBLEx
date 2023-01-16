@@ -23,6 +23,15 @@ Flickable {
     boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
     ScrollBar.vertical: ScrollBar { visible: false }
 
+    ////////
+
+    function resetButtons() {
+        exportButton.text = qsTr("Export")
+        exportButton.primaryColor = Theme.colorGrey
+    }
+
+    ////////
+
     Flow {
         id: inflow
         anchors.left: parent.left
@@ -242,7 +251,7 @@ Flickable {
 
                 ItemTag {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: UtilsBluetooth.getBluetoothPairingText(selectedDevice.pairingStatus)
+                    text: UtilsBluetooth.getBluetoothPairingText(selectedDevice?.pairingStatus)
                     color: Theme.colorBackground
                     visible: (selectedDevice && selectedDevice.pairingStatus > 0)
                 }
@@ -322,7 +331,7 @@ Flickable {
                         Layout.fillWidth: true
                         Layout.minimumHeight: 32
 
-                        text: UtilsBluetooth.getBluetoothMajorClassText(selectedDevice.majorClass)
+                        text: UtilsBluetooth.getBluetoothMajorClassText(selectedDevice?.majorClass)
                         wrapMode: Text.WrapAnywhere
                     }
                 }
@@ -347,7 +356,7 @@ Flickable {
                         Layout.fillWidth: true
                         Layout.minimumHeight: 32
 
-                        text: UtilsBluetooth.getBluetoothMinorClassText(selectedDevice.majorClass, selectedDevice.minorClass)
+                        text: UtilsBluetooth.getBluetoothMinorClassText(selectedDevice?.majorClass, selectedDevice?.minorClass)
                         wrapMode: Text.WrapAnywhere
                     }
                 }
@@ -372,7 +381,7 @@ Flickable {
                         Layout.fillWidth: true
                         Layout.minimumHeight: 32
 
-                        text: UtilsBluetooth.getBluetoothServiceClassText(selectedDevice.serviceClass)
+                        text: UtilsBluetooth.getBluetoothServiceClassText(selectedDevice?.serviceClass)
                         wrapMode: Text.WrapAnywhere
                     }
                 }
@@ -447,6 +456,11 @@ Flickable {
                         source: "qrc:/assets/icons_material/baseline-save-24px.svg"
 
                         onClicked: {
+                            if (exportButton.text === qsTr("Exported")) {
+                                utilsApp.openWith(selectedDevice.getExportPath())
+                                return
+                            }
+
                             if (selectedDevice.exportDeviceInfo()) {
                                 exportButton.text = qsTr("Exported")
                                 exportButton.primaryColor = Theme.colorSuccess
@@ -521,13 +535,14 @@ Flickable {
                         fullColor: true
                         primaryColor: (selectedDevice && selectedDevice.userColor)
                         fulltextColor: (selectedDevice && utilsApp.isQColorLight(selectedDevice.userColor)) ? "#333" : "#f4f4f4"
+                        font.bold: true
 
                         text: qsTr("color")
                         onClicked: colorDialog.open()
 
                         ColorDialog {
                             id: colorDialog
-                            currentColor: selectedDevice.userColor
+                            currentColor: selectedDevice ? selectedDevice.userColor : Theme.colorIcon
                             onAccepted: selectedDevice.userColor = colorDialog.color
                         }
                     }
@@ -637,7 +652,7 @@ Flickable {
                         }
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
-                            text: "-" + Math.abs(selectedDevice.rssi)
+                            text: "-" + Math.abs(selectedDevice?.rssi)
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorText
                         }
