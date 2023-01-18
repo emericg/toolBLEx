@@ -16,6 +16,7 @@
         <file alias="ItemActionTag.qml">components/ItemActionTag.qml</file>
         <file alias="SelectorMenuThemedItemBadge.qml">components/SelectorMenuThemedItemBadge.qml</file>
         <file alias="TextSelectable.qml">components/TextSelectable.qml</file>
+        <file alias="ButtonScanMenu.qml">components/ButtonScanMenu.qml</file>
 
         <file alias="AdapterWidget.qml">components/AdapterWidget.qml</file>
         <file alias="AdvertisementDataWidget.qml">components/AdvertisementDataWidget.qml</file>

@@ -128,10 +128,9 @@ Item {
                     height: 40
                     spacing: 12
 
-                    ButtonWireframeIcon {
+                    ButtonScanMenu {
                         anchors.verticalCenter: parent.verticalCenter
 
-                        fullColor: true
                         text: {
                             if (!selectedDevice) return ""
                             if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
@@ -154,12 +153,14 @@ Item {
                             else
                                 return "qrc:/assets/icons_material/duotone-settings_bluetooth-24px.svg"
                         }
-
                         onClicked: {
-                            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
-                                selectedDevice.actionScan()
-                            else
-                                selectedDevice.deviceDisconnect()
+                            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE) {
+                                if (scanmode === "full") {
+                                    selectedDevice.actionScanWithValues()
+                                } else {
+                                    selectedDevice.actionScanWithoutValues()
+                                }
+                            }
                         }
                     }
 

@@ -26,7 +26,7 @@ Flickable {
     ////////
 
     function resetButtons() {
-        exportButton.text = qsTr("Export")
+        exportButton.text = qsTr("export available data")
         exportButton.primaryColor = Theme.colorGrey
     }
 
@@ -416,8 +416,7 @@ Flickable {
                     width: parent.width
                     spacing: 12
 
-                    ButtonWireframeIcon {
-                        fullColor: true
+                    ButtonScanMenu {
                         text: {
                             if (!selectedDevice) return ""
                             if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
@@ -441,8 +440,13 @@ Flickable {
                                 return "qrc:/assets/icons_material/duotone-settings_bluetooth-24px.svg"
                         }
                         onClicked: {
-                            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
-                                selectedDevice.actionScanWithValues()
+                            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE) {
+                                if (scanmode === "full") {
+                                    selectedDevice.actionScanWithValues()
+                                } else {
+                                    selectedDevice.actionScanWithoutValues()
+                                }
+                            }
                         }
                     }
 

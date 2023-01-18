@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/qml">
-        <file alias="ActionMenuItem.qml">components_generic/ActionMenuItem.qml</file>
         <file alias="ButtonCompactable.qml">components_generic/ButtonCompactable.qml</file>
         <file alias="RoundButtonIcon.qml">components_generic/RoundButtonIcon.qml</file>
         <file alias="ButtonWireframe.qml">components_generic/ButtonWireframe.qml</file>

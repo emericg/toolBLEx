@@ -108,6 +108,7 @@ T.TextField {
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.bottom: parent.bottom
+        anchors.margins: 0
 
         text: control.buttonText
 

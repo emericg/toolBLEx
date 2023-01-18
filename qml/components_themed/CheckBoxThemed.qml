@@ -8,15 +8,19 @@ import ThemeEngine 1.0
 CheckBox {
     id: control
 
-    padding: 4
-    spacing: 12
+    padding: 8
+    spacing: 8
     font.pixelSize: Theme.fontSizeComponent
+
+    property int layoutDirection: Qt.LeftToRight
 
     indicator: Rectangle {
         implicitWidth: Theme.componentHeight
         implicitHeight: Theme.componentHeight
 
-        x: control.leftPadding
+        x: (layoutDirection === Qt.LeftToRight) ?
+               (control.leftPadding) :
+               (control.width - control.padding - width)
         y: (parent.height / 2) - (height / 2)
         width: 24
         height: 24
@@ -39,7 +43,8 @@ CheckBox {
     }
 
     contentItem: Text {
-        leftPadding: control.indicator.width + control.spacing
+        leftPadding: (layoutDirection === Qt.LeftToRight) ? control.indicator.width + control.spacing : 0
+        rightPadding: (layoutDirection === Qt.RightToLeft) ? control.indicator.width + control.spacing : 0
         verticalAlignment: Text.AlignVCenter
 
         text: control.text
