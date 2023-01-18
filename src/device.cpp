@@ -339,7 +339,7 @@ void Device::actionStarted()
 void Device::setTimeoutTimer()
 {
     m_timeoutTimer.setInterval(m_timeoutInterval*1000);
-    m_timeoutTimer.start();
+    //m_timeoutTimer.start(); // toolBLEx doesn't use a bluetooth timeout
 }
 
 /* ************************************************************************** */

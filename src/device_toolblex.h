@@ -142,8 +142,8 @@ class DeviceToolBLEx: public Device
     int m_services_scanmode = 0;
     QList <QObject *> m_services;
 
-    QVariant getLastServiceData() const { if (m_svd.empty()) return QVariant(); return QVariant::fromValue(m_svd.last()); }
-    QVariant getLastManufacturerData() const { if (m_mfd.empty()) return QVariant(); return QVariant::fromValue(m_mfd.last()); }
+    QVariant getLastServiceData() const { if (m_svd.empty()) return QVariant(); return QVariant::fromValue(m_svd.first()); }
+    QVariant getLastManufacturerData() const { if (m_mfd.empty()) return QVariant(); return QVariant::fromValue(m_mfd.first()); }
 
     QVariant getAdvertisementData() const { return QVariant::fromValue(m_advertisementData_filtered); }
     int getAdvertisementDataCount() const { return m_advertisementData_filtered.count(); }
