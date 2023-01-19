@@ -437,7 +437,7 @@ void DeviceToolBLEx::askForRead(const QString &uuid)
     }
 }
 
-void DeviceToolBLEx::askForWrite(const QString &uuid, const QString &value)
+void DeviceToolBLEx::askForWrite(const QString &uuid, const QString &value, const QString &type)
 {
     // Iterate through services, until we find the characteristic we want to write
     for (auto s: m_services)
@@ -450,12 +450,120 @@ void DeviceToolBLEx::askForWrite(const QString &uuid, const QString &value)
                 CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
                 if (cst && cst->getUuidFull() == uuid)
                 {
-                    srv->askForWrite(uuid, value);
+                    srv->askForWrite(uuid, value, type);
                     return;
                 }
             }
         }
     }
+}
+
+QByteArray DeviceToolBLEx::askForData_qba(const QString &value, const QString &type)
+{
+    //qDebug() << "DeviceToolBLEx::askForData_qba(" << value << " / " << type << ")";
+
+    QByteArray data;
+
+    if (type.startsWith("uint"))
+    {
+        //qDebug() << "uINTEGER > " << value.toULongLong();
+        if (type.startsWith("uint16")) {
+            uint16_t u = value.toUShort();
+            data.append(reinterpret_cast<const char*>(&u), 2);
+        }
+        else if (type.startsWith("uint32")) {
+            uint32_t u = value.toUInt();
+            data.append(reinterpret_cast<const char*>(&u), 4);
+        }
+        else if (type.startsWith("uint64")) {
+            uint64_t u = value.toULongLong();
+            data.append(reinterpret_cast<const char*>(&u), 8);
+        }
+    }
+    else if (type.startsWith("int"))
+    {
+        //qDebug() << "sINTEGER > " << value.toInt();
+        if (type.startsWith("int16")) {
+            int16_t i = value.toShort();
+            data.append(reinterpret_cast<const char*>(&i), 2);
+        }
+        else if (type.startsWith("int32")) {
+            int32_t i = value.toInt();
+            data.append(reinterpret_cast<const char*>(&i), 4);
+        }
+        else if (type.startsWith("int64")) {
+            int64_t i = value.toLongLong();
+            data.append(reinterpret_cast<const char*>(&i), 8);
+        }
+    }
+
+    else if (type == "float32")
+    {
+        //qDebug() << "FLOAT > " << value.toFloat();
+        float f = value.toFloat();
+        data.append(reinterpret_cast<const char*>(&f), 4);
+    }
+    else if (type == "float64") {
+        //qDebug() << "DOUBLE > " << value.toDouble();
+        double d = value.toDouble();
+        data.append(reinterpret_cast<const char*>(&d), 8);
+    }
+
+    else if (type == "data") {
+        //qDebug() << "data > " << value.toLatin1();
+        for (int i = 0; i < value.size(); i++)
+        {
+            data.append(value.at(i).toLatin1());
+        }
+    }
+    else if (type == "ascii") {
+        //qDebug() << "ascii > " << value.toLatin1().toHex();
+        data = value.toLatin1().toHex();
+    }
+
+    return data;
+}
+
+QStringList DeviceToolBLEx::askForData_list(const QString &value, const QString &type)
+{
+
+    // Convert data to QByteArray
+    QByteArray a = askForData_qba(value, type);
+
+    // Make it compatible with the data widget for display
+    QStringList out;
+    if (type == "data")
+    {
+        for (int i = 0; i < a.size();)
+        {
+            QByteArray duo; duo += a.at(i++);
+            if (i < a.size()) duo += a.at(i++);
+            else duo += '0';
+            out += duo;
+        }
+    }
+    else if (type == "ascii")
+    {
+        for (int i = 0; i < a.size();)
+        {
+            QByteArray duo;
+            duo += a.at(i++);
+            duo += a.at(i++);
+            out += duo;
+        }
+    }
+    else
+    {
+        for (int i = 0; i < a.size();)
+        {
+            QByteArray duo;
+            duo += a.at(i++);
+            out += duo.toHex();
+        }
+    }
+
+    //qDebug() << "DeviceToolBLEx::askForData_list(" << value << " / " << type << ")  >> " << out;
+    return out;
 }
 
 /* ************************************************************************** */

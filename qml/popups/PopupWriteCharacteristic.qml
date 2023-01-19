@@ -359,12 +359,53 @@ Popup {
                 wrapMode: Text.WordWrap
             }
 
-            TextFieldThemed { // text
+            ////
+
+            function updateTextFields() {
+                var value = ""
+                var type = ""
+
+                if (rowType.mode === qsTr("data")) {
+
+                    type = "data"
+                    value = textfieldValue_data.text
+
+                } else if (rowType.mode === qsTr("text")) {
+
+                    type = "ascii"
+                    value = textfieldValue_text.text
+
+                } else if (rowType.mode === qsTr("integer")) {
+
+                    if (rowSubType_int.mode_signed === qsTr("signed")) type = "int"
+                    if (rowSubType_int.mode_signed === qsTr("unsigned")) type = "uint"
+                    if (rowSizeType_int.mode === "8 bits") type += "8"
+                    if (rowSizeType_int.mode === "16 bits") type += "16"
+                    if (rowSizeType_int.mode === "32 bits") type += "32"
+                    if (rowSizeType_int.mode === "34 bits") type += "34"
+                    if (rowSubType_int.mode_endian === qsTr("le")) type += "_le"
+                    if (rowSubType_int.mode_endian === qsTr("be")) type += "_be"
+                    value = textfieldValue_int.text
+
+                } else if (rowType.mode === qsTr("float")) {
+
+                    if (rowSizeType_float.mode === "32 bits") type = "float32"
+                    if (rowSizeType_float.mode === "64 bits") type = "float64"
+                    value = textfieldValue_float.text
+
+                }
+
+                data_hex.model = selectedDevice.askForData_list(value, type)
+            }
+
+            ////
+
+            TextFieldThemed {
                 id: textfieldValue_text
                 width: parent.width
 
                 visible: rowType.mode === qsTr("text")
-                placeholderText: "text"
+                placeholderText: "ascii text"
 
                 font.pixelSize: 18
                 font.bold: false
@@ -373,16 +414,15 @@ Popup {
 
                 maximumLength: 20
                 validator: RegularExpressionValidator { regularExpression: /[a-zA-Z0-9]+/ }
+
+                onTextChanged: parent.updateTextFields()
             }
-
-            ////
-
             TextFieldThemed {
                 id: textfieldValue_data
                 width: parent.width
 
                 visible: rowType.mode === qsTr("data")
-                placeholderText: "data"
+                placeholderText: "hexadecimal data"
 
                 font.pixelSize: 18
                 font.bold: false
@@ -392,6 +432,8 @@ Popup {
                 maximumLength: 40
                 validator: RegularExpressionValidator { regularExpression: /[a-fA-F0-9]+/ }
                 //inputMask: "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
+
+                onTextChanged: parent.updateTextFields()
             }
             TextFieldThemed {
                 id: textfieldValue_int
@@ -405,11 +447,12 @@ Popup {
                 color: Theme.colorText
                 selectByMouse: true
 
-
                 validator: IntValidator {
-                   bottom: parseInt(-999)
-                   top: parseInt(999)
+                   //bottom: parseInt(-2147483647)
+                   //top: parseInt(2147483647)
                 }
+
+                onTextChanged: parent.updateTextFields()
             }
             TextFieldThemed {
                 id: textfieldValue_float
@@ -424,6 +467,8 @@ Popup {
                 selectByMouse: true
 
                 validator: DoubleValidator { }
+
+                onTextChanged: parent.updateTextFields()
             }
         }
 
@@ -482,7 +527,6 @@ Popup {
         Item  { width: 1; height: 1; } // spacer
 
         Row {
-            id: flowContent
             anchors.right: parent.right
             anchors.rightMargin: 24
             spacing: 16
@@ -504,6 +548,40 @@ Popup {
 
                 text: qsTr("Write value")
                 onClicked: {
+                    var value = ""
+                    var type = ""
+
+                    if (rowType.mode === qsTr("data")) {
+
+                        type = "data"
+                        value = textfieldValue_data.text
+
+                    } else if (rowType.mode === qsTr("text")) {
+
+                        type = "ascii"
+                        value = textfieldValue_text.text
+
+                    } else if (rowType.mode === qsTr("integer")) {
+
+                        if (rowSubType_int.mode_signed === qsTr("signed")) type = "int"
+                        if (rowSubType_int.mode_signed === qsTr("unsigned")) type = "uint"
+                        if (rowSizeType_int.mode === "8 bits") type += "8"
+                        if (rowSizeType_int.mode === "16 bits") type += "16"
+                        if (rowSizeType_int.mode === "32 bits") type += "32"
+                        if (rowSizeType_int.mode === "34 bits") type += "34"
+                        if (rowSubType_int.mode_endian === qsTr("le")) type += "_le"
+                        if (rowSubType_int.mode_endian === qsTr("be")) type += "_be"
+                        value = textfieldValue_int.text
+
+                    } else if (rowType.mode === qsTr("float")) {
+
+                        if (rowSizeType_float.mode === "32 bits") type = "float32"
+                        if (rowSizeType_float.mode === "64 bits") type = "float64"
+                        value = textfieldValue_float.text
+
+                    }
+
+                    selectedDevice.askForWrite(characteristic.uuid_full, value, type)
                     popupWriteCharacteristic.confirmed()
                     popupWriteCharacteristic.close()
                 }

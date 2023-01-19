@@ -22,6 +22,8 @@
 #include "BleServiceInfo.h"
 #include "BleCharacteristicInfo.h"
 
+#include "device_toolblex.h"
+
 #include <QBluetoothServiceInfo>
 #include <QLowEnergyCharacteristic>
 #include <QJsonArray>
@@ -191,11 +193,17 @@ void ServiceInfo::askForRead(const QString &uuid)
     }
 }
 
-void ServiceInfo::askForWrite(const QString &uuid, const QString &value)
+void ServiceInfo::askForWrite(const QString &uuid, const QString &value, const QString &type)
 {
     if (m_ble_service)
     {
         qDebug() << "ServiceInfo::askForWrite(" << uuid << ") > value:" << value;
+
+        QBluetoothUuid towrite(uuid);
+        QLowEnergyCharacteristic crst = m_ble_service->characteristic(towrite);
+
+        QByteArray qba = DeviceToolBLEx::askForData_qba(value, type);
+        m_ble_service->writeCharacteristic(crst, qba);
     }
 }
 
@@ -210,7 +218,7 @@ void ServiceInfo::bleReadDone(const QLowEnergyCharacteristic &c, const QByteArra
     for (auto cc: m_characteristics)
     {
         CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(cc);
-        if (cst && cst->getUuidFull() == c.uuid().toString())
+        if (cst && cst->getUuidFull() == c.uuid().toString().toUpper())
         {
             // update characteristic value
             cst->setValue(v);
@@ -227,7 +235,7 @@ void ServiceInfo::bleReadNotify(const QLowEnergyCharacteristic &c, const QByteAr
     for (auto cc: m_characteristics)
     {
         CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(cc);
-        if (cst && cst->getUuidFull() == c.uuid().toString())
+        if (cst && cst->getUuidFull() == c.uuid().toString().toUpper())
         {
             // update characteristic value
             cst->setValue(v);
@@ -244,7 +252,7 @@ void ServiceInfo::bleWriteDone(const QLowEnergyCharacteristic &c, const QByteArr
     for (auto cc: m_characteristics)
     {
         CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(cc);
-        if (cst && cst->getUuidFull() == c.uuid().toString())
+        if (cst && cst->getUuidFull() == c.uuid().toString().toUpper())
         {
             // update characteristic value
             cst->setValue(v);

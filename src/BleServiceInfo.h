@@ -82,7 +82,7 @@ public:
 
     void askForNotify(const QString &uuid);
     void askForRead(const QString &uuid);
-    void askForWrite(const QString &uuid, const QString &value);
+    void askForWrite(const QString &uuid, const QString &value, const QString &type);
 };
 
 /* ****************************************************************************/
