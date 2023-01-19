@@ -9,7 +9,7 @@ Rectangle {
     height: col.height + 16
     color: Theme.colorBox
 
-    property string uuiidd: modelData.uuid_full
+    property var characteristic: modelData
 
     ////////////////
 
@@ -23,7 +23,7 @@ Rectangle {
             parent: appContent
 
             onConfirmed: {
-                //selectedDevice.askForWrite(bleCharacteristicWidget.uuiidd, "wat")
+                //selectedDevice.askForWrite(characteristic.uuid_full, "wat")
             }
         }
     }
@@ -100,14 +100,14 @@ Rectangle {
                     onClicked: {
                         if (selectedDevice && selectedDevice.servicesScanMode > 1) {
                             if (text === "Notify") {
-                                selectedDevice.askForNotify(bleCharacteristicWidget.uuiidd)
+                                selectedDevice.askForNotify(characteristic.uuid_full)
                             }
                             if (text === "Read") {
-                                selectedDevice.askForRead(bleCharacteristicWidget.uuiidd)
+                                selectedDevice.askForRead(characteristic.uuid_full)
                             }
                             if (text === "Write" || text === "WriteNoResp") {
                                 popupLoader.active = true
-                                popupLoader.item.openU(bleCharacteristicWidget.uuiidd)
+                                popupLoader.item.openCC(characteristic)
                             }
                         }
                     }

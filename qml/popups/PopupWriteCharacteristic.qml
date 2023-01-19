@@ -1,5 +1,5 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 
 import ThemeEngine 1.0
 
@@ -17,16 +17,19 @@ Popup {
 
     signal confirmed()
 
+    property var characteristic: null
+
+    function openCC(cc) {
+        characteristic = cc
+        uuid_tf.text = characteristic.uuid_full
+        open()
+    }
+
     onAboutToShow: {
         //
     }
     onAboutToHide: {
-        //
-    }
-
-    function openU(uuid) {
-        uuid_tf.text = uuid
-        open()
+        // TODO // cleanup
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -50,49 +53,47 @@ Popup {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            height: 64
+            height: 80
             color: Theme.colorPrimary
             radius: Theme.componentRadius
 
-            Text {
+            Column {
                 anchors.left: parent.left
                 anchors.leftMargin: 24
                 anchors.verticalCenter: parent.verticalCenter
+                spacing: 4
 
-                text: qsTr("Write to characteristic")
-                font.pixelSize: Theme.fontSizeTitle
-                font.bold: true
-                color: "white"
-            }
-        }
-
-        ////////
-
-        Column {
-            anchors.left: parent.left
-            anchors.leftMargin: 24
-            anchors.right: parent.right
-            anchors.rightMargin: 24
-            spacing: 8
-
-            Text {
-                width: parent.width
-
-                text: qsTr("Target UUID")
-                textFormat: Text.PlainText
-                font.pixelSize: Theme.fontSizeContentVeryBig
-                color: Theme.colorText
-                wrapMode: Text.WordWrap
+                Text {
+                    text: qsTr("Write to characteristic")
+                    font.pixelSize: Theme.fontSizeTitle
+                    font.bold: true
+                    color: "white"
+                    opacity: 0.98
+                }
+                Text {
+                    id: uuid_tf
+                    text: qsTr("Write to characteristic")
+                    font.pixelSize: Theme.fontSizeTitle-4
+                    color: "white"
+                    opacity: 0.9
+                }
             }
 
-            TextFieldThemed { // UUID
-                id: uuid_tf
-                width: parent.width
+            Row {
+                anchors.right: parent.right
+                anchors.rightMargin: 24
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 4
 
-                readOnly: true
-                font.pixelSize: 18
-                font.bold: false
-                color: Theme.colorText
+                Repeater { // characteristic properties
+                    anchors.verticalCenter: parent.verticalCenter
+                    model: characteristic && characteristic.propertiesList
+                    ItemTag {
+                        text: modelData
+                        textColor: Theme.colorLightGrey
+                        opacity: 0.8
+                    }
+                }
             }
         }
 
@@ -118,7 +119,7 @@ Popup {
                 width: parent.width
                 spacing: 10
 
-                property string mode: "bytes"
+                property string mode: qsTr("data")
 
                 ButtonWireframe {
                     height: 28
@@ -126,7 +127,7 @@ Popup {
                     primaryColor: (rowType.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
                     onClicked: rowType.mode = text
 
-                    text: qsTr("bytes")
+                    text: qsTr("data")
                 }
                 ButtonWireframe {
                     height: 28
@@ -155,26 +156,26 @@ Popup {
             }
 
             Row {
-                id: rowSubType_bytes
+                id: rowSubType_data
                 width: parent.width
                 spacing: 10
 
                 visible: rowType.mode === qsTr("bytes")
-                property string mode: "bytes"
+                property string mode: qsTr("bytes")
 
                 ButtonWireframe {
                     height: 28
                     fullColor: true
-                    primaryColor: (rowSubType_bytes.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
-                    onClicked: rowSubType_bytes.mode = text
+                    primaryColor: (rowSubType_data.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    onClicked: rowSubType_data.mode = text
 
                     text: qsTr("bytes")
                 }
                 ButtonWireframe {
                     height: 28
                     fullColor: true
-                    primaryColor: (rowSubType_bytes.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
-                    onClicked: rowSubType_bytes.mode = text
+                    primaryColor: (rowSubType_data.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    onClicked: rowSubType_data.mode = text
 
                     text: qsTr("byte")
                 }
@@ -186,7 +187,7 @@ Popup {
                 spacing: 10
 
                 visible: rowType.mode === qsTr("text")
-                property string mode: "ascii"
+                property string mode: qsTr("ascii")
 
                 ButtonWireframe {
                     height: 28
@@ -212,9 +213,8 @@ Popup {
                 spacing: 8
 
                 visible: rowType.mode === qsTr("integer")
-                property string mode: "32 bits"
-                property string mode_signed: "signed"
-                property string mode_endian: "le"
+                property string mode_signed: qsTr("signed")
+                property string mode_endian: qsTr("le")
 
                 ButtonWireframe {
                     height: 28
@@ -233,42 +233,7 @@ Popup {
                     text: qsTr("unsigned")
                 }
 
-                ////
-
-                ButtonWireframe {
-                    height: 28
-                    fullColor: true
-                    primaryColor: (rowSubType_int.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
-                    onClicked: rowSubType_int.mode = text
-
-                    text: qsTr("8 bits")
-                }
-                ButtonWireframe {
-                    height: 28
-                    fullColor: true
-                    primaryColor: (rowSubType_int.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
-                    onClicked: rowSubType_int.mode = text
-
-                    text: qsTr("16 bits")
-                }
-                ButtonWireframe {
-                    height: 28
-                    fullColor: true
-                    primaryColor: (rowSubType_int.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
-                    onClicked: rowSubType_int.mode = text
-
-                    text: qsTr("32 bits")
-                }
-                ButtonWireframe {
-                    height: 28
-                    fullColor: true
-                    primaryColor: (rowSubType_int.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
-                    onClicked: rowSubType_int.mode = text
-
-                    text: qsTr("64 bits")
-                }
-
-                ////
+                Item { width: 1; height: 1; } // spacer
 
                 ButtonWireframe {
                     height: 28
@@ -289,7 +254,67 @@ Popup {
             }
 
             Row {
+                id: rowSizeType_int
+                width: parent.width
+                spacing: 8
+
+                visible: rowType.mode === qsTr("integer")
+                property string mode: "32 bits"
+
+                ButtonWireframe {
+                    height: 28
+                    fullColor: true
+                    primaryColor: (rowSizeType_int.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    onClicked: rowSizeType_int.mode = text
+
+                    text: "8 bits"
+                }
+                ButtonWireframe {
+                    height: 28
+                    fullColor: true
+                    primaryColor: (rowSizeType_int.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    onClicked: rowSizeType_int.mode = text
+
+                    text: "16 bits"
+                }
+                ButtonWireframe {
+                    height: 28
+                    fullColor: true
+                    primaryColor: (rowSizeType_int.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    onClicked: rowSizeType_int.mode = text
+
+                    text: "32 bits"
+                }
+                ButtonWireframe {
+                    height: 28
+                    fullColor: true
+                    primaryColor: (rowSizeType_int.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    onClicked: rowSizeType_int.mode = text
+
+                    text: "64 bits"
+                }
+            }
+
+            Row {
                 id: rowSubType_float
+                width: parent.width
+                spacing: 10
+
+                visible: rowType.mode === qsTr("float")
+                property string mode: "IEEE 754"
+
+                ButtonWireframe {
+                    height: 28
+                    fullColor: true
+                    primaryColor: (rowSubType_float.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    onClicked: rowSubType_float.mode = text
+
+                    text: "IEEE 754"
+                }
+            }
+
+            Row {
+                id: rowSizeType_float
                 width: parent.width
                 spacing: 10
 
@@ -299,34 +324,18 @@ Popup {
                 ButtonWireframe {
                     height: 28
                     fullColor: true
-                    primaryColor: (rowSubType_float.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
-                    onClicked: rowSubType_float.mode = text
+                    primaryColor: (rowSizeType_float.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    onClicked: rowSizeType_float.mode = text
 
-                    text: qsTr("16 bits")
+                    text: "32 bits"
                 }
                 ButtonWireframe {
                     height: 28
                     fullColor: true
-                    primaryColor: (rowSubType_float.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
-                    onClicked: rowSubType_float.mode = text
+                    primaryColor: (rowSizeType_float.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    onClicked: rowSizeType_float.mode = text
 
-                    text: qsTr("32 bits")
-                }
-                ButtonWireframe {
-                    height: 28
-                    fullColor: true
-                    primaryColor: (rowSubType_float.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
-                    onClicked: rowSubType_float.mode = text
-
-                    text: qsTr("64 bits")
-                }
-
-                ButtonWireframe {
-                    height: 28
-                    fullColor: true
-                    primaryColor: Theme.colorGrey
-
-                    text: qsTr("IEEE 754")
+                    text: "64 bits"
                 }
             }
         }
@@ -350,14 +359,121 @@ Popup {
                 wrapMode: Text.WordWrap
             }
 
-            TextFieldThemed { // value
+            TextFieldThemed { // text
+                id: textfieldValue_text
                 width: parent.width
+
+                visible: rowType.mode === qsTr("text")
+                placeholderText: "text"
 
                 font.pixelSize: 18
                 font.bold: false
                 color: Theme.colorText
+                selectByMouse: true
 
-                placeholderText: ""
+                maximumLength: 20
+                validator: RegularExpressionValidator { regularExpression: /[a-zA-Z0-9]+/ }
+            }
+
+            ////
+
+            TextFieldThemed {
+                id: textfieldValue_data
+                width: parent.width
+
+                visible: rowType.mode === qsTr("data")
+                placeholderText: "data"
+
+                font.pixelSize: 18
+                font.bold: false
+                color: Theme.colorText
+                selectByMouse: true
+
+                maximumLength: 40
+                validator: RegularExpressionValidator { regularExpression: /[a-fA-F0-9]+/ }
+                //inputMask: "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
+            }
+            TextFieldThemed {
+                id: textfieldValue_int
+                width: parent.width
+
+                visible: rowType.mode === qsTr("integer")
+                placeholderText: "integer"
+
+                font.pixelSize: 18
+                font.bold: false
+                color: Theme.colorText
+                selectByMouse: true
+
+
+                validator: IntValidator {
+                   bottom: parseInt(-999)
+                   top: parseInt(999)
+                }
+            }
+            TextFieldThemed {
+                id: textfieldValue_float
+                width: parent.width
+
+                visible: rowType.mode === qsTr("float")
+                placeholderText: "floating point"
+
+                font.pixelSize: 18
+                font.bold: false
+                color: Theme.colorText
+                selectByMouse: true
+
+                validator: DoubleValidator { }
+            }
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+
+        Column {
+            anchors.left: parent.left
+            anchors.leftMargin: 24
+            anchors.right: parent.right
+            anchors.rightMargin: 24
+            spacing: 8
+
+            Text {
+                width: parent.width
+
+                text: qsTr("Data to be written (hexadecimal)")
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContentVeryBig
+                color: Theme.colorText
+                wrapMode: Text.WordWrap
+            }
+
+            Flow {
+                width: parent.width
+                spacing: 0
+
+                Repeater {
+                    id: data_hex
+                    model: null
+
+                    Rectangle {
+                        width: 26
+                        height: 26
+                        color: (index % 2 === 0) ? Theme.colorForeground : Theme.colorBox
+                        border.width: 0
+                        border.color: Theme.colorForeground
+
+                        Text {
+                            height: 26
+                            anchors.horizontalCenter: parent.horizontalCenter
+
+                            text: modelData
+                            textFormat: Text.PlainText
+                            font.pixelSize: Theme.fontSizeContent-1
+                            verticalAlignment: Text.AlignVCenter
+                            color: Theme.colorText
+                            font.family: fontMonospace
+                        }
+                    }
+                }
             }
         }
 
@@ -372,10 +488,10 @@ Popup {
             spacing: 16
 
             ButtonWireframe {
-                text: qsTr("Cancel")
-                primaryColor: Theme.colorSubText
-                secondaryColor: Theme.colorForeground
+                fullColor: true
+                primaryColor: Theme.colorLightGrey
 
+                text: qsTr("Cancel")
                 onClicked: {
                     popupWriteCharacteristic.close()
                 }
@@ -383,10 +499,10 @@ Popup {
             ButtonWireframe {
                 width: parent.btnSize
 
-                text: qsTr("Write value")
-                primaryColor: Theme.colorPrimary
                 fullColor: true
+                primaryColor: Theme.colorPrimary
 
+                text: qsTr("Write value")
                 onClicked: {
                     popupWriteCharacteristic.confirmed()
                     popupWriteCharacteristic.close()

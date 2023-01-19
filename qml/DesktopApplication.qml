@@ -390,7 +390,7 @@ ApplicationWindow {
                 }
             }
 
-
+            clip: true
             width: appWindow.width*2
             height: width
             radius: width
@@ -399,12 +399,12 @@ ApplicationWindow {
             Image {
                 id: appSplashImage
                 anchors.centerIn: parent
-                width: 256
-                height: 256
-                source: "qrc:/assets/logos/logo.svg"
+                width: 320
+                height: 320
+                source: "qrc:/assets/logos/icon.svg"
                 sourceSize: Qt.size(width, height)
 
-                Behavior on opacity { OpacityAnimator { duration: 500; } }
+                Behavior on opacity { OpacityAnimator { duration: 666; } }
             }
         }
     }

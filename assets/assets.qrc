@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/assets">
         <file>logos/logo.svg</file>
+        <file>logos/icon.svg</file>
         <file>logos/github.svg</file>
 
         <file>icons_bootstrap/bluetooth.svg</file>
