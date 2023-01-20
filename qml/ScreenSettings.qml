@@ -53,7 +53,7 @@ Loader {
                 anchors.right: parent.right
 
                 topPadding: 0
-                bottomPadding: 0
+                bottomPadding: 24
                 spacing: 24
 
                 property int flowElementWidth: (width >= 1080) ? (width / 3) - (spacing*1) - 8

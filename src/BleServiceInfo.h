@@ -59,10 +59,13 @@ Q_SIGNALS:
 
 private slots:
     void serviceDetailsDiscovered(QLowEnergyService::ServiceState newState);
+    void serviceErrorOccured(QLowEnergyService::ServiceError error);
 
     void bleReadDone(const QLowEnergyCharacteristic &c, const QByteArray &value);
     void bleReadNotify(const QLowEnergyCharacteristic &c, const QByteArray &value);
     void bleWriteDone(const QLowEnergyCharacteristic &c, const QByteArray &value);
+    void bleDescReadDone(const QLowEnergyDescriptor &d, const QByteArray &value);
+    void bleDescWriteDone(const QLowEnergyDescriptor &d, const QByteArray &value);
 
 public:
     ServiceInfo() = default;

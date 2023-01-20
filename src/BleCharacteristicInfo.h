@@ -44,9 +44,9 @@ class CharacteristicInfo: public QObject
     Q_PROPERTY(QString permissions READ getPermission NOTIFY characteristicChanged)
     Q_PROPERTY(QStringList permissionsList READ getPermissionList NOTIFY characteristicChanged)
 
-    Q_PROPERTY(bool readInProgress READ getReadInProgress NOTIFY valueChanged)
-    Q_PROPERTY(bool writeInProgress READ getWriteInProgress NOTIFY valueChanged)
-    Q_PROPERTY(bool notifyInProgress READ getNotifyInProgress NOTIFY valueChanged)
+    Q_PROPERTY(bool readInProgress READ getReadInProgress NOTIFY statusChanged)
+    Q_PROPERTY(bool writeInProgress READ getWriteInProgress NOTIFY statusChanged)
+    Q_PROPERTY(bool notifyInProgress READ getNotifyInProgress NOTIFY statusChanged)
 
     Q_PROPERTY(int dataSize READ getDataSize NOTIFY valueChanged)
     Q_PROPERTY(QVariant data READ getData NOTIFY valueChanged)
@@ -68,6 +68,7 @@ class CharacteristicInfo: public QObject
 
 Q_SIGNALS:
     void characteristicChanged();
+    void statusChanged();
     void valueChanged();
 
 public:
@@ -88,6 +89,9 @@ public:
     QString getPermission() const;
     QStringList getPermissionList() const; // TODO
 
+    void setReadInProgress(bool value);
+    void setWriteInProgress(bool value);
+    void setNotifyInProgress(bool value);
     bool getReadInProgress() const { return m_read_inprogress; };
     bool getWriteInProgress() const { return m_write_inprogress; };
     bool getNotifyInProgress() const { return m_notify_inprogress; };

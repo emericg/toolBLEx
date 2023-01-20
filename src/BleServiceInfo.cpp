@@ -116,9 +116,12 @@ void ServiceInfo::connectToService(QLowEnergyService::DiscoveryMode scanmode)
     if (m_ble_service->state() == QLowEnergyService::RemoteService)
     {
         connect(m_ble_service, &QLowEnergyService::stateChanged, this, &ServiceInfo::serviceDetailsDiscovered);
+        connect(m_ble_service, &QLowEnergyService::errorOccurred, this, &ServiceInfo::serviceErrorOccured);
         connect(m_ble_service, &QLowEnergyService::characteristicRead, this, &ServiceInfo::bleReadDone);
         connect(m_ble_service, &QLowEnergyService::characteristicWritten, this, &ServiceInfo::bleWriteDone);
         connect(m_ble_service, &QLowEnergyService::characteristicChanged, this, &ServiceInfo::bleReadNotify);
+        connect(m_ble_service, &QLowEnergyService::descriptorRead, this, &ServiceInfo::bleDescReadDone);
+        connect(m_ble_service, &QLowEnergyService::descriptorWritten, this, &ServiceInfo::bleDescWriteDone);
 
         QTimer::singleShot(0, [=] () { m_ble_service->discoverDetails(scanmode); });
         return;
@@ -139,8 +142,17 @@ void ServiceInfo::connectToService(QLowEnergyService::DiscoveryMode scanmode)
 
 void ServiceInfo::serviceDetailsDiscovered(QLowEnergyService::ServiceState newState)
 {
-    qDebug() << "ServiceInfo::serviceDetailsDiscovered(" << getUuidFull() << ")";
-
+    qDebug() << "ServiceInfo::serviceDetailsDiscovered(" << getUuidFull() << " / " << newState << ")";
+/*
+    QLowEnergyService::InvalidService	0	A service can become invalid when it looses the connection to the underlying device. Even though the connection may be lost it retains its last information. An invalid service cannot become valid anymore even if the connection to the device is re-established.
+    QLowEnergyService::RemoteService	1	The service details are yet to be discovered by calling discoverDetails(). The only reliable pieces of information are its serviceUuid() and serviceName().
+    QLowEnergyService::RemoteServiceDiscovering	2	The service details are being discovered.
+    QLowEnergyService::RemoteServiceDiscovered	3	The service details have been discovered.
+    QLowEnergyService::LocalService (since Qt 5.7)	4	The service is associated with a controller object in the peripheral role. Such service objects do not change their state.
+    QLowEnergyService::DiscoveryRequired	RemoteService	Deprecated. Was renamed to RemoteService.
+    QLowEnergyService::DiscoveringService	RemoteServiceDiscovering	Deprecated. Was renamed to RemoteServiceDiscovering.
+    QLowEnergyService::ServiceDiscovered	RemoteServiceDiscovered	Deprecated. Was renamed to RemoteServiceDiscovered.
+*/
     if (newState != QLowEnergyService::RemoteServiceDiscovered)
     {
         // do not hang in "Scanning for characteristics" mode forever
@@ -166,6 +178,20 @@ void ServiceInfo::serviceDetailsDiscovered(QLowEnergyService::ServiceState newSt
     Q_EMIT characteristicsUpdated();
 }
 
+void ServiceInfo::serviceErrorOccured(QLowEnergyService::ServiceError error)
+{
+    qDebug() << "ServiceInfo::serviceErrorOccured(" << getUuidFull() << " / " << error << ")";
+/*
+    QLowEnergyService::NoError	0	No error has occurred.
+    QLowEnergyService::OperationError	1	An operation was attempted while the service was not ready. An example might be the attempt to write to the service while it was not yet in the ServiceDiscovered state() or the service is invalid due to a loss of connection to the peripheral device.
+    QLowEnergyService::CharacteristicReadError (since Qt 5.5)	5	An attempt to read a characteristic value failed. For example, it might be triggered in response to a call to readCharacteristic().
+    QLowEnergyService::CharacteristicWriteError	2	An attempt to write a new value to a characteristic failed. For example, it might be triggered when attempting to write to a read-only characteristic.
+    QLowEnergyService::DescriptorReadError (since Qt 5.5)	6	An attempt to read a descriptor value failed. For example, it might be triggered in response to a call to readDescriptor().
+    QLowEnergyService::DescriptorWriteError	3	An attempt to write a new value to a descriptor failed. For example, it might be triggered when attempting to write to a read-only descriptor.
+    QLowEnergyService::UnknownError (since Qt 5.5)	4	An unknown error occurred when interacting with the service.
+*/
+}
+
 /* ************************************************************************** */
 
 void ServiceInfo::askForNotify(const QString &uuid)
@@ -177,7 +203,25 @@ void ServiceInfo::askForNotify(const QString &uuid)
         QBluetoothUuid toread(uuid);
         QLowEnergyCharacteristic crst = m_ble_service->characteristic(toread);
         QLowEnergyDescriptor desc = crst.clientCharacteristicConfiguration();
-        m_ble_service->writeDescriptor(desc, QByteArray::fromHex("0100"));
+
+        QByteArray descValue = QByteArray::fromHex("0000");
+        bool inProgress = false;
+
+        if (desc.value() == QByteArray::fromHex("0000"))
+        {
+            descValue = QByteArray::fromHex("0100");
+            inProgress = true;
+        }
+
+        m_ble_service->writeDescriptor(desc, descValue);
+        for (auto c: m_characteristics)
+        {
+            CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
+            if (cst && cst->getUuidFull() == uuid)
+            {
+                cst->setNotifyInProgress(inProgress);
+            }
+        }
     }
 }
 
@@ -190,6 +234,15 @@ void ServiceInfo::askForRead(const QString &uuid)
         QBluetoothUuid toread(uuid);
         QLowEnergyCharacteristic crst = m_ble_service->characteristic(toread);
         m_ble_service->readCharacteristic(crst);
+
+        for (auto c: m_characteristics)
+        {
+            CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
+            if (cst && cst->getUuidFull() == uuid)
+            {
+                cst->setReadInProgress(true);
+            }
+        }
     }
 }
 
@@ -202,8 +255,26 @@ void ServiceInfo::askForWrite(const QString &uuid, const QString &value, const Q
         QBluetoothUuid towrite(uuid);
         QLowEnergyCharacteristic crst = m_ble_service->characteristic(towrite);
 
+        QLowEnergyService::WriteMode m = QLowEnergyService::WriteWithResponse;
+        if (crst.properties() & QLowEnergyCharacteristic::Write) {
+            m = QLowEnergyService::WriteWithResponse;
+
+            for (auto c: m_characteristics)
+            {
+                CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
+                if (cst && cst->getUuidFull() == uuid)
+                {
+                    cst->setWriteInProgress(true);
+                }
+            }
+        } else if (crst.properties() & QLowEnergyCharacteristic::WriteNoResponse) {
+            m = QLowEnergyService::WriteWithoutResponse;
+        } else if (crst.properties() & QLowEnergyCharacteristic::WriteSigned) {
+            m = QLowEnergyService::WriteSigned;
+        }
+
         QByteArray qba = DeviceToolBLEx::askForData_qba(value, type);
-        m_ble_service->writeCharacteristic(crst, qba);
+        m_ble_service->writeCharacteristic(crst, qba, m);
     }
 }
 
@@ -222,6 +293,8 @@ void ServiceInfo::bleReadDone(const QLowEnergyCharacteristic &c, const QByteArra
         {
             // update characteristic value
             cst->setValue(v);
+            cst->setReadInProgress(false);
+            cst->setWriteInProgress(false);
         }
     }
 }
@@ -258,6 +331,20 @@ void ServiceInfo::bleWriteDone(const QLowEnergyCharacteristic &c, const QByteArr
             cst->setValue(v);
         }
     }
+}
+
+void ServiceInfo::bleDescReadDone(const QLowEnergyDescriptor &d, const QByteArray &v)
+{
+    qDebug() << "ServiceInfo::bleDescReadDone()";
+    qDebug() << "- service" << getUuidFull() << " - descriptor" << d.uuid().toString();
+    qDebug() << "- DATA: 0x" << v.toHex();
+}
+
+void ServiceInfo::bleDescWriteDone(const QLowEnergyDescriptor &d, const QByteArray &v)
+{
+    qDebug() << "ServiceInfo::bleDescWriteDone()";
+    qDebug() << "- service" << getUuidFull() << " - descriptor" << d.uuid().toString();
+    qDebug() << "- DATA: 0x" << v.toHex();
 }
 
 /* ************************************************************************** */

@@ -97,6 +97,12 @@ Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                     enabled: (selectedDevice && selectedDevice.servicesScanMode > 1)
                     text: modelData
+                    highlighted: {
+                        if (modelData === "Notify") return characteristic.notifyInProgress
+                        if (modelData === "Read") return characteristic.readInProgress
+                        if (modelData === "Write" || modelData === "WriteNoResp") return characteristic.writeInProgress
+                        return false
+                    }
                     onClicked: {
                         if (selectedDevice && selectedDevice.servicesScanMode > 1) {
                             if (text === "Notify") {

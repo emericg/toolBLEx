@@ -193,6 +193,35 @@ QStringList CharacteristicInfo::getPermissionList() const
 
 /* ************************************************************************** */
 
+void CharacteristicInfo::setReadInProgress(bool value)
+{
+    if (m_read_inprogress != value)
+    {
+        m_read_inprogress = value;
+        Q_EMIT statusChanged();
+    }
+}
+
+void CharacteristicInfo::setWriteInProgress(bool value)
+{
+    if (m_write_inprogress != value)
+    {
+        m_write_inprogress = value;
+        Q_EMIT statusChanged();
+    }
+}
+
+void CharacteristicInfo::setNotifyInProgress(bool value)
+{
+    if (m_notify_inprogress != value)
+    {
+        m_notify_inprogress = value;
+        Q_EMIT statusChanged();
+    }
+}
+
+/* ************************************************************************** */
+
 QString CharacteristicInfo::getValue() const
 {
     // Show raw string first and hex value below

@@ -446,6 +446,8 @@ Flickable {
                                 } else {
                                     selectedDevice.actionScanWithoutValues()
                                 }
+                            } else {
+                                selectedDevice.deviceDisconnect()
                             }
                         }
                     }
