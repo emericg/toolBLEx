@@ -73,11 +73,11 @@ void MenubarManager::setupMenubar(QQuickWindow *view, DeviceManager *dm)
 
     QMenuBar *menuBar = new QMenuBar(nullptr);
 
-    m_actionSensorList = new QAction(tr("Sensor list"));
+    m_actionSensorList = new QAction(tr("Device list"));
 
     connect(m_actionSensorList, &QAction::triggered, this, &MenubarManager::sensorList);
 
-    m_menuSensors = new QMenu(tr("Sensors"));
+    m_menuSensors = new QMenu(tr("Devices"));
     m_menuSensors->addAction(m_actionSensorList);
     menuBar->addMenu(m_menuSensors);
 

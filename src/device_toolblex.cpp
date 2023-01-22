@@ -692,6 +692,8 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
         }
 
         Q_EMIT advertisementChanged();
+
+        mfdFilterUpdate();
     }
     else if (mode == DeviceUtils::BLE_ADV_SERVICEDATA)
     {
@@ -735,6 +737,8 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
         }
 
         Q_EMIT advertisementChanged();
+
+        svdFilterUpdate();
     }
 
     if (m_mfd.length() > 0 || m_svd.length())
@@ -1058,6 +1062,8 @@ bool DeviceToolBLEx::exportDeviceInfo(bool withAdvertisements, bool withServices
 
                 txt += endl;
             }
+
+            txt += endl;
         }
     }
 

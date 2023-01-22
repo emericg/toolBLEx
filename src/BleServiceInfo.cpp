@@ -165,6 +165,12 @@ void ServiceInfo::serviceDetailsDiscovered(QLowEnergyService::ServiceState newSt
         return;
     }
 
+    if (newState == QLowEnergyService::RemoteServiceDiscovered)
+    {
+        // The service details have been discovered
+        m_scan_complete = true;
+    }
+
     auto service = qobject_cast<QLowEnergyService *>(sender());
     if (!service) return;
 
@@ -180,6 +186,7 @@ void ServiceInfo::serviceDetailsDiscovered(QLowEnergyService::ServiceState newSt
 
 void ServiceInfo::serviceErrorOccured(QLowEnergyService::ServiceError error)
 {
+    if (error <= QLowEnergyService::NoError) return;
     qDebug() << "ServiceInfo::serviceErrorOccured(" << getUuidFull() << " / " << error << ")";
 /*
     QLowEnergyService::NoError	0	No error has occurred.
@@ -190,6 +197,30 @@ void ServiceInfo::serviceErrorOccured(QLowEnergyService::ServiceError error)
     QLowEnergyService::DescriptorWriteError	3	An attempt to write a new value to a descriptor failed. For example, it might be triggered when attempting to write to a read-only descriptor.
     QLowEnergyService::UnknownError (since Qt 5.5)	4	An unknown error occurred when interacting with the service.
 */
+    if (error == QLowEnergyService::OperationError)
+    {
+        //
+    }
+    else if (error == QLowEnergyService::CharacteristicReadError)
+    {
+        //
+    }
+    else if (error == QLowEnergyService::CharacteristicWriteError)
+    {
+        //
+    }
+    else if (error == QLowEnergyService::DescriptorReadError)
+    {
+        //
+    }
+    else if (error == QLowEnergyService::DescriptorWriteError)
+    {
+        // cannot start notify?
+    }
+    else // if (error == QLowEnergyService::UnknownError)
+    {
+        //
+    }
 }
 
 /* ************************************************************************** */
@@ -284,7 +315,7 @@ void ServiceInfo::bleReadDone(const QLowEnergyCharacteristic &c, const QByteArra
 {
     qDebug() << "ServiceInfo::bleReadDone()";
     qDebug() << "- service" << getUuidFull() << " - characteristic" << c.uuid().toString();
-    qDebug() << "- DATA: 0x" << v.toHex();
+    qDebug() << "- DATA (" << v.size() << "b)" << v.toHex();
 
     for (auto cc: m_characteristics)
     {
@@ -303,7 +334,7 @@ void ServiceInfo::bleReadNotify(const QLowEnergyCharacteristic &c, const QByteAr
 {
     qDebug() << "ServiceInfo::bleReadNotify()";
     qDebug() << "- service" << getUuidFull() << " - characteristic" << c.uuid().toString();
-    qDebug() << "- DATA: 0x" << v.toHex();
+    qDebug() << "- DATA (" << v.size() << "b)" << v.toHex();
 
     for (auto cc: m_characteristics)
     {
@@ -320,7 +351,7 @@ void ServiceInfo::bleWriteDone(const QLowEnergyCharacteristic &c, const QByteArr
 {
     qDebug() << "ServiceInfo::bleWriteDone()";
     qDebug() << "- service" << getUuidFull() << " - characteristic" << c.uuid().toString();
-    qDebug() << "- DATA: 0x" << v.toHex();
+    qDebug() << "- DATA (" << v.size() << "b)" << v.toHex();
 
     for (auto cc: m_characteristics)
     {
@@ -337,14 +368,14 @@ void ServiceInfo::bleDescReadDone(const QLowEnergyDescriptor &d, const QByteArra
 {
     qDebug() << "ServiceInfo::bleDescReadDone()";
     qDebug() << "- service" << getUuidFull() << " - descriptor" << d.uuid().toString();
-    qDebug() << "- DATA: 0x" << v.toHex();
+    qDebug() << "- DATA (" << v.size() << "b)" << v.toHex();
 }
 
 void ServiceInfo::bleDescWriteDone(const QLowEnergyDescriptor &d, const QByteArray &v)
 {
     qDebug() << "ServiceInfo::bleDescWriteDone()";
     qDebug() << "- service" << getUuidFull() << " - descriptor" << d.uuid().toString();
-    qDebug() << "- DATA: 0x" << v.toHex();
+    qDebug() << "- DATA (" << v.size() << "b)" << v.toHex();
 }
 
 /* ************************************************************************** */

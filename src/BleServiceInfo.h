@@ -36,14 +36,16 @@ class ServiceInfo: public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(bool scanComplete READ getScanComplete NOTIFY serviceUpdated)
     Q_PROPERTY(QString serviceName READ getName NOTIFY serviceUpdated)
     Q_PROPERTY(QString serviceUuid READ getUuidFull NOTIFY serviceUpdated)
     Q_PROPERTY(QString serviceUuidFull READ getUuidFull NOTIFY serviceUpdated)
     Q_PROPERTY(QString serviceUuidShort READ getUuidShort NOTIFY serviceUpdated)
     Q_PROPERTY(QString serviceType READ getType NOTIFY serviceUpdated)
     Q_PROPERTY(QStringList serviceTypeList READ getTypeList NOTIFY serviceUpdated)
-
     Q_PROPERTY(QVariant characteristicList READ getCharacteristics NOTIFY characteristicsUpdated)
+
+    bool m_scan_complete = false;
 
     QLowEnergyService *m_ble_service = nullptr;
     void connectToService(QLowEnergyService::DiscoveryMode scanmode);
@@ -77,6 +79,7 @@ public:
     QList <QObject *> getCharacteristicsInfos();
     bool containsCharacteristic(const QString &uuid);
 
+    bool getScanComplete() const { return m_scan_complete; }
     QString getName() const;
     QString getUuidFull() const;
     QString getUuidShort() const;
