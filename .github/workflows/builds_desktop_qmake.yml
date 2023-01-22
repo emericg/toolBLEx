@@ -13,7 +13,7 @@ on:
 
 env:
   APPLICATION: "toolBLEx"
-  APPLICATION_VERSION: "0.3"
+  APPLICATION_VERSION: "0.4"
   QT_VERSION: "6.4.2"
 
 #-------------------------------------------------------------------------------
