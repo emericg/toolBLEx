@@ -22,7 +22,7 @@
 #include "device_toolblex.h"
 #include "BleServiceInfo.h"
 #include "BleCharacteristicInfo.h"
-
+#include "utils_bits.h"
 #include "DeviceManager.h"
 
 #include <cstdlib>
@@ -467,32 +467,46 @@ QByteArray DeviceToolBLEx::askForData_qba(const QString &value, const QString &t
     if (type.startsWith("uint"))
     {
         //qDebug() << "uINTEGER > " << value.toULongLong();
-        if (type.startsWith("uint16")) {
+        if (type.startsWith("uint8")) {
+            int8_t u = value.toShort();
+            data.append(reinterpret_cast<const char*>(&u), 1);
+        }
+        else if (type.startsWith("uint16")) {
             uint16_t u = value.toUShort();
+            if (type.endsWith("_be")) u = endian_flip_16(u);
             data.append(reinterpret_cast<const char*>(&u), 2);
         }
         else if (type.startsWith("uint32")) {
             uint32_t u = value.toUInt();
+            if (type.endsWith("_be")) u = endian_flip_32(u);
             data.append(reinterpret_cast<const char*>(&u), 4);
         }
         else if (type.startsWith("uint64")) {
             uint64_t u = value.toULongLong();
+            if (type.endsWith("_be")) u = endian_flip_64(u);
             data.append(reinterpret_cast<const char*>(&u), 8);
         }
     }
     else if (type.startsWith("int"))
     {
         //qDebug() << "sINTEGER > " << value.toInt();
-        if (type.startsWith("int16")) {
+        if (type.startsWith("int8")) {
+            int8_t i = value.toShort();
+            data.append(reinterpret_cast<const char*>(&i), 1);
+        }
+        else if (type.startsWith("int16")) {
             int16_t i = value.toShort();
+            if (type.endsWith("_be")) i = endian_flip_16(i);
             data.append(reinterpret_cast<const char*>(&i), 2);
         }
         else if (type.startsWith("int32")) {
             int32_t i = value.toInt();
+            if (type.endsWith("_be")) i = endian_flip_32(i);
             data.append(reinterpret_cast<const char*>(&i), 4);
         }
         else if (type.startsWith("int64")) {
             int64_t i = value.toLongLong();
+            if (type.endsWith("_be")) i = endian_flip_64(i);
             data.append(reinterpret_cast<const char*>(&i), 8);
         }
     }
@@ -501,22 +515,26 @@ QByteArray DeviceToolBLEx::askForData_qba(const QString &value, const QString &t
     {
         //qDebug() << "FLOAT > " << value.toFloat();
         float f = value.toFloat();
+        if (type.endsWith("_be")) f = endian_flip_32(f);
         data.append(reinterpret_cast<const char*>(&f), 4);
     }
-    else if (type == "float64") {
+    else if (type == "float64")
+    {
         //qDebug() << "DOUBLE > " << value.toDouble();
         double d = value.toDouble();
+        if (type.endsWith("_be")) d = endian_flip_64(d);
         data.append(reinterpret_cast<const char*>(&d), 8);
     }
 
-    else if (type == "data") {
+    else if (type == "data")
+    {
         //qDebug() << "data > " << value.toLatin1();
-        for (int i = 0; i < value.size(); i++)
-        {
+        for (int i = 0; i < value.size(); i++) {
             data.append(value.at(i).toLatin1());
         }
     }
-    else if (type == "ascii") {
+    else if (type == "ascii")
+    {
         //qDebug() << "ascii > " << value.toLatin1().toHex();
         data = value.toLatin1().toHex();
     }
@@ -526,7 +544,6 @@ QByteArray DeviceToolBLEx::askForData_qba(const QString &value, const QString &t
 
 QStringList DeviceToolBLEx::askForData_list(const QString &value, const QString &type)
 {
-
     // Convert data to QByteArray
     QByteArray a = askForData_qba(value, type);
 

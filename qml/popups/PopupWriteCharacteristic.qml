@@ -121,6 +121,8 @@ Popup {
 
                 property string mode: qsTr("data")
 
+                onModeChanged: columnTf.updateTextFields()
+
                 ButtonWireframe {
                     height: 28
                     fullColor: true
@@ -163,6 +165,8 @@ Popup {
                 visible: rowType.mode === qsTr("bytes")
                 property string mode: qsTr("bytes")
 
+                onModeChanged: columnTf.updateTextFields()
+
                 ButtonWireframe {
                     height: 28
                     fullColor: true
@@ -188,6 +192,8 @@ Popup {
 
                 visible: rowType.mode === qsTr("text")
                 property string mode: qsTr("ascii")
+
+                onModeChanged: columnTf.updateTextFields()
 
                 ButtonWireframe {
                     height: 28
@@ -215,6 +221,9 @@ Popup {
                 visible: rowType.mode === qsTr("integer")
                 property string mode_signed: qsTr("signed")
                 property string mode_endian: qsTr("le")
+
+                onMode_signedChanged: columnTf.updateTextFields()
+                onMode_endianChanged: columnTf.updateTextFields()
 
                 ButtonWireframe {
                     height: 28
@@ -260,6 +269,8 @@ Popup {
 
                 visible: rowType.mode === qsTr("integer")
                 property string mode: "32 bits"
+
+                onModeChanged: columnTf.updateTextFields()
 
                 ButtonWireframe {
                     height: 28
@@ -321,6 +332,8 @@ Popup {
                 visible: rowType.mode === qsTr("float")
                 property string mode: "32 bits"
 
+                onModeChanged: columnTf.updateTextFields()
+
                 ButtonWireframe {
                     height: 28
                     fullColor: true
@@ -343,6 +356,7 @@ Popup {
         ////////
 
         Column {
+            id: columnTf
             anchors.left: parent.left
             anchors.leftMargin: 24
             anchors.right: parent.right
@@ -382,7 +396,7 @@ Popup {
                     if (rowSizeType_int.mode === "8 bits") type += "8"
                     if (rowSizeType_int.mode === "16 bits") type += "16"
                     if (rowSizeType_int.mode === "32 bits") type += "32"
-                    if (rowSizeType_int.mode === "34 bits") type += "34"
+                    if (rowSizeType_int.mode === "64 bits") type += "64"
                     if (rowSubType_int.mode_endian === qsTr("le")) type += "_le"
                     if (rowSubType_int.mode_endian === qsTr("be")) type += "_be"
                     value = textfieldValue_int.text
@@ -415,7 +429,7 @@ Popup {
                 maximumLength: 20
                 validator: RegularExpressionValidator { regularExpression: /[a-zA-Z0-9]+/ }
 
-                onTextChanged: parent.updateTextFields()
+                onTextChanged: columnTf.updateTextFields()
             }
             TextFieldThemed {
                 id: textfieldValue_data
@@ -433,7 +447,7 @@ Popup {
                 validator: RegularExpressionValidator { regularExpression: /[a-fA-F0-9]+/ }
                 //inputMask: "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
 
-                onTextChanged: parent.updateTextFields()
+                onTextChanged: columnTf.updateTextFields()
             }
             TextFieldThemed {
                 id: textfieldValue_int
@@ -452,7 +466,7 @@ Popup {
                    //top: parseInt(2147483647)
                 }
 
-                onTextChanged: parent.updateTextFields()
+                onTextChanged: columnTf.updateTextFields()
             }
             TextFieldThemed {
                 id: textfieldValue_float
@@ -468,7 +482,7 @@ Popup {
 
                 validator: DoubleValidator { }
 
-                onTextChanged: parent.updateTextFields()
+                onTextChanged: columnTf.updateTextFields()
             }
         }
 
@@ -546,6 +560,7 @@ Popup {
                 fullColor: true
                 primaryColor: Theme.colorPrimary
 
+                enabled: data_hex.model.length
                 text: qsTr("Write value")
                 onClicked: {
                     var value = ""

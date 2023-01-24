@@ -104,13 +104,15 @@ Item {
 
             Text {
                 anchors.fill: parent
-                color: control.selected ? "white" : control.colorContent
 
                 text: control.textBadge
                 textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContentVerySmall
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
+
+                color: control.selected ? control.colorContentHighlight : control.colorContent
+                opacity: control.selected ? 0.7 : 0.7
             }
         }
     }
