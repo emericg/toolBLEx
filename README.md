@@ -4,7 +4,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/emericg/toolBLEx.svg?style=flat-square)](https://github.com/emericg/toolBLEx/issues)
 [![License: GPL v3](https://img.shields.io/badge/license-GPL%20v3-brightgreen.svg?style=flat-square)](http://www.gnu.org/licenses/gpl-3.0)
 
-A Bluetooth Low Energy scanner and device analyzer.
+A Bluetooth Low Energy device scanner and analyzer.
 
 > Available on Linux, macOS, Windows.
 
@@ -50,7 +50,7 @@ $ make
 
 ##### Linux
 
-Bluetooth driver support might be a little shaky...
+Bluetooth support might be a little shaky?!
 
 ##### macOS
 

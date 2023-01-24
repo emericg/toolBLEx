@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=toolBLEx
-Comment=A Bluetooth Low Energy scanner and device analyzer
+Comment=A Bluetooth Low Energy device scanner and analyzer
 Exec=toolblex
 Icon=toolblex
 Categories=Utility;DataVisualization;Qt;

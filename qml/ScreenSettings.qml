@@ -156,7 +156,7 @@ Loader {
                             }
 
                             Text {
-                                text: qsTr("A Bluetooth Low Energy scanner and device analyzer")
+                                text: qsTr("A Bluetooth Low Energy device scanner and analyzer")
                                 font.pixelSize: Theme.fontSizeContentVeryVeryBig
                                 color: Theme.colorSubText
                             }
