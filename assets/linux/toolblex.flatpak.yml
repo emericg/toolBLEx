@@ -22,19 +22,19 @@ finish-args:
   - --share=network
 
 cleanup:
-- /bin/__pypache__
-- /bin/rst*
-- /include
-- /lib/cmake
-- /lib/cups
-- /lib/pkgconfig
-- /lib/python*
-- /share/doc
-- /share/man
-- /share/zsh
-- /src
-- '*.a'
-- '*.la'
+  - /bin/__pypache__
+  - /bin/rst*
+  - /include
+  - /lib/cmake
+  - /lib/cups
+  - /lib/pkgconfig
+  - /lib/python*
+  - /share/doc
+  - /share/man
+  - /share/zsh
+  - /src
+  - '*.a'
+  - '*.la'
 
 build-options:
   append-ld-library-path: /app/lib
@@ -252,9 +252,9 @@ modules:
           stable-only: true
           url-template: https://download.qt.io/archive/qt/$major.$minor/$version/submodules/qt5compat-everywhere-src-$version.tar.xz
 
-- name: toolblex
-  buildsystem: qmake
-  sources:
-    - type: archive
-      url: https://github.com/emericg/toolBLEx/archive/refs/tags/v0.4.tar.gz
-      sha256: b8df8c1eecddc8f378f7be3450c7b5599704c3ad14b722bbccba9a6bd85ae58e
+  - name: toolblex
+    buildsystem: qmake
+    sources:
+      - type: archive
+        url: https://github.com/emericg/toolBLEx/archive/refs/tags/v0.4.tar.gz
+        sha256: 129ae8c54a3005d79635ffb8cb2411bb715caa760f7c58c4a9ebcca7ec43f20c
