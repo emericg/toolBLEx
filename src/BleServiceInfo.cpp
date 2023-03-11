@@ -123,7 +123,7 @@ void ServiceInfo::connectToService(QLowEnergyService::DiscoveryMode scanmode)
         connect(m_ble_service, &QLowEnergyService::descriptorRead, this, &ServiceInfo::bleDescReadDone);
         connect(m_ble_service, &QLowEnergyService::descriptorWritten, this, &ServiceInfo::bleDescWriteDone);
 
-        QTimer::singleShot(0, [=] () { m_ble_service->discoverDetails(scanmode); });
+        QTimer::singleShot(0, this, [=] () { m_ble_service->discoverDetails(scanmode); });
         return;
     }
 
