@@ -53,11 +53,11 @@ Loader {
                 anchors.right: parent.right
 
                 topPadding: 0
-                bottomPadding: 24
-                spacing: 24
+                bottomPadding: 20
+                spacing: 20
 
-                property int flowElementWidth: (width >= 1080) ? (width / 3) - (spacing*1) - 8
-                                                               : (width / 2) - (spacing*1) - 12
+                property int flowElementWidth: (width >= 1080) ? (width / 3) - (spacing*1) - (spacing / 3)
+                                                               : (width / 2) - (spacing*1) - (spacing / 2)
 
                 ////////////////////////
 
@@ -221,10 +221,10 @@ Loader {
                 Flow {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.margins: 24
+                    anchors.margins: 20
 
                     flow: Flow.LeftToRight // Flow.TopToBottom
-                    spacing: 24
+                    spacing: 20
 
                     Column {
                         width: settingsColumn.flowElementWidth
@@ -363,7 +363,7 @@ Loader {
 
                             ComboBoxThemed {
                                 anchors.right: parent.right
-                                anchors.rightMargin: 8
+                                anchors.rightMargin: 16
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 enabled: false
@@ -597,7 +597,7 @@ Loader {
 
                             SpinBoxThemed {
                                 anchors.right: parent.right
-                                anchors.rightMargin: 8
+                                anchors.rightMargin: 16
                                 anchors.verticalCenter: parent.verticalCenter
                                 width: 140
 
@@ -633,7 +633,7 @@ Loader {
 
                             SpinBoxThemed {
                                 anchors.right: parent.right
-                                anchors.rightMargin: 8
+                                anchors.rightMargin: 16
                                 anchors.verticalCenter: parent.verticalCenter
                                 width: 140
 
@@ -698,21 +698,19 @@ Loader {
                             Column {
                                 id: colUber
                                 anchors.left: parent.left
-                                anchors.leftMargin: 12
+                                anchors.leftMargin: 20
                                 anchors.right: parent.right
                                 anchors.rightMargin: 52
                                 anchors.verticalCenter: parent.verticalCenter
                                 spacing: 4
 
-                                //https://greatscottgadgets.com/ubertoothone/
                                 Text {
                                     anchors.left: parent.left
                                     anchors.right: parent.right
 
                                     text: qsTr("This feature relies on specific hardware.")
-                                    textFormat: Text.StyledText
+                                    textFormat: Text.PlainText
                                     font.pixelSize: Theme.fontSizeContent
-                                    font.bold: false
                                     color: Theme.colorText
                                     wrapMode: Text.WordWrap
                                 }
@@ -721,19 +719,28 @@ Loader {
                                     anchors.right: parent.right
 
                                     text: qsTr("Ubertooth One is an open source 2.4 GHz wireless development platform suitable for Bluetooth experimentation.")
-                                    textFormat: Text.StyledText
+                                    textFormat: Text.PlainText
                                     font.pixelSize: Theme.fontSizeContent
-                                    font.bold: false
                                     color: Theme.colorText
                                     wrapMode: Text.WordWrap
-                                }
+                                }/*
+                                Text {
+                                    anchors.left: parent.left
+                                    anchors.right: parent.right
+
+                                    text: "https://greatscottgadgets.com/ubertoothone/"
+                                    textFormat: Text.PlainText
+                                    font.pixelSize: Theme.fontSizeContent
+                                    color: Theme.colorText
+                                    wrapMode: Text.WordWrap
+                                }*/
                             }
 
                             IconSvg {
                                 width: 28
                                 height: 28
                                 anchors.right: parent.right
-                                anchors.rightMargin: 16
+                                anchors.rightMargin: 20
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 source: "qrc:/assets/icons_material/baseline-help-24px.svg"
@@ -750,9 +757,9 @@ Loader {
                             TextFieldPathThemed {
                                 id: ubertoothPath
                                 anchors.left: parent.left
-                                anchors.leftMargin: 12
+                                anchors.leftMargin: 16
                                 anchors.right: parent.right
-                                anchors.rightMargin: 12
+                                anchors.rightMargin: 16
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 height: 36
@@ -796,7 +803,9 @@ Loader {
 
                             RangeSliderThemed {
                                 anchors.left: parent.left
+                                anchors.leftMargin: 12
                                 anchors.right: parent.right
+                                anchors.rightMargin: 12
                                 anchors.verticalCenter: parent.verticalCenter
                                 anchors.margins: 2
 
@@ -818,7 +827,7 @@ Loader {
 
                             SpinBoxThemed {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 8
+                                anchors.leftMargin: 16
                                 anchors.verticalCenter: parent.verticalCenter
                                 width: 150
 
@@ -845,7 +854,7 @@ Loader {
 
                             SpinBoxThemed {
                                 anchors.right: parent.right
-                                anchors.rightMargin: 8
+                                anchors.rightMargin: 16
                                 anchors.verticalCenter: parent.verticalCenter
                                 width: 150
 
@@ -869,9 +878,9 @@ Loader {
                 Flow {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.margins: 24
+                    anchors.margins: 20
                     flow: Flow.LeftToRight // Flow.TopToBottom
-                    spacing: 24
+                    spacing: 20
 
                     Column {
                         width: settingsColumn.flowElementWidth

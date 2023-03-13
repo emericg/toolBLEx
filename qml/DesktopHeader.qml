@@ -9,7 +9,7 @@ Rectangle {
     z: 10
 
     color: Theme.colorHeader
-    property int headerHeight: isHdpi ? 48 : 56
+    property int headerHeight: isHdpi ? 52 : 56
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -315,7 +315,7 @@ Rectangle {
                     width: 12
                     height: 12
                     radius: 12
-                    color: Theme.colorRed
+                    color: Theme.colorGreen
 
                     opacity: deviceManager.scanning ? 0.8 : 0
                     Behavior on opacity { OpacityAnimator { duration: 333 } }
@@ -341,7 +341,7 @@ Rectangle {
                     width: 12
                     height: 12
                     radius: 12
-                    color: Theme.colorRed
+                    color: Theme.colorGreen
 
                     opacity: deviceManager.advertising ? 0.8 : 0
                     Behavior on opacity { OpacityAnimator { duration: 333 } }
@@ -368,7 +368,7 @@ Rectangle {
                     width: 12
                     height: 12
                     radius: 12
-                    color: Theme.colorRed
+                    color: Theme.colorGreen
 
                     opacity: ubertooth.running ? 0.8 : 0
                     Behavior on opacity { OpacityAnimator { duration: 333 } }

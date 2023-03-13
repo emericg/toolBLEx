@@ -225,8 +225,8 @@ Item {
             colorLVselected = "#0080e0"
             colorLVseparator = "#e2e2e2"
 
-            componentHeight = 32
-            componentRadius = 8
+            componentHeight = 34
+            componentRadius = 6
             componentBorderWidth = 2
 
             colorComponent = "#eaeaea"
@@ -288,8 +288,8 @@ Item {
             colorLVseparator = "#333"
             colorLVselected = "#e90c76"
 
-            componentHeight = 32
-            componentRadius = 8
+            componentHeight = 34
+            componentRadius = 6
             componentBorderWidth = 2
 
             colorComponent = "#757575"
