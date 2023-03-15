@@ -1,4 +1,4 @@
-# toolBLEx
+# ![toolBLEx](assets/logos/banner.svg)
 
 [![GitHub action](https://img.shields.io/github/actions/workflow/status/emericg/toolBLEx/builds_desktop_qmake.yml?style=flat-square)](https://github.com/emericg/toolBLEx/actions/workflows/builds_desktop_qmake.yml)
 [![GitHub issues](https://img.shields.io/github/issues/emericg/toolBLEx.svg?style=flat-square)](https://github.com/emericg/toolBLEx/issues)
