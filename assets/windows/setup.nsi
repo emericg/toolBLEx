@@ -10,7 +10,7 @@ Unicode True
 !define COMPANYNAME                  "Emeric Grange"
 !define DESCRIPTION                  "A Bluetooth Low Energy scanner and device analyzer"
 !define VERSIONMAJOR                 0
-!define VERSIONMINOR                 5
+!define VERSIONMINOR                 6
 !define VERSIONBUILD                 0
 !define INSTALL_DIR_DEFAULT          "$PROGRAMFILES64\${APPNAME}"
 !define MUI_ABORTWARNING

@@ -3,7 +3,7 @@
 echo "> toolBLEx packager (Windows x86_64)"
 
 export APP_NAME="toolBLEx";
-export APP_VERSION=0.5;
+export APP_VERSION=0.6;
 export GIT_VERSION=$(git rev-parse --short HEAD);
 
 ## CHECKS ######################################################################
