@@ -104,13 +104,13 @@ bool DeviceFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourcePare
 /* ************************************************************************** */
 
 DeviceModel::DeviceModel(QObject *parent)
-    : QAbstractListModel(parent)
+    : QAbstractTableModel(parent)
 {
     //
 }
 
 DeviceModel::DeviceModel(const DeviceModel &other, QObject *parent)
-    : QAbstractListModel(parent)
+    : QAbstractTableModel(parent)
 {
     m_devices = other.m_devices;
 }
@@ -128,15 +128,16 @@ QHash <int, QByteArray> DeviceModel::roleNames() const
     QHash <int, QByteArray> roles;
 
     roles[Default] = "default";
+
+    roles[DeviceColorRole] = "color";
     roles[DeviceAddressRole] = "address";
     roles[DeviceNameRole] = "name";
     roles[DeviceModelRole] = "model";
     roles[DeviceManufacturerRole] = "manufacturer";
     roles[DeviceRssiRole] = "rssi";
     roles[DeviceIntervalRole] = "interval";
-    roles[DeviceFirstSeenRole] = "first seen";
-    roles[DeviceLastSeenRole] = "last seen";
-
+    roles[DeviceFirstSeenRole] = "firstseen";
+    roles[DeviceLastSeenRole] = "lastseen";
 
     roles[PointerRole] = "pointer";
 
@@ -152,17 +153,18 @@ int DeviceModel::rowCount(const QModelIndex &parent) const
 int DeviceModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
-    return 1;
+    return 8; // ???
 }
 
-Device * DeviceModel::device(const QModelIndex &index) const
+Device *DeviceModel::device(const QModelIndex &index) const
 {
     return m_devices[index.row()];
 }
 
 QVariant DeviceModel::data(const QModelIndex &index, int role) const
 {
-    //qDebug() << "DeviceModel::data(r:" << index.row() << "c:" << index.column();
+    //qDebug() << "DeviceModel::data(idx:" << index << "role:" << role
+    //         << "row:" << index.row() << "col:" << index.column();
 
     if (index.row() < 0 || index.row() >= m_devices.size() || !index.isValid())
         return QVariant();
@@ -170,45 +172,27 @@ QVariant DeviceModel::data(const QModelIndex &index, int role) const
     DeviceToolBLEx *device = static_cast<DeviceToolBLEx *>(m_devices[index.row()]);
     if (device)
     {
-        if (role == Default)
-        {
-            return index.row();
-        }
-        if (role == DeviceAddressRole)
-        {
-            return device->getAddress();
-        }
-        if (role == DeviceNameRole)
-        {
-            return device->getName();
-        }
-        if (role == DeviceModelRole)
-        {
-            return device->getModel();
-        }
-        if (role == DeviceManufacturerRole)
-        {
-            return device->getManufacturer();
-        }
-        if (role == DeviceRssiRole)
-        {
-            return std::abs(device->getRssi());
-        }
-        if (role == DeviceIntervalRole)
-        {
-            return device->getAdvertisementInterval();
-        }
-        if (role == DeviceFirstSeenRole)
-        {
-            return device->getFirstSeen().toMSecsSinceEpoch();
-        }
-        if (role == DeviceLastSeenRole)
-        {
-            return device->getLastSeen().toMSecsSinceEpoch();
-        }
+        //if (index.column() == 0) return device->getDeviceColor();
+        //if (index.column() == 1) return device->getAddress();
+        //if (index.column() == 2) return device->getName();
+        //if (index.column() == 3) return device->getModel();
+        //if (index.column() == 4) return device->getManufacturer();
+        //if (index.column() == 5) return std::abs(device->getRssi());
+        //if (index.column() == 6) return device->getAdvertisementInterval();
+        //if (index.column() == 7) return device->getFirstSeen().toMSecsSinceEpoch();
+        //if (index.column() == 8) return device->getLastSeen().toMSecsSinceEpoch();
 
-        if (role == PointerRole)
-            return QVariant::fromValue(device);
+        if (role == Default) return index.row();
+        if (role == DeviceColorRole) return device->getDeviceColor();
+        if (role == DeviceAddressRole) return device->getAddress();
+        if (role == DeviceNameRole) return device->getName();
+        if (role == DeviceModelRole) return device->getModel();
+        if (role == DeviceManufacturerRole) return device->getManufacturer();
+        if (role == DeviceRssiRole) return std::abs(device->getRssi());
+        if (role == DeviceIntervalRole) return device->getAdvertisementInterval();
+        if (role == DeviceFirstSeenRole) return device->getFirstSeen().toMSecsSinceEpoch();
+        if (role == DeviceLastSeenRole) return device->getLastSeen().toMSecsSinceEpoch();
+        if (role == PointerRole) return QVariant::fromValue(device);
 
         // If we made it here...
         qWarning() << "Ooops missing DeviceModel role !!! " << role;

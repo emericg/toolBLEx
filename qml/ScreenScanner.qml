@@ -242,21 +242,47 @@ Loader {
                     }
                 }
 /*
-                TableView {
-                    id: devicesView2
-
+                DeviceScannerTableHeader {
+                    id: horizontalHeader
                     anchors.top: actionBar.bottom
+                    anchors.left: devicesView.left
+                    anchors.right: devicesView.right
+
+                    syncView: devicesView
+                    boundsBehavior: Flickable.StopAtBounds
+                }
+                TableView {
+                    id: devicesView
+                    anchors.top: horizontalHeader.bottom
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
 
+                    clip: true
+                    interactive: true
+
                     columnSpacing: 0
                     rowSpacing: 0
 
-                    model: deviceManager.devicesList
-                    delegate: DeviceWidget {
-                        width: devicesView2.width
+                    selectionModel: ItemSelectionModel {}
+                    selectionBehavior: TableView.SelectRows
+
+                    resizableColumns: true
+                    boundsBehavior: Flickable.StopAtBounds
+
+                    columnWidthProvider: function(column) {
+                        if (column === 0) return 32
+                        //if (column === 1 && Qt.platform.os === "osx") return 0
+
+                        let w = explicitColumnWidth(column)
+                        if (w >= 0 && w <= 96) return 96; // minimum size
+                        if (w >= 0) return w;
+                        return implicitColumnWidth(column)
                     }
+                    rowHeightProvider: function(column) { return 32; }
+
+                    model: deviceManager.devicesList
+                    delegate: DeviceScannerTableWidget { }
                 }
 */
                 ListView {
@@ -283,8 +309,6 @@ Loader {
                     delegate: DeviceScannerWidget {
                         width: devicesView.width
                     }
-
-                    //footer: Item { }
 
                     Keys.onPressed: (event) => {
                         if (event.key === Qt.Key_Escape) {

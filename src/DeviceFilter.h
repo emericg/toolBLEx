@@ -26,9 +26,10 @@
 #include "device.h"
 
 #include <QObject>
-#include <QByteArray>
 #include <QMetaType>
+#include <QByteArray>
 #include <QAbstractListModel>
+#include <QAbstractTableModel>
 #include <QSortFilterProxyModel>
 
 class SettingsManager;
@@ -62,24 +63,24 @@ public:
 
 /* ************************************************************************** */
 
-class DeviceModel : public QAbstractListModel
+// Also works as a QAbstractListModel
+class DeviceModel : public QAbstractTableModel
 {
     Q_OBJECT
 
 protected:
-    QHash<int, QByteArray> roleNames() const;
+    QHash <int, QByteArray> roleNames() const override;
 
 public:
     DeviceModel(QObject *parent = nullptr);
     DeviceModel(const DeviceModel &other, QObject *parent = nullptr);
     ~DeviceModel();
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     Device *device(const QModelIndex &index) const;
-
     bool hasDevices() const { return !m_devices.empty(); }
     void getDevices(QList <Device *> &device);
     int getDeviceCount() const { return m_devices.size(); }
@@ -89,6 +90,7 @@ public:
     enum DeviceRoles {
         Default = Qt::UserRole+1,
 
+        DeviceColorRole,
         DeviceAddressRole,
         DeviceNameRole,
         DeviceModelRole,

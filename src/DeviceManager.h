@@ -35,9 +35,8 @@
 
 #include <QBluetoothLocalDevice>
 #include <QBluetoothDeviceDiscoveryAgent>
-QT_FORWARD_DECLARE_CLASS(QBluetoothDeviceInfo)
-QT_FORWARD_DECLARE_CLASS(QLowEnergyController)
-QT_FORWARD_DECLARE_CLASS(QLowEnergyConnectionParameters)
+class QBluetoothDeviceInfo;
+class QLowEnergyController;
 
 /* ************************************************************************** */
 
@@ -83,7 +82,6 @@ class DeviceManager: public QObject
 
     QBluetoothLocalDevice *m_bluetoothAdapter = nullptr;
     QBluetoothDeviceDiscoveryAgent *m_discoveryAgent = nullptr;
-    QLowEnergyConnectionParameters *m_ble_params = nullptr;
     QBluetoothLocalDevice::HostMode m_ble_hostmode = QBluetoothLocalDevice::HostPoweredOff;
 
     QList <QObject *> m_bluetoothAdapters;
@@ -127,7 +125,8 @@ class DeviceManager: public QObject
     int m_orderBy_role;
     Qt::SortOrder m_orderBy_order;
 
-    QStringList m_availableColors = {"HotPink", "White", "Tomato", "Yellow", "Red", "Orange", "Gold", "LimeGreen", "Green",
+    QStringList m_availableColors = {
+            "HotPink", "White", "Tomato", "Yellow", "Red", "Orange", "Gold", "LimeGreen", "Green",
             "MediumOrchid", "Purple", "YellowGreen", "LightYellow", "MediumVioletRed", "PeachPuff", "DodgerBlue",
             "Indigo", "Ivory", "DeepSkyBlue", "MistyRose", "DarkBlue", "MintCream", "Black", "OrangeRed",
             "PaleGreen", "Gainsboro", "PaleVioletRed", "Lavender", "Cyan", "MidnightBlue", "LightPink",
@@ -135,7 +134,8 @@ class DeviceManager: public QObject
             "Goldenrod", "DarkSeaGreen", "DarkRed", "LavenderBlush", "Violet", "Maroon", "Khaki",
             "WhiteSmoke", "Salmon", "Olive", "Orchid", "Fuchsia", "Pink", "LawnGreen", "Peru",
             "Grey", "Moccasin", "Beige", "Magenta", "DarkOrchid", "LightCyan", "RosyBrown", "GhostWhite",
-            "MediumSeaGreen", "LemonChiffon", "Chocolate", "BurlyWood"};
+            "MediumSeaGreen", "LemonChiffon", "Chocolate", "BurlyWood"
+    };
     QString getAvailableColor();
 
 Q_SIGNALS:

@@ -113,7 +113,6 @@ DeviceManager::~DeviceManager()
 
     delete m_bluetoothAdapter;
     delete m_discoveryAgent;
-    delete m_ble_params;
 
     delete m_devices_filter;
     delete m_devices_model;
@@ -991,6 +990,7 @@ void DeviceManager::invalidate()
 
 QString DeviceManager::getOrderByRole() const
 {
+    if (m_orderBy_role == DeviceModel::DeviceColorRole) return "color";
     if (m_orderBy_role == DeviceModel::DeviceAddressRole) return "address";
     if (m_orderBy_role == DeviceModel::DeviceNameRole) return "name";
     if (m_orderBy_role == DeviceModel::DeviceManufacturerRole) return "manufacturer";

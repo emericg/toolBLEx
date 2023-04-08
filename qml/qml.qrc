@@ -25,6 +25,8 @@
         <file alias="BleCharacteristicWidget.qml">components/BleCharacteristicWidget.qml</file>
         <file alias="DeviceScannerHeader.qml">components/DeviceScannerHeader.qml</file>
         <file alias="DeviceScannerWidget.qml">components/DeviceScannerWidget.qml</file>
+        <file alias="DeviceScannerTableHeader.qml">components/DeviceScannerTableHeader.qml</file>
+        <file alias="DeviceScannerTableWidget.qml">components/DeviceScannerTableWidget.qml</file>
         <file alias="ProximityRadar.qml">components/ProximityRadar.qml</file>
         <file alias="RssiBar.qml">components/RssiBar.qml</file>
         <file alias="RssiGraph.qml">components/RssiGraph.qml</file>
