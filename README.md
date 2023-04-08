@@ -27,15 +27,15 @@ A Bluetooth Low Energy device scanner and analyzer.
 
 ## Documentation
 
-#### Dependencies
+#### Build dependencies
 
-You will need a C++17 compiler and Qt 6.3+ with the following 'additional librairies':  
+You will need a C++17 compiler and Qt 6.5+ with the following 'additional librairies':  
 - Qt 5 Compatibility Module
 - Qt Connectivity
 - Qt Charts
 
 For Windows builds, you'll need the MSVC 2019+ compiler. Bluetooth won't work with MinGW.  
-For macOS builds, you'll need Xcode 12+ installed.  
+For macOS builds, you'll need Xcode 14+ installed.  
 
 #### Building toolBLEx
 

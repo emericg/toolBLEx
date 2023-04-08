@@ -14,7 +14,7 @@ on:
 env:
   APPLICATION: "toolBLEx"
   APPLICATION_VERSION: "0.6"
-  QT_VERSION: "6.4.3"
+  QT_VERSION: "6.5.0"
 
 #-------------------------------------------------------------------------------
 # Workflow jobs
@@ -42,7 +42,7 @@ jobs:
       # Install dependencies (from package manager)
       - name: Install dependencies (from package manager)
         run: |
-             sudo apt-get install libgl1-mesa-dev libxkbcommon-x11-dev libx11-xcb-dev libzstd-dev -y;
+             sudo apt-get install libgl1-mesa-dev libxcb1-dev libxkbcommon-x11-dev libx11-xcb-dev libxcb-cursor0 libzstd-dev -y;
              sudo apt-get install appstream -y;
 
       # Build application
@@ -66,7 +66,7 @@ jobs:
   ## macOS build ###############################################################
   build-mac:
     name: "macOS CI build"
-    runs-on: macos-11
+    runs-on: macos-12
     steps:
       # Checkout the repository
       - name: Checkout repository and submodules
