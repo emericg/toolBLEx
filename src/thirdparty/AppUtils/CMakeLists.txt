@@ -29,6 +29,8 @@ set(CORE_SOURCES
     utils_app.h
     utils_bits.cpp
     utils_bits.h
+    utils_fpsmonitor.cpp
+    utils_fpsmonitor.h
     utils_language.cpp
     utils_language.h
     utils_log.cpp

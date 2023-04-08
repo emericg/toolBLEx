@@ -64,7 +64,11 @@ Item {
 
         opacity: {
             if (mouseArea.containsMouse) {
-               return (control.highlightMode === "circle" || control.highlightMode === "both" || control.background) ? 1 : 0.75
+               return (control.highlightMode === "circle" ||
+                       control.highlightMode === "both" ||
+                       control.background) ? 1 : 0.75
+            } else if (control.highlightMode === "off") {
+                return control.background ? 1 : 0
             } else {
                 return control.background ? 0.75 : 0
             }

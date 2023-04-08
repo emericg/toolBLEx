@@ -1,5 +1,6 @@
 /*!
- * Copyright (c) 2022 Emeric Grange
+ * Copyright (c) 2022 Luca Carlon
+ * Copyright (c) 2023 Emeric Grange
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,43 +21,53 @@
  * SOFTWARE.
  */
 
-#ifndef UTILS_LOG_H
-#define UTILS_LOG_H
+#ifndef UTILS_FPSMONITOR_H
+#define UTILS_FPSMONITOR_H
 /* ************************************************************************** */
 
 #include <QObject>
-#include <QString>
-#include <QFile>
+#include <QList>
+#include <QMutex>
+#include <QDateTime>
+
+class QTimer;
+class QQuickWindow;
 
 /* ************************************************************************** */
 
-class UtilsLog : public QObject
+/*!
+ * \brief The FrameRateMonitor class
+ *
+ * This class use the QQuickWindow::frameSwapped method from Luca Carlon.
+ * - https://github.com/carlonluca/lqtutils/blob/master/lqtutils_freq.h
+ *
+ * The FrameMonitor widget uses a simplier and pure QML method from qnanopainter.
+ * - https://github.com/QUItCoding/qnanopainter/blob/master/examples/qnanopainter_vs_qpainter_demo/qml/FpsItem.qml
+ */
+class FrameRateMonitor : public QObject
 {
     Q_OBJECT
 
-    bool m_logging = false;
-    QString m_logPath;
-    QFile m_logFile;
+    Q_PROPERTY(int fps READ fps NOTIFY fpsChanged)
 
-    // Singleton
-    static UtilsLog *instance;
-    UtilsLog(const bool enabled);
-    UtilsLog();
-    ~UtilsLog();
+    QMutex m_mutex;
+    QList <QDateTime> m_timestamps;
+    QTimer *m_refreshTimer = nullptr;
+
+    int m_fps = 0;
+    int fps() const { return m_fps; }
+
+Q_SIGNALS:
+    void fpsChanged();
 
 public:
-    static UtilsLog *getInstance(const bool enabled = true);
+    FrameRateMonitor(QQuickWindow *window = nullptr, QObject *parent = nullptr);
+    Q_INVOKABLE void setWindow(QQuickWindow *window);
 
-    void setEnabled(const bool enabled);
-
-    bool openLogFile(const QString &path = QString());
-
-    Q_INVOKABLE void pushLog(const QString &log);
-
-    Q_INVOKABLE QString getLog();
-
-    Q_INVOKABLE void clearLog();
+public slots:
+    void registerSample();
+    void refresh();
 };
 
 /* ************************************************************************** */
-#endif // UTILS_LOG_H
+#endif // UTILS_FPSMONITOR_H

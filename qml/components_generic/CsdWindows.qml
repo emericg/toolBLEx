@@ -14,8 +14,8 @@ Loader {
     height: active ? 28 : 0
 
     active: (settingsManager.appThemeCSD && Qt.platform.os === "windows")
-
     asynchronous: true
+
     sourceComponent: Row {
         id: csdWindows
         spacing: 0

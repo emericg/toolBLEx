@@ -13,8 +13,8 @@ T.TextField {
                              contentHeight + topPadding + bottomPadding,
                              placeholder.implicitHeight + topPadding + bottomPadding)
 
-    padding: 8
-    leftPadding: padding + 4
+    leftPadding: 12
+    rightPadding: 12
 
     color: colorText
     opacity: control.enabled ? 1 : 0.66
@@ -38,7 +38,7 @@ T.TextField {
     property string colorBorder: Theme.colorComponentBorder
     property string colorBackground: Theme.colorComponentBackground
     property string colorSelection: Theme.colorPrimary
-    property string colorSelectedText: "white"
+    property string colorSelectedText: Theme.colorHighContrast
 
     PlaceholderText {
         id: placeholder

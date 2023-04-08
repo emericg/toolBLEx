@@ -391,23 +391,21 @@ Loader {
                                 verticalAlignment: Text.AlignVCenter
                             }
 
-                            Row {
+                            SelectorMenu {
+                                height: 32
                                 anchors.right: parent.right
                                 anchors.rightMargin: 16
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                z: 1
-                                spacing: 12
-
-                                RadioButtonThemed {
-                                    checked: (settingsManager.appUnits === 0)
-                                    onClicked: settingsManager.appUnits = 0
-                                    text: qsTr("metric")
+                                model: ListModel {
+                                    ListElement { idx: 1; txt: qsTr("°C"); src: ""; sz: 16; }
+                                    ListElement { idx: 2; txt: qsTr("°F"); src: ""; sz: 16; }
                                 }
-                                RadioButtonThemed {
-                                    checked: (settingsManager.appUnits === 1)
-                                    onClicked: settingsManager.appUnits = 1
-                                    text: qsTr("imperial")
+
+                                currentSelection: (settingsManager.appUnits === 0) ? 1 : 2
+                                onMenuSelected: (index) => {
+                                    currentSelection = index
+                                    settingsManager.appUnits = index
                                 }
                             }
                         }

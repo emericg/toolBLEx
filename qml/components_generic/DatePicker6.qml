@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 import QtQuick.Controls
 
 import ThemeEngine 1.0
@@ -12,33 +13,32 @@ Item {
 
     //property var locale: Qt.locale()
 
-    property var today: new Date()
-    property bool isToday: false
+    property date today: new Date()
+    property date initialDate
+    property date selectedDate
+
+    property bool isSelectedDateToday: false
 
     property var minDate: null
     property var maxDate: null
 
-    property date initialDate
-    property date currentDate
+    ////////////////////////////////////////////////////////////////////////////
 
     signal updateDate(var newdate)
 
     function openDate(date) {
         //console.log("openDate(" + date + ")")
+
+        today = new Date()
+        initialDate = date
+        selectedDate = date
+        grid.year = date.getFullYear()
+        grid.month = date.getMonth()
+
         minDate = null
         maxDate = null
 
-        initialDate = date
-        currentDate = date
-
-        today = new Date()
-        grid.month = date.getMonth()
-
         printDate()
-
-        // visual hacks
-        //dow.width = dow.width - 8
-        grid.width = dow.width - 8
     }
 
     function openDate_limits(datetime, min, max) {
@@ -52,11 +52,10 @@ Item {
         var thismonth = new Date(grid.year, grid.month)
         bigMonth.text = thismonth.toLocaleString(locale, "MMMM")
 
-        isToday = (today.toLocaleString(locale, "dd MMMM yyyy") === currentDate.toLocaleString(locale, "dd MMMM yyyy"))
-    }
+        if (thismonth.getFullYear() !== today.getFullYear())
+            bigMonth.text += " " + thismonth.toLocaleString(locale, "yyyy")
 
-    Component.onCompleted: {
-        openDate(new Date())
+        isSelectedDateToday = (today.toLocaleString(locale, "dd MMMM yyyy") === selectedDate.toLocaleString(locale, "dd MMMM yyyy"))
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -111,7 +110,7 @@ Item {
                 id: bigMonth
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
-                text: currentDate.toLocaleString(locale, "MMMM") // "Octobre"
+                text: selectedDate.toLocaleString(locale, "MMMM") // "Octobre"
                 font.capitalization: Font.Capitalize
                 font.pixelSize: Theme.fontSizeContentBig
                 color: Theme.colorText
@@ -155,6 +154,7 @@ Item {
                 anchors.rightMargin: 4
                 anchors.verticalCenter: parent.verticalCenter
 
+                Layout.fillWidth: true
                 //locale: datePicker.locale
 
                 delegate: Text {
@@ -179,6 +179,7 @@ Item {
             anchors.rightMargin: 4
             anchors.bottom: parent.bottom
 
+            Layout.fillWidth: true
             //locale: datePicker.locale
 
             delegate: Text {
@@ -187,15 +188,19 @@ Item {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
 
-                opacity: (model.month === grid.month ? 1 : 0.2)
+                property bool isSelected: (model.day === selectedDate.getDate() &&
+                                           model.month === selectedDate.getMonth() &&
+                                           model.year === selectedDate.getFullYear())
+
+                property bool isToday: (model.day === datePicker.today.getDate() &&
+                                        model.month === datePicker.today.getMonth() &&
+                                        model.year === datePicker.today.getFullYear())
+
                 text: model.day
                 font: grid.font
-                //font.bold: model.isToday
-                color: selected ? "white" : Theme.colorSubText
-
-                property bool selected: (model.day === currentDate.getDate() &&
-                                         model.month === currentDate.getMonth() &&
-                                         model.year === currentDate.getFullYear())
+                //font.bold: isToday
+                color: isSelected ? "white" : Theme.colorSubText
+                opacity: (model.month === grid.month ? 1 : 0.2)
 
                 Rectangle {
                     z: -1
@@ -203,9 +208,9 @@ Item {
                     width: Math.min(parent.width, parent.height)
                     height: width
                     radius: width
-                    color: selected ? Theme.colorSecondary : "transparent" //Theme.colorBackground
+                    color: isSelected ? Theme.colorSecondary : "transparent"
                     border.color: Theme.colorSecondary
-                    border.width: model.isToday ? Theme.componentBorderWidth : 0
+                    border.width: isToday ? Theme.componentBorderWidth : 0
                 }
             }
 
@@ -221,24 +226,24 @@ Item {
                         //console.log(diffMaxDays + " diffMaxDays")
 
                         if (diffMinDays > -1 && diffMaxDays < 1) {
-                            date.setHours(currentDate.getHours(),
-                                          currentDate.getMinutes(),
-                                          currentDate.getSeconds())
-                            currentDate = date
-                            updateDate(currentDate)
+                            date.setHours(selectedDate.getHours(),
+                                          selectedDate.getMinutes(),
+                                          selectedDate.getSeconds())
+                            selectedDate = date
+                            updateDate(selectedDate)
                         }
                     } else {
-                        const diffTime = (today - date);
+                        const diffTime = (today - date)
                         const diffDays = -Math.ceil(diffTime / (1000 * 60 * 60 * 24) - 1)
                         //console.log(diffDays + " days")
 
-                        // validate date (-15 / today)
-                        if (diffDays > -15 && diffDays < 1) {
-                            date.setHours(currentDate.getHours(),
-                                          currentDate.getMinutes(),
-                                          currentDate.getSeconds())
-                            currentDate = date
-                            updateDate(currentDate)
+                        // validate date (-21 / today)
+                        if (diffDays > -21 && diffDays < 1) {
+                            date.setHours(selectedDate.getHours(),
+                                          selectedDate.getMinutes(),
+                                          selectedDate.getSeconds())
+                            selectedDate = date
+                            updateDate(selectedDate)
                         }
                     }
 
@@ -249,4 +254,6 @@ Item {
 
         ////////
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

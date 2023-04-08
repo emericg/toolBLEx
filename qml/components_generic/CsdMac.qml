@@ -9,8 +9,8 @@ Loader {
     height: active ? 24 : 0
 
     active: (settingsManager.appThemeCSD && Qt.platform.os === "osx")
-
     asynchronous: true
+
     sourceComponent: Item {
         id: csdMac
         implicitWidth: 48
