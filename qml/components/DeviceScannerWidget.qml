@@ -146,7 +146,7 @@ Item {
             Text { // name
                 Layout.fillWidth: true
 
-                text: (boxDevice.deviceName.length) ? boxDevice.deviceName : qsTr("Unavailable")
+                text: (boxDevice.deviceName.length) ? boxDevice.deviceName_display : qsTr("Unavailable")
                 textFormat: Text.PlainText
                 elide: Text.ElideRight
                 color: {

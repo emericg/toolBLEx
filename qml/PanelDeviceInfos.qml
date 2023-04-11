@@ -102,7 +102,7 @@ Flickable {
                         property bool nameAvailable: (selectedDevice && selectedDevice.deviceName.length > 0)
                         selectByMouse: nameAvailable
                         color: nameAvailable ? Theme.colorText : Theme.colorSubText
-                        text: nameAvailable ? selectedDevice.deviceName : qsTr("Unavailable")
+                        text: nameAvailable ? selectedDevice.deviceName_display : qsTr("Unavailable")
                         wrapMode: Text.WrapAnywhere
                     }
                 }

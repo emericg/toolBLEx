@@ -11,7 +11,7 @@ T.HorizontalHeaderView {
 
     Rectangle { // background
         width: syncView ? syncView.width : 0
-        height: 36
+        height: parent.height
         color: Theme.colorLVheader
     }
 
@@ -20,11 +20,8 @@ T.HorizontalHeaderView {
         implicitHeight: 34
 
         Text { // cell title
-            width: parent.width
-            height: parent.height
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            color: Theme.colorText
+            anchors.fill: parent
+            anchors.margins: 10
 
             text: {
                 if (model[control.textRole] === 1) return ""
@@ -36,6 +33,71 @@ T.HorizontalHeaderView {
                 if (model[control.textRole] === 7) return qsTr("Last seen")
                 if (model[control.textRole] === 8) return qsTr("First seen")
                 return model[control.textRole]
+            }
+            textFormat: Text.PlainText
+            font.bold: ccc
+            color: Theme.colorText
+            horizontalAlignment: Text.AlignLeft
+            verticalAlignment: Text.AlignVCenter
+        }
+
+        property bool ccc: {
+            if (model[control.textRole] === 2 && deviceManager.orderBy_role === "address") return true
+            if (model[control.textRole] === 3 && deviceManager.orderBy_role === "name") return true
+            if (model[control.textRole] === 4 && deviceManager.orderBy_role === "manufacturer") return true
+            if (model[control.textRole] === 5 && deviceManager.orderBy_role === "rssi") return true
+            if (model[control.textRole] === 6 && deviceManager.orderBy_role === "interval") return true
+            if (model[control.textRole] === 7 && deviceManager.orderBy_role === "firstseen") return true
+            if (model[control.textRole] === 8 && deviceManager.orderBy_role === "lastseen") return true
+            return false
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            anchors.leftMargin: 4
+            anchors.rightMargin: 4
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+            onClicked: (mouse) => {
+                if (mouse.button === Qt.LeftButton) {
+                    if (model[control.textRole] === 2) deviceManager.orderby_address()
+                    else if (model[control.textRole] === 3) deviceManager.orderby_name()
+                    else if (model[control.textRole] === 4) deviceManager.orderby_manufacturer()
+                    else if (model[control.textRole] === 5) deviceManager.orderby_rssi()
+                    else if (model[control.textRole] === 6) deviceManager.orderby_interval()
+                    else if (model[control.textRole] === 7) deviceManager.orderby_firstseen()
+                    else if (model[control.textRole] === 8) deviceManager.orderby_lastseen()
+                } else if (mouse.button === Qt.RightButton) {
+                   if (ccc) deviceManager.orderby_default()
+                }
+            }
+        }
+
+        Canvas {
+            id: indicatorName
+            anchors.right: parent.right
+            anchors.rightMargin: 10
+            anchors.verticalCenter: parent.verticalCenter
+
+            width: 8
+            height: 4
+            rotation: deviceManager.orderBy_order ? 0 : 180
+            visible: ccc
+
+            Connections {
+                target: ThemeEngine
+                function onCurrentThemeChanged() { indicatorName.requestPaint() }
+            }
+
+            onPaint: {
+                var ctx = getContext("2d")
+                ctx.reset()
+                ctx.moveTo(0, 0)
+                ctx.lineTo(width, 0)
+                ctx.lineTo(width / 2, height)
+                ctx.closePath()
+                ctx.fillStyle = Theme.colorIcon
+                ctx.fill()
             }
         }
 

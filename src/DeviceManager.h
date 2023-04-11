@@ -216,12 +216,12 @@ public:
     Q_INVOKABLE void orderby_default();
     Q_INVOKABLE void orderby_address();
     Q_INVOKABLE void orderby_name();
+    Q_INVOKABLE void orderby_model();
     Q_INVOKABLE void orderby_manufacturer();
     Q_INVOKABLE void orderby_rssi();
     Q_INVOKABLE void orderby_interval();
     Q_INVOKABLE void orderby_firstseen();
     Q_INVOKABLE void orderby_lastseen();
-    Q_INVOKABLE void orderby_model();
     void orderby(int role, Qt::SortOrder order);
 
     Q_INVOKABLE void setFilterString(const QString &str);

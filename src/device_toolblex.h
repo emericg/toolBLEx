@@ -44,6 +44,8 @@ class DeviceToolBLEx: public Device
 {
     Q_OBJECT
 
+    Q_PROPERTY(QString deviceName_display READ getName_display NOTIFY sensorUpdated)
+
     Q_PROPERTY(bool isBeacon READ isBeacon NOTIFY boolChanged)
     Q_PROPERTY(bool isBlacklisted READ isBlacklisted NOTIFY boolChanged)
     Q_PROPERTY(bool isCached READ isCached NOTIFY boolChanged)
@@ -192,6 +194,8 @@ public:
     virtual void setCoreConfiguration(const int bleconf);
 
     // toolBLEx
+    QString getName_display() const;
+
     QVariant getServices() const { return QVariant::fromValue(m_services); }
     int getServicesCount() const { return m_services.count(); }
     bool getServicesScanned() const { return (m_services_scanmode > 0); }

@@ -260,26 +260,36 @@ Loader {
 
                     clip: true
                     interactive: true
-
                     columnSpacing: 0
                     rowSpacing: 0
 
-                    selectionModel: ItemSelectionModel {}
                     selectionBehavior: TableView.SelectRows
+                    selectionModel: ItemSelectionModel {
+                        onCurrentChanged: (current, previous) => {
+                            //console.log("onCurrentChanged: " + current.row + " / " + previous.row)
+                            selectedDevice = deviceManager.getDeviceByProxyIndex(current.row)
+                            deviceManager.getDeviceByProxyIndex(current.row).selected = true
+                            if (typeof previous === "undefined" || !previous) return
+                            deviceManager.getDeviceByProxyIndex(previous.row).selected = false
+                        }
+                    }
 
+                    boundsBehavior: Flickable.OvershootBounds
+                    flickableDirection: Flickable.AutoFlickIfNeeded
                     resizableColumns: true
-                    boundsBehavior: Flickable.StopAtBounds
 
                     columnWidthProvider: function(column) {
                         if (column === 0) return 32
                         //if (column === 1 && Qt.platform.os === "osx") return 0
 
                         let w = explicitColumnWidth(column)
-                        if (w >= 0 && w <= 96) return 96; // minimum size
+                        if (w >= 0 && w <= 112) return 112; // minimum size
                         if (w >= 0) return w;
-                        return implicitColumnWidth(column)
+                        return Math.max(implicitColumnWidth(column), 112)
                     }
-                    rowHeightProvider: function(column) { return 32; }
+                    rowHeightProvider: function(column) {
+                        return 32;
+                    }
 
                     model: deviceManager.devicesList
                     delegate: DeviceScannerTableWidget { }

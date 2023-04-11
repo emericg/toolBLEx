@@ -38,7 +38,6 @@
 #include <QBluetoothDeviceDiscoveryAgent>
 #include <QBluetoothAddress>
 #include <QBluetoothDeviceInfo>
-#include <QLowEnergyConnectionParameters>
 
 #include <QSqlDatabase>
 #include <QSqlDriver>
@@ -1045,6 +1044,11 @@ void DeviceManager::orderby_name()
     orderby(DeviceModel::DeviceNameRole, m_orderBy_order);
 }
 
+void DeviceManager::orderby_model()
+{
+    orderby(DeviceModel::DeviceModelRole, m_orderBy_order);
+}
+
 void DeviceManager::orderby_manufacturer()
 {
     orderby(DeviceModel::DeviceManufacturerRole, m_orderBy_order);
@@ -1068,11 +1072,6 @@ void DeviceManager::orderby_firstseen()
 void DeviceManager::orderby_lastseen()
 {
     orderby(DeviceModel::DeviceLastSeenRole, m_orderBy_order);
-}
-
-void DeviceManager::orderby_model()
-{
-    orderby(DeviceModel::DeviceModelRole, m_orderBy_order);
 }
 
 void DeviceManager::setFilterString(const QString &str)

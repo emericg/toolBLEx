@@ -25,11 +25,10 @@
 
 #include <QObject>
 
+class QMenu;
+class QAction;
+class QQuickWindow;
 class DeviceManager;
-
-QT_FORWARD_DECLARE_CLASS(QMenu)
-QT_FORWARD_DECLARE_CLASS(QAction)
-QT_FORWARD_DECLARE_CLASS(QQuickWindow)
 
 /* ************************************************************************** */
 

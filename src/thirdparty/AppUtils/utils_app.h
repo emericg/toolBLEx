@@ -58,6 +58,7 @@ public:
     static Q_INVOKABLE bool isDebugBuild();
 
     // tools
+
     QString getAppPath() const { return m_appPath; }
     void setAppPath(const QString &value);
 
@@ -72,11 +73,11 @@ public:
 
     // mobile related
 
-    static Q_INVOKABLE void vibrate(int ms);
-
     static Q_INVOKABLE int getAndroidSdkVersion();
 
     static Q_INVOKABLE void openAndroidAppInfo(const QString &packageName);
+
+    static Q_INVOKABLE void vibrate(int ms);
 
     static Q_INVOKABLE bool checkMobileStoragePermissions();
     static Q_INVOKABLE bool getMobileStoragePermissions();

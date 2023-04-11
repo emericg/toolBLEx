@@ -164,6 +164,14 @@ bool DeviceToolBLEx::getSqlDeviceInfos()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
+QString DeviceToolBLEx::getName_display() const
+{
+    QString prettyname = m_deviceName;
+    prettyname.replace('\n', "↵");
+
+    return prettyname;
+}
+
 void DeviceToolBLEx::setDeviceClass(const int major, const int minor, const int service)
 {
     if (m_major != major || m_minor != minor || m_service != service)
