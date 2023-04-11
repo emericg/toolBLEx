@@ -148,7 +148,7 @@ macx {
     QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
 
     # Target OS
-    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.15
+    QMAKE_MACOSX_DEPLOYMENT_TARGET = 11
 
     # Automatic bundle packaging
 
