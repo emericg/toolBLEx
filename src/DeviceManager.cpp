@@ -28,7 +28,6 @@
 #include "device_toolblex.h"
 
 #include "utils_app.h"
-#include "utils_log.h"
 
 #include <QList>
 #include <QDateTime>
@@ -72,7 +71,7 @@ DeviceManager::DeviceManager(bool daemon)
 
     if (m_dbInternal || m_dbExternal)
     {
-        // Load blacklist
+        // Load device blacklist
         if (!m_daemonMode)
         {
             QSqlQuery queryBlacklist;
@@ -100,9 +99,13 @@ DeviceManager::DeviceManager(bool daemon)
                 //qDebug() << "* Device added (from database): " << deviceName << "/" << deviceAddr;
             }
         }
-
-        checkPaired();
     }
+
+    // Check if we have Bluetooth classic device paired
+    checkPaired();
+
+    // Device colors
+    m_colorsLeft = m_colorsAvailable;
 }
 
 DeviceManager::~DeviceManager()

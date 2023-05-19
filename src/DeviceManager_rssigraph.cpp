@@ -31,9 +31,20 @@
 
 QString DeviceManager::getAvailableColor()
 {
-    int clr_id = QRandomGenerator::global()->bounded(m_availableColors.size());
-    QString clr_str = m_availableColors.at(clr_id);
-    m_availableColors.remove(clr_id);
+    QString clr_str;
+
+    if (m_colorsLeft.size())
+    {
+        // unique colors
+        int clr_id = QRandomGenerator::global()->bounded(m_colorsLeft.size());
+        clr_str = m_colorsLeft.at(clr_id);
+        m_colorsLeft.remove(clr_id);
+    }
+    else
+    {
+        // start reusing colors
+        clr_str = m_colorsAvailable.at(QRandomGenerator::global()->bounded(m_colorsAvailable.size()));
+    }
 
     return clr_str;
 }

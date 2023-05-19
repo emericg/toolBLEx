@@ -125,7 +125,7 @@ class DeviceManager: public QObject
     int m_orderBy_role;
     Qt::SortOrder m_orderBy_order;
 
-    QStringList m_availableColors = {
+    QStringList m_colorsAvailable = {
             "HotPink", "White", "Tomato", "Yellow", "Red", "Orange", "Gold", "LimeGreen", "Green",
             "MediumOrchid", "Purple", "YellowGreen", "LightYellow", "MediumVioletRed", "PeachPuff", "DodgerBlue",
             "Indigo", "Ivory", "DeepSkyBlue", "MistyRose", "DarkBlue", "MintCream", "Black", "OrangeRed",
@@ -136,6 +136,7 @@ class DeviceManager: public QObject
             "Grey", "Moccasin", "Beige", "Magenta", "DarkOrchid", "LightCyan", "RosyBrown", "GhostWhite",
             "MediumSeaGreen", "LemonChiffon", "Chocolate", "BurlyWood"
     };
+    QStringList m_colorsLeft;
     QString getAvailableColor();
 
 Q_SIGNALS:
