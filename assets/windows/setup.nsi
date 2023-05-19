@@ -20,7 +20,7 @@ Unicode True
 !define MUI_FINISHPAGE_LINK          "Visit project website"
 !define MUI_FINISHPAGE_LINK_LOCATION "https://emeric.io/${APPNAME}/"
 !define MUI_WELCOMEPAGE_TITLE        "Welcome to the ${APPNAME} installer!"
-!define MUI_ICON                     "toolblex.ico"
+!define MUI_ICON                     "${APPNAME}.ico"
 !define MUI_WELCOMEFINISHPAGE_BITMAP "nsis-banner.bmp"
 
 !insertmacro MUI_PAGE_WELCOME
