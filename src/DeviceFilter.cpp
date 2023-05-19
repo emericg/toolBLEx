@@ -56,6 +56,11 @@ void DeviceFilter::updateBoolFilters()
     }
 }
 
+void DeviceFilter::invalidatefilter()
+{
+    invalidateFilter();
+}
+
 /* ************************************************************************** */
 
 bool DeviceFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const

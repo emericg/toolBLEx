@@ -216,6 +216,8 @@ void DeviceToolBLEx::setBeacon(bool v)
     {
         m_isBeacon = v;
         Q_EMIT boolChanged();
+
+        static_cast<DeviceManager *>(parent())->invalidateFilter();
     }
 }
 
@@ -226,7 +228,7 @@ void DeviceToolBLEx::setBlacklisted(bool v)
         m_isBlacklisted = v;
         Q_EMIT boolChanged();
 
-        static_cast<DeviceManager *>(parent())->invalidate();
+        static_cast<DeviceManager *>(parent())->invalidateFilter();
     }
 }
 
@@ -237,7 +239,7 @@ void DeviceToolBLEx::setCached(bool v)
         m_isCached = v;
         Q_EMIT boolChanged();
 
-        static_cast<DeviceManager *>(parent())->invalidate();
+        static_cast<DeviceManager *>(parent())->invalidateFilter();
     }
 }
 
@@ -248,7 +250,7 @@ void DeviceToolBLEx::setCache(bool v)
         m_hasCache = v;
         Q_EMIT cacheChanged();
 
-        static_cast<DeviceManager *>(parent())->invalidate();
+        static_cast<DeviceManager *>(parent())->invalidateFilter();
     }
 }
 

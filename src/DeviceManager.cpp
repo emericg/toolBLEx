@@ -982,12 +982,43 @@ bool DeviceManager::isDeviceCached(const QString &addr)
     return false;
 }
 
+void DeviceManager::clearDeviceCache()
+{
+    // Remove every device in the list but not currently scanned
+    for (auto d: qAsConst(m_devices_model->m_devices))
+    {
+        DeviceToolBLEx *dd = qobject_cast<DeviceToolBLEx *>(d);
+        if (dd->hasCache() && !dd->isAvailable())
+        {
+            m_devices_model->removeDevice(dd);
+            Q_EMIT devicesListUpdated();
+        }
+    }
+
+    // Clear persistent cache
+    if (m_dbInternal || m_dbExternal)
+    {
+        QSqlQuery clearDeviceCache;
+        clearDeviceCache.prepare("DELETE FROM devices");
+        if (clearDeviceCache.exec() == false)
+        {
+            qWarning() << "> clearDeviceCache.exec() ERROR"
+                       << clearDeviceCache.lastError().type() << ":" << clearDeviceCache.lastError().text();
+        }
+    }
+}
+
 /* ************************************************************************** */
 /* ************************************************************************** */
 
 void DeviceManager::invalidate()
 {
     m_devices_filter->invalidate();
+}
+
+void DeviceManager::invalidateFilter()
+{
+    m_devices_filter->invalidatefilter();
 }
 
 QString DeviceManager::getOrderByRole() const
@@ -1086,7 +1117,7 @@ void DeviceManager::setFilterString(const QString &str)
 void DeviceManager::updateBoolFilters()
 {
     m_devices_filter->updateBoolFilters();
-    m_devices_filter->invalidate();
+    m_devices_filter->invalidatefilter();
 }
 
 /* ************************************************************************** */

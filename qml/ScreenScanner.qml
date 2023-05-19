@@ -306,9 +306,10 @@ Loader {
                     visible: true
 
                     ScrollBar.vertical: ScrollBar {
-                        visible: false
                         anchors.right: parent.right
-                        anchors.rightMargin: -6
+                        anchors.rightMargin: 0
+                        topPadding: 36
+                        visible: true
                         policy: ScrollBar.AsNeeded
                     }
 

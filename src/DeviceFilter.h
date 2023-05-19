@@ -59,6 +59,7 @@ public:
 
     void setFilterString(const QString &str) { m_filterString = str; }
     void updateBoolFilters();
+    void invalidatefilter();
 };
 
 /* ************************************************************************** */

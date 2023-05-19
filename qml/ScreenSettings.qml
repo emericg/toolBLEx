@@ -29,6 +29,8 @@ Loader {
     sourceComponent: Item {
         anchors.fill: parent
 
+        ////////////////
+
         function backAction() {
             if (ubertoothPath.focus) {
                 ubertoothPath.focus = false
@@ -37,6 +39,25 @@ Loader {
 
             screenScanner.loadScreen()
         }
+
+        ////////////////
+
+        Loader {
+            id: popupLoader
+
+            active: false
+            asynchronous: false
+            sourceComponent: PopupClearDeviceCache {
+                id: popupClearCache
+                parent: appContent
+
+                onConfirmed: {
+                    deviceManager.clearDeviceCache()
+                }
+            }
+        }
+
+        ////////////////
 
         Flickable {
             anchors.fill: parent
@@ -551,37 +572,6 @@ Loader {
                             Text {
                                 anchors.left: parent.left
                                 anchors.leftMargin: 20
-                                anchors.right: parent.right
-                                anchors.rightMargin: 64
-                                anchors.verticalCenter: parent.verticalCenter
-
-                                text: qsTr("Cache devices automatically")
-                                textFormat: Text.PlainText
-                                font.pixelSize: Theme.fontSizeContent
-                                font.bold: false
-                                color: Theme.colorText
-                                wrapMode: Text.WordWrap
-                                verticalAlignment: Text.AlignVCenter
-                            }
-
-                            SwitchThemedDesktop {
-                                anchors.right: parent.right
-                                anchors.verticalCenter: parent.verticalCenter
-
-                                checked: settingsManager.scanCacheAuto
-                                onClicked: settingsManager.scanCacheAuto = checked
-                            }
-                        }
-
-                        Rectangle {
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            height: 48
-                            color: Theme.colorForeground
-
-                            Text {
-                                anchors.left: parent.left
-                                anchors.leftMargin: 20
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 text: qsTr("Scanning timeout")
@@ -643,6 +633,73 @@ Loader {
 
                                 value: settingsManager.scanRssiInterval
                                 onValueModified: settingsManager.scanRssiInterval = value
+                            }
+                        }
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 48
+                            color: Theme.colorForeground
+
+                            Text {
+                                anchors.left: parent.left
+                                anchors.leftMargin: 20
+                                anchors.right: parent.right
+                                anchors.rightMargin: 64
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                text: qsTr("Cache devices automatically")
+                                textFormat: Text.PlainText
+                                font.pixelSize: Theme.fontSizeContent
+                                font.bold: false
+                                color: Theme.colorText
+                                wrapMode: Text.WordWrap
+                                verticalAlignment: Text.AlignVCenter
+                            }
+
+                            SwitchThemedDesktop {
+                                anchors.right: parent.right
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                checked: settingsManager.scanCacheAuto
+                                onClicked: settingsManager.scanCacheAuto = checked
+                            }
+                        }
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 48
+                            color: Theme.colorForeground
+
+                            Text {
+                                anchors.left: parent.left
+                                anchors.leftMargin: 20
+                                anchors.right: parent.right
+                                anchors.rightMargin: 64
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                text: qsTr("Clear device cache")
+                                textFormat: Text.PlainText
+                                font.pixelSize: Theme.fontSizeContent
+                                font.bold: false
+                                color: Theme.colorText
+                                wrapMode: Text.WordWrap
+                                verticalAlignment: Text.AlignVCenter
+                            }
+
+                            ButtonWireframe {
+                                anchors.right: parent.right
+                                anchors.rightMargin: 16
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                fullColor: true
+                                text: qsTr("Clear")
+                                onClicked: {
+                                    popupLoader.active = true
+                                    popupLoader.item.open()
+                                }
                             }
                         }
                     }
