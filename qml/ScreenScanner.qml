@@ -71,7 +71,13 @@ Loader {
                 containmentMask: Item {
                     parent: splithandle
                     anchors.centerIn: parent
-                    width: (splitview.orientation === Qt.Horizontal) ? 20 : splitview.width
+                    anchors.horizontalCenterOffset: (splitview.orientation === Qt.Horizontal &&
+                                                     devicesViewScrollbar.visible) ? 3 : 0
+                    width: {
+                        if (splitview.orientation === Qt.Horizontal && devicesViewScrollbar.visible) return 12
+                        if (splitview.orientation === Qt.Horizontal) return 20
+                        return splitview.width
+                    }
                     height: (splitview.orientation === Qt.Horizontal) ? splitview.height : 20
                 }
             }
@@ -303,13 +309,11 @@ Loader {
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
 
-                    visible: true
-
                     ScrollBar.vertical: ScrollBar {
+                        id: devicesViewScrollbar
                         anchors.right: parent.right
                         anchors.rightMargin: 0
                         topPadding: 36
-                        visible: true
                         policy: ScrollBar.AsNeeded
                     }
 
