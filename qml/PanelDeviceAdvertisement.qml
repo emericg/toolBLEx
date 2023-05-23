@@ -26,7 +26,7 @@ Flickable {
 
         Rectangle {
             width: detailView.ww
-            height: 32 + 24
+            height: adv_nodata.height + 32
             radius: 4
 
             clip: false
@@ -37,16 +37,16 @@ Flickable {
             visible: (selectedDevice && !selectedDevice.hasAdvertisement)
 
             Text {
+                id: adv_nodata
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: 16
+                anchors.right: parent.right
+                anchors.rightMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
-                height: 32
 
                 text: qsTr("No advertisement data...")
                 textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContent
-                horizontalAlignment: Text.AlignRight
-                verticalAlignment: Text.AlignVCenter
                 color: Theme.colorText
             }
         }

@@ -10,6 +10,7 @@ Column {
     anchors.left: parent.left
     anchors.leftMargin: 16
     anchors.right: parent.right
+    anchors.rightMargin: 8
 
     property var packet: null
     property int legendWidth: 48
@@ -24,14 +25,15 @@ Column {
 
     ////////
 
-    Row {
-        height: 24
+    RowLayout {
+        anchors.left: parent.left
+        anchors.right: parent.right
         spacing: 12
 
         Text {
             id: legendUUID
-            width: legendWidth
-            anchors.verticalCenter: parent.verticalCenter
+            Layout.preferredWidth: legendWidth
+            Layout.alignment: Qt.AlignTop | Qt.AlignRight
 
             text: qsTr("UUID")
             textFormat: Text.PlainText
@@ -40,52 +42,54 @@ Column {
             color: Theme.colorSubText
         }
 
-        Row {
-            anchors.verticalCenter: parent.verticalCenter
-            spacing: 4
+        Flow {
+            Layout.alignment: Qt.AlignVCenter
+            Layout.fillWidth: true
+            spacing: 0
 
-            Text {
-                id: t
-                anchors.verticalCenter: parent.verticalCenter
+            Row {
+                spacing: 2
 
-                text: "0x"
-                textFormat: Text.PlainText
-                font.pixelSize: Theme.fontSizeContent-1
-                color: Theme.colorSubText
-            }
-            TextSelectable {
-                anchors.baseline: t.baseline
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
 
-                text: packet.advUUIDstr
-                color: Theme.colorText
-                font.family: fontMonospace
-                //font.capitalization: Font.AllUppercase
-            }
-        }
+                    text: "0x"
+                    textFormat: Text.PlainText
+                    font.pixelSize: Theme.fontSizeContent
+                    color: Theme.colorSubText
+                }
+                TextSelectable {
+                    anchors.verticalCenter: parent.verticalCenter
 
-        Row {
-            anchors.verticalCenter: parent.verticalCenter
-            visible: (packet.advUUIDmanuf.length > 1)
-
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                text: "("
-                textFormat: Text.PlainText
-                font.pixelSize: Theme.fontSizeContent
-                color: Theme.colorSubText
+                    text: packet.advUUIDstr
+                    color: Theme.colorText
+                }
             }
 
-            TextSelectable {
-                anchors.verticalCenter: parent.verticalCenter
-                text: packet.advUUIDmanuf
-                color: Theme.colorText
-            }
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                text: ")"
-                textFormat: Text.PlainText
-                font.pixelSize: Theme.fontSizeContent
-                color: Theme.colorSubText
+            Item { width: 12; height: 12; } // spacer
+
+            Row {
+                visible: (packet.advUUIDmanuf.length > 1)
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: "("
+                    textFormat: Text.PlainText
+                    font.pixelSize: Theme.fontSizeContent
+                    color: Theme.colorSubText
+                }
+                TextSelectable {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: packet.advUUIDmanuf
+                    color: Theme.colorText
+                }
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: ")"
+                    textFormat: Text.PlainText
+                    font.pixelSize: Theme.fontSizeContent
+                    color: Theme.colorSubText
+                }
             }
         }
     }
@@ -101,7 +105,7 @@ Column {
             width: legendWidth
             anchors.verticalCenter: parent.verticalCenter
 
-            text: qsTr("Data")
+            text: qsTr("DATA")
             textFormat: Text.PlainText
             font.pixelSize: Theme.fontSizeContent
             horizontalAlignment: Text.AlignRight
@@ -113,11 +117,12 @@ Column {
             spacing: 4
 
             Text {
-                anchors.baseline: tt.baseline
+                //anchors.baseline: t.baseline
+                anchors.verticalCenter: parent.verticalCenter
 
                 text: packet.advDataSize
                 textFormat: Text.PlainText
-                font.family: fontMonospace
+                //font.family: fontMonospace
                 font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorText
             }
@@ -139,24 +144,21 @@ Column {
         anchors.right: parent.right
         spacing: 12
 
-        Item {
+        Text {
+            id: legendData_hex
+            width: legendWidth
             height: 26
-            Layout.alignment: Qt.AlignTop
+
+            Layout.alignment: Qt.AlignVCenter
             Layout.preferredWidth: legendWidth
 
-            Text {
-                id: legendData_hex
-                width: legendWidth
-                height: 26
-
-                text: qsTr("(hex)")
-                textFormat: Text.PlainText
-                font.pixelSize: Theme.fontSizeContentSmall
-                horizontalAlignment: Text.AlignRight
-                verticalAlignment: Text.AlignVCenter
-                color: Theme.colorSubText
-            }
+            text: qsTr("(hex)")
+            textFormat: Text.PlainText
+            font.pixelSize: Theme.fontSizeContentVerySmall
+            horizontalAlignment: Text.AlignRight
+            color: Theme.colorSubText
         }
+
         Flow {
             Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
@@ -188,29 +190,28 @@ Column {
         }
     }
 
+    ////////
+
     RowLayout {
         anchors.left: parent.left
         anchors.right: parent.right
         spacing: 12
 
-        Item {
+        Text {
+            id: legendData_str
+            width: legendWidth
             height: 26
-            Layout.alignment: Qt.AlignTop
+
+            Layout.alignment: Qt.AlignVCenter
             Layout.preferredWidth: legendWidth
 
-            Text {
-                id: legendData_str
-                width: legendWidth
-                height: 26
-
-                text: qsTr("(str)")
-                textFormat: Text.PlainText
-                font.pixelSize: Theme.fontSizeContentSmall
-                horizontalAlignment: Text.AlignRight
-                verticalAlignment: Text.AlignVCenter
-                color: Theme.colorSubText
-            }
+            text: qsTr("(str)")
+            textFormat: Text.PlainText
+            font.pixelSize: Theme.fontSizeContentVerySmall
+            horizontalAlignment: Text.AlignRight
+            color: Theme.colorSubText
         }
+
         Flow {
             Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
@@ -230,7 +231,8 @@ Column {
                         height: 26
                         anchors.horizontalCenter: parent.horizontalCenter
 
-                        text: modelData
+                        // empty byte: ∅ ? ⧄ ?
+                        text: (modelData === "\0") ? "⧄": modelData
                         textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContent-1
                         verticalAlignment: Text.AlignVCenter

@@ -408,12 +408,14 @@ Flickable {
                 spacing: 12
 
                 Flow { // status row
-                    width: parent.width
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     spacing: 12
                 }
 
                 Flow { // buttons row
-                    width: parent.width
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     spacing: 12
 
                     ButtonScanMenu {
@@ -785,127 +787,7 @@ Flickable {
 
         Rectangle {
             width: detailView.ww
-            height: box4.height + 24
-            radius: 4
-
-            clip: false
-            color: Theme.colorBox
-            border.width: 2
-            border.color: Theme.colorBoxBorder
-
-            visible: (selectedDevice && selectedDevice.rssi !== 0)
-
-            Column {
-                id: box4
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.verticalCenter: parent.verticalCenter
-                spacing: 12
-
-                ////
-
-                Text {
-                    anchors.left: parent.left
-                    anchors.leftMargin: 24
-                    height: 32
-
-                    visible: (selectedDevice && !selectedDevice.hasAdvertisement)
-
-                    text: qsTr("No advertisement data...")
-                    textFormat: Text.PlainText
-                    font.pixelSize: Theme.fontSizeContent
-                    horizontalAlignment: Text.AlignRight
-                    verticalAlignment: Text.AlignVCenter
-                    color: Theme.colorText
-                }
-
-                Column {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-
-                    visible: (selectedDevice && selectedDevice.svd.length)
-
-                    Row {
-                        anchors.left: parent.left
-                        anchors.leftMargin: 16
-                        height: 32
-                        spacing: 12
-
-                        Rectangle {
-                            width: 16; height: 16; radius: 4;
-                            anchors.verticalCenter: parent.verticalCenter
-                            anchors.verticalCenterOffset: -1
-                            color: Theme.colorGreen
-                        }
-
-                        Text {
-                            anchors.verticalCenter: parent.verticalCenter
-
-                            text: qsTr("Latest service data")
-                            textFormat: Text.PlainText
-                            font.pixelSize: Theme.fontSizeContentBig
-                            color: Theme.colorText
-                        }
-                    }
-
-                    Repeater {
-                        model: (selectedDevice && selectedDevice.last_svd)
-                        AdvertisementDataWidget {
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            packet: modelData
-                        }
-                    }
-                }
-
-                ////
-
-                Column {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-
-                    visible: (selectedDevice && selectedDevice.mfd.length)
-
-                    Row {
-                        anchors.left: parent.left
-                        anchors.leftMargin: 16
-                        height: 32
-                        spacing: 12
-
-                        Rectangle {
-                            width: 16; height: 16; radius: 4;
-                            anchors.verticalCenter: parent.verticalCenter
-                            anchors.verticalCenterOffset: -1
-                            color: Theme.colorBlue
-                        }
-
-                        Text {
-                            anchors.verticalCenter: parent.verticalCenter
-
-                            text: qsTr("Latest manufacturer data")
-                            textFormat: Text.PlainText
-                            font.pixelSize: Theme.fontSizeContentBig
-                            color: Theme.colorText
-                        }
-                    }
-
-                    Repeater {
-                        model: (selectedDevice && selectedDevice.last_mfd)
-                        AdvertisementDataWidget {
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            packet: modelData
-                        }
-                    }
-                }
-            }
-        }
-
-        ////////
-
-        Rectangle {
-            width: detailView.ww
-            height: box5.height + 24
+            height: box_adv_services.height + 32
             radius: 4
 
             clip: false
@@ -916,14 +798,12 @@ Flickable {
             visible: (selectedDevice && selectedDevice.servicesAdvertisedCount !== 0)
 
             Column {
-                id: box5
+                id: box_adv_services
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.margins: 16
                 spacing: 8
-
-                ////
 
                 Text {
                     text: qsTr("Service(s) advertised")
@@ -934,7 +814,6 @@ Flickable {
 
                 Column {
                     anchors.left: parent.left
-                    anchors.leftMargin: 4
                     anchors.right: parent.right
 
                     Repeater {
@@ -948,6 +827,145 @@ Flickable {
                             font.family: fontMonospace
                             wrapMode: Text.WrapAnywhere
                         }
+                    }
+                }
+            }
+        }
+
+        ////////
+
+        Rectangle {
+            width: detailView.ww
+            height: box_adv_nodata.height + 32
+            radius: 4
+
+            clip: false
+            color: Theme.colorBox
+            border.width: 2
+            border.color: Theme.colorBoxBorder
+
+            visible: (selectedDevice && selectedDevice.rssi !== 0 && !selectedDevice.hasAdvertisement)
+
+            Text {
+                id: box_adv_nodata
+                anchors.left: parent.left
+                anchors.leftMargin: 16
+                anchors.right: parent.right
+                anchors.rightMargin: 16
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: qsTr("No advertisement data...")
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContent
+                color: Theme.colorText
+            }
+        }
+
+        ////////
+
+        Rectangle {
+            width: detailView.ww
+            height: box_adv_servicedata.height + 32
+            radius: 4
+
+            clip: false
+            color: Theme.colorBox
+            border.width: 2
+            border.color: Theme.colorBoxBorder
+
+            visible: (selectedDevice && selectedDevice.rssi !== 0 && selectedDevice.svd.length)
+
+            Column {
+                id: box_adv_servicedata
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 12
+
+                Row {
+                    anchors.left: parent.left
+                    anchors.leftMargin: 16
+                    spacing: 12
+
+                    Rectangle {
+                        width: 18; height: 18; radius: 4;
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.verticalCenterOffset: -1
+                        color: Theme.colorGreen
+                    }
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        text: qsTr("Latest service data")
+                        textFormat: Text.PlainText
+                        font.pixelSize: Theme.fontSizeContentBig
+                        color: Theme.colorText
+                    }
+                }
+
+                Repeater {
+                    model: (selectedDevice && selectedDevice.last_svd)
+                    AdvertisementDataWidget {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        packet: modelData
+                    }
+                }
+            }
+        }
+
+        ////////
+
+        Rectangle {
+            width: detailView.ww
+            height: box_adv_manufdata.height + 32
+            radius: 4
+
+            clip: false
+            color: Theme.colorBox
+            border.width: 2
+            border.color: Theme.colorBoxBorder
+
+            visible: (selectedDevice && selectedDevice.rssi !== 0 && selectedDevice.mfd.length)
+
+            Column {
+                id: box_adv_manufdata
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 12
+
+                ////
+
+                Row {
+                    anchors.left: parent.left
+                    anchors.leftMargin: 16
+                    spacing: 12
+
+                    Rectangle {
+                        width: 18; height: 18; radius: 4;
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.verticalCenterOffset: -1
+                        color: Theme.colorBlue
+                    }
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        text: qsTr("Latest manufacturer data")
+                        textFormat: Text.PlainText
+                        font.pixelSize: Theme.fontSizeContentBig
+                        color: Theme.colorText
+                    }
+                }
+
+                Repeater {
+                    model: (selectedDevice && selectedDevice.last_mfd)
+                    AdvertisementDataWidget {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        packet: modelData
                     }
                 }
             }

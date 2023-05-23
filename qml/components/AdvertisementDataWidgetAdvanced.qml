@@ -95,52 +95,35 @@ Rectangle {
 
             Row {
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 4
+                spacing: 2
 
                 Text {
-                    id: t
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: "0x"
                     textFormat: Text.PlainText
-                    font.pixelSize: Theme.fontSizeContent-1
+                    font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorSubText
                 }
                 TextSelectable {
-                    anchors.baseline: t.baseline
+                    anchors.verticalCenter: parent.verticalCenter
 
                     text: packet.advUUIDstr
                     color: Theme.colorText
-                    font.family: fontMonospace
-                    //font.capitalization: Font.AllUppercase
                 }
             }
+        }
 
-            Row {
-                anchors.verticalCenter: parent.verticalCenter
-                visible: (packet.advUUIDmanuf.length > 1)
+        ////////
 
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: "("
-                    textFormat: Text.PlainText
-                    font.pixelSize: Theme.fontSizeContent
-                    color: Theme.colorSubText
-                }
+        TextSelectable {
+            anchors.left: parent.left
+            anchors.leftMargin: legendWidth + 12
+            anchors.right: parent.right
 
-                TextSelectable {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: packet.advUUIDmanuf
-                    color: Theme.colorText
-                }
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: ")"
-                    textFormat: Text.PlainText
-                    font.pixelSize: Theme.fontSizeContent
-                    color: Theme.colorSubText
-                }
-            }
+            visible: (packet.advUUIDmanuf.length > 1)
+            text: packet.advUUIDmanuf
+            color: Theme.colorText
         }
 
         ////////
@@ -154,7 +137,7 @@ Rectangle {
                 width: legendWidth
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: qsTr("Data")
+                text: qsTr("DATA")
                 textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContent
                 horizontalAlignment: Text.AlignRight
@@ -166,16 +149,14 @@ Rectangle {
                 spacing: 4
 
                 Text {
-                    anchors.baseline: tt.baseline
-
+                    anchors.verticalCenter: parent.verticalCenter
                     text: packet.advDataSize
                     textFormat: Text.PlainText
-                    font.family: fontMonospace
+                    //font.family: fontMonospace
                     font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorText
                 }
                 Text {
-                    id: tt
                     anchors.verticalCenter: parent.verticalCenter
                     text: qsTr("bytes")
                     textFormat: Text.PlainText
@@ -192,28 +173,24 @@ Rectangle {
             anchors.right: parent.right
             spacing: 12
 
-            Item {
+            Text {
+                id: legendData_hex
+                width: legendWidth
                 height: 26
                 Layout.alignment: Qt.AlignTop
                 Layout.preferredWidth: legendWidth
 
-                Text {
-                    id: legendData_hex
-                    width: legendWidth
-                    height: 26
-
-                    text: qsTr("(hex)")
-                    textFormat: Text.PlainText
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    horizontalAlignment: Text.AlignRight
-                    verticalAlignment: Text.AlignVCenter
-                    color: Theme.colorSubText
-                }
+                text: qsTr("(hex)")
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContentVerySmall
+                horizontalAlignment: Text.AlignRight
+                verticalAlignment: Text.AlignVCenter
+                color: Theme.colorSubText
             }
+
             Flow {
                 Layout.alignment: Qt.AlignVCenter
                 Layout.fillWidth: true
-                spacing: 0
 
                 Repeater {
                     model: packet.advDataHex_list
@@ -248,28 +225,24 @@ Rectangle {
             anchors.right: parent.right
             spacing: 12
 
-            Item {
+            Text {
+                id: legendData_str
+                width: legendWidth
                 height: 26
                 Layout.alignment: Qt.AlignTop
                 Layout.preferredWidth: legendWidth
 
-                Text {
-                    id: legendData_str
-                    width: legendWidth
-                    height: 26
-
-                    text: qsTr("(str)")
-                    textFormat: Text.PlainText
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    horizontalAlignment: Text.AlignRight
-                    verticalAlignment: Text.AlignVCenter
-                    color: Theme.colorSubText
-                }
+                text: qsTr("(str)")
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContentVerySmall
+                horizontalAlignment: Text.AlignRight
+                verticalAlignment: Text.AlignVCenter
+                color: Theme.colorSubText
             }
+
             Flow {
                 Layout.alignment: Qt.AlignVCenter
                 Layout.fillWidth: true
-                spacing: 0
 
                 Repeater {
                     model: packet.advDataAscii_list
@@ -303,7 +276,7 @@ Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.rightMargin: 8
-            spacing: 0
+            spacing: 2
 
             Text {
                 id: legendData_hex
@@ -323,7 +296,6 @@ Rectangle {
 
             Text {
                 height: 24
-
                 Layout.alignment: Qt.AlignBaseline
 
                 text: "0x"

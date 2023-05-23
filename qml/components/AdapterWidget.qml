@@ -28,7 +28,7 @@ Rectangle {
         visible: modelData.isDefault
     }
 
-    Rectangle { // scanning indicator
+    Rectangle { // bluetooth icon
         anchors.right: parent.right
         anchors.rightMargin: 20
         anchors.verticalCenter: parent.verticalCenter
@@ -36,8 +36,10 @@ Rectangle {
         height: 96
         radius: 96
         color: Theme.colorBackground
+
+        visible: (adapterWidget.width > box.legendWidth*4)
 /*
-        Rectangle {
+        Rectangle { // scanning indicator
             id: circlePulseAnimation
             anchors.centerIn: parent
             width: 64
@@ -61,8 +63,6 @@ Rectangle {
             anchors.centerIn: parent
             width: 64
             height: 64
-
-            visible: (adapterWidget.width > box.legendWidth*4)
 
             source: "qrc:/assets/icons_bootstrap/bluetooth.svg"
             color: Theme.colorSubText

@@ -95,7 +95,7 @@ Item {
 
         Rectangle {
             width: detailView.ww
-            height: columnServiceScan.height + 24
+            height: columnServiceScan.height + 32
             radius: 4
 
             clip: false
@@ -106,15 +106,15 @@ Item {
             Column {
                 id: columnServiceScan
                 anchors.left: parent.left
-                anchors.leftMargin: 20
+                anchors.leftMargin: 16
                 anchors.right: parent.right
+                anchors.rightMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 0
+                spacing: 12
 
-                Text {
+                Text { // status row
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    height: 32
 
                     text: qsTr("Services have not been scanned yet...")
                     font.pixelSize: Theme.fontSizeContent
@@ -123,14 +123,12 @@ Item {
                     color: Theme.colorText
                 }
 
-                Row {
+                Flow { // buttons row
                     anchors.left: parent.left
-                    height: 40
+                    anchors.right: parent.right
                     spacing: 12
 
                     ButtonScanMenu {
-                        anchors.verticalCenter: parent.verticalCenter
-
                         text: {
                             if (!selectedDevice) return ""
                             if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
@@ -167,8 +165,6 @@ Item {
                     }
 
                     ButtonWireframeIcon {
-                        anchors.verticalCenter: parent.verticalCenter
-
                         fullColor: true
                         primaryColor: Theme.colorLightGrey
 
