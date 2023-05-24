@@ -868,7 +868,7 @@ Flickable {
             height: box_adv_servicedata.height + 32
             radius: 4
 
-            clip: false
+            clip: true
             color: Theme.colorBox
             border.width: 2
             border.color: Theme.colorBoxBorder
@@ -922,7 +922,7 @@ Flickable {
             height: box_adv_manufdata.height + 32
             radius: 4
 
-            clip: false
+            clip: true
             color: Theme.colorBox
             border.width: 2
             border.color: Theme.colorBoxBorder

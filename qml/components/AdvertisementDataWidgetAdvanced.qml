@@ -7,7 +7,7 @@ import DeviceUtils 1.0
 
 Rectangle {
     id: advDataWidget
-    height: col.height + 24
+    height: columnContent.height + 32
     radius: 4
 
     clip: false
@@ -67,48 +67,42 @@ Rectangle {
     ////////////////
 
     Column {
-        id: col
+        id: columnContent
         anchors.left: parent.left
         anchors.leftMargin: 16
         anchors.right: parent.right
         anchors.rightMargin: 16
         anchors.verticalCenter: parent.verticalCenter
-        spacing: 0
+        spacing: 4
 
         ////////
 
         Row {
-            height: 24
             spacing: 12
 
             Text {
                 id: legendUUID
                 width: legendWidth
-                anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("UUID")
                 textFormat: Text.PlainText
-                font.pixelSize: Theme.fontSizeContent-1
+                font.pixelSize: Theme.fontSizeContent
                 horizontalAlignment: Text.AlignRight
                 color: Theme.colorSubText
             }
 
             Row {
-                anchors.verticalCenter: parent.verticalCenter
                 spacing: 2
 
                 Text {
-                    anchors.verticalCenter: parent.verticalCenter
-
                     text: "0x"
                     textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorSubText
                 }
                 TextSelectable {
-                    anchors.verticalCenter: parent.verticalCenter
-
                     text: packet.advUUIDstr
+                    font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorText
                 }
             }
@@ -129,13 +123,11 @@ Rectangle {
         ////////
 
         Row {
-            height: 28
             spacing: 12
 
             Text {
                 id: legendSize
                 width: legendWidth
-                anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("DATA")
                 textFormat: Text.PlainText
@@ -145,11 +137,9 @@ Rectangle {
             }
 
             Row {
-                anchors.verticalCenter: parent.verticalCenter
                 spacing: 4
 
                 Text {
-                    anchors.verticalCenter: parent.verticalCenter
                     text: packet.advDataSize
                     textFormat: Text.PlainText
                     //font.family: fontMonospace
@@ -157,7 +147,6 @@ Rectangle {
                     color: Theme.colorText
                 }
                 Text {
-                    anchors.verticalCenter: parent.verticalCenter
                     text: qsTr("bytes")
                     textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeContent
@@ -175,16 +164,14 @@ Rectangle {
 
             Text {
                 id: legendData_hex
-                width: legendWidth
-                height: 26
-                Layout.alignment: Qt.AlignTop
+
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
                 Layout.preferredWidth: legendWidth
 
                 text: qsTr("(hex)")
                 textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContentVerySmall
                 horizontalAlignment: Text.AlignRight
-                verticalAlignment: Text.AlignVCenter
                 color: Theme.colorSubText
             }
 
@@ -227,16 +214,14 @@ Rectangle {
 
             Text {
                 id: legendData_str
-                width: legendWidth
-                height: 26
-                Layout.alignment: Qt.AlignTop
+
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
                 Layout.preferredWidth: legendWidth
 
                 text: qsTr("(str)")
                 textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContentVerySmall
                 horizontalAlignment: Text.AlignRight
-                verticalAlignment: Text.AlignVCenter
                 color: Theme.colorSubText
             }
 
@@ -258,6 +243,7 @@ Rectangle {
                             height: 26
                             anchors.horizontalCenter: parent.horizontalCenter
 
+                            //text: (modelData === "\0") ? "⧄": modelData // empty byte: ∅ ? ⧄ ?
                             text: modelData
                             textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent-1

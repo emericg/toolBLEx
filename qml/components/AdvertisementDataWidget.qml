@@ -12,6 +12,9 @@ Column {
     anchors.right: parent.right
     anchors.rightMargin: 8
 
+    clip: false
+    spacing: 4
+
     property var packet: null
     property int legendWidth: 48
 
@@ -32,6 +35,7 @@ Column {
 
         Text {
             id: legendUUID
+
             Layout.preferredWidth: legendWidth
             Layout.alignment: Qt.AlignTop | Qt.AlignRight
 
@@ -45,22 +49,17 @@ Column {
         Flow {
             Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
-            spacing: 0
 
             Row {
                 spacing: 2
 
                 Text {
-                    anchors.verticalCenter: parent.verticalCenter
-
                     text: "0x"
                     textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorSubText
                 }
                 TextSelectable {
-                    anchors.verticalCenter: parent.verticalCenter
-
                     text: packet.advUUIDstr
                     color: Theme.colorText
                 }
@@ -72,19 +71,17 @@ Column {
                 visible: (packet.advUUIDmanuf.length > 1)
 
                 Text {
-                    anchors.verticalCenter: parent.verticalCenter
                     text: "("
                     textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorSubText
                 }
                 TextSelectable {
-                    anchors.verticalCenter: parent.verticalCenter
                     text: packet.advUUIDmanuf
+                    font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorText
                 }
                 Text {
-                    anchors.verticalCenter: parent.verticalCenter
                     text: ")"
                     textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeContent
@@ -97,13 +94,13 @@ Column {
     ////////
 
     Row {
-        height: 28
+        anchors.left: parent.left
+        anchors.right: parent.right
         spacing: 12
 
         Text {
             id: legendSize
             width: legendWidth
-            anchors.verticalCenter: parent.verticalCenter
 
             text: qsTr("DATA")
             textFormat: Text.PlainText
@@ -113,22 +110,15 @@ Column {
         }
 
         Row {
-            anchors.verticalCenter: parent.verticalCenter
             spacing: 4
 
             Text {
-                //anchors.baseline: t.baseline
-                anchors.verticalCenter: parent.verticalCenter
-
                 text: packet.advDataSize
                 textFormat: Text.PlainText
-                //font.family: fontMonospace
                 font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorText
             }
             Text {
-                id: tt
-                anchors.verticalCenter: parent.verticalCenter
                 text: qsTr("bytes")
                 textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContent
@@ -146,10 +136,8 @@ Column {
 
         Text {
             id: legendData_hex
-            width: legendWidth
-            height: 26
 
-            Layout.alignment: Qt.AlignVCenter
+            Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
             Layout.preferredWidth: legendWidth
 
             text: qsTr("(hex)")
@@ -162,7 +150,6 @@ Column {
         Flow {
             Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
-            spacing: 0
 
             Repeater {
                 model: packet.advDataHex_list
@@ -199,10 +186,8 @@ Column {
 
         Text {
             id: legendData_str
-            width: legendWidth
-            height: 26
 
-            Layout.alignment: Qt.AlignVCenter
+            Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
             Layout.preferredWidth: legendWidth
 
             text: qsTr("(str)")
@@ -215,7 +200,6 @@ Column {
         Flow {
             Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
-            spacing: 0
 
             Repeater {
                 model: packet.advDataAscii_list
@@ -231,8 +215,7 @@ Column {
                         height: 26
                         anchors.horizontalCenter: parent.horizontalCenter
 
-                        // empty byte: ∅ ? ⧄ ?
-                        text: (modelData === "\0") ? "⧄": modelData
+                        text: modelData
                         textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContent-1
                         verticalAlignment: Text.AlignVCenter
