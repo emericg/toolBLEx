@@ -68,8 +68,11 @@ RESOURCES   += assets/assets.qrc \
                qml/qml.qrc \
                qml/components.qrc
 
+TRANSLATIONS = i18n/toolBLEx_en.ts
+
 lupdate_only {
     SOURCES += qml/*.qml qml/*.js \
+               qml/popups/*.qml \
                qml/components/*.qml qml/components_generic/*.qml qml/components_js/*.js
 }
 

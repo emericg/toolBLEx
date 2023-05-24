@@ -1,4 +1,9 @@
 <RCC>
   <qresource prefix="/i18n">
+    <file>toolBLEx_en.qm</file>
+  </qresource>
+
+  <qresource prefix="/i18n" lang="en">
+    <file alias="toolBLEx.qm">toolBLEx_en.qm</file>
   </qresource>
 </RCC>

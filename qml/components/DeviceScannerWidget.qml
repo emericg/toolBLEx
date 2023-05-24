@@ -167,7 +167,7 @@ Item {
                 //    Layout.preferredHeight: 20
                 //    visible: (boxDevice.hasBattery && boxDevice.deviceBattery >= 0)
                 //
-                //    source: UtilsDeviceSensors.getDeviceBatteryIcon(boxDevice?.deviceBattery)
+                //    source: UtilsDeviceSensors.getDeviceBatteryIcon(boxDevice.deviceBattery)
                 //    color: isSelected ? "white" : Theme.colorIcon
                 //    rotation: 90
                 //    fillMode: Image.PreserveAspectCrop

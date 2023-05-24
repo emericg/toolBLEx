@@ -60,7 +60,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 visible: (selectedDevice.servicesCount > 0)
 
-                text: qsTr("%1 service(s) found").arg(selectedDevice.servicesCount)
+                text: qsTr("%n service(s) found", "", selectedDevice.servicesCount)
                 color: Theme.colorText
             }
         }

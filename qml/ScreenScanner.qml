@@ -432,9 +432,9 @@ Loader {
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     text: {
-                        var txt = qsTr("%0 device(s) found").arg(deviceManager.deviceCount)
+                        var txt = qsTr("%n device(s) found", "", deviceManager.deviceCount)
                         if (deviceManager.deviceCount !== devicesView.count) {
-                            txt += "  |  " + qsTr("%0 device(s) shown").arg(devicesView.count)
+                            txt += "  |  " + qsTr("%n device(s) shown", "", devicesView.count)
                         }
                         return txt
                     }

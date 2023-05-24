@@ -49,7 +49,7 @@ Item {
             height: 32
             radius: 32
 
-            opacity: (selectedDevice?.status >= DeviceUtils.DEVICE_CONNECTING)
+            opacity: (selectedDevice && selectedDevice.status >= DeviceUtils.DEVICE_CONNECTING)
             Behavior on opacity { OpacityAnimator { duration: 233 } }
 
             color: Theme.colorComponentBackground
@@ -61,7 +61,7 @@ Item {
                 width: 24
                 height: 24
 
-                source: UtilsDeviceSensors.getDeviceStatusIcon(selectedDevice?.status)
+                source: UtilsDeviceSensors.getDeviceStatusIcon(selectedDevice.status)
                 color: Theme.colorIcon
             }
         }
