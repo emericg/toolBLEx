@@ -14,7 +14,7 @@ on:
 env:
   APPLICATION: "toolBLEx"
   APPLICATION_VERSION: "0.6"
-  QT_VERSION: "6.5.0"
+  QT_VERSION: "6.5.1"
 
 #-------------------------------------------------------------------------------
 # Workflow jobs
