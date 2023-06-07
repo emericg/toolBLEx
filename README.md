@@ -1,5 +1,6 @@
 # ![toolBLEx](assets/logos/banner.svg)
 
+[![GitHub release](https://img.shields.io/badge/release-0.6-blue?style=flat-square)](https://github.com/emericg/toolBLEx/releases)
 [![GitHub action](https://img.shields.io/github/actions/workflow/status/emericg/toolBLEx/builds_desktop_qmake.yml?style=flat-square)](https://github.com/emericg/toolBLEx/actions/workflows/builds_desktop_qmake.yml)
 [![GitHub issues](https://img.shields.io/github/issues/emericg/toolBLEx.svg?style=flat-square)](https://github.com/emericg/toolBLEx/issues)
 [![License: GPL v3](https://img.shields.io/badge/license-GPL%20v3-brightgreen.svg?style=flat-square)](http://www.gnu.org/licenses/gpl-3.0)
@@ -11,18 +12,19 @@ A Bluetooth Low Energy device scanner and analyzer.
 - host adapters info
 - RSSI graph / proximity graph (BLE and classic)
 - device scanner (BLE and classic)
-- device advertisement and service explorer (BLE)
+- device advertisement and services explorer (BLE)
+- read/write device services data (BLE)
 - export device info: advertisement packets, services and characteristics (with or without walues)
 - frequency analyzer (ONLY if you have an Ubertooth One)
 
 
 ## Screenshots
 
-![GUI_DESKTOP1](https://i.imgur.com/0wAUe0t.png)
-![GUI_DESKTOP2](https://i.imgur.com/5IXNUJ3.png)
-![GUI_DESKTOP3](https://i.imgur.com/Rkb1pJX.png)
-![GUI_DESKTOP4](https://i.imgur.com/BtGO6rG.png)
-![GUI_DESKTOP5](https://i.imgur.com/bv2oMz6.png)
+![Bluetooth scanner](https://raw.githubusercontent.com/emericg/screenshots_flathub/master/toolBLEx/list1.png)
+![BLE device info](https://raw.githubusercontent.com/emericg/screenshots_flathub/master/toolBLEx/list2.png)
+![BLE device advertisement](https://raw.githubusercontent.com/emericg/screenshots_flathub/master/toolBLEx/adv1.png)
+![BLE device service read](https://raw.githubusercontent.com/emericg/screenshots_flathub/master/toolBLEx/srv1.png)
+![GUI dark mode](https://raw.githubusercontent.com/emericg/screenshots_flathub/master/toolBLEx/theme2.png)
 
 
 ## Documentation
@@ -88,6 +90,6 @@ You can help us find and report bugs, suggest new features, help with translatio
 ## License
 
 toolBLEx is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.  
-Read the [LICENSE](LICENSE) file or [consult the license on the FSF website](https://www.gnu.org/licenses/gpl-3.0.txt) directly.
+Read the [LICENSE](LICENSE.md) file or [consult the license on the FSF website](https://www.gnu.org/licenses/gpl-3.0.txt) directly.
 
 > Emeric Grange <emeric.grange@gmail.com>

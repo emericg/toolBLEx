@@ -14,7 +14,8 @@
       <li>host adapters info</li>
       <li>RSSI graph / proximity graph (BLE and classic)</li>
       <li>device scanner (BLE and classic)</li>
-      <li>device advertisement and service explorer (BLE)</li>
+      <li>device advertisement and services explorer (BLE)</li>
+      <li>read/write device services data (BLE)</li>
       <li>export device info: advertisement packets, services and characteristics (with or without walues)</li>
       <li>frequency analyzer (ONLY if you have an Ubertooth One)</li>
     </ul>
@@ -43,24 +44,32 @@
 
   <screenshots>
     <screenshot type="default">
-      <image>https://i.imgur.com/0wAUe0t.png</image>
+      <image>https://raw.githubusercontent.com/emericg/screenshots_flathub/master/toolBLEx/list1.png</image>
       <caption>Bluetooth scanner</caption>
     </screenshot>
     <screenshot>
-      <image>https://i.imgur.com/5IXNUJ3.png</image>
-      <caption>RSSI graph</caption>
+      <image>https://raw.githubusercontent.com/emericg/screenshots_flathub/master/toolBLEx/list2.png</image>
+      <caption>Bluetooth device info</caption>
     </screenshot>
     <screenshot>
-      <image>https://i.imgur.com/Rkb1pJX.png</image>
-      <caption>BLE device info</caption>
+      <image>https://raw.githubusercontent.com/emericg/screenshots_flathub/master/toolBLEx/adv1.png</image>
+      <caption>Bluetooth device advertisement</caption>
     </screenshot>
     <screenshot>
-      <image>https://i.imgur.com/BtGO6rG.png</image>
-      <caption>BLE device advertisement</caption>
+      <image>https://raw.githubusercontent.com/emericg/screenshots_flathub/master/toolBLEx/radar.png</image>
+      <caption>Bluetooth radar</caption>
     </screenshot>
     <screenshot>
-      <image>https://i.imgur.com/bv2oMz6.png</image>
-      <caption>dark mode</caption>
+      <image>https://raw.githubusercontent.com/emericg/screenshots_flathub/master/toolBLEx/srv1.png</image>
+      <caption>BLE device service read</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/emericg/screenshots_flathub/master/toolBLEx/srv2.png</image>
+      <caption>BLE device service write</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/emericg/screenshots_flathub/master/toolBLEx/theme2.png</image>
+      <caption>GUI dark mode</caption>
     </screenshot>
   </screenshots>
 
