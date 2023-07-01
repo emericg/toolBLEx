@@ -15,7 +15,7 @@ Rectangle {
     // settings
     property string text: "TAG"
     property string textColor: Theme.colorText
-    property int textSize: Theme.fontSizeComponent
+    property int textSize: Theme.componentFontSize
     property int textCapitalization: Font.Normal
     property bool textBold: false
 

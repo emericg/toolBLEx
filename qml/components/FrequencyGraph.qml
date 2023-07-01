@@ -1,7 +1,7 @@
 import QtQuick
 import QtCharts
 
-import ThemeEngine 1.0
+import ThemeEngine
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
 
 ChartView {

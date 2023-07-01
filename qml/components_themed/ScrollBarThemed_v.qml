@@ -47,4 +47,6 @@ ScrollBar {
         height: control.height
         color: Theme.colorForeground
     }
+
+    ////////////////
 }

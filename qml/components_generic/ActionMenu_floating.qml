@@ -6,8 +6,8 @@ import ThemeEngine 1.0
 
 Popup {
     id: actionMenu
-    width: 200
 
+    width: 200
     padding: 0
     margins: 0
 
@@ -48,11 +48,10 @@ Popup {
             role: "t"
             DelegateChoice {
                 roleValue: "sep"
-                Rectangle {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    height: Theme.componentBorderWidth
-                    color: Theme.colorSeparator
+                ListSeparatorPadded {
+                    anchors.leftMargin: Theme.componentMargin
+                    anchors.rightMargin: Theme.componentMargin
+                    height: 9
                 }
             }
             DelegateChoice {

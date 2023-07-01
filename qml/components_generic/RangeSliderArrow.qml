@@ -8,7 +8,8 @@ T.RangeSlider {
     id: control
     implicitWidth: 200
     implicitHeight: Theme.componentHeight
-    padding: 4
+
+    padding: 8
     topPadding: 10
 
     first.value: 0.25

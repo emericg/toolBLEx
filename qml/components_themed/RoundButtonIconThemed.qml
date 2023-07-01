@@ -18,6 +18,8 @@ T.Button {
     property url source
     property int sourceSize: UtilsNumber.alignTo(height * 0.666, 2)
 
+    ////////////////
+
     background: Rectangle {
         implicitWidth: Theme.componentHeight
         implicitHeight: Theme.componentHeight
@@ -26,6 +28,8 @@ T.Button {
         opacity: enabled ? 1 : 0.33
         color: control.down ? Theme.colorComponentDown : Theme.colorComponent
     }
+
+    ////////////////
 
     contentItem: Item {
         IconSvg {
@@ -38,4 +42,6 @@ T.Button {
             color: Theme.colorComponentContent
         }
     }
+
+    ////////////////
 }

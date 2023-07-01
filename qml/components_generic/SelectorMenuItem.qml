@@ -4,7 +4,7 @@ import ThemeEngine 1.0
 
 Item {
     id: control
-    implicitWidth: 16 + contentText.width + (source.toString().length ? sourceSize : 0) + 16
+    implicitWidth: contentText.width + (source.toString().length ? sourceSize : 0) + Theme.componentMarginL*2
     implicitHeight: 32
 
     height: parent.height
@@ -75,7 +75,7 @@ Item {
 
         text: control.text
         textFormat: Text.PlainText
-        font.pixelSize: Theme.fontSizeComponent
+        font.pixelSize: Theme.componentFontSize
         verticalAlignment: Text.AlignVCenter
 
         color: control.selected ? control.colorContentHighlight : control.colorContent

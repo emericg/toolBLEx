@@ -5,12 +5,11 @@ import ThemeEngine 1.0
 
 Item {
     id: control
-    implicitWidth: 80
+    implicitWidth: 64
     implicitHeight: 64
 
-    anchors.left: parent.left
-    anchors.right: parent.right
-    height: Math.max(implicitHeight, content.height + 24)
+    width: parent.width // width drive the size of this element
+    height: Math.max(parent.width, content.height + 24)
 
     // actions
     signal clicked()
@@ -154,4 +153,6 @@ Item {
             verticalAlignment: Text.AlignVCenter
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

@@ -3,17 +3,13 @@ import QtQuick.Layouts 1.15
 
 import ThemeEngine 1.0
 
-Rectangle {
+Item {
     id: actionMenuItem
-    height: 34
-
     anchors.left: parent.left
     anchors.leftMargin: Theme.componentBorderWidth
     anchors.right: parent.right
     anchors.rightMargin: Theme.componentBorderWidth
-
-    radius: 0
-    color: "transparent"
+    height: 36
 
     // actions
     signal clicked()
@@ -32,28 +28,45 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: (isDesktop && enabled)
 
-        onClicked: actionMenuItem.clicked()
-        onPressAndHold: actionMenuItem.pressAndHold()
+        onClicked: {
+            background.opacity = 1
+            actionMenuItem.clicked()
+        }
+        onPressAndHold: {
+            background.opacity = 1
+            actionMenuItem.pressAndHold()
+        }
 
-        onEntered: actionMenuItem.state = "hovered"
-        onExited: actionMenuItem.state = "normal"
-        onCanceled: actionMenuItem.state = "normal"
+        onEntered: background.opacity = 1
+        onExited: background.opacity = 0
+        onCanceled: background.opacity = 0
+    }
+
+    Rectangle {
+        id: background
+        anchors.fill: parent
+        anchors.leftMargin: Theme.componentMargin/2
+        anchors.rightMargin: Theme.componentMargin/2
+
+        radius: Theme.componentMargin/2
+        opacity: 0
+        color: Theme.colorForeground
+        Behavior on opacity { OpacityAnimator { duration: 333 } }
+        //Behavior on color { ColorAnimation { duration: 133 } }
     }
 
     RowLayout {
         anchors.fill: parent
-        anchors.leftMargin: 12
-        anchors.rightMargin: 12
+        anchors.leftMargin: Theme.componentMargin
+        anchors.rightMargin: Theme.componentMargin
 
-        spacing: 6
+        spacing: Theme.componentMargin/2
         layoutDirection: actionMenuItem.layoutDirection
 
         IconSvg {
             id: iButton
-            width: actionMenuItem.sourceSize
-            height: actionMenuItem.sourceSize
-            Layout.maximumWidth: actionMenuItem.sourceSize
-            Layout.maximumHeight: actionMenuItem.sourceSize
+            Layout.preferredWidth: actionMenuItem.sourceSize
+            Layout.preferredHeight: actionMenuItem.sourceSize
 
             source: actionMenuItem.source
             color: Theme.colorIcon
@@ -61,31 +74,19 @@ Rectangle {
 
         Text {
             id: tButton
-
             Layout.fillWidth: true
+            Layout.preferredHeight: actionMenuItem.sourceSize
 
             text: actionMenuItem.text
+            textFormat: Text.PlainText
             font.bold: false
-            font.pixelSize: Theme.fontSizeComponent
+            font.pixelSize: Theme.componentFontSize
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
             color: Theme.colorText
         }
     }
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    states: [
-        State {
-            name: "normal";
-            PropertyChanges { target: actionMenuItem; color: "transparent"; }
-        },
-        State {
-            name: "hovered";
-            PropertyChanges { target: actionMenuItem; color: Theme.colorForeground; }
-        }
-    ]
 
     ////////////////////////////////////////////////////////////////////////////
 }

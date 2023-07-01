@@ -28,7 +28,7 @@
         <file alias="RadioButtonThemed.qml">components_themed/RadioButtonThemed.qml</file>
         <file alias="SelectorMenuThemed.qml">components_themed/SelectorMenuThemed.qml</file>
         <file alias="SelectorMenuThemedItem.qml">components_themed/SelectorMenuThemedItem.qml</file>
-        <file alias="SpinBoxThemed.qml">components_themed/SpinBoxThemed.qml</file>
+        <file alias="SpinBoxThemedDesktop.qml">components_themed/SpinBoxThemed_desktop.qml</file>
         <file alias="SwitchThemedDesktop.qml">components_themed/SwitchThemed_desktop.qml</file>
         <file alias="SliderThemed.qml">components_themed/SliderThemed.qml</file>
         <file alias="RangeSliderThemed.qml">components_themed/RangeSliderThemed.qml</file>

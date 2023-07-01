@@ -18,6 +18,7 @@ Item {
     property real arcWidth: 16              // width of the arc (in pixel)
     property real arcOpacity: 1
     property string arcColor: Theme.colorPrimary
+    property string arcCap: "square"
 
     property bool background: true          // draw a background arc (full arc span)
     property real backgroundOpacity: 1
@@ -80,7 +81,9 @@ Item {
             var start = Math.PI * ((control.arcBegin + control.arcOffset + 90) / 180)
             var end = Math.PI * ((control.arcEnd + control.arcOffset + 90) / 180)
             var end_value = Math.PI * ((control.arcValue + control.arcOffset + 90) / 180)
+
             ctx.reset()
+            ctx.lineCap = control.arcCap
 
             // draw
             if (control.background) {
@@ -99,4 +102,6 @@ Item {
             ctx.stroke()
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

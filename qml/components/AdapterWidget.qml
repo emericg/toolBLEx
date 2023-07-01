@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 
-import ThemeEngine 1.0
+import ThemeEngine
 
 import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
 

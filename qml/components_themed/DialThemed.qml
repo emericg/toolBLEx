@@ -9,6 +9,8 @@ T.Dial {
     implicitWidth: (Theme.componentHeight * 2)
     implicitHeight: (Theme.componentHeight * 2)
 
+    ////////////////
+
     background: Rectangle {
         x: (control.width / 2) - (width / 2)
         y: (control.height / 2) - (height / 2)
@@ -22,6 +24,8 @@ T.Dial {
         border.width: Theme.componentBorderWidth
         border.color: Theme.colorPrimary
     }
+
+    ////////////////
 
     handle: Rectangle {
         x: control.background.x + (control.background.width / 2) - (width / 2)
@@ -40,4 +44,6 @@ T.Dial {
             Rotation { angle: control.angle; origin.x: 8; origin.y: 8; }
         ]
     }
+
+    ////////////////
 }

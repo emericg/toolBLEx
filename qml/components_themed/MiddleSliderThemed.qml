@@ -8,9 +8,12 @@ T.Slider {
     id: control
     implicitWidth: 200
     implicitHeight: Theme.componentHeight
-    padding: 4
+
+    padding: 8
 
     value: 0.5
+
+    ////////////////
 
     background: Rectangle {
         x: control.leftPadding
@@ -28,6 +31,8 @@ T.Slider {
             color: Theme.colorPrimary
         }
     }
+
+    ////////////////
 
     handle: Rectangle {
         x: control.leftPadding + (control.visualPosition * (control.availableWidth - width))
@@ -56,4 +61,6 @@ T.Slider {
             }
         }
     }
+
+    ////////////////
 }

@@ -8,6 +8,7 @@ T.Slider {
     id: control
     implicitWidth: 200
     implicitHeight: Theme.componentHeight
+
     padding: 4
     topPadding: 10
 

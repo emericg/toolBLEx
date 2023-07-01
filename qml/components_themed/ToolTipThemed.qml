@@ -27,7 +27,7 @@ T.ToolTip {
     enter: Transition { NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 133; } }
     exit: Transition { NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 133; } }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     contentItem: Text {
         text: control.text
@@ -38,7 +38,7 @@ T.ToolTip {
         color: control.textColor
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     background: Rectangle {
         color: control.backgroundColor
@@ -53,5 +53,5 @@ T.ToolTip {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 }

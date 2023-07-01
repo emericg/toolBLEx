@@ -9,6 +9,7 @@ T.RangeSlider {
     id: control
     implicitWidth: 200
     implicitHeight: 4
+
     padding: 4
 
     first.value: 0.25

@@ -35,4 +35,6 @@ ScrollBar {
 
         color: Theme.colorForeground
     }
+
+    ////////////////
 }

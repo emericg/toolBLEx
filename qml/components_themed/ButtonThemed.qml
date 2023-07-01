@@ -17,9 +17,11 @@ T.Button {
     leftPadding: 12
     rightPadding: 12
 
-    font.pixelSize: Theme.fontSizeComponent
+    font.pixelSize: Theme.componentFontSize
 
     focusPolicy: Qt.NoFocus
+
+    ////////////////
 
     background: Rectangle {
         implicitWidth: 80
@@ -29,6 +31,8 @@ T.Button {
         opacity: enabled ? 1 : 0.33
         color: control.down ? Theme.colorComponentDown : Theme.colorComponent
     }
+
+    ////////////////
 
     contentItem: Text {
         text: control.text
@@ -43,4 +47,6 @@ T.Button {
         opacity: enabled ? 1.0 : 0.33
         color: control.down ? Theme.colorComponentContent : Theme.colorComponentContent
     }
+
+    ////////////////
 }

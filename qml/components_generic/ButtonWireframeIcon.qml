@@ -20,8 +20,8 @@ T.Button {
     rightPadding: 12 + (control.source.toString().length && control.text ? 2 : 0)
     spacing: 6
 
-    font.pixelSize: Theme.fontSizeComponent
-    font.bold: false
+    font.pixelSize: Theme.componentFontSize
+    font.bold: fullColor ? true : false
 
     focusPolicy: Qt.NoFocus
 

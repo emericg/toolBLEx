@@ -4,8 +4,8 @@ import QtQuick.Controls
 
 import Qt.labs.platform
 
-import ThemeEngine 1.0
-import DeviceUtils 1.0
+import ThemeEngine
+import DeviceUtils
 
 import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
 

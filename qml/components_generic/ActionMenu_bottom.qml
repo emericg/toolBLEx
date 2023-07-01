@@ -38,7 +38,7 @@ Popup {
     ////////////////////////////////////////////////////////////////////////////
 
     background: Rectangle {
-        color: Theme.colorBackground
+        color: Theme.colorForeground
         radius: Theme.componentRadius
         border.color: Theme.colorSeparator
         border.width: Theme.componentBorderWidth

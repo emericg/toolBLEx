@@ -9,6 +9,7 @@ T.RangeSlider {
     id: control
     implicitWidth: 200
     implicitHeight: 20
+
     padding: 4
 
     first.value: 0.25
@@ -39,7 +40,7 @@ T.RangeSlider {
         color: control.colorBg
 
         Rectangle {
-            x: (first.handle.x + (first.handle.width / 4))
+            x: (first.handle.x)
             width: ((second.handle.x + (second.handle.width / 2)) - x)
             height: parent.height
             radius: hhh

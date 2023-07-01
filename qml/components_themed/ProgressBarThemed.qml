@@ -6,6 +6,7 @@ import ThemeEngine 1.0
 
 T.ProgressBar {
     id: control
+
     implicitWidth: 200
     implicitHeight: 12
 
@@ -13,6 +14,8 @@ T.ProgressBar {
 
     property var colorBackground: Theme.colorComponentBackground
     property var colorForeground: Theme.colorPrimary
+
+    ////////////////
 
     background: Rectangle {
         implicitWidth: 200
@@ -22,6 +25,8 @@ T.ProgressBar {
         color: control.colorBackground
     }
 
+    ////////////////
+
     contentItem: Item {
         Rectangle {
             width: control.visualPosition * control.width
@@ -30,4 +35,6 @@ T.ProgressBar {
             color: control.colorForeground
         }
     }
+
+    ////////////////
 }

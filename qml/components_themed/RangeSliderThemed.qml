@@ -6,13 +6,17 @@ import ThemeEngine 1.0
 
 T.RangeSlider {
     id: control
+
     implicitWidth: 200
     implicitHeight: Theme.componentHeight
+
     padding: 8
 
     first.value: 0.25
     second.value: 0.75
     snapMode: T.RangeSlider.SnapAlways
+
+    ////////////////
 
     background: Rectangle {
         x: control.leftPadding
@@ -30,6 +34,8 @@ T.RangeSlider {
             color: Theme.colorPrimary
         }
     }
+
+    ////////////////
 
     first.handle: Rectangle {
         x: control.leftPadding + (first.visualPosition * (control.availableWidth - width))
@@ -53,11 +59,13 @@ T.RangeSlider {
                 anchors.fill: parent
                 radius: width
                 color: Theme.colorPrimary
-                opacity: parent.containsMouse ? 0.2 : 0
+                opacity: (first.pressed || first.containsMouse) ? 0.2 : 0
                 Behavior on opacity { NumberAnimation { duration: 233 } }
             }
         }
     }
+
+    ////////////////
 
     second.handle: Rectangle {
         x: control.leftPadding + (second.visualPosition * (control.availableWidth - width))
@@ -81,9 +89,11 @@ T.RangeSlider {
                 anchors.fill: parent
                 radius: width
                 color: Theme.colorPrimary
-                opacity: parent.containsMouse ? 0.2 : 0
+                opacity: (second.pressed || second.containsMouse) ? 0.2 : 0
                 Behavior on opacity { NumberAnimation { duration: 233 } }
             }
         }
     }
+
+    ////////////////
 }

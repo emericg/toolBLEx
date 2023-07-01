@@ -66,7 +66,7 @@ Item {
 
             text: control.text
             textFormat: Text.PlainText
-            font.pixelSize: Theme.fontSizeComponent
+            font.pixelSize: Theme.componentFontSize
             font.bold: true
             color: control.selected ? control.colorHighlight : control.colorContent
             Behavior on color { ColorAnimation { duration: 133 } }

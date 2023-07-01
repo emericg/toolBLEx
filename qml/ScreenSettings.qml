@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 
-import ThemeEngine 1.0
+import ThemeEngine
 import "qrc:/js/UtilsPath.js" as UtilsPath
 
 Loader {
@@ -583,7 +583,7 @@ Loader {
                                 verticalAlignment: Text.AlignVCenter
                             }
 
-                            SpinBoxThemed {
+                            SpinBoxThemedDesktop {
                                 anchors.right: parent.right
                                 anchors.rightMargin: 16
                                 anchors.verticalCenter: parent.verticalCenter
@@ -619,7 +619,7 @@ Loader {
                                 verticalAlignment: Text.AlignVCenter
                             }
 
-                            SpinBoxThemed {
+                            SpinBoxThemedDesktop {
                                 anchors.right: parent.right
                                 anchors.rightMargin: 16
                                 anchors.verticalCenter: parent.verticalCenter
@@ -880,7 +880,7 @@ Loader {
 
                             visible: ubertooth.toolsAvailable
 
-                            SpinBoxThemed {
+                            SpinBoxThemedDesktop {
                                 anchors.left: parent.left
                                 anchors.leftMargin: 16
                                 anchors.verticalCenter: parent.verticalCenter
@@ -907,7 +907,7 @@ Loader {
                                 }
                             }
 
-                            SpinBoxThemed {
+                            SpinBoxThemedDesktop {
                                 anchors.right: parent.right
                                 anchors.rightMargin: 16
                                 anchors.verticalCenter: parent.verticalCenter

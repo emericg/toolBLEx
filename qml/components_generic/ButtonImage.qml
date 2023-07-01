@@ -87,4 +87,6 @@ Item {
         opacity: enabled ? 1.0 : 0.4
         Behavior on opacity { OpacityAnimator { duration: 333 } }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

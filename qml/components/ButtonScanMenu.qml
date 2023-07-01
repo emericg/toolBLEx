@@ -4,7 +4,7 @@ import QtQuick.Layouts
 
 import Qt5Compat.GraphicalEffects
 
-import ThemeEngine 1.0
+import ThemeEngine
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
 
 Item {

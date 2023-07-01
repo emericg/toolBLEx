@@ -26,7 +26,7 @@ Item {
     property bool warning: false
 
     property string legend
-    property int legendWidth: 80
+    property int legendWidth: item_legend.contentWidth
     property int legendContentWidth: item_legend.contentWidth
 
     // colors
@@ -39,6 +39,8 @@ Item {
     Row {
         anchors.fill: parent
         spacing: 12
+
+        ////////////////
 
         Text {
             id: item_legend
@@ -56,13 +58,15 @@ Item {
             horizontalAlignment: Text.AlignRight
         }
 
-        ////////
+        ////////////////
 
         Item {
             id: item_bg
             width: dataBarCompact.width - (item_legend.visible ? (item_legend.width + parent.spacing) : 0)
             height: hhh
             anchors.bottom: parent.bottom
+
+            ////////
 
             Rectangle {
                 id: rect_bg
@@ -140,6 +144,8 @@ Item {
                 }
             }
 
+            ////////
+
             Text {
                 id: textIndicator
                 height: 15
@@ -208,6 +214,8 @@ Item {
                 }
             }
 
+            ////////
+
             IconSvg {
                 id: warningIndicator
                 width: 15
@@ -221,6 +229,10 @@ Item {
                 Behavior on opacity { OpacityAnimator { duration: animated ? 333 : 0 } }
                 source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
             }
+
+            ////////
         }
+
+        ////////////////
     }
 }

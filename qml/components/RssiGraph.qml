@@ -1,7 +1,7 @@
 import QtQuick
 import QtCharts
 
-import ThemeEngine 1.0
+import ThemeEngine
 
 ChartView {
     id: rssiGraph

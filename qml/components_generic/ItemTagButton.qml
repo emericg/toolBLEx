@@ -13,7 +13,7 @@ Rectangle {
 
     property string text: "TAG"
     property string textColor: "white"
-    property int textSize: Theme.fontSizeComponent
+    property int textSize: Theme.componentFontSize
 
     property url source: "qrc:/assets/icons_material/baseline-add-24px.svg"
     property string sourceColor: "white"
@@ -37,7 +37,7 @@ Rectangle {
             color: control.textColor
             elide: Text.ElideMiddle
             font.capitalization: Font.AllUppercase
-            font.pixelSize: Theme.fontSizeComponent
+            font.pixelSize: Theme.componentFontSize
             font.bold: true
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter

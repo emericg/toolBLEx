@@ -1,8 +1,8 @@
 import QtQuick
 import QtQuick.Layouts
 
-import ThemeEngine 1.0
-import DeviceUtils 1.0
+import ThemeEngine
+import DeviceUtils
 
 import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
 import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth

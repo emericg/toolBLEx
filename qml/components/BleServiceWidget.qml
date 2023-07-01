@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 
-import ThemeEngine 1.0
+import ThemeEngine
 
 Rectangle {
     id: bleServiceWidget
@@ -61,7 +61,7 @@ Rectangle {
                     Text { // serviceType
                         anchors.verticalCenter: parent.verticalCenter
                         text: modelData.serviceType
-                        font.pixelSize: Theme.fontSizeComponent
+                        font.pixelSize: Theme.componentFontSize
                         color: Theme.colorSubText
                     }
                     IconSvg { // expandIcon

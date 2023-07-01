@@ -16,12 +16,12 @@ T.SpinBox {
     value: 50
     editable: true
 
-    font.pixelSize: Theme.fontSizeComponent
+    font.pixelSize: Theme.componentFontSize
     opacity: enabled ? 1 : 0.4
 
     property string legend
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     background: Rectangle {
         implicitWidth: 128
@@ -32,16 +32,16 @@ T.SpinBox {
 
         Rectangle {
             width: control.height
-            height: control.height
-            anchors.verticalCenter: parent.verticalCenter
+            height: control.height / 2
             x: control.mirrored ? 0 : control.width - width
+            y: 0
             color: control.up.pressed ? Theme.colorComponentDown : Theme.colorComponent
         }
         Rectangle {
             width: control.height
-            height: control.height
-            anchors.verticalCenter: parent.verticalCenter
-            x: control.mirrored ? control.width - width : 0
+            height: control.height / 2
+            x: control.mirrored ? 0 : control.width - width
+            y: height
             color: control.down.pressed ? Theme.colorComponentDown : Theme.colorComponent
         }
 
@@ -65,9 +65,14 @@ T.SpinBox {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     contentItem: Item {
+        anchors.left: parent.left
+        anchors.leftMargin: 8
+        anchors.right: parent.right
+        anchors.rightMargin: control.height + 8
+
         Row {
             anchors.centerIn: parent
             spacing: 2
@@ -122,53 +127,83 @@ T.SpinBox {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     up.indicator: Item {
         implicitWidth: Theme.componentHeight
         implicitHeight: Theme.componentHeight
 
         width: control.height
-        height: control.height
+        height: control.height / 2
         x: control.mirrored ? 0 : control.width - width
-        anchors.verticalCenter: control.verticalCenter
+        y: 0
 
         opacity: enabled ? 1 : 0.33
 
-        Rectangle {
+        Canvas {
+            id: arrowup
             anchors.centerIn: parent
-            width: UtilsNumber.round2(parent.height * 0.4)
-            height: 2
-            color: Theme.colorComponentContent
-        }
-        Rectangle {
-            anchors.centerIn: parent
-            width: 2
-            height: UtilsNumber.round2(parent.height * 0.4)
-            color: Theme.colorComponentContent
+            anchors.verticalCenterOffset: 2
+            width: 12
+            height: 6
+            rotation: 180
+
+            Connections {
+                target: ThemeEngine
+                function onCurrentThemeChanged() { arrowup.requestPaint() }
+            }
+
+            onPaint: {
+                var ctx = getContext("2d")
+                ctx.reset()
+                ctx.moveTo(0, 0)
+                ctx.lineTo(width, 0)
+                ctx.lineTo(width / 2, height)
+                ctx.closePath()
+                ctx.fillStyle = Theme.colorIcon
+                ctx.fill()
+            }
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     down.indicator: Item {
         implicitWidth: Theme.componentHeight
         implicitHeight: Theme.componentHeight
 
         width: control.height
-        height: control.height
-        x: control.mirrored ? control.width - width : 0
-        anchors.verticalCenter: control.verticalCenter
+        height: control.height / 2
+        x: control.mirrored ? 0 : control.width - width
+        y: height
 
         opacity: enabled ? 1 : 0.33
 
-        Rectangle {
+        Canvas {
+            id: arrowdown
             anchors.centerIn: parent
-            width: UtilsNumber.round2(parent.height * 0.4)
-            height: 2
-            color: Theme.colorComponentContent
+            anchors.verticalCenterOffset: -2
+            width: 12
+            height: 6
+            rotation: 0
+
+            Connections {
+                target: ThemeEngine
+                function onCurrentThemeChanged() { arrowdown.requestPaint() }
+            }
+
+            onPaint: {
+                var ctx = getContext("2d")
+                ctx.reset()
+                ctx.moveTo(0, 0)
+                ctx.lineTo(width, 0)
+                ctx.lineTo(width / 2, height)
+                ctx.closePath()
+                ctx.fillStyle = Theme.colorIcon
+                ctx.fill()
+            }
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 }

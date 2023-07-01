@@ -1,6 +1,6 @@
-import QtQuick 2.15
+import QtQuick
 
-import ThemeEngine 1.0
+import ThemeEngine
 
 Rectangle {
     id: control
@@ -19,7 +19,7 @@ Rectangle {
     // settings
     property string text: "TAG"
     property string textColor: Theme.colorText
-    property int textSize: Theme.fontSizeComponent
+    property int textSize: Theme.componentFontSize
     property bool textBold: false
     property int textCapitalization: Font.Normal
     property bool highlighted: false

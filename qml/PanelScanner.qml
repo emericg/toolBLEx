@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 
-import ThemeEngine 1.0
+import ThemeEngine
 
 Item {
     id: panelScanner

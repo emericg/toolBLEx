@@ -9,7 +9,7 @@ Item {
     implicitHeight: 64
 
     width: Math.max(parent.height, content.width + 32)
-    height: parent.height
+    height: parent.height // height drive the size of this element
 
     // actions
     signal clicked()
@@ -97,7 +97,7 @@ Item {
             text: control.text
             textFormat: Text.PlainText
             color: (!control.selected && control.highlightMode === "content") ? control.colorHighlight : control.colorContent
-            font.pixelSize: Theme.fontSizeComponent
+            font.pixelSize: Theme.componentFontSize
             font.bold: true
             verticalAlignment: Text.AlignVCenter
         }

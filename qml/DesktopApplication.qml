@@ -2,8 +2,8 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Window
 
-import ThemeEngine 1.0
-import DeviceUtils 1.0
+import ThemeEngine
+import DeviceUtils
 
 ApplicationWindow {
     id: appWindow

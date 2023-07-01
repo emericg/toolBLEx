@@ -2,8 +2,8 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
-import ThemeEngine 1.0
-import DeviceUtils 1.0
+import ThemeEngine
+import DeviceUtils
 
 Rectangle {
     id: advDataWidget

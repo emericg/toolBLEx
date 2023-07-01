@@ -1,6 +1,6 @@
-import QtQuick 2.15
+import QtQuick
 
-import ThemeEngine 1.0
+import ThemeEngine
 
 Item {
     id: control
@@ -85,7 +85,7 @@ Item {
 
             text: control.text
             textFormat: Text.PlainText
-            font.pixelSize: Theme.fontSizeComponent
+            font.pixelSize: Theme.componentFontSize
             verticalAlignment: Text.AlignVCenter
 
             color: control.selected ? control.colorContentHighlight : control.colorContent

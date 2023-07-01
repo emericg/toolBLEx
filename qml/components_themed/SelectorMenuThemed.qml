@@ -15,12 +15,16 @@ Item {
 
     property var model: null
 
+    ////////////////
+
     Rectangle {
         id: background
         anchors.fill: parent
         radius: Theme.componentRadius
         color: Theme.colorComponentBackground
     }
+
+    ////////////////
 
     Row {
         id: contentRow
@@ -49,4 +53,6 @@ Item {
         border.width: Theme.componentBorderWidth
         border.color: Theme.colorComponentBorder
     }
+
+    ////////////////
 }

@@ -19,6 +19,7 @@ T.Button {
 
     leftPadding: 12
     rightPadding: 12
+    spacing: 12
 
     focusPolicy: Qt.NoFocus
 
@@ -45,8 +46,8 @@ T.Button {
     ////////////////////////////////////////////////////////////////////////////
 
     background: Item {
-        implicitWidth: 256
-        implicitHeight: 56
+        implicitWidth: 80
+        implicitHeight: 48
 
         ////////
 
@@ -104,6 +105,9 @@ T.Button {
         layoutDirection: control.layoutDirection
 
         IconSvg { // contentImage
+            Layout.preferredWidth: control.sourceSize
+            Layout.preferredHeight: control.sourceSize
+
             width: control.sourceSize
             height: control.sourceSize
 
@@ -112,15 +116,16 @@ T.Button {
             opacity: enabled ? 1.0 : 0.33
         }
         Text { // contentText
+            Layout.fillWidth: true
+
             text: control.text
             textFormat: Text.PlainText
-
             font.bold: true
-            font.pixelSize: Theme.fontSizeComponent
+            font.pixelSize: Theme.componentFontSize
 
             elide: Text.ElideMiddle
             //wrapMode: Text.WordWrap
-            horizontalAlignment: Text.AlignHCenter
+            horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
 
             color: control.primaryColor

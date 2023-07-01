@@ -20,7 +20,7 @@ T.TextField {
     opacity: 1
 
     text: ""
-    font.pixelSize: Theme.fontSizeComponent
+    font.pixelSize: Theme.componentFontSize
     verticalAlignment: Text.AlignVCenter
 
     placeholderText: ""
@@ -61,7 +61,7 @@ T.TextField {
 
     background: Rectangle {
         implicitWidth: 256
-        implicitHeight: 56
+        implicitHeight: 48
 
         radius: 8
         color: control.colorBackground

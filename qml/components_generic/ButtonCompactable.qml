@@ -20,10 +20,10 @@ Item {
     signal pressAndHold()
 
     // settings
-    property bool compact: true
-    property string text
+    property bool compact: false
     property url source
     property int sourceSize: UtilsNumber.alignTo(height * 0.666, 2)
+    property int layoutDirection: Qt.LeftToRight
 
     // colors
     property string textColor: Theme.colorText
@@ -34,6 +34,9 @@ Item {
     property string animation // available: rotate, fade, both
     property bool animationRunning: false
     property bool hoverAnimation: (isDesktop && !compact)
+
+    // text
+    property string text
 
     // tooltip
     property string tooltipText
@@ -102,6 +105,7 @@ Item {
         id: contentRow
         anchors.centerIn: control
         spacing: 8
+        layoutDirection: control.layoutDirection
 
         IconSvg {
             id: contentImage
@@ -142,10 +146,13 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             visible: !control.compact
 
+            opacity: enabled ? 1.0 : 0.4
+            Behavior on opacity { NumberAnimation { duration: 333 } }
+
             text: control.text
             textFormat: Text.PlainText
             color: control.iconColor
-            font.pixelSize: Theme.fontSizeComponent
+            font.pixelSize: Theme.componentFontSize
             font.bold: true
             elide: Text.ElideRight
         }
@@ -155,7 +162,7 @@ Item {
 
     Loader {
         anchors.fill: control
-        active: control.tooltipText
+        active: control.tooltipText && (control.compact || !control.text)
 
         sourceComponent: ToolTipFlat {
             visible: mouseArea.containsMouse

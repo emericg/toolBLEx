@@ -1,7 +1,7 @@
 // UtilsDeviceSensors.js
 // Version -1
 
-.import DeviceUtils 1.0 as DeviceUtils
+.import DeviceUtils as DeviceUtils
 .import ThemeEngine 1.0 as ThemeEngine
 
 /* ************************************************************************** */

@@ -1,6 +1,6 @@
 import QtQuick
 
-import ThemeEngine 1.0
+import ThemeEngine
 
 Item {
     id: proximityRadar

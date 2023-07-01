@@ -111,6 +111,7 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
                 text: selectedDate.toLocaleString(locale, "MMMM") // "Octobre"
+                textFormat: Text.PlainText
                 font.capitalization: Font.Capitalize
                 font.pixelSize: Theme.fontSizeContentBig
                 color: Theme.colorText
@@ -160,8 +161,10 @@ Item {
                 delegate: Text {
                     anchors.bottom: parent.bottom
                     text: model.shortName.substring(0, 1).toUpperCase()
-                    color: Theme.colorText
+                    textFormat: Text.PlainText
+                    font.pixelSize: Theme.componentFontSize
                     font.bold: true
+                    color: Theme.colorText
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -188,18 +191,22 @@ Item {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
 
-                property bool isSelected: (model.day === selectedDate.getDate() &&
-                                           model.month === selectedDate.getMonth() &&
-                                           model.year === selectedDate.getFullYear())
+                property bool isWeekend: (model.date.getDay() >= 5)
 
                 property bool isToday: (model.day === datePicker.today.getDate() &&
                                         model.month === datePicker.today.getMonth() &&
                                         model.year === datePicker.today.getFullYear())
 
+                property bool isSelected: (model.day === selectedDate.getDate() &&
+                                           model.month === selectedDate.getMonth() &&
+                                           model.year === selectedDate.getFullYear())
+
                 text: model.day
-                font: grid.font
-                //font.bold: isToday
-                color: isSelected ? "white" : Theme.colorSubText
+                textFormat: Text.PlainText
+
+                font.pixelSize: Theme.componentFontSize
+                font.bold: isToday
+                color: isSelected ? "white" : (isWeekend ? Theme.colorSubText : Theme.colorText)
                 opacity: (model.month === grid.month ? 1 : 0.2)
 
                 Rectangle {

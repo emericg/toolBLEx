@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Templates as T
 
-import ThemeEngine 1.0
+import ThemeEngine
 
 T.HorizontalHeaderView {
     id: control

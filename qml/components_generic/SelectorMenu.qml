@@ -10,21 +10,29 @@ Item {
     width: contentRow.width
     opacity: enabled ? 1 : 0.4
 
-    signal menuSelected(var index)
-    property int currentSelection: 1
-
     property var model: null
+
+    // colors
+    property string colorBackground: Theme.colorComponentBackground
+
+    // states
+    property int currentSelection: 1
+    signal menuSelected(var index)
+
+    ////////////////////////////////////////////////////////////////////////////
 
     Rectangle {
         id: background
         anchors.fill: parent
 
         radius: height
-        color: Theme.colorComponentBackground
+        color: selectorMenu.colorBackground
 
         border.width: 2
         border.color: Theme.colorComponentDown
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 
     Row {
         id: contentRow
@@ -43,4 +51,6 @@ Item {
             }
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }
