@@ -74,36 +74,37 @@ Item {
     property color colorLVimpair
     property color colorLVselected
     property color colorLVseparator
+    property color colorLightGrey: "#7f7f7f"
 
     ////////////////
 
     // Palette colors
-    property color colorLightGreen: "#09debc"
-    property color colorGreen
-    property color colorDarkGreen: "#1ea892"
-    property color colorBlue
-    property color colorYellow
-    property color colorOrange
-    property color colorRed
-    property color colorGrey: "#5c5c5c"
-    property color colorLightGrey: "#7f7f7f"
+    property color colorRed: "#ff7657"
+    property color colorGreen: "#8cd200"
+    property color colorBlue: "#4cafe9"
+    property color colorYellow: "#ffcf00"
+    property color colorOrange: "#ffa635"
+    property color colorGrey: "#555151"
 
-    // Fixed colors
-    readonly property color colorMaterialBlue: "#2196f3"
-    readonly property color colorMaterialThisblue: "#448aff"
-    readonly property color colorMaterialIndigo: "#3f51b5"
-    readonly property color colorMaterialPurple: "#9c27b0"
-    readonly property color colorMaterialDeepPurple: "#673ab7"
-    readonly property color colorMaterialRed: "#f44336"
-    readonly property color colorMaterialOrange: "#ff9800"
-    readonly property color colorMaterialLightGreen: "#8bc34a"
-
-    readonly property color colorMaterialLightGrey: "#f8f8f8"
-    readonly property color colorMaterialGrey: "#eeeeee"
-    readonly property color colorMaterialDarkGrey: "#ececec"
-
-    readonly property color colorNeutralDay: "#e4e4e4"
-    readonly property color colorNeutralNight: "#ffb300"
+    // Material colors
+    readonly property color colorMaterialRed: "#F44336"
+    readonly property color colorMaterialPink: "#E91E63"
+    readonly property color colorMaterialPurple: "#9C27B0"
+    readonly property color colorMaterialDeepPurple: "#673AB7"
+    readonly property color colorMaterialIndigo: "#3F51B5"
+    readonly property color colorMaterialBlue: "#2196F3"
+    readonly property color colorMaterialLightBlue: "#03A9F4"
+    readonly property color colorMaterialCyan: "#00BCD4"
+    readonly property color colorMaterialTeal: "#009688"
+    readonly property color colorMaterialGreen: "#4CAF50"
+    readonly property color colorMaterialLightGreen: "#8BC34A"
+    readonly property color colorMaterialLime: "#CDDC39"
+    readonly property color colorMaterialYellow: "#FFEB3B"
+    readonly property color colorMaterialAmber: "#FFC107"
+    readonly property color colorMaterialOrange: "#FF9800"
+    readonly property color colorMaterialDeepOrange: "#FF5722"
+    readonly property color colorMaterialBrown: "#795548"
+    readonly property color colorMaterialGrey: "#9E9E9E"
 
     ////////////////
 

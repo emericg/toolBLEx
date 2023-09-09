@@ -190,23 +190,14 @@ Loader {
                                 ButtonWireframeIconCentered {
                                     width: 160
                                     height: 40
-                                    sourceSize: 28
                                     fullColor: true
                                     primaryColor: "#5483EF"
 
                                     text: qsTr("WEBSITE")
-                                    source: "qrc:/assets/icons_material/baseline-insert_link-24px.svg"
-                                    onClicked: Qt.openUrlExternally("https://emeric.io/toolBLEx")
-                                }
-
-                                ButtonWireframeIconCentered {
-                                    width: 160
-                                    height: 40
-                                    sourceSize: 22
-                                    fullColor: true
-                                    primaryColor: "#5483EF"
-
-                                    text: qsTr("GitHub")
+                                    //sourceSize: 28
+                                    //source: "qrc:/assets/icons_material/baseline-insert_link-24px.svg"
+                                    //onClicked: Qt.openUrlExternally("https://emeric.io/toolBLEx")
+                                    sourceSize: 20
                                     source: "qrc:/assets/logos/github.svg"
                                     onClicked: Qt.openUrlExternally("https://github.com/emericg/toolBLEx")
                                 }
@@ -221,6 +212,17 @@ Loader {
                                     text: qsTr("SUPPORT")
                                     source: "qrc:/assets/icons_material/baseline-support-24px.svg"
                                     onClicked: Qt.openUrlExternally("https://github.com/emericg/toolBLEx/issues")
+                                }
+
+                                ButtonWireframeIcon {
+                                    height: 40
+                                    sourceSize: 22
+                                    fullColor: true
+                                    primaryColor: "#5483EF"
+
+                                    text: qsTr("Release notes")
+                                    source: "qrc:/assets/icons_material/outline-new_releases-24px.svg"
+                                    onClicked: Qt.openUrlExternally("https://github.com/emericg/toolBLEx/releases")
                                 }
                             }
                         }

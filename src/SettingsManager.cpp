@@ -268,7 +268,7 @@ void SettingsManager::setAppSplashScreen(const bool value)
     }
 }
 
-void SettingsManager::setAppUnits(const unsigned value)
+void SettingsManager::setAppUnits(int value)
 {
     if (m_appUnits != value)
     {

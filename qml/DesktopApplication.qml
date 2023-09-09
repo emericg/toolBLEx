@@ -14,7 +14,7 @@ ApplicationWindow {
     property bool isMobile: false
     property bool isPhone: false
     property bool isTablet: false
-    property bool isHdpi: (utilsScreen.screenDpi > 128 || utilsScreen.screenPar > 1.0)
+    property bool isHdpi: (utilsScreen.screenDpi >= 128 || utilsScreen.screenPar >= 2.0)
 
     // Desktop stuff ///////////////////////////////////////////////////////////
 
