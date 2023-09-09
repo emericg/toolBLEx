@@ -43,6 +43,8 @@ T.TextField {
     property string colorSelectedText: Theme.colorHighContrast
     property string colorSelection: Theme.colorPrimary
 
+    ////////////////
+
     PlaceholderText {
         id: placeholder
         x: control.leftPadding
@@ -58,6 +60,8 @@ T.TextField {
         elide: Text.ElideRight
         renderType: control.renderType
     }
+
+    ////////////////
 
     background: Rectangle {
         implicitWidth: 256
@@ -86,4 +90,6 @@ T.TextField {
             }
         }
     }
+
+    ////////////////
 }

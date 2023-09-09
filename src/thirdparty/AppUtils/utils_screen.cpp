@@ -34,7 +34,7 @@
 #include "utils_os_android.h"
 #elif defined(Q_OS_IOS)
 #include "utils_os_ios.h"
-#include <QtGui/qpa/qplatformwindow.h>
+//#include <QtGui/qpa/qplatformwindow.h>
 #elif defined(Q_OS_MACOS)
 #include "utils_os_macos.h"
 #elif defined(Q_OS_LINUX)
@@ -139,7 +139,7 @@ QVariantMap UtilsScreen::getSafeAreaMargins(QQuickWindow *window)
 
     if (window)
     {
-#if defined(Q_OS_IOS)
+#if defined(Q_OS_IOS) && 0
         QPlatformWindow *platformWindow = static_cast<QPlatformWindow *>(window->handle());
         if (platformWindow)
         {

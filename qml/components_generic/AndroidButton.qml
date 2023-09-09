@@ -24,7 +24,7 @@ T.Button {
     // colors
     property string primaryColor: Theme.colorPrimary
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     MouseArea {
         id: mouseArea
@@ -36,7 +36,7 @@ T.Button {
         onClicked: control.clicked()
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     background: Item {
         implicitWidth: 80
@@ -68,7 +68,7 @@ T.Button {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     contentItem: Text {
         text: control.text
@@ -86,4 +86,6 @@ T.Button {
         color: control.primaryColor
         opacity: enabled ? 1.0 : 0.33
     }
+
+    ////////////////
 }

@@ -7,29 +7,35 @@ import ThemeEngine 1.0
 T.RangeSlider {
     id: control
 
-    implicitWidth: 200
-    implicitHeight: Theme.componentHeight
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            first.implicitHandleWidth + leftPadding + rightPadding,
+                            second.implicitHandleWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             first.implicitHandleHeight + topPadding + bottomPadding,
+                             second.implicitHandleHeight + topPadding + bottomPadding)
 
-    padding: 8
-
-    first.value: 0.25
-    second.value: 0.75
-    snapMode: T.RangeSlider.SnapAlways
+    padding: 6
 
     ////////////////
 
     background: Rectangle {
-        x: control.leftPadding
-        y: control.topPadding + (control.availableHeight / 2) - (height / 2)
-        width: control.availableWidth
-        height: 4
+        x: control.leftPadding + (control.horizontal ? 0 : (control.availableWidth - width) / 2)
+        y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : 0)
+        implicitWidth: control.horizontal ? 200 : 4
+        implicitHeight: control.horizontal ? 4 : 200
+        width: control.horizontal ? control.availableWidth : implicitWidth
+        height: control.horizontal ? implicitHeight : control.availableHeight
+
         radius: 2
         color: Theme.colorComponentBackground
+        scale: control.horizontal && control.mirrored ? -1 : 1
 
         Rectangle {
-            x: (control.first.visualPosition * parent.width)
-            width: (control.second.visualPosition * parent.width) - x
-            height: parent.height
+            x: control.horizontal ? control.first.position * parent.width + 3 : -1
+            y: control.horizontal ? -1 : control.second.visualPosition * parent.height + 3
+            width: control.horizontal ? control.second.position * parent.width - control.first.position * parent.width - 6 : 6
+            height: control.horizontal ? 6 : control.second.position * parent.height - control.first.position * parent.height - 6
+
             radius: 2
             color: Theme.colorPrimary
         }
@@ -38,12 +44,15 @@ T.RangeSlider {
     ////////////////
 
     first.handle: Rectangle {
-        x: control.leftPadding + (first.visualPosition * (control.availableWidth - width))
-        y: control.topPadding + (control.availableHeight / 2) - (height / 2)
-        width: 18
-        height: width
-        radius: (width / 2)
+        x: control.leftPadding + (control.horizontal ? control.first.visualPosition * (control.availableWidth - width) : (control.availableWidth - width) / 2)
+        y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.first.visualPosition * (control.availableHeight - height))
+
+        implicitWidth: 18
+        implicitHeight: 18
+        radius: 9
+
         color: first.pressed ? Theme.colorSecondary : Theme.colorPrimary
+        border.width: 1
         border.color: Theme.colorPrimary
 
         MouseArea {
@@ -68,12 +77,15 @@ T.RangeSlider {
     ////////////////
 
     second.handle: Rectangle {
-        x: control.leftPadding + (second.visualPosition * (control.availableWidth - width))
-        y: control.topPadding + (control.availableHeight / 2) - (height / 2)
-        width: 18
-        height: width
-        radius: (width / 2)
+        x: control.leftPadding + (control.horizontal ? control.second.visualPosition * (control.availableWidth - width) : (control.availableWidth - width) / 2)
+        y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.second.visualPosition * (control.availableHeight - height))
+
+        implicitWidth: 18
+        implicitHeight: 18
+        radius: 9
+
         color: second.pressed ? Theme.colorSecondary : Theme.colorPrimary
+        border.width: 1
         border.color: Theme.colorPrimary
 
         MouseArea {

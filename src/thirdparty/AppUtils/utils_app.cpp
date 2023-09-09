@@ -57,8 +57,7 @@ UtilsApp::UtilsApp()
     // Set default application path
     m_appPath = QCoreApplication::applicationDirPath();
 
-    //m_appPath = newpath.absolutePath();
-    // Make sure the path is terminated with a separator.
+    // Make sure the path is terminated with a separator?
     //if (!m_appPath.endsWith('/')) m_appPath += '/';
 }
 
@@ -117,6 +116,12 @@ bool UtilsApp::isDebugBuild()
     return true;
 }
 
+QString UtilsApp::qtVersion()
+{
+    return QString(qVersion());
+}
+
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 void UtilsApp::appExit()
@@ -145,6 +150,8 @@ void UtilsApp::vibrate(int ms)
 {
 #if defined(Q_OS_ANDROID)
     return UtilsAndroid::vibrate(ms);
+#elif defined(Q_OS_IOS)
+    return UtilsIOS::vibrate(ms);
 #else
     Q_UNUSED(ms)
 #endif
@@ -258,6 +265,22 @@ void UtilsApp::openAndroidAppInfo(const QString &packageName)
 #endif
 
     Q_UNUSED(packageName)
+}
+
+void UtilsApp::openAndroidStorageSettings(const QString &packageName)
+{
+#if defined(Q_OS_ANDROID)
+    return UtilsAndroid::openStorageSettings(packageName);
+#endif
+
+    Q_UNUSED(packageName)
+}
+
+void UtilsApp::openAndroidLocationSettings()
+{
+#if defined(Q_OS_ANDROID)
+    UtilsAndroid::openLocationSettings();
+#endif
 }
 
 bool UtilsApp::checkMobileLocationPermission()
@@ -382,6 +405,30 @@ bool UtilsApp::getMobileStorageWritePermission()
 #endif
 }
 
+bool UtilsApp::checkMobileStorageFileSystemPermission()
+{
+#if defined(Q_OS_ANDROID)
+    return UtilsAndroid::checkPermission_storage_filesystem();
+#elif defined(Q_OS_IOS)
+    return false;
+#else
+    return true;
+#endif
+}
+
+bool UtilsApp::getMobileStorageFileSystemPermission(const QString &packageName)
+{
+    Q_UNUSED(packageName)
+
+#if defined(Q_OS_ANDROID)
+    return UtilsAndroid::getPermission_storage_filesystem(packageName);
+#elif defined(Q_OS_IOS)
+    return false;
+#else
+    return true;
+#endif
+}
+
 bool UtilsApp::checkMobilePhoneStatePermission()
 {
 #if defined(Q_OS_ANDROID)
@@ -433,9 +480,18 @@ bool UtilsApp::getMobileCameraPermission()
 bool UtilsApp::isMobileGpsEnabled()
 {
 #if defined(Q_OS_ANDROID)
-    return UtilsAndroid::isGpsEnabled();
+    return UtilsAndroid::gpsutils_isGpsEnabled();
+#elif defined(Q_OS_IOS)
+    return false; // TODO
 #else
     return false;
+#endif
+}
+
+void UtilsApp::forceMobileGpsEnabled()
+{
+#if defined(Q_OS_ANDROID)
+    UtilsAndroid::gpsutils_forceGpsEnabled();
 #endif
 }
 

@@ -64,7 +64,7 @@ android {
 
 # iOS OS utils
 ios {
-    QT      += gui-private quick
+    QT      += quick
     LIBS    += -framework UIKit
 
     SOURCES += $${PWD}/utils_os_ios.mm

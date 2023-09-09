@@ -121,6 +121,41 @@ bool UtilsAndroid::getPermission_storage_write()
 
 /* ************************************************************************** */
 
+bool UtilsAndroid::checkPermission_storage_filesystem()
+{
+    if (QNativeInterface::QAndroidApplication::sdkVersion() >= 30)
+    {
+        return QJniObject::callStaticMethod<jboolean>("android/os/Environment", "isExternalStorageManager");
+    }
+
+    return false;
+}
+
+bool UtilsAndroid::getPermission_storage_filesystem(const QString &packageName)
+{
+    //qDebug() << "> getPermission_storage_filesystem(" << packageName << ")";
+
+    bool status = false;
+
+    if (QNativeInterface::QAndroidApplication::sdkVersion() >= 30)
+    {
+        if (!checkPermission_storage_filesystem())
+        {
+            openStorageSettings(packageName);
+        }
+
+        status = checkPermission_storage_filesystem();
+    }
+    else
+    {
+        qWarning() << "ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION is not available";
+    }
+
+    return status;
+}
+
+/* ************************************************************************** */
+
 bool UtilsAndroid::checkPermission_camera()
 {
     QFuture<QtAndroidPrivate::PermissionResult> cam = QtAndroidPrivate::checkPermission("android.permission.CAMERA");
@@ -301,21 +336,64 @@ bool UtilsAndroid::isGpsEnabled()
     QJniObject activity = QNativeInterface::QAndroidApplication::context();
     if (activity.isValid())
     {
-        QJniObject appCtx = activity.callObjectMethod("getApplicationContext", "()Landroid/content/Context;");
-        if (appCtx.isValid())
+        QJniObject locationString = QJniObject::fromString("location");
+        QJniObject locationService = activity.callObjectMethod("getSystemService",
+                                                               "(Ljava/lang/String;)Ljava/lang/Object;",
+                                                               locationString.object<jstring>());
+        if (locationService.callMethod<jboolean>("isLocationEnabled", "()Z"))
         {
-            QJniObject locationString = QJniObject::fromString("location");
-            QJniObject locationService = appCtx.callObjectMethod("getSystemService",
-                                                                 "(Ljava/lang/String;)Ljava/lang/Object;",
-                                                                 locationString.object<jstring>());
-            if (locationService.callMethod<jboolean>("isLocationEnabled", "()Z"))
-            {
-                status = true;
-            }
+            status = true;
         }
     }
 
     return status;
+}
+
+bool UtilsAndroid::gpsutils_isGpsEnabled()
+{
+    bool status = false;
+
+    jboolean verified = QJniObject::callStaticMethod<jboolean>(
+        "com/emeric/utils/QGpsUtils",
+        "checkGpsEnabled",
+        "(Landroid/content/Context;)Z",
+        QNativeInterface::QAndroidApplication::context());
+
+    if (verified)
+    {
+        status = true;
+    }
+
+    return status;
+}
+
+bool UtilsAndroid::gpsutils_forceGpsEnabled()
+{
+    bool status = false;
+
+    jboolean verified = QJniObject::callStaticMethod<jboolean>(
+        "com/emeric/utils/QGpsUtils",
+        "forceGpsEnabled",
+        "(Landroid/content/Context;)Z",
+        QNativeInterface::QAndroidApplication::context());
+
+    if (verified)
+    {
+        status = true;
+    }
+
+    return status;
+}
+
+void UtilsAndroid::gpsutils_openLocationSettings()
+{
+    QJniObject intent = QJniObject::callStaticObjectMethod(
+        "com/emeric/utils/QGpsUtils",
+        "openLocationSettings",
+        "()Landroid/content/Intent;",
+        QNativeInterface::QAndroidApplication::context());
+
+    QtAndroidPrivate::startActivity(intent, 0);
 }
 
 /* ************************************************************************** */
@@ -407,15 +485,17 @@ QString UtilsAndroid::getDeviceSerial()
     if (QNativeInterface::QAndroidApplication::sdkVersion() >= 29)
     {
         QJniObject activity = QNativeInterface::QAndroidApplication::context();
-        QJniObject appctx = activity.callObjectMethod("getApplicationContext", "()Landroid/content/Context;");
-        QJniObject contentR = appctx.callObjectMethod("getContentResolver", "()Landroid/content/ContentResolver;");
+        if (activity.isValid())
+        {
+            QJniObject contentR = activity.callObjectMethod("getContentResolver", "()Landroid/content/ContentResolver;");
 
-        QJniObject aidString = QJniObject::fromString("android_id");
-        QJniObject aidService = QJniObject::callStaticObjectMethod("android/provider/Settings$Secure","getString",
-                                                                   "(Landroid/content/ContentResolver;Ljava/lang/String;)Ljava/lang/String;",
-                                                                   contentR.object<jobject>(),
-                                                                   aidString.object<jstring>());
-        device_serial = aidService.toString();
+            QJniObject aidString = QJniObject::fromString("android_id");
+            QJniObject aidService = QJniObject::callStaticObjectMethod("android/provider/Settings$Secure", "getString",
+                                                                       "(Landroid/content/ContentResolver;Ljava/lang/String;)Ljava/lang/String;",
+                                                                       contentR.object<jobject>(),
+                                                                       aidString.object<jstring>());
+            device_serial = aidService.toString();
+        }
     }
     else
     {
@@ -522,17 +602,32 @@ void UtilsAndroid::vibrate(int milliseconds)
         QJniObject activity = QNativeInterface::QAndroidApplication::context();
         if (activity.isValid())
         {
-            QJniObject appCtx = activity.callObjectMethod("getApplicationContext", "()Landroid/content/Context;");
-            if (appCtx.isValid())
+            QJniObject vibratorString = QJniObject::fromString("vibrator");
+            QJniObject vibratorService = activity.callObjectMethod("getSystemService",
+                                                                   "(Ljava/lang/String;)Ljava/lang/Object;",
+                                                                   vibratorString.object<jstring>());
+            if (vibratorService.callMethod<jboolean>("hasVibrator", "()Z"))
             {
-                QJniObject vibratorString = QJniObject::fromString("vibrator");
-                QJniObject vibratorService = appCtx.callObjectMethod("getSystemService",
-                                                                     "(Ljava/lang/String;)Ljava/lang/Object;",
-                                                                     vibratorString.object<jstring>());
-                if (vibratorService.callMethod<jboolean>("hasVibrator", "()Z"))
+                if (QNativeInterface::QAndroidApplication::sdkVersion() < 26)
                 {
+                    // vibrate (long milliseconds) // Deprecated in API level 26
+
                     jlong ms = milliseconds;
                     vibratorService.callMethod<void>("vibrate", "(J)V", ms);
+                }
+                else
+                {
+                    // vibrate(VibrationEffect vibe) // Added in API level 26
+
+                    jint effect = 0x00000002;
+                    QJniObject vibrationEffect = QJniObject::callStaticObjectMethod("android/os/VibrationEffect",
+                                                                                    "createPredefined",
+                                                                                    "(I)Landroid/os/VibrationEffect;",
+                                                                                    effect);
+
+                    vibratorService.callMethod<void>("vibrate",
+                                                     "(Landroid/os/VibrationEffect;)V",
+                                                     vibrationEffect.object<jobject>());
                 }
             }
         }
@@ -553,33 +648,89 @@ void UtilsAndroid::openApplicationInfo(const QString &packageName)
     QJniObject jpackageName = QJniObject::fromString("package:" + packageName);
     QJniObject jintentName = QJniObject::fromString("android.settings.APPLICATION_DETAILS_SETTINGS");
 
-    //if (QNativeInterface::QAndroidApplication::sdkVersion() >= 28)
+    QJniObject juri = QJniObject::callStaticObjectMethod("android/net/Uri", "parse",
+                                                         "(Ljava/lang/String;)Landroid/net/Uri;",
+                                                         jpackageName.object<jstring>());
+    if (!juri.isValid())
     {
-        QJniObject activity = QNativeInterface::QAndroidApplication::context();
-        if (activity.isValid())
-        {
-            QJniObject juri = QJniObject::callStaticObjectMethod("android/net/Uri", "parse",
-                                                                "(Ljava/lang/String;)Landroid/net/Uri;",
-                                                                jpackageName.object<jstring>());
-            if (!juri.isValid())
-            {
-                qWarning("Unable to create Uri object");
-                return;
-            }
-
-            QJniObject intent("android/content/Intent","(Ljava/lang/String;)V", jintentName.object<jstring>());
-            if (!intent.isValid())
-            {
-                qWarning("Unable to create Intent object");
-                return;
-            }
-            intent.callObjectMethod("addCategory", "(Ljava/lang/String;)Landroid/content/Intent;",
-                                    QJniObject::fromString("android.intent.category.DEFAULT").object<jstring>());
-            intent.callObjectMethod("setData", "(Landroid/net/Uri;)Landroid/content/Intent;", juri.object<jobject>());
-
-            QtAndroidPrivate::startActivity(intent.object<jobject>(), 10101);
-        }
+        qWarning("Unable to create Uri object for APPLICATION_DETAILS_SETTINGS");
+        return;
     }
+
+    QJniObject intent("android/content/Intent", "(Ljava/lang/String;)V",
+                      jintentName.object<jstring>());
+    if (!intent.isValid())
+    {
+        qWarning("Unable to create Intent object for APPLICATION_DETAILS_SETTINGS");
+        return;
+    }
+
+    intent.callObjectMethod("addCategory", "(Ljava/lang/String;)Landroid/content/Intent;",
+                            QJniObject::fromString("android.intent.category.DEFAULT").object<jstring>());
+
+    intent.callObjectMethod("setData", "(Landroid/net/Uri;)Landroid/content/Intent;",
+                            juri.object<jobject>());
+
+    QtAndroidPrivate::startActivity(intent, 0);
+}
+
+/* ************************************************************************** */
+
+void UtilsAndroid::openStorageSettings(const QString &packageName)
+{
+    //qDebug() << "> openStorageSettings(" << packageName << ")";
+
+    if (QNativeInterface::QAndroidApplication::sdkVersion() >= 30)
+    {
+        QJniObject jpackageName = QJniObject::fromString("package:" + packageName);
+        QJniObject jintentObject = QJniObject::getStaticObjectField("android/provider/Settings",
+                                                                    "ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION",
+                                                                    "Ljava/lang/String;");
+
+        QJniObject juri = QJniObject::callStaticObjectMethod("android/net/Uri", "parse",
+                                                             "(Ljava/lang/String;)Landroid/net/Uri;",
+                                                             jpackageName.object<jstring>());
+        if (!juri.isValid())
+        {
+            qWarning("Unable to create Uri object for ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION");
+            return;
+        }
+
+        QJniObject intent("android/content/Intent", "(Ljava/lang/String;)V", jintentObject.object());
+        if (!intent.isValid())
+        {
+            qWarning("Unable to create Intent object for ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION");
+            return;
+        }
+
+        intent.callObjectMethod("setData", "(Landroid/net/Uri;)Landroid/content/Intent;",
+                                juri.object<jobject>());
+
+        QtAndroidPrivate::startActivity(intent, 0);
+    }
+}
+
+/* ************************************************************************** */
+
+void UtilsAndroid::openLocationSettings()
+{
+    //qDebug() << "> openLocationSettings()";
+
+    QJniObject jintentObject = QJniObject::getStaticObjectField("android/provider/Settings",
+                                                                "ACTION_LOCATION_SOURCE_SETTINGS",
+                                                                "Ljava/lang/String;");
+
+    QJniObject intent("android/content/Intent", "(Ljava/lang/String;)V", jintentObject.object());
+    if (!intent.isValid())
+    {
+        qWarning("Unable to create Intent object for ACTION_LOCATION_SOURCE_SETTINGS");
+        return;
+    }
+
+    jint jflag = QJniObject::getStaticField<jint>("android/content/Intent", "FLAG_ACTIVITY_NEW_TASK");
+    intent.callObjectMethod("setFlags", "(I)Landroid/content/Intent;", jflag);
+
+    QtAndroidPrivate::startActivity(intent, 0);
 }
 
 /* ************************************************************************** */

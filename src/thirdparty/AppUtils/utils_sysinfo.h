@@ -40,7 +40,9 @@ class UtilsSysinfo: public QObject
     Q_PROPERTY(int cpu_coreCount_physical READ getCpuCoreCountPhysical CONSTANT)
     Q_PROPERTY(int cpu_coreCount_logical READ getCpuCoreCountLogical CONSTANT)
     Q_PROPERTY(quint64 ram_total READ getRamTotal CONSTANT)
-    Q_PROPERTY(QString os_name READ getOs CONSTANT)
+
+    Q_PROPERTY(QString os_name READ getOsName CONSTANT)
+    Q_PROPERTY(QString os_version READ getOsVersion CONSTANT)
 
     QString m_cpu_arch;
     int m_cpu_core_physical = 0;
@@ -49,6 +51,7 @@ class UtilsSysinfo: public QObject
     uint64_t m_ram_total = 0;
 
     QString m_os_name;
+    QString m_os_version;
 
     // Singleton
     static UtilsSysinfo *instance;
@@ -71,7 +74,9 @@ public:
 
     Q_INVOKABLE uint64_t getRamTotal() const  { return m_ram_total; };
 
-    Q_INVOKABLE QString getOs() const { return m_os_name; };
+    Q_INVOKABLE QString getOsName() const { return m_os_name; };
+
+    Q_INVOKABLE QString getOsVersion() const { return m_os_version; };
 };
 
 /* ************************************************************************** */

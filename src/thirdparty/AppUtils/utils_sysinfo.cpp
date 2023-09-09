@@ -74,6 +74,7 @@ UtilsSysinfo::UtilsSysinfo()
     getRamInfos();
 
     m_os_name = QSysInfo::prettyProductName();
+    m_os_version = QSysInfo::productVersion();
 }
 
 UtilsSysinfo::~UtilsSysinfo()

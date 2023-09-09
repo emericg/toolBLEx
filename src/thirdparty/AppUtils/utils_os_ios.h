@@ -38,6 +38,8 @@ public:
 
     static void screenLockOrientation(int orientation);
     static void screenLockOrientation(int orientation, bool autoRotate);
+
+    static void vibrate(int milliseconds);
 };
 
 /* ************************************************************************** */

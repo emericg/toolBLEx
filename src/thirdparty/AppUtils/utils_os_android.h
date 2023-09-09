@@ -44,26 +44,29 @@ class UtilsAndroid
 {
 public:
     /*!
-     * \brief getSdkVersion
-     * \return
+     * \brief Get Android SDK / API level
+     * \return See https://apilevels.com/
      */
     static int getSdkVersion();
 
-    /*!
-     * \note DEPRECATED in Android 12
-     * \return True if R/W permissions on main storage have been previously obtained.
-     */
+    static bool getPermissions_storage();
     static bool checkPermissions_storage();
-    static bool checkPermission_storage_read();
-    static bool checkPermission_storage_write();
 
     /*!
      * \note DEPRECATED in Android 12
-     * \return True if R/W permissions on main storage have been explicitly obtained.
+     * \return True if R/W permissions on main storage have been previously or explicitly obtained.
      */
-    static bool getPermissions_storage();
+    static bool checkPermission_storage_read();
     static bool getPermission_storage_read();
+    static bool checkPermission_storage_write();
     static bool getPermission_storage_write();
+
+    /*!
+     * \param packageName: the application package, for instance 'com.application.identifier'.
+     * \return True if filesystem access have been previously or explicitly obtained.
+     */
+    static bool checkPermission_storage_filesystem();
+    static bool getPermission_storage_filesystem(const QString &packageName);
 
     /*!
      * \return True if CAMERA permission has been previously obtained.
@@ -115,10 +118,27 @@ public:
      */
     static bool getPermission_phonestate();
 
+    /* ********************************************************************** */
+
     /*!
      * \return True if device GPS is turned on.
      */
     static bool isGpsEnabled();
+
+    /*!
+     * \return True if device GPS is turned on (using QGpsUtils.java).
+     */
+    static bool gpsutils_isGpsEnabled();
+
+    /*!
+     * \return True if device GPS has been turned on turned on (using QGpsUtils.java).
+     */
+    static bool gpsutils_forceGpsEnabled();
+
+    /*!
+     * \brief Open the Android location settings intent (using QGpsUtils.java).
+     */
+    static void gpsutils_openLocationSettings();
 
     /* ********************************************************************** */
 
@@ -158,6 +178,7 @@ public:
     /*!
      * \return The device manufacturer + model.
      *
+     * Documentation:
      * - https://developer.android.com/reference/android/os/Build.html
      */
     static QString getDeviceModel();
@@ -168,6 +189,7 @@ public:
      * Need READ_PHONE_STATE permission.
      * Only work before Android 10 (API < 29).
      *
+     * Documentation:
      * - https://developer.android.com/reference/android/os/Build#getSerial()
      */
     static QString getDeviceSerial();
@@ -211,11 +233,24 @@ public:
     /* ********************************************************************** */
 
     /*!
+     * \brief Open the Android application info intent for the given package name.
      * \param packageName: the application package, for instance 'com.application.identifier'.
-     *
-     * Open the Android application info intent for the given package name.
      */
     static void openApplicationInfo(const QString &packageName);
+
+    /*!
+     * \brief Open the Android "manage all files" intent for the given package name.
+     * \param packageName: the application package, for instance 'com.application.identifier'.
+     *
+     * Documentation:
+     * - https://developer.android.com/training/data-storage/manage-all-files
+     */
+    static void openStorageSettings(const QString &packageName);
+
+    /*!
+     * \brief Open the Android location settings intent.
+     */
+    static void openLocationSettings();
 };
 
 /* ************************************************************************** */

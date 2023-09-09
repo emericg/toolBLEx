@@ -6,27 +6,34 @@ import ThemeEngine 1.0
 
 T.Slider {
     id: control
-    implicitWidth: 200
-    implicitHeight: Theme.componentHeight
 
-    padding: 8
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            implicitHandleWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             implicitHandleHeight + topPadding + bottomPadding)
 
-    value: 0.5
+    padding: 6
 
     ////////////////
 
     background: Rectangle {
-        x: control.leftPadding
-        y: control.topPadding + (control.availableHeight / 2) - (height / 2)
-        width: control.availableWidth
-        height: 4
+        x: control.leftPadding + (control.horizontal ? 0 : (control.availableWidth - width) / 2)
+        y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : 0)
+        implicitWidth: control.horizontal ? 200 : 4
+        implicitHeight: control.horizontal ? 4 : 200
+        width: control.horizontal ? control.availableWidth : implicitWidth
+        height: control.horizontal ? implicitHeight : control.availableHeight
+
         radius: 2
         color: Theme.colorComponentBackground
+        scale: control.horizontal && control.mirrored ? -1 : 1
 
         Rectangle {
-            x: (handle.x < control.availableWidth / 2) ? handle.x : (control.width / 2)
-            width: Math.abs((control.width / 2) - handle.x)
-            height: parent.height
+            x: control.horizontal ? ((handle.x < control.availableWidth / 2) ? handle.x : control.width / 2) : -1
+            y: control.horizontal ? -1 : ((handle.y < control.availableHeight / 2) ? handle.y : control.height / 2)
+            width: control.horizontal ? Math.abs((control.width / 2) - handle.x) : 6
+            height: control.horizontal ? 6 : Math.abs((control.height / 2) - handle.y)
+
             radius: 2
             color: Theme.colorPrimary
         }
@@ -35,12 +42,15 @@ T.Slider {
     ////////////////
 
     handle: Rectangle {
-        x: control.leftPadding + (control.visualPosition * (control.availableWidth - width))
-        y: control.topPadding + (control.availableHeight / 2) - (height / 2)
-        width: 18
-        height: width
-        radius: (width / 2)
+        x: control.leftPadding + (control.horizontal ? (control.visualPosition * (control.availableWidth - width)) : (control.availableWidth - width))
+        y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : (control.visualPosition * (control.availableHeight - height)))
+
+        implicitWidth: 18
+        implicitHeight: 18
+        radius: 9
+
         color: control.pressed ? Theme.colorSecondary : Theme.colorPrimary
+        border.width: 1
         border.color: Theme.colorPrimary
 
         MouseArea {

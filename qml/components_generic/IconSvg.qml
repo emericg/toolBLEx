@@ -11,7 +11,7 @@ Item {
     property alias color: overlayImg.color
     property alias fillMode: sourceImg.fillMode
     property alias asynchronous: sourceImg.asynchronous
-    property alias smooth: sourceImg.smooth
+    //property alias smooth: sourceImg.smooth
 
     Image {
         id: sourceImg

@@ -46,7 +46,7 @@ T.ItemDelegate {
 
     contentItem: Row {
         anchors.verticalCenter: parent.verticalCenter
-        width: screenMobileComponents.width
+        width: control.width
         spacing: Theme.componentMargin
 
         RoundButtonIcon {
@@ -55,8 +55,7 @@ T.ItemDelegate {
             height: Theme.componentHeight
 
             source: model.icon
-            sourceSize: icon.width
-            background: true
+            backgroundVisible: true
         }
 
         Column {

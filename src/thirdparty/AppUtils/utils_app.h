@@ -57,8 +57,9 @@ public:
     static Q_INVOKABLE QString appBuildModeFull();
     static Q_INVOKABLE bool isDebugBuild();
 
-    // tools
+    static Q_INVOKABLE QString qtVersion();
 
+    // tools
     QString getAppPath() const { return m_appPath; }
     void setAppPath(const QString &value);
 
@@ -76,6 +77,8 @@ public:
     static Q_INVOKABLE int getAndroidSdkVersion();
 
     static Q_INVOKABLE void openAndroidAppInfo(const QString &packageName);
+    static Q_INVOKABLE void openAndroidStorageSettings(const QString &packageName);
+    static Q_INVOKABLE void openAndroidLocationSettings();
 
     static Q_INVOKABLE void vibrate(int ms);
 
@@ -85,6 +88,9 @@ public:
     static Q_INVOKABLE bool getMobileStorageReadPermission();
     static Q_INVOKABLE bool checkMobileStorageWritePermission();
     static Q_INVOKABLE bool getMobileStorageWritePermission();
+
+    static Q_INVOKABLE bool checkMobileStorageFileSystemPermission();
+    static Q_INVOKABLE bool getMobileStorageFileSystemPermission(const QString &packageName);
 
     static Q_INVOKABLE bool checkMobileLocationPermission();
     static Q_INVOKABLE bool getMobileLocationPermission();
@@ -102,6 +108,7 @@ public:
     static Q_INVOKABLE bool getMobileCameraPermission();
 
     static Q_INVOKABLE bool isMobileGpsEnabled();
+    static Q_INVOKABLE void forceMobileGpsEnabled();
 
     static Q_INVOKABLE QString getMobileDeviceModel();
     static Q_INVOKABLE QString getMobileDeviceSerial();

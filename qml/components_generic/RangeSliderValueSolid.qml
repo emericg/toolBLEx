@@ -7,14 +7,15 @@ import "qrc:/js/UtilsNumber.js" as UtilsNumber
 
 T.RangeSlider {
     id: control
-    implicitWidth: 200
-    implicitHeight: 20
+
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            first.implicitHandleWidth + leftPadding + rightPadding,
+                            second.implicitHandleWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             first.implicitHandleHeight + topPadding + bottomPadding,
+                             second.implicitHandleHeight + topPadding + bottomPadding)
 
     padding: 4
-
-    first.value: 0.25
-    second.value: 0.75
-    snapMode: T.RangeSlider.SnapAlways
 
     // settings
     property int hhh: 18
@@ -27,40 +28,44 @@ T.RangeSlider {
     property string colorFg: Theme.colorPrimary
     property string colorTxt: "white"
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     background: Rectangle {
-        x: control.leftPadding
-        y: control.topPadding + (control.availableHeight / 2) - (height / 2)
-        width: control.availableWidth
+        x: control.leftPadding + (control.horizontal ? 0 : (control.availableWidth - width) / 2)
+        y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : 0)
+        implicitWidth: control.horizontal ? 200 : hhh
+        implicitHeight: control.horizontal ? hhh : 200
+        width: control.horizontal ? control.availableWidth : implicitWidth
+        height: control.horizontal ? implicitHeight : control.availableHeight
 
-        height: hhh
         radius: hhh
-        opacity: 1
         color: control.colorBg
+        scale: control.horizontal && control.mirrored ? -1 : 1
 
         Rectangle {
-            x: (first.handle.x)
-            width: ((second.handle.x + (second.handle.width / 2)) - x)
-            height: parent.height
+            x: control.horizontal ? control.first.handle.x : 0
+            y: control.horizontal ? 0 : control.second.handle.y
+            width: control.horizontal ? control.second.handle.x - control.first.handle.x + control.second.handle.width*0.66 : hhh
+            height: control.horizontal ? hhh : control.first.handle.y - control.second.handle.y + control.second.handle.height*0.66
+
             radius: hhh
             color: control.colorFg
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     first.handle: Rectangle {
-        x: control.leftPadding + first.visualPosition * (control.availableWidth - width)
-        y: control.topPadding + (control.availableHeight / 2) - (height / 2)
+        x: control.leftPadding + (control.horizontal ? control.first.visualPosition * (control.availableWidth - width) : (control.availableWidth - width) / 2)
+        y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.first.visualPosition * (control.availableHeight - height))
         implicitWidth: hhh
         implicitHeight: hhh
-        width: t1.width + 16
 
+        width: control.horizontal ? t1.contentWidth + 16 : hhh
+        height: hhh
         radius: hhh
         color: control.colorFg
         border.color: control.colorFg
-        opacity: first.pressed ? 1 : 1
 
         Text {
             id: t1
@@ -76,26 +81,27 @@ T.RangeSlider {
             textFormat: Text.PlainText
             font.bold: true
             font.pixelSize: isDesktop ? 12 : 13
-            fontSizeMode: Text.VerticalFit
+            fontSizeMode: Text.Fit
+            minimumPixelSize: 10
             color: control.colorTxt
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     second.handle: Rectangle {
-        x: control.leftPadding + second.visualPosition * (control.availableWidth - width)
-        y: control.topPadding + (control.availableHeight / 2) - (height / 2)
+        x: control.leftPadding + (control.horizontal ? control.second.visualPosition * (control.availableWidth - width) : (control.availableWidth - width) / 2)
+        y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.second.visualPosition * (control.availableHeight - height))
         implicitWidth: hhh
         implicitHeight: hhh
-        width: t2.width + 16
 
+        width: control.horizontal ? t2.contentWidth + 16 : hhh
+        height: hhh
         radius: hhh
         color: control.colorFg
         border.color: control.colorFg
-        opacity: second.pressed ? 1 : 1
 
         Text {
             id: t2
@@ -111,12 +117,13 @@ T.RangeSlider {
             textFormat: Text.PlainText
             font.bold: true
             font.pixelSize: isDesktop ? 12 : 13
-            fontSizeMode: Text.VerticalFit
+            fontSizeMode: Text.Fit
+            minimumPixelSize: 10
             color: control.colorTxt
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 }

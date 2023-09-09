@@ -452,7 +452,7 @@ Loader {
                 RoundButtonIcon {
                     width: 24; height: 24;
                     highlightMode: "color"
-                    selected: (settingsManager.scanviewOrientation === Qt.Vertical)
+                    highlighted: (settingsManager.scanviewOrientation === Qt.Vertical)
                     source: "qrc:/assets/icons_bootstrap/layout-bottombar.svg"
                     iconColor: Theme.colorSubText
 
@@ -466,7 +466,7 @@ Loader {
                 RoundButtonIcon {
                     width: 24; height: 24;
                     highlightMode: "color"
-                    selected: (settingsManager.scanviewOrientation === Qt.Horizontal)
+                    highlighted: (settingsManager.scanviewOrientation === Qt.Horizontal)
                     source: "qrc:/assets/icons_bootstrap/layout-sidebar.svg"
                     iconColor: Theme.colorSubText
 

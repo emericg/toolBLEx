@@ -7,7 +7,7 @@ import ThemeEngine 1.0
 Item {
     id: control
     width: 256
-    height: width*0.85
+    height: width
 
     property real from: 0
     property real to: 1
@@ -18,7 +18,7 @@ Item {
     property real arcWidth: 16              // width of the arc (in pixel)
     property real arcOpacity: 1
     property string arcColor: Theme.colorPrimary
-    property string arcCap: "square"
+    property string arcCap: "butt"          // butt, round or square
 
     property bool background: true          // draw a background arc (full arc span)
     property real backgroundOpacity: 1

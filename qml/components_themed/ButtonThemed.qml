@@ -12,8 +12,6 @@ T.Button {
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              implicitContentHeight + topPadding + bottomPadding)
 
-    width: contentItem.contentWidth + leftPadding + rightPadding
-
     leftPadding: 12
     rightPadding: 12
 

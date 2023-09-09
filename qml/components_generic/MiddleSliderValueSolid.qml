@@ -41,9 +41,10 @@ T.Slider {
         scale: control.horizontal && control.mirrored ? -1 : 1
 
         Rectangle {
-            y: control.horizontal ? 0 : handle.y
-            width: control.horizontal ? Math.max(control.position * parent.width, handle.x + handle.width/2) : hhh
-            height: control.horizontal ? hhh : parent.height - handle.y
+            x: control.horizontal ? ((control.visualPosition <= 0.5) ? handle.x : control.availableWidth / 2) : 0
+            y: !control.horizontal ? ((control.visualPosition <= 0.5) ? handle.y : control.availableHeight / 2) : 0
+            width: control.horizontal ? Math.abs((control.width / 2) - handle.x - ((control.visualPosition > 0.5) ? handle.width : 0)) : hhh
+            height: !control.horizontal ? Math.abs((control.height / 2) - handle.y - ((control.visualPosition > 0.5) ? handle.height : 0)) : hhh
 
             radius: hhh
             color: control.colorFg
@@ -88,4 +89,20 @@ T.Slider {
     }
 
     ////////////////
+/*
+    Rectangle {
+        anchors.fill: parent
+        z: -1
+        color: "red"
+        opacity: 0.1
+    }
+    Rectangle {
+       x: control.leftPadding + (control.horizontal ? control.visualPosition * (control.availableWidth - width) : (control.availableWidth - width) / 2)
+       y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.visualPosition * (control.availableHeight - height))
+       width: 4
+       height: 4
+       radius: 4
+       color: "white"
+    }
+*/
 }

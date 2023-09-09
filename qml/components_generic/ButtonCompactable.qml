@@ -1,4 +1,6 @@
 import QtQuick 2.15
+import QtQuick.Controls.impl 2.15
+import QtQuick.Templates 2.15 as T
 
 //import QtGraphicalEffects 1.15 // Qt5
 import Qt5Compat.GraphicalEffects // Qt6
@@ -8,6 +10,7 @@ import "qrc:/js/UtilsNumber.js" as UtilsNumber
 
 Item {
     id: control
+
     implicitWidth: Theme.componentHeight
     implicitHeight: Theme.componentHeight
 
@@ -42,13 +45,13 @@ Item {
     property string tooltipText
     property string tooltipPosition: "bottom"
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     MouseArea {
         id: mouseArea
         anchors.fill: parent
 
-        hoverEnabled: (isDesktop && control.enabled)
+        hoverEnabled: (hoverAnimation && control.enabled)
 
         onClicked: control.clicked()
         onPressed: {
@@ -63,7 +66,7 @@ Item {
         onCanceled: mouseBackground.width = 0
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     Rectangle {
         id: background
@@ -87,7 +90,7 @@ Item {
             Behavior on width { NumberAnimation { duration: 200 } }
         }
 
-        layer.enabled: control.hoverAnimation
+        layer.enabled: true
         layer.effect: OpacityMask {
             maskSource: Rectangle {
                 x: background.x
@@ -99,7 +102,7 @@ Item {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     Row {
         id: contentRow
@@ -158,7 +161,7 @@ Item {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     Loader {
         anchors.fill: control
@@ -173,5 +176,5 @@ Item {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 }

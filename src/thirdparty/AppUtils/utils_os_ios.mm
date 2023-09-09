@@ -42,15 +42,15 @@ void UtilsIOS::screenKeepOn(bool on)
 }
 
 /* ************************************************************************** */
-/*
-    enum ScreenOrientation_iOS {
-        UIInterfaceOrientationUnknown = 0,          // The orientation of the device is unknown.
-        UIInterfaceOrientationPortrait,             // The device is in portrait mode, with the device upright and the Home button on the bottom.
-        UIInterfaceOrientationPortraitUpsideDown,   // The device is in portrait mode but is upside down, with the device upright and the Home button at the top.
-        UIInterfaceOrientationLandscapeLeft,        // The device is in landscape mode, with the device upright and the Home button on the left.
-        UIInterfaceOrientationLandscapeRight,       // The device is in landscape mode, with the device upright and the Home button on the right.
-    };
-*/
+
+// For reference:
+//enum ScreenOrientation_iOS {
+//    UIInterfaceOrientationUnknown = 0,          // The orientation of the device is unknown.
+//    UIInterfaceOrientationPortrait,             // The device is in portrait mode, with the device upright and the Home button on the bottom.
+//    UIInterfaceOrientationPortraitUpsideDown,   // The device is in portrait mode but is upside down, with the device upright and the Home button at the top.
+//    UIInterfaceOrientationLandscapeLeft,        // The device is in landscape mode, with the device upright and the Home button on the left.
+//    UIInterfaceOrientationLandscapeRight,       // The device is in landscape mode, with the device upright and the Home button on the right.
+//};
 
 void UtilsIOS::screenLockOrientation(int orientation)
 {
@@ -71,6 +71,16 @@ void UtilsIOS::screenLockOrientation(int orientation, bool autoRotate)
     else if (orientation == 8) value = [NSNumber numberWithInt:UIInterfaceOrientationLandscapeRight];
 
     [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
+}
+
+/* ************************************************************************** */
+
+void UtilsIOS::vibrate(int ms)
+{
+    UISelectionFeedbackGenerator *generator = [[UISelectionFeedbackGenerator alloc] init];
+    [generator prepare];
+    [generator selectionChanged];
+    generator = nil;
 }
 
 /* ************************************************************************** */

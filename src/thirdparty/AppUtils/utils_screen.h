@@ -68,6 +68,8 @@ class UtilsScreen: public QObject
     double getScreenPar() { return m_screenPar; }
     double getScreenSize_inch() { return m_screenSizeInch; }
 
+    QVariantMap getSafeAreaMargins(QQuickWindow *window); // DEPRECATED
+
     // Actual screen
     const QScreen *m_scr = nullptr;
 
@@ -86,8 +88,6 @@ public:
     static UtilsScreen *getInstance();
 
     Q_INVOKABLE void printScreenInfos();
-
-    Q_INVOKABLE QVariantMap getSafeAreaMargins(QQuickWindow *window);
 
     /*!
      * \brief Screen saver inhibitor.

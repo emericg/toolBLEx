@@ -25,6 +25,8 @@ T.Button {
     property string colorHighlighted: Theme.colorPrimary
     property string colorHovered: Theme.colorHeader
 
+    ////////////////
+
     background: Rectangle {
         implicitWidth: 80
         implicitHeight: Theme.componentHeight
@@ -42,6 +44,8 @@ T.Button {
         }
     }
 
+    ////////////////
+
     contentItem: Text {
         text: control.text
         textFormat: Text.PlainText
@@ -55,4 +59,6 @@ T.Button {
         opacity: control.enabled ? 1 : 0.66
         color: control.highlighted ? "white" : Theme.colorText
     }
+
+    ////////////////
 }

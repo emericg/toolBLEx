@@ -58,7 +58,7 @@ Rectangle {
                 height: 48
                 sourceSize: 30
 
-                background: false
+                backgroundVisible: false
                 backgroundColor: Theme.colorHeaderHighlight
                 opacity: 1
                 highlightMode: "off"
@@ -83,10 +83,10 @@ Rectangle {
                             "qrc:/assets/icons_material/baseline-play_arrow-24px.svg" :
                             "qrc:/assets/icons_material/baseline-play_arrow-24px.svg"
 
-                background: {
-                    if (appContent.state === "Scanner" && deviceManager.scanning) return 1
-                    if (appContent.state === "Advertiser" && deviceManager.advertising) return 1
-                    if (appContent.state === "Ubertooth" && ubertooth.running) return 1
+                backgroundVisible: {
+                    if (appContent.state === "Scanner" && deviceManager.scanning) return true
+                    if (appContent.state === "Advertiser" && deviceManager.advertising) return true
+                    if (appContent.state === "Ubertooth" && ubertooth.running) return true
                     return false
                 }
                 backgroundColor: Theme.colorHeaderHighlight

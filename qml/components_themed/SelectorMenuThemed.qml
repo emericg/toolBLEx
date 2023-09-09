@@ -17,8 +17,7 @@ Item {
 
     ////////////////
 
-    Rectangle {
-        id: background
+    Rectangle { // background
         anchors.fill: parent
         radius: Theme.componentRadius
         color: Theme.colorComponentBackground
@@ -34,7 +33,8 @@ Item {
         Repeater {
             model: selectorMenu.model
             delegate: SelectorMenuThemedItem {
-                selected: (selectorMenu.currentSelection === idx)
+                height: parent.height
+                highlighted: (selectorMenu.currentSelection === idx)
                 index: idx ?? 0
                 text: txt ?? ""
                 source: src ?? ""
@@ -44,8 +44,7 @@ Item {
         }
     }
 
-    Rectangle {
-        id: foreground
+    Rectangle { // foreground border
         anchors.fill: parent
         radius: Theme.componentRadius
 

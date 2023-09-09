@@ -39,7 +39,7 @@ T.Button {
     // animation
     property bool hoverAnimation: isDesktop
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     MouseArea {
         id: mousearea
@@ -73,7 +73,7 @@ T.Button {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     background: Rectangle {
         implicitWidth: 80
@@ -115,7 +115,7 @@ T.Button {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     contentItem: RowLayout {
         spacing: control.spacing
@@ -131,7 +131,7 @@ T.Button {
             Layout.maximumHeight: control.sourceSize
             Layout.alignment: Qt.AlignVCenter
 
-            opacity: enabled ? 1.0 : 0.66
+            opacity: enabled ? (control.down && !control.hoverAnimation ? 0.8 : 1.0) : 0.66
             color: control.fullColor ? control.fulltextColor : control.primaryColor
         }
         Text {
@@ -144,7 +144,6 @@ T.Button {
 
             font: control.font
             elide: Text.ElideMiddle
-            //wrapMode: Text.WordWrap
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
 
@@ -153,5 +152,5 @@ T.Button {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 }

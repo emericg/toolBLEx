@@ -39,7 +39,7 @@ T.Button {
     // animation
     property bool hoverAnimation: isDesktop
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     MouseArea {
         id: mousearea
@@ -73,7 +73,7 @@ T.Button {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     background: Rectangle {
         implicitWidth: 80
@@ -115,7 +115,7 @@ T.Button {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     contentItem: Item {
         Row {
@@ -131,7 +131,7 @@ T.Button {
                 width: control.sourceSize
                 height: control.sourceSize
 
-                opacity: enabled ? 1.0 : 0.66
+                opacity: enabled ? (control.down && !control.hoverAnimation ? 0.8 : 1.0) : 0.66
                 color: control.fullColor ? control.fulltextColor : control.primaryColor
             }
 
@@ -142,11 +142,12 @@ T.Button {
                 text: control.text
                 textFormat: Text.PlainText
                 font: control.font
+
                 opacity: enabled ? (control.down && !control.hoverAnimation ? 0.8 : 1.0) : 0.66
                 color: control.fullColor ? control.fulltextColor : control.primaryColor
             }
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 }

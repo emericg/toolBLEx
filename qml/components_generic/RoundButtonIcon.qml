@@ -1,28 +1,25 @@
 import QtQuick 2.15
+import QtQuick.Controls.impl 2.15
+import QtQuick.Templates 2.15 as T
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
 
-Item {
+T.Button {
     id: control
+
     implicitWidth: Theme.componentHeight
     implicitHeight: Theme.componentHeight
 
+    focusPolicy: Qt.NoFocus
+
     property url source
     property int sourceSize: UtilsNumber.alignTo(height * 0.666, 2)
-
-    // actions
-    signal clicked()
-    signal pressed()
-    signal pressAndHold()
-
-    // states
-    property bool selected: false
+    property int sourceRotation: 0
 
     // settings
-    property bool border: false
-    property bool background: false
-    property int rotation: 0
+    property bool borderVisible: false
+    property bool backgroundVisible: false
     property string highlightMode: "circle" // available: border, circle, color, both (circle+color), off
 
     // colors
@@ -39,99 +36,91 @@ Item {
     property string tooltipText
     property string tooltipPosition: "bottom"
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
-    MouseArea {
-        id: mouseArea
-        anchors.fill: control
+    background: Rectangle {
+        implicitWidth: Theme.componentHeight
+        implicitHeight: Theme.componentHeight
+        radius: Theme.componentHeight
 
-        hoverEnabled: (isDesktop && control.enabled)
-        propagateComposedEvents: false
-
-        onClicked: control.clicked()
-        onPressed: control.pressed()
-        onPressAndHold: control.pressAndHold()
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    Rectangle { // background
-        anchors.fill: control
-        radius: width
-
-        visible: (control.highlightMode === "circle" || control.highlightMode === "both" || control.background)
+        visible: (control.highlightMode === "circle" || control.highlightMode === "both" || control.backgroundVisible)
         color: control.backgroundColor
 
         opacity: {
-            if (mouseArea.containsMouse) {
+            if (control.hovered) {
                return (control.highlightMode === "circle" ||
                        control.highlightMode === "both" ||
-                       control.background) ? 1 : 0.75
+                       control.backgroundVisible) ? 1 : 0.75
             } else if (control.highlightMode === "off") {
-                return control.background ? 1 : 0
+                return control.backgroundVisible ? 1 : 0
             } else {
-                return control.background ? 0.75 : 0
+                return control.backgroundVisible ? 0.75 : 0
             }
         }
         Behavior on opacity { NumberAnimation { duration: 333 } }
+
+        Rectangle { // border
+            anchors.fill: parent
+            radius: width
+
+            visible: control.borderVisible
+            color: "transparent"
+            border.width: Theme.componentBorderWidth
+            border.color: control.borderColor
+        }
     }
-    Rectangle { // border
-        anchors.fill: control
-        radius: width
 
-        visible: control.border
-        color: "transparent"
-        border.width: Theme.componentBorderWidth
-        border.color: control.borderColor
-    }
+    ////////////////
 
-    ////////////////////////////////////////////////////////////////////////////
+    contentItem: Item {
+        IconSvg {
+            anchors.centerIn: parent
 
-    IconSvg { // contentItem
-        width: control.sourceSize
-        height: control.sourceSize
-        anchors.centerIn: control
+            width: control.sourceSize
+            height: control.sourceSize
 
-        rotation: control.rotation
-        opacity: control.enabled ? 1.0 : 0.33
-        Behavior on opacity { NumberAnimation { duration: 333 } }
+            rotation: control.sourceRotation
+            opacity: control.enabled ? 1.0 : 0.33
+            Behavior on opacity { NumberAnimation { duration: 333 } }
 
-        source: control.source
-        color: {
-            if ((control.selected || mouseArea.containsMouse) && (control.highlightMode === "color" || control.highlightMode === "both")) {
-                return control.highlightColor
+            source: control.source
+            color: {
+                if ((control.highlighted || control.hovered || control.pressed) &&
+                    (control.highlightMode === "color" || control.highlightMode === "both")) {
+                    return control.highlightColor
+                }
+                return control.iconColor
             }
-            return control.iconColor
-        }
 
-        SequentialAnimation on opacity {
-            running: (control.animation === "fade" && control.animationRunning)
-            alwaysRunToEnd: true
-            loops: Animation.Infinite
+            SequentialAnimation on opacity {
+                running: (control.animation === "fade" && control.animationRunning)
+                alwaysRunToEnd: true
+                loops: Animation.Infinite
 
-            PropertyAnimation { to: 0.33; duration: 750; }
-            PropertyAnimation { to: 1; duration: 750; }
-        }
-        NumberAnimation on rotation {
-            running: (control.animation === "rotate" && control.animationRunning)
-            alwaysRunToEnd: true
-            loops: Animation.Infinite
+                PropertyAnimation { to: 0.33; duration: 750; }
+                PropertyAnimation { to: 1; duration: 750; }
+            }
+            NumberAnimation on rotation {
+                running: (control.animation === "rotate" && control.animationRunning)
+                alwaysRunToEnd: true
+                loops: Animation.Infinite
 
-            duration: 1500
-            from: 0
-            to: 360
-            easing.type: Easing.Linear
+                duration: 1500
+                from: 0
+                to: 360
+                easing.type: Easing.Linear
+            }
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     Loader {
         anchors.fill: control
         active: control.tooltipText
 
         sourceComponent: ToolTipFlat {
-            visible: mouseArea.containsMouse
+            visible: control.hovered
             text: control.tooltipText
             textColor: control.iconColor
             tooltipPosition: control.tooltipPosition
@@ -139,5 +128,5 @@ Item {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 }

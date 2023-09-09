@@ -262,7 +262,8 @@ Item {
                     textFormat: Text.PlainText
                     font.bold: true
                     font.pixelSize: isDesktop ? 12 : 13
-                    fontSizeMode: Text.VerticalFit
+                    fontSizeMode: Text.Fit
+                    minimumPixelSize: 10
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -302,4 +303,6 @@ Item {
 
         ////////////////
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

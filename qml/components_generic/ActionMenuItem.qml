@@ -1,83 +1,92 @@
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
+import QtQuick.Controls.impl 2.15
+import QtQuick.Templates 2.15 as T
+
+//import QtGraphicalEffects 1.15 // Qt5
+import Qt5Compat.GraphicalEffects // Qt6
 
 import ThemeEngine 1.0
 
-Item {
-    id: actionMenuItem
+T.Button {
+    id: control
+
     anchors.left: parent.left
     anchors.leftMargin: Theme.componentBorderWidth
     anchors.right: parent.right
     anchors.rightMargin: Theme.componentBorderWidth
+
+    leftInset: Theme.componentMargin/2
+    rightInset: Theme.componentMargin/2
+    rightPadding: Theme.componentMargin
+    leftPadding: Theme.componentMargin
+
     height: 36
 
-    // actions
-    signal clicked()
-    signal pressAndHold()
+    focusPolicy: Qt.NoFocus
 
     // settings
     property int index
-    property string text
+    //property string text
     property url source
     property int sourceSize: 20
     property int layoutDirection: Qt.RightToLeft
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
-    MouseArea {
-        anchors.fill: parent
-        hoverEnabled: (isDesktop && enabled)
+    background: Item {
+        implicitHeight: 36
 
-        onClicked: {
-            background.opacity = 1
-            actionMenuItem.clicked()
+        Rectangle {
+            anchors.fill: parent
+            radius: Theme.componentMargin/2
+
+            color: Theme.colorForeground
+            //Behavior on color { ColorAnimation { duration: 133 } }
+
+            opacity: control.hovered ? 1 : 0
+            Behavior on opacity { OpacityAnimator { duration: 233 } }
         }
-        onPressAndHold: {
-            background.opacity = 1
-            actionMenuItem.pressAndHold()
+
+        RippleThemed {
+            anchors.fill: parent
+            clip: visible
+            pressed: control.down
+            active: enabled && control.down
+            color: Qt.rgba(Theme.colorForeground.r, Theme.colorForeground.g, Theme.colorForeground.b, 0.66)
         }
 
-        onEntered: background.opacity = 1
-        onExited: background.opacity = 0
-        onCanceled: background.opacity = 0
+        layer.enabled: true
+        layer.effect: OpacityMask {
+            maskSource: Rectangle {
+                x: background.x
+                y: background.y
+                width: background.width
+                height: background.height
+                radius: Theme.componentRadius
+            }
+        }
     }
 
-    Rectangle {
-        id: background
-        anchors.fill: parent
-        anchors.leftMargin: Theme.componentMargin/2
-        anchors.rightMargin: Theme.componentMargin/2
+    ////////////////
 
-        radius: Theme.componentMargin/2
-        opacity: 0
-        color: Theme.colorForeground
-        Behavior on opacity { OpacityAnimator { duration: 333 } }
-        //Behavior on color { ColorAnimation { duration: 133 } }
-    }
-
-    RowLayout {
-        anchors.fill: parent
-        anchors.leftMargin: Theme.componentMargin
-        anchors.rightMargin: Theme.componentMargin
-
+    contentItem: RowLayout {
         spacing: Theme.componentMargin/2
-        layoutDirection: actionMenuItem.layoutDirection
+        layoutDirection: control.layoutDirection
 
         IconSvg {
-            id: iButton
-            Layout.preferredWidth: actionMenuItem.sourceSize
-            Layout.preferredHeight: actionMenuItem.sourceSize
+            Layout.preferredWidth: control.sourceSize
+            Layout.preferredHeight: control.sourceSize
 
-            source: actionMenuItem.source
+            source: control.source
             color: Theme.colorIcon
         }
 
         Text {
-            id: tButton
             Layout.fillWidth: true
-            Layout.preferredHeight: actionMenuItem.sourceSize
+            Layout.preferredHeight: control.sourceSize
 
-            text: actionMenuItem.text
+            text: control.text
             textFormat: Text.PlainText
             font.bold: false
             font.pixelSize: Theme.componentFontSize
@@ -88,5 +97,5 @@ Item {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 }

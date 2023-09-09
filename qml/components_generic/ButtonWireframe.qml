@@ -32,11 +32,11 @@ T.Button {
     // animation
     property bool hoverAnimation: isDesktop
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     MouseArea {
         id: mousearea
-        anchors.fill: parent
+        anchors.fill: control
 
         enabled: control.hoverAnimation
         hoverEnabled: control.hoverAnimation
@@ -65,7 +65,7 @@ T.Button {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     background: Rectangle {
         implicitWidth: 80
@@ -106,7 +106,7 @@ T.Button {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     contentItem: Text {
         text: control.text
@@ -114,11 +114,12 @@ T.Button {
 
         font: control.font
         elide: Text.ElideMiddle
-        //wrapMode: Text.WordWrap
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
 
         opacity: enabled ? (control.down && !control.hoverAnimation ? 0.8 : 1.0) : 0.66
         color: control.fullColor ? control.fulltextColor : control.primaryColor
     }
+
+    ////////////////
 }
