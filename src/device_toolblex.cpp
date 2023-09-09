@@ -172,6 +172,41 @@ QString DeviceToolBLEx::getName_display() const
     return prettyname;
 }
 
+QString DeviceToolBLEx::getAddr_display() const
+{
+    QString prettyaddr;
+
+#if defined(Q_OS_MACOS) || defined(Q_OS_IOS)
+    prettyaddr = m_bleDevice.deviceUuid().toString();
+#else
+    prettyaddr = m_bleDevice.address().toString();
+#endif
+
+    return prettyaddr;
+}
+
+QString DeviceToolBLEx::getName_export() const
+{
+    QString prettyname = m_deviceName;
+    prettyname.replace('\n', "_");
+    prettyname.replace(' ', "_");
+
+    return prettyname;
+}
+
+QString DeviceToolBLEx::getAddr_export() const
+{
+    QString prettyaddr;
+
+#if defined(Q_OS_MACOS) || defined(Q_OS_IOS)
+    prettyaddr = m_bleDevice.deviceUuid().toString();
+#else
+    prettyaddr = m_bleDevice.address().toString();
+#endif
+
+    return prettyaddr;
+}
+
 void DeviceToolBLEx::setDeviceClass(const int major, const int minor, const int service)
 {
     if (m_major != major || m_minor != minor || m_service != service)
@@ -1033,64 +1068,67 @@ void DeviceToolBLEx::restoreServiceCache()
 
 /* ************************************************************************** */
 
-QString DeviceToolBLEx::getExportPath() const
+QString DeviceToolBLEx::getExportDirectory() const
 {
     return QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/toolBLEx";
 }
 
-bool DeviceToolBLEx::exportDeviceInfo(bool withAdvertisements, bool withServices, bool withValues)
+bool DeviceToolBLEx::exportDeviceInfo(const QString &exportPath,
+                                      bool withAdvertisements, bool withServices, bool withValues)
 {
     bool status = false;
 
-    QString txt;
+    // Create export string ////////////////////////////////////////////////////
+
+    QString str;
     QString endl = QChar('\n');
 
-    txt += "Device Name: " + m_deviceName + endl;
-    if (hasAddressMAC()) txt += "Device MAC: " + m_deviceAddress + endl;
-    if (m_deviceManufacturer.length() > 0) txt += "Device MAC manufacturer: " + m_deviceManufacturer + endl;
-    txt += endl;
+    str += "Device Name: " + m_deviceName + endl;
+    if (hasAddressMAC()) str += "Device MAC: " + m_deviceAddress + endl;
+    if (m_deviceManufacturer.length() > 0) str += "Device MAC manufacturer: " + m_deviceManufacturer + endl;
+    str += endl;
 
     // Advertisements
     if (withAdvertisements)
     {
-        txt += "Advertising interval: " + QString::number(m_advertisementInterval) + "ms" + endl;
+        str += "Advertising interval: " + QString::number(m_advertisementInterval) + "ms" + endl;
 
         if (m_advertisementData.size() == 0)
         {
-            txt += "> No advertisement packets." + endl;
-            txt += endl;
+            str += "> No advertisement packets." + endl;
+            str += endl;
         }
         else
         {
-            txt += "Advertisement packets:" + endl;
+            str += "Advertisement packets:" + endl;
 
             for (auto adv: m_advertisementData)
             {
                 if (adv->getMode() == DeviceUtils::BLE_ADV_MANUFACTURERDATA)
                 {
-                    txt += "> MFD > ";
-                    txt += adv->getTimestamp().toString("hh:mm:ss.zzz") + " > ";
-                    txt += "0x" + adv->getUUID_str() + " (" + adv->getUUID_vendor() + ")" + " > ";
-                    txt += "(" + QString::number(adv->getDataSize()).rightJustified(3, ' ') + " bytes) ";
-                    txt += "0x" + adv->getDataHex();
+                    str += "> MFD > ";
+                    str += adv->getTimestamp().toString("hh:mm:ss.zzz") + " > ";
+                    str += "0x" + adv->getUUID_str() + " (" + adv->getUUID_vendor() + ")" + " > ";
+                    str += "(" + QString::number(adv->getDataSize()).rightJustified(3, ' ') + " bytes) ";
+                    str += "0x" + adv->getDataHex();
                 }
                 else if (adv->getMode() == DeviceUtils::BLE_ADV_SERVICEDATA)
                 {
-                    txt += "> SVD > ";
-                    txt += adv->getTimestamp().toString("hh:mm:ss.zzz") + " > ";
-                    txt += "0x" + adv->getUUID_str() + " > ";
-                    txt += "(" + QString::number(adv->getDataSize()).rightJustified(3, ' ') + " bytes) ";
-                    txt += "0x" + adv->getDataHex();
+                    str += "> SVD > ";
+                    str += adv->getTimestamp().toString("hh:mm:ss.zzz") + " > ";
+                    str += "0x" + adv->getUUID_str() + " > ";
+                    str += "(" + QString::number(adv->getDataSize()).rightJustified(3, ' ') + " bytes) ";
+                    str += "0x" + adv->getDataHex();
                 }
                 else
                 {
-                    txt += "> ??? > ";
+                    str += "> ??? > ";
                 }
 
-                txt += endl;
+                str += endl;
             }
 
-            txt += endl;
+            str += endl;
         }
     }
 
@@ -1102,53 +1140,61 @@ bool DeviceToolBLEx::exportDeviceInfo(bool withAdvertisements, bool withServices
             ServiceInfo *srv = qobject_cast<ServiceInfo *>(s);
             if (srv)
             {
-                txt += "Service Name: \"" + srv->getName() + "\"" + endl;
-                txt += "Service UUID: " + srv->getUuidFull() + endl;
+                str += "Service Name: \"" + srv->getName() + "\"" + endl;
+                str += "Service UUID: " + srv->getUuidFull() + endl;
 
                 for (auto c: srv->getCharacteristicsInfos())
                 {
                     CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
                     if (cst)
                     {
-                        txt += "Characteristic Name: " + cst->getName();
-                        txt += " - UUID: " + cst->getUuidFull();
-                        txt += " - Properties: " + cst->getProperty();
+                        str += "Characteristic Name: " + cst->getName();
+                        str += " - UUID: " + cst->getUuidFull();
+                        str += " - Properties: " + cst->getProperty();
                         //exp += " - Handle: " + cst->getHandle();
 
                         if (withValues)
                         {
                             if (cst->getValue() == "<none>")
-                                txt += " - Value: <none>";
+                                str += " - Value: <none>";
                             else
-                                txt += " - Value: 0x" + cst->getValueHex();
+                                str += " - Value: 0x" + cst->getValueHex();
                         }
 
-                        txt += endl;
+                        str += endl;
                     }
                 }
 
-                txt += endl;
+                str += endl;
             }
         }
     }
 
-    // DEBUG
-    //qDebug() << "DeviceToolBLEx::exportDeviceInfo()" << txt;
+    // Save export string to file //////////////////////////////////////////////
 
-    // Get home directory path
-    QString exportDirectoryPath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/toolBLEx";
-    QDir exportDirectory(exportDirectoryPath);
+    QString exportFilePath;
+
+    if (exportPath.isEmpty())
+    {
+        // Generate a file path
+        exportFilePath = getExportDirectory();
+        exportFilePath += "/" + getName_display() + "-" + getAddr_display() + ".txt";
+    }
+    else
+    {
+        // Use file path from UI
+        exportFilePath = exportPath;
+    }
+
+    QDir exportDirectory = QFileInfo(exportFilePath).dir();
     if (!exportDirectory.exists())
     {
-        exportDirectory.mkpath(exportDirectoryPath);
+        exportDirectory.mkpath(exportDirectory.path());
     }
 
     if (exportDirectory.exists())
     {
-        // Finish preping export path
-        QString exportFilePath = "/" + m_deviceName + ".txt";
-        exportFilePath.replace(" ", "_");
-        exportFilePath = exportDirectoryPath + exportFilePath;
+        qDebug() << "DeviceToolBLEx::getExportDirectory(" << exportFilePath << ")";
 
         // Open file and save content
         QFile efile(exportFilePath);
@@ -1156,7 +1202,7 @@ bool DeviceToolBLEx::exportDeviceInfo(bool withAdvertisements, bool withServices
         {
             QTextStream eout(&efile);
             eout.setEncoding(QStringConverter::Utf8);
-            eout << txt;
+            eout << str;
 
             status = true;
             efile.close();

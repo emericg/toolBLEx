@@ -45,6 +45,9 @@ class DeviceToolBLEx: public Device
     Q_OBJECT
 
     Q_PROPERTY(QString deviceName_display READ getName_display NOTIFY sensorUpdated)
+    Q_PROPERTY(QString deviceAddr_display READ getAddr_display NOTIFY sensorUpdated)
+    Q_PROPERTY(QString deviceName_export READ getName_export NOTIFY sensorUpdated)
+    Q_PROPERTY(QString deviceAddr_export READ getAddr_export NOTIFY sensorUpdated)
 
     Q_PROPERTY(bool isBeacon READ isBeacon NOTIFY boolChanged)
     Q_PROPERTY(bool isBlacklisted READ isBlacklisted NOTIFY boolChanged)
@@ -195,6 +198,9 @@ public:
 
     // toolBLEx
     QString getName_display() const;
+    QString getAddr_display() const;
+    QString getName_export() const;
+    QString getAddr_export() const;
 
     QVariant getServices() const { return QVariant::fromValue(m_services); }
     int getServicesCount() const { return m_services.count(); }
@@ -275,8 +281,11 @@ public:
     Q_INVOKABLE bool saveServiceCache();
     Q_INVOKABLE void restoreServiceCache();
 
-    Q_INVOKABLE QString getExportPath() const;
-    Q_INVOKABLE bool exportDeviceInfo(bool withAdvertisements = true, bool withServices = true, bool withValues = true);
+    Q_INVOKABLE QString getExportDirectory() const;
+    Q_INVOKABLE bool exportDeviceInfo(const QString &exportPath,
+                                      bool withAdvertisements = true,
+                                      bool withServices = true,
+                                      bool withValues = true);
 };
 
 /* ************************************************************************** */

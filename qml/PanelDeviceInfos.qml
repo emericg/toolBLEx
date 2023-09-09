@@ -2,12 +2,13 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
-import Qt.labs.platform
+import QtCore
+import QtQuick.Dialogs
 
 import ThemeEngine
 import DeviceUtils
-
 import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
+import "qrc:/js/UtilsPath.js" as UtilsPath
 
 Flickable {
     id: panelDeviceInfos
@@ -464,17 +465,42 @@ Flickable {
                         source: "qrc:/assets/icons_material/baseline-save-24px.svg"
 
                         onClicked: {
+                            // (file selection)
+                            fileDialog.selectedFile = fileDialog.currentFolder +
+                                    "/" + selectedDevice.deviceName_export +
+                                    "-" + selectedDevice.deviceAddr_export + ".txt"
+                            fileDialog.open()
+                            return
+/*
+                            // (auto)
                             if (exportButton.text === qsTr("Exported")) {
-                                utilsApp.openWith(selectedDevice.getExportPath())
+                                utilsApp.openWith(selectedDevice.getExportDirectory())
                                 return
                             }
-
                             if (selectedDevice.exportDeviceInfo()) {
                                 exportButton.text = qsTr("Exported")
                                 exportButton.primaryColor = Theme.colorSuccess
                             } else {
                                 exportButton.text = qsTr("Export error")
                                 exportButton.primaryColor = Theme.colorWarning
+                            }
+*/
+                        }
+
+                        FileDialog {
+                            id: fileDialog
+
+                            fileMode: FileDialog.SaveFile
+                            currentFolder: StandardPaths.writableLocation(StandardPaths.DocumentsLocation)
+
+                            onAccepted: {
+                                if (selectedDevice.exportDeviceInfo(UtilsPath.cleanUrl(currentFile))) {
+                                    exportButton.text = qsTr("Exported")
+                                    exportButton.primaryColor = Theme.colorSuccess
+                                } else {
+                                    exportButton.text = qsTr("Export error")
+                                    exportButton.primaryColor = Theme.colorWarning
+                                }
                             }
                         }
                     }
@@ -550,8 +576,8 @@ Flickable {
 
                         ColorDialog {
                             id: colorDialog
-                            currentColor: selectedDevice ? selectedDevice.userColor : Theme.colorIcon
-                            onAccepted: selectedDevice.userColor = colorDialog.color
+                            selectedColor: selectedDevice ? selectedDevice.userColor : Theme.colorIcon
+                            onAccepted: selectedDevice.userColor = colorDialog.selectedColor
                         }
                     }
 /*
@@ -566,8 +592,8 @@ Flickable {
 
                         ColorDialog {
                             id: colorDialog
-                            currentColor: selectedDevice.userColor
-                            onAccepted: selectedDevice.userColor = colorDialog.color
+                            selectedColor: selectedDevice.userColor
+                            onAccepted: selectedDevice.userColor = colorDialog.selectedColor
                         }
 
                         MouseArea {

@@ -1,11 +1,14 @@
 import QtQuick
 import QtQuick.Controls
 
+import QtCore
+import QtQuick.Dialogs
+
 import ThemeEngine
 import DeviceUtils
-
 import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
 import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
+import "qrc:/js/UtilsPath.js" as UtilsPath
 
 Item {
     id: panelDeviceService
@@ -210,8 +213,9 @@ Item {
             fullColor: true
             primaryColor: Theme.colorLightGrey
 
-            visible: (selectedDevice && selectedDevice.servicesCount > 1)
-            enabled: (selectedDevice && selectedDevice.servicesScanMode > 1)
+            visible: (selectedDevice &&
+                      selectedDevice.servicesCount > 1 &&
+                      selectedDevice && selectedDevice.servicesScanMode > 1)
 
             text: qsTr("Cache")
             source: "qrc:/assets/icons_material/baseline-save-24px.svg"
@@ -227,23 +231,48 @@ Item {
             primaryColor: Theme.colorGrey
 
             visible: (selectedDevice && selectedDevice.servicesCount > 0)
-            enabled: (selectedDevice && selectedDevice.servicesScanMode > 1)
+            //enabled: (selectedDevice && selectedDevice.servicesScanMode > 1)
 
             text: qsTr("Export")
             source: "qrc:/assets/icons_material/baseline-save-24px.svg"
 
             onClicked: {
+                // (file selection)
+                fileDialog.selectedFile = fileDialog.currentFolder +
+                        "/" + selectedDevice.deviceName_export +
+                        "-" + selectedDevice.deviceAddr_export + ".txt"
+                fileDialog.open()
+                return
+/*
+                // (auto)
                 if (exportButton.text === qsTr("Exported")) {
-                    utilsApp.openWith(selectedDevice.getExportPath())
+                    utilsApp.openWith(selectedDevice.getExportDirectory())
                     return
                 }
-
                 if (selectedDevice.exportDeviceInfo()) {
                     exportButton.text = qsTr("Exported")
                     exportButton.primaryColor = Theme.colorSuccess
                 } else {
                     exportButton.text = qsTr("Export error")
                     exportButton.primaryColor = Theme.colorWarning
+                }
+*/
+            }
+
+            FileDialog {
+                id: fileDialog
+
+                fileMode: FileDialog.SaveFile
+                currentFolder: StandardPaths.writableLocation(StandardPaths.DocumentsLocation)
+
+                onAccepted: {
+                    if (selectedDevice.exportDeviceInfo(UtilsPath.cleanUrl(currentFile))) {
+                        exportButton.text = qsTr("Exported")
+                        exportButton.primaryColor = Theme.colorSuccess
+                    } else {
+                        exportButton.text = qsTr("Export error")
+                        exportButton.primaryColor = Theme.colorWarning
+                    }
                 }
             }
         }
