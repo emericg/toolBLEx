@@ -82,7 +82,9 @@ DeviceManager::DeviceManager(bool daemon)
             }
         }
 
-        // Load saved devices
+        // Load cached devices
+        countDeviceCached();
+
         QSqlQuery queryDevices;
         queryDevices.exec("SELECT deviceAddr, deviceName FROM devices");
         while (queryDevices.next())
@@ -927,7 +929,12 @@ void DeviceManager::cacheDevice(const QString &addr)
                     cacheDevice.bindValue(":deviceClass", deviceClass);
                     cacheDevice.bindValue(":firstSeen", dd->getFirstSeen());
 
-                    if (cacheDevice.exec() == false)
+                    if (cacheDevice.exec())
+                    {
+                        m_devicesCachedCount++;
+                        Q_EMIT devicesCacheUpdated();
+                    }
+                    else
                     {
                         qWarning() << "> cacheDevice.exec() ERROR"
                                    << cacheDevice.lastError().type() << ":" << cacheDevice.lastError().text();
@@ -953,7 +960,12 @@ void DeviceManager::uncacheDevice(const QString &addr)
                 uncacheDevice.prepare("DELETE FROM devices WHERE deviceAddr = :deviceAddr");
                 uncacheDevice.bindValue(":deviceAddr", addr);
 
-                if (uncacheDevice.exec() == false)
+                if (uncacheDevice.exec())
+                {
+                    m_devicesCachedCount--;
+                    Q_EMIT devicesCacheUpdated();
+                }
+                else
                 {
                     qWarning() << "> uncacheDevice.exec() ERROR"
                                << uncacheDevice.lastError().type() << ":" << uncacheDevice.lastError().text();
@@ -1000,12 +1012,42 @@ void DeviceManager::clearDeviceCache()
     {
         QSqlQuery clearDeviceCache;
         clearDeviceCache.prepare("DELETE FROM devices");
-        if (clearDeviceCache.exec() == false)
+        if (clearDeviceCache.exec())
+        {
+            m_devicesCachedCount = 0;
+            Q_EMIT devicesCacheUpdated();
+        }
+        else
         {
             qWarning() << "> clearDeviceCache.exec() ERROR"
                        << clearDeviceCache.lastError().type() << ":" << clearDeviceCache.lastError().text();
         }
     }
+}
+
+int DeviceManager::countDeviceCached()
+{
+    // Count device cached
+    if (m_dbInternal || m_dbExternal)
+    {
+        QSqlQuery countDeviceCached;
+        countDeviceCached.prepare("SELECT COUNT(*) FROM devices");
+        if (countDeviceCached.exec() == false)
+        {
+            qWarning() << "> countDeviceCached.exec() ERROR"
+                       << countDeviceCached.lastError().type() << ":" << countDeviceCached.lastError().text();
+        }
+        else
+        {
+            if (countDeviceCached.first())
+            {
+                m_devicesCachedCount = countDeviceCached.value(0).toInt();
+                Q_EMIT devicesCacheUpdated();
+            }
+        }
+    }
+
+    return m_devicesCachedCount;
 }
 
 /* ************************************************************************** */

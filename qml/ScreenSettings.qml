@@ -673,20 +673,32 @@ Loader {
                             height: 48
                             color: Theme.colorForeground
 
-                            Text {
+                            visible: (deviceManager.deviceCached > 0)
+
+                            Row {
                                 anchors.left: parent.left
                                 anchors.leftMargin: 20
                                 anchors.right: parent.right
                                 anchors.rightMargin: 64
                                 anchors.verticalCenter: parent.verticalCenter
+                                spacing: Theme.componentMargin
 
-                                text: qsTr("Clear device cache")
-                                textFormat: Text.PlainText
-                                font.pixelSize: Theme.fontSizeContent
-                                font.bold: false
-                                color: Theme.colorText
-                                wrapMode: Text.WordWrap
-                                verticalAlignment: Text.AlignVCenter
+                                Text {
+                                    anchors.verticalCenter: parent.verticalCenter
+
+                                    text: qsTr("Clear device cache")
+                                    textFormat: Text.PlainText
+                                    font.pixelSize: Theme.fontSizeContent
+                                    color: Theme.colorText
+                                }
+                                Text {
+                                    anchors.verticalCenter: parent.verticalCenter
+
+                                    text: qsTr("%1 device(s)").arg(deviceManager.deviceCached)
+                                    textFormat: Text.PlainText
+                                    font.pixelSize: Theme.fontSizeContent
+                                    color: Theme.colorSubText
+                                }
                             }
 
                             ButtonWireframe {

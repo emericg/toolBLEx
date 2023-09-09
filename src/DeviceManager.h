@@ -55,6 +55,8 @@ class DeviceManager: public QObject
     Q_PROPERTY(DeviceFilter *devicesList READ getDevicesFiltered NOTIFY devicesListUpdated)
     Q_PROPERTY(int deviceCount READ getDeviceCount NOTIFY devicesListUpdated)
 
+    Q_PROPERTY(int deviceCached READ getDeviceCached NOTIFY devicesCacheUpdated)
+
     Q_PROPERTY(bool listening READ isListening NOTIFY listeningChanged)
     Q_PROPERTY(bool scanning READ isScanning NOTIFY scanningChanged)
     Q_PROPERTY(bool scanningPaused READ isScanningPaused NOTIFY scanningChanged)
@@ -87,6 +89,8 @@ class DeviceManager: public QObject
     QList <QObject *> m_bluetoothAdapters;
 
     QList <QString> m_devices_blacklist;
+
+    int m_devicesCachedCount = 0;
 
     DeviceModel *m_devices_model = nullptr;
     DeviceFilter *m_devices_filter = nullptr;
@@ -146,6 +150,7 @@ Q_SIGNALS:
     void adaptersListUpdated();
 
     void devicesListUpdated();
+    void devicesCacheUpdated();
     void devicesBlacklistUpdated();
 
     void listeningChanged();
@@ -214,7 +219,10 @@ public:
     void uncacheDevice(const QString &addr);
     bool isDeviceCached(const QString &addr);
     Q_INVOKABLE void clearDeviceCache();
+    Q_INVOKABLE int countDeviceCached();
+    int getDeviceCached() const { return m_devicesCachedCount; }
 
+    // Sorting and filtering
     Q_INVOKABLE void orderby_default();
     Q_INVOKABLE void orderby_address();
     Q_INVOKABLE void orderby_name();
