@@ -503,10 +503,10 @@ void DeviceToolBLEx::askForWrite(const QString &uuid, const QString &value, cons
     }
 }
 
+/* ************************************************************************** */
+
 QByteArray DeviceToolBLEx::askForData_qba(const QString &value, const QString &type)
 {
-    //qDebug() << "DeviceToolBLEx::askForData_qba(" << value << " / " << type << ")";
-
     QByteArray data;
 
     if (type.startsWith("uint"))
@@ -518,17 +518,17 @@ QByteArray DeviceToolBLEx::askForData_qba(const QString &value, const QString &t
         }
         else if (type.startsWith("uint16")) {
             uint16_t u = value.toUShort();
-            if (type.endsWith("_be")) u = endian_flip_16(u);
+            if (!type.endsWith("_be")) u = endian_flip_16(u);
             data.append(reinterpret_cast<const char*>(&u), 2);
         }
         else if (type.startsWith("uint32")) {
             uint32_t u = value.toUInt();
-            if (type.endsWith("_be")) u = endian_flip_32(u);
+            if (!type.endsWith("_be")) u = endian_flip_32(u);
             data.append(reinterpret_cast<const char*>(&u), 4);
         }
         else if (type.startsWith("uint64")) {
             uint64_t u = value.toULongLong();
-            if (type.endsWith("_be")) u = endian_flip_64(u);
+            if (!type.endsWith("_be")) u = endian_flip_64(u);
             data.append(reinterpret_cast<const char*>(&u), 8);
         }
     }
@@ -541,17 +541,17 @@ QByteArray DeviceToolBLEx::askForData_qba(const QString &value, const QString &t
         }
         else if (type.startsWith("int16")) {
             int16_t i = value.toShort();
-            if (type.endsWith("_be")) i = endian_flip_16(i);
+            if (!type.endsWith("_be")) i = endian_flip_16(i);
             data.append(reinterpret_cast<const char*>(&i), 2);
         }
         else if (type.startsWith("int32")) {
             int32_t i = value.toInt();
-            if (type.endsWith("_be")) i = endian_flip_32(i);
+            if (!type.endsWith("_be")) i = endian_flip_32(i);
             data.append(reinterpret_cast<const char*>(&i), 4);
         }
         else if (type.startsWith("int64")) {
             int64_t i = value.toLongLong();
-            if (type.endsWith("_be")) i = endian_flip_64(i);
+            if (!type.endsWith("_be")) i = endian_flip_64(i);
             data.append(reinterpret_cast<const char*>(&i), 8);
         }
     }
@@ -560,74 +560,54 @@ QByteArray DeviceToolBLEx::askForData_qba(const QString &value, const QString &t
     {
         //qDebug() << "FLOAT > " << value.toFloat();
         float f = value.toFloat();
-        if (type.endsWith("_be")) f = endian_flip_32(f);
+        if (!type.endsWith("_be")) f = endian_flip_32(f);
         data.append(reinterpret_cast<const char*>(&f), 4);
     }
     else if (type == "float64")
     {
         //qDebug() << "DOUBLE > " << value.toDouble();
         double d = value.toDouble();
-        if (type.endsWith("_be")) d = endian_flip_64(d);
+        if (!type.endsWith("_be")) d = endian_flip_64(d);
         data.append(reinterpret_cast<const char*>(&d), 8);
     }
 
     else if (type == "data")
     {
-        //qDebug() << "data > " << value.toLatin1();
-        for (int i = 0; i < value.size(); i++) {
-            data.append(value.at(i).toLatin1());
+        //qDebug() << "DATA > " << value.toLatin1();
+        for (int i = 0; i < value.size();) {
+            int a = QString(value.at(i++)).toInt(nullptr, 16) << 4;
+            if (i <value.size()) a += QString(value.at(i++)).toInt(nullptr, 16);
+            data.append(a);
         }
     }
     else if (type == "ascii")
     {
-        //qDebug() << "ascii > " << value.toLatin1().toHex();
-        data = value.toLatin1().toHex();
+        //qDebug() << "ASCII > " << value.toLatin1().toHex();
+        data = value.toLatin1();
     }
 
+    //qDebug() << "DeviceToolBLEx::askForData_qba(" << value << " / " << type << ")  >> " << data << "   size:" << data.size();
     return data;
 }
 
-QStringList DeviceToolBLEx::askForData_list(const QString &value, const QString &type)
+QStringList DeviceToolBLEx::askForData_strlst(const QString &value, const QString &type)
 {
-    // Convert data to QByteArray
-    QByteArray a = askForData_qba(value, type);
+    QByteArray in = askForData_qba(value, type);
+    QStringList out;
 
     // Make it compatible with the data widget for display
-    QStringList out;
-    if (type == "data")
+    for (int i = 0; i < in.size();)
     {
-        for (int i = 0; i < a.size();)
-        {
-            QByteArray duo; duo += a.at(i++);
-            if (i < a.size()) duo += a.at(i++);
-            else duo += '0';
-            out += duo;
-        }
-    }
-    else if (type == "ascii")
-    {
-        for (int i = 0; i < a.size();)
-        {
-            QByteArray duo;
-            duo += a.at(i++);
-            duo += a.at(i++);
-            out += duo;
-        }
-    }
-    else
-    {
-        for (int i = 0; i < a.size();)
-        {
-            QByteArray duo;
-            duo += a.at(i++);
-            out += duo.toHex();
-        }
+        QByteArray hex;
+        hex += in.at(i++);
+        out.append(hex.toHex());
     }
 
-    //qDebug() << "DeviceToolBLEx::askForData_list(" << value << " / " << type << ")  >> " << out;
+    //qDebug() << "DeviceToolBLEx::askForData_strlst(" << value << " / " << type << ")  >> " << out;
     return out;
 }
 
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 void DeviceToolBLEx::deviceConnected()
@@ -645,7 +625,6 @@ void DeviceToolBLEx::deviceConnected()
     Device::deviceConnected();
 }
 
-/* ************************************************************************** */
 /* ************************************************************************** */
 
 void DeviceToolBLEx::addLowEnergyService(const QBluetoothUuid &uuid)

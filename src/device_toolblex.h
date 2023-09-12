@@ -274,8 +274,8 @@ public:
     Q_INVOKABLE void askForRead(const QString &uuid);
     Q_INVOKABLE void askForWrite(const QString &uuid, const QString &value, const QString &type);
 
-    Q_INVOKABLE static QStringList askForData_list(const QString &value, const QString &type);
     Q_INVOKABLE static QByteArray askForData_qba(const QString &value, const QString &type);
+    Q_INVOKABLE static QStringList askForData_strlst(const QString &value, const QString &type);
 
     Q_INVOKABLE bool hasServiceCache() const;
     Q_INVOKABLE bool saveServiceCache();

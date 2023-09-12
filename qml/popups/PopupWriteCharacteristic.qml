@@ -409,7 +409,7 @@ Popup {
 
                 }
 
-                data_hex.model = selectedDevice.askForData_list(value, type)
+                data_hex.model = selectedDevice.askForData_strlst(value, type)
             }
 
             ////

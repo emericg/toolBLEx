@@ -281,13 +281,14 @@ void ServiceInfo::askForWrite(const QString &uuid, const QString &value, const Q
 {
     if (m_ble_service)
     {
-        qDebug() << "ServiceInfo::askForWrite(" << uuid << ") > value:" << value;
+        qDebug() << "ServiceInfo::askForWrite(" << uuid << ") > value:" << value << " (type:" << type << "/ size:" << value.size() << ")";
 
         QBluetoothUuid towrite(uuid);
         QLowEnergyCharacteristic crst = m_ble_service->characteristic(towrite);
 
         QLowEnergyService::WriteMode m = QLowEnergyService::WriteWithResponse;
-        if (crst.properties() & QLowEnergyCharacteristic::Write) {
+        if (crst.properties() & QLowEnergyCharacteristic::Write)
+        {
             m = QLowEnergyService::WriteWithResponse;
 
             for (auto c: m_characteristics)
@@ -298,14 +299,24 @@ void ServiceInfo::askForWrite(const QString &uuid, const QString &value, const Q
                     cst->setWriteInProgress(true);
                 }
             }
-        } else if (crst.properties() & QLowEnergyCharacteristic::WriteNoResponse) {
+        }
+        else if (crst.properties() & QLowEnergyCharacteristic::WriteNoResponse)
+        {
             m = QLowEnergyService::WriteWithoutResponse;
-        } else if (crst.properties() & QLowEnergyCharacteristic::WriteSigned) {
+        }
+        else if (crst.properties() & QLowEnergyCharacteristic::WriteSigned)
+        {
             m = QLowEnergyService::WriteSigned;
         }
 
         QByteArray qba = DeviceToolBLEx::askForData_qba(value, type);
         m_ble_service->writeCharacteristic(crst, qba, m);
+
+        if (crst.properties() & QLowEnergyCharacteristic::WriteNoResponse)
+        {
+            // If the write is "no response" we manually trigger a read so we can get confirmation of the value
+            m_ble_service->readCharacteristic(crst);
+        }
     }
 }
 

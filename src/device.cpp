@@ -683,18 +683,19 @@ void Device::deviceErrored(QLowEnergyController::Error error)
 {
     if (error <= QLowEnergyController::NoError) return;
     qWarning() << "Device::deviceErrored(" << m_deviceAddress << ") error:" << error;
-    /*
-        QLowEnergyController::NoError	0	No error has occurred.
-        QLowEnergyController::UnknownError	1	An unknown error has occurred.
-        QLowEnergyController::UnknownRemoteDeviceError	2	The remote Bluetooth Low Energy device with the address passed to the constructor of this class cannot be found.
-        QLowEnergyController::NetworkError	3	The attempt to read from or write to the remote device failed.
-        QLowEnergyController::InvalidBluetoothAdapterError	4	The local Bluetooth device with the address passed to the constructor of this class cannot be found or there is no local Bluetooth device.
-        QLowEnergyController::ConnectionError (since Qt 5.5)	5	The attempt to connect to the remote device failed.
-        QLowEnergyController::AdvertisingError (since Qt 5.7)	6	The attempt to start advertising failed.
-        QLowEnergyController::RemoteHostClosedError (since Qt 5.10)	7	The remote device closed the connection.
-        QLowEnergyController::AuthorizationError (since Qt 5.14)	8	The local Bluetooth device closed the connection due to insufficient authorization.
-        QLowEnergyController::MissingPermissionsError (since Qt 6.4)	9	The operating system requests permissions which were not granted by the user.
-    */
+
+/*
+    QLowEnergyController::NoError	0	No error has occurred.
+    QLowEnergyController::UnknownError	1	An unknown error has occurred.
+    QLowEnergyController::UnknownRemoteDeviceError	2	The remote Bluetooth Low Energy device with the address passed to the constructor of this class cannot be found.
+    QLowEnergyController::NetworkError	3	The attempt to read from or write to the remote device failed.
+    QLowEnergyController::InvalidBluetoothAdapterError	4	The local Bluetooth device with the address passed to the constructor of this class cannot be found or there is no local Bluetooth device.
+    QLowEnergyController::ConnectionError (since Qt 5.5)	5	The attempt to connect to the remote device failed.
+    QLowEnergyController::AdvertisingError (since Qt 5.7)	6	The attempt to start advertising failed.
+    QLowEnergyController::RemoteHostClosedError (since Qt 5.10)	7	The remote device closed the connection.
+    QLowEnergyController::AuthorizationError (since Qt 5.14)	8	The local Bluetooth device closed the connection due to insufficient authorization.
+    QLowEnergyController::MissingPermissionsError (since Qt 6.4)	9	The operating system requests permissions which were not granted by the user.
+*/
 
     m_lastError = QDateTime::currentDateTime();
 
