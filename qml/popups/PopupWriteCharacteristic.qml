@@ -1,7 +1,9 @@
 import QtQuick
 import QtQuick.Controls
 
-import ThemeEngine 1.0
+import Qt5Compat.GraphicalEffects
+
+import ThemeEngine
 
 Popup {
     id: popupWriteCharacteristic
@@ -34,11 +36,22 @@ Popup {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    background: Rectangle {
-        radius: Theme.componentRadius
-        color: Theme.colorBackground
-        border.color: Theme.colorSeparator
-        border.width: Theme.componentBorderWidth
+    background: Item {
+        Rectangle {
+            id: bgrect
+            anchors.fill: parent
+
+            radius: Theme.componentRadius
+            color: Theme.colorBackground
+            border.color: Theme.colorSeparator
+            border.width: Theme.componentBorderWidth
+        }
+        DropShadow {
+            anchors.fill: parent
+            source: bgrect
+            color: "#60000000"
+            samples: 24
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -72,7 +85,7 @@ Popup {
                 }
                 Text {
                     id: uuid_tf
-                    text: qsTr("Write to characteristic")
+                    text: "00000000-0000-1000-8000-00805F9B34FB"
                     font.pixelSize: Theme.fontSizeTitle-4
                     color: "white"
                     opacity: 0.9
@@ -427,7 +440,8 @@ Popup {
                 selectByMouse: true
 
                 maximumLength: 20
-                validator: RegularExpressionValidator { regularExpression: /[a-zA-Z0-9]+/ }
+                //validator: RegularExpressionValidator { regularExpression: /[a-zA-Z0-9]+/ } // poor man ascii
+                validator: RegularExpressionValidator { regularExpression: /([\x00-\x7F])+/ } // ascii
 
                 onTextChanged: columnTf.updateTextFields()
             }
@@ -461,10 +475,11 @@ Popup {
                 color: Theme.colorText
                 selectByMouse: true
 
-                validator: IntValidator {
-                   //bottom: parseInt(-2147483647)
-                   //top: parseInt(2147483647)
-                }
+                property var v_int1 : IntValidator { bottom: parseInt(-2147483647); top: parseInt(2147483647); }
+                property var v_int : RegularExpressionValidator { regularExpression: /[0-9--]+/ }
+                property var v_uint : RegularExpressionValidator { regularExpression: /[0-9]+/ }
+
+                validator: RegularExpressionValidator { regularExpression: /[0-9--]+/ }
 
                 onTextChanged: columnTf.updateTextFields()
             }
@@ -555,12 +570,11 @@ Popup {
                 }
             }
             ButtonWireframe {
-                width: parent.btnSize
-
                 fullColor: true
                 primaryColor: Theme.colorPrimary
 
                 enabled: data_hex.model.length
+
                 text: qsTr("Write value")
                 onClicked: {
                     var value = ""

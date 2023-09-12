@@ -68,7 +68,7 @@ T.RangeSlider {
                 anchors.fill: parent
                 radius: width
                 color: Theme.colorPrimary
-                opacity: (first.pressed || first.containsMouse) ? 0.2 : 0
+                opacity: (first.pressed || parent.containsMouse) ? 0.2 : 0
                 Behavior on opacity { NumberAnimation { duration: 233 } }
             }
         }
@@ -101,7 +101,7 @@ T.RangeSlider {
                 anchors.fill: parent
                 radius: width
                 color: Theme.colorPrimary
-                opacity: (second.pressed || second.containsMouse) ? 0.2 : 0
+                opacity: (second.pressed || parent.containsMouse) ? 0.2 : 0
                 Behavior on opacity { NumberAnimation { duration: 233 } }
             }
         }

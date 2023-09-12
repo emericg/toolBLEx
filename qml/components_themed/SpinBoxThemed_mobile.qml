@@ -70,7 +70,7 @@ T.SpinBox {
     contentItem: Item {
         Row {
             anchors.centerIn: parent
-            spacing: 2
+            spacing: 4
 
             TextInput {
                 height: control.height

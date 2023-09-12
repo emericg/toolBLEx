@@ -1,16 +1,17 @@
 import QtQuick
 import QtQuick.Controls
 
-import ThemeEngine 1.0
+import Qt5Compat.GraphicalEffects
+
+import ThemeEngine
 
 Popup {
     id: popupClearDeviceCache
-    x: (appWindow.width / 2) - (width / 2)
-    y: singleColumn ? (appWindow.height - height) : ((appWindow.height / 2) - (height / 2) /*- (appHeader.height)*/)
 
-    width: singleColumn ? parent.width : 640
-    height: columnContent.height + padding*2
-    padding: singleColumn ? 20 : 24
+    x: ((appWindow.width / 2) - (width / 2))
+    y: ((appWindow.height / 2) - (height / 2) - (appHeader.height / 2))
+    width: 720
+    padding: 0
 
     modal: true
     focus: true
@@ -20,37 +21,71 @@ Popup {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    background: Rectangle {
-        color: Theme.colorBackground
-        border.color: Theme.colorSeparator
-        border.width: singleColumn ? 0 : Theme.componentBorderWidth
-        radius: singleColumn ? 0 : Theme.componentRadius
-
+    background: Item {
         Rectangle {
-            width: parent.width
-            height: Theme.componentBorderWidth
-            visible: singleColumn
-            color: Theme.colorSeparator
+            id: bgrect
+            anchors.fill: parent
+
+            radius: Theme.componentRadius
+            color: Theme.colorBackground
+            border.color: Theme.colorSeparator
+            border.width: Theme.componentBorderWidth
+        }
+        DropShadow {
+            anchors.fill: parent
+            source: bgrect
+            color: "#60000000"
+            samples: 24
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////
 
-    contentItem: Item {
-        Column {
-            id: columnContent
-            width: parent.width
-            spacing: 20
+    contentItem: Column {
+        id: columnContent
+        spacing: 24
 
-            Text {
-                width: parent.width
+        ////////
 
-                text: qsTr("Are you sure you want to clear the device cache?")
-                textFormat: Text.PlainText
-                font.pixelSize: Theme.fontSizeContentVeryBig
-                color: Theme.colorText
-                wrapMode: Text.WordWrap
+        Rectangle { // titleArea
+            anchors.left: parent.left
+            anchors.right: parent.right
+
+            height: 80
+            color: Theme.colorPrimary
+            radius: Theme.componentRadius
+
+            Column {
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 4
+
+                Text {
+                    text: qsTr("Clear device cache")
+                    font.pixelSize: Theme.fontSizeTitle
+                    font.bold: true
+                    color: "white"
+                    opacity: 0.98
+                }
+                Text {
+                    id: uuid_tf
+                    text: qsTr("Are you sure you want to clear the device cache?")
+                    font.pixelSize: Theme.fontSizeTitle-4
+                    color: "white"
+                    opacity: 0.9
+                }
             }
+        }
+
+        ////////
+
+        Column {
+            anchors.left: parent.left
+            anchors.leftMargin: 24
+            anchors.right: parent.right
+            anchors.rightMargin: 24
+            spacing: 24
 
             Rectangle {
                 width: parent.width
@@ -82,17 +117,11 @@ Popup {
                 wrapMode: Text.WordWrap
             }
 
-            Flow {
-                id: flowContent
-                width: parent.width
-                height: singleColumn ? 120+32 : 40
-
-                property var btnSize: singleColumn ? width : ((width-spacing) / 2)
+            Row {
+                anchors.right: parent.right
                 spacing: 16
 
                 ButtonWireframe {
-                    width: parent.btnSize
-
                     text: qsTr("Cancel")
                     primaryColor: Theme.colorSubText
                     secondaryColor: Theme.colorForeground
@@ -100,8 +129,6 @@ Popup {
                     onClicked: popupClearDeviceCache.close()
                 }
                 ButtonWireframe {
-                    width: parent.btnSize
-
                     text: qsTr("Clear cache")
                     primaryColor: Theme.colorOrange
                     fullColor: true
@@ -112,7 +139,11 @@ Popup {
                     }
                 }
             }
+
+            Item  { width: 1; height: 1; } // spacer
         }
+
+        ////////
     }
 
     ////////////////////////////////////////////////////////////////////////////
