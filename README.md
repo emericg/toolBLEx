@@ -27,6 +27,11 @@ A Bluetooth Low Energy device scanner and analyzer.
 ![GUI dark mode](https://raw.githubusercontent.com/emericg/screenshots_flathub/master/toolBLEx/theme2.png)
 
 
+## Frequency analyzer (with an Ubertooth One)
+
+![frequency analyzer](https://raw.githubusercontent.com/emericg/screenshots_flathub/master/toolBLEx/freqanalyzer1.webp)
+
+
 ## Documentation
 
 #### Build dependencies
