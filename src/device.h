@@ -71,9 +71,10 @@ class Device: public QObject
     Q_PROPERTY(int serviceClass READ getServiceClass NOTIFY advertisementUpdated)
     Q_PROPERTY(int bluetoothConfiguration READ getBluetoothConfiguration NOTIFY advertisementUpdated)
 
-    Q_PROPERTY(bool enabled READ isEnabled NOTIFY statusUpdated)
     Q_PROPERTY(int status READ getStatus NOTIFY statusUpdated)
     Q_PROPERTY(int action READ getAction NOTIFY statusUpdated)
+    Q_PROPERTY(bool enabled READ isEnabled NOTIFY statusUpdated)
+    Q_PROPERTY(bool connected READ isConnected NOTIFY statusUpdated)
     Q_PROPERTY(bool busy READ isBusy NOTIFY statusUpdated)
     Q_PROPERTY(bool working READ isWorking NOTIFY statusUpdated)
     Q_PROPERTY(bool updating READ isUpdating NOTIFY statusUpdated)
@@ -247,6 +248,7 @@ public:
     QString getAddressMAC() const;
     void setAddressMAC(const QString &mac);
     bool isEnabled() const { return m_isEnabled; }
+    bool isConnected() const { return m_ble_status >= DeviceUtils::DEVICE_CONNECTED; }
     // Device additional settings
     Q_INVOKABLE bool hasSetting(const QString &key) const;
     Q_INVOKABLE QVariant getSetting(const QString &key) const;

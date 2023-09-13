@@ -127,7 +127,7 @@ Item {
     property int componentRadius: 6
     property int componentBorderWidth: 2
 
-    property int componentFontSize: 16
+    property int componentFontSize: 15
 
     ////////////////
 

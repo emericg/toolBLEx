@@ -12,79 +12,6 @@ import "qrc:/js/UtilsPath.js" as UtilsPath
 
 Item {
     id: panelDeviceService
-/*
-    Rectangle {
-        id: connectionBar
-        anchors.left: parent.left
-        anchors.right: parent.right
-
-        z: 5
-        height: 36
-        color: Theme.colorLVheader
-
-        // prevent clicks below this area
-        MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
-
-        Row {
-            anchors.top: parent.top
-            anchors.topMargin: 0
-            anchors.left: parent.left
-            anchors.leftMargin: 12
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
-
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-
-                text: UtilsDeviceSensors.getDeviceStatusText(selectedDevice.status)
-                color: Theme.colorText
-            }
-
-            Item { // separator
-                anchors.verticalCenter: parent.verticalCenter
-                width: 16
-                height: 24
-                Rectangle {
-                    anchors.centerIn: parent
-                    width: 2; height: 18;
-                    color: Theme.colorLVseparator
-                }
-            }
-
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                visible: (selectedDevice.servicesCount === 0)
-
-                text: qsTr("Not scanned")
-                color: Theme.colorText
-            }
-
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                visible: (selectedDevice.servicesCount > 0)
-
-                text: qsTr("%n service(s) found", "", selectedDevice.servicesCount)
-                color: Theme.colorText
-            }
-        }
-
-        Rectangle {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-
-            height: 2
-            opacity: 1
-            color: Theme.colorSeparator
-        }
-    }
-*/
-    ////////
-
-    function resetButtons() {
-        exportButton.text = qsTr("Export")
-        exportButton.primaryColor = Theme.colorGrey
-    }
 
     ////////
 
@@ -115,6 +42,8 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 12
 
+                ////
+
                 Text { // status row
                     anchors.left: parent.left
                     anchors.right: parent.right
@@ -126,48 +55,20 @@ Item {
                     color: Theme.colorText
                 }
 
+                ////
+
                 Flow { // buttons row
                     anchors.left: parent.left
                     anchors.right: parent.right
                     spacing: 12
 
                     ButtonScanMenu {
-                        text: {
-                            if (!selectedDevice) return ""
-                            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
-                                return qsTr("scan services")
-                            else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
-                                return qsTr("connecting...")
-                            else if (selectedDevice.status === DeviceUtils.DEVICE_WORKING)
-                                return qsTr("scanning...")
-                            else if (selectedDevice.status >= DeviceUtils.DEVICE_CONNECTED)
-                                return qsTr("disconnect")
-                        }
-                        source: {
-                            if (!selectedDevice) return ""
-                            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
-                                return "qrc:/assets/icons_material/baseline-bluetooth-24px.svg"
-                            else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
-                                return "qrc:/assets/icons_material/duotone-bluetooth_connected-24px.svg"
-                            else if (selectedDevice.status === DeviceUtils.DEVICE_WORKING)
-                                return "qrc:/assets/icons_material/duotone-bluetooth_searching-24px.svg"
-                            else
-                                return "qrc:/assets/icons_material/duotone-settings_bluetooth-24px.svg"
-                        }
-                        onClicked: {
-                            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE) {
-                                if (scanmode === "full") {
-                                    selectedDevice.actionScanWithValues()
-                                } else {
-                                    selectedDevice.actionScanWithoutValues()
-                                }
-                            } else {
-                                selectedDevice.deviceDisconnect()
-                            }
-                        }
+                        width: ((parent.width - parent.spacing) / 2)
                     }
 
                     ButtonWireframeIcon {
+                        width: ((parent.width - parent.spacing) / 2)
+
                         fullColor: true
                         primaryColor: Theme.colorLightGrey
 
@@ -180,6 +81,8 @@ Item {
                         }
                     }
                 }
+
+                ////
             }
         }
     }
@@ -210,6 +113,7 @@ Item {
 
         ButtonWireframeIcon {
             id: cacheButton
+
             fullColor: true
             primaryColor: Theme.colorLightGrey
 
@@ -222,58 +126,6 @@ Item {
 
             onClicked: {
                 selectedDevice.saveServiceCache()
-            }
-        }
-
-        ButtonWireframeIcon {
-            id: exportButton
-            fullColor: true
-            primaryColor: Theme.colorGrey
-
-            visible: (selectedDevice && selectedDevice.servicesCount > 0)
-            //enabled: (selectedDevice && selectedDevice.servicesScanMode > 1)
-
-            text: qsTr("Export")
-            source: "qrc:/assets/icons_material/baseline-save-24px.svg"
-
-            onClicked: {
-                // (file selection)
-                fileDialog.selectedFile = fileDialog.currentFolder +
-                        "/" + selectedDevice.deviceName_export +
-                        "-" + selectedDevice.deviceAddr_export + ".txt"
-                fileDialog.open()
-                return
-/*
-                // (auto)
-                if (exportButton.text === qsTr("Exported")) {
-                    utilsApp.openWith(selectedDevice.getExportDirectory())
-                    return
-                }
-                if (selectedDevice.exportDeviceInfo()) {
-                    exportButton.text = qsTr("Exported")
-                    exportButton.primaryColor = Theme.colorSuccess
-                } else {
-                    exportButton.text = qsTr("Export error")
-                    exportButton.primaryColor = Theme.colorWarning
-                }
-*/
-            }
-
-            FileDialog {
-                id: fileDialog
-
-                fileMode: FileDialog.SaveFile
-                currentFolder: StandardPaths.writableLocation(StandardPaths.DocumentsLocation)
-
-                onAccepted: {
-                    if (selectedDevice.exportDeviceInfo(UtilsPath.cleanUrl(currentFile))) {
-                        exportButton.text = qsTr("Exported")
-                        exportButton.primaryColor = Theme.colorSuccess
-                    } else {
-                        exportButton.text = qsTr("Export error")
-                        exportButton.primaryColor = Theme.colorWarning
-                    }
-                }
             }
         }
     }

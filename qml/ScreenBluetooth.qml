@@ -6,7 +6,7 @@ import ThemeEngine
 Loader {
     id: screenBluetooth
 
-    ////////
+    ////////////////
 
     function loadScreen() {
         screenBluetooth.active = true
@@ -16,14 +16,12 @@ Loader {
         screenBluetooth.active = false
     }
 
-    ////////
-
     function backAction() {
         if (screenBluetooth.status === Loader.Ready)
             screenBluetooth.item.backAction()
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     active: false
     asynchronous: true
@@ -304,4 +302,6 @@ Loader {
 
         ////////////////////////////////////////////////////////////////////////
     }
+
+    ////////////////
 }

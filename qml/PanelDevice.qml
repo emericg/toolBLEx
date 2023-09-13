@@ -20,7 +20,6 @@ Item {
 
             // Reset buttons
             panelDeviceInfos.resetButtons()
-            panelDeviceServices.resetButtons()
         }
     }
 
@@ -40,31 +39,6 @@ Item {
 
         // only make sense for BLE device?
         //visible: (selectedDevice && selectedDevice.isLowEnergy)
-
-        Rectangle {
-            anchors.left: parent.left
-            anchors.leftMargin: 12
-            anchors.verticalCenter: parent.verticalCenter
-            width: 32
-            height: 32
-            radius: 32
-
-            opacity: (selectedDevice && selectedDevice.status >= DeviceUtils.DEVICE_CONNECTING)
-            Behavior on opacity { OpacityAnimator { duration: 233 } }
-
-            color: Theme.colorComponentBackground
-            border.width: Theme.componentBorderWidth
-            border.color: Theme.colorComponentBorder
-
-            IconSvg {
-                anchors.centerIn: parent
-                width: 24
-                height: 24
-
-                source: UtilsDeviceSensors.getDeviceStatusIcon(selectedDevice.status)
-                color: Theme.colorIcon
-            }
-        }
 
         Item {
             id: deviceMenu
@@ -96,28 +70,29 @@ Item {
 
                 SelectorMenuThemedItemBadge {
                     index: 1
-                    selected: (deviceMenu.currentSelection === index)
+                    highlighted: (deviceMenu.currentSelection === index)
 
                     text: qsTr("device info")
-                    textBadge: ""
+                    badgeText: (selectedDevice && selectedDevice.connected) ? " " : ""
+                    badgeColor: Theme.colorGreen
                     onClicked: deviceMenu.menuSelected(index)
                     sourceSize: 0
                 }
                 SelectorMenuThemedItemBadge {
                     index: 2
-                    selected: (deviceMenu.currentSelection === index)
+                    highlighted: (deviceMenu.currentSelection === index)
 
                     text: qsTr("advertisement")
-                    textBadge: (selectedDevice && selectedDevice.advCount)
+                    badgeText: (selectedDevice && selectedDevice.advCount)
                     onClicked: deviceMenu.menuSelected(index)
                     sourceSize: 0
                 }
                 SelectorMenuThemedItemBadge {
                     index: 3
-                    selected: (deviceMenu.currentSelection === index)
+                    highlighted: (deviceMenu.currentSelection === index)
 
                     text: qsTr("services")
-                    textBadge: (selectedDevice && selectedDevice.servicesScanned) ? selectedDevice.servicesCount : "?"
+                    badgeText: (selectedDevice && selectedDevice.servicesScanned) ? selectedDevice.servicesCount : "?"
                     onClicked: deviceMenu.menuSelected(index)
                     sourceSize: 0
                 }
@@ -146,7 +121,7 @@ Item {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     PanelDeviceInfos {
         id: panelDeviceInfos
@@ -159,7 +134,7 @@ Item {
         visible: (deviceMenu.currentSelection === 1)
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     PanelDeviceAdvertisement {
         id: panelDeviceAdvertisement
@@ -172,7 +147,7 @@ Item {
         visible: (deviceMenu.currentSelection === 2)
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     PanelDeviceServices {
         id: panelDeviceServices
@@ -185,5 +160,5 @@ Item {
         visible: (deviceMenu.currentSelection === 3)
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 }

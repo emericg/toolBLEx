@@ -167,6 +167,8 @@ Flickable {
                     anchors.right: parent.right
                     spacing: 12
 
+                    visible: (selectedDevice && selectedDevice.deviceAddressMAC.length)
+
                     Text {
                         id: legendManufacturer
                         Layout.preferredWidth: box1.legendWidth
@@ -420,43 +422,12 @@ Flickable {
                     spacing: 12
 
                     ButtonScanMenu {
-                        text: {
-                            if (!selectedDevice) return ""
-                            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
-                                return qsTr("scan services")
-                            else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
-                                return qsTr("connecting...")
-                            else if (selectedDevice.status === DeviceUtils.DEVICE_WORKING)
-                                return qsTr("scanning...")
-                            else if (selectedDevice.status >= DeviceUtils.DEVICE_CONNECTED)
-                                return qsTr("disconnect")
-                        }
-                        source: {
-                            if (!selectedDevice) return ""
-                            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
-                                return "qrc:/assets/icons_material/baseline-bluetooth-24px.svg"
-                            else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
-                                return "qrc:/assets/icons_material/duotone-bluetooth_connected-24px.svg"
-                            else if (selectedDevice.status === DeviceUtils.DEVICE_WORKING)
-                                return "qrc:/assets/icons_material/duotone-bluetooth_searching-24px.svg"
-                            else
-                                return "qrc:/assets/icons_material/duotone-settings_bluetooth-24px.svg"
-                        }
-                        onClicked: {
-                            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE) {
-                                if (scanmode === "full") {
-                                    selectedDevice.actionScanWithValues()
-                                } else {
-                                    selectedDevice.actionScanWithoutValues()
-                                }
-                            } else {
-                                selectedDevice.deviceDisconnect()
-                            }
-                        }
+                        width: ((parent.width - parent.spacing) / 2)
                     }
 
                     ButtonWireframeIcon {
                         id: exportButton
+                        width: ((parent.width - parent.spacing) / 2)
                         fullColor: true
                         primaryColor: Theme.colorGrey
 

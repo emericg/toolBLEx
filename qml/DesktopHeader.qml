@@ -11,14 +11,14 @@ Rectangle {
     color: Theme.colorHeader
     property int headerHeight: isHdpi ? 52 : 56
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     signal scannerButtonClicked()
     signal advertiserButtonClicked()
     signal ubertoothButtonClicked()
     signal settingsButtonClicked()
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     DragHandler {
         // make that surface draggable
@@ -27,7 +27,7 @@ Rectangle {
         target: null
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     Rectangle { // left menus
         anchors.left: parent.left

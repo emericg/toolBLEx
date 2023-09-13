@@ -46,7 +46,6 @@ T.ProgressBar {
             opacity: 0.4
         }
         Rectangle { // mean
-            //width: control.visualPosition * control.width
             width: ((100-Math.abs(value)) / 100) * control.width
             height: control.height
             radius: (Theme.componentRadius / 2)

@@ -7,29 +7,25 @@ import "qrc:/js/UtilsPath.js" as UtilsPath
 Loader {
     id: screenSettings
 
-    ////////
+    ////////////////
 
     function loadScreen() {
         screenSettings.active = true
         appContent.state = "Settings"
     }
 
-    ////////
-
     function backAction() {
         if (screenSettings.status === Loader.Ready)
             screenSettings.item.backAction()
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     active: false
     asynchronous: true
 
     sourceComponent: Item {
         anchors.fill: parent
-
-        ////////////////
 
         function backAction() {
             if (ubertoothPath.focus) {
@@ -40,7 +36,7 @@ Loader {
             screenScanner.loadScreen()
         }
 
-        ////////////////
+        ////////////////////////////////////////////////////////////////////////
 
         Loader {
             id: popupLoader
@@ -57,7 +53,7 @@ Loader {
             }
         }
 
-        ////////////////
+        ////////////////////////////////////////////////////////////////////////
 
         Flickable {
             anchors.fill: parent
@@ -1164,5 +1160,9 @@ Loader {
                 ////////
             }
         }
+
+        ////////////////////////////////////////////////////////////////////////
     }
+
+    ////////////////
 }

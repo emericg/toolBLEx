@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Controls
-
 import Qt5Compat.GraphicalEffects
 
 import ThemeEngine
@@ -21,6 +20,8 @@ Popup {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    enter: Transition { NumberAnimation { property: "opacity"; from: 0.33; to: 1.0; duration: 233; } }
+
     background: Item {
         Rectangle {
             id: bgrect
@@ -36,6 +37,7 @@ Popup {
             source: bgrect
             color: "#60000000"
             samples: 24
+            cached: true
         }
     }
 
@@ -122,17 +124,17 @@ Popup {
                 spacing: 16
 
                 ButtonWireframe {
-                    text: qsTr("Cancel")
                     primaryColor: Theme.colorSubText
                     secondaryColor: Theme.colorForeground
 
+                    text: qsTr("Cancel")
                     onClicked: popupClearDeviceCache.close()
                 }
                 ButtonWireframe {
-                    text: qsTr("Clear cache")
-                    primaryColor: Theme.colorOrange
                     fullColor: true
+                    primaryColor: Theme.colorOrange
 
+                    text: qsTr("Clear cache")
                     onClicked: {
                         popupClearDeviceCache.confirmed()
                         popupClearDeviceCache.close()

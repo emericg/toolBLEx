@@ -21,7 +21,7 @@ T.Button {
     spacing: 6
 
     font.pixelSize: Theme.componentFontSize
-    font.bold: fullColor ? true : false
+    font.bold: false
 
     focusPolicy: Qt.NoFocus
 

@@ -6,21 +6,19 @@ import ThemeEngine
 Loader {
     id: screenScanner
 
-    ////////
+    ////////////////
 
     function loadScreen() {
         screenScanner.active = true
         appContent.state = "Scanner"
     }
 
-    ////////
-
     function backAction() {
         if (screenScanner.status === Loader.Ready)
             screenScanner.item.backAction()
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     active: false
     asynchronous: true
@@ -318,10 +316,10 @@ Loader {
                     }
 
                     headerPositioning: ListView.OverlayHeader
-                    header: DeviceScannerHeader { }
+                    header: DeviceScannerListHeader { }
 
                     model: deviceManager.devicesList
-                    delegate: DeviceScannerWidget {
+                    delegate: DeviceScannerListWidget {
                         width: devicesView.width
                     }
 
@@ -492,4 +490,6 @@ Loader {
 
         ////////////////////////////////////////////////////////////////////////
     }
+
+    ////////////////
 }

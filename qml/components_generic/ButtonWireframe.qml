@@ -19,7 +19,7 @@ T.Button {
     rightPadding: 12
 
     font.pixelSize: Theme.componentFontSize
-    font.bold: fullColor ? true : false
+    font.bold: false
 
     focusPolicy: Qt.NoFocus
 

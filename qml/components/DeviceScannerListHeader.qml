@@ -12,7 +12,6 @@ Rectangle {
     color: Theme.colorLVheader
 
     property bool showAddress: (Qt.platform.os !== "osx")
-    property bool showManufacturer: (Qt.platform.os !== "osx")
 
     Row {
         anchors.left: parent.left
@@ -21,7 +20,7 @@ Rectangle {
         anchors.rightMargin: 12
         anchors.verticalCenter: parent.verticalCenter
 
-        Item { width: 16; height: 24; }
+        Item { width: 12; height: 24; } // color
 
         Item { // separator ////////////////////////////////////////////////////
             width: 16

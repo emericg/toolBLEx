@@ -8,7 +8,7 @@ import "qrc:/js/UtilsNumber.js" as UtilsNumber
 Loader {
     id: screenUbertooth
 
-    ////////
+    ////////////////
 
     function loadScreen() {
         screenUbertooth.active = true
@@ -18,14 +18,12 @@ Loader {
             screenUbertooth.item.loadAction()
     }
 
-    ////////
-
     function backAction() {
         if (screenUbertooth.status === Loader.Ready)
             screenUbertooth.item.backAction()
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     active: false
     asynchronous: true
@@ -296,4 +294,6 @@ Loader {
 
         ////////////////////////////////////////////////////////////////////////
     }
+
+    ////////////////
 }

@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Controls
-
 import Qt5Compat.GraphicalEffects
 
 import ThemeEngine
@@ -27,14 +26,12 @@ Popup {
         open()
     }
 
-    onAboutToShow: {
-        //
-    }
-    onAboutToHide: {
-        // TODO // cleanup
-    }
+    onAboutToShow: { }
+    onAboutToHide: { } // TODO // cleanup
 
     ////////////////////////////////////////////////////////////////////////////
+
+    enter: Transition { NumberAnimation { property: "opacity"; from: 0.33; to: 1.0; duration: 233; } }
 
     background: Item {
         Rectangle {
@@ -51,6 +48,7 @@ Popup {
             source: bgrect
             color: "#60000000"
             samples: 24
+            cached: true
         }
     }
 
@@ -520,6 +518,34 @@ Popup {
                 wrapMode: Text.WordWrap
             }
 
+            Rectangle {
+                id: rectNoData
+                width: 26
+                height: 26
+
+                visible: !data_hex.model.length
+                color: Theme.colorForeground
+
+                Canvas {
+                    width: 26
+                    height: 26
+                    onPaint: {
+                        var ctx = getContext("2d")
+                        ctx.reset()
+                        ctx.moveTo(0, width)
+                        ctx.lineTo(width, width)
+                        ctx.lineTo(width, 0)
+                        ctx.closePath()
+                        ctx.fillStyle = Theme.colorBox
+                        ctx.fill()
+                    }
+                    Connections {
+                        target: ThemeEngine
+                        function onCurrentThemeChanged() { indicator.requestPaint() }
+                    }
+                }
+            }
+
             Flow {
                 width: parent.width
                 spacing: 0
@@ -532,8 +558,6 @@ Popup {
                         width: 26
                         height: 26
                         color: (index % 2 === 0) ? Theme.colorForeground : Theme.colorBox
-                        border.width: 0
-                        border.color: Theme.colorForeground
 
                         Text {
                             height: 26
@@ -561,13 +585,11 @@ Popup {
             spacing: 16
 
             ButtonWireframe {
-                fullColor: true
-                primaryColor: Theme.colorLightGrey
+                primaryColor: Theme.colorSubText
+                secondaryColor: Theme.colorForeground
 
                 text: qsTr("Cancel")
-                onClicked: {
-                    popupWriteCharacteristic.close()
-                }
+                onClicked: popupWriteCharacteristic.close()
             }
             ButtonWireframe {
                 fullColor: true

@@ -14,17 +14,15 @@ Item {
 
     property var boxDevice: pointer
 
-    property bool isSelected: boxDevice.selected
-
     property bool showAddress: (Qt.platform.os !== "osx")
-    property bool showManufacturer: (Qt.platform.os !== "osx")
 
     ////////////////////////////////////////////////////////////////////////////
 
-    Rectangle {
+    Rectangle { // background
         anchors.fill: parent
         color: {
-            if (isSelected) return Theme.colorLVselected
+            if (boxDevice.selected) return Theme.colorLVselected
+            if (boxDevice.connected) return Qt.lighter(Theme.colorGreen,1.1)
             if (index % 2 === 1) return Theme.colorLVimpair
             return Theme.colorLVpair
         }
@@ -80,12 +78,12 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         spacing: 16
 
-        opacity: (boxDevice.rssi < 0) ? 1 : 0.4
+        opacity: (boxDevice.connected || boxDevice.rssi < 0) ? 1 : 0.4
 
         ////
 
         Item { // color
-            width: 16; height: 32;
+            width: 12; height: 32;
 
             Rectangle {
                 anchors.centerIn: parent
@@ -107,7 +105,7 @@ Item {
             text: boxDevice.deviceAddress
             textFormat: Text.PlainText
             font.family: fontMonospace
-            color: isSelected ? "white" : Theme.colorText
+            color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorText
             elide: Text.ElideMiddle
 
             Text {
@@ -140,7 +138,7 @@ Item {
                     return ""
                 }
                 opacity: 0.8
-                color: isSelected ? "white" : Theme.colorIcon
+                color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorIcon
             }
 
             Text { // name
@@ -150,7 +148,7 @@ Item {
                 textFormat: Text.PlainText
                 elide: Text.ElideRight
                 color: {
-                    if (isSelected) return "white"
+                    if (boxDevice.connected || boxDevice.selected) return "white"
                     if (boxDevice.deviceName.length === 0) return Theme.colorSubText
                     return Theme.colorText
                 }
@@ -168,7 +166,7 @@ Item {
                 //    visible: (boxDevice.hasBattery && boxDevice.deviceBattery >= 0)
                 //
                 //    source: UtilsDeviceSensors.getDeviceBatteryIcon(boxDevice.deviceBattery)
-                //    color: isSelected ? "white" : Theme.colorIcon
+                //    color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorIcon
                 //    rotation: 90
                 //    fillMode: Image.PreserveAspectCrop
                 //}
@@ -176,10 +174,10 @@ Item {
                 IconSvg { // connected
                     width: 20
                     height: 20
-                    visible: (boxDevice.status >= DeviceUtils.DEVICE_CONNECTED)
+                    visible: (boxDevice.connected)
 
                     source: "qrc:/assets/icons_material/duotone-bluetooth_connected-24px.svg"
-                    color: isSelected ? "white" : Theme.colorIcon
+                    color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorIcon
                 }
 
                 IconSvg { // starred
@@ -188,7 +186,7 @@ Item {
                     visible: (boxDevice.isStarred)
 
                     source: "qrc:/assets/icons_material/baseline-stars-24px.svg"
-                    color: isSelected ? "white" : Theme.colorIcon
+                    color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorIcon
                 }
 
                 IconSvg { // paired
@@ -197,7 +195,7 @@ Item {
                     visible: (boxDevice.isPaired)
 
                     source: "qrc:/assets/icons_material/baseline-insert_link-24px.svg"
-                    color: isSelected ? "white" : Theme.colorIcon
+                    color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorIcon
                 }
             }
         }
@@ -212,7 +210,7 @@ Item {
 
             text: boxDevice.deviceManufacturer
             textFormat: Text.PlainText
-            color: isSelected ? "white" : Theme.colorText
+            color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorText
             elide: Text.ElideRight
         }
 
@@ -233,7 +231,7 @@ Item {
 
                     text: "-" + Math.abs(boxDevice.rssi)
                     textFormat: Text.PlainText
-                    color: isSelected ? "white" : Theme.colorText
+                    color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorText
                     horizontalAlignment: Text.AlignRight
                 }
 
@@ -241,7 +239,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "dBm"
                     textFormat: Text.PlainText
-                    color: isSelected ? "white" : Theme.colorSubText
+                    color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorSubText
                     font.pixelSize: 12
                 }
             }
@@ -274,7 +272,7 @@ Item {
 
                     text: boxDevice.advInterval
                     textFormat: Text.PlainText
-                    color: isSelected ? "white" : Theme.colorText
+                    color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorText
                 }
 
                 Text {
@@ -282,7 +280,7 @@ Item {
 
                     text: "ms"
                     textFormat: Text.PlainText
-                    color: isSelected ? "white" : Theme.colorSubText
+                    color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorSubText
                     font.pixelSize: 12
                 }
             }
@@ -301,7 +299,7 @@ Item {
                           boxDevice.lastSeen.toLocaleTimeString(locale, "hh:mm") :
                           boxDevice.lastSeen.toLocaleString(locale, "dd/MM hh:mm")
                 textFormat: Text.PlainText
-                color: isSelected ? "white" : Theme.colorText
+                color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorText
             }
         }
 
@@ -316,7 +314,7 @@ Item {
 
                 text: boxDevice.firstSeen.toLocaleString(locale, "dd/MM hh:mm")
                 textFormat: Text.PlainText
-                color: isSelected ? "white" : Theme.colorText
+                color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorText
             }
         }
 

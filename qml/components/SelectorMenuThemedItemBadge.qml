@@ -1,26 +1,25 @@
 import QtQuick
+import QtQuick.Templates as T
 
 import ThemeEngine
 
-Item {
+T.Button {
     id: control
-    implicitWidth: 16 + content.width + 16
-    implicitHeight: 32
 
-    height: parent.height
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            implicitContentWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             implicitContentHeight + topPadding + bottomPadding)
 
-    // actions
-    signal clicked()
-    signal pressed()
-    signal pressAndHold()
+    leftPadding: 16
+    rightPadding: 16
 
-    // states
-    property bool selected: false
+    focusPolicy: Qt.NoFocus
 
     // settings
     property int index
-    property string text
-    property string textBadge
+    property string badgeText
+    property string badgeColor: Theme.colorPrimary
     property url source
     property int sourceSize: 32
 
@@ -29,55 +28,37 @@ Item {
     property string colorContentHighlight: Theme.colorComponentContent
     property string colorBackgroundHighlight: Theme.colorComponentDown
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
-    MouseArea {
-        id: mouseArea
-        anchors.fill: control
-        hoverEnabled: (isDesktop && control.enabled)
-
-        onClicked: control.clicked()
-        onPressed: control.pressed()
-        onPressAndHold: control.pressAndHold()
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    Rectangle {
-        id: background
-        anchors.fill: control
-        anchors.margins: 0 // Theme.componentBorderWidth
+    background: Rectangle {
+        implicitWidth: 32
+        implicitHeight: 32
         radius: Theme.componentRadius
 
         color: control.colorBackgroundHighlight
         opacity: {
-            if (mouseArea.containsMouse && control.selected)
-                return 0.9
-            else if (control.selected)
-                return 0.7
-            else if (mouseArea.containsMouse)
-                return 0.5
-            else
-                return 0
+            if (control.hovered && control.highlighted) return 0.9
+            else if (control.highlighted) return 0.7
+            else if (control.hovered) return 0.5
+            return 0
         }
         Behavior on opacity { OpacityAnimator { duration: 133 } }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
-    Row {
-        id: content
-        anchors.centerIn: control
+    contentItem: Row {
         spacing: 8
 
         IconSvg {
-            width: control.sourceSize
-            height: control.sourceSize
             anchors.verticalCenter: parent.verticalCenter
 
+            width: control.sourceSize
+            height: control.sourceSize
+
             source: control.source
-            color: control.selected ? control.colorContentHighlight : control.colorContent
-            opacity: control.selected ? 1 : 0.5
+            color: control.highlighted ? control.colorContentHighlight : control.colorContent
+            opacity: control.highlighted ? 1 : 0.5
         }
 
         Text {
@@ -88,34 +69,35 @@ Item {
             font.pixelSize: Theme.componentFontSize
             verticalAlignment: Text.AlignVCenter
 
-            color: control.selected ? control.colorContentHighlight : control.colorContent
-            opacity: control.selected ? 1 : 0.6
+            color: control.highlighted ? control.colorContentHighlight : control.colorContent
+            opacity: control.highlighted ? 1 : 0.6
         }
 
         Rectangle {
+            anchors.verticalCenter: parent.verticalCenter
+
             width: control.height*0.6
             height: width
             radius: width
-            anchors.verticalCenter: parent.verticalCenter
 
-            visible: control.textBadge
-            color: Theme.colorPrimary
-            opacity: control.selected ? 1 : 0.6
+            visible: control.badgeText
+            color: control.badgeColor
+            opacity: control.highlighted ? 1 : 0.6
 
             Text {
                 anchors.fill: parent
 
-                text: control.textBadge
+                text: control.badgeText
                 textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContentVerySmall
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
 
-                color: control.selected ? control.colorContentHighlight : control.colorContent
-                opacity: control.selected ? 0.7 : 0.7
+                color: control.highlighted ? control.colorContentHighlight : control.colorContent
+                opacity: control.highlighted ? 0.7 : 0.7
             }
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 }
