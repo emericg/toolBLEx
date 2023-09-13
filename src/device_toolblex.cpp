@@ -188,8 +188,23 @@ QString DeviceToolBLEx::getAddr_display() const
 QString DeviceToolBLEx::getName_export() const
 {
     QString prettyname = m_deviceName;
-    prettyname.replace('\n', "_");
-    prettyname.replace(' ', "_");
+    prettyname.replace('\n', '_');
+    prettyname.replace(' ', '_');
+
+    prettyname.replace('/', '_'); // on every platform
+    prettyname.replace('#', '_'); // but why?
+
+#if defined(Q_OS_MACOS) || defined(Q_OS_WINDOWS)
+    prettyname.replace(':', '_');
+#elif defined(Q_OS_WINDOWS)
+    prettyname.replace('<', '_');
+    prettyname.replace('>', '_');
+    prettyname.replace('"', '_');
+    prettyname.replace('\\', '_');
+    prettyname.replace('|', '_');
+    prettyname.replace('?', '_');
+    prettyname.replace('*', '_');
+#endif
 
     return prettyname;
 }
@@ -202,6 +217,10 @@ QString DeviceToolBLEx::getAddr_export() const
     prettyaddr = m_bleDevice.deviceUuid().toString();
 #else
     prettyaddr = m_bleDevice.address().toString();
+#endif
+
+#if defined(Q_OS_MACOS) || defined(Q_OS_WINDOWS)
+    prettyaddr.replace(':', "");
 #endif
 
     return prettyaddr;
