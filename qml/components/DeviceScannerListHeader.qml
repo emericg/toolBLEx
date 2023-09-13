@@ -3,7 +3,7 @@ import QtQuick
 import ThemeEngine
 
 Rectangle {
-    id: deviceScannerHeader
+    id: deviceScannerListHeader
     anchors.left: parent.left
     anchors.right: parent.right
 

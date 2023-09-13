@@ -405,7 +405,7 @@ T.Button {
                 primaryColor: control.color
                 visible: (selectedDevice && selectedDevice.status !== DeviceUtils.DEVICE_OFFLINE)
 
-                text: (selectedDevice.connected) ? qsTr("disconnect") : qsTr("abort")
+                text: (selectedDevice && selectedDevice.connected) ? qsTr("disconnect") : qsTr("abort")
                 source: "qrc:/assets/icons_material/baseline-bluetooth_disabled-24px.svg"
 
                 onClicked: {

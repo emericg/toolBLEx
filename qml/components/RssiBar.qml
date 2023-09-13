@@ -24,8 +24,8 @@ T.ProgressBar {
     value: 0
     property real value2: 0
 
-    property string colorBackground: "transparent"
-    property string colorForeground: Theme.colorPrimary
+    property color colorBackground: (Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT) ? "#ccffffff" : "#cc333333"
+    property color colorForeground: Theme.colorPrimary
 
     background: Rectangle {
         implicitWidth: 200

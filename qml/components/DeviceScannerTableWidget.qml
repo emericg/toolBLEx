@@ -16,8 +16,15 @@ DelegateChooser {
         column: 0
 
         delegate: Rectangle { // color
+            opacity: (pointer.connected || pointer.selected || pointer.rssi < 0) ? 1 : 0.4
             color: {
-                if (row === devicesView.currentRow) return Theme.colorLVselected
+                if (pointer.selected) return Theme.colorLVselected
+                if (pointer.connected) {
+                    if (Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT)
+                        return Qt.lighter(Theme.colorGreen, 1.1)
+                    if (Theme.currentTheme === Theme.THEME_DESKTOP_DARK)
+                        return Qt.darker(Theme.colorGreen, 1.1)
+                }
                 if (row % 2 === 1) return Theme.colorLVimpair
                 return Theme.colorLVpair
             }
@@ -42,19 +49,26 @@ DelegateChooser {
             text: address
             textFormat: Text.PlainText
             font.family: fontMonospace
-            color: (row === devicesView.currentRow) ? "white" : Theme.colorText
+            color: (pointer.connected || pointer.selected) ? "white" : Theme.colorText
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideMiddle
 
-            Rectangle {
+            Rectangle { // background
                 anchors.fill: parent
                 z: -1
                 color: {
-                    if (row === devicesView.currentRow) return Theme.colorLVselected
+                    if (pointer.selected) return Theme.colorLVselected
+                    if (pointer.connected) {
+                        if (Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT)
+                            return Qt.lighter(Theme.colorGreen, 1.1)
+                        if (Theme.currentTheme === Theme.THEME_DESKTOP_DARK)
+                            return Qt.darker(Theme.colorGreen, 1.1)
+                    }
                     if (row % 2 === 1) return Theme.colorLVimpair
                     return Theme.colorLVpair
                 }
             }
+            opacity: (pointer.connected || pointer.selected || pointer.rssi < 0) ? 1 : 0.4
         }
     }
 
@@ -67,20 +81,26 @@ DelegateChooser {
 
             text: name
             textFormat: Text.PlainText
-            color: (row === devicesView.currentRow) ? "white" : Theme.colorText
+            color: (pointer.connected || pointer.selected) ? "white" : Theme.colorText
             elide: Text.ElideRight
             verticalAlignment: Text.AlignVCenter
 
-            Rectangle {
+            Rectangle { // background
                 anchors.fill: parent
                 z: -1
                 color: {
-                    if ((row === devicesView.currentRow)) return Theme.colorLVselected
-                    if (row === devicesView.currentRow) return Theme.colorLVselected
+                    if (pointer.selected) return Theme.colorLVselected
+                    if (pointer.connected) {
+                        if (Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT)
+                            return Qt.lighter(Theme.colorGreen, 1.1)
+                        if (Theme.currentTheme === Theme.THEME_DESKTOP_DARK)
+                            return Qt.darker(Theme.colorGreen, 1.1)
+                    }
                     if (row % 2 === 1) return Theme.colorLVimpair
                     return Theme.colorLVpair
                 }
             }
+            opacity: (pointer.connected || pointer.selected || pointer.rssi < 0) ? 1 : 0.4
         }
     }
 
@@ -93,19 +113,26 @@ DelegateChooser {
 
             text: manufacturer
             textFormat: Text.PlainText
-            color: (row === devicesView.currentRow) ? "white" : Theme.colorText
+            color: (pointer.connected || pointer.selected) ? "white" : Theme.colorText
             elide: Text.ElideRight
             verticalAlignment: Text.AlignVCenter
 
-            Rectangle {
+            Rectangle { // background
                 anchors.fill: parent
                 z: -1
                 color: {
-                    if (row === devicesView.currentRow) return Theme.colorLVselected
+                    if (pointer.selected) return Theme.colorLVselected
+                    if (pointer.connected) {
+                        if (Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT)
+                            return Qt.lighter(Theme.colorGreen, 1.1)
+                        if (Theme.currentTheme === Theme.THEME_DESKTOP_DARK)
+                            return Qt.darker(Theme.colorGreen, 1.1)
+                    }
                     if (row % 2 === 1) return Theme.colorLVimpair
                     return Theme.colorLVpair
                 }
             }
+            opacity: (pointer.connected || pointer.selected || pointer.rssi < 0) ? 1 : 0.4
         }
     }
 
@@ -115,8 +142,15 @@ DelegateChooser {
         delegate: Rectangle { // rssi
             implicitWidth: r.width
 
+            opacity: (pointer.connected || pointer.selected || pointer.rssi < 0) ? 1 : 0.4
             color: {
-                if (row === devicesView.currentRow) return Theme.colorLVselected
+                if (pointer.selected) return Theme.colorLVselected
+                if (pointer.connected) {
+                    if (Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT)
+                        return Qt.lighter(Theme.colorGreen, 1.1)
+                    if (Theme.currentTheme === Theme.THEME_DESKTOP_DARK)
+                        return Qt.darker(Theme.colorGreen, 1.1)
+                }
                 if (row % 2 === 1) return Theme.colorLVimpair
                 return Theme.colorLVpair
             }
@@ -133,15 +167,15 @@ DelegateChooser {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "-" + Math.abs(rssi).toFixed(0)
                     textFormat: Text.PlainText
-                    color: (row === devicesView.currentRow) ? "white" : Theme.colorText
+                    color: (pointer.connected || pointer.selected) ? "white" : Theme.colorText
                     horizontalAlignment: Text.AlignRight
                 }
 
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
-                    text: "dBm"
+                    text: qsTr("dBm")
                     textFormat: Text.PlainText
-                    color: (row === devicesView.currentRow) ? "white" : Theme.colorSubText
+                    color: (pointer.connected || pointer.selected) ? "#ddd" : Theme.colorSubText
                     font.pixelSize: 12
                 }
 
@@ -162,8 +196,15 @@ DelegateChooser {
         delegate: Rectangle { // interval
             implicitWidth: rr.width
 
+            opacity: (pointer.connected || pointer.selected || pointer.rssi < 0) ? 1 : 0.4
             color: {
-                if (row === devicesView.currentRow) return Theme.colorLVselected
+                if (pointer.selected) return Theme.colorLVselected
+                if (pointer.connected) {
+                    if (Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT)
+                        return Qt.lighter(Theme.colorGreen, 1.1)
+                    if (Theme.currentTheme === Theme.THEME_DESKTOP_DARK)
+                        return Qt.darker(Theme.colorGreen, 1.1)
+                }
                 if (row % 2 === 1) return Theme.colorLVimpair
                 return Theme.colorLVpair
             }
@@ -181,15 +222,15 @@ DelegateChooser {
 
                     text: interval
                     textFormat: Text.PlainText
-                    color: (row === devicesView.currentRow) ? "white" : Theme.colorText
+                    color: (pointer.connected || pointer.selected) ? "white" : Theme.colorText
                 }
 
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: "ms"
+                    text: qsTr("ms")
                     textFormat: Text.PlainText
-                    color: (row === devicesView.currentRow) ? "white" : Theme.colorSubText
+                    color: (pointer.connected || pointer.selected) ? "#ddd" : Theme.colorSubText
                     font.pixelSize: 12
                 }
             }
@@ -207,19 +248,26 @@ DelegateChooser {
                     pointer.lastSeen.toLocaleTimeString(locale, "hh:mm") :
                     pointer.lastSeen.toLocaleString(locale, "dd/MM hh:mm")
             textFormat: Text.PlainText
-            color: (row === devicesView.currentRow) ? "white" : Theme.colorText
+            color: (pointer.connected || pointer.selected) ? "white" : Theme.colorText
             elide: Text.ElideRight
             verticalAlignment: Text.AlignVCenter
 
-            Rectangle {
+            Rectangle { // background
                 anchors.fill: parent
                 z: -1
                 color: {
-                    if (row === devicesView.currentRow) return Theme.colorLVselected
+                    if (pointer.selected) return Theme.colorLVselected
+                    if (pointer.connected) {
+                        if (Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT)
+                            return Qt.lighter(Theme.colorGreen, 1.1)
+                        if (Theme.currentTheme === Theme.THEME_DESKTOP_DARK)
+                            return Qt.darker(Theme.colorGreen, 1.1)
+                    }
                     if (row % 2 === 1) return Theme.colorLVimpair
                     return Theme.colorLVpair
                 }
             }
+            opacity: (pointer.connected || pointer.selected || pointer.rssi < 0) ? 1 : 0.4
         }
     }
     DelegateChoice {
@@ -231,19 +279,26 @@ DelegateChooser {
 
             text: pointer.firstSeen.toLocaleString(locale, "dd/MM hh:mm")
             textFormat: Text.PlainText
-            color: (row === devicesView.currentRow) ? "white" : Theme.colorText
+            color: (pointer.connected || pointer.selected) ? "white" : Theme.colorText
             elide: Text.ElideRight
             verticalAlignment: Text.AlignVCenter
 
-            Rectangle {
+            Rectangle { // background
                 anchors.fill: parent
                 z: -1
                 color: {
-                    if (row === devicesView.currentRow) return Theme.colorLVselected
+                    if (pointer.selected) return Theme.colorLVselected
+                    if (pointer.connected) {
+                        if (Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT)
+                            return Qt.lighter(Theme.colorGreen, 1.1)
+                        if (Theme.currentTheme === Theme.THEME_DESKTOP_DARK)
+                            return Qt.darker(Theme.colorGreen, 1.1)
+                    }
                     if (row % 2 === 1) return Theme.colorLVimpair
                     return Theme.colorLVpair
                 }
             }
+            opacity: (pointer.connected || pointer.selected || pointer.rssi < 0) ? 1 : 0.4
         }
     }
 }

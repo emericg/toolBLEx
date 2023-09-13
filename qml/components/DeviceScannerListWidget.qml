@@ -8,7 +8,7 @@ import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
 import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
 
 Item {
-    id: deviceScannerWidget
+    id: deviceScannerListWidget
     implicitWidth: 720
     implicitHeight: 32
 
@@ -22,7 +22,12 @@ Item {
         anchors.fill: parent
         color: {
             if (boxDevice.selected) return Theme.colorLVselected
-            if (boxDevice.connected) return Qt.lighter(Theme.colorGreen,1.1)
+            if (boxDevice.connected) {
+                if (Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT)
+                    return Qt.lighter(Theme.colorGreen, 1.1)
+                if (Theme.currentTheme === Theme.THEME_DESKTOP_DARK)
+                    return Qt.darker(Theme.colorGreen, 1.1)
+            }
             if (index % 2 === 1) return Theme.colorLVimpair
             return Theme.colorLVpair
         }
@@ -78,7 +83,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         spacing: 16
 
-        opacity: (boxDevice.connected || boxDevice.rssi < 0) ? 1 : 0.4
+        opacity: (boxDevice.connected || boxDevice.selected || boxDevice.rssi < 0) ? 1 : 0.4
 
         ////
 
@@ -237,9 +242,9 @@ Item {
 
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
-                    text: "dBm"
+                    text: qsTr("dBm")
                     textFormat: Text.PlainText
-                    color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorSubText
+                    color: (boxDevice.connected || boxDevice.selected) ? "#ddd" : Theme.colorSubText
                     font.pixelSize: 12
                 }
             }
@@ -278,9 +283,9 @@ Item {
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: "ms"
+                    text: qsTr("ms")
                     textFormat: Text.PlainText
-                    color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorSubText
+                    color: (boxDevice.connected || boxDevice.selected) ? "#ddd" : Theme.colorSubText
                     font.pixelSize: 12
                 }
             }

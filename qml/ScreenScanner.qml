@@ -262,10 +262,20 @@ Loader {
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
 
+                    ScrollBar.vertical: ScrollBar {
+                        id: devicesViewScrollbar
+                        anchors.right: parent.right
+                        anchors.rightMargin: 0
+                        topPadding: 36
+                        policy: ScrollBar.AsNeeded
+                    }
+
                     clip: true
                     interactive: true
                     columnSpacing: 0
                     rowSpacing: 0
+
+                    property int count: devicesView.rows
 
                     selectionBehavior: TableView.SelectRows
                     selectionModel: ItemSelectionModel {
