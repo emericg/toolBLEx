@@ -4,26 +4,34 @@ import ThemeEngine
 
 Rectangle {
     id: deviceScannerListHeader
-    anchors.left: parent.left
-    anchors.right: parent.right
 
-    z: 5
-    height: 36
+    implicitWidth: 800
+    implicitHeight: 36
+
     color: Theme.colorLVheader
+    z: 5
 
     property bool showAddress: (Qt.platform.os !== "osx")
 
+    // prevent clicks below this area
+    MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
+
+    ////////
+
     Row {
         anchors.left: parent.left
-        anchors.leftMargin: 12
+        anchors.leftMargin: deviceManager.deviceHeader.margin
         anchors.right: parent.right
-        anchors.rightMargin: 12
+        anchors.rightMargin: deviceManager.deviceHeader.margin
         anchors.verticalCenter: parent.verticalCenter
 
-        Item { width: 12; height: 24; } // color
+        Item { // color column header
+            width: deviceManager.deviceHeader.colColor
+            height: 24
+        }
 
         Item { // separator ////////////////////////////////////////////////////
-            width: 16
+            width: deviceManager.deviceHeader.spacing
             height: 24
             visible: showAddress
             Rectangle {
@@ -34,11 +42,12 @@ Rectangle {
         }
 
         Text { // address column header
+            id: colAddress
             anchors.verticalCenter: parent.verticalCenter
-            width: ref.contentWidth
+            width: deviceManager.deviceHeader.colAddress
 
+            clip: true
             visible: showAddress
-
             text: qsTr("Address")
             color: Theme.colorText
             font.bold: (deviceManager.orderBy_role === "address")
@@ -95,19 +104,40 @@ Rectangle {
         }
 
         Item { // separator ////////////////////////////////////////////////////
-            width: 16
+            width: deviceManager.deviceHeader.spacing
             height: 24
-            Rectangle {
-                anchors.centerIn: parent
-                width: 2; height: 18;
-                color: Theme.colorLVseparator
+
+            MouseArea {
+                anchors.fill: parent
+
+                hoverEnabled: true
+                cursorShape: Qt.SplitHCursor
+
+                drag.target: parent
+                drag.axis: Drag.XAxis
+                drag.minimumX: colAddress.x + 16
+                drag.maximumX: colAddress.x + 512
+
+                onPositionChanged: {
+                    var delta =  parent.x - (colAddress.x + colAddress.width)
+                    if (delta != 0) deviceManager.deviceHeader.colAddress = colAddress.width + delta
+                }
+
+                Rectangle { // marker
+                    anchors.centerIn: parent
+                    width: 2; height: 18;
+                    color: parent.containsMouse || parent.drag.active ?
+                               ThemeEngine.colorSecondary : Theme.colorLVseparator
+                }
             }
         }
 
         Text { // name column header
+            id: colName
             anchors.verticalCenter: parent.verticalCenter
-            width: 220
+            width: deviceManager.deviceHeader.colName
 
+            clip: true
             text: qsTr("Advertised name")
             color: Theme.colorText
             font.bold: (deviceManager.orderBy_role === "name")
@@ -154,22 +184,42 @@ Rectangle {
         }
 
         Item { // separator ////////////////////////////////////////////////////
-            width: 16
+            width: deviceManager.deviceHeader.spacing
             height: 24
-            visible: showAddress
-            Rectangle {
-                anchors.centerIn: parent
-                width: 2; height: 18;
-                color: Theme.colorLVseparator
+
+            MouseArea {
+                anchors.fill: parent
+
+                hoverEnabled: true
+                cursorShape: Qt.SplitHCursor
+
+                drag.target: parent
+                drag.axis: Drag.XAxis
+                drag.minimumX: colName.x + 16
+                drag.maximumX: colName.x + 512
+
+                onPositionChanged: {
+                    var delta =  parent.x - (colName.x + colName.width)
+                    if (delta != 0) deviceManager.deviceHeader.colName = colName.width + delta
+                }
+
+                Rectangle { // marker
+                    anchors.centerIn: parent
+                    width: 2; height: 18;
+                    color: parent.containsMouse || parent.drag.active ?
+                               ThemeEngine.colorSecondary : Theme.colorLVseparator
+                }
             }
+
         }
 
         Text { // manufacturer column header
+            id: colManuf
             anchors.verticalCenter: parent.verticalCenter
-            width: 220
+            width: deviceManager.deviceHeader.colManuf
 
+            clip: true
             visible: showAddress
-
             text: qsTr("Manufacturer")
             font.bold: (deviceManager.orderBy_role === "manufacturer")
             color: Theme.colorText
@@ -216,18 +266,38 @@ Rectangle {
         }
 
         Item { // separator ////////////////////////////////////////////////////
-            width: 16
+            width: deviceManager.deviceHeader.spacing
             height: 24
-            Rectangle {
-                anchors.centerIn: parent
-                width: 2; height: 18;
-                color: Theme.colorLVseparator
+
+            visible: showAddress
+            MouseArea {
+                anchors.fill: parent
+
+                hoverEnabled: true
+                cursorShape: Qt.SplitHCursor
+
+                drag.target: parent
+                drag.axis: Drag.XAxis
+                drag.minimumX: colManuf.x + 16
+                drag.maximumX: colManuf.x + 512
+
+                onPositionChanged: {
+                    var delta =  parent.x - (colManuf.x + colManuf.width)
+                    if (delta != 0) deviceManager.deviceHeader.colManuf = colManuf.width + delta
+                }
+
+                Rectangle { // marker
+                    anchors.centerIn: parent
+                    width: 2; height: 18;
+                    color: parent.containsMouse || parent.drag.active ?
+                               ThemeEngine.colorSecondary : Theme.colorLVseparator
+                }
             }
         }
 
         Item { // RSSI column header
             anchors.verticalCenter: parent.verticalCenter
-            width: 180
+            width: deviceManager.deviceHeader.colRssi
             height: 24
 
             Row {
@@ -294,7 +364,7 @@ Rectangle {
         }
 
         Item { // separator ////////////////////////////////////////////////////
-            width: 16
+            width: deviceManager.deviceHeader.spacing
             height: 24
             Rectangle {
                 anchors.centerIn: parent
@@ -305,7 +375,7 @@ Rectangle {
 
         Item { // Adv interval header column
             anchors.verticalCenter: parent.verticalCenter
-            width: 120
+            width: deviceManager.deviceHeader.colInterval
             height: 24
 
             Row {
@@ -370,7 +440,7 @@ Rectangle {
         }
 
         Item { // separator ////////////////////////////////////////////////////
-            width: 16
+            width: deviceManager.deviceHeader.spacing
             height: 24
             Rectangle {
                 anchors.centerIn: parent
@@ -381,7 +451,7 @@ Rectangle {
 
         Text { // last seen header column
             anchors.verticalCenter: parent.verticalCenter
-            width: 120
+            width: deviceManager.deviceHeader.colLastSeen
 
             text: qsTr("Last seen")
             font.bold: (deviceManager.orderBy_role === "lastseen")
@@ -429,7 +499,7 @@ Rectangle {
         }
 
         Item { // separator ////////////////////////////////////////////////////
-            width: 16
+            width: deviceManager.deviceHeader.spacing
             height: 24
             Rectangle {
                 anchors.centerIn: parent
@@ -440,7 +510,7 @@ Rectangle {
 
         Text { // first seen header column
             anchors.verticalCenter: parent.verticalCenter
-            width: 120
+            width: deviceManager.deviceHeader.colFirstSeen
 
             text: qsTr("First seen")
             font.bold: (deviceManager.orderBy_role === "firstseen")
@@ -488,7 +558,7 @@ Rectangle {
         }
 
         Item { // separator ////////////////////////////////////////////////////
-            width: 16
+            width: deviceManager.deviceHeader.spacing
             height: 24
             Rectangle {
                 anchors.centerIn: parent
@@ -498,7 +568,9 @@ Rectangle {
         }
     }
 
-    Rectangle {
+    ////////
+
+    Rectangle { // bottom separator
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
@@ -506,4 +578,6 @@ Rectangle {
         height: 2
         color: Qt.lighter(Theme.colorLVseparator, 1.06)
     }
+
+    ////////
 }

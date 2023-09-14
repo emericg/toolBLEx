@@ -9,7 +9,8 @@ import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
 
 Item {
     id: deviceScannerListWidget
-    implicitWidth: 720
+
+    implicitWidth: 800
     implicitHeight: 32
 
     property var boxDevice: pointer
@@ -77,18 +78,20 @@ Item {
 
     Row {
         anchors.left: parent.left
-        anchors.leftMargin: 12
+        anchors.leftMargin: deviceManager.deviceHeader.margin
         anchors.right: parent.right
-        anchors.rightMargin: 12
+        anchors.rightMargin: deviceManager.deviceHeader.margin
         anchors.verticalCenter: parent.verticalCenter
-        spacing: 16
+        spacing: deviceManager.deviceHeader.spacing
 
         opacity: (boxDevice.connected || boxDevice.selected || boxDevice.rssi < 0) ? 1 : 0.4
 
         ////
 
         Item { // color
-            width: 12; height: 32;
+            anchors.verticalCenter: parent.verticalCenter
+            width: deviceManager.deviceHeader.colColor
+            height: 32
 
             Rectangle {
                 anchors.centerIn: parent
@@ -103,33 +106,22 @@ Item {
 
         Text { // address
             anchors.verticalCenter: parent.verticalCenter
-            width: ref.contentWidth
+            width: deviceManager.deviceHeader.colAddress
 
             visible: showAddress
-
             text: boxDevice.deviceAddress
             textFormat: Text.PlainText
             font.family: fontMonospace
             color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorText
             elide: Text.ElideMiddle
-
-            Text {
-                id: ref
-                visible: false
-                text: (Qt.platform.os === "osx") ?
-                          "329562a2-d357-470a-862c-6f6b73397607" :
-                          "00:11:22:33:44:55"
-                textFormat: Text.PlainText
-                font.family: fontMonospace
-            }
         }
 
         ////
 
         RowLayout { // icons + name
-            width: 220
-            height: 32
             anchors.verticalCenter: parent.verticalCenter
+            width: deviceManager.deviceHeader.colName
+            height: 32
             spacing: 8
 
             IconSvg { // device
@@ -209,7 +201,7 @@ Item {
 
         Text { // mac vendor
             anchors.verticalCenter: parent.verticalCenter
-            width: 220
+            width: deviceManager.deviceHeader.colManuf
 
             visible: showAddress
 
@@ -223,7 +215,7 @@ Item {
 
         Item { // rssi
             anchors.verticalCenter: parent.verticalCenter
-            width: 180
+            width: deviceManager.deviceHeader.colRssi
             height: 16
 
             Row {
@@ -264,7 +256,7 @@ Item {
 
         Item { // interval
             anchors.verticalCenter: parent.verticalCenter
-            width: 120
+            width: deviceManager.deviceHeader.colInterval
             height: 32
 
             Row {
@@ -294,7 +286,7 @@ Item {
         ////
 
         Item { // last seen
-            width: 120
+            width: deviceManager.deviceHeader.colLastSeen
             height: 32
 
             Text {
@@ -311,7 +303,7 @@ Item {
         ////
 
         Item { // first seen
-            width: 120
+            width: deviceManager.deviceHeader.colFirstSeen
             height: 32
 
             Text {

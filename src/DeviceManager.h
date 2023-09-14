@@ -24,6 +24,7 @@
 /* ************************************************************************** */
 
 #include "DeviceFilter.h"
+#include "DeviceHeader.h"
 
 #include <QObject>
 #include <QVariant>
@@ -52,8 +53,9 @@ class DeviceManager: public QObject
     Q_PROPERTY(int adaptersCount READ getAdaptersCount NOTIFY adaptersListUpdated)
 
     Q_PROPERTY(bool hasDevices READ areDevicesAvailable NOTIFY devicesListUpdated)
-    Q_PROPERTY(DeviceFilter *devicesList READ getDevicesFiltered NOTIFY devicesListUpdated)
     Q_PROPERTY(int deviceCount READ getDeviceCount NOTIFY devicesListUpdated)
+    Q_PROPERTY(DeviceHeader *deviceHeader READ getDeviceHeader NOTIFY deviceHeaderUpdated)
+    Q_PROPERTY(DeviceFilter *devicesList READ getDevicesFiltered NOTIFY devicesListUpdated)
 
     Q_PROPERTY(int deviceCached READ getDeviceCached NOTIFY devicesCacheUpdated)
 
@@ -94,6 +96,7 @@ class DeviceManager: public QObject
 
     DeviceModel *m_devices_model = nullptr;
     DeviceFilter *m_devices_filter = nullptr;
+    DeviceHeader *m_device_header = nullptr;
 
     bool m_listening = false;
     bool isListening() const;
@@ -149,6 +152,7 @@ Q_SIGNALS:
 
     void adaptersListUpdated();
 
+    void deviceHeaderUpdated();
     void devicesListUpdated();
     void devicesCacheUpdated();
     void devicesBlacklistUpdated();
@@ -209,6 +213,7 @@ public:
     // Devices list management
     Q_INVOKABLE bool areDevicesAvailable() const { return m_devices_model->hasDevices(); }
     DeviceFilter *getDevicesFiltered() const { return m_devices_filter; }
+    DeviceHeader *getDeviceHeader() const { return m_device_header; }
     int getDeviceCount() const { return m_devices_model->getDeviceCount(); }
 
     void blacklistDevice(const QString &addr);

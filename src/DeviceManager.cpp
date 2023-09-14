@@ -50,6 +50,7 @@ DeviceManager::DeviceManager(bool daemon)
     m_daemonMode = daemon;
 
     // Data model init
+    m_device_header = new DeviceHeader(this);
     m_devices_model = new DeviceModel(this);
     m_devices_filter = new DeviceFilter(this);
     m_devices_filter->setSourceModel(m_devices_model);
@@ -118,6 +119,7 @@ DeviceManager::~DeviceManager()
     delete m_bluetoothAdapter;
     delete m_discoveryAgent;
 
+    delete m_device_header;
     delete m_devices_filter;
     delete m_devices_model;
 }

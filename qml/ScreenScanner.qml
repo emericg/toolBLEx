@@ -337,7 +337,7 @@ Loader {
                         topPadding: 36
                     }
 
-                    contentWidth: -1
+                    contentWidth: deviceManager.deviceHeader.width
                     ScrollBar.horizontal: ScrollBar {
                         anchors.bottom: parent.bottom
                         policy: ScrollBar.AsNeeded
@@ -413,6 +413,9 @@ Loader {
 
                 clip: true
                 color: Theme.colorBackground
+
+                // prevent clicks below this area
+                MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
 
                 ////
 

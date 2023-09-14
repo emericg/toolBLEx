@@ -49,6 +49,7 @@ HEADERS  += src/SettingsManager.h \
             src/MenubarManager.h \
             src/DatabaseManager.h \
             src/DeviceManager.h \
+            src/DeviceHeader.h \
             src/DeviceFilter.h \
             src/VendorsDatabase.h \
             src/ubertooth.h \
