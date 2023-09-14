@@ -706,6 +706,8 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
 {
     bool hasNewData = false;
 
+    Q_UNUSED(uuid)
+
     // mode:
     // DeviceUtils::BLE_ADV_MANUFACTURERDATA
     // DeviceUtils::BLE_ADV_SERVICEDATA

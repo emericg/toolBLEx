@@ -79,14 +79,14 @@ Popup {
                     font.pixelSize: Theme.fontSizeTitle
                     font.bold: true
                     color: "white"
-                    opacity: 0.98
+                    opacity: 0.96
                 }
                 Text {
                     id: uuid_tf
                     text: "00000000-0000-1000-8000-00805F9B34FB"
-                    font.pixelSize: Theme.fontSizeTitle-4
+                    font.pixelSize: Theme.fontSizeContentBig
                     color: "white"
-                    opacity: 0.9
+                    opacity: 0.88
                 }
             }
 
@@ -94,15 +94,17 @@ Popup {
                 anchors.right: parent.right
                 anchors.rightMargin: 24
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 4
+                spacing: 8
 
                 Repeater { // characteristic properties
                     anchors.verticalCenter: parent.verticalCenter
                     model: characteristic && characteristic.propertiesList
+
                     ItemTag {
                         text: modelData
-                        textColor: Theme.colorLightGrey
-                        opacity: 0.8
+                        textColor: "white"
+                        color: Qt.darker(Theme.colorPrimary, 1.1)
+                        opacity: 0.84
                     }
                 }
             }
@@ -137,7 +139,7 @@ Popup {
                 ButtonWireframe {
                     height: 28
                     fullColor: true
-                    primaryColor: (rowType.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    primaryColor: (rowType.mode === text) ? Theme.colorPrimary : Theme.colorLightGrey
                     onClicked: rowType.mode = text
 
                     text: qsTr("data")
@@ -145,7 +147,7 @@ Popup {
                 ButtonWireframe {
                     height: 28
                     fullColor: true
-                    primaryColor: (rowType.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    primaryColor: (rowType.mode === text) ? Theme.colorPrimary : Theme.colorLightGrey
                     onClicked: rowType.mode = text
 
                     text: qsTr("text")
@@ -153,7 +155,7 @@ Popup {
                 ButtonWireframe {
                     height: 28
                     fullColor: true
-                    primaryColor: (rowType.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    primaryColor: (rowType.mode === text) ? Theme.colorPrimary : Theme.colorLightGrey
                     onClicked: rowType.mode = text
 
                     text: qsTr("integer")
@@ -161,7 +163,7 @@ Popup {
                 ButtonWireframe {
                     height: 28
                     fullColor: true
-                    primaryColor: (rowType.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    primaryColor: (rowType.mode === text) ? Theme.colorPrimary : Theme.colorLightGrey
                     onClicked: rowType.mode = text
 
                     text: qsTr("float")
@@ -181,7 +183,7 @@ Popup {
                 ButtonWireframe {
                     height: 28
                     fullColor: true
-                    primaryColor: (rowSubType_data.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    primaryColor: (rowSubType_data.mode === text) ? Theme.colorPrimary : Theme.colorLightGrey
                     onClicked: rowSubType_data.mode = text
 
                     text: qsTr("bytes")
@@ -189,7 +191,7 @@ Popup {
                 ButtonWireframe {
                     height: 28
                     fullColor: true
-                    primaryColor: (rowSubType_data.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    primaryColor: (rowSubType_data.mode === text) ? Theme.colorPrimary : Theme.colorLightGrey
                     onClicked: rowSubType_data.mode = text
 
                     text: qsTr("byte")
@@ -209,7 +211,7 @@ Popup {
                 ButtonWireframe {
                     height: 28
                     fullColor: true
-                    primaryColor: (rowSubType_text.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    primaryColor: (rowSubType_text.mode === text) ? Theme.colorPrimary : Theme.colorLightGrey
                     onClicked: rowSubType_text.mode = text
 
                     text: qsTr("ascii")
@@ -217,10 +219,11 @@ Popup {
                 ButtonWireframe {
                     height: 28
                     fullColor: true
-                    primaryColor: (rowSubType_text.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    primaryColor: (rowSubType_text.mode === text) ? Theme.colorPrimary : Theme.colorLightGrey
                     onClicked: rowSubType_text.mode = text
 
                     text: qsTr("UTF-8")
+                    visible: false
                 }
             }
 
@@ -239,7 +242,7 @@ Popup {
                 ButtonWireframe {
                     height: 28
                     fullColor: true
-                    primaryColor: (rowSubType_int.mode_signed === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    primaryColor: (rowSubType_int.mode_signed === text) ? Theme.colorPrimary : Theme.colorLightGrey
                     onClicked: rowSubType_int.mode_signed = text
 
                     text: qsTr("signed")
@@ -247,7 +250,7 @@ Popup {
                 ButtonWireframe {
                     height: 28
                     fullColor: true
-                    primaryColor: (rowSubType_int.mode_signed === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    primaryColor: (rowSubType_int.mode_signed === text) ? Theme.colorPrimary : Theme.colorLightGrey
                     onClicked: rowSubType_int.mode_signed = text
 
                     text: qsTr("unsigned")
@@ -258,7 +261,7 @@ Popup {
                 ButtonWireframe {
                     height: 28
                     fullColor: true
-                    primaryColor: (rowSubType_int.mode_endian === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    primaryColor: (rowSubType_int.mode_endian === text) ? Theme.colorPrimary : Theme.colorLightGrey
                     onClicked: rowSubType_int.mode_endian = text
 
                     text: qsTr("le")
@@ -266,7 +269,7 @@ Popup {
                 ButtonWireframe {
                     height: 28
                     fullColor: true
-                    primaryColor: (rowSubType_int.mode_endian === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    primaryColor: (rowSubType_int.mode_endian === text) ? Theme.colorPrimary : Theme.colorLightGrey
                     onClicked: rowSubType_int.mode_endian = text
 
                     text: qsTr("be")
@@ -279,41 +282,41 @@ Popup {
                 spacing: 8
 
                 visible: rowType.mode === qsTr("integer")
-                property string mode: "32 bits"
+                property string mode: qsTr("32 bits")
 
                 onModeChanged: columnTf.updateTextFields()
 
                 ButtonWireframe {
                     height: 28
                     fullColor: true
-                    primaryColor: (rowSizeType_int.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    primaryColor: (rowSizeType_int.mode === text) ? Theme.colorPrimary : Theme.colorLightGrey
                     onClicked: rowSizeType_int.mode = text
 
-                    text: "8 bits"
+                    text: qsTr("8 bits")
                 }
                 ButtonWireframe {
                     height: 28
                     fullColor: true
-                    primaryColor: (rowSizeType_int.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    primaryColor: (rowSizeType_int.mode === text) ? Theme.colorPrimary : Theme.colorLightGrey
                     onClicked: rowSizeType_int.mode = text
 
-                    text: "16 bits"
+                    text: qsTr("16 bits")
                 }
                 ButtonWireframe {
                     height: 28
                     fullColor: true
-                    primaryColor: (rowSizeType_int.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    primaryColor: (rowSizeType_int.mode === text) ? Theme.colorPrimary : Theme.colorLightGrey
                     onClicked: rowSizeType_int.mode = text
 
-                    text: "32 bits"
+                    text: qsTr("32 bits")
                 }
                 ButtonWireframe {
                     height: 28
                     fullColor: true
-                    primaryColor: (rowSizeType_int.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    primaryColor: (rowSizeType_int.mode === text) ? Theme.colorPrimary : Theme.colorLightGrey
                     onClicked: rowSizeType_int.mode = text
 
-                    text: "64 bits"
+                    text: qsTr("64 bits")
                 }
             }
 
@@ -323,15 +326,15 @@ Popup {
                 spacing: 10
 
                 visible: rowType.mode === qsTr("float")
-                property string mode: "IEEE 754"
+                property string mode: qsTr("IEEE 754")
 
                 ButtonWireframe {
                     height: 28
                     fullColor: true
-                    primaryColor: (rowSubType_float.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    primaryColor: (rowSubType_float.mode === text) ? Theme.colorPrimary : Theme.colorLightGrey
                     onClicked: rowSubType_float.mode = text
 
-                    text: "IEEE 754"
+                    text: qsTr("IEEE 754")
                 }
             }
 
@@ -341,25 +344,25 @@ Popup {
                 spacing: 10
 
                 visible: rowType.mode === qsTr("float")
-                property string mode: "32 bits"
+                property string mode: qsTr("32 bits")
 
                 onModeChanged: columnTf.updateTextFields()
 
                 ButtonWireframe {
                     height: 28
                     fullColor: true
-                    primaryColor: (rowSizeType_float.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    primaryColor: (rowSizeType_float.mode === text) ? Theme.colorPrimary : Theme.colorLightGrey
                     onClicked: rowSizeType_float.mode = text
 
-                    text: "32 bits"
+                    text: qsTr("32 bits")
                 }
                 ButtonWireframe {
                     height: 28
                     fullColor: true
-                    primaryColor: (rowSizeType_float.mode === text) ? Theme.colorGrey : Theme.colorLightGrey
+                    primaryColor: (rowSizeType_float.mode === text) ? Theme.colorPrimary : Theme.colorLightGrey
                     onClicked: rowSizeType_float.mode = text
 
-                    text: "64 bits"
+                    text: qsTr("64 bits")
                 }
             }
         }
@@ -430,7 +433,7 @@ Popup {
                 width: parent.width
 
                 visible: rowType.mode === qsTr("text")
-                placeholderText: "ascii text"
+                placeholderText: qsTr("ascii text")
 
                 font.pixelSize: 18
                 font.bold: false
@@ -448,7 +451,7 @@ Popup {
                 width: parent.width
 
                 visible: rowType.mode === qsTr("data")
-                placeholderText: "hexadecimal data"
+                placeholderText: qsTr("hexadecimal data")
 
                 font.pixelSize: 18
                 font.bold: false
@@ -466,7 +469,7 @@ Popup {
                 width: parent.width
 
                 visible: rowType.mode === qsTr("integer")
-                placeholderText: "integer"
+                placeholderText: qsTr("integer")
 
                 font.pixelSize: 18
                 font.bold: false
@@ -486,7 +489,7 @@ Popup {
                 width: parent.width
 
                 visible: rowType.mode === qsTr("float")
-                placeholderText: "floating point"
+                placeholderText: qsTr("floating point")
 
                 font.pixelSize: 18
                 font.bold: false

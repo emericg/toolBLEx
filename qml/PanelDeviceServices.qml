@@ -97,6 +97,35 @@ Item {
         clip: false
         visible: (selectedDevice && selectedDevice.servicesCount > 0)
 
+        header: Rectangle {
+            width: servicesView.width
+            height: (selectedDevice && selectedDevice.servicesScanMode === 1) ? 40 : 0
+            color: Theme.colorForeground
+
+            visible: (selectedDevice && selectedDevice.servicesScanMode === 1)
+
+            IconSvg {
+                anchors.left: parent.left
+                anchors.leftMargin: 16
+                anchors.verticalCenter: parent.verticalCenter
+                width: 24
+                height: 24
+                source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
+                color: Theme.colorIcon
+            }
+
+            Text {
+                anchors.left: parent.left
+                anchors.leftMargin: 52
+                anchors.right: parent.right
+                anchors.rightMargin: 16
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: qsTr("Services info loaded from cache")
+                color: Theme.colorText
+            }
+        }
+
         model: (selectedDevice && selectedDevice.servicesList)
         delegate: BleServiceWidget {
             width: servicesView.width
@@ -119,7 +148,7 @@ Item {
 
             visible: (selectedDevice &&
                       selectedDevice.servicesCount > 1 &&
-                      selectedDevice && selectedDevice.servicesScanMode > 1)
+                      selectedDevice.servicesScanMode > 1)
 
             text: qsTr("Cache")
             source: "qrc:/assets/icons_material/baseline-save-24px.svg"

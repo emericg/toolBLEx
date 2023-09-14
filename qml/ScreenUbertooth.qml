@@ -229,13 +229,13 @@ Loader {
                         height: 18
                         Text {
                             anchors.left: parent.left
-                            text: "2.3 GHz"
+                            text: qsTr("2.3 GHz")
                             font.pixelSize: Theme.fontSizeContentSmall
                             color: Theme.colorSubText
                         }
                         Text {
                             anchors.right: parent.right
-                            text: "2.6 GHz"
+                            text: qsTr("2.6 GHz")
                             font.pixelSize: Theme.fontSizeContentSmall
                             color: Theme.colorSubText
                         }

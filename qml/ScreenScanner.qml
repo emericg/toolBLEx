@@ -92,6 +92,8 @@ Loader {
                 clip: false
                 color: Theme.colorLVpair
 
+                ////////
+
                 Rectangle {
                     id: actionBar
                     anchors.left: parent.left
@@ -245,6 +247,8 @@ Loader {
                         color: Theme.colorSeparator
                     }
                 }
+
+                ////////
 /*
                 DeviceScannerTableHeader {
                     id: horizontalHeader
@@ -267,6 +271,10 @@ Loader {
                         anchors.right: parent.right
                         anchors.rightMargin: 0
                         topPadding: 36
+                        policy: ScrollBar.AsNeeded
+                    }
+                    ScrollBar.horizontal: ScrollBar {
+                        anchors.bottom: parent.bottom
                         policy: ScrollBar.AsNeeded
                     }
 
@@ -309,6 +317,8 @@ Loader {
                     delegate: DeviceScannerTableWidget { }
                 }
 */
+                ////////
+
                 ListView {
                     id: devicesView
 
@@ -317,21 +327,34 @@ Loader {
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
 
+                    boundsBehavior: Flickable.StopAtBounds
+                    flickableDirection: Flickable.AutoFlickDirection
+
+                    contentHeight: -1
                     ScrollBar.vertical: ScrollBar {
                         id: devicesViewScrollbar
-                        anchors.right: parent.right
-                        anchors.rightMargin: 0
+                        policy: ScrollBar.AsNeeded
                         topPadding: 36
+                    }
+
+                    contentWidth: -1
+                    ScrollBar.horizontal: ScrollBar {
+                        anchors.bottom: parent.bottom
                         policy: ScrollBar.AsNeeded
                     }
 
                     headerPositioning: ListView.OverlayHeader
-                    header: DeviceScannerListHeader { }
+                    header: DeviceScannerListHeader {
+                        width: appContent.width
+                    }
 
                     model: deviceManager.devicesList
                     delegate: DeviceScannerListWidget {
-                        width: devicesView.width
+                        width: appContent.width
                     }
+
+                    //interactive: true
+                    //snapMode : ListView.SnapToItem
 
                     Keys.onPressed: (event) => {
                         if (event.key === Qt.Key_Escape) {
@@ -371,6 +394,8 @@ Loader {
                         }
                     }
                 }
+
+                ////////
             }
 
             ////////////////

@@ -188,6 +188,7 @@ Loader {
                                     height: 40
                                     fullColor: true
                                     primaryColor: "#5483EF"
+                                    font.bold: true
 
                                     text: qsTr("WEBSITE")
                                     //sourceSize: 28
@@ -204,6 +205,7 @@ Loader {
                                     sourceSize: 22
                                     fullColor: true
                                     primaryColor: "#5483EF"
+                                    font.bold: true
 
                                     text: qsTr("SUPPORT")
                                     source: "qrc:/assets/icons_material/baseline-support-24px.svg"
@@ -215,8 +217,9 @@ Loader {
                                     sourceSize: 22
                                     fullColor: true
                                     primaryColor: "#5483EF"
+                                    font.bold: true
 
-                                    text: qsTr("Release notes")
+                                    text: qsTr("RELEASE NOTES")
                                     source: "qrc:/assets/icons_material/outline-new_releases-24px.svg"
                                     onClicked: Qt.openUrlExternally("https://github.com/emericg/toolBLEx/releases")
                                 }
