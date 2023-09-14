@@ -3,7 +3,7 @@
 echo "> toolBLEx packager (macOS x86_64)"
 
 export APP_NAME="toolBLEx";
-export APP_VERSION=0.7;
+export APP_VERSION=0.8;
 export GIT_VERSION=$(git rev-parse --short HEAD);
 
 ## CHECKS ######################################################################
