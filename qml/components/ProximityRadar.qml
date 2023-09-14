@@ -2,6 +2,8 @@ import QtQuick
 
 import ThemeEngine
 
+import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
+
 Item {
     id: proximityRadar
 
@@ -124,15 +126,23 @@ Item {
             }
 
             Loader {
-                active: circleDevice.isStarred
+                anchors.centerIn: parent
+
+                active: (circleDevice.isStarred || circleDevice.isBeacon || circleDevice.majorClass)
                 asynchronous: true
 
                 sourceComponent: IconSvg {
-                    width: 32
-                    height: 32
-                    opacity: 0.33
-                    source: "qrc:/assets/icons_material/baseline-stars-24px.svg"
+                    anchors.centerIn: parent
+                    width: (circleDevice.isStarred) ? 32 : 20
+                    height: width
+                    opacity: 0.66
                     color: "white"
+                    source: {
+                        if (circleDevice.isStarred) return "qrc:/assets/icons_material/baseline-stars-24px.svg"
+                        if (circleDevice.isBeacon) return "qrc:/assets/icons_bootstrap/tags.svg"
+                        if (circleDevice.majorClass) return UtilsBluetooth.getBluetoothMinorClassIcon(circleDevice.majorClass, circleDevice.minorClass)
+                        return ""
+                    }
                 }
             }
 
