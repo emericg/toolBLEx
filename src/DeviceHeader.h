@@ -44,10 +44,10 @@ class DeviceHeader: public QObject
     Q_PROPERTY(int colAddress READ getColAddr WRITE setColAddr NOTIFY colAddrChanged)
     Q_PROPERTY(int colName READ getColName WRITE setColName NOTIFY colNameChanged)
     Q_PROPERTY(int colManuf READ getColManuf WRITE setColManuf NOTIFY colManufChanged)
-    Q_PROPERTY(int colRssi READ getColRssi CONSTANT)
-    Q_PROPERTY(int colInterval READ getColInterval CONSTANT)
-    Q_PROPERTY(int colFirstSeen READ getColFirstSeen CONSTANT)
-    Q_PROPERTY(int colLastSeen READ getColLastSeen CONSTANT)
+    Q_PROPERTY(int colRssi READ getColRssi WRITE setColRssi NOTIFY colRssiChanged)
+    Q_PROPERTY(int colInterval READ getColInterval WRITE setColInterval NOTIFY colIntervalChanged)
+    Q_PROPERTY(int colFirstSeen READ getColFirstSeen WRITE setColSeen NOTIFY colRssiChanged)
+    Q_PROPERTY(int colLastSeen READ getColLastSeen WRITE setColSeen NOTIFY colSeenChanged)
 
     int m_color = 12;
     int m_addr = 180;
@@ -63,6 +63,9 @@ Q_SIGNALS:
     void colAddrChanged();
     void colNameChanged();
     void colManufChanged();
+    void colRssiChanged();
+    void colIntervalChanged();
+    void colSeenChanged();
 
 public:
     DeviceHeader(QObject *parent = nullptr): QObject(parent) {}
@@ -71,9 +74,11 @@ public:
     int getWidth() const {
         int w = getMargin()*2 + getSpacing()*7;
         w += m_color;
-        w += m_addr;
         w += m_name;
+#if !defined(Q_OS_MACOS)
+        w += m_addr;
         w += m_manuf;
+#endif
         w += m_rssi;
         w += m_interval;
         w += m_firstseen;
@@ -120,6 +125,37 @@ public:
             m_manuf = value;
 
             Q_EMIT colManufChanged();
+            Q_EMIT widthChanged();
+        }
+    }
+    void setColRssi(int value) {
+        if (value != m_rssi) {
+            if (value < 16) value = 16;
+            if (value > 256) value = 256;
+            m_rssi = value;
+
+            Q_EMIT colRssiChanged();
+            Q_EMIT widthChanged();
+        }
+    }
+    void setColInterval(int value) {
+        if (value != m_interval) {
+            if (value < 16) value = 16;
+            if (value > 256) value = 256;
+            m_interval = value;
+
+            Q_EMIT colIntervalChanged();
+            Q_EMIT widthChanged();
+        }
+    }
+    void setColSeen(int value) {
+        if (value != m_firstseen) {
+            if (value < 16) value = 16;
+            if (value > 128) value = 256;
+            m_firstseen = value;
+            m_lastseen = value;
+
+            Q_EMIT colSeenChanged();
             Q_EMIT widthChanged();
         }
     }

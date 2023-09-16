@@ -588,7 +588,6 @@ Loader {
                                 anchors.right: parent.right
                                 anchors.rightMargin: 16
                                 anchors.verticalCenter: parent.verticalCenter
-                                width: 140
 
                                 editable: false
                                 legend: "m"
@@ -624,7 +623,6 @@ Loader {
                                 anchors.right: parent.right
                                 anchors.rightMargin: 16
                                 anchors.verticalCenter: parent.verticalCenter
-                                width: 140
 
                                 editable: false
                                 legend: "ms"
@@ -897,7 +895,7 @@ Loader {
                                 anchors.left: parent.left
                                 anchors.leftMargin: 16
                                 anchors.verticalCenter: parent.verticalCenter
-                                width: 150
+                                z: 2
 
                                 hoverEnabled: false
                                 editable: false
@@ -924,7 +922,7 @@ Loader {
                                 anchors.right: parent.right
                                 anchors.rightMargin: 16
                                 anchors.verticalCenter: parent.verticalCenter
-                                width: 150
+                                z: 2
 
                                 hoverEnabled: false
                                 editable: false

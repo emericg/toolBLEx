@@ -74,10 +74,13 @@ Flickable {
                 Component.onCompleted: {
                     legendWidth = 80
                     legendWidth = Math.max(legendWidth, legendName.contentWidth)
-                    legendWidth = Math.max(legendWidth, legendAddressMAC.contentWidth)
-                    legendWidth = Math.max(legendWidth, legendAddressUUID.contentWidth)
-                    legendWidth = Math.max(legendWidth, legendManufacturer.contentWidth)
                     legendWidth = Math.max(legendWidth, legendBluetooth.contentWidth)
+                    if (Qt.platform.os === "osx") {
+                        legendWidth = Math.max(legendWidth, legendAddressUUID.contentWidth)
+                    } else {
+                        legendWidth = Math.max(legendWidth, legendAddressMAC.contentWidth)
+                        legendWidth = Math.max(legendWidth, legendManufacturer.contentWidth)
+                    }
                 }
 
                 RowLayout {
@@ -421,13 +424,15 @@ Flickable {
                     anchors.right: parent.right
                     spacing: 12
 
+                    property int www: (width > 320) ? ((width - spacing) / 2) : width
+
                     ButtonScanMenu {
-                        width: ((parent.width - parent.spacing) / 2)
+                        width: parent.www
                     }
 
                     ButtonWireframeIcon {
                         id: exportButton
-                        width: ((parent.width - parent.spacing) / 2)
+                        width: parent.www
                         fullColor: true
                         primaryColor: Theme.colorGrey
 

@@ -18,6 +18,30 @@ Rectangle {
 
     ////////
 
+    Text { // address field size reference
+        visible: false
+        text: (Qt.platform.os === "osx") ?
+                  "329562a2-d357-470a-862c-6f6b73397607" :
+                  "00:11:22:33:44:55"
+        textFormat: Text.PlainText
+        font.family: fontMonospace
+        Component.onCompleted: deviceManager.deviceHeader.colAddress = contentWidth
+    }
+    Text { // adv interval field size reference
+        visible: false
+        text: "000000000"
+        textFormat: Text.PlainText
+        Component.onCompleted: deviceManager.deviceHeader.colInterval = contentWidth
+    }
+    Text { // "seen" fields size reference
+        visible: false
+        text: "00/00 00:00"
+        textFormat: Text.PlainText
+        Component.onCompleted: deviceManager.deviceHeader.colFirstSeen = contentWidth
+    }
+
+    ////////
+
     Row {
         anchors.left: parent.left
         anchors.leftMargin: deviceManager.deviceHeader.margin
@@ -51,16 +75,6 @@ Rectangle {
             text: qsTr("Address")
             color: Theme.colorText
             font.bold: (deviceManager.orderBy_role === "address")
-
-            Text {
-                id: ref
-                visible: false
-                text: (Qt.platform.os === "osx") ?
-                          "329562a2-d357-470a-862c-6f6b73397607" :
-                          "00:11:22:33:44:55"
-                textFormat: Text.PlainText
-                font.family: fontMonospace
-            }
 
             MouseArea {
                 anchors.fill: parent
@@ -126,8 +140,11 @@ Rectangle {
                 Rectangle { // marker
                     anchors.centerIn: parent
                     width: 2; height: 18;
-                    color: parent.containsMouse || parent.drag.active ?
-                               ThemeEngine.colorSecondary : Theme.colorLVseparator
+                    color: {
+                        if (parent.containsPress || parent.drag.active) return ThemeEngine.colorPrimary
+                        if (parent.containsMouse) return ThemeEngine.colorSecondary
+                        return Theme.colorLVseparator
+                    }
                 }
             }
         }
@@ -206,11 +223,13 @@ Rectangle {
                 Rectangle { // marker
                     anchors.centerIn: parent
                     width: 2; height: 18;
-                    color: parent.containsMouse || parent.drag.active ?
-                               ThemeEngine.colorSecondary : Theme.colorLVseparator
+                    color: {
+                        if (parent.containsPress || parent.drag.active) return ThemeEngine.colorPrimary
+                        if (parent.containsMouse) return ThemeEngine.colorSecondary
+                        return Theme.colorLVseparator
+                    }
                 }
             }
-
         }
 
         Text { // manufacturer column header
@@ -289,13 +308,17 @@ Rectangle {
                 Rectangle { // marker
                     anchors.centerIn: parent
                     width: 2; height: 18;
-                    color: parent.containsMouse || parent.drag.active ?
-                               ThemeEngine.colorSecondary : Theme.colorLVseparator
+                    color: {
+                        if (parent.containsPress || parent.drag.active) return ThemeEngine.colorPrimary
+                        if (parent.containsMouse) return ThemeEngine.colorSecondary
+                        return Theme.colorLVseparator
+                    }
                 }
             }
         }
 
         Item { // RSSI column header
+            id: colRssi
             anchors.verticalCenter: parent.verticalCenter
             width: deviceManager.deviceHeader.colRssi
             height: 24
@@ -366,10 +389,32 @@ Rectangle {
         Item { // separator ////////////////////////////////////////////////////
             width: deviceManager.deviceHeader.spacing
             height: 24
-            Rectangle {
-                anchors.centerIn: parent
-                width: 2; height: 18;
-                color: Theme.colorLVseparator
+
+            MouseArea {
+                anchors.fill: parent
+
+                hoverEnabled: true
+                cursorShape: Qt.SplitHCursor
+
+                drag.target: parent
+                drag.axis: Drag.XAxis
+                drag.minimumX: colRssi.x + 16
+                drag.maximumX: colRssi.x + 256
+
+                onPositionChanged: {
+                    var delta =  parent.x - (colRssi.x + colRssi.width)
+                    if (delta != 0) deviceManager.deviceHeader.colRssi = colRssi.width + delta
+                }
+
+                Rectangle { // marker
+                    anchors.centerIn: parent
+                    width: 2; height: 18;
+                    color: {
+                        if (parent.containsPress || parent.drag.active) return ThemeEngine.colorPrimary
+                        if (parent.containsMouse) return ThemeEngine.colorSecondary
+                        return Theme.colorLVseparator
+                    }
+                }
             }
         }
 
