@@ -190,6 +190,7 @@ T.Button {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignVCenter
 
+            font: control.font
             elide: Text.ElideMiddle
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter

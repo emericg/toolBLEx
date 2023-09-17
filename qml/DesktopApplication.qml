@@ -74,14 +74,13 @@ ApplicationWindow {
         function onUbertoothButtonClicked() { screenUbertooth.loadScreen() }
         function onSettingsButtonClicked() { screenSettings.loadScreen() }
     }
-/*
+
     Connections {
         target: menubarManager
         function onSensorsClicked() { appContent.state = "Scanner" }
-        function onSettingsClicked() { screenSettings.loadScreen() }
-        function onAboutClicked() { screenAbout.loadScreen() }
+        function onAboutClicked() { screenSettings.loadScreen() }
     }
-*/
+
     Connections {
         target: Qt.application
         function onStateChanged() {
@@ -401,7 +400,7 @@ ApplicationWindow {
                 anchors.centerIn: parent
                 width: 320
                 height: 320
-                source: "qrc:/assets/logos/icon.svg"
+                source: "qrc:/assets/logos/splash.svg"
                 sourceSize: Qt.size(width, height)
 
                 Behavior on opacity { OpacityAnimator { duration: 666; } }

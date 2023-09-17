@@ -69,10 +69,10 @@ Flickable {
                 anchors.rightMargin: 8
                 anchors.verticalCenter: parent.verticalCenter
 
-                property int legendWidth: 80
+                property int legendWidth: 64
 
                 Component.onCompleted: {
-                    legendWidth = 80
+                    legendWidth = 64
                     legendWidth = Math.max(legendWidth, legendName.contentWidth)
                     legendWidth = Math.max(legendWidth, legendBluetooth.contentWidth)
                     if (Qt.platform.os === "osx") {
@@ -286,10 +286,10 @@ Flickable {
                 anchors.rightMargin: 8
                 anchors.verticalCenter: parent.verticalCenter
 
-                property int legendWidth: 80
+                property int legendWidth: 64
 
                 Component.onCompleted: {
-                    legendWidth = 80
+                    legendWidth = 64
                     legendWidth = Math.max(legendWidth, legendCategory.contentWidth)
                     legendWidth = Math.max(legendWidth, legendDeviceType.contentWidth)
                     legendWidth = Math.max(legendWidth, legendService.contentWidth)
@@ -424,7 +424,7 @@ Flickable {
                     anchors.right: parent.right
                     spacing: 12
 
-                    property int www: (width > 320) ? ((width - spacing) / 2) : width
+                    property int www: (width > 400) ? ((width - spacing) / 2) : width
 
                     ButtonScanMenu {
                         width: parent.www
@@ -616,10 +616,10 @@ Flickable {
                 anchors.right: parent.right
                 anchors.rightMargin: 8
 
-                property int legendWidth: 80
+                property int legendWidth: 64
 
                 Component.onCompleted: {
-                    legendWidth = 80
+                    legendWidth = 64
                     legendWidth = Math.max(legendWidth, legendRSSI.contentWidth)
                     legendWidth = Math.max(legendWidth, legendAdvertising.contentWidth)
                 }
