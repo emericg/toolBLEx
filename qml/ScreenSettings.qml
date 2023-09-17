@@ -693,7 +693,7 @@ Loader {
                                 Text {
                                     anchors.verticalCenter: parent.verticalCenter
 
-                                    text: qsTr("%1 device(s)").arg(deviceManager.deviceCached)
+                                    text: qsTr("%n device(s)", "", deviceManager.deviceCached)
                                     textFormat: Text.PlainText
                                     font.pixelSize: Theme.fontSizeContent
                                     color: Theme.colorSubText

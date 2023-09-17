@@ -19,7 +19,6 @@ finish-args:
   # We need Bluetooth support
   - --allow=bluetooth
   - --system-talk-name=org.bluez
-  - --share=network
 
 cleanup:
   - /bin/__pypache__
