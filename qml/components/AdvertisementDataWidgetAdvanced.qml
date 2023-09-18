@@ -41,6 +41,7 @@ Rectangle {
     ////////////////
 
     Text {
+        id: timebox
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.topMargin: 4
@@ -77,12 +78,17 @@ Rectangle {
 
         ////////
 
-        Row {
+        RowLayout {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.rightMargin: timebox.width
             spacing: 12
 
             Text {
                 id: legendUUID
-                width: legendWidth
+
+                Layout.alignment: Qt.AlignTop | Qt.AlignRight
+                Layout.preferredWidth: legendWidth
 
                 text: qsTr("UUID")
                 textFormat: Text.PlainText
@@ -91,33 +97,48 @@ Rectangle {
                 color: Theme.colorSubText
             }
 
-            Row {
-                spacing: 2
+            Flow {
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                Layout.fillWidth: true
+                spacing: 4
 
-                Text {
-                    text: "0x"
-                    textFormat: Text.PlainText
-                    font.pixelSize: Theme.fontSizeContent
-                    color: Theme.colorSubText
+                Row {
+                    spacing: 2
+
+                    Text {
+                        text: "0x"
+                        textFormat: Text.PlainText
+                        font.pixelSize: Theme.fontSizeContent
+                        color: Theme.colorSubText
+                    }
+                    TextSelectable {
+                        text: packet.advUUIDstr
+                        font.pixelSize: Theme.fontSizeContent
+                        color: Theme.colorText
+                    }
                 }
-                TextSelectable {
-                    text: packet.advUUIDstr
-                    font.pixelSize: Theme.fontSizeContent
-                    color: Theme.colorText
+
+                Row {
+                    visible: (packet.advUUIDmanuf.length > 1)
+
+                    Text {
+                        text: "("
+                        textFormat: Text.PlainText
+                        font.pixelSize: Theme.fontSizeContent
+                        color: Theme.colorSubText
+                    }
+                    TextSelectable {
+                        text: packet.advUUIDmanuf
+                        color: Theme.colorText
+                    }
+                    Text {
+                        text: ")"
+                        textFormat: Text.PlainText
+                        font.pixelSize: Theme.fontSizeContent
+                        color: Theme.colorSubText
+                    }
                 }
             }
-        }
-
-        ////////
-
-        TextSelectable {
-            anchors.left: parent.left
-            anchors.leftMargin: legendWidth + 12
-            anchors.right: parent.right
-
-            visible: (packet.advUUIDmanuf.length > 1)
-            text: packet.advUUIDmanuf
-            color: Theme.colorText
         }
 
         ////////

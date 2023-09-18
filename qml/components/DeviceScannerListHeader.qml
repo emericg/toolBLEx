@@ -27,12 +27,6 @@ Rectangle {
         font.family: fontMonospace
         Component.onCompleted: deviceManager.deviceHeader.colAddress = contentWidth
     }
-    Text { // adv interval field size reference
-        visible: false
-        text: "000000000"
-        textFormat: Text.PlainText
-        Component.onCompleted: deviceManager.deviceHeader.colInterval = contentWidth
-    }
     Text { // "seen" fields size reference
         visible: false
         text: "00/00 00:00"
@@ -49,12 +43,12 @@ Rectangle {
         anchors.rightMargin: deviceManager.deviceHeader.margin
         anchors.verticalCenter: parent.verticalCenter
 
-        Item { // color column header
+        Item { // color column header //////////////////////////////////////////
             width: deviceManager.deviceHeader.colColor
             height: 24
         }
 
-        Item { // separator ////////////////////////////////////////////////////
+        Item { // separator
             width: deviceManager.deviceHeader.spacing
             height: 24
             visible: showAddress
@@ -65,7 +59,7 @@ Rectangle {
             }
         }
 
-        Text { // address column header
+        Text { // address column header ////////////////////////////////////////
             id: colAddress
             anchors.verticalCenter: parent.verticalCenter
             width: deviceManager.deviceHeader.colAddress
@@ -117,7 +111,7 @@ Rectangle {
             }
         }
 
-        Item { // separator ////////////////////////////////////////////////////
+        Item { // separator
             width: deviceManager.deviceHeader.spacing
             height: 24
 
@@ -129,7 +123,7 @@ Rectangle {
 
                 drag.target: parent
                 drag.axis: Drag.XAxis
-                drag.minimumX: colAddress.x + 16
+                drag.minimumX: colAddress.x + deviceManager.deviceHeader.minSize
                 drag.maximumX: colAddress.x + 512
 
                 onPositionChanged: {
@@ -149,7 +143,7 @@ Rectangle {
             }
         }
 
-        Text { // name column header
+        Text { // name column header ///////////////////////////////////////////
             id: colName
             anchors.verticalCenter: parent.verticalCenter
             width: deviceManager.deviceHeader.colName
@@ -200,7 +194,7 @@ Rectangle {
             }
         }
 
-        Item { // separator ////////////////////////////////////////////////////
+        Item { // separator
             width: deviceManager.deviceHeader.spacing
             height: 24
 
@@ -212,7 +206,7 @@ Rectangle {
 
                 drag.target: parent
                 drag.axis: Drag.XAxis
-                drag.minimumX: colName.x + 16
+                drag.minimumX: colName.x + deviceManager.deviceHeader.minSize
                 drag.maximumX: colName.x + 512
 
                 onPositionChanged: {
@@ -232,7 +226,7 @@ Rectangle {
             }
         }
 
-        Text { // manufacturer column header
+        Text { // manufacturer column header ///////////////////////////////////
             id: colManuf
             anchors.verticalCenter: parent.verticalCenter
             width: deviceManager.deviceHeader.colManuf
@@ -284,7 +278,7 @@ Rectangle {
             }
         }
 
-        Item { // separator ////////////////////////////////////////////////////
+        Item { // separator
             width: deviceManager.deviceHeader.spacing
             height: 24
 
@@ -297,7 +291,7 @@ Rectangle {
 
                 drag.target: parent
                 drag.axis: Drag.XAxis
-                drag.minimumX: colManuf.x + 16
+                drag.minimumX: colManuf.x + deviceManager.deviceHeader.minSize
                 drag.maximumX: colManuf.x + 512
 
                 onPositionChanged: {
@@ -317,18 +311,19 @@ Rectangle {
             }
         }
 
-        Item { // RSSI column header
+        Item { // RSSI column header ///////////////////////////////////////////
             id: colRssi
             anchors.verticalCenter: parent.verticalCenter
             width: deviceManager.deviceHeader.colRssi
             height: 24
+            clip: true
 
             Row {
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 4
+                spacing: 6
 
                 IconSvg {
-                    width: 16; height: 16;
+                    width: 14; height: 14;
                     anchors.verticalCenter: parent.verticalCenter
 
                     source: "qrc:/assets/icons_material/baseline-signal_cellular_full-24px.svg"
@@ -386,7 +381,7 @@ Rectangle {
             }
         }
 
-        Item { // separator ////////////////////////////////////////////////////
+        Item { // separator
             width: deviceManager.deviceHeader.spacing
             height: 24
 
@@ -398,7 +393,7 @@ Rectangle {
 
                 drag.target: parent
                 drag.axis: Drag.XAxis
-                drag.minimumX: colRssi.x + 16
+                drag.minimumX: colRssi.x + deviceManager.deviceHeader.minSize
                 drag.maximumX: colRssi.x + 256
 
                 onPositionChanged: {
@@ -418,17 +413,19 @@ Rectangle {
             }
         }
 
-        Item { // Adv interval header column
+        Item { // Adv interval header column ///////////////////////////////////
+            id: colInterval
             anchors.verticalCenter: parent.verticalCenter
             width: deviceManager.deviceHeader.colInterval
             height: 24
+            clip: true
 
             Row {
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 4
+                spacing: 6
 
                 IconSvg {
-                    width: 16; height: 16;
+                    width: 14; height: 14;
                     anchors.verticalCenter: parent.verticalCenter
 
                     source: "qrc:/assets/icons_material/baseline-arrow_left_right-24px.svg"
@@ -484,17 +481,39 @@ Rectangle {
             }
         }
 
-        Item { // separator ////////////////////////////////////////////////////
+        Item { // separator
             width: deviceManager.deviceHeader.spacing
             height: 24
-            Rectangle {
-                anchors.centerIn: parent
-                width: 2; height: 18;
-                color: Theme.colorLVseparator
+
+            MouseArea {
+                anchors.fill: parent
+
+                hoverEnabled: true
+                cursorShape: Qt.SplitHCursor
+
+                drag.target: parent
+                drag.axis: Drag.XAxis
+                drag.minimumX: colInterval.x + deviceManager.deviceHeader.minSize
+                drag.maximumX: colInterval.x + 256
+
+                onPositionChanged: {
+                    var delta =  parent.x - (colInterval.x + colInterval.width)
+                    if (delta != 0) deviceManager.deviceHeader.colInterval = colInterval.width + delta
+                }
+
+                Rectangle { // marker
+                    anchors.centerIn: parent
+                    width: 2; height: 18;
+                    color: {
+                        if (parent.containsPress || parent.drag.active) return ThemeEngine.colorPrimary
+                        if (parent.containsMouse) return ThemeEngine.colorSecondary
+                        return Theme.colorLVseparator
+                    }
+                }
             }
         }
 
-        Text { // last seen header column
+        Text { // last seen header column //////////////////////////////////////
             anchors.verticalCenter: parent.verticalCenter
             width: deviceManager.deviceHeader.colLastSeen
 
@@ -543,7 +562,7 @@ Rectangle {
             }
         }
 
-        Item { // separator ////////////////////////////////////////////////////
+        Item { // separator
             width: deviceManager.deviceHeader.spacing
             height: 24
             Rectangle {
@@ -553,7 +572,7 @@ Rectangle {
             }
         }
 
-        Text { // first seen header column
+        Text { // first seen header column /////////////////////////////////////
             anchors.verticalCenter: parent.verticalCenter
             width: deviceManager.deviceHeader.colFirstSeen
 
@@ -602,7 +621,7 @@ Rectangle {
             }
         }
 
-        Item { // separator ////////////////////////////////////////////////////
+        Item { // separator
             width: deviceManager.deviceHeader.spacing
             height: 24
             Rectangle {

@@ -17,7 +17,7 @@ Item {
 
     property bool showAddress: (Qt.platform.os !== "osx")
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////
 
     Rectangle { // background
         anchors.fill: parent
@@ -74,7 +74,7 @@ Item {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////
 
     Row {
         anchors.left: parent.left
@@ -86,9 +86,7 @@ Item {
 
         opacity: (boxDevice.connected || boxDevice.selected || boxDevice.rssi < 0) ? 1 : 0.4
 
-        ////
-
-        Item { // color
+        Item { // color ////////////////////////////////////////////////////////
             anchors.verticalCenter: parent.verticalCenter
             width: deviceManager.deviceHeader.colColor
             height: 32
@@ -102,9 +100,7 @@ Item {
             }
         }
 
-        ////
-
-        Text { // address
+        Text { // address //////////////////////////////////////////////////////
             anchors.verticalCenter: parent.verticalCenter
             width: deviceManager.deviceHeader.colAddress
 
@@ -116,9 +112,7 @@ Item {
             elide: Text.ElideMiddle
         }
 
-        ////
-
-        RowLayout { // icons + name
+        RowLayout { // icons + name ////////////////////////////////////////////
             anchors.verticalCenter: parent.verticalCenter
             width: deviceManager.deviceHeader.colName
             height: 32
@@ -197,9 +191,7 @@ Item {
             }
         }
 
-        ////
-
-        Text { // mac vendor
+        Text { // mac vendor ///////////////////////////////////////////////////
             anchors.verticalCenter: parent.verticalCenter
             width: deviceManager.deviceHeader.colManuf
 
@@ -211,12 +203,10 @@ Item {
             elide: Text.ElideRight
         }
 
-        ////
-
-        Item { // rssi
+        RowLayout { // rssi ////////////////////////////////////////////////////
             anchors.verticalCenter: parent.verticalCenter
             width: deviceManager.deviceHeader.colRssi
-            height: 16
+            clip: true
 
             Row {
                 visible: (boxDevice.rssi !== 0)
@@ -242,9 +232,8 @@ Item {
             }
 
             RssiBar {
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
-                width: 105
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignRight
 
                 visible: (boxDevice.rssi !== 0)
                 value: -Math.abs(boxDevice.rssi)
@@ -252,12 +241,11 @@ Item {
             }
         }
 
-        ////
-
-        Item { // interval
+        Item { // interval /////////////////////////////////////////////////////
             anchors.verticalCenter: parent.verticalCenter
             width: deviceManager.deviceHeader.colInterval
             height: 32
+            clip: true
 
             Row {
                 anchors.verticalCenter: parent.verticalCenter
@@ -283,9 +271,7 @@ Item {
             }
         }
 
-        ////
-
-        Item { // last seen
+        Item { // last seen ////////////////////////////////////////////////////
             width: deviceManager.deviceHeader.colLastSeen
             height: 32
 
@@ -300,9 +286,7 @@ Item {
             }
         }
 
-        ////
-
-        Item { // first seen
+        Item { // first seen ///////////////////////////////////////////////////
             width: deviceManager.deviceHeader.colFirstSeen
             height: 32
 
@@ -314,9 +298,7 @@ Item {
                 color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorText
             }
         }
-
-        ////
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////
 }

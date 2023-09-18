@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 
 import ThemeEngine
 import DeviceUtils
@@ -66,28 +67,53 @@ Flickable {
 
             visible: (selectedDevice && selectedDevice.hasAdvertisement)
 
-            Row {
+            ////
+
+            RowLayout {
                 anchors.top: parent.top
                 anchors.topMargin: 12
                 anchors.left: parent.left
                 anchors.leftMargin: 16
+                anchors.right: parent.right
+                anchors.rightMargin: 16
+
                 height: 32
                 spacing: 12
 
                 Rectangle {
+                    Layout.alignment: Qt.AlignVCenter
                     width: 16; height: 16; radius: 4;
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.verticalCenterOffset: -1
                     color: Theme.colorGreen
                 }
 
                 Text {
-                    anchors.verticalCenter: parent.verticalCenter
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignVCenter
 
                     text: qsTr("Service data")
                     textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeContentBig
+                    horizontalAlignment: Text.AlignLeft
+                    elide: Text.ElideRight
                     color: Theme.colorText
+                }
+
+                Text {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignVCenter
+
+                    text: qsTr("Manufacturer data")
+                    textFormat: Text.PlainText
+                    font.pixelSize: Theme.fontSizeContentBig
+                    horizontalAlignment: Text.AlignRight
+                    elide: Text.ElideRight
+                    color: Theme.colorText
+                }
+
+                Rectangle {
+                    Layout.alignment: Qt.AlignVCenter
+                    width: 16; height: 16; radius: 4;
+                    color: Theme.colorBlue
                 }
             }
 
@@ -122,33 +148,6 @@ Flickable {
                 }
             }
 
-            ////////
-
-            Row {
-                anchors.top: parent.top
-                anchors.topMargin: 12
-                anchors.right: parent.right
-                anchors.rightMargin: 16
-                height: 32
-                spacing: 12
-
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    text: qsTr("Manufacturer data")
-                    textFormat: Text.PlainText
-                    font.pixelSize: Theme.fontSizeContentBig
-                    color: Theme.colorText
-                }
-
-                Rectangle {
-                    width: 16; height: 16; radius: 4;
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.verticalCenterOffset: -1
-                    color: Theme.colorBlue
-                }
-            }
-
             ////
 
             Row {
@@ -179,6 +178,8 @@ Flickable {
                     }
                 }
             }
+
+            ////
         }
 
         ////////
@@ -192,5 +193,7 @@ Flickable {
                 packet: modelData
             }
         }
+
+        ////////
     }
 }

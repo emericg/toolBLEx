@@ -39,28 +39,13 @@ Loader {
 
             ////////
 
-            Rectangle { // not implemented
+            FrameBox { // not implemented
                 width: screenAdvertiser.width * 0.666
-                height: 128
-                radius: 4
-
-                clip: false
-                color: Theme.colorBox
-                border.width: 2
-                border.color: Theme.colorBoxBorder
-
-                Rectangle {
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.bottom: parent.bottom
-
-                    width: 8
-                    radius: 2
-                    color: Theme.colorPrimary
-                }
+                padding: 0
 
                 Item {
                     anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
                     width: 128
                     height: 128
 

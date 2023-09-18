@@ -27,8 +27,7 @@ Flickable {
     ////////
 
     function resetButtons() {
-        exportButton.text = qsTr("export available data")
-        exportButton.primaryColor = Theme.colorGrey
+        exportButton.reset()
     }
 
     ////////
@@ -413,12 +412,6 @@ Flickable {
                 anchors.centerIn: parent
                 spacing: 12
 
-                Flow { // status row
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    spacing: 12
-                }
-
                 Flow { // buttons row
                     anchors.left: parent.left
                     anchors.right: parent.right
@@ -439,6 +432,11 @@ Flickable {
                         //enabled: (selectedDevice && selectedDevice.servicesCount > 0)
                         text: qsTr("export available data")
                         source: "qrc:/assets/icons_material/baseline-save-24px.svg"
+
+                        function reset() {
+                            exportButton.text = qsTr("export available data")
+                            exportButton.primaryColor = Theme.colorGrey
+                        }
 
                         onClicked: {
                             // (file selection)
@@ -481,6 +479,22 @@ Flickable {
                         }
                     }
                 }
+/*
+                Flow { // status row
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    spacing: 12
+
+                    Text {
+                        text: qsTr("%n adv packet(s)", "", selectedDevice.advCount)
+                        color: Theme.colorSubText
+                    }
+                    Text {
+                        text: qsTr("%n service(s)", "", selectedDevice.servicesCount)
+                        color: Theme.colorSubText
+                    }
+                }
+*/
             }
         }
 
@@ -600,7 +614,7 @@ Flickable {
             height: box3.height + 32
             radius: 4
 
-            clip: false
+            clip: true
             color: Theme.colorBox
             border.width: 2
             border.color: Theme.colorBoxBorder

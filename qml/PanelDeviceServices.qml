@@ -62,12 +62,14 @@ Item {
                     anchors.right: parent.right
                     spacing: 12
 
+                    property int www: (width > 400) ? ((width - spacing) / 2) : width
+
                     ButtonScanMenu {
-                        width: ((parent.width - parent.spacing) / 2)
+                        width: parent.www
                     }
 
                     ButtonWireframeIcon {
-                        width: ((parent.width - parent.spacing) / 2)
+                        width: parent.www
 
                         fullColor: true
                         primaryColor: Theme.colorLightGrey

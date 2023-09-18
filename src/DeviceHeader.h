@@ -39,6 +39,8 @@ class DeviceHeader: public QObject
 
     Q_PROPERTY(int margin READ getMargin CONSTANT)
     Q_PROPERTY(int spacing READ getSpacing CONSTANT)
+    Q_PROPERTY(int minSize READ getMinSize CONSTANT)
+    Q_PROPERTY(int maxSize READ getMaxSize CONSTANT)
 
     Q_PROPERTY(int colColor READ getColColor CONSTANT)
     Q_PROPERTY(int colAddress READ getColAddr WRITE setColAddr NOTIFY colAddrChanged)
@@ -48,6 +50,11 @@ class DeviceHeader: public QObject
     Q_PROPERTY(int colInterval READ getColInterval WRITE setColInterval NOTIFY colIntervalChanged)
     Q_PROPERTY(int colFirstSeen READ getColFirstSeen WRITE setColSeen NOTIFY colRssiChanged)
     Q_PROPERTY(int colLastSeen READ getColLastSeen WRITE setColSeen NOTIFY colSeenChanged)
+
+    int m_margin = 12;
+    int m_spacing = 16;
+    int m_minSize = 16;
+    int m_maxSize = 256;
 
     int m_color = 12;
     int m_addr = 180;
@@ -86,8 +93,10 @@ public:
         return w;
     };
 
-    int getMargin() const { return 12; };
-    int getSpacing() const { return 16; };
+    int getMargin() const { return m_margin; };
+    int getSpacing() const { return m_spacing; };
+    int getMinSize() const { return m_minSize; };
+    int getMaxSize() const { return m_maxSize; };
 
     int getColColor() const { return m_color; };
     int getColAddr() const { return m_addr; };
@@ -100,7 +109,7 @@ public:
 
     void setColAddr(int value) {
         if (value != m_addr) {
-            if (value < 16) value = 16;
+            if (value < m_minSize) value = m_minSize;
             if (value > 512) value = 512;
             m_addr = value;
 
@@ -110,7 +119,7 @@ public:
     }
     void setColName(int value) {
         if (value != m_name) {
-            if (value < 16) value = 16;
+            if (value < m_minSize) value = m_minSize;
             if (value > 512) value = 512;
             m_name = value;
 
@@ -120,7 +129,7 @@ public:
     }
     void setColManuf(int value) {
         if (value != m_manuf) {
-            if (value < 16) value = 16;
+            if (value < m_minSize) value = m_minSize;
             if (value > 512) value = 512;
             m_manuf = value;
 
@@ -130,7 +139,7 @@ public:
     }
     void setColRssi(int value) {
         if (value != m_rssi) {
-            if (value < 16) value = 16;
+            if (value < m_minSize) value = m_minSize;
             if (value > 256) value = 256;
             m_rssi = value;
 
@@ -140,7 +149,7 @@ public:
     }
     void setColInterval(int value) {
         if (value != m_interval) {
-            if (value < 16) value = 16;
+            if (value < m_minSize) value = m_minSize;
             if (value > 256) value = 256;
             m_interval = value;
 
@@ -150,8 +159,8 @@ public:
     }
     void setColSeen(int value) {
         if (value != m_firstseen) {
-            if (value < 16) value = 16;
-            if (value > 128) value = 256;
+            if (value < m_minSize) value = m_minSize;
+            if (value > 256) value = 256;
             m_firstseen = value;
             m_lastseen = value;
 

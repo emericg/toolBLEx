@@ -13,9 +13,11 @@ T.Frame {
                              contentHeight + topPadding + bottomPadding)
 
     padding: 12
-    leftPadding: 12 + 8
+    leftPadding: padding + 8
 
     background: Rectangle {
+        implicitWidth: 512
+        implicitHeight: 128
         radius: 4
         color: Theme.colorBox
         border.width: 2

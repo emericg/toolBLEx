@@ -20,6 +20,9 @@
         <file alias="SliderValueSolid.qml">components_generic/SliderValueSolid.qml</file>
         <file alias="ToolTipFlat.qml">components_generic/ToolTipFlat.qml</file>
 
+        <file alias="FrameBox.qml">components_generic/FrameBox.qml</file>
+        <file alias="FrameThemed.qml">components_themed/FrameThemed.qml</file>
+
         <file alias="ButtonThemed.qml">components_themed/ButtonThemed.qml</file>
         <file alias="CheckBoxThemed.qml">components_themed/CheckBoxThemed.qml</file>
         <file alias="ComboBoxThemed.qml">components_themed/ComboBoxThemed.qml</file>
