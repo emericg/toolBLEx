@@ -79,10 +79,11 @@ public:
     ~DeviceHeader() = default;
 
     int getWidth() const {
-        int w = getMargin()*2 + getSpacing()*7;
+        int w = m_margin*2 + m_spacing*5;
         w += m_color;
         w += m_name;
 #if !defined(Q_OS_MACOS)
+        w += m_spacing*2;
         w += m_addr;
         w += m_manuf;
 #endif

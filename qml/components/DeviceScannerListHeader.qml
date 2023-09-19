@@ -8,6 +8,8 @@ Rectangle {
     implicitWidth: 800
     implicitHeight: 36
 
+    width: deviceManager.deviceHeader.width
+
     color: Theme.colorLVheader
     z: 5
 

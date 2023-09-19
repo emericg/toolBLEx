@@ -7,7 +7,7 @@ import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
 
 Rectangle {
     id: adapterWidget
-    height: box.height + 24
+    height: box.height + 28
     radius: 4
 
     clip: false
@@ -28,61 +28,20 @@ Rectangle {
         visible: modelData.isDefault
     }
 
-    Rectangle { // bluetooth icon
-        anchors.right: parent.right
-        anchors.rightMargin: 20
-        anchors.verticalCenter: parent.verticalCenter
-        width: 96
-        height: 96
-        radius: 96
-        color: Theme.colorBackground
-
-        visible: (adapterWidget.width > box.legendWidth*4)
-/*
-        Rectangle { // scanning indicator
-            id: circlePulseAnimation
-            anchors.centerIn: parent
-            width: 64
-            height: 64
-            radius: 64
-            color: Theme.colorBox
-
-            ParallelAnimation {
-                running: (deviceManager.scanning && !deviceManager.scanningPaused &&
-                          appContent.state === "Scanner" && hostMenu.currentSelection === 1)
-                alwaysRunToEnd: true
-                loops: Animation.Infinite
-
-                NumberAnimation { target: circlePulseAnimation; property: "width"; from: 40; to: 96; duration: 1500; }
-                NumberAnimation { target: circlePulseAnimation; property: "height"; from: 40; to: 96; duration: 1500; }
-                OpacityAnimator { target: circlePulseAnimation; from: 1; to: 0; duration: 1500; }
-            }
-        }
-*/
-        IconSvg {
-            anchors.centerIn: parent
-            width: 64
-            height: 64
-
-            source: "qrc:/assets/icons_bootstrap/bluetooth.svg"
-            color: Theme.colorSubText
-        }
-    }
-
     ////////
 
     Column {
         id: box
         anchors.left: parent.left
-        anchors.leftMargin: 24
+        anchors.leftMargin: 20
         anchors.right: parent.right
         anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
 
-        property int legendWidth: 80
+        property int legendWidth: 64
 
         Component.onCompleted: {
-            legendWidth = 80
+            legendWidth = 64
             legendWidth = Math.max(legendWidth, legendHostname.contentWidth)
             legendWidth = Math.max(legendWidth, legendAddress.contentWidth)
             legendWidth = Math.max(legendWidth, legendMAC.contentWidth)
@@ -92,7 +51,7 @@ Rectangle {
 
         Text {
             anchors.left: parent.left
-            anchors.leftMargin: 16
+            anchors.leftMargin: 20
             height: 32
 
             text: qsTr("Bluetooth adapter #%1").arg(index+1)
@@ -230,6 +189,47 @@ Rectangle {
                 text: UtilsBluetooth.getBluetoothAdapterModeText(modelData.mode)
                 color: Theme.colorForeground
             }
+        }
+    }
+
+    ////////
+
+    Rectangle { // bluetooth icon
+        anchors.right: parent.right
+        anchors.rightMargin: 20
+        anchors.verticalCenter: parent.verticalCenter
+        width: 96; height: 96; radius: 96;
+        color: Theme.colorBackground
+
+        visible: (detailView.ww > 400)
+/*
+        Rectangle { // scanning indicator
+            id: circlePulseAnimation
+            anchors.centerIn: parent
+            width: 64
+            height: 64
+            radius: 64
+            color: Theme.colorBox
+
+            ParallelAnimation {
+                running: (deviceManager.scanning && !deviceManager.scanningPaused &&
+                          appContent.state === "Scanner" && hostMenu.currentSelection === 1)
+                alwaysRunToEnd: true
+                loops: Animation.Infinite
+
+                NumberAnimation { target: circlePulseAnimation; property: "width"; from: 40; to: 96; duration: 1500; }
+                NumberAnimation { target: circlePulseAnimation; property: "height"; from: 40; to: 96; duration: 1500; }
+                OpacityAnimator { target: circlePulseAnimation; from: 1; to: 0; duration: 1500; }
+            }
+        }
+*/
+        IconSvg {
+            anchors.centerIn: parent
+            width: 64
+            height: 64
+
+            source: "qrc:/assets/icons_bootstrap/bluetooth.svg"
+            color: Theme.colorSubText
         }
     }
 

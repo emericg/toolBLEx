@@ -70,9 +70,9 @@ Loader {
                     parent: splithandle
                     anchors.centerIn: parent
                     anchors.horizontalCenterOffset: (splitview.orientation === Qt.Horizontal &&
-                                                     devicesViewScrollbar.visible) ? 3 : 0
+                                                     devicesViewVertScrollbar.visible) ? 3 : 0
                     width: {
-                        if (splitview.orientation === Qt.Horizontal && devicesViewScrollbar.visible) return 12
+                        if (splitview.orientation === Qt.Horizontal && devicesViewVertScrollbar.visible) return 12
                         if (splitview.orientation === Qt.Horizontal) return 20
                         return splitview.width
                     }
@@ -331,26 +331,25 @@ Loader {
                     flickableDirection: Flickable.AutoFlickDirection
 
                     contentHeight: -1
-                    ScrollBar.vertical: ScrollBar {
-                        id: devicesViewScrollbar
-                        policy: ScrollBar.AsNeeded
-                        topPadding: 36
-                    }
-
                     contentWidth: deviceManager.deviceHeader.width
+
+                    ScrollBar.vertical: ScrollBar {
+                        id: devicesViewVertScrollbar
+                        topPadding: 36
+                        policy: ScrollBar.AsNeeded
+                    }
                     ScrollBar.horizontal: ScrollBar {
-                        anchors.bottom: parent.bottom
                         policy: ScrollBar.AsNeeded
                     }
 
                     headerPositioning: ListView.OverlayHeader
                     header: DeviceScannerListHeader {
-                        width: appContent.width
+                        width: Math.max(deviceManager.deviceHeader.width, appContent.width)
                     }
 
                     model: deviceManager.devicesList
                     delegate: DeviceScannerListWidget {
-                        width: appContent.width
+                        width: Math.max(deviceManager.deviceHeader.width, appContent.width)
                     }
 
                     //interactive: true

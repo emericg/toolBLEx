@@ -63,7 +63,7 @@ Flickable {
             Column {
                 id: box1
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: 20
                 anchors.right: parent.right
                 anchors.rightMargin: 8
                 anchors.verticalCenter: parent.verticalCenter
@@ -194,36 +194,41 @@ Flickable {
                     }
                 }
 
-                Row {
-                    height: 32
+                RowLayout {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     spacing: 12
 
                     Text {
                         id: legendBluetooth
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: box1.legendWidth
+                        Layout.preferredWidth: box1.legendWidth
+                        Layout.alignment: Qt.AlignCenter
+
                         text: qsTr("Bluetooth")
                         textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContent
                         horizontalAlignment: Text.AlignRight
                         color: Theme.colorSubText
                     }
-                    ItemTag {
-                        anchors.verticalCenter: parent.verticalCenter
-                        visible: (selectedDevice && selectedDevice.isClassic)
-                        text: qsTr("Classic")
-                        color: Theme.colorForeground
+
+                    Flow {
+                        Layout.fillWidth: true
+                        spacing: 6
+
+                        ItemTag {
+                            visible: (selectedDevice && selectedDevice.isClassic)
+                            text: qsTr("Classic")
+                            color: Theme.colorForeground
+                        }
+                        ItemTag {
+                            visible: (selectedDevice && selectedDevice.isLowEnergy)
+                            text: qsTr("Low Energy")
+                            color: Theme.colorForeground
+                        }
+                        //TextSelectable {
+                        //    text: UtilsBluetooth.getBluetoothCoreConfigurationText(selectedDevice.bluetoothConfiguration)
+                        //}
                     }
-                    ItemTag {
-                        anchors.verticalCenter: parent.verticalCenter
-                        visible: (selectedDevice && selectedDevice.isLowEnergy)
-                        text: qsTr("Low Energy")
-                        color: Theme.colorForeground
-                    }
-                    //TextSelectable {
-                    //    anchors.verticalCenter: parent.verticalCenter
-                    //    text: UtilsBluetooth.getBluetoothCoreConfigurationText(selectedDevice.bluetoothConfiguration)
-                    //}
                 }
             }
 
@@ -233,9 +238,12 @@ Flickable {
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 8
 
+                visible: (detailView.ww > 400)
+
                 Rectangle {
                     width: 96; height: 96; radius: 96;
                     color: Theme.colorBackground
+
                     visible: (selectedDevice && selectedDevice.isClassic && deviceIcon.source.toString().length)
 
                     IconSvg {
@@ -256,6 +264,7 @@ Flickable {
 
                 ItemTag {
                     anchors.horizontalCenter: parent.horizontalCenter
+
                     text: UtilsBluetooth.getBluetoothPairingText(selectedDevice.pairingStatus)
                     color: Theme.colorBackground
                     visible: (selectedDevice && selectedDevice.pairingStatus > 0)
@@ -280,7 +289,7 @@ Flickable {
             Column {
                 id: box2
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: 20
                 anchors.right: parent.right
                 anchors.rightMargin: 8
                 anchors.verticalCenter: parent.verticalCenter
@@ -623,12 +632,11 @@ Flickable {
 
             Column {
                 id: box3
-                anchors.top: parent.top
-                anchors.topMargin: 12
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: 20
                 anchors.right: parent.right
                 anchors.rightMargin: 8
+                anchors.verticalCenter: parent.verticalCenter
 
                 property int legendWidth: 64
 

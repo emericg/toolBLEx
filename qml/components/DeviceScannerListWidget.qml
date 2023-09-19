@@ -13,6 +13,8 @@ Item {
     implicitWidth: 800
     implicitHeight: 32
 
+    width: deviceManager.deviceHeader.width
+
     property var boxDevice: pointer
 
     property bool showAddress: (Qt.platform.os !== "osx")
@@ -76,7 +78,7 @@ Item {
 
     ////////
 
-    Row {
+    Row { // content
         anchors.left: parent.left
         anchors.leftMargin: deviceManager.deviceHeader.margin
         anchors.right: parent.right
@@ -105,6 +107,7 @@ Item {
             width: deviceManager.deviceHeader.colAddress
 
             visible: showAddress
+
             text: boxDevice.deviceAddress
             textFormat: Text.PlainText
             font.family: fontMonospace
@@ -207,6 +210,12 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             width: deviceManager.deviceHeader.colRssi
             clip: true
+
+            Item { // fake item so the RowLayout doesn't have a null width when the content is invisible
+                width: deviceManager.deviceHeader.colRssi
+                height: 32
+                visible: (boxDevice.rssi === 0)
+            }
 
             Row {
                 visible: (boxDevice.rssi !== 0)
