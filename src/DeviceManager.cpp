@@ -27,8 +27,6 @@
 #include "device.h"
 #include "device_toolblex.h"
 
-#include "utils_app.h"
-
 #include <QList>
 #include <QDateTime>
 #include <QDebug>
@@ -54,12 +52,10 @@ DeviceManager::DeviceManager(bool daemon)
     m_devices_model = new DeviceModel(this);
     m_devices_filter = new DeviceFilter(this);
     m_devices_filter->setSourceModel(m_devices_model);
+    m_devices_filter->setDynamicSortFilter(true);
 
     // BLE init
-    startBleAgent();
     enableBluetooth(true); // Enables adapter // ONLY if off and permission given
-    checkBluetooth();
-
     connect(this, &DeviceManager::bluetoothChanged, this, &DeviceManager::bluetoothStatusChanged);
 
     // Database
@@ -83,9 +79,10 @@ DeviceManager::DeviceManager(bool daemon)
             }
         }
 
-        // Load cached devices
+        // Count saved devices
         countDeviceCached();
 
+        // Load saved devices
         QSqlQuery queryDevices;
         queryDevices.exec("SELECT deviceAddr, deviceName FROM devices");
         while (queryDevices.next())
@@ -127,95 +124,46 @@ DeviceManager::~DeviceManager()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-bool DeviceManager::hasBluetooth() const
-{
-    return (m_btA && m_btE);
-}
-
-bool DeviceManager::hasBluetoothAdapter() const
-{
-    return m_btA;
-}
-
-bool DeviceManager::hasBluetoothEnabled() const
-{
-    return m_btE;
-}
-
-bool DeviceManager::hasBluetoothPermissions() const
-{
-    return m_btP;
-}
-
-bool DeviceManager::isListening() const
-{
-    return false;
-}
-
-bool DeviceManager::isScanning() const
-{
-    return m_scanning;
-}
-
-bool DeviceManager::isScanningPaused() const
-{
-    return m_scanning_paused;
-}
-
-bool DeviceManager::isUpdating() const
-{
-    return false;
-}
-
-bool DeviceManager::isSyncing() const
-{
-    return false;
-}
-
-bool DeviceManager::isAdvertising() const
-{
-    return m_advertising;
-}
-
-/* ************************************************************************** */
-
 bool DeviceManager::checkBluetooth()
 {
     //qDebug() << "DeviceManager::checkBluetooth()";
 
 #if defined(Q_OS_IOS)
-    checkBluetoothIos();
-    return true;
+    // at this point we don't actually try to use checkBluetoothIOS() or we will
+    // be caugth in a loop with the OS notifying the user that BLE wants to start
+    // but is off, then giving back the focus to the app, thus calling checkBluetooth()...
+    return m_bleEnabled;
 #endif
 
-    bool btA_was = m_btA;
-    bool btE_was = m_btE;
-    bool btP_was = m_btP;
+    bool btA_was = m_bleAdapter;
+    bool btE_was = m_bleEnabled;
+    bool btP_was = m_blePermissions;
 
-    // Check availability
+    // Check adapter availability
     if (m_bluetoothAdapter && m_bluetoothAdapter->isValid())
     {
-        m_btA = true;
+        m_bleAdapter = true;
 
         if (m_bluetoothAdapter->hostMode() > QBluetoothLocalDevice::HostMode::HostPoweredOff)
         {
-            m_btE = true;
+            m_bleEnabled = true;
         }
         else
         {
-            m_btE = false;
+            m_bleEnabled = false;
             qDebug() << "Bluetooth adapter host mode:" << m_bluetoothAdapter->hostMode();
         }
     }
     else
     {
-        m_btA = false;
-        m_btE = false;
+        m_bleAdapter = false;
+        m_bleEnabled = false;
     }
 
+    // Check OS permissions
     checkBluetoothPermissions();
 
-    if (btA_was != m_btA || btE_was != m_btE || btP_was != m_btP)
+    if (btA_was != m_bleAdapter || btE_was != m_bleEnabled || btP_was != m_blePermissions)
     {
         // this function did changed the Bluetooth adapter status
         Q_EMIT bluetoothChanged();
@@ -236,7 +184,7 @@ bool DeviceManager::checkBluetooth()
         }
     }
 
-    return (m_btA && m_btE);
+    return (m_bleAdapter && m_bleEnabled && m_blePermissions);
 }
 
 void DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
@@ -244,13 +192,13 @@ void DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
     //qDebug() << "DeviceManager::enableBluetooth() enforce:" << enforceUserPermissionCheck;
 
 #if defined(Q_OS_IOS)
-    checkBluetoothIos();
+    checkBluetoothIOS();
     return;
 #endif
 
-    bool btA_was = m_btA;
-    bool btE_was = m_btE;
-    bool btP_was = m_btP;
+    bool btA_was = m_bleAdapter;
+    bool btE_was = m_bleEnabled;
+    bool btP_was = m_blePermissions;
 
     // Invalid adapter? (ex: plugged off)
     if (m_bluetoothAdapter && !m_bluetoothAdapter->isValid())
@@ -299,16 +247,20 @@ void DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
         Q_EMIT adaptersListUpdated();
     }
 
+    // Check adapter availability
     if (m_bluetoothAdapter && m_bluetoothAdapter->isValid())
     {
-        m_btA = true;
+        m_bleAdapter = true;
 
         if (m_bluetoothAdapter->hostMode() > QBluetoothLocalDevice::HostMode::HostPoweredOff)
         {
-            m_btE = true; // was already activated
+            // Was already activated
+            m_bleEnabled = true;
         }
-        else // Try to activate the adapter
+        else
         {
+            // Try to activate the adapter
+
 #if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
             // mobile? check if we have the user's permission to do so
             if (enforceUserPermissionCheck)
@@ -332,13 +284,14 @@ void DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
     }
     else
     {
-        m_btA = false;
-        m_btE = false;
+        m_bleAdapter = false;
+        m_bleEnabled = false;
     }
 
+    // Check OS permissions
     checkBluetoothPermissions();
 
-    if (btA_was != m_btA || btE_was != m_btE || btP_was != m_btP)
+    if (btA_was != m_bleAdapter || btE_was != m_bleEnabled || btP_was != m_blePermissions)
     {
         // this function did changed the Bluetooth adapter status
         Q_EMIT bluetoothChanged();
@@ -347,25 +300,59 @@ void DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
 
 bool DeviceManager::checkBluetoothPermissions()
 {
-    bool btP_was = m_btP;
+    qDebug() << "DeviceManager::checkBluetoothPermissions()";
 
-    UtilsApp *utilsApp = UtilsApp::getInstance();
-    if (m_daemonMode)
-    {
-        m_btP = utilsApp->checkMobileBackgroundLocationPermission();
-    }
-    else
-    {
-        m_btP = utilsApp->checkMobileBleLocationPermission();
-    }
+#if !defined(Q_OS_MACOS) && !defined(Q_OS_IOS)
+    m_permOS = true;
+#endif
 
-    if (btP_was != m_btP)
+#if !defined(Q_OS_ANDROID)
+    m_permLocationBLE = true;
+    m_permLocationBKG = true;
+    m_permGPS = true;
+#endif
+
+    bool os_was = m_permOS;
+    bool loc_was = m_permLocationBLE;
+    bool loc_bg_was = m_permLocationBKG;
+    bool gps_was = m_permGPS;
+    bool btP_was = m_blePermissions;
+
+#if defined(Q_OS_ANDROID)
+
+    m_permLocationBLE = UtilsApp::checkMobileBleLocationPermission();
+    m_permLocationBKG = UtilsApp::checkMobileBackgroundLocationPermission();
+    m_permGPS = UtilsApp::isMobileGpsEnabled();
+
+    // set m_permLocationBLE as primary
+    // we will check for GPS or background location permissions explicitely if we need them
+    m_blePermissions = m_permLocationBLE;
+
+#elif defined(Q_OS_MACOS) || defined(Q_OS_IOS)
+
+    m_permOS = true; // TODO
+    m_blePermissions = m_permOS;
+
+#else
+
+    // Linux and Windows don't have required BLE permissions
+    m_blePermissions = true;
+
+#endif
+
+    if (os_was != m_permOS || gps_was != m_permGPS ||
+        loc_was != m_permLocationBLE || loc_bg_was != m_permLocationBKG)
+    {
+        // this function did change the Bluetooth permission
+        Q_EMIT permissionsChanged();
+    }
+    if (btP_was != m_blePermissions)
     {
         // this function did changed the Bluetooth adapter status
         Q_EMIT bluetoothChanged();
     }
 
-    return m_btP;
+    return m_blePermissions;
 }
 
 /* ************************************************************************** */
@@ -382,13 +369,13 @@ void DeviceManager::bluetoothHostModeStateChanged(QBluetoothLocalDevice::HostMod
 
     if (state > QBluetoothLocalDevice::HostPoweredOff)
     {
-        m_btE = true;
+        m_bleEnabled = true;
 
         checkPaired();
     }
     else
     {
-        m_btE = false;
+        m_bleEnabled = false;
     }
 
     Q_EMIT bluetoothChanged();
@@ -396,10 +383,11 @@ void DeviceManager::bluetoothHostModeStateChanged(QBluetoothLocalDevice::HostMod
 
 void DeviceManager::bluetoothStatusChanged()
 {
-    //qDebug() << "DeviceManager::bluetoothStatusChanged() bt adapter:" << m_btA << " /  bt enabled:" << m_btE;
+    //qDebug() << "DeviceManager::bluetoothStatusChanged() bt adapter:" << m_bleAdapter << " /  bt enabled:" << m_bleEnabled;
 
-    if (m_btA && m_btE)
+    if (m_bleAdapter && m_bleEnabled)
     {
+        // Bluetooth enabled, re/start listening
         scanDevices_start();
     }
     else
@@ -434,15 +422,34 @@ void DeviceManager::startBleAgent()
     }
 }
 
-void DeviceManager::checkBluetoothIos()
+void DeviceManager::checkBluetoothIOS()
 {
+    //qDebug() << "DeviceManager::checkBluetoothIOS()";
+
     // iOS behave differently than all other platforms; there is no way to check
-    // adapter status, only to start a device discovery and check for errors
+    // adapter status, we can only to start a device discovery and check if it fails
 
-    //qDebug() << "DeviceManager::checkBluetoothIos()";
+    // the thing is, when the discovery is started with the BLE adapter turned off,
+    // it will actually take up to 30s to report that fact... so after a short while,
+    // we check on our own if the discovery agent is still running or not using a timer
 
-    m_btA = true;
+    // when the BLE adapter is turned off while the discovery is already running,
+    // the error is reported instantly though
 
+    m_bleAdapter = true; // there is no iOS device without a BLE adapter
+
+    m_permOS = true; // TODO
+    m_blePermissions = m_permOS;
+
+    // not necessary on iOS // set everything to true
+    m_permLocationBLE = true;
+    m_permLocationBKG = true;
+    m_permGPS = true;
+
+    if (!m_discoveryAgent)
+    {
+        startBleAgent();
+    }
     if (m_discoveryAgent)
     {
         disconnect(m_discoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
@@ -463,7 +470,31 @@ void DeviceManager::checkBluetoothIos()
         if (m_discoveryAgent->isActive())
         {
             qDebug() << "Checking iOS Bluetooth...";
+
+            // this ensure no other function will be able to use the discovery agent while this check is running
+            m_checking_ios_ble = true;
+            m_bleEnabled = false;
+
+            // this ensure that we catch error as soon as possible (~333ms) and not ~30s later when the OS think we should know
+            connect(&m_checking_ios_timer, &QTimer::timeout, this,
+                    &DeviceManager::deviceDiscoveryErrorIOS, Qt::UniqueConnection);
+            m_checking_ios_timer.setSingleShot(true);
+            m_checking_ios_timer.start(333);
         }
+    }
+}
+
+void DeviceManager::deviceDiscoveryErrorIOS()
+{
+    //qDebug() << "DeviceManager::deviceDiscoveryErrorIOS()";
+
+    if (m_discoveryAgent) m_discoveryAgent->stop();
+    m_checking_ios_ble = false;
+
+    if (m_bleEnabled)
+    {
+        m_bleEnabled = false;
+        Q_EMIT bluetoothChanged();
     }
 }
 
@@ -475,9 +506,9 @@ void DeviceManager::deviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error e
     {
         qWarning() << "The Bluetooth adaptor is powered off, power it on before doing discovery.";
 
-        if (m_btE)
+        if (m_bleEnabled)
         {
-            m_btE = false;
+            m_bleEnabled = false;
             Q_EMIT bluetoothChanged();
         }
     }
@@ -485,19 +516,19 @@ void DeviceManager::deviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error e
     {
         qWarning() << "deviceDiscoveryError() Writing or reading from the device resulted in an error.";
 
-        m_btA = false;
-        m_btE = false;
+        m_bleAdapter = false;
+        m_bleEnabled = false;
         Q_EMIT bluetoothChanged();
     }
     else if (error == QBluetoothDeviceDiscoveryAgent::InvalidBluetoothAdapterError)
     {
         qWarning() << "deviceDiscoveryError() Invalid Bluetooth adapter.";
 
-        m_btA = false;
+        m_bleAdapter = false;
 
-        if (m_btE)
+        if (m_bleEnabled)
         {
-            m_btE = false;
+            m_bleEnabled = false;
             Q_EMIT bluetoothChanged();
         }
     }
@@ -505,40 +536,40 @@ void DeviceManager::deviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error e
     {
         qWarning() << "deviceDiscoveryError() Unsupported Platform.";
 
-        m_btA = false;
-        m_btE = false;
+        m_bleAdapter = false;
+        m_bleEnabled = false;
         Q_EMIT bluetoothChanged();
     }
     else if (error == QBluetoothDeviceDiscoveryAgent::UnsupportedDiscoveryMethod)
     {
         qWarning() << "deviceDiscoveryError() Unsupported Discovery Method.";
 
-        m_btE = false;
-        m_btP = false;
+        m_bleEnabled = false;
+        m_blePermissions = false;
         Q_EMIT bluetoothChanged();
     }
     else if (error == QBluetoothDeviceDiscoveryAgent::LocationServiceTurnedOffError)
     {
         qWarning() << "deviceDiscoveryError() Location Service Turned Off Error.";
 
-        m_btE = false;
-        m_btP = false;
+        m_bleEnabled = false;
+        m_blePermissions = false;
         Q_EMIT bluetoothChanged();
     }
     else if (error == QBluetoothDeviceDiscoveryAgent::MissingPermissionsError)
     {
         qWarning() << "deviceDiscoveryError() Missing Permissions Error.";
 
-        m_btE = false;
-        m_btP = false;
+        m_bleEnabled = false;
+        m_blePermissions = false;
         Q_EMIT bluetoothChanged();
     }
     else
     {
         qWarning() << "An unknown error has occurred.";
 
-        m_btA = false;
-        m_btE = false;
+        m_bleAdapter = false;
+        m_bleEnabled = false;
         Q_EMIT bluetoothChanged();
     }
 
@@ -560,6 +591,20 @@ void DeviceManager::deviceDiscoveryFinished()
 {
     //qDebug() << "DeviceManager::deviceDiscoveryFinished()";
 
+#if defined(Q_OS_IOS)
+    if (m_checking_ios_ble)
+    {
+        m_checking_ios_ble = false;
+        m_checking_ios_timer.stop();
+
+        if (!m_bleEnabled)
+        {
+            m_bleEnabled = true;
+            Q_EMIT bluetoothChanged();
+        }
+    }
+#endif
+
     if (m_scanning)
     {
         m_scanning = false;
@@ -570,14 +615,6 @@ void DeviceManager::deviceDiscoveryFinished()
         m_listening = false;
         Q_EMIT listeningChanged();
     }
-
-#if defined(Q_OS_IOS)
-    if (!m_btE)
-    {
-        m_btE = true;
-        Q_EMIT bluetoothChanged();
-    }
-#endif
 }
 
 void DeviceManager::deviceDiscoveryStopped()
@@ -727,14 +764,22 @@ void DeviceManager::scanDevices_stop()
 {
     //qDebug() << "DeviceManager::scanDevices_stop()";
 
+#if defined(Q_OS_ANDROID)
+    // An Android service won't be able to scan/listen in the background without the associated permission
+    if (m_daemonMode && !m_permLocationBKG) return;
+#endif
+
     if (hasBluetooth())
     {
+        if (!m_discoveryAgent)
+        {
+            startBleAgent();
+        }
         if (m_discoveryAgent)
         {
-            if (m_discoveryAgent->isActive())
+            if (m_discoveryAgent->isActive() && m_scanning)
             {
                 m_discoveryAgent->stop();
-
                 m_scanning = false;
                 Q_EMIT scanningChanged();
             }

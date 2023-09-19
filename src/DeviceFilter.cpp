@@ -65,10 +65,10 @@ void DeviceFilter::invalidatefilter()
 
 bool DeviceFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    bool accepted = false;
-
     Q_UNUSED(sourceRow)
     Q_UNUSED(sourceParent)
+
+    bool accepted = false;
 
     QModelIndex index = sourceModel()->index(sourceRow, 0, sourceParent);
 
@@ -224,14 +224,22 @@ void DeviceModel::addDevice(Device *d)
     }
 }
 
-void DeviceModel::removeDevice(Device *d)
+void DeviceModel::removeDevice(Device *d, bool del)
 {
     if (d)
     {
         beginRemoveRows(QModelIndex(), m_devices.indexOf(d), m_devices.indexOf(d));
         m_devices.removeOne(d);
-        delete d;
+        if (del) delete d;
         endRemoveRows();
+    }
+}
+
+void DeviceModel::clearDevices()
+{
+    for (auto d: qAsConst(m_devices))
+    {
+        removeDevice(d, true);
     }
 }
 

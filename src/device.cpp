@@ -22,7 +22,6 @@
 #include "device.h"
 #include "DatabaseManager.h"
 #include "VendorsDatabase.h"
-#include "utils_screen.h"
 
 #include <cstdlib>
 #include <cmath>
@@ -31,6 +30,7 @@
 #include <QBluetoothAddress>
 #include <QBluetoothServiceInfo>
 #include <QLowEnergyService>
+#include <QLowEnergyConnectionParameters>
 
 #include <QJsonDocument>
 #include <QSqlQuery>
@@ -60,9 +60,6 @@ Device::Device(const QString &deviceAddr, const QString &deviceName, QObject *pa
     m_deviceAddress = deviceAddr;
     m_deviceName = deviceName;
 
-    VendorsDatabase *vdb = VendorsDatabase::getInstance();
-    vdb->getVendor(m_deviceAddress, m_deviceManufacturer);
-
     // Check address validity
     if (m_bleDevice.isValid() == false)
     {
@@ -76,6 +73,10 @@ Device::Device(const QString &deviceAddr, const QString &deviceName, QObject *pa
         m_dbInternal = db->hasDatabaseInternal();
         m_dbExternal = db->hasDatabaseExternal();
     }
+
+    // Vendor database
+    VendorsDatabase *vdb = VendorsDatabase::getInstance();
+    vdb->getVendor(m_deviceAddress, m_deviceManufacturer);
 
     // Configure timeout timer
     m_timeoutTimer.setSingleShot(true);
@@ -214,6 +215,15 @@ void Device::actionConnect()
 
 /* ************************************************************************** */
 
+void Device::actionDisconnect()
+{
+    //qDebug() << "Device::actionConnect()" << getAddress() << getName();
+
+    deviceDisconnect();
+}
+
+/* ************************************************************************** */
+
 void Device::actionScan()
 {
     qDebug() << "Device::actionScan()" << getAddress() << getName();
@@ -336,10 +346,11 @@ void Device::actionStarted()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void Device::setTimeoutTimer()
+void Device::setTimeoutTimer(int)
 {
-    m_timeoutTimer.setInterval(m_timeoutInterval*1000);
-    //m_timeoutTimer.start(); // toolBLEx doesn't use a bluetooth timeout
+    // toolBLEx doesn't use a bluetooth timeout
+    //m_timeoutTimer.setInterval(time_s*1000);
+    //m_timeoutTimer.start();
 }
 
 /* ************************************************************************** */
@@ -362,6 +373,11 @@ bool Device::isErrored() const
 bool Device::isBusy() const
 {
     return (m_ble_status >= DeviceUtils::DEVICE_CONNECTING);
+}
+
+bool Device::isConnected() const
+{
+    return (m_ble_status >= DeviceUtils::DEVICE_CONNECTED);
 }
 
 bool Device::isWorking() const
@@ -498,12 +514,6 @@ void Device::setBattery(const int battery)
 {
     if (battery > 0 && battery <= 100)
     {
-        //if (!hasBatteryLevel())
-        {
-            m_deviceCapabilities |= DeviceUtils::DEVICE_BATTERY;
-            Q_EMIT capabilitiesUpdated();
-        }
-
         if (m_deviceBattery != battery)
         {
             m_deviceBattery = battery;
@@ -617,13 +627,11 @@ void Device::deviceConnected()
     if (m_ble_action == DeviceUtils::ACTION_UPDATE_REALTIME ||
         m_ble_action == DeviceUtils::ACTION_UPDATE_HISTORY)
     {
+#if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
         // Keep screen on
         UtilsScreen *utilsScreen = UtilsScreen::getInstance();
-        if (utilsScreen)
-        {
-            utilsScreen->keepScreenOn(true);
-        }
-
+        if (utilsScreen) utilsScreen->keepScreenOn(true);
+#endif
         // Stop timeout timer, we'll be long...
         m_timeoutTimer.stop();
     }
@@ -683,7 +691,6 @@ void Device::deviceErrored(QLowEnergyController::Error error)
 {
     if (error <= QLowEnergyController::NoError) return;
     qWarning() << "Device::deviceErrored(" << m_deviceAddress << ") error:" << error;
-
 /*
     QLowEnergyController::NoError	0	No error has occurred.
     QLowEnergyController::UnknownError	1	An unknown error has occurred.
@@ -696,7 +703,6 @@ void Device::deviceErrored(QLowEnergyController::Error error)
     QLowEnergyController::AuthorizationError (since Qt 5.14)	8	The local Bluetooth device closed the connection due to insufficient authorization.
     QLowEnergyController::MissingPermissionsError (since Qt 6.4)	9	The operating system requests permissions which were not granted by the user.
 */
-
     m_lastError = QDateTime::currentDateTime();
 
     if (m_ble_status < DeviceUtils::DEVICE_CONNECTED)
@@ -749,7 +755,7 @@ void Device::bleReadNotify(const QLowEnergyCharacteristic &, const QByteArray &)
 
 void Device::parseAdvertisementData(const uint16_t, const uint16_t, const QByteArray &)
 {
-    //qDebug() << "Device::parseAdvertisementData(" << m_deviceAddress << ")";
+    //qDebug() << "Device::parseAdvertisementData(" << m_deviceName << m_deviceAddress << ")";
 }
 
 /* ************************************************************************** */

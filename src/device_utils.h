@@ -73,6 +73,7 @@ public:
         DEVICE_LIGHT                 = 8,
         DEVICE_BEACON,
         DEVICE_REMOTE,
+        DEVICE_PBP,
         DEVICE_PGP,
     };
     Q_ENUM(DeviceType)
@@ -202,20 +203,27 @@ class ChartDataHistory: public QObject
 
 public:
     ChartDataHistory(const QDateTime &dt,
-                     float sm, float sc, float st,
-                     float t, float h, float l,
                      QObject *parent) : QObject(parent)
     {
         datetime = dt;
-
-        soilMoisture = sm;
-        soilConductivity = sc;
-        soilTemperature = st;
-        temperature = t;
-        humidity = h;
-        luminosityLux = l;
     }
+    ChartDataHistory(const ChartDataHistory &dt,
+                     QObject *parent) : QObject(parent)
+    {
+        datetime = dt.datetime;
 
+        soilMoisture = dt.soilMoisture;
+        soilConductivity = dt.soilConductivity;
+        soilTemperature = dt.soilTemperature;
+        soilPH = dt.soilPH;
+        temperature = dt.temperature;
+        humidity = dt.humidity;
+        luminosityLux = dt.luminosityLux;
+        luminosityMmol = dt.luminosityMmol;
+
+        temperatureMax = dt.temperatureMax;
+        luminosityLuxMax = dt.luminosityLuxMax;
+    }
     ChartDataHistory(const QDateTime &dt,
                      float sm, float sc, float st,
                      float t, float h, float l,
@@ -306,7 +314,7 @@ public slots:
 
 /* ************************************************************************** */
 
-class ChartDataVoc: public QObject
+class ChartDataEnv: public QObject
 {
     Q_OBJECT
 
@@ -327,6 +335,14 @@ class ChartDataVoc: public QObject
     Q_PROPERTY(float co2Mean READ getCo2Mean CONSTANT)
     Q_PROPERTY(float co2Max READ getCo2Max CONSTANT)
 
+    Q_PROPERTY(float pm25Min READ getPM25Min CONSTANT)
+    Q_PROPERTY(float pm25Mean READ getPM25Mean CONSTANT)
+    Q_PROPERTY(float pm25Max READ getPM25Max CONSTANT)
+
+    Q_PROPERTY(float pm10Min READ getPM10Min CONSTANT)
+    Q_PROPERTY(float pm10Mean READ getPM10Mean CONSTANT)
+    Q_PROPERTY(float pm10Max READ getPM10Max CONSTANT)
+
     QDateTime datetime;
 
     float vocMin;
@@ -341,11 +357,21 @@ class ChartDataVoc: public QObject
     float co2Mean = -99.f;
     float co2Max;
 
+    float pm25Min;
+    float pm25Mean = -99.f;
+    float pm25Max;
+
+    float pm10Min;
+    float pm10Mean = -99.f;
+    float pm10Max;
+
 public:
-    ChartDataVoc(const QDateTime &dt,
+    ChartDataEnv(const QDateTime &dt,
                  float vmin, float v, float vmax,
                  float hmin, float h, float hmax,
                  float cmin, float c, float cmax,
+                 float p2min, float p2, float p2max,
+                 float p10min, float p10, float p10max,
                  QObject *parent) : QObject(parent)
     {
         datetime = dt;
@@ -353,6 +379,8 @@ public:
         vocMin = vmin; vocMean = v; vocMax = vmax;
         hchoMin = hmin; hchoMean = h; hchoMax = hmax;
         co2Min = cmin; co2Mean = c; co2Max = cmax;
+        pm25Min = p2min; pm25Mean = p2; pm25Max = p2max;
+        pm10Min = p10min; pm10Mean = p10; pm10Max = p10max;
     }
 
 public slots:
@@ -372,6 +400,14 @@ public slots:
     float getCo2Min() { return co2Min; }
     float getCo2Mean() { return co2Mean; }
     float getCo2Max() { return co2Max; }
+
+    float getPM25Min() { return pm25Min; }
+    float getPM25Mean() { return pm25Mean; }
+    float getPM25Max() { return pm25Max; }
+
+    float getPM10Min() { return pm10Min; }
+    float getPM10Mean() { return pm10Mean; }
+    float getPM10Max() { return pm10Max; }
 };
 
 /* ************************************************************************** */

@@ -36,6 +36,7 @@
 
 #include <QBluetoothLocalDevice>
 #include <QBluetoothDeviceDiscoveryAgent>
+
 class QBluetoothDeviceInfo;
 class QLowEnergyController;
 
@@ -54,35 +55,48 @@ class DeviceManager: public QObject
 
     Q_PROPERTY(bool hasDevices READ areDevicesAvailable NOTIFY devicesListUpdated)
     Q_PROPERTY(int deviceCount READ getDeviceCount NOTIFY devicesListUpdated)
+
+    Q_PROPERTY(int deviceCached READ getDeviceCached NOTIFY devicesCacheUpdated)
     Q_PROPERTY(DeviceHeader *deviceHeader READ getDeviceHeader NOTIFY deviceHeaderUpdated)
     Q_PROPERTY(DeviceFilter *devicesList READ getDevicesFiltered NOTIFY devicesListUpdated)
 
-    Q_PROPERTY(int deviceCached READ getDeviceCached NOTIFY devicesCacheUpdated)
+    ////////
 
+    Q_PROPERTY(bool advertising READ isAdvertising NOTIFY advertisingChanged)
     Q_PROPERTY(bool listening READ isListening NOTIFY listeningChanged)
     Q_PROPERTY(bool scanning READ isScanning NOTIFY scanningChanged)
     Q_PROPERTY(bool scanningPaused READ isScanningPaused NOTIFY scanningChanged)
     Q_PROPERTY(bool updating READ isUpdating NOTIFY updatingChanged)
     Q_PROPERTY(bool syncing READ isSyncing NOTIFY syncingChanged)
-    Q_PROPERTY(bool advertising READ isAdvertising NOTIFY advertisingChanged)
 
     Q_PROPERTY(bool bluetooth READ hasBluetooth NOTIFY bluetoothChanged)
     Q_PROPERTY(bool bluetoothAdapter READ hasBluetoothAdapter NOTIFY bluetoothChanged)
     Q_PROPERTY(bool bluetoothEnabled READ hasBluetoothEnabled NOTIFY bluetoothChanged)
     Q_PROPERTY(bool bluetoothPermissions READ hasBluetoothPermissions NOTIFY bluetoothChanged)
+
+    Q_PROPERTY(bool permissionOS READ hasPermissionOS NOTIFY permissionsChanged)
+    Q_PROPERTY(bool permissionLocationBLE READ hasPermissionLocationBLE NOTIFY permissionsChanged)
+    Q_PROPERTY(bool permissionLocationBackground READ hasPermissionLocationBackground NOTIFY permissionsChanged)
+    Q_PROPERTY(bool permissionLocationGPS READ hasPermissionGPS NOTIFY permissionsChanged)
+
     Q_PROPERTY(int bluetoothHostMode READ getBluetoothHostMode NOTIFY hostModeChanged)
 
     Q_PROPERTY(QString orderBy_role READ getOrderByRole NOTIFY filteringChanged)
     Q_PROPERTY(int orderBy_order READ getOrderByOrder NOTIFY filteringChanged)
 
-    bool m_dbInternal = false;
-    bool m_dbExternal = false;
+    bool m_dbInternal = false;  //!< do we have an internal SQLite database?
+    bool m_dbExternal = false;  //!< do we have a remote MySQL database?
 
-    bool m_daemonMode = false;
+    bool m_daemonMode = false;  //!< did we start without UI?
 
-    bool m_btA = false;
-    bool m_btE = false;
-    bool m_btP = true;
+    bool m_bleAdapter = false;      //!< do we have a BLE adapter?
+    bool m_bleEnabled = false;      //!< is the BLE adapter enabled?
+    bool m_blePermissions = false;  //!< do we have necessary BLE permissions? (OS independent)
+
+    bool m_permOS = false;          //!< do we have OS permissions for BLE? (macOS, iOS)
+    bool m_permLocationBLE = false; //!< do we location permission? (Android)
+    bool m_permLocationBKG = false; //!< do we background location permission? (Android)
+    bool m_permGPS = false;         //!< is the GPS enabled? (Android)
 
     QBluetoothLocalDevice *m_bluetoothAdapter = nullptr;
     QBluetoothDeviceDiscoveryAgent *m_discoveryAgent = nullptr;
@@ -98,33 +112,41 @@ class DeviceManager: public QObject
     DeviceFilter *m_devices_filter = nullptr;
     DeviceHeader *m_device_header = nullptr;
 
+    bool m_advertising = false;
+    bool isAdvertising() const  { return m_advertising; }
+
     bool m_listening = false;
-    bool isListening() const;
+    bool isListening() const { return m_listening; }
 
     bool m_scanning = false;
-    bool isScanning() const;
+    bool isScanning() const { return m_scanning; }
 
     bool m_scanning_paused = false;
-    bool isScanningPaused() const;
+    bool isScanningPaused() const { return m_scanning_paused; }
 
     bool m_updating = false;
-    bool isUpdating() const;
+    bool isUpdating() const  { return m_updating; }
 
     bool m_syncing = false;
-    bool isSyncing() const;
+    bool isSyncing() const  { return m_syncing; }
 
-    bool m_advertising = false;
-    bool isAdvertising() const;
+    bool hasBluetooth() const { return (m_bleAdapter && m_bleEnabled && m_blePermissions); }
+    bool hasBluetoothAdapter() const { return m_bleAdapter; }
+    bool hasBluetoothEnabled() const { return m_bleEnabled; }
+    bool hasBluetoothPermissions() const { return m_blePermissions; }
+
+    bool hasPermissionOS() const { return m_permOS; }
+    bool hasPermissionLocationBLE() const { return m_permLocationBLE; }
+    bool hasPermissionLocationBackground() const { return m_permLocationBKG; }
+    bool hasPermissionGPS() const { return m_permGPS; }
 
     int getBluetoothHostMode() const { return m_ble_hostmode; }
 
-    bool hasBluetooth() const;
-    bool hasBluetoothAdapter() const;
-    bool hasBluetoothEnabled() const;
-    bool hasBluetoothPermissions() const;
-
-    void checkBluetoothIos();
     void startBleAgent();
+
+    void checkBluetoothIOS();
+    bool m_checking_ios_ble = false;
+    QTimer m_checking_ios_timer;
 
     QString getOrderByRole() const;
     int getOrderByOrder() const;
@@ -148,7 +170,7 @@ class DeviceManager: public QObject
 
 Q_SIGNALS:
     void bluetoothChanged();
-    void filteringChanged();
+    void permissionsChanged();
 
     void adaptersListUpdated();
 
@@ -157,12 +179,14 @@ Q_SIGNALS:
     void devicesCacheUpdated();
     void devicesBlacklistUpdated();
 
+    void advertisingChanged();
     void listeningChanged();
     void scanningChanged();
     void updatingChanged();
     void syncingChanged();
-    void advertisingChanged();
     void hostModeChanged();
+
+    void filteringChanged();
 
 private slots:
     // QBluetoothLocalDevice related
@@ -175,12 +199,15 @@ private slots:
     void updateBleDevice_simple(const QBluetoothDeviceInfo &info);
     void updateBleDevice_discovery(const QBluetoothDeviceInfo &info);
     void deviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error);
+    void deviceDiscoveryErrorIOS();
     void deviceDiscoveryFinished();
     void deviceDiscoveryStopped();
 
 public:
     DeviceManager(bool daemon = false);
     ~DeviceManager();
+
+    bool isDaemon() const { return m_daemonMode; }
 
     // Adapters management
     Q_INVOKABLE bool areAdaptersAvailable() const { return m_bluetoothAdapters.size(); }
@@ -196,36 +223,32 @@ public:
     static int getLastRun();
 
     Q_INVOKABLE void scanDevices_start();
-    Q_INVOKABLE void scanDevices_pause();
-    Q_INVOKABLE void scanDevices_resume();
     Q_INVOKABLE void scanDevices_stop();
 
-    Q_INVOKABLE void disconnectDevices();
+    Q_INVOKABLE void scanDevices_pause();
+    Q_INVOKABLE void scanDevices_resume();
 
     Q_INVOKABLE void checkPaired();
 
     // Device management
-
-    // RSSI graph
-    Q_INVOKABLE void getRssiGraphAxis(QDateTimeAxis *axis);
-    Q_INVOKABLE void getRssiGraphData(QLineSeries *serie, int index);
-
-    // Devices list management
-    Q_INVOKABLE bool areDevicesAvailable() const { return m_devices_model->hasDevices(); }
-    DeviceFilter *getDevicesFiltered() const { return m_devices_filter; }
-    DeviceHeader *getDeviceHeader() const { return m_device_header; }
-    int getDeviceCount() const { return m_devices_model->getDeviceCount(); }
-
-    void blacklistDevice(const QString &addr);
-    void whitelistDevice(const QString &addr);
-    bool isDeviceBlacklisted(const QString &addr);
-
     void cacheDevice(const QString &addr);
     void uncacheDevice(const QString &addr);
     bool isDeviceCached(const QString &addr);
     Q_INVOKABLE void clearDeviceCache();
     Q_INVOKABLE int countDeviceCached();
     int getDeviceCached() const { return m_devicesCachedCount; }
+
+    void blacklistDevice(const QString &addr);
+    void whitelistDevice(const QString &addr);
+    bool isDeviceBlacklisted(const QString &addr);
+
+    // Devices list management
+    Q_INVOKABLE bool areDevicesAvailable() const { return m_devices_model->hasDevices(); }
+    Q_INVOKABLE void disconnectDevices();
+
+    int getDeviceCount() const { return m_devices_model->getDeviceCount(); }
+    DeviceFilter *getDevicesFiltered() const { return m_devices_filter; }
+    DeviceHeader *getDeviceHeader() const { return m_device_header; }
 
     // Sorting and filtering
     Q_INVOKABLE void orderby_default();
@@ -242,14 +265,17 @@ public:
     Q_INVOKABLE void setFilterString(const QString &str);
     Q_INVOKABLE void updateBoolFilters();
 
-    Q_INVOKABLE QVariant getDeviceByProxyIndex(const int index) const
-    {
+    Q_INVOKABLE QVariant getDeviceByProxyIndex(const int index) const {
         QModelIndex proxyIndex = m_devices_filter->index(index, 0);
         return QVariant::fromValue(m_devices_filter->data(proxyIndex, DeviceModel::PointerRole));
     }
 
     void invalidate();
     void invalidateFilter();
+
+    // RSSI graph
+    Q_INVOKABLE void getRssiGraphAxis(QDateTimeAxis *axis);
+    Q_INVOKABLE void getRssiGraphData(QLineSeries *serie, int index);
 };
 
 /* ************************************************************************** */

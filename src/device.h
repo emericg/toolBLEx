@@ -142,9 +142,12 @@ protected:
     QDateTime m_lastError;
     bool m_firmware_uptodate = false;
 
-    int m_timeoutInterval = 60;
+    const static int s_timeout = 12;
+    const static int s_timeoutConnection = 12;
+    const static int s_timeoutError = 12;
+
     QTimer m_timeoutTimer;
-    void setTimeoutTimer();
+    void setTimeoutTimer(int time_s = s_timeout);
 
     // Device time
     int64_t m_device_time = -1;
@@ -239,6 +242,7 @@ public:
     int getAction() const { return m_ble_action; }
     int getStatus() const { return m_ble_status; }
     bool isBusy() const;                //!< Is currently doing/trying something?
+    bool isConnected() const;           //!< Is currently connected
     bool isWorking() const;             //!< Is currently working?
     bool isUpdating() const;            //!< Is currently being updated?
     bool isErrored() const;             //!< Has emitted a BLE error
@@ -248,7 +252,6 @@ public:
     QString getAddressMAC() const;
     void setAddressMAC(const QString &mac);
     bool isEnabled() const { return m_isEnabled; }
-    bool isConnected() const { return m_ble_status >= DeviceUtils::DEVICE_CONNECTED; }
     // Device additional settings
     Q_INVOKABLE bool hasSetting(const QString &key) const;
     Q_INVOKABLE QVariant getSetting(const QString &key) const;
@@ -256,6 +259,7 @@ public:
 
     // Start actions
     Q_INVOKABLE void actionConnect();
+    Q_INVOKABLE void actionDisconnect();
     Q_INVOKABLE void actionScan();
 
     // BLE advertisement

@@ -27,7 +27,6 @@
 
 #include <QObject>
 #include <QMetaType>
-#include <QByteArray>
 #include <QAbstractListModel>
 #include <QAbstractTableModel>
 #include <QSortFilterProxyModel>
@@ -82,7 +81,8 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     Device *device(const QModelIndex &index) const;
-    bool hasDevices() const { return !m_devices.empty(); }
+
+    bool hasDevices() const { return !m_devices.isEmpty(); }
     void getDevices(QList <Device *> &device);
     int getDeviceCount() const { return m_devices.size(); }
 
@@ -107,7 +107,8 @@ public:
 
 public slots:
     void addDevice(Device *d);
-    void removeDevice(Device *d);
+    void removeDevice(Device *d, bool del = true);
+    void clearDevices();
     void sanetize();
 };
 
