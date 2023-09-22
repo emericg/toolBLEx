@@ -17,9 +17,23 @@ Item {
             if (!selectedDevice.isLowEnergy) {
                 deviceMenu.currentSelection = 1
             }
+        }
+    }
 
-            // Reset buttons
-            panelDeviceInfos.resetButtons()
+    ////////////////////////////////////////////////////////////////////////
+
+    Loader {
+        id: popupLoader_export
+
+        active: false
+        asynchronous: false
+        sourceComponent: PopupExportDeviceData {
+            id: popupClearCache
+            parent: appContent
+
+            onConfirmed: {
+                //
+            }
         }
     }
 

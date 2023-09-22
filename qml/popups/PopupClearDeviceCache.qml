@@ -8,7 +8,7 @@ Popup {
     id: popupClearDeviceCache
 
     x: ((appWindow.width / 2) - (width / 2))
-    y: ((appWindow.height / 2) - (height / 2) - (appHeader.height / 2))
+    y: ((appWindow.height / 2) - (height / 2) - (appHeader.height))
     width: 720
     padding: 0
 
@@ -60,20 +60,29 @@ Popup {
             Column {
                 anchors.left: parent.left
                 anchors.leftMargin: 24
+                anchors.right: parent.right
+                anchors.rightMargin: 24
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 4
 
                 Text {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
                     text: qsTr("Clear device cache")
                     font.pixelSize: Theme.fontSizeTitle
                     font.bold: true
+                    elide: Text.ElideRight
                     color: "white"
                     opacity: 0.98
                 }
                 Text {
-                    id: uuid_tf
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
                     text: qsTr("Are you sure you want to clear the device cache?")
                     font.pixelSize: Theme.fontSizeTitle-4
+                    elide: Text.ElideRight
                     color: "white"
                     opacity: 0.9
                 }
@@ -82,7 +91,7 @@ Popup {
 
         ////////
 
-        Column {
+        Column { // contentArea
             anchors.left: parent.left
             anchors.leftMargin: 24
             anchors.right: parent.right
@@ -108,42 +117,59 @@ Popup {
                 }
             }
 
-            Text {
-                width: parent.width
-
-                text: qsTr("Cached devices will persist between session, even if they are not detected nearby.") + "<br>" +
-                      qsTr("Clear the cache if you have too many or too old devices.")
-                textFormat: Text.StyledText
-                font.pixelSize: Theme.fontSizeContent
-                color: Theme.colorSubText
-                wrapMode: Text.WordWrap
-            }
-
-            Row {
+            Column {
+                anchors.left: parent.left
                 anchors.right: parent.right
-                spacing: 16
+                spacing: 8
 
-                ButtonWireframe {
-                    primaryColor: Theme.colorSubText
-                    secondaryColor: Theme.colorForeground
-
-                    text: qsTr("Cancel")
-                    onClicked: popupClearDeviceCache.close()
+                Text {
+                    width: parent.width
+                    text: qsTr("Cached devices persists between session, even if they are not detected nearby.")
+                    textFormat: Text.StyledText
+                    font.pixelSize: Theme.fontSizeContent
+                    color: Theme.colorSubText
+                    wrapMode: Text.WordWrap
                 }
-                ButtonWireframe {
-                    fullColor: true
-                    primaryColor: Theme.colorOrange
-
-                    text: qsTr("Clear cache")
-                    onClicked: {
-                        popupClearDeviceCache.confirmed()
-                        popupClearDeviceCache.close()
-                    }
+                Text {
+                    width: parent.width
+                    text: qsTr("Clear the cache if you have too many or too old devices.")
+                    textFormat: Text.StyledText
+                    font.pixelSize: Theme.fontSizeContent
+                    color: Theme.colorSubText
+                    wrapMode: Text.WordWrap
                 }
             }
-
-            Item  { width: 1; height: 1; } // spacer
         }
+
+        ////////
+
+        Item  { width: 1; height: 1; } // spacer
+
+        Row {
+            anchors.right: parent.right
+            anchors.rightMargin: 24
+            spacing: 16
+
+            ButtonWireframe {
+                primaryColor: Theme.colorSubText
+                secondaryColor: Theme.colorForeground
+
+                text: qsTr("Cancel")
+                onClicked: popupClearDeviceCache.close()
+            }
+            ButtonWireframe {
+                fullColor: true
+                primaryColor: Theme.colorOrange
+
+                text: qsTr("Clear cache")
+                onClicked: {
+                    popupClearDeviceCache.confirmed()
+                    popupClearDeviceCache.close()
+                }
+            }
+        }
+
+        Item  { width: 1; height: 1; } // spacer
 
         ////////
     }

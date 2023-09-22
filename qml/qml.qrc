@@ -34,6 +34,7 @@
         <file alias="FrequencyGraphLegend.qml">components/FrequencyGraphLegend.qml</file>
 
         <file alias="PopupClearDeviceCache.qml">popups/PopupClearDeviceCache.qml</file>
+        <file alias="PopupExportDeviceData.qml">popups/PopupExportDeviceData.qml</file>
         <file alias="PopupWriteCharacteristic.qml">popups/PopupWriteCharacteristic.qml</file>
 
         <file>ThemeEngine.qml</file>

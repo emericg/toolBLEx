@@ -39,7 +39,7 @@ Loader {
         ////////////////////////////////////////////////////////////////////////
 
         Loader {
-            id: popupLoader
+            id: popupLoader_cache
 
             active: false
             asynchronous: false
@@ -680,12 +680,12 @@ Loader {
                                 anchors.right: parent.right
                                 anchors.rightMargin: 64
                                 anchors.verticalCenter: parent.verticalCenter
-                                spacing: Theme.componentMargin
+                                spacing: 24
 
                                 Text {
                                     anchors.verticalCenter: parent.verticalCenter
 
-                                    text: qsTr("Clear device cache")
+                                    text: qsTr("Device cache")
                                     textFormat: Text.PlainText
                                     font.pixelSize: Theme.fontSizeContent
                                     color: Theme.colorText
@@ -695,8 +695,16 @@ Loader {
 
                                     text: qsTr("%n device(s)", "", deviceManager.deviceCached)
                                     textFormat: Text.PlainText
-                                    font.pixelSize: Theme.fontSizeContent
-                                    color: Theme.colorSubText
+                                    font.pixelSize: Theme.fontSizeContentSmall
+                                    color: Theme.colorText
+
+                                    Rectangle {
+                                        anchors.fill: parent
+                                        anchors.margins: -8
+                                        z: -1
+                                        radius: Theme.componentRadius
+                                        color: Theme.colorComponent
+                                    }
                                 }
                             }
 
@@ -706,10 +714,10 @@ Loader {
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 fullColor: true
-                                text: qsTr("Clear")
+                                text: qsTr("Clear cache")
                                 onClicked: {
-                                    popupLoader.active = true
-                                    popupLoader.item.open()
+                                    popupLoader_cache.active = true
+                                    popupLoader_cache.item.open()
                                 }
                             }
                         }
@@ -820,7 +828,7 @@ Loader {
                             height: 48
                             color: Theme.colorForeground
 
-                            TextFieldPathThemed {
+                            TextFieldFileDialog {
                                 id: ubertoothPath
                                 anchors.left: parent.left
                                 anchors.leftMargin: 16
@@ -834,11 +842,9 @@ Loader {
                                 text: settingsManager.ubertooth_path
                                 placeholderText: "ubertooth-specan"
 
+                                fileMode: FileDialog.OpenFile
                                 dialogTitle: qsTr("Please select the path to the ubertooth-specan binary")
                                 dialogFilter: ["specan binary (ubertooth-specan)"]
-
-                                //statusSource: ubertooth.toolsAvailable ? "qrc:/assets/icons_material/baseline-check_circle-24px.svg" : ""
-                                //statuscolor: Theme.colorSuccess
 
                                 IconSvg {
                                     anchors.right: parent.right

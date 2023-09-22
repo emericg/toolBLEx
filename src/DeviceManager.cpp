@@ -1047,7 +1047,7 @@ void DeviceManager::clearDeviceCache()
     for (auto d: qAsConst(m_devices_model->m_devices))
     {
         DeviceToolBLEx *dd = qobject_cast<DeviceToolBLEx *>(d);
-        if (dd->hasCache() && !dd->isAvailable())
+        if (dd->isCached() && !dd->isAvailable())
         {
             m_devices_model->removeDevice(dd);
             Q_EMIT devicesListUpdated();

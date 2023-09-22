@@ -2,7 +2,6 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
-import QtCore
 import QtQuick.Dialogs
 
 import ThemeEngine
@@ -23,12 +22,6 @@ Flickable {
 
     boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
     ScrollBar.vertical: ScrollBar { visible: false }
-
-    ////////
-
-    function resetButtons() {
-        exportButton.reset()
-    }
 
     ////////
 
@@ -438,53 +431,15 @@ Flickable {
                         fullColor: true
                         primaryColor: Theme.colorGrey
 
-                        //enabled: (selectedDevice && selectedDevice.servicesCount > 0)
+                        enabled: (selectedDevice &&
+                                  (selectedDevice.advCount > 0 || selectedDevice.servicesCount > 0 || selectedDevice.hasServiceCache))
+
                         text: qsTr("export available data")
                         source: "qrc:/assets/icons_material/baseline-save-24px.svg"
 
-                        function reset() {
-                            exportButton.text = qsTr("export available data")
-                            exportButton.primaryColor = Theme.colorGrey
-                        }
-
                         onClicked: {
-                            // (file selection)
-                            fileDialog.selectedFile = fileDialog.currentFolder +
-                                    "/" + selectedDevice.deviceName_export +
-                                    "-" + selectedDevice.deviceAddr_export + ".txt"
-                            fileDialog.open()
-                            return
-/*
-                            // (auto)
-                            if (exportButton.text === qsTr("Exported")) {
-                                utilsApp.openWith(selectedDevice.getExportDirectory())
-                                return
-                            }
-                            if (selectedDevice.exportDeviceInfo()) {
-                                exportButton.text = qsTr("Exported")
-                                exportButton.primaryColor = Theme.colorSuccess
-                            } else {
-                                exportButton.text = qsTr("Export error")
-                                exportButton.primaryColor = Theme.colorWarning
-                            }
-*/
-                        }
-
-                        FileDialog {
-                            id: fileDialog
-
-                            fileMode: FileDialog.SaveFile
-                            currentFolder: StandardPaths.writableLocation(StandardPaths.DocumentsLocation)
-
-                            onAccepted: {
-                                if (selectedDevice.exportDeviceInfo(UtilsPath.cleanUrl(currentFile))) {
-                                    exportButton.text = qsTr("Exported")
-                                    exportButton.primaryColor = Theme.colorSuccess
-                                } else {
-                                    exportButton.text = qsTr("Export error")
-                                    exportButton.primaryColor = Theme.colorWarning
-                                }
-                            }
+                            popupLoader_export.active = true
+                            popupLoader_export.item.open()
                         }
                     }
                 }
@@ -546,8 +501,8 @@ Flickable {
 
                         visible: (selectedDevice && !selectedDevice.isBeacon)
 
-                        text: (selectedDevice && selectedDevice.hasCache) ? qsTr("forget") : qsTr("cache")
-                        source: (selectedDevice && selectedDevice.hasCache) ?
+                        text: (selectedDevice && selectedDevice.isCached) ? qsTr("forget") : qsTr("cache")
+                        source: (selectedDevice && selectedDevice.isCached) ?
                                     "qrc:/assets/icons_material/baseline-loupe_minus-24px.svg" :
                                     "qrc:/assets/icons_material/baseline-loupe-24px.svg"
                         onClicked: selectedDevice.cache(!selectedDevice.isCached)

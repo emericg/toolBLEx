@@ -74,13 +74,13 @@ Item {
                         fullColor: true
                         primaryColor: Theme.colorLightGrey
 
-                        enabled: (selectedDevice && selectedDevice.hasServiceCache())
                         text: qsTr("load from cache")
                         source: "qrc:/assets/icons_material/baseline-save-24px.svg"
 
-                        onClicked: {
-                            selectedDevice.restoreServiceCache()
-                        }
+                        enabled: (selectedDevice && selectedDevice.hasServiceCache &&
+                                  selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
+
+                        onClicked: selectedDevice.restoreServiceCache()
                     }
                 }
 
@@ -101,10 +101,10 @@ Item {
 
         header: Rectangle {
             width: servicesView.width
-            height: (selectedDevice && selectedDevice.servicesScanMode === 1) ? 40 : 0
+            height: (selectedDevice && selectedDevice.servicesCached) ? 40 : 0
             color: Theme.colorForeground
 
-            visible: (selectedDevice && selectedDevice.servicesScanMode === 1)
+            visible: (selectedDevice && selectedDevice.servicesCached)
 
             IconSvg {
                 anchors.left: parent.left
@@ -149,8 +149,8 @@ Item {
             primaryColor: Theme.colorLightGrey
 
             visible: (selectedDevice &&
-                      selectedDevice.servicesCount > 1 &&
-                      selectedDevice.servicesScanMode > 1)
+                      selectedDevice.hasServices &&
+                      selectedDevice.servicesScanned)
 
             text: qsTr("Cache")
             source: "qrc:/assets/icons_material/baseline-save-24px.svg"

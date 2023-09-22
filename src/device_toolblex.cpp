@@ -57,7 +57,7 @@ DeviceToolBLEx::DeviceToolBLEx(const QString &deviceAddr, const QString &deviceN
     // Creation from database cache
 
     m_isCached = true;
-    m_hasCache = true;
+    m_hasServiceCache = checkServiceCache();
 
     getSqlDeviceInfos();
 }
@@ -70,6 +70,7 @@ DeviceToolBLEx::DeviceToolBLEx(const QBluetoothDeviceInfo &d, QObject *parent):
     addAdvertisementEntry(d.rssi(), !d.manufacturerIds().empty(), !d.serviceIds().empty());
 
     m_isCached = (d.isCached() || d.rssi() == 0);
+    m_hasServiceCache = checkServiceCache();
     m_firstSeen = QDateTime::currentDateTime();
     m_bluetoothCoreConfiguration = d.coreConfigurations();
 }
@@ -297,17 +298,6 @@ void DeviceToolBLEx::setCached(bool v)
     }
 }
 
-void DeviceToolBLEx::setCache(bool v)
-{
-    if (m_hasCache != v)
-    {
-        m_hasCache = v;
-        Q_EMIT cacheChanged();
-
-        static_cast<DeviceManager *>(parent())->invalidateFilter();
-    }
-}
-
 void DeviceToolBLEx::setPairingStatus(QBluetoothLocalDevice::Pairing p)
 {
     if (m_pairingStatus != p)
@@ -425,8 +415,7 @@ void DeviceToolBLEx::cache(bool c)
         if (c) static_cast<DeviceManager *>(parent())->cacheDevice(m_deviceAddress);
         else static_cast<DeviceManager *>(parent())->uncacheDevice(m_deviceAddress);
 
-        setCache(c);
-        if (m_rssi >= 0) setCached(c);
+        setCached(c);
     }
 }
 
@@ -956,12 +945,19 @@ void DeviceToolBLEx::advertisementFilterUpdate()
 
 /* ************************************************************************** */
 
-bool DeviceToolBLEx::hasServiceCache() const
+bool DeviceToolBLEx::checkServiceCache()
 {
     QString cachePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     cachePath += "/devices/" + m_deviceAddress + ".cache";
 
-    return QFile::exists(cachePath);
+    bool checkResult = QFile::exists(cachePath);
+    if (m_hasServiceCache != checkResult)
+    {
+        m_hasServiceCache = checkResult;
+        Q_EMIT servicesChanged();
+    }
+
+    return checkResult;
 }
 
 bool DeviceToolBLEx::saveServiceCache()
@@ -1030,6 +1026,12 @@ bool DeviceToolBLEx::saveServiceCache()
             efile.close();
 
             status = true;
+
+            if (m_hasServiceCache != true)
+            {
+                m_hasServiceCache = true;
+                Q_EMIT servicesChanged();
+            }
         }
     }
 
@@ -1050,7 +1052,7 @@ void DeviceToolBLEx::restoreServiceCache()
 
         qDeleteAll(m_services);
         m_services.clear();
-        m_services_scanmode = 1; // cache
+        m_services_scanmode = 1; // cache is in use
 
         QJsonArray servicesArray = root["services"].toArray();
         for (const auto &srv: servicesArray)
@@ -1074,7 +1076,8 @@ QString DeviceToolBLEx::getExportDirectory() const
 }
 
 bool DeviceToolBLEx::exportDeviceInfo(const QString &exportPath,
-                                      bool withAdvertisements, bool withServices, bool withValues)
+                                      bool withGenericInfo, bool withAdvertisements,
+                                      bool withServices, bool withValues)
 {
     bool status = false;
 
@@ -1088,10 +1091,26 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &exportPath,
     if (m_deviceManufacturer.length() > 0) str += "Device MAC manufacturer: " + m_deviceManufacturer + endl;
     str += endl;
 
+    // Generic info
+    if (withGenericInfo)
+    {
+        if (!m_userComment.isEmpty()) str += "User comment: " + m_userComment + endl;
+        str += "First seen: " + m_firstSeen.toString() + endl;
+        str += "Last seen: " + m_lastSeen.toString() + endl;
+
+        if (!m_advertised_services.isEmpty()) str += endl + "Service(s) advertised:" + endl;
+        for (auto srv: m_advertised_services)
+        {
+            str += "- " + srv + endl;
+        }
+
+        str += endl;
+    }
+
     // Advertisements
     if (withAdvertisements)
     {
-        str += "Advertising interval: " + QString::number(m_advertisementInterval) + "ms" + endl;
+        str += "Advertising interval: " + QString::number(m_advertisementInterval) + " ms" + endl;
 
         if (m_advertisementData.size() == 0)
         {
@@ -1100,7 +1119,7 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &exportPath,
         }
         else
         {
-            str += "Advertisement packets:" + endl;
+            str += "Advertisement packet(s):" + endl;
 
             for (auto adv: m_advertisementData)
             {
@@ -1108,17 +1127,19 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &exportPath,
                 {
                     str += "> MFD > ";
                     str += adv->getTimestamp().toString("hh:mm:ss.zzz") + " > ";
-                    str += "0x" + adv->getUUID_str() + " (" + adv->getUUID_vendor() + ")" + " > ";
-                    str += "(" + QString::number(adv->getDataSize()).rightJustified(3, ' ') + " bytes) ";
-                    str += "0x" + adv->getDataHex();
+                    str += "0x" + adv->getUUID_str() + " (" + adv->getUUID_vendor() + ")" + " > (";
+                    if (adv->getDataSize() < 100) str += QString::number(adv->getDataSize()).rightJustified(2, ' ');
+                    else  str += QString::number(adv->getDataSize()).rightJustified(3, ' ');
+                    str += " bytes) 0x" + adv->getDataHex();
                 }
                 else if (adv->getMode() == DeviceUtils::BLE_ADV_SERVICEDATA)
                 {
                     str += "> SVD > ";
                     str += adv->getTimestamp().toString("hh:mm:ss.zzz") + " > ";
-                    str += "0x" + adv->getUUID_str() + " > ";
-                    str += "(" + QString::number(adv->getDataSize()).rightJustified(3, ' ') + " bytes) ";
-                    str += "0x" + adv->getDataHex();
+                    str += "0x" + adv->getUUID_str() + " > (";
+                    if (adv->getDataSize() < 100) str += QString::number(adv->getDataSize()).rightJustified(2, ' ');
+                    else  str += QString::number(adv->getDataSize()).rightJustified(3, ' ');
+                    str += " bytes) 0x" + adv->getDataHex();
                 }
                 else
                 {
@@ -1127,8 +1148,6 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &exportPath,
 
                 str += endl;
             }
-
-            str += endl;
         }
     }
 

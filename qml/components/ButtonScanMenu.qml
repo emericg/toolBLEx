@@ -351,7 +351,8 @@ T.Button {
                 fullColor: true
                 primaryColor: control.color
                 layoutDirection: Qt.RightToLeft
-                visible: (selectedDevice && selectedDevice.status === DeviceUtils.DEVICE_OFFLINE && selectedDevice.hasServiceCache())
+                visible: (selectedDevice && selectedDevice.hasServiceCache &&
+                          selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
 
                 text: qsTr("load from cache")
                 source: "qrc:/assets/icons_material/baseline-save-24px.svg"

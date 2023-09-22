@@ -12,12 +12,7 @@ QT     += qml quick quickcontrols2 charts
 # Validate Qt version
 !versionAtLeast(QT_VERSION, 6.5) : error("You need at least Qt version 6.5 for $${TARGET}")
 
-# Project features #############################################################
-
-# Use Qt Quick compiler
-ios | android { CONFIG += qtquickcompiler }
-
-win32 { DEFINES += _USE_MATH_DEFINES }
+# Project modules ##############################################################
 
 # SingleApplication for desktop OS
 include(src/thirdparty/SingleApplication/SingleApplication.pri)
@@ -85,6 +80,8 @@ OTHER_FILES += README.md \
                .gitignore
 
 # Build settings ###############################################################
+
+win32 { DEFINES += _USE_MATH_DEFINES }
 
 CONFIG(release, debug|release) : DEFINES += NDEBUG QT_NO_DEBUG QT_NO_DEBUG_OUTPUT
 

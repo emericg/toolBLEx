@@ -19,6 +19,7 @@
         <file alias="SelectorMenuItem.qml">components_generic/SelectorMenuItem.qml</file>
         <file alias="SliderValueSolid.qml">components_generic/SliderValueSolid.qml</file>
         <file alias="ToolTipFlat.qml">components_generic/ToolTipFlat.qml</file>
+        <file alias="TextFieldFileDialog.qml">components_generic/TextField_FileDialog6.qml</file>
 
         <file alias="FrameBox.qml">components_generic/FrameBox.qml</file>
         <file alias="FrameThemed.qml">components_themed/FrameThemed.qml</file>
@@ -36,7 +37,6 @@
         <file alias="SliderThemed.qml">components_themed/SliderThemed.qml</file>
         <file alias="RangeSliderThemed.qml">components_themed/RangeSliderThemed.qml</file>
         <file alias="TextFieldThemed.qml">components_themed/TextFieldThemed.qml</file>
-        <file alias="TextFieldPathThemed.qml">components_themed/TextFieldPathThemed.qml</file>
     </qresource>
 
     <qresource prefix="/js">

@@ -1,11 +1,11 @@
-import QtQuick 2.15
-import QtQuick.Controls.impl 2.15
-import QtQuick.Templates 2.15 as T
+import QtQuick
+import QtQuick.Controls.impl
+import QtQuick.Templates as T
 
-//import QtQuick.Dialogs 1.3 // Qt5
-import QtQuick.Dialogs // Qt6
+import QtQuick.Dialogs
+import QtCore
 
-import ThemeEngine 1.0
+import ThemeEngine
 import "qrc:/js/UtilsPath.js" as UtilsPath
 
 T.TextField {
@@ -36,16 +36,14 @@ T.TextField {
     selectedTextColor: colorSelectedText
 
     onEditingFinished: focus = false
+    Keys.onBackPressed: focus = false
 
     // settings
     property string buttonText: qsTr("change")
     property int buttonWidth: (buttonChange.visible ? buttonChange.width + 2 : 2)
 
-    property string dialogTitle: qsTr("Please choose a file!")
-    property var dialogFilter: ["All files (*)"]
-
-    property string statusSource: ""
-    property string statuscolor: Theme.colorPrimary
+    property string dialogTitle: qsTr("Please choose a folder!")
+    property var currentFolder: StandardPaths.writableLocation(StandardPaths.HomeLocation)
 
     // colors
     property string colorText: Theme.colorComponentText
@@ -62,18 +60,16 @@ T.TextField {
 
         active: false
         asynchronous: false
-        sourceComponent: FileDialog {
+        sourceComponent: FolderDialog {
             title: control.dialogTitle
-            nameFilters: control.dialogFilter
 
-            //currentFolder: UtilsPath.makeUrl(control.text)
-            currentFile: UtilsPath.makeUrl(control.text)
+            currentFolder: UtilsPath.makeUrl(control.currentFolder)
 
             onAccepted: {
-                //console.log("fileDialog URL: " + selectedFolder)
+                //console.log("fileDialog currentFolder: " + currentFolder)
+                //console.log("fileDialog selectedFolder: " + selectedFolder)
 
-                //var f = UtilsPath.cleanUrl(selectedFolder)
-                var f = UtilsPath.cleanUrl(selectedFile)
+                var f = UtilsPath.cleanUrl(selectedFolder)
                 if (f.slice(0, -1) !== "/") f += "/"
 
                 control.text = f

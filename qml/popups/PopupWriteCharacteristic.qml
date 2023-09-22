@@ -8,7 +8,7 @@ Popup {
     id: popupWriteCharacteristic
 
     x: ((appWindow.width / 2) - (width / 2))
-    y: ((appWindow.height / 2) - (height / 2) - (appHeader.height / 2))
+    y: ((appWindow.height / 2) - (height / 2) - (appHeader.height))
     width: 720
     padding: 0
 
@@ -71,20 +71,30 @@ Popup {
             Column {
                 anchors.left: parent.left
                 anchors.leftMargin: 24
+                anchors.right: parent.right
+                anchors.rightMargin: 24
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 4
 
                 Text {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
                     text: qsTr("Write to characteristic")
                     font.pixelSize: Theme.fontSizeTitle
                     font.bold: true
+                    elide: Text.ElideRight
                     color: "white"
                     opacity: 0.96
                 }
                 Text {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
                     id: uuid_tf
                     text: "00000000-0000-1000-8000-00805F9B34FB"
                     font.pixelSize: Theme.fontSizeContentBig
+                    elide: Text.ElideRight
                     color: "white"
                     opacity: 0.88
                 }
@@ -112,7 +122,7 @@ Popup {
 
         ////////
 
-        Column {
+        Column { // contentArea
             anchors.left: parent.left
             anchors.leftMargin: 24
             anchors.right: parent.right

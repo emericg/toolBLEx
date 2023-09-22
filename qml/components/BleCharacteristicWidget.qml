@@ -14,7 +14,7 @@ Rectangle {
     ////////////////
 
     Loader {
-        id: popupLoader
+        id: popupLoader_write
 
         active: false
         asynchronous: false
@@ -95,7 +95,7 @@ Rectangle {
                 model: modelData.propertiesList
                 ItemActionTag {
                     anchors.verticalCenter: parent.verticalCenter
-                    enabled: (selectedDevice && selectedDevice.servicesScanMode > 1)
+                    enabled: (selectedDevice && selectedDevice.servicesScanned)
                     text: modelData
                     highlighted: {
                         if (modelData === "Notify") return characteristic.notifyInProgress
@@ -104,7 +104,7 @@ Rectangle {
                         return false
                     }
                     onClicked: {
-                        if (selectedDevice && selectedDevice.servicesScanMode > 1) {
+                        if (selectedDevice && selectedDevice.servicesScanned) {
                             if (text === "Notify") {
                                 selectedDevice.askForNotify(characteristic.uuid_full)
                             }
@@ -112,8 +112,8 @@ Rectangle {
                                 selectedDevice.askForRead(characteristic.uuid_full)
                             }
                             if (text === "Write" || text === "WriteNoResp") {
-                                popupLoader.active = true
-                                popupLoader.item.openCC(characteristic)
+                                popupLoader_write.active = true
+                                popupLoader_write.item.openCC(characteristic)
                             }
                         }
                     }
@@ -137,7 +137,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 text: {
                     if (modelData.dataSize === 0) {
-                        if (selectedDevice.servicesScanMode === 1)
+                        if (selectedDevice.servicesCached)
                             return qsTr("no data from cache")
                         else
                             return qsTr("no data")

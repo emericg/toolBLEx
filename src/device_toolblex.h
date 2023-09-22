@@ -59,7 +59,6 @@ class DeviceToolBLEx: public Device
     Q_PROPERTY(bool isPaired READ isPaired NOTIFY pairingChanged)
     Q_PROPERTY(int pairingStatus READ getPairingStatus NOTIFY pairingChanged)
 
-    Q_PROPERTY(bool hasCache READ hasCache NOTIFY cacheChanged)
     Q_PROPERTY(bool isStarred READ isStarred WRITE setUserStar NOTIFY starChanged)
     Q_PROPERTY(QString color READ getDeviceColor CONSTANT)
 
@@ -78,11 +77,10 @@ class DeviceToolBLEx: public Device
     Q_PROPERTY(int advInterval READ getAdvertisementInterval NOTIFY rssiUpdated)
 
     // Advertisement
-    Q_PROPERTY(bool hasAdvertisement READ hasAdvertisement NOTIFY advertisementChanged)
-
     Q_PROPERTY(QStringList servicesAdvertised READ getAdvertisedServices NOTIFY servicesAdvertisedChanged)
     Q_PROPERTY(int servicesAdvertisedCount READ getAdvertisedServicesCount NOTIFY servicesAdvertisedChanged)
 
+    Q_PROPERTY(bool hasAdvertisement READ hasAdvertisement NOTIFY advertisementChanged)
     Q_PROPERTY(QVariant adv READ getAdvertisementData NOTIFY advertisementFilteredChanged)
     Q_PROPERTY(int advCount READ getAdvertisementDataCount NOTIFY advertisementFilteredChanged)
 
@@ -95,7 +93,11 @@ class DeviceToolBLEx: public Device
     Q_PROPERTY(QVariant last_mfd READ getLastManufacturerData NOTIFY advertisementChanged)
 
     // Services
+    Q_PROPERTY(bool hasServices READ hasServices NOTIFY servicesChanged)
+    Q_PROPERTY(bool hasServiceCache READ hasServiceCache NOTIFY servicesChanged)
+    Q_PROPERTY(bool servicesCached READ getServicesCached NOTIFY servicesChanged)
     Q_PROPERTY(bool servicesScanned READ getServicesScanned NOTIFY servicesChanged)
+
     Q_PROPERTY(int servicesScanMode READ getServicesScanMode NOTIFY servicesChanged)
     Q_PROPERTY(int servicesCount READ getServicesCount NOTIFY servicesChanged)
     Q_PROPERTY(QVariant servicesList READ getServices NOTIFY servicesChanged)
@@ -120,13 +122,14 @@ class DeviceToolBLEx: public Device
     QDateTime m_firstSeen;
     QDateTime m_lastSeen;
 
-    bool m_hasCache = false;
+    // adv
+
     bool m_hasAdvertisement = false;
     int m_advertisementInterval = 0;
 
-    QStringList m_advertised_services;
-
     QList <AdvertisementEntry *> m_advertisementEntries;
+
+    QStringList m_advertised_services;
 
     QList <AdvertisementData *> m_advertisementData;
     QList <AdvertisementData *> m_advertisementData_filtered;
@@ -135,6 +138,8 @@ class DeviceToolBLEx: public Device
     QList <AdvertisementUUID *> m_svd_uuid;
     QList <AdvertisementData *> m_mfd;
     QList <AdvertisementUUID *> m_mfd_uuid;
+
+    // srv
 
     /*!
      * - 0: not scanned
@@ -145,7 +150,12 @@ class DeviceToolBLEx: public Device
      * - 5: scanned (with values)
      */
     int m_services_scanmode = 0;
+
+    bool m_hasServiceCache = false;
+
     QList <QObject *> m_services;
+
+    //func
 
     QVariant getLastServiceData() const { if (m_svd.empty()) return QVariant(); return QVariant::fromValue(m_svd.first()); }
     QVariant getLastManufacturerData() const { if (m_mfd.empty()) return QVariant(); return QVariant::fromValue(m_mfd.first()); }
@@ -180,7 +190,6 @@ Q_SIGNALS:
     void servicesChanged();
     void pairingChanged();
     void boolChanged();
-    void cacheChanged();
     void starChanged();
     void commentChanged();
     void colorChanged();
@@ -204,8 +213,9 @@ public:
 
     QVariant getServices() const { return QVariant::fromValue(m_services); }
     int getServicesCount() const { return m_services.count(); }
-    bool getServicesScanned() const { return (m_services_scanmode > 0); }
     int getServicesScanMode() const { return m_services_scanmode; }
+    bool getServicesCached() const { return (m_services_scanmode == 1); }
+    bool getServicesScanned() const { return (m_services_scanmode > 1); }
 
     int getAdvertisedServicesCount() const { return m_advertised_services.count(); }
     QStringList getAdvertisedServices() const { return m_advertised_services; };
@@ -228,7 +238,6 @@ public:
     void setBeacon(bool v);
     void setBlacklisted(bool v);
     void setCached(bool v);
-    void setCache(bool v);
 
     bool isPaired() const { return m_pairingStatus; }
     int getPairingStatus() const { return m_pairingStatus; }
@@ -252,7 +261,9 @@ public:
     bool isLastSeenToday();
 
     bool hasAdvertisement() const { return m_hasAdvertisement; }
-    bool hasCache() const { return m_hasCache; }
+    bool hasServices() const { return !m_services.isEmpty(); }
+    bool hasServiceCache() const { return m_hasServiceCache; }
+
     bool isStarred() const { return m_userStarred; }
     bool isBeacon() const { return m_isBeacon; }
     bool isBlacklisted() const { return m_isBlacklisted; }
@@ -277,15 +288,14 @@ public:
     Q_INVOKABLE static QByteArray askForData_qba(const QString &value, const QString &type);
     Q_INVOKABLE static QStringList askForData_strlst(const QString &value, const QString &type);
 
-    Q_INVOKABLE bool hasServiceCache() const;
+    Q_INVOKABLE bool checkServiceCache();
     Q_INVOKABLE bool saveServiceCache();
     Q_INVOKABLE void restoreServiceCache();
 
     Q_INVOKABLE QString getExportDirectory() const;
     Q_INVOKABLE bool exportDeviceInfo(const QString &exportPath,
-                                      bool withAdvertisements = true,
-                                      bool withServices = true,
-                                      bool withValues = true);
+                                      bool withGenericInfo = true, bool withAdvertisements = true,
+                                      bool withServices = true, bool withValues = true);
 };
 
 /* ************************************************************************** */
