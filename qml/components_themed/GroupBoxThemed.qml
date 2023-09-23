@@ -42,6 +42,7 @@ T.GroupBox {
         width: control.availableWidth
 
         text: control.title
+        font: control.font
         color: Theme.colorText
         elide: Text.ElideRight
         verticalAlignment: Text.AlignVCenter

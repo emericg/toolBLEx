@@ -11,8 +11,9 @@ import "qrc:/js/UtilsPath.js" as UtilsPath
 T.TextField {
     id: control
 
-    implicitWidth: implicitBackgroundWidth + leftInset + rightInset
-                   || Math.max(contentWidth, placeholder.implicitWidth) + leftPadding + rightPadding
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            contentWidth + leftPadding + rightPadding,
+                            placeholder.implicitWidth + leftPadding + rightPadding)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              contentHeight + topPadding + bottomPadding,
                              placeholder.implicitHeight + topPadding + bottomPadding)
@@ -39,17 +40,15 @@ T.TextField {
     Keys.onBackPressed: focus = false
 
     // settings
-    property string buttonText: qsTr("change")
-    property int buttonWidth: (buttonChange.visible ? buttonChange.width + 2 : 2)
-
     property string dialogTitle: qsTr("Please choose a file!")
     property var dialogFilter: ["All files (*)"]
+    property int dialogFileMode: FileDialog.SaveFile
 
-    property int fileMode: FileDialog.SaveFile
     property var currentFolder: StandardPaths.writableLocation(StandardPaths.HomeLocation)
 
-    property string statusSource: ""
-    property string statuscolor: Theme.colorPrimary
+    // button
+    property string buttonText: qsTr("change")
+    property int buttonWidth: (buttonChange.visible ? buttonChange.width + 2 : 2)
 
     // colors
     property string colorText: Theme.colorComponentText
@@ -70,7 +69,7 @@ T.TextField {
             title: control.dialogTitle
             nameFilters: control.dialogFilter
 
-            fileMode: control.fileMode
+            fileMode: control.dialogFileMode
             currentFolder: UtilsPath.makeUrl(control.currentFolder)
             currentFile: UtilsPath.makeUrl(control.text)
 

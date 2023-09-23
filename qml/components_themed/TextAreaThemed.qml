@@ -31,6 +31,7 @@ T.TextArea {
     selectedTextColor: colorSelectedText
 
     onEditingFinished: focus = false
+    Keys.onBackPressed: focus = false
 
     // colors
     property string colorText: Theme.colorComponentContent
@@ -38,7 +39,7 @@ T.TextArea {
     property string colorBorder: Theme.colorComponentBorder
     property string colorBackground: Theme.colorComponentBackground
     property string colorSelection: Theme.colorPrimary
-    property string colorSelectedText: Theme.colorHighContrast
+    property string colorSelectedText: "white"
 
     ////////////////
 

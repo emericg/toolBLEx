@@ -43,7 +43,7 @@ T.Popup {
     ////////////////////////////////////////////////////////////////////////////
 
     background: Rectangle {
-        color: Theme.colorBackground
+        color: Theme.colorComponentBackground
         Rectangle {
             width: parent.width
             height: Theme.componentBorderWidth
@@ -67,10 +67,8 @@ T.Popup {
                 role: "t"
                 DelegateChoice {
                     roleValue: "sep"
-                    ListSeparatorPadded {
-                        anchors.leftMargin: Theme.componentMargin
-                        anchors.rightMargin: Theme.componentMargin
-                        height: 9
+                    ActionMenuSeparator {
+                        width: actionMenu.width
                     }
                 }
                 DelegateChoice {

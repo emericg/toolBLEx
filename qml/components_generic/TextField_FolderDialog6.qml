@@ -11,8 +11,9 @@ import "qrc:/js/UtilsPath.js" as UtilsPath
 T.TextField {
     id: control
 
-    implicitWidth: implicitBackgroundWidth + leftInset + rightInset
-                   || Math.max(contentWidth, placeholder.implicitWidth) + leftPadding + rightPadding
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            contentWidth + leftPadding + rightPadding,
+                            placeholder.implicitWidth + leftPadding + rightPadding)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              contentHeight + topPadding + bottomPadding,
                              placeholder.implicitHeight + topPadding + bottomPadding)
@@ -39,11 +40,13 @@ T.TextField {
     Keys.onBackPressed: focus = false
 
     // settings
+    property string dialogTitle: qsTr("Please choose a folder!")
+
+    property var currentFolder: StandardPaths.writableLocation(StandardPaths.HomeLocation)
+
+    // button
     property string buttonText: qsTr("change")
     property int buttonWidth: (buttonChange.visible ? buttonChange.width + 2 : 2)
-
-    property string dialogTitle: qsTr("Please choose a folder!")
-    property var currentFolder: StandardPaths.writableLocation(StandardPaths.HomeLocation)
 
     // colors
     property string colorText: Theme.colorComponentText

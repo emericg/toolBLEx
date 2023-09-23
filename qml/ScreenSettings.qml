@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Dialogs
 
 import ThemeEngine
 import "qrc:/js/UtilsPath.js" as UtilsPath
@@ -842,9 +843,9 @@ Loader {
                                 text: settingsManager.ubertooth_path
                                 placeholderText: "ubertooth-specan"
 
-                                fileMode: FileDialog.OpenFile
                                 dialogTitle: qsTr("Please select the path to the ubertooth-specan binary")
                                 dialogFilter: ["specan binary (ubertooth-specan)"]
+                                dialogFileMode: FileDialog.OpenFile
 
                                 IconSvg {
                                     anchors.right: parent.right

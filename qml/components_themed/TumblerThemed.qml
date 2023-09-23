@@ -7,15 +7,18 @@ import ThemeEngine 1.0
 T.Tumbler {
     id: control
 
-    implicitWidth: Theme.componentHeight
-    implicitHeight: Theme.componentHeight * 2
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            implicitContentWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             implicitContentHeight + topPadding + bottomPadding)
 
-    model: 24
+    opacity: (control.enabled ? 1.0 : 0.8)
 
     ////////////////
 
     background: Item {
-        //
+        implicitWidth: Theme.componentHeight
+        implicitHeight: Theme.componentHeight * 2
     }
 
     ////////////////
@@ -30,7 +33,7 @@ T.Tumbler {
         pathItemCount: control.visibleItemCount + 1
         preferredHighlightBegin: 0.5
         preferredHighlightEnd: 0.5
-        dragMargin: width / 2
+        dragMargin: (width / 2)
 
         path: Path {
             startX: (pathView.width / 2)
@@ -45,16 +48,22 @@ T.Tumbler {
         property real delegateHeight: (control.availableHeight / control.visibleItemCount)
     }
 
+    ////////////////
+
     delegate: Text {
         text: modelData
         textFormat: Text.PlainText
+        font: control.font
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
 
         color: (control.currentIndex === modelData) ? Theme.colorPrimary : Theme.colorText
-        opacity: (control.enabled ? 1.0 : 0.8) - (Math.abs(T.Tumbler.displacement) / (control.visibleItemCount * 0.55))
-        font.pixelSize: (control.currentIndex === modelData) ? Theme.componentFontSize+2 : Theme.componentFontSize
-        font.bold: false
+        Behavior on color { ColorAnimation { duration: 133 } }
+
+        opacity: 1.0 - Math.abs(T.Tumbler.displacement) / (control.visibleItemCount / 2)
+
+        //scale: 1.0 + Math.max(0, 1 - Math.abs(T.Tumbler.displacement)) * 0.33
+        //scale: (control.currentIndex === modelData) ? 1.33 : 1.0
 
         required property var modelData
         required property int index

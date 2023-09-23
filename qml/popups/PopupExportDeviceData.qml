@@ -252,9 +252,9 @@ Popup {
                     anchors.right: parent.right
                     height: 40
 
-                    fileMode: FileDialog.SaveFile
                     dialogTitle: qsTr("Please select the export file")
                     dialogFilter: ["Text file (*.txt)"]
+                    dialogFileMode: FileDialog.SaveFile
 
                     currentFolder: StandardPaths.writableLocation(StandardPaths.DocumentsLocation)
                 }

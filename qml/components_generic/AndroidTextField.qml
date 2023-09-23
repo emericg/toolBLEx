@@ -16,10 +16,8 @@ T.TextField {
     padding: 12
     leftPadding: padding + 4
 
-    color: colorText
     opacity: 1
-
-    text: ""
+    color: colorText
     font.pixelSize: Theme.componentFontSize
     verticalAlignment: Text.AlignVCenter
 
@@ -31,6 +29,7 @@ T.TextField {
     selectionColor: colorSelection
 
     onEditingFinished: focus = false
+    Keys.onBackPressed: focus = false
 
     // settings
     property string title: ""
@@ -40,8 +39,8 @@ T.TextField {
     property string colorPlaceholderText: Theme.colorSubText
     property string colorBorder: Theme.colorSubText
     property string colorBackground: Theme.colorBackground
-    property string colorSelectedText: Theme.colorHighContrast
     property string colorSelection: Theme.colorPrimary
+    property string colorSelectedText: "white"
 
     ////////////////
 

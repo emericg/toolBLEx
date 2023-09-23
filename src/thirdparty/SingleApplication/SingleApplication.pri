@@ -7,7 +7,7 @@ SOURCES += $${PWD}/SingleApplication.cpp \
 HEADERS += $${PWD}/SingleApplication.h \
            $${PWD}/SingleApplication_private.h
 
-#INCLUDEPATH += $${PWD}
+INCLUDEPATH += $${PWD}
 
 win32 {
     msvc: LIBS += Advapi32.lib

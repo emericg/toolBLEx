@@ -31,6 +31,7 @@ T.TextField {
     selectedTextColor: colorSelectedText
 
     onEditingFinished: focus = false
+    Keys.onBackPressed: focus = false
 
     // colors
     property string colorText: Theme.colorComponentText

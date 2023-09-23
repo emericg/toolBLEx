@@ -36,6 +36,7 @@
 #include <QtCore/QThread>
 #include <QtCore/QByteArray>
 #include <QtCore/QDataStream>
+#include <QtCore/QSharedMemory>
 #include <QtCore/QElapsedTimer>
 #include <QtCore/QCryptographicHash>
 #include <QtNetwork/QLocalServer>

@@ -89,20 +89,4 @@ T.Slider {
     }
 
     ////////////////
-/*
-    Rectangle {
-        anchors.fill: parent
-        z: -1
-        color: "red"
-        opacity: 0.1
-    }
-    Rectangle {
-       x: control.leftPadding + (control.horizontal ? control.visualPosition * (control.availableWidth - width) : (control.availableWidth - width) / 2)
-       y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.visualPosition * (control.availableHeight - height))
-       width: 4
-       height: 4
-       radius: 4
-       color: "white"
-    }
-*/
 }

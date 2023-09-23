@@ -10,16 +10,28 @@ import "qrc:/js/UtilsNumber.js" as UtilsNumber
 
 T.SpinBox {
     id: control
-    implicitWidth: 128
-    implicitHeight: Theme.componentHeight
 
-    value: 50
-    editable: true
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            contentItem.implicitWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             implicitContentHeight + topPadding + bottomPadding,
+                             up.implicitIndicatorHeight, down.implicitIndicatorHeight)
 
-    font.pixelSize: Theme.componentFontSize
+    leftPadding: padding + (control.mirrored ? (up.indicator ? up.indicator.width : 0) : (down.indicator ? down.indicator.width : 0))
+    rightPadding: padding + (control.mirrored ? (down.indicator ? down.indicator.width : 0) : (up.indicator ? up.indicator.width : 0))
+
     opacity: enabled ? 1 : 0.4
+    font.pixelSize: Theme.componentFontSize
 
     property string legend
+
+    ////////////////
+
+    validator: IntValidator {
+        locale: control.locale.name
+        bottom: Math.min(control.from, control.to)
+        top: Math.max(control.from, control.to)
+    }
 
     ////////////////
 
@@ -69,9 +81,9 @@ T.SpinBox {
 
     contentItem: Item {
         anchors.left: parent.left
-        anchors.leftMargin: 8
+        anchors.leftMargin: control.leftPadding
         anchors.right: parent.right
-        anchors.rightMargin: control.height + 8
+        anchors.rightMargin: control.rightPadding + control.height
 
         Row {
             anchors.centerIn: parent
@@ -86,7 +98,7 @@ T.SpinBox {
                 selectedTextColor: "white"
                 selectByMouse: control.editable
 
-                text: control.value
+                text: control.displayText
                 font: control.font
                 horizontalAlignment: Qt.AlignHCenter
                 verticalAlignment: Qt.AlignVCenter
@@ -103,10 +115,14 @@ T.SpinBox {
                     if (v > control.to) v = control.to
 
                     control.value = v
-                    text = v
+                    control.valueModified()
 
                     control.focus = false
-                    control.valueModified()
+                    focus = false
+                }
+                Keys.onBackPressed: {
+                    control.focus = false
+                    focus = false
                 }
             }
 
@@ -131,7 +147,7 @@ T.SpinBox {
 
     up.indicator: Item {
         implicitWidth: Theme.componentHeight
-        implicitHeight: Theme.componentHeight
+        implicitHeight: Theme.componentHeight / 2
 
         width: control.height
         height: control.height / 2
@@ -170,7 +186,7 @@ T.SpinBox {
 
     down.indicator: Item {
         implicitWidth: Theme.componentHeight
-        implicitHeight: Theme.componentHeight
+        implicitHeight: Theme.componentHeight / 2
 
         width: control.height
         height: control.height / 2
