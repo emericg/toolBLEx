@@ -12,8 +12,8 @@ on:
 #-------------------------------------------------------------------------------
 
 env:
-  APPLICATION: "toolBLEx"
-  APPLICATION_VERSION: "0.9"
+  APP_NAME: "toolBLEx"
+  APP_VERSION: "0.9"
   QT_VERSION: "6.5.2"
 
 #-------------------------------------------------------------------------------
@@ -45,11 +45,15 @@ jobs:
              sudo apt-get install libgl1-mesa-dev libxcb1-dev libxkbcommon-x11-dev libx11-xcb-dev libxcb-cursor0 libzstd-dev -y;
              sudo apt-get install appstream -y;
 
+      # Setup env
+      - name: Setup env
+        run: |
+             qmake --version
+
       # Build application
       - name: Build application
         run: |
-             qmake --version
-             qmake ${{env.APPLICATION}}.pro CONFIG+=release PREFIX=/usr
+             qmake ${{env.APP_NAME}}.pro CONFIG+=release PREFIX=/usr
              make -j$(nproc)
 
       # Deploy application
@@ -60,8 +64,8 @@ jobs:
       - name: Upload AppImage
         uses: actions/upload-artifact@v3
         with:
-          name: ${{env.APPLICATION}}-${{env.APPLICATION_VERSION}}-linux64.AppImage
-          path: ${{env.APPLICATION}}*.AppImage
+          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.AppImage
+          path: ${{env.APP_NAME}}*.AppImage
 
   ## macOS build ###############################################################
   build-mac:
@@ -86,11 +90,16 @@ jobs:
           version: ${{env.QT_VERSION}}
           modules: qtconnectivity qtcharts qtshadertools qt5compat
 
+      # Setup env
+      - name: Setup env
+        run: |
+             qmake --version
+             alias nproc="sysctl -n hw.logicalcpu"
+
       # Build application
       - name: Build application
         run: |
-             qmake --version
-             qmake ${{env.APPLICATION}}.pro CONFIG+=release
+             qmake ${{env.APP_NAME}}.pro CONFIG+=release
              make -j$(nproc)
 
       # Deploy application
@@ -101,8 +110,8 @@ jobs:
       - name: Upload app zip
         uses: actions/upload-artifact@v3
         with:
-          name: ${{env.APPLICATION}}-${{env.APPLICATION_VERSION}}-macOS.zip
-          path: bin/${{env.APPLICATION}}-${{env.APPLICATION_VERSION}}-macOS.zip
+          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-macOS.zip
+          path: bin/${{env.APP_NAME}}-${{env.APP_VERSION}}-macOS.zip
 
   ## Windows build #############################################################
   build-windows:
@@ -136,11 +145,15 @@ jobs:
       #       scoop bucket add extras
       #       scoop install nsis
 
+      # Setup env
+      - name: Setup env
+        run: |
+             qmake --version
+
       # Build application
       - name: Build application
         run: |
-             qmake --version
-             qmake ${{env.APPLICATION}}.pro CONFIG+=release
+             qmake ${{env.APP_NAME}}.pro CONFIG+=release
              nmake
 
       # Deploy application
@@ -151,12 +164,12 @@ jobs:
       - name: Upload ZIP
         uses: actions/upload-artifact@v3
         with:
-          name: ${{env.APPLICATION}}-${{env.APPLICATION_VERSION}}-win64.zip
-          path: ${{env.APPLICATION}}-${{env.APPLICATION_VERSION}}-win64.zip
+          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.zip
+          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.zip
 
       # Upload NSIS installer
       - name: Upload NSIS installer
         uses: actions/upload-artifact@v3
         with:
-          name: ${{env.APPLICATION}}-${{env.APPLICATION_VERSION}}-win64.exe
-          path: ${{env.APPLICATION}}-${{env.APPLICATION_VERSION}}-win64.exe
+          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.exe
+          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.exe
