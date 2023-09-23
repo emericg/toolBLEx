@@ -171,7 +171,7 @@ bool DeviceManager::checkBluetooth()
 
     if (m_bluetoothAdapter)
     {
-        for (auto a: qAsConst(m_bluetoothAdapters))
+        for (auto a: std::as_const(m_bluetoothAdapters))
         {
             Adapter *adp = qobject_cast<Adapter *>(a);
             if (adp)
@@ -715,7 +715,7 @@ void DeviceManager::scanDevices_pause()
         }
     }
 
-    for (auto d: qAsConst(m_devices_model->m_devices))
+    for (auto d: std::as_const(m_devices_model->m_devices))
     {
         Device *dd = qobject_cast<Device *>(d);
         if (dd) dd->cleanRssi();
@@ -786,7 +786,7 @@ void DeviceManager::scanDevices_stop()
         }
     }
 
-    for (auto d: qAsConst(m_devices_model->m_devices))
+    for (auto d: std::as_const(m_devices_model->m_devices))
     {
         Device *dd = qobject_cast<Device *>(d);
         if (dd) dd->cleanRssi();
@@ -801,7 +801,7 @@ void DeviceManager::addBleDevice(const QBluetoothDeviceInfo &info)
     //qDebug() << "DeviceManager::addBleDevice()" << " > NAME" << info.name() << " > RSSI" << info.rssi();
 
     // Is the device is already in the UI?
-    for (auto ed: qAsConst(m_devices_model->m_devices)) // device is already in the UI
+    for (auto ed: std::as_const(m_devices_model->m_devices)) // device is already in the UI
     {
         Device *edd = qobject_cast<Device *>(ed);
         if (edd && (edd->getAddress() == info.address().toString() ||
@@ -842,7 +842,7 @@ void DeviceManager::disconnectDevices()
 {
     //qDebug() << "DeviceManager::disconnectDevices()";
 
-    for (auto d: qAsConst(m_devices_model->m_devices))
+    for (auto d: std::as_const(m_devices_model->m_devices))
     {
         Device *dd = qobject_cast<Device *>(d);
         dd->deviceDisconnect();
@@ -856,7 +856,7 @@ void DeviceManager::checkPaired()
 {
     if (m_bluetoothAdapter && m_bluetoothAdapter->isValid() && m_devices_model->hasDevices())
     {
-        for (auto d: qAsConst(m_devices_model->m_devices))
+        for (auto d: std::as_const(m_devices_model->m_devices))
         {
             DeviceToolBLEx *dd = qobject_cast<DeviceToolBLEx *>(d);
 
@@ -943,7 +943,7 @@ void DeviceManager::cacheDevice(const QString &addr)
 {
     if (m_dbInternal || m_dbExternal)
     {
-        for (auto d: qAsConst(m_devices_model->m_devices))
+        for (auto d: std::as_const(m_devices_model->m_devices))
         {
             DeviceToolBLEx *dd = qobject_cast<DeviceToolBLEx *>(d);
             if (dd->getAddress() == addr)
@@ -996,7 +996,7 @@ void DeviceManager::uncacheDevice(const QString &addr)
 {
     if (m_dbInternal || m_dbExternal)
     {
-        for (auto d: qAsConst(m_devices_model->m_devices))
+        for (auto d: std::as_const(m_devices_model->m_devices))
         {
             DeviceToolBLEx *dd = qobject_cast<DeviceToolBLEx *>(d);
             if (dd->getAddress() == addr)
@@ -1044,7 +1044,7 @@ bool DeviceManager::isDeviceCached(const QString &addr)
 void DeviceManager::clearDeviceCache()
 {
     // Remove every device in the list but not currently scanned
-    for (auto d: qAsConst(m_devices_model->m_devices))
+    for (auto d: std::as_const(m_devices_model->m_devices))
     {
         DeviceToolBLEx *dd = qobject_cast<DeviceToolBLEx *>(d);
         if (dd->isCached() && !dd->isAvailable())

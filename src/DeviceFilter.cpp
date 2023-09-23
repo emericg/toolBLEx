@@ -208,7 +208,7 @@ QVariant DeviceModel::data(const QModelIndex &index, int role) const
 
 void DeviceModel::getDevices(QList <Device *> &device)
 {
-    for (auto d: qAsConst(m_devices))
+    for (auto d: std::as_const(m_devices))
     {
         device.push_back(d);
     }
@@ -237,7 +237,7 @@ void DeviceModel::removeDevice(Device *d, bool del)
 
 void DeviceModel::clearDevices()
 {
-    for (auto d: qAsConst(m_devices))
+    for (auto d: std::as_const(m_devices))
     {
         removeDevice(d, true);
     }

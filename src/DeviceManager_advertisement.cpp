@@ -61,7 +61,7 @@ void DeviceManager::updateBleDevice(const QBluetoothDeviceInfo &info,
 
     // Supported devices ///////////////////////////////////////////////////////
 
-    for (auto d: qAsConst(m_devices_model->m_devices))
+    for (auto d: std::as_const(m_devices_model->m_devices))
     {
         DeviceToolBLEx *dd = qobject_cast<DeviceToolBLEx *>(d);
 

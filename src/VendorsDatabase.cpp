@@ -180,7 +180,7 @@ bool VendorsDatabase::loadDb()
 
 void VendorsDatabase::getVendor(const QString &device_mac, QString &device_vendor) const
 {
-    for (auto v: qAsConst(m_vendors))
+    for (auto v: std::as_const(m_vendors))
     {
         VendorEntry *mac = qobject_cast<VendorEntry *>(v);
 
