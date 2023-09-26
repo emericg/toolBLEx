@@ -43,6 +43,7 @@
 
 #if defined(Q_OS_MACOS) || defined(Q_OS_IOS)
 #if QT_CONFIG(permissions)
+#include <QGuiApplication>
 #include <QPermissions>
 #endif
 #endif
@@ -337,20 +338,23 @@ void DeviceManager::checkBluetoothPermissions()
 #elif defined(Q_OS_MACOS) || defined(Q_OS_IOS)
 #if QT_CONFIG(permissions)
 
-    QBluetoothPermission blePermission;
-    switch (qApp->checkPermission(blePermission))
+    if (qApp)
     {
-    case Qt::PermissionStatus::Undetermined:
-        qApp->requestPermission(blePermission, this, &DeviceManager::checkBluetoothPermissions);
-        return;
-    case Qt::PermissionStatus::Denied:
-        m_permOS = false;
-        m_blePermissions = m_permOS;
-        break;
-    case Qt::PermissionStatus::Granted:
-        m_permOS = true;
-        m_blePermissions = m_permOS;
-        break;
+        QBluetoothPermission blePermission;
+        switch (qApp->checkPermission(blePermission))
+        {
+        case Qt::PermissionStatus::Undetermined:
+            qApp->requestPermission(blePermission, this, &DeviceManager::checkBluetoothPermissions);
+            return;
+        case Qt::PermissionStatus::Denied:
+            m_permOS = false;
+            m_blePermissions = m_permOS;
+            break;
+        case Qt::PermissionStatus::Granted:
+            m_permOS = true;
+            m_blePermissions = m_permOS;
+            break;
+        }
     }
 
 #endif
