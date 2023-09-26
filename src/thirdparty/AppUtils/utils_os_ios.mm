@@ -77,6 +77,8 @@ void UtilsIOS::screenLockOrientation(int orientation, bool autoRotate)
 
 void UtilsIOS::vibrate(int ms)
 {
+    Q_UNUSED(ms)
+
     UISelectionFeedbackGenerator *generator = [[UISelectionFeedbackGenerator alloc] init];
     [generator prepare];
     [generator selectionChanged];

@@ -215,8 +215,8 @@ public:
     int getAdaptersCount() const { return m_bluetoothAdapters.size(); }
 
     // Bluetooth management
-    Q_INVOKABLE bool checkBluetooth();
-    Q_INVOKABLE bool checkBluetoothPermissions();
+    Q_INVOKABLE void checkBluetooth();
+    Q_INVOKABLE void checkBluetoothPermissions();
     Q_INVOKABLE void enableBluetooth(bool enforceUserPermissionCheck = false);
 
     // Scanning management

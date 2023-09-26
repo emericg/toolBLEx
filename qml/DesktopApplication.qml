@@ -98,12 +98,12 @@ ApplicationWindow {
                 case Qt.ApplicationActive: {
                     //console.log("Qt.ApplicationActive")
 
+                    // Check Bluetooth anyway (on macOS)
+                    //if (Qt.platform.os === "osx") deviceManager.checkBluetooth()
+
                     // Resume scanning (if needed)
                     pauseTimer.stop()
                     deviceManager.scanDevices_resume();
-
-                    // Check Bluetooth anyway (on macOS)
-                    //if (Qt.platform.os === "osx") deviceManager.checkBluetooth()
 
                     break
                 }

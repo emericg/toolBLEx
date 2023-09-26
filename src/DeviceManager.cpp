@@ -41,6 +41,12 @@
 #include <QSqlError>
 #include <QSqlQuery>
 
+#if defined(Q_OS_MACOS) || defined(Q_OS_IOS)
+#if QT_CONFIG(permissions)
+#include <QPermissions>
+#endif
+#endif
+
 /* ************************************************************************** */
 
 DeviceManager::DeviceManager(bool daemon)
@@ -124,7 +130,7 @@ DeviceManager::~DeviceManager()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-bool DeviceManager::checkBluetooth()
+void DeviceManager::checkBluetooth()
 {
     //qDebug() << "DeviceManager::checkBluetooth()";
 
@@ -184,7 +190,7 @@ bool DeviceManager::checkBluetooth()
         }
     }
 
-    return (m_bleAdapter && m_bleEnabled && m_blePermissions);
+    //return (m_bleAdapter && m_bleEnabled && m_blePermissions);
 }
 
 void DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
@@ -298,7 +304,7 @@ void DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
     }
 }
 
-bool DeviceManager::checkBluetoothPermissions()
+void DeviceManager::checkBluetoothPermissions()
 {
     qDebug() << "DeviceManager::checkBluetoothPermissions()";
 
@@ -329,10 +335,25 @@ bool DeviceManager::checkBluetoothPermissions()
     m_blePermissions = m_permLocationBLE;
 
 #elif defined(Q_OS_MACOS) || defined(Q_OS_IOS)
+#if QT_CONFIG(permissions)
 
-    m_permOS = true; // TODO
-    m_blePermissions = m_permOS;
+    QBluetoothPermission blePermission;
+    switch (qApp->checkPermission(blePermission))
+    {
+    case Qt::PermissionStatus::Undetermined:
+        qApp->requestPermission(blePermission, this, &DeviceManager::checkBluetoothPermissions);
+        return;
+    case Qt::PermissionStatus::Denied:
+        m_permOS = false;
+        m_blePermissions = m_permOS;
+        break;
+    case Qt::PermissionStatus::Granted:
+        m_permOS = true;
+        m_blePermissions = m_permOS;
+        break;
+    }
 
+#endif
 #else
 
     // Linux and Windows don't have required BLE permissions
@@ -352,7 +373,7 @@ bool DeviceManager::checkBluetoothPermissions()
         Q_EMIT bluetoothChanged();
     }
 
-    return m_blePermissions;
+    //return m_blePermissions;
 }
 
 /* ************************************************************************** */
