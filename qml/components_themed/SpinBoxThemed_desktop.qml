@@ -98,14 +98,14 @@ T.SpinBox {
                 selectedTextColor: "white"
                 selectByMouse: control.editable
 
-                text: control.displayText
+                text: control.value
                 font: control.font
                 horizontalAlignment: Qt.AlignHCenter
                 verticalAlignment: Qt.AlignVCenter
 
                 readOnly: !control.editable
                 validator: control.validator
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
 
                 onEditingFinished: {
                     var v = parseInt(text)
