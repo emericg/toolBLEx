@@ -50,7 +50,8 @@ class DeviceFilter : public QSortFilterProxyModel
     bool m_filterShowBluetoothLowEnergy = true;
 
 protected:
-    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const override;
 
 public:
     DeviceFilter(QObject *parent = nullptr);
