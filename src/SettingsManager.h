@@ -216,7 +216,6 @@ public:
 
     ////
 
-    // Utils
     Q_INVOKABLE void reloadSettings();
     Q_INVOKABLE void resetSettings();
 };

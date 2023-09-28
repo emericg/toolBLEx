@@ -63,7 +63,7 @@ Device::Device(const QString &deviceAddr, const QString &deviceName, QObject *pa
     // Check address validity
     if (m_bleDevice.isValid() == false)
     {
-        qWarning() << "Device() '" << m_deviceAddress << "' is an invalid QBluetoothDeviceInfo...";
+        qWarning() << "Device() '" << getAddress() << "' is an invalid QBluetoothDeviceInfo...";
     }
 
     // Database
@@ -111,7 +111,7 @@ Device::Device(const QBluetoothDeviceInfo &d, QObject *parent) : QObject(parent)
     // Check address validity
     if (m_bleDevice.isValid() == false)
     {
-        qWarning() << "Device() '" << m_deviceAddress << "' is an invalid QBluetoothDeviceInfo...";
+        qWarning() << "Device() '" << getAddress() << "' is an invalid QBluetoothDeviceInfo...";
     }
 
     // Database
@@ -358,7 +358,7 @@ void Device::setTimeoutTimer(int)
 
 bool Device::getSqlDeviceInfos()
 {
-    //qDebug() << "Device::getSqlDeviceInfos(" << m_deviceAddress << ")";
+    //qDebug() << "Device::getSqlDeviceInfos(" << getAddress() << ")";
     return false;
 }
 
@@ -394,30 +394,60 @@ bool Device::isUpdating() const
 
 bool Device::hasAddressMAC() const
 {
-#if !defined(Q_OS_MACOS) && !defined(Q_OS_IOS)
-    return true;
-#endif
+    if (m_deviceAddressMAC.size() == 17) return true;
+    if (m_deviceAddress.size() == 17) return true;
 
-    return !m_deviceAddressMAC.isEmpty();
+    return false;
 }
 
 QString Device::getAddressMAC() const
 {
-#if !defined(Q_OS_MACOS) && !defined(Q_OS_IOS)
-    return m_deviceAddress;
-#endif
+    if (m_deviceAddressMAC.size() == 17) return m_deviceAddressMAC;
+    if (m_deviceAddress.size() == 17) return m_deviceAddress;
 
-    return m_deviceAddressMAC;
+    return QString();
 }
 
 void Device::setAddressMAC(const QString &mac)
 {
     //qDebug() << "setAddressMAC(" << mac << ")";
 
-    if (m_deviceAddressMAC != mac)
+    if (mac.size() == 17)
     {
-        m_deviceAddressMAC = mac;
-        Q_EMIT settingsUpdated();
+        if (m_deviceAddressMAC != mac)
+        {
+            m_deviceAddressMAC = mac;
+            Q_EMIT sensorUpdated();
+        }
+    }
+}
+
+bool Device::hasAddressUUID() const
+{
+    return (m_deviceAddress.size() == 38);
+}
+
+QString Device::getAddressUUID() const
+{
+    if (m_deviceAddress.size() == 38) return m_deviceAddress;
+
+    return QString();
+}
+
+void Device::setAddressUUID(const QString &uuid)
+{
+    //qDebug() << "setAddressUUID(" << uuid << ")";
+
+    if (uuid.size() == 38)
+    {
+        if (m_deviceAddress.isEmpty() || m_deviceAddress.size() == 38)
+        {
+            if (m_deviceAddress != uuid)
+            {
+                m_deviceAddress = uuid;
+                Q_EMIT sensorUpdated();
+            }
+        }
     }
 }
 
@@ -576,7 +606,7 @@ void Device::setCoreConfiguration(const int bleconf)
 
 void Device::setDeviceClass(const int major, const int minor, const int service)
 {
-    //qDebug() << "Device::setDeviceClass() " << info.name() << info.address() << info.minorDeviceClass() << info.majorDeviceClass() << info.serviceClasses();
+    //qDebug() << "Device::setDeviceClass() " << getName() << getAddress() << major << minor << service;
 
     if (m_major != major || m_minor != minor || m_service != service)
     {
@@ -620,7 +650,7 @@ void Device::cleanRssi()
 
 void Device::deviceConnected()
 {
-    //qDebug() << "Device::deviceConnected(" << m_deviceAddress << ")";
+    //qDebug() << "Device::deviceConnected(" << getAddress() << ")";
 
     m_ble_status = DeviceUtils::DEVICE_CONNECTED;
 
@@ -679,7 +709,7 @@ void Device::deviceConnected()
 
 void Device::deviceDisconnected()
 {
-    //qDebug() << "Device::deviceDisconnected(" << m_deviceAddress << ")";
+    //qDebug() << "Device::deviceDisconnected(" << getAddress() << ")";
 
     Q_EMIT disconnected();
 
@@ -690,7 +720,7 @@ void Device::deviceDisconnected()
 void Device::deviceErrored(QLowEnergyController::Error error)
 {
     if (error <= QLowEnergyController::NoError) return;
-    qWarning() << "Device::deviceErrored(" << m_deviceAddress << ") error:" << error;
+    qWarning() << "Device::deviceErrored(" << getAddress() << ") error:" << error;
 /*
     QLowEnergyController::NoError	0	No error has occurred.
     QLowEnergyController::UnknownError	1	An unknown error has occurred.
@@ -714,7 +744,7 @@ void Device::deviceErrored(QLowEnergyController::Error error)
 
 void Device::deviceStateChanged(QLowEnergyController::ControllerState)
 {
-    //qDebug() << "Device::deviceStateChanged(" << m_deviceAddress << ") state:" << state;
+    //qDebug() << "Device::deviceStateChanged(" << getAddress() << ") state:" << state;
 }
 
 /* ************************************************************************** */
@@ -726,12 +756,12 @@ void Device::addLowEnergyService(const QBluetoothUuid &)
 
 void Device::serviceDetailsDiscovered(QLowEnergyService::ServiceState)
 {
-    //qDebug() << "Device::serviceDetailsDiscovered(" << m_deviceAddress << ")";
+    //qDebug() << "Device::serviceDetailsDiscovered(" << getAddress() << ")";
 }
 
 void Device::serviceScanDone()
 {
-    //qDebug() << "Device::serviceScanDone(" << m_deviceAddress << ")";
+    //qDebug() << "Device::serviceScanDone(" << getAddress() << ")";
 }
 
 /* ************************************************************************** */

@@ -840,10 +840,10 @@ void DeviceManager::addBleDevice(const QBluetoothDeviceInfo &info)
     DeviceToolBLEx *d = new DeviceToolBLEx(info, this);
     if (d)
     {
-        if (info.name().isEmpty()) d->setBeacon(true);
-        if (info.name().replace('-', ':') == info.address().toString()) d->setBeacon(true);
         if (info.isCached() || info.rssi() == 0) d->setCached(true);
-        if (m_devices_blacklist.contains(info.address().toString())) d->setBlacklisted(true);
+        if (info.name().isEmpty()) d->setBeacon(true);
+        if (info.name().replace('-', ':') == d->getAddress()) d->setBeacon(true);
+        if (m_devices_blacklist.contains(d->getAddress())) d->setBlacklisted(true);
 
         // Get a random color
         d->setDeviceColor(getAvailableColor());
@@ -856,7 +856,7 @@ void DeviceManager::addBleDevice(const QBluetoothDeviceInfo &info)
         SettingsManager *sm = SettingsManager::getInstance();
         if (sm->getScanCacheAuto() && !d->isBeacon())
         {
-            cacheDevice(info.address().toString());
+            cacheDevice(d->getAddress());
         }
 
         //qDebug() << "Device added (from BLE discovery): " << d->getName() << "/" << d->getAddress();

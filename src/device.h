@@ -215,6 +215,13 @@ public:
     QString getFirmware() const { return m_deviceFirmware; }
     int getBatteryLevel() const { return m_deviceBattery; }
 
+    bool hasAddressMAC() const;
+    QString getAddressMAC() const;
+    void setAddressMAC(const QString &mac);
+    bool hasAddressUUID() const;
+    QString getAddressUUID() const;
+    void setAddressUUID(const QString &uuid);
+
     // Device type, capabilities and sensors
     int getDeviceType() const { return m_deviceType; }
     int getDeviceCapabilities() const { return m_deviceCapabilities; }
@@ -248,9 +255,6 @@ public:
     bool isErrored() const;             //!< Has emitted a BLE error
 
     // Device associated data
-    bool hasAddressMAC() const;
-    QString getAddressMAC() const;
-    void setAddressMAC(const QString &mac);
     bool isEnabled() const { return m_isEnabled; }
     // Device additional settings
     Q_INVOKABLE bool hasSetting(const QString &key) const;

@@ -1086,9 +1086,17 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &exportPath,
     QString str;
     QString endl = QChar('\n');
 
+    // Name and address
     str += "Device Name: " + m_deviceName + endl;
-    if (hasAddressMAC()) str += "Device MAC: " + m_deviceAddress + endl;
-    if (m_deviceManufacturer.length() > 0) str += "Device MAC manufacturer: " + m_deviceManufacturer + endl;
+    if (hasAddressMAC())
+    {
+        str += "Device MAC: " + getAddressMAC() + endl;
+        if (m_deviceManufacturer.length() > 0) str += "Device MAC manufacturer: " + m_deviceManufacturer + endl;
+    }
+    else if (hasAddressUUID())
+    {
+        str += "Device MAC: " + getAddressUUID() + endl;
+    }
     str += endl;
 
     // Generic info

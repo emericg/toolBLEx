@@ -85,6 +85,8 @@ bool SettingsManager::readSettings()
         if (m_appVisibility < 1 || m_appVisibility > 5) m_appVisibility = 1;
 #endif
 
+        ////
+
         if (settings.contains("settings/appTheme"))
             m_appTheme = settings.value("settings/appTheme").toString();
 
@@ -100,7 +102,7 @@ bool SettingsManager::readSettings()
         if (settings.contains("settings/appUnits"))
             m_appUnits = settings.value("settings/appUnits").toInt();
 
-        //
+        ////
 
         if (settings.contains("settings/scanAuto"))
             m_scanAuto = settings.value("settings/scanAuto").toBool();

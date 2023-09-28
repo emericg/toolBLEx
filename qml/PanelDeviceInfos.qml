@@ -153,6 +153,7 @@ Flickable {
                         Layout.minimumHeight: 32
 
                         text: (selectedDevice && selectedDevice.deviceAddress)
+                        font.pixelSize: Theme.fontSizeComponentSmall
                         wrapMode: Text.WrapAnywhere
                     }
                 }
