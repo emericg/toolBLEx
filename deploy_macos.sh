@@ -2,9 +2,9 @@
 
 echo "> toolBLEx packager (macOS x86_64)"
 
-export APP_NAME="toolBLEx";
+export APP_NAME="toolBLEx"
 export APP_VERSION=0.10
-export GIT_VERSION=$(git rev-parse --short HEAD);
+export GIT_VERSION=$(git rev-parse --short HEAD)
 
 ## CHECKS ######################################################################
 
@@ -51,38 +51,39 @@ done
 
 if [[ $make_install = true ]] ; then
   echo '---- Running make install'
-  make INSTALL_ROOT=bin/ install;
+  make INSTALL_ROOT=bin/ install
 
   #echo '---- Installation directory content recap:'
-  #find bin/;
+  #find bin/
 fi
 
 ## DEPLOY ######################################################################
 
 if [[ $use_contribs = true ]] ; then
-  export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/macOS_x86_64/usr/lib/;
+  export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/macOS_x86_64/usr/lib/
 else
-  export LD_LIBRARY_PATH=/usr/local/lib/;
+  export LD_LIBRARY_PATH=/usr/local/lib/
 fi
 
 echo '---- Running macdeployqt'
-macdeployqt bin/$APP_NAME.app -qmldir=qml/ -hardened-runtime -timestamp -appstore-compliant;
+macdeployqt bin/$APP_NAME.app -qmldir=qml/ -hardened-runtime -timestamp -appstore-compliant
 
 #echo '---- Installation directory content recap:'
-#find bin/;
+#find bin/
 
-## PACKAGE #####################################################################
+## PACKAGE (zip) ###############################################################
 
 if [[ $create_package = true ]] ; then
   echo '---- Compressing package'
-  cd bin/;
-  zip -r -y -X $APP_NAME-$APP_VERSION-macos.zip $APP_NAME.app;
+  cd bin/
+  zip -r -y -X ../$APP_NAME-$APP_VERSION-macos.zip $APP_NAME.app
+  cd ..
 fi
 
 ## UPLOAD ######################################################################
 
 if [[ $upload_package = true ]] ; then
   printf "---- Uploading to transfer.sh"
-  curl --upload-file $APP_NAME*.zip https://transfer.sh/$APP_NAME.$APP_VERSION-git$GIT_VERSION-macOS.zip;
+  curl --upload-file $APP_NAME*.zip https://transfer.sh/$APP_NAME.$APP_VERSION-git$GIT_VERSION-macOS.zip
   printf "\n"
 fi

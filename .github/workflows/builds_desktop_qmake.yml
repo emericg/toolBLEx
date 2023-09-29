@@ -6,6 +6,7 @@ name: "Desktop CI builds (qmake)"
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 #-------------------------------------------------------------------------------
 # Define application name & version
@@ -28,7 +29,7 @@ jobs:
     steps:
       # Checkout the repository
       - name: Checkout repository and submodules
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
@@ -60,12 +61,19 @@ jobs:
       - name: Deploy application
         run: ./deploy_linux.sh -c -i -p
 
+      # Upload archive
+      - name: Upload archive
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.tar.gz
+          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.tar.gz
+
       # Upload AppImage
       - name: Upload AppImage
         uses: actions/upload-artifact@v3
         with:
           name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.AppImage
-          path: ${{env.APP_NAME}}*.AppImage
+          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.AppImage
 
   ## macOS build ###############################################################
   build-mac:
@@ -74,7 +82,7 @@ jobs:
     steps:
       # Checkout the repository
       - name: Checkout repository and submodules
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
@@ -111,7 +119,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-macOS.zip
-          path: bin/${{env.APP_NAME}}-${{env.APP_VERSION}}-macOS.zip
+          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-macOS.zip
 
   ## Windows build #############################################################
   build-windows:
@@ -120,7 +128,7 @@ jobs:
     steps:
       # Checkout the repository
       - name: Checkout repository and submodules
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 

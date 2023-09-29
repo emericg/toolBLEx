@@ -2,9 +2,9 @@
 
 echo "> toolBLEx packager (Windows x86_64)"
 
-export APP_NAME="toolBLEx";
+export APP_NAME="toolBLEx"
 export APP_VERSION=0.10
-export GIT_VERSION=$(git rev-parse --short HEAD);
+export GIT_VERSION=$(git rev-parse --short HEAD)
 
 ## CHECKS ######################################################################
 
@@ -46,10 +46,10 @@ done
 
 if [[ $make_install = true ]] ; then
   echo '---- Running make install'
-  make INSTALL_ROOT=bin/ install;
+  make INSTALL_ROOT=bin/ install
 
   #echo '---- Installation directory content recap:'
-  #find bin/;
+  #find bin/
 fi
 
 ## DEPLOY ######################################################################
@@ -58,11 +58,9 @@ echo '---- Running windeployqt'
 windeployqt bin/ --qmldir qml/
 
 #echo '---- Installation directory content recap:'
-#find bin/;
+#find bin/
 
-## PACKAGE #####################################################################
-
-mv bin $APP_NAME-$APP_VERSION-win64;
+mv bin $APP_NAME-$APP_VERSION-win64
 
 ## PACKAGE (zip) ###############################################################
 
@@ -84,8 +82,8 @@ fi
 
 if [[ $upload_package = true ]] ; then
   printf "---- Uploading to transfer.sh"
-  curl --upload-file $APP_NAME*.zip https://transfer.sh/$APP_NAME-$APP_VERSION-git$GIT_VERSION-win64.zip;
+  curl --upload-file $APP_NAME*.zip https://transfer.sh/$APP_NAME-$APP_VERSION-git$GIT_VERSION-win64.zip
   printf "\n"
-  curl --upload-file $APP_NAME*.exe https://transfer.sh/$APP_NAME-$APP_VERSION-git$GIT_VERSION-win64.exe;
+  curl --upload-file $APP_NAME*.exe https://transfer.sh/$APP_NAME-$APP_VERSION-git$GIT_VERSION-win64.exe
   printf "\n"
 fi

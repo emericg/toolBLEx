@@ -36,49 +36,6 @@ cleanup:
   - '*.la'
 
 modules:
-  - name: libical # required by bluez
-    buildsystem: cmake-ninja
-    config-opts:
-      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
-      - -DBUILD_SHARED_LIBS:BOOL=ON
-      - -DICAL_GLIB=true
-      - -DGOBJECT_INTROSPECTION=true
-      - -DICAL_GLIB_VAPI=true
-      - -DICAL_BUILD_DOCS=false
-      - -DICAL_GLIB_VAPI=false
-    sources:
-      - type: archive
-        url: https://github.com/libical/libical/archive/v3.0.16.tar.gz
-        sha256: b44705dd71ca4538c86fb16248483ab4b48978524fb1da5097bd76aa2e0f0c33
-        x-checker-data:
-          type: anitya
-          project-id: 1637
-          url-template: https://github.com/libical/libical/archive/v$version.tar.gz
-
-  - name: bluez # required by qtconnectivity
-    buildsystem: autotools
-    config-opts:
-      - --disable-tools
-      - --disable-cups
-      - --disable-monitor
-      - --disable-client
-      - --disable-systemd
-      - --disable-udev
-      - --disable-manpages
-      - --disable-datafiles
-      - --enable-experimental
-      - --enable-library
-      - --prefix=/app
-      - --sysconfdir=/app/etc
-    sources:
-      - type: archive
-        url: https://www.kernel.org/pub/linux/bluetooth/bluez-5.69.tar.xz
-        sha256: bc5a35ddc7c72d0d3999a0d7b2175c8b7d57ab670774f8b5b4900ff38a2627fc
-        x-checker-data:
-          type: anitya
-          project-id: 10029
-          url-template: https://www.kernel.org/pub/linux/bluetooth/bluez-$version.tar.xz
-
   - name: qt-base
     buildsystem: cmake-ninja
     builddir: true

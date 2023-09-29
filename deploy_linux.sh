@@ -2,9 +2,9 @@
 
 echo "> toolBLEx packager (Linux x86_64)"
 
-export APP_NAME="toolBLEx";
+export APP_NAME="toolBLEx"
 export APP_VERSION=0.10
-export GIT_VERSION=$(git rev-parse --short HEAD);
+export GIT_VERSION=$(git rev-parse --short HEAD)
 
 ## CHECKS ######################################################################
 
@@ -51,10 +51,10 @@ done
 
 if [[ $make_install = true ]] ; then
   echo '---- Running make install'
-  make INSTALL_ROOT=appdir/ install;
+  make INSTALL_ROOT=appdir/ install
 
   #echo '---- Installation directory content recap:'
-  #find appdir/;
+  #find appdir/
 fi
 
 ## DEPLOY ######################################################################
@@ -62,51 +62,57 @@ fi
 unset LD_LIBRARY_PATH; #unset QT_PLUGIN_PATH; #unset QTDIR;
 
 if [[ $use_contribs = true ]] ; then
-  export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/linux_x86_64/usr/lib/:/usr/lib;
+  export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/linux_x86_64/usr/lib/:/usr/lib
 else
-  export LD_LIBRARY_PATH=/usr/lib/;
+  export LD_LIBRARY_PATH=/usr/lib/
 fi
 USRDIR=/usr;
 if [ -d appdir/usr/local ]; then
-  USRDIR=/usr/local;
+  USRDIR=/usr/local
 fi
 if [ -z "$QTDIR" ]; then
-  QTDIR=/usr/lib/qt;
+  QTDIR=/usr/lib/qt
 fi
 
 echo '---- Downloading linuxdeploy + plugins'
-if [ ! -x contribs/deploy/linuxdeploy-x86_64.AppImage.AppImage ]; then
-  wget -c -nv "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage" -P contribs/deploy/;
-  wget -c -nv "https://github.com/linuxdeploy/linuxdeploy-plugin-appimage/releases/download/continuous/linuxdeploy-plugin-appimage-x86_64.AppImage" -P contribs/deploy/;
-  wget -c -nv "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage" -P contribs/deploy/;
+if [ ! -x contribs/deploy/linuxdeploy-x86_64.AppImage ]; then
+  wget -c -nv "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage" -P contribs/deploy/
+  wget -c -nv "https://github.com/linuxdeploy/linuxdeploy-plugin-appimage/releases/download/continuous/linuxdeploy-plugin-appimage-x86_64.AppImage" -P contribs/deploy/
+  wget -c -nv "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage" -P contribs/deploy/
 fi
-chmod a+x contribs/deploy/linuxdeploy-x86_64.AppImage;
-chmod a+x contribs/deploy/linuxdeploy-plugin-appimage-x86_64.AppImage;
-chmod a+x contribs/deploy/linuxdeploy-plugin-qt-x86_64.AppImage;
+chmod a+x contribs/deploy/linuxdeploy-x86_64.AppImage
+chmod a+x contribs/deploy/linuxdeploy-plugin-appimage-x86_64.AppImage
+chmod a+x contribs/deploy/linuxdeploy-plugin-qt-x86_64.AppImage
 
 # linuxdeploy settings
 export QML_SOURCES_PATHS="$(pwd)/qml/"
 export EXTRA_QT_PLUGINS="svg;"
 
 #echo '---- Installation directory content recap:'
-#find appdir/;
+#find appdir/
 
 ## PACKAGE (AppImage) ##########################################################
 
 if [[ $create_package = true ]] ; then
   echo '---- Running AppImage packager'
   ./contribs/deploy/linuxdeploy-x86_64.AppImage --appdir appdir --plugin qt --output appimage
+  mv $APP_NAME-x86_64.AppImage $APP_NAME-$APP_VERSION-linux64.AppImage
 fi
 
-## PACKAGE (ZIP) ###############################################################
+## PACKAGE (archive) ###########################################################
 
-# TODO
+if [[ $create_package = true ]] ; then
+  echo '---- Compressing package'
+  mv appdir/ toolBLEx/
+  tar zcvf $APP_NAME-$APP_VERSION-linux64.tar.gz toolBLEx/
+fi
 
 ## UPLOAD ######################################################################
 
 if [[ $upload_package = true ]] ; then
   printf "---- Uploading to transfer.sh"
-  find appdir -executable -type f -exec ldd {} \; | grep " => $USRDIR" | cut -d " " -f 2-3 | sort | uniq;
-  curl --upload-file $APP_NAME*.AppImage https://transfer.sh/$APP_NAME-$APP_VERSION-git$GIT_VERSION-linux64.AppImage;
+  curl --upload-file $APP_NAME*.tar.gz https://transfer.sh/$APP_NAME-$APP_VERSION-git$GIT_VERSION-linux64.tar.gz
+  printf "\n"
+  curl --upload-file $APP_NAME*.AppImage https://transfer.sh/$APP_NAME-$APP_VERSION-git$GIT_VERSION-linux64.AppImage
   printf "\n"
 fi
