@@ -51,21 +51,27 @@ done
 
 if [[ $make_install = true ]] ; then
   echo '---- Running make install'
-  make INSTALL_ROOT=appdir/ install
+  make INSTALL_ROOT=bin/ install
 
-  #echo '---- Installation directory content recap:'
-  #find appdir/
+  #echo '---- Installation directory content recap (after make install):'
+  #find bin/
+
+  cp -r bin appdir
+  mv bin $APP_NAME
 fi
 
 ## DEPLOY ######################################################################
-
-unset LD_LIBRARY_PATH; #unset QT_PLUGIN_PATH; #unset QTDIR;
 
 if [[ $use_contribs = true ]] ; then
   export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/linux_x86_64/usr/lib/:/usr/lib
 else
   export LD_LIBRARY_PATH=/usr/lib/
 fi
+
+echo '---- Prepare linuxdeploy + plugins'
+
+unset LD_LIBRARY_PATH; #unset QT_PLUGIN_PATH; #unset QTDIR;
+
 USRDIR=/usr;
 if [ -d appdir/usr/local ]; then
   USRDIR=/usr/local
@@ -74,7 +80,6 @@ if [ -z "$QTDIR" ]; then
   QTDIR=/usr/lib/qt
 fi
 
-echo '---- Downloading linuxdeploy + plugins'
 if [ ! -x contribs/deploy/linuxdeploy-x86_64.AppImage ]; then
   wget -c -nv "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage" -P contribs/deploy/
   wget -c -nv "https://github.com/linuxdeploy/linuxdeploy-plugin-appimage/releases/download/continuous/linuxdeploy-plugin-appimage-x86_64.AppImage" -P contribs/deploy/
@@ -88,23 +93,26 @@ chmod a+x contribs/deploy/linuxdeploy-plugin-qt-x86_64.AppImage
 export QML_SOURCES_PATHS="$(pwd)/qml/"
 export EXTRA_QT_PLUGINS="svg;"
 
-#echo '---- Installation directory content recap:'
-#find appdir/
-
 ## PACKAGE (AppImage) ##########################################################
 
 if [[ $create_package = true ]] ; then
   echo '---- Running AppImage packager'
   ./contribs/deploy/linuxdeploy-x86_64.AppImage --appdir appdir --plugin qt --output appimage
   mv $APP_NAME-x86_64.AppImage $APP_NAME-$APP_VERSION-linux64.AppImage
+
+  #echo '---- Installation directory content recap (after linuxdeploy):'
+  #find appdir/
 fi
 
 ## PACKAGE (archive) ###########################################################
 
 if [[ $create_package = true ]] ; then
+  echo '---- Faking package'
+  cp -r appdir/lib/* $APP_NAME/
+  cp -r appdir/plugins $APP_NAME/
+  cp -r appdir/qml $APP_NAME/
   echo '---- Compressing package'
-  mv appdir/ toolBLEx/
-  tar zcvf $APP_NAME-$APP_VERSION-linux64.tar.gz toolBLEx/
+  tar zcvf $APP_NAME-$APP_VERSION-linux64.tar.gz $APP_NAME/
 fi
 
 ## UPLOAD ######################################################################

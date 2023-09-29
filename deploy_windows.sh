@@ -48,7 +48,7 @@ if [[ $make_install = true ]] ; then
   echo '---- Running make install'
   make INSTALL_ROOT=bin/ install
 
-  #echo '---- Installation directory content recap:'
+  #echo '---- Installation directory content recap (after make install):'
   #find bin/
 fi
 
@@ -57,23 +57,23 @@ fi
 echo '---- Running windeployqt'
 windeployqt bin/ --qmldir qml/
 
-#echo '---- Installation directory content recap:'
+#echo '---- Installation directory content recap (after windeployqt):'
 #find bin/
 
-mv bin $APP_NAME-$APP_VERSION-win64
+mv bin $APP_NAME
 
 ## PACKAGE (zip) ###############################################################
 
 if [[ $create_package = true ]] ; then
   echo '---- Compressing package'
-  7z a $APP_NAME-$APP_VERSION-win64.zip $APP_NAME-$APP_VERSION-win64
+  7z a $APP_NAME-$APP_VERSION-win64.zip $APP_NAME
 fi
 
 ## PACKAGE (NSIS) ##############################################################
 
 if [[ $create_package = true ]] ; then
   echo '---- Creating installer'
-  mv $APP_NAME-$APP_VERSION-win64 assets/windows/$APP_NAME
+  mv $APP_NAME assets/windows/$APP_NAME
   makensis assets/windows/setup.nsi
   mv assets/windows/*.exe $APP_NAME-$APP_VERSION-win64.exe
 fi

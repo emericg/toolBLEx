@@ -53,7 +53,7 @@ if [[ $make_install = true ]] ; then
   echo '---- Running make install'
   make INSTALL_ROOT=bin/ install
 
-  #echo '---- Installation directory content recap:'
+  #echo '---- Installation directory content recap (after make install):'
   #find bin/
 fi
 
@@ -68,7 +68,7 @@ fi
 echo '---- Running macdeployqt'
 macdeployqt bin/$APP_NAME.app -qmldir=qml/ -hardened-runtime -timestamp -appstore-compliant
 
-#echo '---- Installation directory content recap:'
+#echo '---- Installation directory content recap (after macdeployqt):'
 #find bin/
 
 ## PACKAGE (zip) ###############################################################
