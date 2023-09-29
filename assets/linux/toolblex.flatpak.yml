@@ -252,5 +252,5 @@ modules:
       buildsystem: qmake
       sources:
         - type: archive
-          url: https://github.com/emericg/toolBLEx/archive/refs/tags/v0.9.tar.gz
+          url: https://github.com/emericg/toolBLEx/archive/refs/tags/v0.10.tar.gz
           sha256:
