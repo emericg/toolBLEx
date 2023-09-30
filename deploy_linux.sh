@@ -55,9 +55,6 @@ if [[ $make_install = true ]] ; then
 
   #echo '---- Installation directory content recap (after make install):'
   #find bin/
-
-  cp -r bin appdir
-  mv bin $APP_NAME
 fi
 
 ## DEPLOY ######################################################################
@@ -73,7 +70,7 @@ echo '---- Prepare linuxdeploy + plugins'
 unset LD_LIBRARY_PATH; #unset QT_PLUGIN_PATH; #unset QTDIR;
 
 USRDIR=/usr;
-if [ -d appdir/usr/local ]; then
+if [ -d bin/usr/local ]; then
   USRDIR=/usr/local
 fi
 if [ -z "$QTDIR" ]; then
@@ -97,20 +94,27 @@ export EXTRA_QT_PLUGINS="svg;"
 
 if [[ $create_package = true ]] ; then
   echo '---- Running AppImage packager'
-  ./contribs/deploy/linuxdeploy-x86_64.AppImage --appdir appdir --plugin qt --output appimage
+  ./contribs/deploy/linuxdeploy-x86_64.AppImage --appdir bin --plugin qt --output appimage
   mv $APP_NAME-x86_64.AppImage $APP_NAME-$APP_VERSION-linux64.AppImage
 
   #echo '---- Installation directory content recap (after linuxdeploy):'
-  #find appdir/
+  #find bin/
 fi
 
 ## PACKAGE (archive) ###########################################################
 
 if [[ $create_package = true ]] ; then
-  echo '---- Faking package'
-  cp -r appdir/lib/* $APP_NAME/
-  cp -r appdir/plugins $APP_NAME/
-  cp -r appdir/qml $APP_NAME/
+  echo '---- Reorganize appdir into a regular directory'
+  mkdir $APP_NAME/
+  mv bin/usr/bin/* $APP_NAME/
+  mv bin/usr/lib/* $APP_NAME/
+  mv bin/usr/plugins $APP_NAME/
+  mv bin/usr/qml $APP_NAME/
+  mv bin/usr/share/appdata/$APP_NAME.appdata.xml $APP_NAME/
+  mv bin/usr/share/applications/$APP_NAME.desktop $APP_NAME/
+  mv bin/usr/share/pixmaps/$APP_NAME.svg $APP_NAME/
+  printf '[Paths]\nPrefix = .\nPlugins = plugins\nImports = qml\n' > qt.conf
+  printf '#!/bin/sh\nappname=`basename $0 | sed s,\.sh$,,`\ndirname=`dirname $0`\nexport LD_LIBRARY_PATH=$dirname\n$dirname/$appname' > $APP_NAME.sh
   echo '---- Compressing package'
   tar zcvf $APP_NAME-$APP_VERSION-linux64.tar.gz $APP_NAME/
 fi
