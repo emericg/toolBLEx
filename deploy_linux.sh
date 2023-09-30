@@ -104,17 +104,21 @@ fi
 ## PACKAGE (archive) ###########################################################
 
 if [[ $create_package = true ]] ; then
+  export APP_NAME_LOWERCASE=${APP_NAME,,}
+
   echo '---- Reorganize appdir into a regular directory'
   mkdir $APP_NAME/
   mv bin/usr/bin/* $APP_NAME/
   mv bin/usr/lib/* $APP_NAME/
   mv bin/usr/plugins $APP_NAME/
   mv bin/usr/qml $APP_NAME/
-  mv bin/usr/share/appdata/$APP_NAME.appdata.xml $APP_NAME/
-  mv bin/usr/share/applications/$APP_NAME.desktop $APP_NAME/
-  mv bin/usr/share/pixmaps/$APP_NAME.svg $APP_NAME/
-  printf '[Paths]\nPrefix = .\nPlugins = plugins\nImports = qml\n' > qt.conf
-  printf '#!/bin/sh\nappname=`basename $0 | sed s,\.sh$,,`\ndirname=`dirname $0`\nexport LD_LIBRARY_PATH=$dirname\n$dirname/$appname' > $APP_NAME.sh
+  mv bin/usr/share/appdata/$APP_NAME_LOWERCASE.appdata.xml $APP_NAME/
+  mv bin/usr/share/applications/$APP_NAME_LOWERCASE.desktop $APP_NAME/
+  mv bin/usr/share/pixmaps/$APP_NAME_LOWERCASE.svg $APP_NAME/
+  printf '[Paths]\nPrefix = .\nPlugins = plugins\nImports = qml\n' > $APP_NAME/qt.conf
+  printf '#!/bin/sh\nappname=`basename $0 | sed s,\.sh$,,`\ndirname=`dirname $0`\nexport LD_LIBRARY_PATH=$dirname\n$dirname/$appname' > $APP_NAME/$APP_NAME_LOWERCASE.sh
+  chmod +x $APP_NAME/$APP_NAME_LOWERCASE.sh
+
   echo '---- Compressing package'
   tar zcvf $APP_NAME-$APP_VERSION-linux64.tar.gz $APP_NAME/
 fi

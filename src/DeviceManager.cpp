@@ -347,7 +347,7 @@ bool DeviceManager::checkBluetoothPermissions()
         {
         case Qt::PermissionStatus::Undetermined:
             qApp->requestPermission(blePermission, this, &DeviceManager::checkBluetoothPermissions);
-            return;
+            return false;
         case Qt::PermissionStatus::Denied:
             m_permOS = false;
             m_blePermissions = m_permOS;
