@@ -131,7 +131,7 @@ DeviceManager::~DeviceManager()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void DeviceManager::checkBluetooth()
+bool DeviceManager::checkBluetooth()
 {
     //qDebug() << "DeviceManager::checkBluetooth()";
 
@@ -191,10 +191,10 @@ void DeviceManager::checkBluetooth()
         }
     }
 
-    //return (m_bleAdapter && m_bleEnabled && m_blePermissions);
+    return (m_bleAdapter && m_bleEnabled && m_blePermissions);
 }
 
-void DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
+bool DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
 {
     //qDebug() << "DeviceManager::enableBluetooth() enforce:" << enforceUserPermissionCheck;
 
@@ -303,11 +303,13 @@ void DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
         // this function did changed the Bluetooth adapter status
         Q_EMIT bluetoothChanged();
     }
+
+    return (m_bleAdapter && m_bleEnabled && m_blePermissions);
 }
 
-void DeviceManager::checkBluetoothPermissions()
+bool DeviceManager::checkBluetoothPermissions()
 {
-    qDebug() << "DeviceManager::checkBluetoothPermissions()";
+    //qDebug() << "DeviceManager::checkBluetoothPermissions()";
 
 #if !defined(Q_OS_MACOS) && !defined(Q_OS_IOS)
     m_permOS = true;
@@ -357,7 +359,7 @@ void DeviceManager::checkBluetoothPermissions()
         }
     }
 
-#endif
+#endif // QT_CONFIG(permissions)
 #else
 
     // Linux and Windows don't have required BLE permissions
@@ -377,7 +379,7 @@ void DeviceManager::checkBluetoothPermissions()
         Q_EMIT bluetoothChanged();
     }
 
-    //return m_blePermissions;
+    return m_blePermissions;
 }
 
 /* ************************************************************************** */

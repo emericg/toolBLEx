@@ -113,7 +113,7 @@ class DeviceManager: public QObject
     DeviceHeader *m_device_header = nullptr;
 
     bool m_advertising = false;
-    bool isAdvertising() const  { return m_advertising; }
+    bool isAdvertising() const { return m_advertising; }
 
     bool m_listening = false;
     bool isListening() const { return m_listening; }
@@ -125,10 +125,10 @@ class DeviceManager: public QObject
     bool isScanningPaused() const { return m_scanning_paused; }
 
     bool m_updating = false;
-    bool isUpdating() const  { return m_updating; }
+    bool isUpdating() const { return m_updating; }
 
     bool m_syncing = false;
-    bool isSyncing() const  { return m_syncing; }
+    bool isSyncing() const { return m_syncing; }
 
     bool hasBluetooth() const { return (m_bleAdapter && m_bleEnabled && m_blePermissions); }
     bool hasBluetoothAdapter() const { return m_bleAdapter; }
@@ -215,9 +215,9 @@ public:
     int getAdaptersCount() const { return m_bluetoothAdapters.size(); }
 
     // Bluetooth management
-    Q_INVOKABLE void checkBluetooth();
-    Q_INVOKABLE void checkBluetoothPermissions();
-    Q_INVOKABLE void enableBluetooth(bool enforceUserPermissionCheck = false);
+    Q_INVOKABLE bool checkBluetooth();
+    Q_INVOKABLE bool checkBluetoothPermissions();
+    Q_INVOKABLE bool enableBluetooth(bool enforceUserPermissionCheck = false);
 
     // Scanning management
     static int getLastRun();
