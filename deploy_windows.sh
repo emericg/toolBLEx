@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-echo "> toolBLEx packager (Windows x86_64)"
-
 export APP_NAME="toolBLEx"
 export APP_VERSION=0.10
 export GIT_VERSION=$(git rev-parse --short HEAD)
 
+echo "> $APP_NAME packager (Windows x86_64) [v$APP_VERSION]"
+
 ## CHECKS ######################################################################
 
-if [ ${PWD##*/} != "toolBLEx" ]; then
-  echo "This script MUST be run from the toolBLEx/ directory"
+if [ ${PWD##*/} != $APP_NAME ]; then
+  echo "This script MUST be run from the $APP_NAME/ directory"
   exit 1
 fi
 

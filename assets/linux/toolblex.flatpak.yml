@@ -206,8 +206,8 @@ modules:
           url-template: https://download.qt.io/archive/qt/$major.$minor/$version/submodules/qt5compat-everywhere-src-$version.tar.xz
 
   - name: toolblex
-      buildsystem: qmake
-      sources:
-        - type: archive
-          url: https://github.com/emericg/toolBLEx/archive/refs/tags/v0.10.tar.gz
-          sha256:
+    buildsystem: qmake
+    sources:
+      - type: archive
+        url: https://github.com/emericg/toolBLEx/archive/refs/tags/v0.10.tar.gz
+        sha256: 
