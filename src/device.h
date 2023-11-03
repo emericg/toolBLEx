@@ -63,6 +63,7 @@ class Device: public QObject
     Q_PROPERTY(bool hasBluetoothConnection READ hasBluetoothConnection CONSTANT)
     Q_PROPERTY(bool hasBluetoothAdvertisement READ hasBluetoothAdvertisement CONSTANT)
 
+    Q_PROPERTY(int mtu READ getMTU NOTIFY mtuUpdated)
     Q_PROPERTY(int rssi READ getRssi NOTIFY rssiUpdated)
     Q_PROPERTY(bool available READ isAvailable NOTIFY rssiUpdated)
 
@@ -98,6 +99,7 @@ Q_SIGNALS:
     void selectionUpdated();
 
     void batteryUpdated();
+    void mtuUpdated();
     void rssiUpdated();
     void advertisementUpdated();
     void statusUpdated();
@@ -159,6 +161,8 @@ protected:
 
     int m_bluetoothCoreConfiguration = 0; //!< See QBluetoothDeviceInfo::CoreConfiguration enum
 
+    int m_mtu = -1;
+
     int m_rssi = 0;
     int m_rssiMin = 0;
     int m_rssiMax = -100;
@@ -174,6 +178,7 @@ protected:
     virtual void deviceDisconnected();
     virtual void deviceErrored(QLowEnergyController::Error);
     virtual void deviceStateChanged(QLowEnergyController::ControllerState state);
+    virtual void deviceMtuChanged(int mtu);
 
     virtual void addLowEnergyService(const QBluetoothUuid &uuid);
     virtual void serviceDetailsDiscovered(QLowEnergyService::ServiceState newState);
@@ -231,6 +236,8 @@ public:
     int getBluetoothMode() const { return m_deviceBluetoothMode; }
     bool hasBluetoothConnection() const { return (m_deviceBluetoothMode & DeviceUtils::DEVICE_BLE_CONNECTION); }
     bool hasBluetoothAdvertisement() const { return (m_deviceBluetoothMode & DeviceUtils::DEVICE_BLE_ADVERTISEMENT); }
+
+    int getMTU() const { return m_mtu; }
 
     // Device RSSI
     void setRssi(const int rssi);

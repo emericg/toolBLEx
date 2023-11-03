@@ -598,9 +598,40 @@ Flickable {
 
                 Component.onCompleted: {
                     legendWidth = 64
+                    legendWidth = Math.max(legendWidth, legendMTU.contentWidth)
                     legendWidth = Math.max(legendWidth, legendRSSI.contentWidth)
                     legendWidth = Math.max(legendWidth, legendAdvertising.contentWidth)
                 }
+
+                ////
+
+                Row {
+                    height: 32
+                    spacing: 12
+
+                    visible: (selectedDevice && selectedDevice.mtu > 0)
+
+                    Text {
+                        id: legendMTU
+                        width: box3.legendWidth
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        text: qsTr("MTU")
+                        textFormat: Text.PlainText
+                        font.pixelSize: Theme.fontSizeContent
+                        horizontalAlignment: Text.AlignRight
+                        color: Theme.colorSubText
+                    }
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: selectedDevice.mtu
+                        font.pixelSize: Theme.fontSizeContent
+                        color: Theme.colorText
+                    }
+                }
+
+                ////
 
                 Row {
                     height: 32

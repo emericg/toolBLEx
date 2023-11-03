@@ -161,13 +161,18 @@ void Device::deviceConnect()
             {
                 m_bleController->setRemoteAddressType(QLowEnergyController::PublicAddress);
 
+                m_mtu = m_bleController->mtu();
+                Q_EMIT mtuUpdated();
+
                 // Connecting signals and slots for connecting to LE services.
                 connect(m_bleController, &QLowEnergyController::connected, this, &Device::deviceConnected);
                 connect(m_bleController, &QLowEnergyController::disconnected, this, &Device::deviceDisconnected);
                 connect(m_bleController, &QLowEnergyController::serviceDiscovered, this, &Device::addLowEnergyService, Qt::QueuedConnection);
                 connect(m_bleController, &QLowEnergyController::discoveryFinished, this, &Device::serviceScanDone, Qt::QueuedConnection); // Windows hack, see: QTBUG-80770 and QTBUG-78488
                 connect(m_bleController, QOverload<QLowEnergyController::Error>::of(&QLowEnergyController::errorOccurred), this, &Device::deviceErrored);
+
                 connect(m_bleController, &QLowEnergyController::stateChanged, this, &Device::deviceStateChanged);
+                connect(m_bleController, &QLowEnergyController::mtuChanged, this, &Device::deviceMtuChanged);
             }
             else
             {
@@ -745,6 +750,17 @@ void Device::deviceErrored(QLowEnergyController::Error error)
 void Device::deviceStateChanged(QLowEnergyController::ControllerState)
 {
     //qDebug() << "Device::deviceStateChanged(" << getAddress() << ") state:" << state;
+}
+
+void Device::deviceMtuChanged(int mtu)
+{
+    //qDebug() << "Device::deviceMtuChanged(" << getAddress() << ") MTU:" << mtu;
+
+    if (m_mtu != mtu)
+    {
+        m_mtu = mtu;
+        Q_EMIT mtuUpdated();
+    }
 }
 
 /* ************************************************************************** */
