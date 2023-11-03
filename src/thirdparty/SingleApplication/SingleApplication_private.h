@@ -110,5 +110,63 @@ public Q_SLOTS:
     void slotClientConnectionClosed( QLocalSocket*, quint32 );
 };
 
+
+
+#if !QT_CONFIG(sharedmemory) ///////////////////////////////////////////////////
+#include <QNativeIpcKey>
+class QSharedMemory : public QObject
+{
+    Q_OBJECT
+
+public:
+    enum AccessMode
+    {
+        ReadOnly,
+        ReadWrite
+    };
+    enum SharedMemoryError
+    {
+        NoError,
+        PermissionDenied,
+        InvalidSize,
+        KeyError,
+        AlreadyExists,
+        NotFound,
+        LockError,
+        OutOfResources,
+        UnknownError
+    };
+
+    QSharedMemory(QObject *parent = nullptr) { Q_UNUSED(parent) }
+    QSharedMemory(const QString &key, QObject *parent = nullptr) { Q_UNUSED(key); Q_UNUSED(parent); }
+    QSharedMemory(const QNativeIpcKey &key, QObject *parent = nullptr) { Q_UNUSED(key); Q_UNUSED(parent); }
+    ~QSharedMemory() {}
+
+    void setKey(const QString &) {}
+    QString key() const { return QString(); }
+    void setNativeKey(const QString &) {}
+    QString nativeKey() const { return QString(); }
+
+    bool create(qsizetype size, AccessMode mode = ReadWrite) { Q_UNUSED(size); Q_UNUSED(mode); return false; }
+    qsizetype size() const { return 0; }
+
+    bool attach(AccessMode mode = ReadWrite) { Q_UNUSED(mode); return false; }
+    bool isAttached() const { return false; }
+    bool detach() { return false; }
+
+    bool lock() { return false; }
+    bool unlock() { return true; }
+
+    void *data() { return nullptr; }
+    const void* constData() const { return nullptr; }
+    const void *data() const { return nullptr; }
+
+    SharedMemoryError error() const { return SharedMemoryError(); }
+    QString errorString() const { return QString(); }
+};
+#endif // QT_CONFIG(sharedmemory) //////////////////////////////////////////////
+
+
+
 /* ************************************************************************** */
 #endif // SINGLEAPPLICATION_P_H

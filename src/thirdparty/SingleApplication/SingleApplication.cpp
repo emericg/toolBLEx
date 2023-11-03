@@ -54,8 +54,7 @@ SingleApplication::SingleApplication( int &argc, char *argv[], bool allowSeconda
     if ( ! userData.isEmpty() )
         d->addAppData( userData );
 
-    // Generating an application ID used for identifying the shared memory
-    // block and QLocalServer
+    // Generating an application ID used for identifying the shared memory block and QLocalServer
     d->genBlockServerName();
 
     // To mitigate QSharedMemory issues with large amount of processes
@@ -114,8 +113,7 @@ SingleApplication::SingleApplication( int &argc, char *argv[], bool allowSeconda
       // If the shared memory block's checksum is valid continue
       if( d->blockChecksum() == inst->checksum ) break;
 
-      // If more than 5s have elapsed, assume the primary instance crashed and
-      // assume it's position
+      // If more than 5s have elapsed, assume the primary instance crashed and assume it's position
       if( time.elapsed() > 5000 ){
           qWarning() << "SingleApplication: Shared memory block has been in an inconsistent state from more than 5s. Assuming primary instance failure.";
           d->initializeMemoryBlock();
@@ -196,9 +194,8 @@ bool SingleApplication::isSecondary() const
 }
 
 /**
- * Allows you to identify an instance by returning unique consecutive instance
- * ids. It is reset when the first (primary) instance of your app starts and
- * only incremented afterwards.
+ * Allows you to identify an instance by returning unique consecutive instance ids.
+ * It is reset when the first (primary) instance of your app starts and only incremented afterwards.
  * @return Returns a unique instance id.
  */
 quint32 SingleApplication::instanceId() const
@@ -209,8 +206,7 @@ quint32 SingleApplication::instanceId() const
 
 /**
  * Returns the OS PID (Process Identifier) of the process running the primary
- * instance. Especially useful when SingleApplication is coupled with OS.
- * specific APIs.
+ * instance. Especially useful when SingleApplication is coupled with OS specific APIs.
  * @return Returns the primary instance PID.
  */
 qint64 SingleApplication::primaryPid() const

@@ -35,8 +35,7 @@
 class SingleApplicationPrivate;
 
 /**
- * @brief The SingleApplication class handles multiple instances of the same
- * Application
+ * @brief The SingleApplication class handles multiple instances of the same Application
  * @see QCoreApplication
  */
 class SingleApplication : public QAPPLICATION_CLASS
@@ -66,19 +65,14 @@ public:
     Q_DECLARE_FLAGS(Options, Mode)
 
     /**
-     * @brief Intitializes a SingleApplication instance with argc command line
-     * arguments in argv
+     * @brief Intitializes a SingleApplication instance with argc command line arguments in argv
      * @arg {int &} argc - Number of arguments in argv
      * @arg {const char *[]} argv - Supplied command line arguments
-     * @arg {bool} allowSecondary - Whether to start the instance as secondary
-     * if there is already a primary instance.
-     * @arg {Mode} mode - Whether for the SingleApplication block to be applied
-     * User wide or System wide.
+     * @arg {bool} allowSecondary - Whether to start the instance as secondary if there is already a primary instance.
+     * @arg {Mode} mode - Whether for the SingleApplication block to be applied User wide or System wide.
      * @arg {int} timeout - Timeout to wait in milliseconds.
-     * @note argc and argv may be changed as Qt removes arguments that it
-     * recognizes
-     * @note Mode::SecondaryNotification only works if set on both the primary
-     * instance and the secondary instance.
+     * @note argc and argv may be changed as Qt removes arguments that it recognizes
+     * @note Mode::SecondaryNotification only works if set on both the primary instance and the secondary instance.
      * @note The timeout is just a hint for the maximum time of blocking
      * operations. It does not guarantee that the SingleApplication
      * initialisation will be completed in given time, though is a good hint.
@@ -128,8 +122,7 @@ public:
      * @brief Sends a message to the primary instance. Returns true on success.
      * @param {int} timeout - Timeout for connecting
      * @returns {bool}
-     * @note sendMessage() will return false if invoked from the primary
-     * instance.
+     * @note sendMessage() will return false if invoked from the primary instance.
      */
     bool sendMessage( const QByteArray &message, int timeout = 100 );
 
