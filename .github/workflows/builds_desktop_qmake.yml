@@ -102,13 +102,12 @@ jobs:
       - name: Setup env
         run: |
              qmake --version
-             alias nproc="sysctl -n hw.logicalcpu"
 
       # Build application
       - name: Build application
         run: |
              qmake ${{env.APP_NAME}}.pro CONFIG+=release
-             make -j$(nproc)
+             make -j`sysctl -n hw.logicalcpu`
 
       # Deploy application
       - name: Deploy application
