@@ -709,11 +709,11 @@ void Device::deviceConnected()
     Q_EMIT connected();
     Q_EMIT statusUpdated();
 
-    QLowEnergyConnectionParameters params;
-    params.setIntervalRange(7.5, 10);
-    params.setLatency(0);
-    params.setSupervisionTimeout(1000);
-    m_bleController->requestConnectionUpdate(params);
+    //QLowEnergyConnectionParameters params;
+    //params.setIntervalRange(7.5, 10);
+    //params.setLatency(0);
+    //params.setSupervisionTimeout(1000);
+    //m_bleController->requestConnectionUpdate(params);
 
     m_bleController->discoverServices();
 }
