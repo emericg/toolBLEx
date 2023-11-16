@@ -81,6 +81,7 @@ Item {
                 function onConnected() { menuInfo.blink() }
                 function onAdvertisementChanged() { menuAdv.blink() }
                 function onServicesChanged() { menuSrv.blink() }
+                function onLogUpdated() { menuLog.blink() }
             }
 
             Row {
@@ -117,6 +118,16 @@ Item {
 
                     text: qsTr("services")
                     badgeText: (selectedDevice && selectedDevice.servicesScanned) ? selectedDevice.servicesCount : "?"
+                    onClicked: deviceMenu.menuSelected(index)
+                    sourceSize: 0
+                }
+                SelectorMenuThemedItemBadge {
+                    id: menuLog
+                    index: 4
+                    highlighted: (deviceMenu.currentSelection === index)
+
+                    text: qsTr("log")
+                    badgeText: (selectedDevice && selectedDevice.deviceLogCount) ? selectedDevice.deviceLogCount : "?"
                     onClicked: deviceMenu.menuSelected(index)
                     sourceSize: 0
                 }
@@ -182,6 +193,19 @@ Item {
         anchors.margins: 16
 
         visible: (deviceMenu.currentSelection === 3)
+    }
+
+    ////////////////
+
+    PanelDeviceLog {
+        id: panelDeviceLog
+        anchors.top: actionBar.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.margins: 16
+
+        visible: (deviceMenu.currentSelection === 4)
     }
 
     ////////////////

@@ -166,6 +166,45 @@ public:
 
 /* ************************************************************************** */
 
+class LogEvent: public QObject
+{
+    Q_OBJECT
+
+    Q_PROPERTY(QDateTime timestamp READ getTimestamp CONSTANT)
+    Q_PROPERTY(int event READ getEvent CONSTANT)
+    Q_PROPERTY(QString log READ getLog CONSTANT)
+
+public:
+    enum EventType {
+        UNKNOWN       = 0,
+        ERROR         = 1,
+        CONN          = 2,
+        STATE         = 3,
+        DATA          = 4,
+        ADV           = 5,
+        USER          = 6,
+    };
+    Q_ENUM(EventType)
+
+    QDateTime timestamp;
+    QDateTime getTimestamp() const { return timestamp; }
+
+    int event = 0;
+    int getEvent() const { return event; }
+
+    QString log;
+    const QString getLog() const { return log; }
+
+    LogEvent(const QDateTime &ts, int ev, const QString &txt,
+                   QObject *parent) : QObject(parent) {
+        timestamp = ts;
+        event = ev;
+        log = txt;
+    }
+};
+
+/* ************************************************************************** */
+
 class ChartDataHistory: public QObject
 {
     Q_OBJECT

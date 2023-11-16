@@ -37,6 +37,11 @@ ServiceInfo::ServiceInfo(QLowEnergyService *service,
                          QLowEnergyService::DiscoveryMode scanmode,
                          QObject *parent) : QObject(parent)
 {
+    if (parent)
+    {
+        m_device = qobject_cast<DeviceToolBLEx*>(parent);
+    }
+
     if (service)
     {
         // Make sure we won't use the cache
@@ -54,6 +59,11 @@ ServiceInfo::ServiceInfo(QLowEnergyService *service,
 ServiceInfo::ServiceInfo(const QJsonObject &servicecache,
                          QObject *parent) : QObject(parent)
 {
+    if (parent)
+    {
+        m_device = qobject_cast<DeviceToolBLEx*>(parent);
+    }
+
     if (!m_ble_service)
     {
         m_service_cache = servicecache;
@@ -155,8 +165,7 @@ void ServiceInfo::serviceDetailsDiscovered(QLowEnergyService::ServiceState newSt
 */
     if (newState != QLowEnergyService::RemoteServiceDiscovered)
     {
-        // do not hang in "Scanning for characteristics" mode forever
-        // in case the service discovery failed
+        // do not hang in "Scanning for characteristics" mode forever in case the service discovery failed
         // We have to queue the signal up to give UI time to even enter the above mode
         if (newState != QLowEnergyService::RemoteServiceDiscovering)
         {
@@ -167,6 +176,8 @@ void ServiceInfo::serviceDetailsDiscovered(QLowEnergyService::ServiceState newSt
 
     if (newState == QLowEnergyService::RemoteServiceDiscovered)
     {
+        m_device->logEvent("Service details discovered for " + m_ble_service->serviceUuid().toString(), LogEvent::STATE);
+
         // The service details have been discovered
         m_scan_complete = true;
     }
@@ -188,6 +199,9 @@ void ServiceInfo::serviceErrorOccured(QLowEnergyService::ServiceError error)
 {
     if (error <= QLowEnergyService::NoError) return;
     qDebug() << "ServiceInfo::serviceErrorOccured(" << getUuidFull() << " / " << error << ")";
+
+    m_device->logEvent("serviceErrorOccured", LogEvent::ERROR);
+
 /*
     QLowEnergyService::NoError	0	No error has occurred.
     QLowEnergyService::OperationError	1	An operation was attempted while the service was not ready. An example might be the attempt to write to the service while it was not yet in the ServiceDiscovered state() or the service is invalid due to a loss of connection to the peripheral device.
@@ -230,6 +244,7 @@ void ServiceInfo::askForNotify(const QString &uuid)
     if (m_ble_service)
     {
         qDebug() << "ServiceInfo::askForNotify(" << uuid << ")";
+        m_device->logEvent("User asked for NOTIFY on " + uuid, LogEvent::USER);
 
         QBluetoothUuid toread(uuid);
         QLowEnergyCharacteristic crst = m_ble_service->characteristic(toread);
@@ -261,6 +276,7 @@ void ServiceInfo::askForRead(const QString &uuid)
     if (m_ble_service)
     {
         qDebug() << "ServiceInfo::askForRead(" << uuid << ")";
+        m_device->logEvent("User asked for READ on " + uuid, LogEvent::USER);
 
         QBluetoothUuid toread(uuid);
         QLowEnergyCharacteristic crst = m_ble_service->characteristic(toread);
@@ -281,7 +297,10 @@ void ServiceInfo::askForWrite(const QString &uuid, const QString &value, const Q
 {
     if (m_ble_service)
     {
-        qDebug() << "ServiceInfo::askForWrite(" << uuid << ") > value:" << value << " (type:" << type << "/ size:" << value.size() << ")";
+        qDebug() << "ServiceInfo::askForWrite(" << uuid << ") > value:" << value
+                 << " (type:" << type << "/ size:" << value.size() << ")";
+
+        m_device->logEvent("User asked for WRITE on " + uuid, LogEvent::USER);
 
         QBluetoothUuid towrite(uuid);
         QLowEnergyCharacteristic crst = m_ble_service->characteristic(towrite);
@@ -328,6 +347,8 @@ void ServiceInfo::bleReadDone(const QLowEnergyCharacteristic &c, const QByteArra
     qDebug() << "- service" << getUuidFull() << " - characteristic" << c.uuid().toString();
     qDebug() << "- DATA (" << v.size() << "b)" << v.toHex();
 
+    m_device->logEvent("Read done on " + c.uuid().toString() + " / " + QString::number(v.size()) + " bytes / 0x" + v.toHex(), LogEvent::DATA);
+
     for (auto cc: m_characteristics)
     {
         CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(cc);
@@ -347,6 +368,8 @@ void ServiceInfo::bleReadNotify(const QLowEnergyCharacteristic &c, const QByteAr
     qDebug() << "- service" << getUuidFull() << " - characteristic" << c.uuid().toString();
     qDebug() << "- DATA (" << v.size() << "b)" << v.toHex();
 
+    m_device->logEvent("Read/Notify on " + c.uuid().toString() + " / " + QString::number(v.size()) + " bytes / 0x" + v.toHex(), LogEvent::DATA);
+
     for (auto cc: m_characteristics)
     {
         CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(cc);
@@ -364,6 +387,8 @@ void ServiceInfo::bleWriteDone(const QLowEnergyCharacteristic &c, const QByteArr
     qDebug() << "- service" << getUuidFull() << " - characteristic" << c.uuid().toString();
     qDebug() << "- DATA (" << v.size() << "b)" << v.toHex();
 
+    m_device->logEvent("Write done on " + c.uuid().toString() + " / " + QString::number(v.size()) + " bytes / 0x" + v.toHex(), LogEvent::DATA);
+
     for (auto cc: m_characteristics)
     {
         CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(cc);
@@ -380,6 +405,8 @@ void ServiceInfo::bleDescReadDone(const QLowEnergyDescriptor &d, const QByteArra
     qDebug() << "ServiceInfo::bleDescReadDone()";
     qDebug() << "- service" << getUuidFull() << " - descriptor" << d.uuid().toString();
     qDebug() << "- DATA (" << v.size() << "b)" << v.toHex();
+
+    m_device->logEvent("Descriptor read on " + d.uuid().toString() + " / " + QString::number(v.size()) + " bytes / 0x" + v.toHex(), LogEvent::DATA);
 }
 
 void ServiceInfo::bleDescWriteDone(const QLowEnergyDescriptor &d, const QByteArray &v)
@@ -387,6 +414,8 @@ void ServiceInfo::bleDescWriteDone(const QLowEnergyDescriptor &d, const QByteArr
     qDebug() << "ServiceInfo::bleDescWriteDone()";
     qDebug() << "- service" << getUuidFull() << " - descriptor" << d.uuid().toString();
     qDebug() << "- DATA (" << v.size() << "b)" << v.toHex();
+
+    m_device->logEvent("Descriptor write on " + d.uuid().toString() + " / " + QString::number(v.size()) + " bytes / 0x" + v.toHex(), LogEvent::DATA);
 }
 
 /* ************************************************************************** */

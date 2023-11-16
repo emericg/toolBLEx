@@ -102,6 +102,11 @@ class DeviceToolBLEx: public Device
     Q_PROPERTY(int servicesCount READ getServicesCount NOTIFY servicesChanged)
     Q_PROPERTY(QVariant servicesList READ getServices NOTIFY servicesChanged)
 
+    // Logs
+    Q_PROPERTY(int deviceLogCount READ getDeviceLogCount NOTIFY logUpdated)
+    Q_PROPERTY(QVariant deviceLog READ getDeviceLog NOTIFY logUpdated)
+    Q_PROPERTY(QString deviceLogStr READ getDeviceLogStr NOTIFY logUpdated)
+
     static const int s_min_entries_advertisement = 60;
     static const int s_max_entries_advertisement = 60;
     static const int s_max_entries_packets = 20;
@@ -177,11 +182,24 @@ class DeviceToolBLEx: public Device
 
     void updateCache();
 
+    // log
+    QList <QObject *> m_deviceLog;
+    QString m_deviceLogString;
+
 private:
     // QLowEnergyController related
     void deviceConnected();
+    void deviceDisconnected();
+    void deviceErrored(QLowEnergyController::Error error);
+    void deviceStateChanged(QLowEnergyController::ControllerState state);
+
     void addLowEnergyService(const QBluetoothUuid &uuid);
+    void serviceDetailsDiscovered(QLowEnergyService::ServiceState newState);
     void serviceScanDone();
+
+    void bleWriteDone(const QLowEnergyCharacteristic &c, const QByteArray &value);
+    void bleReadDone(const QLowEnergyCharacteristic &c, const QByteArray &value);
+    void bleReadNotify(const QLowEnergyCharacteristic &c, const QByteArray &value);
 
 Q_SIGNALS:
     void advertisementChanged();
@@ -194,6 +212,7 @@ Q_SIGNALS:
     void commentChanged();
     void colorChanged();
     void seenChanged();
+    void logUpdated();
 
 public:
     DeviceToolBLEx(const QString &deviceAddr, const QString &deviceName,
@@ -270,6 +289,15 @@ public:
     bool isCached() const { return m_isCached; }
     bool isBluetoothClassic() const { return m_isClassic; }
     bool isBluetoothLowEnergy() const { return m_isBLE; }
+
+    // Logging
+    const QVariant getDeviceLog() const { return QVariant::fromValue(m_deviceLog); }
+    const QString &getDeviceLogStr() const { return m_deviceLogString; }
+    int getDeviceLogCount() const { return m_deviceLog.size(); }
+    void logEvent(const QString &logline, const int event = 0);
+
+    Q_INVOKABLE bool saveLog(const QString &filename);
+    Q_INVOKABLE void clearLog();
 
     Q_INVOKABLE void blacklist(bool blacklist);
     Q_INVOKABLE void cache(bool cache);

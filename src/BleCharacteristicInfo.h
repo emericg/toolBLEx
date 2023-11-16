@@ -35,6 +35,7 @@
 class CharacteristicInfo: public QObject
 {
     Q_OBJECT
+
     Q_PROPERTY(QString name READ getName NOTIFY characteristicChanged)
     Q_PROPERTY(QString uuid READ getUuidFull NOTIFY characteristicChanged)
     Q_PROPERTY(QString uuid_full READ getUuidFull NOTIFY characteristicChanged)

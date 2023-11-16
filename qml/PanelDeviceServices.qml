@@ -146,7 +146,7 @@ Item {
             id: cacheButton
 
             fullColor: true
-            primaryColor: Theme.colorLightGrey
+            primaryColor: Theme.colorGrey
 
             visible: (selectedDevice &&
                       selectedDevice.hasServices &&

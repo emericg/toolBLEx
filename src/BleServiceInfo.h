@@ -30,6 +30,8 @@
 #include <QLowEnergyService>
 #include <QJsonObject>
 
+class DeviceToolBLEx;
+
 /* ****************************************************************************/
 
 class ServiceInfo: public QObject
@@ -44,6 +46,8 @@ class ServiceInfo: public QObject
     Q_PROPERTY(QString serviceType READ getType NOTIFY serviceUpdated)
     Q_PROPERTY(QStringList serviceTypeList READ getTypeList NOTIFY serviceUpdated)
     Q_PROPERTY(QVariant characteristicList READ getCharacteristics NOTIFY characteristicsUpdated)
+
+    DeviceToolBLEx *m_device = nullptr;
 
     bool m_scan_complete = false;
 

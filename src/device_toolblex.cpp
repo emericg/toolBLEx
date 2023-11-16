@@ -425,6 +425,7 @@ void DeviceToolBLEx::cache(bool c)
 void DeviceToolBLEx::actionScanWithValues()
 {
     qDebug() << "DeviceToolBLEx::actionScanWithValues()" << getAddress() << getName();
+    logEvent("User asked for connection (scan with values)", LogEvent::USER);
 
     if (!isBusy())
     {
@@ -437,6 +438,7 @@ void DeviceToolBLEx::actionScanWithValues()
 void DeviceToolBLEx::actionScanWithoutValues()
 {
     qDebug() << "DeviceToolBLEx::actionScanWithoutValues()" << getAddress() << getName();
+    logEvent("User asked for connection (scan without values)", LogEvent::USER);
 
     if (!isBusy())
     {
@@ -620,7 +622,7 @@ QStringList DeviceToolBLEx::askForData_strlst(const QString &value, const QStrin
 
 void DeviceToolBLEx::deviceConnected()
 {
-    qDebug() << "DeviceToolBLEx::deviceConnected(" << m_deviceAddress << ")";
+    logEvent("Device connected", LogEvent::CONN);
 
     if (m_ble_action == DeviceUtils::ACTION_SCAN ||
         m_ble_action == DeviceUtils::ACTION_SCAN_WITH_VALUES ||
@@ -633,11 +635,53 @@ void DeviceToolBLEx::deviceConnected()
     Device::deviceConnected();
 }
 
+void DeviceToolBLEx::deviceDisconnected()
+{
+    logEvent("Device disconnected", LogEvent::CONN);
+
+    Device::deviceDisconnected();
+}
+
+void DeviceToolBLEx::deviceErrored(QLowEnergyController::Error error)
+{
+    if (error <= QLowEnergyController::NoError) return;
+
+    QString errorstr = "UnknownError";
+    if (error == QLowEnergyController::UnknownRemoteDeviceError) errorstr = "UnknownRemoteDeviceError";
+    else if (error == QLowEnergyController::NetworkError) errorstr = "NetworkError";
+    else if (error == QLowEnergyController::InvalidBluetoothAdapterError) errorstr = "InvalidBluetoothAdapterError";
+    else if (error == QLowEnergyController::ConnectionError) errorstr = "ConnectionError";
+    else if (error == QLowEnergyController::AdvertisingError) errorstr = "AdvertisingError";
+    else if (error == QLowEnergyController::RemoteHostClosedError) errorstr = "RemoteHostClosedError";
+    else if (error == QLowEnergyController::AuthorizationError) errorstr = "AuthorizationError";
+    else if (error == QLowEnergyController::MissingPermissionsError) errorstr = "MissingPermissionsError";
+    else if (error == QLowEnergyController::RssiReadError) errorstr = "RssiReadError";
+    logEvent("Device errored: " + errorstr, LogEvent::ERROR);
+
+    Device::deviceErrored(error);
+}
+
+void DeviceToolBLEx::deviceStateChanged(QLowEnergyController::ControllerState state)
+{
+    QString statestr = "UnconnectedState";
+    if (state == QLowEnergyController::ConnectingState) statestr = "ConnectingState";
+    else if (state == QLowEnergyController::ConnectedState) statestr = "ConnectedState";
+    else if (state == QLowEnergyController::DiscoveringState) statestr = "DiscoveringState";
+    else if (state == QLowEnergyController::DiscoveredState) statestr = "DiscoveredState";
+    else if (state == QLowEnergyController::ClosingState) statestr = "ClosingState";
+    else if (state == QLowEnergyController::AdvertisingState) statestr = "AdvertisingState";
+    logEvent("Device state changed: " + statestr, LogEvent::STATE);
+
+    Device::deviceStateChanged(state);
+}
+
 /* ************************************************************************** */
 
 void DeviceToolBLEx::addLowEnergyService(const QBluetoothUuid &uuid)
 {
-    qDebug() << "DeviceToolbox::addLowEnergyService(" << uuid.toString() << ")";
+    qDebug() << "DeviceToolBLEx::addLowEnergyService(" << uuid.toString() << ")";
+
+    logEvent("Service found: " + uuid.toString(), LogEvent::STATE);
 
     QLowEnergyService *service = m_bleController->createServiceObject(uuid);
     if (!service)
@@ -664,11 +708,16 @@ void DeviceToolBLEx::addLowEnergyService(const QBluetoothUuid &uuid)
     Q_EMIT servicesChanged();
 }
 
-/* ************************************************************************** */
+void DeviceToolBLEx::serviceDetailsDiscovered(QLowEnergyService::ServiceState)
+{
+    //qDebug() << "Device::serviceDetailsDiscovered(" << getAddress() << ")";
+}
 
 void DeviceToolBLEx::serviceScanDone()
 {
-    qDebug() << "DeviceToolbox::serviceScanDone(" << m_deviceAddress << ")";
+    qDebug() << "DeviceToolBLEx::serviceScanDone(" << m_deviceAddress << ")";
+
+    logEvent("Service scan is done", LogEvent::CONN);
 
     if (m_services_scanmode == 2) // "incomplete scan"
     {
@@ -686,6 +735,23 @@ void DeviceToolBLEx::serviceScanDone()
 }
 
 /* ************************************************************************** */
+
+void DeviceToolBLEx::bleWriteDone(const QLowEnergyCharacteristic &, const QByteArray &)
+{
+    //qDebug() << "Device::bleWriteDone(" << m_deviceAddress << ")";
+}
+
+void DeviceToolBLEx::bleReadDone(const QLowEnergyCharacteristic &, const QByteArray &)
+{
+    //qDebug() << "Device::bleReadDone(" << m_deviceAddress << ")";
+}
+
+void DeviceToolBLEx::bleReadNotify(const QLowEnergyCharacteristic &, const QByteArray &)
+{
+    //qDebug() << "Device::bleReadNotify(" << m_deviceAddress << ")";
+}
+
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
@@ -694,12 +760,7 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
                                                 const QByteArray &data)
 {
     bool hasNewData = false;
-
     Q_UNUSED(uuid)
-
-    // mode:
-    // DeviceUtils::BLE_ADV_MANUFACTURERDATA
-    // DeviceUtils::BLE_ADV_SERVICEDATA
 
     if (mode == DeviceUtils::BLE_ADV_MANUFACTURERDATA)
     {
@@ -708,6 +769,9 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
             hasNewData = m_mfd.first()->compare(data);
             if (!hasNewData) return false;
         }
+
+        logEvent("New manufacturer data: ID 0x" + QString::number(id, 16).rightJustified(4, '0') +
+                 " / " + QString::number(data.size()) + " bytes / 0x" + data.toHex(), LogEvent::ADV);
 
         AdvertisementData *a = new AdvertisementData(mode, id, data, this);
         m_advertisementData.push_front(a); // always add it to the unfiltered list
@@ -753,6 +817,9 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
             hasNewData = m_svd.first()->compare(data);
             if (!hasNewData) return false;
         }
+
+        logEvent("New service data: " + uuid.toString() + " / " + QString::number(data.size()) +
+                 " bytes / 0x" + data.toHex(), LogEvent::ADV);
 
         AdvertisementData *a = new AdvertisementData(mode, id, data, this);
         m_advertisementData.push_front(a); // always add it to the unfiltered list
@@ -1221,7 +1288,7 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &exportPath,
 
     if (exportDirectory.exists())
     {
-        qDebug() << "DeviceToolBLEx::getExportDirectory(" << exportFilePath << ")";
+        qDebug() << "DeviceToolBLEx::exportDeviceInfo(" << exportFilePath << ")";
 
         // Open file and save content
         QFile efile(exportFilePath);
@@ -1237,6 +1304,77 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &exportPath,
     }
 
     return status;
+}
+
+/* ************************************************************************** */
+
+void DeviceToolBLEx::logEvent(const QString &logline, const int event)
+{
+    if (!logline.isEmpty())
+    {
+        // log format
+        LogEvent *log = new LogEvent(QDateTime::currentDateTime(), event, logline, this);
+        if (log)
+        {
+            m_deviceLog.push_back(log);
+            Q_EMIT logUpdated();
+        }
+
+        // text format
+        m_deviceLogString += QDateTime::currentDateTime().toString("[hh:mm:ss.zzz] ") + logline + QChar('\n');
+    }
+}
+
+bool DeviceToolBLEx::saveLog(const QString &filename)
+{
+    bool status = false;
+
+    QString exportFilePath;
+
+    if (filename.isEmpty())
+    {
+        // Generate a file path
+        exportFilePath = getExportDirectory();
+        exportFilePath += "/" + getName_display() + "-log.txt";
+    }
+    else
+    {
+        // Use file path from UI
+        exportFilePath = filename;
+    }
+
+    QDir exportDirectory = QFileInfo(exportFilePath).dir();
+    if (!exportDirectory.exists())
+    {
+        exportDirectory.mkpath(exportDirectory.path());
+    }
+
+    if (exportDirectory.exists())
+    {
+        qDebug() << "DeviceToolBLEx::saveLog(" << exportFilePath << ")";
+
+        // Open file and save content
+        QFile efile(exportFilePath);
+        if (efile.open(QFile::WriteOnly | QIODevice::Text))
+        {
+            QTextStream eout(&efile);
+            eout.setEncoding(QStringConverter::Utf8);
+            eout << m_deviceLogString;
+
+            status = true;
+            efile.close();
+        }
+    }
+
+    return status;
+}
+
+void DeviceToolBLEx::clearLog()
+{
+    qDeleteAll(m_deviceLog);
+    m_deviceLog.clear();
+
+    Q_EMIT logUpdated();
 }
 
 /* ************************************************************************** */
