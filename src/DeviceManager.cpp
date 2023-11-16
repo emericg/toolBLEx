@@ -200,7 +200,7 @@ bool DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
 
 #if defined(Q_OS_IOS)
     checkBluetoothIOS();
-    return;
+    return false;
 #endif
 
     bool btA_was = m_bleAdapter;

@@ -24,7 +24,15 @@ Item {
     Rectangle { // background
         anchors.fill: parent
         color: {
-            if (boxDevice.selected) return Theme.colorLVselected
+            if (boxDevice.selected && !boxDevice.connected) {
+                return Theme.colorLVselected
+            }
+            if (boxDevice.selected && boxDevice.connected) {
+                if (Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT)
+                    return Theme.colorMaterialTeal
+                if (Theme.currentTheme === Theme.THEME_DESKTOP_DARK)
+                    return Theme.colorMaterialPurple
+            }
             if (boxDevice.connected) {
                 if (Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT)
                     return Qt.lighter(Theme.colorGreen, 1.1)

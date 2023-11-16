@@ -76,6 +76,13 @@ Item {
                 color: Theme.colorComponentBackground
             }
 
+            Connections {
+                target: selectedDevice
+                function onConnected() { menuInfo.blink() }
+                function onAdvertisementChanged() { menuAdv.blink() }
+                function onServicesChanged() { menuSrv.blink() }
+            }
+
             Row {
                 id: contentRow
                 height: parent.height
@@ -83,6 +90,7 @@ Item {
                 spacing: Theme.componentBorderWidth
 
                 SelectorMenuThemedItemBadge {
+                    id: menuInfo
                     index: 1
                     highlighted: (deviceMenu.currentSelection === index)
 
@@ -93,6 +101,7 @@ Item {
                     sourceSize: 0
                 }
                 SelectorMenuThemedItemBadge {
+                    id: menuAdv
                     index: 2
                     highlighted: (deviceMenu.currentSelection === index)
 
@@ -102,6 +111,7 @@ Item {
                     sourceSize: 0
                 }
                 SelectorMenuThemedItemBadge {
+                    id: menuSrv
                     index: 3
                     highlighted: (deviceMenu.currentSelection === index)
 

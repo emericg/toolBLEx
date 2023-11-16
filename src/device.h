@@ -86,6 +86,14 @@ class Device: public QObject
     bool isSelected() const { return selected; }
     void setSelected(bool value) { selected = value; Q_EMIT selectionUpdated(); }
 
+    // helpers
+    void setModel(const QString &model);
+    void setModelID(const QString &modelID);
+    void setBattery(const int battery);
+    void setBatteryFirmware(const int battery, const QString &firmware);
+    void setFirmware(const QString &firmware);
+    bool isFirmwareUpToDate() const { return m_firmware_uptodate; }
+
 Q_SIGNALS:
     void connected();
     void disconnected();
@@ -174,9 +182,10 @@ protected:
     int m_minor = 0;
     int m_service = 0;
 
+protected slots:
     virtual void deviceConnected();
     virtual void deviceDisconnected();
-    virtual void deviceErrored(QLowEnergyController::Error);
+    virtual void deviceErrored(QLowEnergyController::Error error);
     virtual void deviceStateChanged(QLowEnergyController::ControllerState state);
     virtual void deviceMtuChanged(int mtu);
 
@@ -193,14 +202,6 @@ protected:
     virtual void actionTimedout();
 
     virtual bool getSqlDeviceInfos();
-
-    // helpers
-    void setModel(const QString &model);
-    void setModelID(const QString &modelID);
-    void setBattery(const int battery);
-    void setBatteryFirmware(const int battery, const QString &firmware);
-    void setFirmware(const QString &firmware);
-    bool isFirmwareUpToDate() const { return m_firmware_uptodate; }
 
 public:
     Device(const QString &deviceAddr, const QString &deviceName, QObject *parent = nullptr);

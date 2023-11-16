@@ -139,8 +139,7 @@ public:
 
     QStringList getDataHex_list() const {
         QStringList out;
-        for (int i = 0; i < advData.size(); i++)
-        {
+        for (int i = 0; i < advData.size(); i++) {
             QByteArray duo; duo += advData.at(i);
             out += duo.toHex();
         }
@@ -148,8 +147,7 @@ public:
     }
     QStringList getDataAscii_list() const {
         QStringList out;
-        for (int i = 0; i < advData.size(); i++)
-        {
+        for (int i = 0; i < advData.size(); i++) {
             QByteArray duo; duo += advData.at(i);
             out += QString::fromStdString(duo.toStdString());
         }

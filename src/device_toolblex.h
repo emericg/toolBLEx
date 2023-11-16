@@ -155,7 +155,7 @@ class DeviceToolBLEx: public Device
 
     QList <QObject *> m_services;
 
-    //func
+    // func
 
     QVariant getLastServiceData() const { if (m_svd.empty()) return QVariant(); return QVariant::fromValue(m_svd.first()); }
     QVariant getLastManufacturerData() const { if (m_mfd.empty()) return QVariant(); return QVariant::fromValue(m_mfd.first()); }

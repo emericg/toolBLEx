@@ -28,6 +28,8 @@ T.Button {
     property string colorContentHighlight: Theme.colorComponentContent
     property string colorBackgroundHighlight: Theme.colorComponentDown
 
+    function blink() { blinkAnim.start() }
+
     ////////////////
 
     background: Rectangle {
@@ -83,6 +85,25 @@ T.Button {
             visible: control.badgeText
             color: control.badgeColor
             opacity: control.highlighted ? 1 : 0.6
+
+            Rectangle {
+                id: blinkRect
+                anchors.centerIn: parent
+                z: -1
+                width: 0
+                height: width
+                radius: width
+                color: control.badgeColor
+
+                ParallelAnimation {
+                    id: blinkAnim
+                    loops: 1
+                    running: false
+                    alwaysRunToEnd: false
+                    NumberAnimation { target: blinkRect; property: "width"; from: 12; to: 40; duration: 666; }
+                    NumberAnimation { target: blinkRect; property: "opacity"; from: 0.85; to: 0; duration: 666; }
+                }
+            }
 
             Text {
                 anchors.fill: parent
