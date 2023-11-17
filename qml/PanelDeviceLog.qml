@@ -17,6 +17,33 @@ Flickable {
 
     property string logFormat: "adv"
 
+    Rectangle {
+        width: detailView.ww
+        height: log_nodata.height + 32
+        radius: 4
+
+        clip: false
+        color: Theme.colorBox
+        border.width: 2
+        border.color: Theme.colorBoxBorder
+
+        visible: (selectedDevice && selectedDevice.deviceLogCount <= 0)
+
+        Text {
+            id: log_nodata
+            anchors.left: parent.left
+            anchors.leftMargin: 16
+            anchors.right: parent.right
+            anchors.rightMargin: 16
+            anchors.verticalCenter: parent.verticalCenter
+
+            text: qsTr("No event logged yet...")
+            textFormat: Text.PlainText
+            font.pixelSize: Theme.fontSizeContent
+            color: Theme.colorText
+        }
+    }
+
     Loader {
         anchors.fill: parent
         anchors.margins: -16
@@ -110,6 +137,7 @@ Flickable {
             TextArea {
                 text: (selectedDevice && selectedDevice.deviceLogStr)
                 textFormat: Text.PlainText
+                color: Theme.colorText
                 wrapMode: Text.WrapAnywhere
                 readOnly: true
             }
