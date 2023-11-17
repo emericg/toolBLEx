@@ -442,6 +442,50 @@ Loader {
                             Text {
                                 anchors.left: parent.left
                                 anchors.leftMargin: 20
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                text: qsTr("Preferred screen")
+                                textFormat: Text.PlainText
+                                font.pixelSize: Theme.fontSizeContent
+                                font.bold: false
+                                color: Theme.colorText
+                                wrapMode: Text.WordWrap
+                                verticalAlignment: Text.AlignVCenter
+                            }
+
+                            SelectorMenu {
+                                height: 32
+                                anchors.right: parent.right
+                                anchors.rightMargin: 16
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                ListModel {
+                                    id: lmScreens1
+                                    ListElement { idx: 0; txt: qsTr("scanner"); src: ""; sz: 16; }
+                                    ListElement { idx: 1; txt: qsTr("advertiser"); src: ""; sz: 16; }
+                                    ListElement { idx: 2; txt: qsTr("freq. analyser"); src: ""; sz: 16; }
+                                }
+                                ListModel {
+                                    id: lmScreens2
+                                    ListElement { idx: 0; txt: qsTr("scanner"); src: ""; sz: 16; }
+                                    ListElement { idx: 1; txt: qsTr("advertiser"); src: ""; sz: 16; }
+                                }
+                                model: ubertooth.toolsAvailable ? lmScreens1 : lmScreens2
+
+                                currentSelection: settingsManager.preferredScreen
+                                onMenuSelected: (index) => { settingsManager.preferredScreen = index }
+                            }
+                        }
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 48
+                            color: Theme.colorForeground
+
+                            Text {
+                                anchors.left: parent.left
+                                anchors.leftMargin: 20
                                 anchors.right: parent.right
                                 anchors.rightMargin: 64
                                 anchors.verticalCenter: parent.verticalCenter

@@ -66,8 +66,10 @@ class SettingsManager: public QObject
     Q_PROPERTY(int scanviewOrientation READ getScanviewOrientation WRITE setScanviewOrientation NOTIFY scanviewChanged)
     Q_PROPERTY(QByteArray scanviewSize READ getScanviewSize WRITE setScanviewSize NOTIFY scanviewChanged)
 
-    Q_PROPERTY(QString preferedAdapter_scan READ getPreferedAdapter_scan WRITE setPreferedAdapter_scan NOTIFY preferedAdapterScanChanged)
-    Q_PROPERTY(QString preferedAdapter_adv READ getPreferedAdapter_adv WRITE setPreferedAdapter_adv NOTIFY preferedAdapterAdvChanged)
+    Q_PROPERTY(int preferredScreen READ getPreferredScreen WRITE setPreferredScreen NOTIFY preferredScreenChanged)
+
+    Q_PROPERTY(QString preferredAdapter_scan READ getPreferredAdapter_scan WRITE setPreferredAdapter_scan NOTIFY preferredAdapterScanChanged)
+    Q_PROPERTY(QString preferredAdapter_adv READ getPreferredAdapter_adv WRITE setPreferredAdapter_adv NOTIFY preferredAdapterAdvChanged)
 
     Q_PROPERTY(QString ubertooth_path READ getUbertoothPath WRITE setUbertoothPath NOTIFY ubertoothPathChanged)
     Q_PROPERTY(int ubertooth_freqMin READ getUbertoothFreqMin WRITE setUbertoothFreqMin NOTIFY ubertoothFreqChanged)
@@ -89,7 +91,7 @@ class SettingsManager: public QObject
     QString m_appLanguage = "auto";
 
     // Application specific
-    int m_scanTimeout = 5;
+    int m_scanTimeout = 0;
     int m_scanRssiInterval = 1000;
     bool m_scanAuto = true;
     bool m_scanPause = false;
@@ -103,8 +105,10 @@ class SettingsManager: public QObject
     int m_scanviewOrientation = Qt::Horizontal;
     QByteArray m_scanviewSize;
 
-    QString m_preferedAdapter_scan;
-    QString m_preferedAdapter_adv;
+    int m_preferredScreen = 0;
+
+    QString m_preferredAdapter_scan;
+    QString m_preferredAdapter_adv;
 
     QString m_ubertooth_path = "ubertooth-specan";
     int m_ubertooth_freqMin = 2400;
@@ -135,8 +139,9 @@ Q_SIGNALS:
     void scanRssiIntervalChanged();
     void scanShowChanged();
     void scanviewChanged();
-    void preferedAdapterScanChanged();
-    void preferedAdapterAdvChanged();
+    void preferredScreenChanged();
+    void preferredAdapterScanChanged();
+    void preferredAdapterAdvChanged();
     void ubertoothPathChanged();
     void ubertoothFreqChanged();
 
@@ -202,10 +207,13 @@ public:
     QByteArray getScanviewSize() const { return m_scanviewSize; }
     void setScanviewSize(const QByteArray &value);
 
-    QString getPreferedAdapter_scan() const { return m_preferedAdapter_scan; }
-    void setPreferedAdapter_scan(const QString &value);
-    QString getPreferedAdapter_adv() const { return m_preferedAdapter_adv; }
-    void setPreferedAdapter_adv(const QString &value);
+    int getPreferredScreen() const { return m_preferredScreen; }
+    void setPreferredScreen(const int value);
+
+    QString getPreferredAdapter_scan() const { return m_preferredAdapter_scan; }
+    void setPreferredAdapter_scan(const QString &value);
+    QString getPreferredAdapter_adv() const { return m_preferredAdapter_adv; }
+    void setPreferredAdapter_adv(const QString &value);
 
     QString getUbertoothPath() const { return m_ubertooth_path; }
     void setUbertoothPath(const QString &value);

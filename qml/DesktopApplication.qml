@@ -59,11 +59,16 @@ ApplicationWindow {
     // Events handling /////////////////////////////////////////////////////////
 
     Component.onCompleted: {
-        // Load scanner
-        screenScanner.loadScreen()
-
-        // Start scanning?
-        //if (settingsManager.scanAuto) deviceManager.scanDevices_start()
+        // Load preferred screen
+        if (settingsManager.preferredScreen === 0) {
+            screenScanner.loadScreen()
+        } else if (settingsManager.preferredScreen === 1) {
+            screenAdvertiser.loadScreen()
+        } else if (settingsManager.preferredScreen === 2 && ubertooth.toolsAvailable) {
+            screenUbertooth.loadScreen()
+        } else {
+            screenScanner.loadScreen() // default to scanner
+        }
     }
 
     Connections {
@@ -77,7 +82,7 @@ ApplicationWindow {
 
     Connections {
         target: menubarManager
-        function onSensorsClicked() { appContent.state = "Scanner" }
+        function onSensorsClicked() { screenScanner.loadScreen() }
         function onAboutClicked() { screenSettings.loadScreen() }
     }
 
@@ -123,12 +128,12 @@ ApplicationWindow {
         if (visibility === Window.AutomaticVisibility ||
             visibility === Window.Minimized || visibility === Window.Maximized ||
             visibility === Window.Windowed || visibility === Window.FullScreen) {
-             //
-         }
+            //
+        }
 
-         if (visibility === Window.Hidden) {
-             //deviceManager.disconnectDevices()
-         }
+        if (visibility === Window.Hidden) {
+            //deviceManager.disconnectDevices()
+        }
     }
 
     onClosing: (close) => {
@@ -166,7 +171,7 @@ ApplicationWindow {
                 appContent.previousStates.pop()
                 appContent.state = appContent.previousStates[appContent.previousStates.length-1]
             } else {
-                appContent.state = "Scanner"
+                screenScanner.loadScreen()
             }
         }
     }

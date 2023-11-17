@@ -134,10 +134,13 @@ bool SettingsManager::readSettings()
         if (settings.contains("settings/scanSplitviewSize"))
             m_scanviewSize = settings.value("settings/scanSplitviewSize").toByteArray();
 
-        if (settings.contains("settings/preferedAdapter_scan"))
-            m_preferedAdapter_scan = settings.value("settings/preferedAdapter_scan").toString();
-        if (settings.contains("settings/preferedAdapter_adv"))
-            m_preferedAdapter_adv = settings.value("settings/preferedAdapter_adv").toString();
+        if (settings.contains("settings/preferredScreen"))
+            m_preferredScreen = settings.value("settings/preferredScreen").toInt();
+
+        if (settings.contains("settings/preferredAdapter_scan"))
+            m_preferredAdapter_scan = settings.value("settings/preferredAdapter_scan").toString();
+        if (settings.contains("settings/preferredAdapter_adv"))
+            m_preferredAdapter_adv = settings.value("settings/preferredAdapter_adv").toString();
 
         if (settings.contains("settings/ubertooth_path"))
             m_ubertooth_path = settings.value("settings/ubertooth_path").toString();
@@ -185,8 +188,10 @@ bool SettingsManager::writeSettings()
         settings.setValue("settings/scanSplitviewOrientation", m_scanviewOrientation);
         settings.setValue("settings/scanSplitviewSize", m_scanviewSize);
 
-        settings.setValue("settings/preferedAdapter_scan", m_preferedAdapter_scan);
-        settings.setValue("settings/preferedAdapter_adv", m_preferedAdapter_adv);
+        settings.setValue("settings/preferredScreen", m_preferredScreen);
+
+        settings.setValue("settings/preferredAdapter_scan", m_preferredAdapter_scan);
+        settings.setValue("settings/preferredAdapter_adv", m_preferredAdapter_adv);
 
         settings.setValue("settings/ubertooth_path", m_ubertooth_path);
         settings.setValue("settings/ubertooth_freqMin", m_ubertooth_freqMin);
@@ -412,23 +417,35 @@ void SettingsManager::setScanviewSize(const QByteArray &value)
 
 /* ************************************************************************** */
 
-void SettingsManager::setPreferedAdapter_scan(const QString &value)
+void SettingsManager::setPreferredScreen(const int value)
 {
-    if (m_preferedAdapter_scan != value)
+    if (m_preferredScreen != value)
     {
-        m_preferedAdapter_scan = value;
+        m_preferredScreen = value;
         writeSettings();
-        Q_EMIT preferedAdapterScanChanged();
+        Q_EMIT preferredScreenChanged();
     }
 }
 
-void SettingsManager::setPreferedAdapter_adv(const QString &value)
+/* ************************************************************************** */
+
+void SettingsManager::setPreferredAdapter_scan(const QString &value)
 {
-    if (m_preferedAdapter_adv != value)
+    if (m_preferredAdapter_scan != value)
     {
-        m_preferedAdapter_adv = value;
+        m_preferredAdapter_scan = value;
         writeSettings();
-        Q_EMIT preferedAdapterAdvChanged();
+        Q_EMIT preferredAdapterScanChanged();
+    }
+}
+
+void SettingsManager::setPreferredAdapter_adv(const QString &value)
+{
+    if (m_preferredAdapter_adv != value)
+    {
+        m_preferredAdapter_adv = value;
+        writeSettings();
+        Q_EMIT preferredAdapterAdvChanged();
     }
 }
 

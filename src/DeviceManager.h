@@ -222,6 +222,9 @@ public:
     // Scanning management
     static int getLastRun();
 
+    Q_INVOKABLE void advertise_start();
+    Q_INVOKABLE void advertise_stop();
+
     Q_INVOKABLE void scanDevices_start();
     Q_INVOKABLE void scanDevices_stop();
 

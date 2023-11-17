@@ -663,6 +663,19 @@ void DeviceManager::deviceDiscoveryStopped()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
+void DeviceManager::advertise_start()
+{
+    //qDebug() << "DeviceManager::advertise_start()";
+}
+
+void DeviceManager::advertise_stop()
+{
+    //qDebug() << "DeviceManager::advertise_stop()";
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
 void DeviceManager::scanDevices_start()
 {
     //qDebug() << "DeviceManager::scanDevices_start()";
