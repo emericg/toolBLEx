@@ -69,7 +69,7 @@ DeviceToolBLEx::DeviceToolBLEx(const QBluetoothDeviceInfo &d, QObject *parent):
 
     addAdvertisementEntry(d.rssi(), !d.manufacturerIds().empty(), !d.serviceIds().empty());
 
-    m_isCached = (d.isCached() || d.rssi() == 0);
+    m_isCached = (d.rssi() == 0);
     m_hasServiceCache = checkServiceCache();
     m_firstSeen = QDateTime::currentDateTime();
     m_bluetoothCoreConfiguration = d.coreConfigurations();

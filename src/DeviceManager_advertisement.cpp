@@ -74,7 +74,7 @@ void DeviceManager::updateBleDevice(const QBluetoothDeviceInfo &info,
             dd->setName(info.name());
             dd->setRssi(info.rssi());
             dd->setLastSeen(QDateTime::currentDateTime());
-            dd->setCached(info.isCached() || info.rssi() >= 0);
+            dd->setCached(info.rssi() >= 0);
             dd->setCoreConfiguration(info.coreConfigurations());
             dd->setDeviceClass(info.majorDeviceClass(), info.minorDeviceClass(), info.serviceClasses());
             dd->setAdvertisedServices(info.serviceUuids());

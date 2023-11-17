@@ -858,6 +858,7 @@ void DeviceManager::addBleDevice(const QBluetoothDeviceInfo &info)
         if (info.isCached() || info.rssi() == 0) d->setCached(true);
         if (info.name().isEmpty()) d->setBeacon(true);
         if (info.name().replace('-', ':') == d->getAddress()) d->setBeacon(true);
+        if (info.name() == "Bluetooth " + d->getAddress().toLower()) d->setBeacon(true);
         if (m_devices_blacklist.contains(d->getAddress())) d->setBlacklisted(true);
 
         // Get a random color
