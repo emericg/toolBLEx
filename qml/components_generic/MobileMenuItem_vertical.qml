@@ -13,8 +13,8 @@ T.Button {
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              implicitContentHeight + topPadding + bottomPadding)
 
-    leftPadding: 12
-    rightPadding: 12
+    leftPadding: 0
+    rightPadding: 0
 
     focusPolicy: Qt.NoFocus
 
@@ -28,18 +28,19 @@ T.Button {
 
     ////////////////
 
-    background: Item {}
+    background: Item {
+        implicitWidth: Theme.componentHeight
+        implicitHeight: Theme.componentHeight
+    }
 
     ////////////////
 
     contentItem: ColumnLayout {
-        spacing: 0
+        spacing: -2
 
         IconSvg { // contentImage
-            width: control.sourceSize
-            height: control.sourceSize
-            Layout.maximumWidth: control.sourceSize
-            Layout.maximumHeight: control.sourceSize
+            Layout.preferredWidth: control.sourceSize
+            Layout.preferredHeight: control.sourceSize
             Layout.alignment: Qt.AlignHCenter
 
             visible: source.toString().length
@@ -47,23 +48,38 @@ T.Button {
             source: control.source
             opacity: control.enabled ? 1.0 : 0.33
             color: control.highlighted ? control.colorHighlight : control.colorContent
-            Behavior on color { ColorAnimation { duration: 133 } }
+            Behavior on color { ColorAnimation { duration: 233 } }
+
+            Rectangle { // backgroundIndicator
+                anchors.centerIn: parent
+                z: -1
+
+                width: 60
+                height: 32
+                radius: height
+                color: control.colorHighlight
+
+                opacity: control.highlighted ? 0.2 : 0
+                Behavior on opacity { OpacityAnimator { duration: 233 } }
+            }
         }
 
         Text { // contentText
-            width: control.width
+            Layout.preferredWidth: control.width
             Layout.alignment: Qt.AlignHCenter
 
             visible: text
 
             text: control.text
             textFormat: Text.PlainText
+            horizontalAlignment: Text.AlignHCenter
             font.pixelSize: Theme.fontSizeContentVerySmall
-            font.bold: false
+            font.bold: true
+
             color: control.highlighted ? control.colorHighlight : control.colorContent
-            Behavior on color { ColorAnimation { duration: 133 } }
+            Behavior on color { ColorAnimation { duration: 233 } }
         }
     }
 
-    ////////
+    ////////////////
 }

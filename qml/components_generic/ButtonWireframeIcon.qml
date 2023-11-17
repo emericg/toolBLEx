@@ -44,8 +44,8 @@ T.Button {
     MouseArea {
         id: mousearea
         anchors.fill: parent
-        enabled: control.hoverAnimation
 
+        enabled: control.hoverAnimation
         hoverEnabled: control.hoverAnimation
 
         onClicked: control.clicked()
@@ -122,7 +122,6 @@ T.Button {
         layoutDirection: control.layoutDirection
 
         IconSvg {
-            source: control.source
             width: control.sourceSize
             height: control.sourceSize
 
@@ -131,9 +130,11 @@ T.Button {
             Layout.maximumHeight: control.sourceSize
             Layout.alignment: Qt.AlignVCenter
 
-            opacity: enabled ? (control.down && !control.hoverAnimation ? 0.8 : 1.0) : 0.66
+            source: control.source
             color: control.fullColor ? control.fulltextColor : control.primaryColor
+            opacity: enabled ? (control.down && !control.hoverAnimation ? 0.8 : 1.0) : 0.66
         }
+
         Text {
             text: control.text
             textFormat: Text.PlainText
@@ -147,8 +148,8 @@ T.Button {
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
 
-            opacity: enabled ? (control.down && !control.hoverAnimation ? 0.8 : 1.0) : 0.66
             color: control.fullColor ? control.fulltextColor : control.primaryColor
+            opacity: enabled ? (control.down && !control.hoverAnimation ? 0.8 : 1.0) : 0.66
         }
     }
 

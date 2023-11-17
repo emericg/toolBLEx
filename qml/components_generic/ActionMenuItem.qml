@@ -27,7 +27,6 @@ T.Button {
 
     // settings
     property int index
-    //property string text
     property url source
     property int sourceSize: 20
     property int layoutDirection: Qt.RightToLeft

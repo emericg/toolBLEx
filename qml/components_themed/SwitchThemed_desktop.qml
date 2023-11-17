@@ -17,14 +17,17 @@ T.Switch {
 
     font.pixelSize: Theme.componentFontSize
 
+    property color colorText: Theme.colorText
+    property color colorSubText: Theme.colorSubText
+
     ////////////////
 
     indicator: Rectangle {
         implicitWidth: 48
         implicitHeight: Theme.componentHeight
 
-        x: control.leftPadding
-        y: (parent.height / 2) - (height / 2)
+        x: control.text ? (control.mirrored ? control.width - width - control.rightPadding : control.leftPadding) : control.leftPadding + (control.availableWidth - width) / 2
+        y: control.topPadding + (control.availableHeight - height) / 2
         width: 48
         height: (width / 2)
         radius: (width / 2)
@@ -57,15 +60,15 @@ T.Switch {
     }
 
     contentItem: Text {
-        leftPadding: control.indicator && !control.mirrored ? control.indicator.width + control.spacing : 0
-        rightPadding: control.indicator && control.mirrored ? control.indicator.width + control.spacing : 0
+        leftPadding: !control.mirrored ? control.indicator.width + control.spacing : 0
+        rightPadding: control.mirrored ? control.indicator.width + control.spacing : 0
 
         opacity: enabled ? 1.0 : 0.33
 
         text: control.text
         textFormat: Text.PlainText
         font: control.font
-        color: control.checked ? Theme.colorText : Theme.colorSubText
+        color: control.checked ? control.colorText : control.colorSubText
         elide: Text.ElideRight
         verticalAlignment: Text.AlignVCenter
     }

@@ -18,6 +18,8 @@ T.PageIndicator {
     count: 1
     currentIndex: 1
 
+    property color color: Theme.colorHeaderContent
+
     ////////////////
 
     delegate: Rectangle {
@@ -25,7 +27,7 @@ T.PageIndicator {
         implicitHeight: 12
         radius: (width / 2)
 
-        color: Theme.colorHeaderContent
+        color: control.color
         opacity: (index === control.currentIndex) ? (0.95) : (control.pressed ? 0.7 : 0.45)
 
         required property int index

@@ -13,7 +13,6 @@ T.Button {
 
     focusPolicy: Qt.NoFocus
 
-    //property string text
     property int textSize: Math.round(width * 0.333)
 
     // settings

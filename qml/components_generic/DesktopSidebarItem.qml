@@ -1,28 +1,25 @@
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
+import QtQuick.Controls.impl 2.15
+import QtQuick.Templates 2.15 as T
 
 import ThemeEngine 1.0
+import "qrc:/js/UtilsNumber.js" as UtilsNumber
 
-Item {
+T.Button {
     id: control
+
     implicitWidth: 64
     implicitHeight: 64
+
+    focusPolicy: Qt.NoFocus
 
     width: parent.width // width drive the size of this element
     height: Math.max(parent.width, content.height + 24)
 
-    // actions
-    signal clicked()
-    signal pressed()
-    signal pressAndHold()
-
-    // states
-    property bool selected: false
-
-    // settings
     property url source
     property int sourceSize: 40
-    property string text
+
     property string highlightMode: "background" // available: background, indicator, circle, content
 
     // colors
@@ -30,26 +27,16 @@ Item {
     property string colorHighlight: Theme.colorSidebarHighlight
 
     // indicator
-    property url indicatorSource: "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
+    property bool indicatorVisible: false
     property bool indicatorAnimated: false
+    property color indicatorColor: "white"
+    property url indicatorSource: ""
 
     ////////////////////////////////////////////////////////////////////////////
 
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-        hoverEnabled: true
-
-        onClicked: control.clicked()
-        onPressed: control.pressed()
-        onPressAndHold: control.pressAndHold()
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    Rectangle {
-        id: background
-        anchors.centerIn: parent
+    background: Rectangle {
+        implicitWidth: 64
+        implicitHeight: 64
 
         width: (control.highlightMode === "circle") ? height : parent.width
         height: parent.height
@@ -60,21 +47,22 @@ Item {
                   control.highlightMode === "circle")
         color: control.colorHighlight
         opacity: {
-            if (control.selected) return 1
-            if (mouseArea.containsMouse) return 0.5
+            if (control.highlighted) return 1
+            if (control.hovered) return 0.5
             return 0
         }
         Behavior on opacity { OpacityAnimator { duration: 233 } }
-    }
-    Rectangle {
-        id: backgroundIndicator
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.bottom: parent.bottom
 
-        width: 6
-        visible: (control.selected && control.highlightMode === "indicator")
-        color: Theme.colorPrimary
+        Rectangle {
+            id: backgroundIndicator
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+
+            width: 6
+            visible: (control.highlighted && control.highlightMode === "indicator")
+            color: Theme.colorPrimary
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -100,7 +88,7 @@ Item {
             visible: source.toString().length
 
             source: control.source
-            color: (!control.selected && control.highlightMode === "content") ? control.colorHighlight : control.colorContent
+            color: (!control.highlighted && control.highlightMode === "content") ? control.colorHighlight : control.colorContent
             opacity: control.enabled ? 1.0 : 0.33
 
             Item {
@@ -110,7 +98,7 @@ Item {
                 anchors.rightMargin: -4
                 anchors.bottom: parent.bottom
 
-                opacity: control.indicatorAnimated ? 1 : 0
+                opacity: (control.indicatorVisible || control.indicatorAnimated) ? 1 : 0
                 Behavior on opacity { OpacityAnimator { duration: 500 } }
 
                 Rectangle {
@@ -144,7 +132,7 @@ Item {
             visible: control.text
             text: control.text
             textFormat: Text.PlainText
-            color: (!control.selected && control.highlightMode === "content") ? control.colorHighlight : control.colorContent
+            color: (!control.highlighted && control.highlightMode === "content") ? control.colorHighlight : control.colorContent
             font.pixelSize: Theme.fontSizeContentVerySmall
             font.bold: true
 
