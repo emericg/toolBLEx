@@ -463,7 +463,7 @@ Loader {
                                     id: lmScreens1
                                     ListElement { idx: 0; txt: qsTr("scanner"); src: ""; sz: 16; }
                                     ListElement { idx: 1; txt: qsTr("advertiser"); src: ""; sz: 16; }
-                                    ListElement { idx: 2; txt: qsTr("freq. analyser"); src: ""; sz: 16; }
+                                    ListElement { idx: 2; txt: qsTr("freq. analyzer"); src: ""; sz: 16; }
                                 }
                                 ListModel {
                                     id: lmScreens2
