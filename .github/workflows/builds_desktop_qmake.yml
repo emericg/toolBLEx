@@ -50,6 +50,8 @@ jobs:
       - name: Setup env
         run: |
              qmake --version
+             sudo rm /usr/lib/qt/plugins/sqldrivers/libqsqlmimer.so
+             sudo rm /usr/lib/qt6/plugins/sqldrivers/libqsqlmimer.so
 
       # Build application
       - name: Build application
@@ -63,14 +65,14 @@ jobs:
 
       # Upload archive
       - name: Upload archive
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.tar.gz
           path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.tar.gz
 
       # Upload AppImage
       - name: Upload AppImage
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.AppImage
           path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.AppImage
@@ -115,7 +117,7 @@ jobs:
 
       # Upload app ZIP
       - name: Upload app ZIP
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-macOS.zip
           path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-macOS.zip
@@ -169,14 +171,14 @@ jobs:
 
       # Upload app ZIP
       - name: Upload app ZIP
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.zip
           path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.zip
 
       # Upload NSIS installer
       - name: Upload NSIS installer
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.exe
           path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.exe
