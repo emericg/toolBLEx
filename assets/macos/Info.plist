@@ -32,5 +32,9 @@
 	<string>toolBLEx connects to Bluetooth Low Energy sensors.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>toolBLEx connects to Bluetooth Low Energy sensors.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>bluetooth-central</string>
+	</array>
 </dict>
 </plist>
