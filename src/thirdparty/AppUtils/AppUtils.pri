@@ -29,15 +29,15 @@ linux:!android {
     HEADERS += $${PWD}/utils_os_linux.h
 }
 
+# macOS utils
 macx {
-    # macOS OS utils
     SOURCES += $${PWD}/utils_os_macos.mm
     HEADERS += $${PWD}/utils_os_macos.h
     LIBS    += -framework IOKit
 
     # macOS dock click handler
-    SOURCES += $${PWD}/utils_os_macosdock.mm
-    HEADERS += $${PWD}/utils_os_macosdock.h
+    SOURCES += $${PWD}/utils_os_macos_dock.mm
+    HEADERS += $${PWD}/utils_os_macos_dock.h
     LIBS    += -framework AppKit
 }
 
@@ -62,11 +62,16 @@ android {
     }
 }
 
-# iOS OS utils
+# iOS utils
 ios {
     QT      += quick
     LIBS    += -framework UIKit
+    LIBS    += -framework UserNotifications
 
     SOURCES += $${PWD}/utils_os_ios.mm
     HEADERS += $${PWD}/utils_os_ios.h
+
+    # iOS notifications
+    SOURCES += $${PWD}/utils_os_ios_notif.mm
+    HEADERS += $${PWD}/utils_os_ios_notif.h
 }

@@ -82,8 +82,8 @@ if(APPLE AND NOT IOS)
     set(PLATFORM_SOURCES
         utils_os_macos.mm
         utils_os_macos.h
-        utils_os_macosdock.mm
-        utils_os_macosdock.h)
+        utils_os_macos_dock.mm
+        utils_os_macos_dock.h)
 
     set(PLATFORM_LIBRARIES "-framework AppKit" m)
 endif()
@@ -91,7 +91,9 @@ endif()
 if(IOS)
     set(PLATFORM_SOURCES
         utils_os_ios.mm
-        utils_os_ios.h)
+        utils_os_ios.h
+        utils_os_ios_notif.mm
+        utils_os_ios_notif.h)
 
     find_package(Qt${QT_DEFAULT_MAJOR_VERSION} REQUIRED COMPONENTS Quick)
     set(PLATFORM_LIBRARIES Qt::Quick)

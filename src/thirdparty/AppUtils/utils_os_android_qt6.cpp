@@ -189,6 +189,113 @@ bool UtilsAndroid::getPermission_camera()
 
 /* ************************************************************************** */
 
+bool UtilsAndroid::checkPermission_notification()
+{
+    QFuture<QtAndroidPrivate::PermissionResult> notif = QtAndroidPrivate::checkPermission("android.permission.POST_NOTIFICATIONS");
+    //cam.waitForFinished();
+
+    return (notif.result() == QtAndroidPrivate::PermissionResult::Authorized);
+}
+
+bool UtilsAndroid::getPermission_notification()
+{
+    bool status = true;
+
+    QFuture<QtAndroidPrivate::PermissionResult> notif = QtAndroidPrivate::checkPermission("android.permission.POST_NOTIFICATIONS");
+    //notif.waitForFinished();
+
+    if (notif.result() == QtAndroidPrivate::PermissionResult::Denied)
+    {
+        QtAndroidPrivate::requestPermission("android.permission.POST_NOTIFICATIONS");
+        notif = QtAndroidPrivate::checkPermission("android.permission.POST_NOTIFICATIONS");
+        //notif.waitForFinished();
+
+        if (notif.result() == QtAndroidPrivate::PermissionResult::Denied)
+        {
+            qWarning() << "POST_NOTIFICATIONS PERMISSION DENIED";
+            status = false;
+        }
+    }
+
+    return status;
+}
+
+/* ************************************************************************** */
+
+bool UtilsAndroid::checkPermission_bluetooth()
+{
+    bool status = false;
+
+    // (up to) Android 11 / SDK 30
+    // BLUETOOTH
+    // BLUETOOTH_ADMIN
+
+    if (getSdkVersion() <= 30)
+    {
+        QFuture<QtAndroidPrivate::PermissionResult> ble = QtAndroidPrivate::checkPermission("android.permission.BLUETOOTH");
+        //ble.waitForFinished();
+
+        QFuture<QtAndroidPrivate::PermissionResult> ble_admin = QtAndroidPrivate::checkPermission("android.permission.BLUETOOTH_ADMIN");
+        //ble_admin.waitForFinished();
+
+        status = (ble.result() == QtAndroidPrivate::PermissionResult::Authorized) &&
+                 (ble_admin.result() == QtAndroidPrivate::PermissionResult::Authorized);
+    }
+
+    // (from) Android 12+ / SDK 31
+    // BLUETOOTH_SCAN
+    // BLUETOOTH_CONNECT
+
+    if (getSdkVersion() >= 31)
+    {
+        QFuture<QtAndroidPrivate::PermissionResult> ble_scan = QtAndroidPrivate::checkPermission("android.permission.BLUETOOTH_SCAN");
+        //ble_scan.waitForFinished();
+
+        QFuture<QtAndroidPrivate::PermissionResult> ble_connect = QtAndroidPrivate::checkPermission("android.permission.BLUETOOTH_CONNECT");
+        //ble_connect.waitForFinished();
+
+        status = (ble_scan.result() == QtAndroidPrivate::PermissionResult::Authorized) &&
+                 (ble_connect.result() == QtAndroidPrivate::PermissionResult::Authorized);
+    }
+
+    return status;
+}
+
+bool UtilsAndroid::getPermission_bluetooth()
+{
+    if (getSdkVersion() <= 30)
+    {
+        QFuture<QtAndroidPrivate::PermissionResult> ble = QtAndroidPrivate::checkPermission("android.permission.BLUETOOTH");
+        if (ble.result() == QtAndroidPrivate::PermissionResult::Denied)
+        {
+            QtAndroidPrivate::requestPermission("android.permission.BLUETOOTH");
+        }
+        QFuture<QtAndroidPrivate::PermissionResult> ble_admin = QtAndroidPrivate::checkPermission("android.permission.BLUETOOTH_ADMIN");
+        if (ble_admin.result() == QtAndroidPrivate::PermissionResult::Denied)
+        {
+            QtAndroidPrivate::requestPermission("android.permission.BLUETOOTH_ADMIN");
+        }
+    }
+
+    if (getSdkVersion() >= 31)
+    {
+        QFuture<QtAndroidPrivate::PermissionResult> ble_scan = QtAndroidPrivate::checkPermission("android.permission.BLUETOOTH_SCAN");
+        if (ble_scan.result() == QtAndroidPrivate::PermissionResult::Denied)
+        {
+            QtAndroidPrivate::requestPermission("android.permission.BLUETOOTH_SCAN");
+        }
+        QFuture<QtAndroidPrivate::PermissionResult> ble_connect = QtAndroidPrivate::checkPermission("android.permission.BLUETOOTH_CONNECT");
+        if (ble_connect.result() == QtAndroidPrivate::PermissionResult::Denied)
+        {
+            QtAndroidPrivate::requestPermission("android.permission.BLUETOOTH_CONNECT");
+        }
+    }
+
+    return checkPermission_bluetooth();
+}
+
+/* ************************************************************************** */
+
 bool UtilsAndroid::checkPermission_location()
 {
     QFuture<QtAndroidPrivate::PermissionResult> loc = QtAndroidPrivate::checkPermission("android.permission.ACCESS_FINE_LOCATION");
@@ -354,7 +461,7 @@ bool UtilsAndroid::gpsutils_isGpsEnabled()
     bool status = false;
 
     jboolean verified = QJniObject::callStaticMethod<jboolean>(
-        "io/emeric/utils/QGpsUtils",
+        "com/emeric/utils/QGpsUtils",
         "checkGpsEnabled",
         "(Landroid/content/Context;)Z",
         QNativeInterface::QAndroidApplication::context());
@@ -372,7 +479,7 @@ bool UtilsAndroid::gpsutils_forceGpsEnabled()
     bool status = false;
 
     jboolean verified = QJniObject::callStaticMethod<jboolean>(
-        "io/emeric/utils/QGpsUtils",
+        "com/emeric/utils/QGpsUtils",
         "forceGpsEnabled",
         "(Landroid/content/Context;)Z",
         QNativeInterface::QAndroidApplication::context());
@@ -388,7 +495,7 @@ bool UtilsAndroid::gpsutils_forceGpsEnabled()
 void UtilsAndroid::gpsutils_openLocationSettings()
 {
     QJniObject intent = QJniObject::callStaticObjectMethod(
-        "io/emeric/utils/QGpsUtils",
+        "com/emeric/utils/QGpsUtils",
         "openLocationSettings",
         "()Landroid/content/Intent;",
         QNativeInterface::QAndroidApplication::context());

@@ -164,6 +164,30 @@ bool UtilsAndroid::getPermission_camera()
 
 /* ************************************************************************** */
 
+bool UtilsAndroid::checkPermission_notification()
+{
+    return false; // TODO
+}
+
+bool UtilsAndroid::getPermission_notification()
+{
+    return false; // TODO
+}
+
+/* ************************************************************************** */
+
+bool UtilsAndroid::checkPermission_bluetooth()
+{
+    return false; // TODO
+}
+
+bool UtilsAndroid::getPermission_bluetooth()
+{
+    return false; // TODO
+}
+
+/* ************************************************************************** */
+
 bool UtilsAndroid::checkPermission_location()
 {
     QtAndroid::PermissionResult loc = QtAndroid::checkPermission("android.permission.ACCESS_FINE_LOCATION");
@@ -296,7 +320,7 @@ bool UtilsAndroid::gpsutils_isGpsEnabled()
         if (appCtx.isValid())
         {
             jboolean verified = QAndroidJniObject::callStaticMethod<jboolean>(
-                "io/emeric/utils/QGpsUtils",
+                "com/emeric/utils/QGpsUtils",
                 "checkGpsEnabled",
                 "(Landroid/content/Context;)Z",
                 appCtx.object());
@@ -322,7 +346,7 @@ bool UtilsAndroid::gpsutils_forceGpsEnabled()
         if (appCtx.isValid())
         {
             jboolean verified = QAndroidJniObject::callStaticMethod<jboolean>(
-                "io/emeric/utils/QGpsUtils",
+                "com/emeric/utils/QGpsUtils",
                 "forceGpsEnabled",
                 "(Landroid/content/Context;)Z",
                 appCtx.object());
@@ -346,7 +370,7 @@ void UtilsAndroid::gpsutils_openLocationSettings()
         if (appCtx.isValid())
         {
             QAndroidJniObject intent = QAndroidJniObject::callStaticObjectMethod(
-                "io/emeric/utils/QGpsUtils",
+                "com/emeric/utils/QGpsUtils",
                 "openLocationSettings",
                 "()Landroid/content/Intent;",
                 appCtx.object());

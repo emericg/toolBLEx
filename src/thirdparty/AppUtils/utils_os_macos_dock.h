@@ -20,8 +20,8 @@
  * SOFTWARE.
  */
 
-#ifndef UTILS_MACOS_DOCK_H
-#define UTILS_MACOS_DOCK_H
+#ifndef UTILS_OS_MACOS_DOCK_H
+#define UTILS_OS_MACOS_DOCK_H
 
 #include <QtGlobal>
 
@@ -59,4 +59,4 @@ public:
 
 /* ************************************************************************** */
 #endif // Q_OS_MACOS
-#endif // UTILS_MACOS_DOCK_H
+#endif // UTILS_OS_MACOS_DOCK_H

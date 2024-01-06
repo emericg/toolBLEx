@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-#include "utils_os_macosdock.h"
+#include "utils_os_macos_dock.h"
 
 #if defined(Q_OS_MACOS)
 
