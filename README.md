@@ -1,6 +1,6 @@
 # ![toolBLEx](assets/logos/banner.svg)
 
-[![GitHub release](https://img.shields.io/badge/release-0.9-blue?style=flat-square)](https://github.com/emericg/toolBLEx/releases)
+[![GitHub release](https://img.shields.io/badge/release-0.10-blue?style=flat-square)](https://github.com/emericg/toolBLEx/releases)
 [![GitHub action](https://img.shields.io/github/actions/workflow/status/emericg/toolBLEx/builds_desktop_qmake.yml?style=flat-square)](https://github.com/emericg/toolBLEx/actions/workflows/builds_desktop_qmake.yml)
 [![GitHub issues](https://img.shields.io/github/issues/emericg/toolBLEx.svg?style=flat-square)](https://github.com/emericg/toolBLEx/issues)
 [![License: GPL v3](https://img.shields.io/badge/license-GPL%20v3-brightgreen.svg?style=flat-square)](http://www.gnu.org/licenses/gpl-3.0)
@@ -9,14 +9,19 @@ A Bluetooth Low Energy device scanner and analyzer.
 
 > Available on Linux, macOS, Windows.
 
+### Features
+
 - host adapters info
 - RSSI graph / proximity graph (BLE and classic)
 - device scanner (BLE and classic)
 - device advertisement and services explorer (BLE)
 - read/write device services data (BLE)
-- export device info: advertisement packets, services and characteristics (with or without walues)
+- export device info: advertisement packets, services and characteristics (with or without values)
 - frequency analyzer (ONLY if you have an Ubertooth One)
 
+#### Download
+
+<a href='https://flathub.org/apps/io.emeric.toolblex'><img width='200' alt='Download on Flathub' src='https://dl.flathub.org/assets/badges/flathub-badge-en.png'/></a>
 
 ## Screenshots
 
