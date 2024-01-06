@@ -9,7 +9,7 @@ A Bluetooth Low Energy device scanner and analyzer.
 
 > Available on Linux, macOS, Windows.
 
-### Features
+#### Features
 
 - host adapters info
 - RSSI graph / proximity graph (BLE and classic)
