@@ -47,6 +47,8 @@ class UtilsScreen: public QObject
     Q_PROPERTY(int screenDpi READ getScreenDpi NOTIFY screenChanged)
     Q_PROPERTY(double screenPar READ getScreenPar NOTIFY screenChanged)
     Q_PROPERTY(double screenSize READ getScreenSize_inch NOTIFY screenChanged)
+    Q_PROPERTY(double screenDar READ getScreenDar NOTIFY screenChanged)
+    Q_PROPERTY(QString screenDarStr READ getScreenDarStr NOTIFY screenChanged)
 
     int m_screenWidth = -1;
     int m_screenHeight = -1;
@@ -56,6 +58,9 @@ class UtilsScreen: public QObject
     int m_screenDpi = -1;
     double m_screenPar = -1.0;
     double m_screenSizeInch = -1.0;
+
+    double m_screenDar = -1.0;
+    QString m_screenDarStr;
 
     uint32_t m_screensaverId = 0;
 
@@ -68,7 +73,8 @@ class UtilsScreen: public QObject
     double getScreenPar() { return m_screenPar; }
     double getScreenSize_inch() { return m_screenSizeInch; }
 
-    QVariantMap getSafeAreaMargins(QQuickWindow *window); // DEPRECATED
+    double getScreenDar() { return m_screenDar; }
+    QString getScreenDarStr() { return m_screenDarStr; }
 
     // Actual screen
     const QScreen *m_scr = nullptr;

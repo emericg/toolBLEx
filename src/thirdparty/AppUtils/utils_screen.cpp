@@ -98,6 +98,39 @@ void UtilsScreen::getScreenInfos(const QScreen *scr)
 
         // TODO // On Android, physicalSize().height seems to ignore the buttons and/or status bar
 
+        if (m_screenWidth >= m_screenHeight) {
+            m_screenDar = m_screenWidth / static_cast<double>(m_screenHeight);
+        } else {
+            m_screenDar = m_screenHeight / static_cast<double>(m_screenWidth);
+            //m_screenDarInverted = true;
+        }
+
+        if (m_screenDar > 0.99f && m_screenDar < 1.01f) {
+            m_screenDarStr = "1:1";
+        } else if (m_screenDar > 1.24f && m_screenDar < 1.26) {
+            m_screenDarStr = "5:4";
+        } else if (m_screenDar > 1.323f && m_screenDar < 1.343f) {
+            m_screenDarStr = "4:3";
+        } else if (m_screenDar > 1.49f && m_screenDar < 1.51f) {
+            m_screenDarStr = "3:2";
+        } else if (m_screenDar > 1.59f && m_screenDar < 1.61f) {
+            m_screenDarStr = "16:10";
+        } else if (m_screenDar > 1.767f && m_screenDar < 1.787f) {
+            m_screenDarStr = "16:9";
+        } else if (m_screenDar > 1.99f && m_screenDar < 2.01f) {
+            m_screenDarStr = "2:1";
+        } else if (m_screenDar > 2.1 && m_screenDar < 2.12f) {
+            m_screenDarStr = "19:9";
+        } else if (m_screenDar > 2.15f && m_screenDar < 2.17f) {
+            m_screenDarStr = "19.5:9";
+        } else if (m_screenDar > 2.21f && m_screenDar < 2.23f) {
+            m_screenDarStr = "20:9";
+        } else if (m_screenDar > 2.33f && m_screenDar < 2.40f) {
+            m_screenDarStr = "21:9";
+        } else if (m_screenDar > 3.5f && m_screenDar < 2.34f) {
+            m_screenDarStr = "32:9";
+        }
+
         Q_EMIT screenChanged();
     }
     else
@@ -129,39 +162,6 @@ void UtilsScreen::printScreenInfos()
     {
         qWarning() << "UtilsScreen::printScreenInfos() Unable to get screen infos, NULL QScreen";
     }
-}
-
-/* ************************************************************************** */
-
-QVariantMap UtilsScreen::getSafeAreaMargins(QQuickWindow *window)
-{
-    QVariantMap map;
-
-    if (window)
-    {
-#if defined(Q_OS_IOS) && 0
-        QPlatformWindow *platformWindow = static_cast<QPlatformWindow *>(window->handle());
-        if (platformWindow)
-        {
-            QMargins margins = platformWindow->safeAreaMargins();
-            map["top"] = margins.top();
-            map["right"] = margins.right();
-            map["bottom"] = margins.bottom();
-            map["left"] = margins.left();
-            map["total"] = margins.top() + margins.right() + margins.bottom() + margins.left();
-        }
-        else
-        {
-            qDebug() << "getSafeAreaMargins() No QPlatformWindow available";
-        }
-#endif // defined(Q_OS_IOS)
-    }
-    else
-    {
-        qWarning() << "UtilsScreen::getSafeAreaMargins() QQuickWindow is NULL";
-    }
-
-    return map;
 }
 
 /* ************************************************************************** */

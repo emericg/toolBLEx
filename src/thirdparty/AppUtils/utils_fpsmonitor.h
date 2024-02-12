@@ -62,7 +62,7 @@ Q_SIGNALS:
 
 public:
     FrameRateMonitor(QQuickWindow *window = nullptr, QObject *parent = nullptr);
-    Q_INVOKABLE void setWindow(QQuickWindow *window);
+    Q_INVOKABLE void setQuickWindow(QQuickWindow *window);
 
 public slots:
     void registerSample();

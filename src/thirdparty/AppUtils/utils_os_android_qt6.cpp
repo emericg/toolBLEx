@@ -461,7 +461,7 @@ bool UtilsAndroid::gpsutils_isGpsEnabled()
     bool status = false;
 
     jboolean verified = QJniObject::callStaticMethod<jboolean>(
-        "com/emeric/utils/QGpsUtils",
+        "io/emeric/utils/QGpsUtils",
         "checkGpsEnabled",
         "(Landroid/content/Context;)Z",
         QNativeInterface::QAndroidApplication::context());
@@ -479,7 +479,7 @@ bool UtilsAndroid::gpsutils_forceGpsEnabled()
     bool status = false;
 
     jboolean verified = QJniObject::callStaticMethod<jboolean>(
-        "com/emeric/utils/QGpsUtils",
+        "io/emeric/utils/QGpsUtils",
         "forceGpsEnabled",
         "(Landroid/content/Context;)Z",
         QNativeInterface::QAndroidApplication::context());
@@ -494,13 +494,17 @@ bool UtilsAndroid::gpsutils_forceGpsEnabled()
 
 void UtilsAndroid::gpsutils_openLocationSettings()
 {
-    QJniObject intent = QJniObject::callStaticObjectMethod(
-        "com/emeric/utils/QGpsUtils",
-        "openLocationSettings",
-        "()Landroid/content/Intent;",
-        QNativeInterface::QAndroidApplication::context());
+    QJniObject activity = QNativeInterface::QAndroidApplication::context();
+    if (activity.isValid())
+    {
+        QJniObject intent = QJniObject::callStaticObjectMethod(
+            "io/emeric/utils/QGpsUtils",
+            "openLocationSettings",
+            "()Landroid/content/Intent;",
+            activity.object<jobject>());
 
-    QtAndroidPrivate::startActivity(intent, 0);
+        QtAndroidPrivate::startActivity(intent, 0);
+    }
 }
 
 /* ************************************************************************** */
@@ -521,7 +525,7 @@ QString UtilsAndroid::getAppExternalStorage()
         QJniObject dir = QJniObject::fromString(QStringLiteral(""));
         QJniObject path = activity.callObjectMethod("getExternalFilesDir",
                                                     "(Ljava/lang/String;)Ljava/io/File;",
-                                                    dir.object());
+                                                    dir.object<jobject>());
         storage = path.toString();
     }
 
@@ -803,7 +807,7 @@ void UtilsAndroid::openStorageSettings(const QString &packageName)
             return;
         }
 
-        QJniObject intent("android/content/Intent", "(Ljava/lang/String;)V", jintentObject.object());
+        QJniObject intent("android/content/Intent", "(Ljava/lang/String;)V", jintentObject.object<jobject>());
         if (!intent.isValid())
         {
             qWarning("Unable to create Intent object for ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION");
@@ -827,7 +831,7 @@ void UtilsAndroid::openLocationSettings()
                                                                 "ACTION_LOCATION_SOURCE_SETTINGS",
                                                                 "Ljava/lang/String;");
 
-    QJniObject intent("android/content/Intent", "(Ljava/lang/String;)V", jintentObject.object());
+    QJniObject intent("android/content/Intent", "(Ljava/lang/String;)V", jintentObject.object<jobject>());
     if (!intent.isValid())
     {
         qWarning("Unable to create Intent object for ACTION_LOCATION_SOURCE_SETTINGS");

@@ -56,35 +56,46 @@
 
 /* ************************************************************************** */
 
-UtilsSysinfo *UtilsSysinfo::instance = nullptr;
+UtilsSysInfo *UtilsSysInfo::instance = nullptr;
 
-UtilsSysinfo *UtilsSysinfo::getInstance()
+UtilsSysInfo *UtilsSysInfo::getInstance()
 {
     if (instance == nullptr)
     {
-        instance = new UtilsSysinfo();
+        instance = new UtilsSysInfo();
     }
 
     return instance;
 }
 
-UtilsSysinfo::UtilsSysinfo()
+UtilsSysInfo::UtilsSysInfo()
 {
     getCpuInfos();
     getRamInfos();
 
     m_os_name = QSysInfo::prettyProductName();
     m_os_version = QSysInfo::productVersion();
+
+#if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
+    m_os_displayserver = qgetenv("XDG_SESSION_TYPE");
+    if (m_os_displayserver.isEmpty())
+    {
+        m_os_displayserver = qgetenv("WAYLAND_DISPLAY");
+
+        if (m_os_displayserver.isEmpty()) m_os_displayserver = "x11";
+        else m_os_displayserver = "wayland";
+    }
+#endif
 }
 
-UtilsSysinfo::~UtilsSysinfo()
+UtilsSysInfo::~UtilsSysInfo()
 {
     //
 }
 
 /* ************************************************************************** */
 
-void UtilsSysinfo::getCpuInfos()
+void UtilsSysInfo::getCpuInfos()
 {
     // Get CPU hardware architecture
     m_cpu_arch = QSysInfo::currentCpuArchitecture();
@@ -125,7 +136,7 @@ void UtilsSysinfo::getCpuInfos()
 
 /* ************************************************************************** */
 
-void UtilsSysinfo::getRamInfos()
+void UtilsSysInfo::getRamInfos()
 {
 #if defined(Q_OS_LINUX)
 
@@ -155,16 +166,16 @@ void UtilsSysinfo::getRamInfos()
 
 /* ************************************************************************** */
 
-void UtilsSysinfo::printInfos()
+void UtilsSysInfo::printInfos()
 {
-    qDebug() << "UtilsSysinfo::getCoreInfos()";
+    qDebug() << "UtilsSysInfo::getCoreInfos()";
     qDebug() << "> cpu (physical):" << m_cpu_core_physical;
     qDebug() << "> cpu (logical) :" << m_cpu_core_logical;
 
-    qDebug() << "UtilsSysinfo::getRamInfos()";
+    qDebug() << "UtilsSysInfo::getRamInfos()";
     qDebug() << "> RAM size (MB)    :" << m_ram_total;
 
-    qDebug() << "UtilsSysinfo::OperatingSystem()";
+    qDebug() << "UtilsSysInfo::OperatingSystem()";
     qDebug() << "> name    :" << QSysInfo::prettyProductName();
     qDebug() << "> version :" << QSysInfo::productType();
 ;

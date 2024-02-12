@@ -32,7 +32,7 @@
 
 FrameRateMonitor::FrameRateMonitor(QQuickWindow *window, QObject *parent) : QObject(parent)
 {
-    setWindow(window);
+    setQuickWindow(window);
 
     m_refreshTimer = new QTimer(this);
     connect(m_refreshTimer, &QTimer::timeout, this, &FrameRateMonitor::refresh);
@@ -43,7 +43,7 @@ FrameRateMonitor::FrameRateMonitor(QQuickWindow *window, QObject *parent) : QObj
 
 /* ************************************************************************** */
 
-void FrameRateMonitor::setWindow(QQuickWindow *window)
+void FrameRateMonitor::setQuickWindow(QQuickWindow *window)
 {
     if (window)
     {

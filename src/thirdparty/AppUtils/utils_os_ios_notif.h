@@ -38,6 +38,9 @@ class UtilsIOSNotifications
 public:
     UtilsIOSNotifications();
 
+    bool checkPermission_notification();
+    bool getPermission_notification();
+
     bool notify(const QString &title, const QString &message, const int channel);
 };
 

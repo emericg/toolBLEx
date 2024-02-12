@@ -1,8 +1,9 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.20)
 
 project(AppUtils LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 
 ################################################################################
@@ -99,6 +100,7 @@ if(IOS)
     set(PLATFORM_LIBRARIES Qt::Quick)
     set(PLATFORM_LIBRARIES Qt::GuiPrivate)
     set(PLATFORM_LIBRARIES "-framework UIKit" m)
+    set(PLATFORM_LIBRARIES "-framework UserNotifications" m)
 endif()
 
 ################################################################################

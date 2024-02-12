@@ -30,9 +30,9 @@
 /* ************************************************************************** */
 
 /*!
- * \brief The UtilsSysinfo class
+ * \brief The UtilsSysInfo class
  */
-class UtilsSysinfo: public QObject
+class UtilsSysInfo: public QObject
 {
     Q_OBJECT
 
@@ -43,6 +43,7 @@ class UtilsSysinfo: public QObject
 
     Q_PROPERTY(QString os_name READ getOsName CONSTANT)
     Q_PROPERTY(QString os_version READ getOsVersion CONSTANT)
+    Q_PROPERTY(QString os_display_server READ getOsDisplayServer CONSTANT)
 
     QString m_cpu_arch;
     int m_cpu_core_physical = 0;
@@ -52,17 +53,18 @@ class UtilsSysinfo: public QObject
 
     QString m_os_name;
     QString m_os_version;
+    QString m_os_displayserver;
 
     // Singleton
-    static UtilsSysinfo *instance;
-    UtilsSysinfo();
-    ~UtilsSysinfo();
+    static UtilsSysInfo *instance;
+    UtilsSysInfo();
+    ~UtilsSysInfo();
 
     void getCpuInfos();
     void getRamInfos();
 
 public:
-    static UtilsSysinfo *getInstance();
+    static UtilsSysInfo *getInstance();
 
     void printInfos();
 
@@ -77,6 +79,8 @@ public:
     Q_INVOKABLE QString getOsName() const { return m_os_name; };
 
     Q_INVOKABLE QString getOsVersion() const { return m_os_version; };
+
+    Q_INVOKABLE QString getOsDisplayServer() const { return m_os_displayserver; };
 };
 
 /* ************************************************************************** */
