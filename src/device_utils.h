@@ -195,8 +195,8 @@ public:
     QString log;
     const QString getLog() const { return log; }
 
-    LogEvent(const QDateTime &ts, int ev, const QString &txt,
-                   QObject *parent) : QObject(parent) {
+    LogEvent(const QDateTime &ts, const int ev, const QString &txt,
+             QObject *parent) : QObject(parent) {
         timestamp = ts;
         event = ev;
         log = txt;

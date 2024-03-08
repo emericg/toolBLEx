@@ -48,6 +48,9 @@ class CharacteristicInfo: public QObject
     Q_PROPERTY(bool readInProgress READ getReadInProgress NOTIFY statusChanged)
     Q_PROPERTY(bool writeInProgress READ getWriteInProgress NOTIFY statusChanged)
     Q_PROPERTY(bool notifyInProgress READ getNotifyInProgress NOTIFY statusChanged)
+    Q_PROPERTY(bool readInError READ getReadInError NOTIFY statusChanged)
+    Q_PROPERTY(bool writeInError READ getWriteInError NOTIFY statusChanged)
+    Q_PROPERTY(bool notifyInError READ getNotifyInError NOTIFY statusChanged)
 
     Q_PROPERTY(int dataSize READ getDataSize NOTIFY valueChanged)
     Q_PROPERTY(QVariant data READ getData NOTIFY valueChanged)
@@ -66,6 +69,10 @@ class CharacteristicInfo: public QObject
     bool m_read_inprogress = false;
     bool m_write_inprogress = false;
     bool m_notify_inprogress = false;
+
+    bool m_read_inerror = false;
+    bool m_write_inerror = false;
+    bool m_notify_inerror = false;
 
 Q_SIGNALS:
     void characteristicChanged();
@@ -96,6 +103,13 @@ public:
     bool getReadInProgress() const { return m_read_inprogress; };
     bool getWriteInProgress() const { return m_write_inprogress; };
     bool getNotifyInProgress() const { return m_notify_inprogress; };
+
+    void setReadInError(bool value);
+    void setWriteInError(bool value);
+    void setNotifyInError(bool value);
+    bool getReadInError() const { return m_read_inerror; };
+    bool getWriteInError() const { return m_write_inerror; };
+    bool getNotifyInError() const { return m_notify_inerror; };
 
     QVariant getData() const { return QVariant::fromValue(m_data); }
     int getDataSize() const { return m_data.size(); }

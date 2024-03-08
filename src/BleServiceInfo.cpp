@@ -88,6 +88,26 @@ ServiceInfo::~ServiceInfo()
 
 /* ************************************************************************** */
 
+int ServiceInfo::getServiceStatus() const
+{
+    if (m_ble_service) return m_ble_service->state();
+    return 0;
+}
+
+QString ServiceInfo::getServiceStatusStr() const
+{
+    if (m_ble_service)
+    {
+        if (m_ble_service->state() == QLowEnergyService::InvalidService) return QStringLiteral("Invalid");
+        if (m_ble_service->state() == QLowEnergyService::RemoteService) return QStringLiteral("Remote");
+        if (m_ble_service->state() == QLowEnergyService::RemoteServiceDiscovering) return QStringLiteral("Discovering");
+        if (m_ble_service->state() == QLowEnergyService::RemoteServiceDiscovered) return QStringLiteral("Discovered");
+    }
+    return QString("Cache");
+}
+
+/* ************************************************************************** */
+
 QLowEnergyService *ServiceInfo::getService()
 {
     return m_ble_service;
@@ -119,9 +139,7 @@ void ServiceInfo::connectToService(QLowEnergyService::DiscoveryMode scanmode)
     //qDebug() << "ServiceInfo::connectToService()";
 
     if (!m_ble_service) return;
-
-    qDeleteAll(m_characteristics);
-    m_characteristics.clear();
+    Q_EMIT stateUpdated();
 
     if (m_ble_service->state() == QLowEnergyService::RemoteService)
     {
@@ -129,7 +147,7 @@ void ServiceInfo::connectToService(QLowEnergyService::DiscoveryMode scanmode)
         connect(m_ble_service, &QLowEnergyService::errorOccurred, this, &ServiceInfo::serviceErrorOccured);
         connect(m_ble_service, &QLowEnergyService::characteristicRead, this, &ServiceInfo::bleReadDone);
         connect(m_ble_service, &QLowEnergyService::characteristicWritten, this, &ServiceInfo::bleWriteDone);
-        connect(m_ble_service, &QLowEnergyService::characteristicChanged, this, &ServiceInfo::bleReadNotify);
+        //connect(m_ble_service, &QLowEnergyService::characteristicChanged, this, &ServiceInfo::bleReadNotify);
         connect(m_ble_service, &QLowEnergyService::descriptorRead, this, &ServiceInfo::bleDescReadDone);
         connect(m_ble_service, &QLowEnergyService::descriptorWritten, this, &ServiceInfo::bleDescWriteDone);
 
@@ -137,15 +155,24 @@ void ServiceInfo::connectToService(QLowEnergyService::DiscoveryMode scanmode)
         return;
     }
 
-    // discovery already done
-    const QList <QLowEnergyCharacteristic> chars = m_ble_service->characteristics();
-    for (const QLowEnergyCharacteristic &ch: chars)
+    if (m_ble_service->state() == QLowEnergyService::RemoteServiceDiscovering)
     {
-        auto cInfo = new CharacteristicInfo(ch, this);
-        m_characteristics.append(cInfo);
+        //
     }
 
-    QTimer::singleShot(0, this, &ServiceInfo::characteristicsUpdated);
+    if (m_ble_service->state() == QLowEnergyService::RemoteServiceDiscovered)
+    {
+        qDeleteAll(m_characteristics);
+        m_characteristics.clear();
+
+        const QList <QLowEnergyCharacteristic> chars = m_ble_service->characteristics();
+        for (const QLowEnergyCharacteristic &ch: chars)
+        {
+            auto cInfo = new CharacteristicInfo(ch, this);
+            m_characteristics.append(cInfo);
+        }
+        Q_EMIT characteristicsUpdated();
+    }
 }
 
 /* ************************************************************************** */
@@ -174,14 +201,6 @@ void ServiceInfo::serviceDetailsDiscovered(QLowEnergyService::ServiceState newSt
         return;
     }
 
-    if (newState == QLowEnergyService::RemoteServiceDiscovered)
-    {
-        m_device->logEvent("Service details discovered for " + m_ble_service->serviceUuid().toString(), LogEvent::STATE);
-
-        // The service details have been discovered
-        m_scan_complete = true;
-    }
-
     auto service = qobject_cast<QLowEnergyService *>(sender());
     if (!service) return;
 
@@ -191,8 +210,16 @@ void ServiceInfo::serviceDetailsDiscovered(QLowEnergyService::ServiceState newSt
         auto cInfo = new CharacteristicInfo(ch, this);
         m_characteristics.append(cInfo);
     }
-
     Q_EMIT characteristicsUpdated();
+
+    if (newState == QLowEnergyService::RemoteServiceDiscovered)
+    {
+        m_device->logEvent("Service details discovered for " + m_ble_service->serviceUuid().toString(), LogEvent::STATE);
+
+        // The service details have been discovered
+        m_scan_complete = true;
+    }
+    Q_EMIT stateUpdated();
 }
 
 void ServiceInfo::serviceErrorOccured(QLowEnergyService::ServiceError error)
@@ -201,7 +228,6 @@ void ServiceInfo::serviceErrorOccured(QLowEnergyService::ServiceError error)
     qDebug() << "ServiceInfo::serviceErrorOccured(" << getUuidFull() << " / " << error << ")";
 
     m_device->logEvent("serviceErrorOccured", LogEvent::ERROR);
-
 /*
     QLowEnergyService::NoError	0	No error has occurred.
     QLowEnergyService::OperationError	1	An operation was attempted while the service was not ready. An example might be the attempt to write to the service while it was not yet in the ServiceDiscovered state() or the service is invalid due to a loss of connection to the peripheral device.
@@ -213,27 +239,36 @@ void ServiceInfo::serviceErrorOccured(QLowEnergyService::ServiceError error)
 */
     if (error == QLowEnergyService::OperationError)
     {
-        //
+        // ???
     }
     else if (error == QLowEnergyService::CharacteristicReadError)
     {
-        //
+        for (auto c: m_characteristics)
+        {
+            CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
+            if (cst && cst->getReadInProgress()) cst->setReadInError(true);
+            if (cst && cst->getNotifyInProgress()) cst->setNotifyInError(true);
+        }
     }
     else if (error == QLowEnergyService::CharacteristicWriteError)
     {
-        //
+        for (auto c: m_characteristics)
+        {
+            CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
+            if (cst && cst->getWriteInProgress()) cst->setWriteInError(true);
+        }
     }
     else if (error == QLowEnergyService::DescriptorReadError)
     {
-        //
+        // ???
     }
     else if (error == QLowEnergyService::DescriptorWriteError)
     {
-        // cannot start notify?
+        // ???
     }
     else // if (error == QLowEnergyService::UnknownError)
     {
-        //
+        // ???
     }
 }
 
@@ -441,14 +476,13 @@ QString ServiceInfo::getType() const
     if (m_ble_service)
     {
         if (m_ble_service->type() & QLowEnergyService::PrimaryService)
-            result += QStringLiteral("primary");
+            result += QStringLiteral("Primary");
         else
-            result += QStringLiteral("secondary");
+            result += QStringLiteral("Secondary");
 
         if (m_ble_service->type() & QLowEnergyService::IncludedService)
-            result += QStringLiteral(" included");
+            result += QStringLiteral(" (included)");
 
-        result.prepend('<').append('>');
         return result;
     }
     else if (!m_service_cache.isEmpty())
@@ -457,7 +491,10 @@ QString ServiceInfo::getType() const
         for (const auto &t: types)
         {
             if (!result.isEmpty()) result += QStringLiteral(" ");
-            result += t.toString();
+
+            if (t.toString() == "primary") result += QStringLiteral("Primary");
+            else if (t.toString() == "secondary") result += QStringLiteral("Secondary");
+            else result += t.toString();
         }
     }
 
@@ -474,15 +511,15 @@ QStringList ServiceInfo::getTypeList() const
 
         if (tflag & QLowEnergyService::PrimaryService)
         {
-            tlist += QStringLiteral("primary");
+            tlist += QStringLiteral("Primary");
         }
         else
         {
-            tlist += QStringLiteral("primary");
+            tlist += QStringLiteral("Secondary");
         }
         if (tflag & QLowEnergyService::IncludedService)
         {
-            tlist += QStringLiteral("included");
+            tlist += QStringLiteral("(included)");
         }
     }
     else if (!m_service_cache.isEmpty())

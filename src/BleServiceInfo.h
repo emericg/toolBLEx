@@ -38,28 +38,34 @@ class ServiceInfo: public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(bool scanComplete READ getScanComplete NOTIFY serviceUpdated)
+    Q_PROPERTY(bool scanComplete READ getScanComplete NOTIFY stateUpdated)
+    Q_PROPERTY(int serviceStatus READ getServiceStatus NOTIFY stateUpdated)
+    Q_PROPERTY(QString serviceStatusStr READ getServiceStatusStr NOTIFY stateUpdated)
+
     Q_PROPERTY(QString serviceName READ getName NOTIFY serviceUpdated)
     Q_PROPERTY(QString serviceUuid READ getUuidFull NOTIFY serviceUpdated)
     Q_PROPERTY(QString serviceUuidFull READ getUuidFull NOTIFY serviceUpdated)
     Q_PROPERTY(QString serviceUuidShort READ getUuidShort NOTIFY serviceUpdated)
     Q_PROPERTY(QString serviceType READ getType NOTIFY serviceUpdated)
     Q_PROPERTY(QStringList serviceTypeList READ getTypeList NOTIFY serviceUpdated)
+
     Q_PROPERTY(QVariant characteristicList READ getCharacteristics NOTIFY characteristicsUpdated)
+    Q_PROPERTY(int characteristicsCount READ getCharacteristicsCount NOTIFY characteristicsUpdated)
 
-    DeviceToolBLEx *m_device = nullptr;
+    DeviceToolBLEx *m_device = nullptr; // parent device
 
-    bool m_scan_complete = false;
+    QLowEnergyService *m_ble_service = nullptr; // current service
+    void connectToService(QLowEnergyService::DiscoveryMode scanMode);
 
-    QLowEnergyService *m_ble_service = nullptr;
-    void connectToService(QLowEnergyService::DiscoveryMode scanmode);
+    QList <QObject *> m_characteristics; // included characteristics
+    QVariant getCharacteristics() { return QVariant::fromValue(m_characteristics); }
+
+    bool m_scan_complete = false; // persists around disconnection
 
     QJsonObject m_service_cache;
 
-    QList <QObject *> m_characteristics;
-    QVariant getCharacteristics() { return QVariant::fromValue(m_characteristics); }
-
 Q_SIGNALS:
+    void stateUpdated();
     void serviceUpdated();
     void characteristicsUpdated();
 
@@ -75,15 +81,19 @@ private slots:
 
 public:
     ServiceInfo() = default;
-    ServiceInfo(QLowEnergyService *service, QLowEnergyService::DiscoveryMode scanmode, QObject *parent);
+    ServiceInfo(QLowEnergyService *service, QLowEnergyService::DiscoveryMode scanMode, QObject *parent);
     ServiceInfo(const QJsonObject &servicecache, QObject *parent);
     ~ServiceInfo();
+
+    bool getScanComplete() const { return m_scan_complete; }
+    int getServiceStatus() const;
+    QString getServiceStatusStr() const;
 
     QLowEnergyService *getService();
     QList <QObject *> getCharacteristicsInfos();
     bool containsCharacteristic(const QString &uuid);
+    int getCharacteristicsCount() const { return m_characteristics.count(); }
 
-    bool getScanComplete() const { return m_scan_complete; }
     QString getName() const;
     QString getUuidFull() const;
     QString getUuidShort() const;

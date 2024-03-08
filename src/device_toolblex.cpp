@@ -25,9 +25,6 @@
 #include "utils_bits.h"
 #include "DeviceManager.h"
 
-#include <cstdlib>
-#include <cmath>
-
 #include <QBluetoothUuid>
 #include <QBluetoothAddress>
 #include <QBluetoothServiceInfo>
@@ -680,7 +677,6 @@ void DeviceToolBLEx::deviceStateChanged(QLowEnergyController::ControllerState st
 void DeviceToolBLEx::addLowEnergyService(const QBluetoothUuid &uuid)
 {
     qDebug() << "DeviceToolBLEx::addLowEnergyService(" << uuid.toString() << ")";
-
     logEvent("Service found: " + uuid.toString(), LogEvent::STATE);
 
     QLowEnergyService *service = m_bleController->createServiceObject(uuid);
@@ -710,15 +706,29 @@ void DeviceToolBLEx::addLowEnergyService(const QBluetoothUuid &uuid)
 
 void DeviceToolBLEx::serviceDetailsDiscovered(QLowEnergyService::ServiceState)
 {
-    //qDebug() << "Device::serviceDetailsDiscovered(" << getAddress() << ")";
+    //qDebug() << "Device::serviceDetailsDiscovered(" << getAddress() << state << ")";
 }
 
-void DeviceToolBLEx::serviceScanDone()
+int DeviceToolBLEx::getCharacteristicsCount() const
+{
+    int characteristicCount = 0;
+
+    // Count characteristics
+    for (const auto s: m_services)
+    {
+        ServiceInfo *srv = qobject_cast<ServiceInfo *>(s);
+        if (srv) characteristicCount += srv->getCharacteristicsCount();
+    }
+
+    return characteristicCount;
+}
+
+void DeviceToolBLEx::serviceScanDone() // aka discoveryFinished()
 {
     qDebug() << "DeviceToolBLEx::serviceScanDone(" << m_deviceAddress << ")";
+    logEvent("Service scan is done", LogEvent::STATE);
 
-    logEvent("Service scan is done", LogEvent::CONN);
-
+    // Update service status
     if (m_services_scanmode == 2) // "incomplete scan"
     {
         m_services_scanmode = 4; // now "scanned"
@@ -729,7 +739,7 @@ void DeviceToolBLEx::serviceScanDone()
     }
     Q_EMIT servicesChanged();
 
-    // Stay connected
+    // No longer working, just connected
     m_ble_status = DeviceUtils::DEVICE_CONNECTED;
     Q_EMIT statusUpdated();
 }
@@ -1122,16 +1132,17 @@ void DeviceToolBLEx::restoreServiceCache()
         m_services_scanmode = 1; // cache is in use
 
         QJsonArray servicesArray = root["services"].toArray();
-        for (const auto &srv: servicesArray)
+        for (const auto &srv_json: servicesArray)
         {
-            QJsonObject obj = srv.toObject();
+            QJsonObject obj = srv_json.toObject();
             qDebug() << "+ SERVICE >" << obj["name"].toString() << obj["uuid"].toString();
 
-            auto serv = new ServiceInfo(obj, this);
-            m_services.append(serv);
+            auto srv = new ServiceInfo(obj, this);
+            m_services.append(srv);
         }
 
         Q_EMIT servicesChanged();
+        Q_EMIT characteristicsChanged();
     }
 }
 
@@ -1174,7 +1185,7 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &exportPath,
         str += "Last seen: " + m_lastSeen.toString() + endl;
 
         if (!m_advertised_services.isEmpty()) str += endl + "Service(s) advertised:" + endl;
-        for (auto srv: m_advertised_services)
+        for (const auto &srv: m_advertised_services)
         {
             str += "- " + srv + endl;
         }

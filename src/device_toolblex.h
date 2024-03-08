@@ -102,6 +102,9 @@ class DeviceToolBLEx: public Device
     Q_PROPERTY(int servicesCount READ getServicesCount NOTIFY servicesChanged)
     Q_PROPERTY(QVariant servicesList READ getServices NOTIFY servicesChanged)
 
+    // Characteristics count
+    Q_PROPERTY(int characteristicsCount READ getCharacteristicsCount NOTIFY characteristicsChanged)
+
     // Logs
     Q_PROPERTY(int deviceLogCount READ getDeviceLogCount NOTIFY logUpdated)
     Q_PROPERTY(QVariant deviceLog READ getDeviceLog NOTIFY logUpdated)
@@ -147,6 +150,8 @@ class DeviceToolBLEx: public Device
     // srv
 
     /*!
+     * \FIXME this is only for the services, not their characteristics
+     *
      * - 0: not scanned
      * - 1: cache
      * - 2: incomplete scan
@@ -186,26 +191,28 @@ class DeviceToolBLEx: public Device
     QList <QObject *> m_deviceLog;
     QString m_deviceLogString;
 
-private:
+private slots:
     // QLowEnergyController related
     void deviceConnected();
     void deviceDisconnected();
     void deviceErrored(QLowEnergyController::Error error);
-    void deviceStateChanged(QLowEnergyController::ControllerState state);
+    void deviceStateChanged(QLowEnergyController::ControllerState newState);
 
     void addLowEnergyService(const QBluetoothUuid &uuid);
     void serviceDetailsDiscovered(QLowEnergyService::ServiceState newState);
     void serviceScanDone();
 
-    void bleWriteDone(const QLowEnergyCharacteristic &c, const QByteArray &value);
-    void bleReadDone(const QLowEnergyCharacteristic &c, const QByteArray &value);
-    void bleReadNotify(const QLowEnergyCharacteristic &c, const QByteArray &value);
+    void bleWriteDone(const QLowEnergyCharacteristic &c, const QByteArray &v);
+    void bleReadDone(const QLowEnergyCharacteristic &c, const QByteArray &v);
+    void bleReadNotify(const QLowEnergyCharacteristic &c, const QByteArray &v);
 
 Q_SIGNALS:
     void advertisementChanged();
     void advertisementFilteredChanged();
     void servicesAdvertisedChanged();
     void servicesChanged();
+    void characteristicsChanged();
+
     void pairingChanged();
     void boolChanged();
     void starChanged();
@@ -235,6 +242,8 @@ public:
     int getServicesScanMode() const { return m_services_scanmode; }
     bool getServicesCached() const { return (m_services_scanmode == 1); }
     bool getServicesScanned() const { return (m_services_scanmode > 1); }
+
+    int getCharacteristicsCount() const;
 
     int getAdvertisedServicesCount() const { return m_advertised_services.count(); }
     QStringList getAdvertisedServices() const { return m_advertised_services; };

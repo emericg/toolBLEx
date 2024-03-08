@@ -183,6 +183,40 @@ QStringList CharacteristicInfo::getPropertyList() const
 
 QString CharacteristicInfo::getPermission() const
 {
+/*
+    Access Permissions
+
+       Similar to file permissions, access permissions determine whether the client can read or write (or both) an attribute value (introduced in Value). Each attribute can have one of the following access permissions:
+
+       None
+           The attribute can neither be read nor written by a client.
+       Readable
+           The attribute can be read by a client.
+       Writable
+           The attribute can be written by a client.
+       Readable and writable
+           The attribute can be both read and written by the client.
+
+   Encryption
+
+       Determines whether a certain level of encryption is required for this attribute to be accessed by the client. (See Authentication, Security Modes and Procedures, and Security Modes for more information on authentication and encryption.) These are the allowed encryption permissions, as defined by GATT:
+
+       No encryption required (Security Mode 1, Level 1)
+           The attribute is accessible on a plain-text, non-encrypted connection.
+       Unauthenticated encryption required (Security Mode 1, Level 2)
+           The connection must be encrypted to access this attribute, but the encryption keys do not need to be authenticated (although they can be).
+       Authenticated encryption required (Security Mode 1, Level 3)
+           The connection must be encrypted with an authenticated key to access this attribute.
+
+   Authorization
+
+       Determines whether user permission (also known as authorization, as discussed in Security Modes and Procedures) is required to access this attribute. An attribute can choose only between requiring or not requiring authorization:
+
+       No authorization required
+           Access to this attribute does not require authorization.
+       Authorization required
+           Access to this attribute requires authorization.
+*/
     return QString();
 }
 
@@ -198,6 +232,7 @@ void CharacteristicInfo::setReadInProgress(bool value)
     if (m_read_inprogress != value)
     {
         m_read_inprogress = value;
+        if (m_read_inprogress) m_read_inerror = false;
         Q_EMIT statusChanged();
     }
 }
@@ -207,6 +242,7 @@ void CharacteristicInfo::setWriteInProgress(bool value)
     if (m_write_inprogress != value)
     {
         m_write_inprogress = value;
+        if (m_write_inprogress) m_write_inerror = false;
         Q_EMIT statusChanged();
     }
 }
@@ -216,6 +252,37 @@ void CharacteristicInfo::setNotifyInProgress(bool value)
     if (m_notify_inprogress != value)
     {
         m_notify_inprogress = value;
+        if (m_notify_inprogress) m_notify_inerror = false;
+        Q_EMIT statusChanged();
+    }
+}
+
+void CharacteristicInfo::setReadInError(bool value)
+{
+    if (m_read_inerror != value)
+    {
+        m_read_inerror = value;
+        if (m_read_inerror) m_read_inprogress = false;
+        Q_EMIT statusChanged();
+    }
+}
+
+void CharacteristicInfo::setWriteInError(bool value)
+{
+    if (m_write_inerror != value)
+    {
+        m_write_inerror = value;
+        if (m_write_inerror) m_write_inprogress = false;
+        Q_EMIT statusChanged();
+    }
+}
+
+void CharacteristicInfo::setNotifyInError(bool value)
+{
+    if (m_notify_inerror != value)
+    {
+        m_notify_inerror = value;
+        if (m_notify_inerror) m_notify_inprogress = false;
         Q_EMIT statusChanged();
     }
 }
