@@ -58,12 +58,15 @@ Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                     spacing: 8
 
-                    Text { // serviceType
+                    ItemTag { // serviceType
                         anchors.verticalCenter: parent.verticalCenter
                         text: modelData.serviceType
-                        font.pixelSize: Theme.componentFontSize
-                        color: Theme.colorSubText
                     }
+                    ItemTag { // serviceStatus
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: modelData.serviceStatusStr
+                    }
+
                     IconSvg { // expandIcon
                         width: 24
                         height: 24
@@ -110,6 +113,7 @@ Rectangle {
         model: modelData.characteristicList
         delegate: BleCharacteristicWidget {
             width: characteristicview.width
+            //editable: (modelData.serviceStatus === 3)
         }
     }
 

@@ -343,6 +343,7 @@ ChartView {
             Row {
                 spacing: 6
                 Rectangle {
+                    anchors.verticalCenter: parent.verticalCenter
                     width: 16
                     height: 16
                     radius: 4
@@ -359,6 +360,7 @@ ChartView {
             Row {
                 spacing: 6
                 Rectangle {
+                    anchors.verticalCenter: parent.verticalCenter
                     width: 16
                     height: 16
                     radius: 4
@@ -375,6 +377,7 @@ ChartView {
             Row {
                 spacing: 6
                 Rectangle {
+                    anchors.verticalCenter: parent.verticalCenter
                     width: 16
                     height: 16
                     radius: 4

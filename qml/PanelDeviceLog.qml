@@ -16,6 +16,7 @@ Flickable {
     ////////
 
     property string logFormat: "adv"
+    property bool logLegend: false
 
     Rectangle {
         width: detailView.ww
@@ -64,28 +65,96 @@ Flickable {
 
     ////////
 
-    Row {
+    Column {
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         anchors.margins: -4
         spacing: 8
 
-        ButtonWireframeIcon {
-            id: formatButton
+        visible: (selectedDevice && selectedDevice.deviceLogCount > 0)
 
-            fullColor: true
-            primaryColor: Theme.colorLightGrey
+        Row {
+            visible: logLegend
+            spacing: 8
 
-            visible: (selectedDevice && selectedDevice.deviceLog)
+            Repeater {
+                model: [
+                    "CONNECTION",
+                    "STATE",
+                    "DATA",
+                    "ADVERTISEMENT",
+                    "USER ACTION",
+                    "ERROR",
+                ]
+                delegate:
+                    Row {
+                        spacing: 6
+                        Rectangle {
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: 16
+                            height: 16
+                            radius: 4
+                            color: {
+                                if (index === 0) return Theme.colorMaterialGreen
+                                if (index === 1) return Theme.colorMaterialLime
+                                if (index === 2) return Theme.colorMaterialBlue
+                                if (index === 3) return Theme.colorMaterialLightBlue
+                                if (index === 4) return Theme.colorPrimary
+                                if (index === 5) return Theme.colorError
+                                return Theme.colorBox
+                            }
+                        }
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: modelData
+                            textFormat: Text.PlainText
+                            color: {
+                                if (index === 0) return Theme.colorMaterialGreen
+                                if (index === 1) return Theme.colorMaterialLime
+                                if (index === 2) return Theme.colorMaterialBlue
+                                if (index === 3) return Theme.colorMaterialLightBlue
+                                if (index === 4) return Theme.colorPrimary
+                                if (index === 5) return Theme.colorError
+                                return Theme.colorBox
+                            }
+                        }
+                    }
+            }
+        }
 
-            text: qsTr("format:") + " " + logFormat
+        Row {
+            spacing: 8
 
-            onClicked: {
-                if (logFormat === "adv") logFormat = "txt"
-                else logFormat = "adv"
+            ButtonWireframeIcon { // formatButton
+                fullColor: true
+                primaryColor: Theme.colorLightGrey
+
+                visible: (selectedDevice && selectedDevice.deviceLog)
+
+                text: qsTr("format:") + " " + logFormat
+
+                onClicked: {
+                    if (logFormat === "adv") logFormat = "txt"
+                    else logFormat = "adv"
+                }
+            }
+
+            ButtonWireframeIcon { // legendButton
+                fullColor: true
+                primaryColor: logLegend ? Theme.colorGrey : Theme.colorLightGrey
+
+                visible: (selectedDevice && selectedDevice.deviceLog)
+
+                text: qsTr("legend")
+
+                onClicked: {
+                    logLegend = !logLegend
+                }
             }
         }
     }
+
+    ////
 
     Row {
         anchors.right: parent.right
@@ -93,9 +162,9 @@ Flickable {
         anchors.margins: -4
         spacing: 8
 
-        ButtonWireframeIcon {
-            id: clearButton
+        visible: (selectedDevice && selectedDevice.deviceLogCount > 0)
 
+        ButtonWireframeIcon { // clearButton
             fullColor: true
             primaryColor: Theme.colorLightGrey
 
@@ -109,8 +178,7 @@ Flickable {
             }
         }
 
-        ButtonWireframeIcon {
-            id: saveButton
+        ButtonWireframeIcon { // saveButton
 
             fullColor: true
             primaryColor: Theme.colorGrey

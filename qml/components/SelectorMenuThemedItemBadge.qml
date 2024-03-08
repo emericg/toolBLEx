@@ -18,6 +18,7 @@ T.Button {
 
     // settings
     property int index
+    property bool badgeFade: false
     property string badgeText
     property string badgeColor: Theme.colorPrimary
     property url source
@@ -82,7 +83,7 @@ T.Button {
             height: width
             radius: width
 
-            visible: control.badgeText
+            visible: (control.badgeText || control.badgeFade)
             color: control.badgeColor
             opacity: control.highlighted ? 1 : 0.6
 
@@ -94,15 +95,22 @@ T.Button {
                 height: width
                 radius: width
                 color: control.badgeColor
-
-                ParallelAnimation {
-                    id: blinkAnim
-                    loops: 1
-                    running: false
-                    alwaysRunToEnd: false
-                    NumberAnimation { target: blinkRect; property: "width"; from: 12; to: 40; duration: 666; }
-                    NumberAnimation { target: blinkRect; property: "opacity"; from: 0.85; to: 0; duration: 666; }
-                }
+            }
+            ParallelAnimation {
+                id: blinkAnim
+                running: false
+                loops: 1
+                alwaysRunToEnd: false
+                NumberAnimation { target: blinkRect; property: "width"; from: 12; to: 40; duration: 666; }
+                NumberAnimation { target: blinkRect; property: "opacity"; from: 0.85; to: 0; duration: 666; }
+            }
+            SequentialAnimation on opacity {
+                id: fadeAnim
+                running: control.badgeFade
+                loops: Animation.Infinite
+                alwaysRunToEnd: true
+                PropertyAnimation { to: 0.33; duration: 666; }
+                PropertyAnimation { to: 0.66; duration: 666; }
             }
 
             Text {

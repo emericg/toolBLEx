@@ -62,7 +62,7 @@ Loader {
             contentWidth: -1
             contentHeight: settingsColumn.height
 
-            boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
+            boundsBehavior: Flickable.StopAtBounds
             ScrollBar.vertical: ScrollBar { visible: false }
 
             Column {

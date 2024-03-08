@@ -97,7 +97,8 @@ Item {
 
                     text: qsTr("device info")
                     badgeText: (selectedDevice && selectedDevice.connected) ? " " : ""
-                    badgeColor: Theme.colorGreen
+                    badgeColor: (selectedDevice && selectedDevice.status === 2) ? Theme.colorYellow : Theme.colorGreen
+                    badgeFade: (selectedDevice && selectedDevice.status === 2)
                     onClicked: deviceMenu.menuSelected(index)
                     sourceSize: 0
                 }
@@ -117,7 +118,7 @@ Item {
                     highlighted: (deviceMenu.currentSelection === index)
 
                     text: qsTr("services")
-                    badgeText: (selectedDevice && selectedDevice.servicesScanned) ? selectedDevice.servicesCount : "?"
+                    badgeText: (selectedDevice && selectedDevice.servicesCount) ? selectedDevice.servicesCount : "?"
                     onClicked: deviceMenu.menuSelected(index)
                     sourceSize: 0
                 }

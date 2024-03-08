@@ -74,9 +74,12 @@ Popup {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            height: 80
+            height: 88
             color: Theme.colorPrimary
             radius: Theme.componentRadius
+
+            border.color: Qt.darker(color, 1.05)
+            border.width: Theme.componentBorderWidth
 
             Column {
                 anchors.left: parent.left
@@ -84,7 +87,7 @@ Popup {
                 anchors.right: parent.right
                 anchors.rightMargin: 24
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 4
+                spacing: 2
 
                 Text {
                     anchors.left: parent.left
@@ -109,14 +112,14 @@ Popup {
                         font.pixelSize: Theme.fontSizeTitle-4
                         elide: Text.ElideRight
                         color: "white"
-                        opacity: 0.9
+                        opacity: 0.92
                     }
                     Text {
                         text: selectedDevice.deviceAddress
                         font.pixelSize: Theme.fontSizeTitle-4
                         elide: Text.ElideRight
                         color: "white"
-                        opacity: 0.9
+                        opacity: 0.88
                     }
                 }
             }
@@ -180,6 +183,11 @@ Popup {
                     ItemTag {
                         height: 36
                         text: qsTr("%n service(s)", "", selectedDevice.servicesCount)
+                        textColor: Theme.colorSubText
+                    }
+                    ItemTag {
+                        height: 36
+                        text: qsTr("%n characteristic(s)", "", selectedDevice.characteristicsCount)
                         textColor: Theme.colorSubText
                     }
 

@@ -22,8 +22,8 @@ T.Button {
     focusPolicy: Qt.NoFocus
 
     // colors
-    property string colorHighlighted: Theme.colorPrimary
-    property string colorHovered: Theme.colorHeader
+    property string colorHighlight: Theme.colorPrimary
+    property string colorHover: Theme.colorHeader
 
     ////////////////
 
@@ -38,8 +38,8 @@ T.Button {
             return 1
         }
         color: {
-            if (control.highlighted) return control.colorHighlighted
-            if (control.hovered) return control.colorHovered
+            if (control.highlighted) return control.colorHighlight
+            if (control.hovered) return control.colorHover
             return "transparent"
         }
     }

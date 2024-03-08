@@ -11,6 +11,10 @@ Rectangle {
 
     property var characteristic: modelData
 
+    property bool editable: (selectedDevice &&
+                             selectedDevice.connected &&
+                             selectedDevice.servicesScanned)
+
     ////////////////
 
     Loader {
@@ -23,7 +27,7 @@ Rectangle {
             parent: appContent
 
             onConfirmed: {
-                //selectedDevice.askForWrite(characteristic.uuid_full, "wat")
+                // the popup itself is triggering the write
             }
         }
     }
@@ -95,16 +99,24 @@ Rectangle {
                 model: modelData.propertiesList
                 ItemActionTag {
                     anchors.verticalCenter: parent.verticalCenter
-                    enabled: (selectedDevice && selectedDevice.servicesScanned)
+                    enabled: bleCharacteristicWidget.editable
                     text: modelData
+                    colorBackground: {
+                        if (!characteristic) return Theme.colorForeground
+                        if (modelData === "Notify" && characteristic.notifyInProgress) return Theme.colorWarning
+                        if (modelData === "Read" && characteristic.readInProgress) return Theme.colorWarning
+                        if ((modelData === "Write" || modelData === "WriteNoResp") && characteristic.writeInProgress) return Theme.colorWarning
+                        return Theme.colorForeground
+                    }
                     highlighted: {
+                        if (!characteristic) return false
                         if (modelData === "Notify") return characteristic.notifyInProgress
                         if (modelData === "Read") return characteristic.readInProgress
                         if (modelData === "Write" || modelData === "WriteNoResp") return characteristic.writeInProgress
                         return false
                     }
                     onClicked: {
-                        if (selectedDevice && selectedDevice.servicesScanned) {
+                        if (bleCharacteristicWidget.editable) {
                             if (text === "Notify") {
                                 selectedDevice.askForNotify(characteristic.uuid_full)
                             }
@@ -137,10 +149,8 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 text: {
                     if (modelData.dataSize === 0) {
-                        if (selectedDevice.servicesCached)
-                            return qsTr("no data from cache")
-                        else
-                            return qsTr("no data")
+                        if (selectedDevice.servicesCached) return qsTr("no data from cache")
+                        else return qsTr("no data")
                     } else {
                         return modelData.dataSize + " " + qsTr("bytes")
                     }

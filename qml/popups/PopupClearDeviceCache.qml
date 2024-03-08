@@ -53,9 +53,12 @@ Popup {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            height: 80
+            height: 88
             color: Theme.colorPrimary
             radius: Theme.componentRadius
+
+            border.color: Qt.darker(color, 1.05)
+            border.width: Theme.componentBorderWidth
 
             Column {
                 anchors.left: parent.left
@@ -63,7 +66,7 @@ Popup {
                 anchors.right: parent.right
                 anchors.rightMargin: 24
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 4
+                spacing: 2
 
                 Text {
                     anchors.left: parent.left
@@ -84,7 +87,7 @@ Popup {
                     font.pixelSize: Theme.fontSizeTitle-4
                     elide: Text.ElideRight
                     color: "white"
-                    opacity: 0.9
+                    opacity: 0.92
                 }
             }
         }

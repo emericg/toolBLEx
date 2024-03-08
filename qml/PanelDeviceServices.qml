@@ -44,7 +44,7 @@ Item {
 
                 ////
 
-                Text { // status row
+                Text {
                     anchors.left: parent.left
                     anchors.right: parent.right
 
@@ -77,6 +77,7 @@ Item {
                         text: qsTr("load from cache")
                         source: "qrc:/assets/icons_material/baseline-save-24px.svg"
 
+                        visible: (selectedDevice && selectedDevice.hasServiceCache)
                         enabled: (selectedDevice && selectedDevice.hasServiceCache &&
                                   selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
 
@@ -101,10 +102,10 @@ Item {
 
         header: Rectangle {
             width: servicesView.width
-            height: (selectedDevice && selectedDevice.servicesCached) ? 40 : 0
+            height: visible ? 40 : 0
             color: Theme.colorForeground
 
-            visible: (selectedDevice && selectedDevice.servicesCached)
+            visible: (selectedDevice && (selectedDevice.servicesCached || !selectedDevice.connected))
 
             IconSvg {
                 anchors.left: parent.left
@@ -113,17 +114,29 @@ Item {
                 width: 24
                 height: 24
                 source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
-                color: Theme.colorIcon
+                color: Theme.colorSubText
             }
 
             Text {
                 anchors.left: parent.left
-                anchors.leftMargin: 52
+                anchors.leftMargin: 56
                 anchors.right: parent.right
                 anchors.rightMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
 
+                visible: (selectedDevice && selectedDevice.servicesCached)
                 text: qsTr("Services info loaded from cache")
+                color: Theme.colorText
+            }
+            Text {
+                anchors.left: parent.left
+                anchors.leftMargin: 56
+                anchors.right: parent.right
+                anchors.rightMargin: 16
+                anchors.verticalCenter: parent.verticalCenter
+
+                visible: (selectedDevice && !selectedDevice.servicesCached && !selectedDevice.connected)
+                text: qsTr("Device is disconnected")
                 color: Theme.colorText
             }
         }

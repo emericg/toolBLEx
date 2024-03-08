@@ -10,7 +10,7 @@ Rectangle {
     width: contentText.contentWidth + 24
 
     radius: Theme.componentRadius
-    color: (mousearea.containsMouse || control.highlighted) ? Qt.darker(Theme.colorForeground, 1.1) : Theme.colorForeground
+    color: (mousearea.containsMouse || control.highlighted) ? control.colorHighlight : control.colorBackground
     Behavior on color { ColorAnimation { duration: 333; } }
 
     // actions
@@ -23,6 +23,10 @@ Rectangle {
     property bool textBold: false
     property int textCapitalization: Font.Normal
     property bool highlighted: false
+
+    // colors
+    property string colorHighlight: Qt.darker(Theme.colorForeground, 1.1)
+    property string colorBackground: Theme.colorForeground
 
     Text {
         id: contentText
