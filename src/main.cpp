@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * \date      2018
+ * \date      2022
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 

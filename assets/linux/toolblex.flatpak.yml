@@ -45,8 +45,8 @@ modules:
       - -DQT_BUILD_TESTS=OFF
     sources:
       - type: archive
-        url: https://download.qt.io/archive/qt/6.6/6.6.1/submodules/qtbase-everywhere-src-6.6.1.tar.xz
-        sha256: 450c5b4677b2fe40ed07954d7f0f40690068e80a94c9df86c2c905ccd59d02f7
+        url: https://download.qt.io/archive/qt/6.6/6.6.2/submodules/qtbase-everywhere-src-6.6.2.tar.xz
+        sha256: b89b426b9852a17d3e96230ab0871346574d635c7914480a2a27f98ff942677b
         x-checker-data:
           type: anitya
           project-id: 7927
@@ -65,8 +65,8 @@ modules:
       - -DQT_BUILD_TESTS=OFF
     sources:
       - type: archive
-        url: https://download.qt.io/archive/qt/6.6/6.6.1/submodules/qttools-everywhere-src-6.6.1.tar.xz
-        sha256: 4939105a7345ab4e19e7caee8654a836e65bd41910359623e0f233f3aff0914a
+        url: https://download.qt.io/archive/qt/6.6/6.6.2/submodules/qttools-everywhere-src-6.6.2.tar.xz
+        sha256: e6d49e9f52111287f77878ecb8b708cce682f10b03ba2476d9247603bc6c4746
         x-checker-data:
           type: anitya
           project-id: 7927
@@ -81,8 +81,8 @@ modules:
       - -DQT_BUILD_TESTS=OFF
     sources:
       - type: archive
-        url: https://download.qt.io/archive/qt/6.6/6.6.1/submodules/qtshadertools-everywhere-src-6.6.1.tar.xz
-        sha256: 08338fe4f54954928e41a8a5450627e61bca115039706c28161bf967785e73bb
+        url: https://download.qt.io/archive/qt/6.6/6.6.2/submodules/qtshadertools-everywhere-src-6.6.2.tar.xz
+        sha256: 628bead7ff4e7f42cb910f47d2adefbdea0d8c71a0234baef8ca709bf467b92f
         x-checker-data:
           type: anitya
           project-id: 7927
@@ -99,8 +99,8 @@ modules:
       - -DQT_BUILD_TESTS=OFF
     sources:
       - type: archive
-        url: https://download.qt.io/archive/qt/6.6/6.6.1/submodules/qtdeclarative-everywhere-src-6.6.1.tar.xz
-        sha256: 7effd7338e6658464ce9554dc88d1bf93a39d1415501be2c4b34c098b608995c
+        url: https://download.qt.io/archive/qt/6.6/6.6.2/submodules/qtdeclarative-everywhere-src-6.6.2.tar.xz
+        sha256: c39ce9a7c4468f7399c9ced0fbe6ef9c8d6550efc4b893297aa3cfb965b3d84c
         x-checker-data:
           type: anitya
           project-id: 7927
@@ -115,8 +115,8 @@ modules:
       - -DQT_BUILD_TESTS=OFF
     sources:
       - type: archive
-        url: https://download.qt.io/archive/qt/6.6/6.6.1/submodules/qtwayland-everywhere-src-6.6.1.tar.xz
-        sha256: 66cc2d632dc07fc6cc4e35247f48b7c1753276ccbf86e86d7b24d799725568b1
+        url: https://download.qt.io/archive/qt/6.6/6.6.2/submodules/qtwayland-everywhere-src-6.6.2.tar.xz
+        sha256: 9bcdd5cef7ae304e3e0435dac495367ccfb010d09f664b596ba330361941dd78
         x-checker-data:
           type: anitya
           project-id: 7927
@@ -133,8 +133,8 @@ modules:
       - -DQT_BUILD_TESTS=OFF
     sources:
       - type: archive
-        url: https://download.qt.io/archive/qt/6.6/6.6.1/submodules/qtimageformats-everywhere-src-6.6.1.tar.xz
-        sha256: ac4ed08950072e375be662cfa64fdb447dd6e935cf29c56a4128d1500492188f
+        url: https://download.qt.io/archive/qt/6.6/6.6.2/submodules/qtimageformats-everywhere-src-6.6.2.tar.xz
+        sha256: 71584c9136d4983ad19fa2d017abbae57b055eb90c62a36bf3f45d6d21a87cb3
         x-checker-data:
           type: anitya
           project-id: 7927
@@ -149,8 +149,8 @@ modules:
       - -DQT_BUILD_TESTS=OFF
     sources:
       - type: archive
-        url: https://download.qt.io/archive/qt/6.6/6.6.1/submodules/qtsvg-everywhere-src-6.6.1.tar.xz
-        sha256: 248deb56d26a463cf3162f530358ccf90cfb654bbf518bb35ddf81b205e09228
+        url: https://download.qt.io/archive/qt/6.6/6.6.2/submodules/qtsvg-everywhere-src-6.6.2.tar.xz
+        sha256: 5a231d59ef1b42bfbaa5174d4ff39f8e1b4ba070ef984a70b069b4b2576d8181
         x-checker-data:
           type: anitya
           project-id: 7927
@@ -165,8 +165,8 @@ modules:
       - -DQT_BUILD_TESTS=OFF
     sources:
       - type: archive
-        url: https://download.qt.io/archive/qt/6.6/6.6.1/submodules/qtconnectivity-everywhere-src-6.6.1.tar.xz
-        sha256: 5b468d4649464ff983746c5e9129b731de639ac835d35857f5d87cd4258e0645
+        url: https://download.qt.io/archive/qt/6.6/6.6.2/submodules/qtconnectivity-everywhere-src-6.6.2.tar.xz
+        sha256: a36f51085883ef8ae5782826d15cef261355a822eba76ccc323f3f0b81defab7
         x-checker-data:
           type: anitya
           project-id: 7927
@@ -181,8 +181,8 @@ modules:
       - -DQT_BUILD_TESTS=OFF
     sources:
       - type: archive
-        url: https://download.qt.io/archive/qt/6.6/6.6.1/submodules/qtcharts-everywhere-src-6.6.1.tar.xz
-        sha256: 1156caa94526b7e1bc30da800a7503d19744b10afc7c1f702da6dedfaa2a31b6
+        url: https://download.qt.io/archive/qt/6.6/6.6.2/submodules/qtcharts-everywhere-src-6.6.2.tar.xz
+        sha256: b1486262ee07b4420b8cdd1525c01800186b15d4fee0669cf544fdd5e941f5f4
         x-checker-data:
           type: anitya
           project-id: 7927
@@ -197,8 +197,8 @@ modules:
       - -DQT_BUILD_TESTS=OFF
     sources:
       - type: archive
-        url: https://download.qt.io/archive/qt/6.6/6.6.1/submodules/qt5compat-everywhere-src-6.6.1.tar.xz
-        sha256: 0e1d15b6eda4172383208109d957257c8fa26a8a881f2901a4e9f347a31bc1f2
+        url: https://download.qt.io/archive/qt/6.6/6.6.2/submodules/qt5compat-everywhere-src-6.6.2.tar.xz
+        sha256: e07b08ab7658e4856f07e3262ab342df4ed7e7a69f2720e56bb2128729191967
         x-checker-data:
           type: anitya
           project-id: 7927

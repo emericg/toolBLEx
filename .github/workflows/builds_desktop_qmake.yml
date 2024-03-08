@@ -14,8 +14,8 @@ on:
 
 env:
   APP_NAME: "toolBLEx"
-  APP_VERSION: "0.10"
-  QT_VERSION: "6.6.1"
+  APP_VERSION: "0.11"
+  QT_VERSION: "6.6.2"
 
 #-------------------------------------------------------------------------------
 # Workflow jobs
@@ -27,7 +27,7 @@ jobs:
     name: "Linux CI build"
     runs-on: ubuntu-20.04
     steps:
-      # Checkout the repository (and submodules)
+      # Checkout repository (and submodules)
       - name: Checkout repository (and submodules)
         uses: actions/checkout@v4
         with:
@@ -62,8 +62,8 @@ jobs:
       - name: Deploy application
         run: ./deploy_linux.sh -c -i -p
 
-      # Upload archive
-      - name: Upload archive
+      # Upload application ZIP
+      - name: Upload application ZIP
         uses: actions/upload-artifact@v4
         with:
           name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.tar.gz
@@ -81,7 +81,7 @@ jobs:
     name: "macOS CI build"
     runs-on: macos-12
     steps:
-      # Checkout the repository (and submodules)
+      # Checkout repository (and submodules)
       - name: Checkout repository (and submodules)
         uses: actions/checkout@v4
         with:
@@ -114,8 +114,8 @@ jobs:
       - name: Deploy application
         run: ./deploy_macos.sh -c -p
 
-      # Upload app ZIP
-      - name: Upload app ZIP
+      # Upload application ZIP
+      - name: Upload application ZIP
         uses: actions/upload-artifact@v4
         with:
           name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-macOS.zip
@@ -126,7 +126,7 @@ jobs:
     name: "Windows CI build"
     runs-on: windows-2022
     steps:
-      # Checkout the repository (and submodules)
+      # Checkout repository (and submodules)
       - name: Checkout repository (and submodules)
         uses: actions/checkout@v4
         with:
@@ -168,8 +168,8 @@ jobs:
       - name: Deploy application
         run: sh deploy_windows.sh -c -p
 
-      # Upload app ZIP
-      - name: Upload app ZIP
+      # Upload application ZIP
+      - name: Upload application ZIP
         uses: actions/upload-artifact@v4
         with:
           name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.zip
