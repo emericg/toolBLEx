@@ -1,9 +1,8 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Effects
 import QtQuick.Controls
 import QtQuick.Templates as T
-
-import Qt5Compat.GraphicalEffects
 
 import ThemeEngine
 import DeviceUtils
@@ -68,6 +67,11 @@ T.Button {
         }
     }
 
+    Connections {
+        target: screenScanner.item
+        function onSelectedDeviceChanged() { actionMenu.close() }
+    }
+
     ////////////////
 
     MouseArea {
@@ -110,48 +114,50 @@ T.Button {
         border.width: Theme.componentBorderWidth
         border.color: Qt.darker(color, 1.03)
 
-        Item {
-            anchors.fill: parent
+        Rectangle { // menu toggle
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
 
-            Rectangle { // menu toggle
-                anchors.top: parent.top
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
+            width: 32
+            color: Qt.darker(control.color, 1.03)
 
-                width: 32
-                color: Qt.darker(control.color, 1.03)
+            IconSvg {
+                anchors.centerIn: parent
+                width: 28
+                height: 28
 
-                IconSvg {
-                    anchors.centerIn: parent
-                    width: 28
-                    height: 28
+                Layout.maximumWidth: control.sourceSize
+                Layout.maximumHeight: control.sourceSize
+                Layout.alignment: Qt.AlignVCenter
 
-                    Layout.maximumWidth: control.sourceSize
-                    Layout.maximumHeight: control.sourceSize
-                    Layout.alignment: Qt.AlignVCenter
-
-                    opacity: enabled ? 1.0 : 0.66
-                    color: control.colorText
-                    source: "qrc:/assets/icons_material/baseline-more_vert-24px.svg"
-                }
+                opacity: enabled ? 1.0 : 0.66
+                color: control.colorText
+                source: "qrc:/assets/icons_material/baseline-more_vert-24px.svg"
             }
+        }
 
-            Rectangle { // mouse circle
-                id: mouseBackground
-                width: 0; height: width; radius: width;
-                x: mousearea.mouseX - (width / 2)
-                y: mousearea.mouseY - (width / 2)
+        Rectangle { // mouse circle
+            id: mouseBackground
+            width: 0; height: width; radius: width;
+            x: mousearea.mouseX - (width / 2)
+            y: mousearea.mouseY - (width / 2)
 
-                visible: control.hoverAnimation
-                color: "white"
-                opacity: mousearea.containsMouse ? 0.16 : 0
-                Behavior on opacity { NumberAnimation { duration: 333 } }
-                Behavior on width { NumberAnimation { duration: 200 } }
-            }
+            visible: control.hoverAnimation
+            color: "white"
+            opacity: mousearea.containsMouse ? 0.16 : 0
+            Behavior on opacity { NumberAnimation { duration: 333 } }
+            Behavior on width { NumberAnimation { duration: 200 } }
+        }
 
-            layer.enabled: control.hoverAnimation
-            layer.effect: OpacityMask {
-                maskSource: Rectangle {
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            maskEnabled: true
+            maskThresholdMin: 0.5
+            maskSpreadAtMin: 1.0
+            maskSpreadAtMax: 0.0
+            maskSource: ShaderEffectSource {
+                sourceItem: Rectangle {
                     x: background.x
                     y: background.y
                     width: background.width
@@ -214,12 +220,7 @@ T.Button {
     }
 
     ////////////////
-/*
-    Connections {
-        target: selectedDevice
-        function onStatusChanged() { actionMenu.close() }
-    }
-*/
+
     Popup { // menu
         id: actionMenu
         x: 0
@@ -287,13 +288,19 @@ T.Button {
             }
 
             layer.enabled: control.hoverAnimation
-            layer.effect: OpacityMask {
-                maskSource: Rectangle {
-                    x: background.x
-                    y: background.y
-                    width: background.width
-                    height: background.height
-                    radius: background.radius
+            layer.effect: MultiEffect {
+                maskEnabled: true
+                maskThresholdMin: 0.5
+                maskSpreadAtMin: 1.0
+                maskSpreadAtMax: 0.0
+                maskSource: ShaderEffectSource {
+                    sourceItem:Rectangle {
+                        x: background.x
+                        y: background.y
+                        width: background.width
+                        height: background.height
+                        radius: background.radius
+                    }
                 }
             }
         }

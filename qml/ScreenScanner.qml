@@ -115,7 +115,7 @@ Loader {
                         ButtonWireframe {
                             height: 28
                             fullColor: true
-                            primaryColor: Theme.colorActionbarHighlight
+                            primaryColor: Theme.colorPrimary
                             opacity: settingsManager.scanShowLowEnergy ? 1 : 0.5
                             font.bold: false
 
@@ -128,7 +128,7 @@ Loader {
                         ButtonWireframe {
                             height: 28
                             fullColor: true
-                            primaryColor: Theme.colorActionbarHighlight
+                            primaryColor: Theme.colorPrimary
                             opacity: settingsManager.scanShowClassic ? 1 : 0.5
                             font.bold: false
 
@@ -141,7 +141,7 @@ Loader {
                         ButtonWireframe {
                             height: 28
                             fullColor: true
-                            primaryColor: Theme.colorActionbarHighlight
+                            primaryColor: Theme.colorPrimary
                             opacity: settingsManager.scanShowCached ? 1 : 0.5
                             font.bold: false
 
@@ -154,7 +154,7 @@ Loader {
                         ButtonWireframe {
                             height: 28
                             fullColor: true
-                            primaryColor: Theme.colorActionbarHighlight
+                            primaryColor: Theme.colorPrimary
                             opacity: settingsManager.scanShowBlacklisted ? 1 : 0.5
                             font.bold: false
 
@@ -167,7 +167,7 @@ Loader {
                         ButtonWireframe {
                             height: 28
                             fullColor: true
-                            primaryColor: Theme.colorActionbarHighlight
+                            primaryColor: Theme.colorPrimary
                             opacity: settingsManager.scanShowBeacon ? 1 : 0.5
                             font.bold: false
 

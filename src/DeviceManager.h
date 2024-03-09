@@ -55,10 +55,12 @@ class DeviceManager: public QObject
 
     Q_PROPERTY(bool hasDevices READ areDevicesAvailable NOTIFY devicesListUpdated)
     Q_PROPERTY(int deviceCount READ getDeviceCount NOTIFY devicesListUpdated)
-
-    Q_PROPERTY(int deviceCached READ getDeviceCached NOTIFY devicesCacheUpdated)
     Q_PROPERTY(DeviceHeader *deviceHeader READ getDeviceHeader NOTIFY deviceHeaderUpdated)
     Q_PROPERTY(DeviceFilter *devicesList READ getDevicesFiltered NOTIFY devicesListUpdated)
+
+    Q_PROPERTY(int deviceSeenCached READ getDeviceSeenCached NOTIFY devicesSeenCacheUpdated)
+
+    Q_PROPERTY(int deviceStructureCached READ getDeviceStructureCached NOTIFY devicesStructureCacheUpdated)
 
     ////////
 
@@ -106,7 +108,8 @@ class DeviceManager: public QObject
 
     QList <QString> m_devices_blacklist;
 
-    int m_devicesCachedCount = 0;
+    int m_devicesSeenCachedCount = 0;
+    int m_devicesStructureCachedCount = 0;
 
     DeviceModel *m_devices_model = nullptr;
     DeviceFilter *m_devices_filter = nullptr;
@@ -177,7 +180,8 @@ Q_SIGNALS:
 
     void deviceHeaderUpdated();
     void devicesListUpdated();
-    void devicesCacheUpdated();
+    void devicesSeenCacheUpdated();
+    void devicesStructureCacheUpdated();
     void devicesBlacklistUpdated();
 
     void advertisingChanged();
@@ -236,13 +240,18 @@ public:
 
     Q_INVOKABLE void checkPaired();
 
-    // Device management
-    void cacheDevice(const QString &addr);
-    void uncacheDevice(const QString &addr);
-    bool isDeviceCached(const QString &addr);
-    Q_INVOKABLE void clearDeviceCache();
-    Q_INVOKABLE int countDeviceCached();
-    int getDeviceCached() const { return m_devicesCachedCount; }
+    // Device saved
+    int getDeviceSeenCached() const { return m_devicesSeenCachedCount; }
+    void cacheDeviceSeen(const QString &addr);
+    void uncacheDeviceSeen(const QString &addr);
+    bool isDeviceSeenCached(const QString &addr);
+    Q_INVOKABLE void clearDeviceSeenCache();
+    Q_INVOKABLE int countDeviceSeenCached();
+
+    int getDeviceStructureCached() const { return m_devicesStructureCachedCount; }
+    Q_INVOKABLE QString getDeviceStructureDirectory() const;
+    Q_INVOKABLE void clearDeviceStructureCache();
+    Q_INVOKABLE int countDeviceStructureCached();
 
     void blacklistDevice(const QString &addr);
     void whitelistDevice(const QString &addr);

@@ -27,8 +27,10 @@
 #include "device.h"
 #include "device_toolblex.h"
 
+#include <QDir>
 #include <QList>
 #include <QDateTime>
+#include <QStandardPaths>
 #include <QDebug>
 
 #include <QBluetoothLocalDevice>
@@ -87,7 +89,7 @@ DeviceManager::DeviceManager(bool daemon)
         }
 
         // Count saved devices
-        countDeviceCached();
+        countDeviceSeenCached();
 
         // Load saved devices
         QSqlQuery queryDevices;
@@ -107,6 +109,9 @@ DeviceManager::DeviceManager(bool daemon)
             }
         }
     }
+
+    // Count device structure cache files
+    countDeviceStructureCached();
 
     // Check if we have Bluetooth classic device paired
     checkPaired();
@@ -981,7 +986,7 @@ void DeviceManager::addBleDevice(const QBluetoothDeviceInfo &info)
         SettingsManager *sm = SettingsManager::getInstance();
         if (sm->getScanCacheAuto() && !d->isBeacon())
         {
-            cacheDevice(d->getAddress());
+            cacheDeviceSeen(d->getAddress());
         }
 
         //qDebug() << "Device added (from BLE discovery): " << d->getName() << "/" << d->getAddress();
@@ -1089,7 +1094,7 @@ bool DeviceManager::isDeviceBlacklisted(const QString &addr)
 
 /* ************************************************************************** */
 
-void DeviceManager::cacheDevice(const QString &addr)
+void DeviceManager::cacheDeviceSeen(const QString &addr)
 {
     if (m_dbInternal || m_dbExternal)
     {
@@ -1128,8 +1133,8 @@ void DeviceManager::cacheDevice(const QString &addr)
 
                     if (cacheDevice.exec())
                     {
-                        m_devicesCachedCount++;
-                        Q_EMIT devicesCacheUpdated();
+                        m_devicesSeenCachedCount++;
+                        Q_EMIT devicesSeenCacheUpdated();
                     }
                     else
                     {
@@ -1142,7 +1147,7 @@ void DeviceManager::cacheDevice(const QString &addr)
     }
 }
 
-void DeviceManager::uncacheDevice(const QString &addr)
+void DeviceManager::uncacheDeviceSeen(const QString &addr)
 {
     if (m_dbInternal || m_dbExternal)
     {
@@ -1159,8 +1164,8 @@ void DeviceManager::uncacheDevice(const QString &addr)
 
                 if (uncacheDevice.exec())
                 {
-                    m_devicesCachedCount--;
-                    Q_EMIT devicesCacheUpdated();
+                    m_devicesSeenCachedCount--;
+                    Q_EMIT devicesSeenCacheUpdated();
                 }
                 else
                 {
@@ -1174,7 +1179,7 @@ void DeviceManager::uncacheDevice(const QString &addr)
     }
 }
 
-bool DeviceManager::isDeviceCached(const QString &addr)
+bool DeviceManager::isDeviceSeenCached(const QString &addr)
 {
     if (m_dbInternal || m_dbExternal)
     {
@@ -1191,7 +1196,7 @@ bool DeviceManager::isDeviceCached(const QString &addr)
     return false;
 }
 
-void DeviceManager::clearDeviceCache()
+void DeviceManager::clearDeviceSeenCache()
 {
     // Remove every device in the list but not currently scanned
     for (auto d: std::as_const(m_devices_model->m_devices))
@@ -1207,44 +1212,83 @@ void DeviceManager::clearDeviceCache()
     // Clear persistent cache
     if (m_dbInternal || m_dbExternal)
     {
-        QSqlQuery clearDeviceCache;
-        clearDeviceCache.prepare("DELETE FROM devices");
-        if (clearDeviceCache.exec())
+        QSqlQuery clearDeviceSeenCache;
+        clearDeviceSeenCache.prepare("DELETE FROM devices");
+        if (clearDeviceSeenCache.exec())
         {
-            m_devicesCachedCount = 0;
-            Q_EMIT devicesCacheUpdated();
+            m_devicesSeenCachedCount = 0;
+            Q_EMIT devicesSeenCacheUpdated();
         }
         else
         {
-            qWarning() << "> clearDeviceCache.exec() ERROR"
-                       << clearDeviceCache.lastError().type() << ":" << clearDeviceCache.lastError().text();
+            qWarning() << "> clearDeviceSeenCache.exec() ERROR"
+                       << clearDeviceSeenCache.lastError().type() << ":" << clearDeviceSeenCache.lastError().text();
         }
     }
 }
 
-int DeviceManager::countDeviceCached()
+int DeviceManager::countDeviceSeenCached()
 {
     // Count device cached
     if (m_dbInternal || m_dbExternal)
     {
-        QSqlQuery countDeviceCached;
-        countDeviceCached.prepare("SELECT COUNT(*) FROM devices");
-        if (countDeviceCached.exec() == false)
+        QSqlQuery countDeviceSeenCached;
+        countDeviceSeenCached.prepare("SELECT COUNT(*) FROM devices");
+        if (countDeviceSeenCached.exec() == false)
         {
-            qWarning() << "> countDeviceCached.exec() ERROR"
-                       << countDeviceCached.lastError().type() << ":" << countDeviceCached.lastError().text();
+            qWarning() << "> countDeviceSeenCached.exec() ERROR"
+                       << countDeviceSeenCached.lastError().type() << ":" << countDeviceSeenCached.lastError().text();
         }
         else
         {
-            if (countDeviceCached.first())
+            if (countDeviceSeenCached.first())
             {
-                m_devicesCachedCount = countDeviceCached.value(0).toInt();
-                Q_EMIT devicesCacheUpdated();
+                m_devicesSeenCachedCount = countDeviceSeenCached.value(0).toInt();
+                Q_EMIT devicesSeenCacheUpdated();
             }
         }
     }
 
-    return m_devicesCachedCount;
+    return m_devicesSeenCachedCount;
+}
+
+/* ************************************************************************** */
+
+QString DeviceManager::getDeviceStructureDirectory() const
+{
+    return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/devices/";
+}
+
+int DeviceManager::countDeviceStructureCached()
+{
+    QDir cacheFolder = getDeviceStructureDirectory();
+    QStringList filters("*.cache");
+    QStringList files = cacheFolder.entryList(filters, QDir::Files);
+
+    m_devicesStructureCachedCount = files.count();
+    Q_EMIT devicesStructureCacheUpdated();
+
+    return m_devicesStructureCachedCount;
+}
+
+void DeviceManager::clearDeviceStructureCache()
+{
+    QString cacheDirPath = getDeviceStructureDirectory();
+    if (cacheDirPath.isEmpty()) return;
+
+    QDir cacheFolder = cacheDirPath;
+    QStringList filters("*.cache");
+    QStringList files = cacheFolder.entryList(filters, QDir::Files);
+    for (const auto &file: files)
+    {
+        if (!file.isEmpty())
+        {
+            //qDebug() << "REMOVING FILE" << cacheDirPath + file;
+            QFile::remove(cacheDirPath + file);
+        }
+    }
+
+    countDeviceStructureCached();
 }
 
 /* ************************************************************************** */

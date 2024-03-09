@@ -1,11 +1,11 @@
 import QtQuick
 import QtQuick.Controls
-import Qt5Compat.GraphicalEffects
+import QtQuick.Effects
 
 import ThemeEngine
 
 Popup {
-    id: popupClearDeviceCache
+    id: popupClearDeviceSeenCache
 
     x: ((appWindow.width / 2) - (width / 2))
     y: ((appWindow.height / 2) - (height / 2) - (appHeader.height))
@@ -16,13 +16,24 @@ Popup {
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
-    signal confirmed()
+    enter: Transition { NumberAnimation { property: "opacity"; from: 0.333; to: 1.0; duration: 233; } }
 
     ////////////////////////////////////////////////////////////////////////////
 
-    enter: Transition { NumberAnimation { property: "opacity"; from: 0.33; to: 1.0; duration: 233; } }
+    Overlay.modal: Rectangle {
+        color: "#000"
+        opacity: (ThemeEngine.currentTheme === ThemeEngine.THEME_DESKTOP_LIGHT) ? 0.333 : 0.666
+    }
 
     background: Item {
+        MultiEffect {
+            anchors.fill: parent
+            source: bgrect
+            autoPaddingEnabled: true
+            shadowEnabled: true
+            shadowColor: (ThemeEngine.currentTheme === ThemeEngine.THEME_DESKTOP_LIGHT) ?
+                             "#aa000000" : "#aaffffff"
+        }
         Rectangle {
             id: bgrect
             anchors.fill: parent
@@ -31,13 +42,6 @@ Popup {
             color: Theme.colorBackground
             border.color: Theme.colorSeparator
             border.width: Theme.componentBorderWidth
-        }
-        DropShadow {
-            anchors.fill: parent
-            source: bgrect
-            color: "#60000000"
-            samples: 24
-            cached: true
         }
     }
 
@@ -53,7 +57,7 @@ Popup {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            height: 88
+            height: 96
             color: Theme.colorPrimary
             radius: Theme.componentRadius
 
@@ -66,13 +70,13 @@ Popup {
                 anchors.right: parent.right
                 anchors.rightMargin: 24
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 2
+                spacing: 4
 
                 Text {
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    text: qsTr("Clear device cache")
+                    text: qsTr("Device seen cache")
                     font.pixelSize: Theme.fontSizeTitle
                     font.bold: true
                     elide: Text.ElideRight
@@ -83,7 +87,7 @@ Popup {
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    text: qsTr("Are you sure you want to clear the device cache?")
+                    text: qsTr("Are you sure you want to clear the device seen cache?")
                     font.pixelSize: Theme.fontSizeTitle-4
                     elide: Text.ElideRight
                     color: "white"
@@ -111,7 +115,7 @@ Popup {
                     anchors.leftMargin: 16
                     anchors.rightMargin: 16
 
-                    text: qsTr("There are %n device(s) in the cache.", "", deviceManager.deviceCached)
+                    text: qsTr("There are %n device(s) in the cache.", "", deviceManager.deviceSeenCached)
                     textFormat: Text.StyledText
                     font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorText
@@ -127,7 +131,7 @@ Popup {
 
                 Text {
                     width: parent.width
-                    text: qsTr("Cached devices persists between session, even if they are not detected nearby.")
+                    text: qsTr("Devices in the cache persists between sessions, even if they are not detected nearby.")
                     textFormat: Text.StyledText
                     font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorSubText
@@ -158,7 +162,7 @@ Popup {
                 secondaryColor: Theme.colorForeground
 
                 text: qsTr("Cancel")
-                onClicked: popupClearDeviceCache.close()
+                onClicked: popupClearDeviceSeenCache.close()
             }
             ButtonWireframe {
                 fullColor: true
@@ -166,8 +170,8 @@ Popup {
 
                 text: qsTr("Clear cache")
                 onClicked: {
-                    popupClearDeviceCache.confirmed()
-                    popupClearDeviceCache.close()
+                    deviceManager.clearDeviceSeenCache()
+                    popupClearDeviceSeenCache.close()
                 }
             }
         }

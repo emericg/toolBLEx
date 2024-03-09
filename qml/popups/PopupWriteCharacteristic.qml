@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls
-import Qt5Compat.GraphicalEffects
+import QtQuick.Effects
 
 import ThemeEngine
 
@@ -16,9 +16,16 @@ Popup {
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
+    enter: Transition { NumberAnimation { property: "opacity"; from: 0.333; to: 1.0; duration: 233; } }
+
     signal confirmed()
 
     property var characteristic: null
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    onAboutToShow: { }
+    onAboutToHide: { }
 
     function openCC(cc) {
         characteristic = cc
@@ -26,14 +33,22 @@ Popup {
         open()
     }
 
-    onAboutToShow: { }
-    onAboutToHide: { } // TODO // cleanup
-
     ////////////////////////////////////////////////////////////////////////////
 
-    enter: Transition { NumberAnimation { property: "opacity"; from: 0.33; to: 1.0; duration: 233; } }
+    Overlay.modal: Rectangle {
+        color: "#000"
+        opacity: (ThemeEngine.currentTheme === ThemeEngine.THEME_DESKTOP_LIGHT) ? 0.333 : 0.666
+    }
 
     background: Item {
+        MultiEffect {
+            anchors.fill: parent
+            source: bgrect
+            autoPaddingEnabled: true
+            shadowEnabled: true
+            shadowColor: (ThemeEngine.currentTheme === ThemeEngine.THEME_DESKTOP_LIGHT) ?
+                             "#aa000000" : "#aaffffff"
+        }
         Rectangle {
             id: bgrect
             anchors.fill: parent
@@ -42,13 +57,6 @@ Popup {
             color: Theme.colorBackground
             border.color: Theme.colorSeparator
             border.width: Theme.componentBorderWidth
-        }
-        DropShadow {
-            anchors.fill: parent
-            source: bgrect
-            color: "#60000000"
-            samples: 24
-            cached: true
         }
     }
 
@@ -64,7 +72,7 @@ Popup {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            height: 88
+            height: 96
             color: Theme.colorPrimary
             radius: Theme.componentRadius
 
@@ -77,7 +85,7 @@ Popup {
                 anchors.right: parent.right
                 anchors.rightMargin: 24
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 2
+                spacing: 4
 
                 Text {
                     anchors.left: parent.left

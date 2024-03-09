@@ -40,17 +40,24 @@ Loader {
         ////////////////////////////////////////////////////////////////////////
 
         Loader {
-            id: popupLoader_cache
+            id: popupLoader_cacheseen
 
             active: false
             asynchronous: false
-            sourceComponent: PopupClearDeviceCache {
-                id: popupClearCache
+            sourceComponent: PopupClearDeviceSeenCache {
+                id: popupClearSeenCache
                 parent: appContent
+            }
+        }
 
-                onConfirmed: {
-                    deviceManager.clearDeviceCache()
-                }
+        Loader {
+            id: popupLoader_cachestructure
+
+            active: false
+            asynchronous: false
+            sourceComponent: PopupClearDeviceStructureCache {
+                id: popupClearStructureCache
+                parent: appContent
             }
         }
 
@@ -63,7 +70,7 @@ Loader {
             contentHeight: settingsColumn.height
 
             boundsBehavior: Flickable.StopAtBounds
-            ScrollBar.vertical: ScrollBar { visible: false }
+            ScrollBar.vertical: ScrollBar { policy: ScrollBar.AsNeeded }
 
             Column {
                 id: settingsColumn
@@ -693,7 +700,7 @@ Loader {
                                 anchors.rightMargin: 64
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                text: qsTr("Cache devices automatically")
+                                text: qsTr("Automatically save devices seen nearby")
                                 textFormat: Text.PlainText
                                 font.pixelSize: Theme.fontSizeContent
                                 font.bold: false
@@ -717,7 +724,7 @@ Loader {
                             height: 48
                             color: Theme.colorForeground
 
-                            visible: (deviceManager.deviceCached > 0)
+                            visible: (deviceManager.deviceSeenCached > 0)
 
                             Row {
                                 anchors.left: parent.left
@@ -730,7 +737,7 @@ Loader {
                                 Text {
                                     anchors.verticalCenter: parent.verticalCenter
 
-                                    text: qsTr("Device cache")
+                                    text: qsTr("Device seen cache")
                                     textFormat: Text.PlainText
                                     font.pixelSize: Theme.fontSizeContent
                                     color: Theme.colorText
@@ -738,7 +745,7 @@ Loader {
                                 Text {
                                     anchors.verticalCenter: parent.verticalCenter
 
-                                    text: qsTr("%n device(s)", "", deviceManager.deviceCached)
+                                    text: qsTr("%n device(s)", "", deviceManager.deviceSeenCached)
                                     textFormat: Text.PlainText
                                     font.pixelSize: Theme.fontSizeContentSmall
                                     color: Theme.colorText
@@ -761,8 +768,64 @@ Loader {
                                 fullColor: true
                                 text: qsTr("Clear cache")
                                 onClicked: {
-                                    popupLoader_cache.active = true
-                                    popupLoader_cache.item.open()
+                                    popupLoader_cacheseen.active = true
+                                    popupLoader_cacheseen.item.open()
+                                }
+                            }
+                        }
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 48
+                            color: Theme.colorForeground
+
+                            visible: (deviceManager.deviceSeenCached > 0)
+
+                            Row {
+                                anchors.left: parent.left
+                                anchors.leftMargin: 20
+                                anchors.right: parent.right
+                                anchors.rightMargin: 64
+                                anchors.verticalCenter: parent.verticalCenter
+                                spacing: 24
+
+                                Text {
+                                    anchors.verticalCenter: parent.verticalCenter
+
+                                    text: qsTr("Device structure cache")
+                                    textFormat: Text.PlainText
+                                    font.pixelSize: Theme.fontSizeContent
+                                    color: Theme.colorText
+                                }
+                                Text {
+                                    anchors.verticalCenter: parent.verticalCenter
+
+                                    text: qsTr("%n device(s)", "", deviceManager.deviceStructureCached)
+                                    textFormat: Text.PlainText
+                                    font.pixelSize: Theme.fontSizeContentSmall
+                                    color: Theme.colorText
+
+                                    Rectangle {
+                                        anchors.fill: parent
+                                        anchors.margins: -8
+                                        z: -1
+                                        radius: Theme.componentRadius
+                                        color: Theme.colorComponent
+                                    }
+                                }
+                            }
+
+                            ButtonWireframe {
+                                anchors.right: parent.right
+                                anchors.rightMargin: 16
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                fullColor: true
+                                text: qsTr("Clear cache")
+                                onClicked: {
+                                    popupLoader_cachestructure.active = true
+                                    popupLoader_cachestructure.item.open()
                                 }
                             }
                         }

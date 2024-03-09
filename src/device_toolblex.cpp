@@ -30,10 +30,10 @@
 #include <QBluetoothServiceInfo>
 #include <QLowEnergyService>
 
-#include <QStandardPaths>
 #include <QDir>
 #include <QFile>
 #include <QTextStream>
+#include <QStandardPaths>
 
 #include <QJsonDocument>
 #include <QJsonArray>
@@ -409,8 +409,8 @@ void DeviceToolBLEx::cache(bool c)
 {
     if (m_isCached != c)
     {
-        if (c) static_cast<DeviceManager *>(parent())->cacheDevice(m_deviceAddress);
-        else static_cast<DeviceManager *>(parent())->uncacheDevice(m_deviceAddress);
+        if (c) static_cast<DeviceManager *>(parent())->cacheDeviceSeen(m_deviceAddress);
+        else static_cast<DeviceManager *>(parent())->uncacheDeviceSeen(m_deviceAddress);
 
         setCached(c);
     }
