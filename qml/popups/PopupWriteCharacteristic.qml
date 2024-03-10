@@ -37,7 +37,7 @@ Popup {
 
     Overlay.modal: Rectangle {
         color: "#000"
-        opacity: (ThemeEngine.currentTheme === ThemeEngine.THEME_DESKTOP_LIGHT) ? 0.333 : 0.666
+        opacity: ThemeEngine.isLight ? 0.333 : 0.666
     }
 
     background: Item {
@@ -46,8 +46,7 @@ Popup {
             source: bgrect
             autoPaddingEnabled: true
             shadowEnabled: true
-            shadowColor: (ThemeEngine.currentTheme === ThemeEngine.THEME_DESKTOP_LIGHT) ?
-                             "#aa000000" : "#aaffffff"
+            shadowColor: ThemeEngine.isLight ? "#aa000000" : "#aaffffff"
         }
         Rectangle {
             id: bgrect

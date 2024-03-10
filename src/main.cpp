@@ -29,6 +29,7 @@
 
 #include "utils_app.h"
 #include "utils_screen.h"
+#include "utils_sysinfo.h"
 #include "utils_language.h"
 #if defined(Q_OS_MACOS)
 #include "utils_os_macos_dock.h"
@@ -96,6 +97,7 @@ int main(int argc, char *argv[])
     // Init generic utils
     UtilsApp *utilsApp = UtilsApp::getInstance();
     UtilsScreen *utilsScreen = UtilsScreen::getInstance();
+    UtilsSysInfo *utilsSysInfo = UtilsSysInfo::getInstance();
     UtilsLanguage *utilsLanguage = UtilsLanguage::getInstance();
     if (!utilsScreen || !utilsApp || !utilsLanguage)
     {
@@ -122,8 +124,9 @@ int main(int argc, char *argv[])
     engine_context->setContextProperty("ubertooth", uber);
 
     engine_context->setContextProperty("utilsApp", utilsApp);
-    engine_context->setContextProperty("utilsLanguage", utilsLanguage);
     engine_context->setContextProperty("utilsScreen", utilsScreen);
+    engine_context->setContextProperty("utilsSysInfo", utilsSysInfo);
+    engine_context->setContextProperty("utilsLanguage", utilsLanguage);
 
     // Load the main view
     engine.load(QUrl(QStringLiteral("qrc:/qml/DesktopApplication.qml")));
@@ -141,6 +144,9 @@ int main(int argc, char *argv[])
 
     // QQuickWindow must be valid at this point
     QQuickWindow *window = qobject_cast<QQuickWindow *>(engine.rootObjects().value(0));
+
+    // Infos
+    utilsApp->setQuickWindow(window);
 
     // React to secondary instances
     QObject::connect(&app, &SingleApplication::instanceStarted, window, &QQuickWindow::show);

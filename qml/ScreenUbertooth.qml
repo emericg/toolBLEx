@@ -246,6 +246,16 @@ Loader {
                         radius: 2
                         color: Theme.colorBackground
 
+                        Repeater {
+                            model: 5
+                            Rectangle {
+                                x: (256 / 6) * (index+1) - 1
+                                width: 2
+                                height: 8
+                                color: Theme.colorSeparator
+                                opacity: 0.66
+                            }
+                        }
                         Rectangle {
                             anchors.left: parent.left
                             anchors.leftMargin: UtilsNumber.mapNumber(ubertooth.freqMin, 2300, 2600, 0, parent.width)

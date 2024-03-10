@@ -428,11 +428,11 @@ Loader {
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 model: ListModel {
-                                    ListElement { idx: 1; txt: qsTr("°C"); src: ""; sz: 16; }
-                                    ListElement { idx: 2; txt: qsTr("°F"); src: ""; sz: 16; }
+                                    ListElement { idx: 0; txt: qsTr("metric"); src: ""; sz: 16; }
+                                    ListElement { idx: 1; txt: qsTr("imperial"); src: ""; sz: 16; }
                                 }
 
-                                currentSelection: (settingsManager.appUnits === 0) ? 1 : 2
+                                currentSelection: settingsManager.appUnits
                                 onMenuSelected: (index) => {
                                     currentSelection = index
                                     settingsManager.appUnits = index
@@ -508,6 +508,7 @@ Loader {
 
                             SwitchThemedDesktop {
                                 anchors.right: parent.right
+                                anchors.rightMargin: 8
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 checked: settingsManager.appSplashScreen
@@ -578,6 +579,7 @@ Loader {
 
                             SwitchThemedDesktop {
                                 anchors.right: parent.right
+                                anchors.rightMargin: 8
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 checked: settingsManager.scanAuto
@@ -609,6 +611,7 @@ Loader {
 
                             SwitchThemedDesktop {
                                 anchors.right: parent.right
+                                anchors.rightMargin: 8
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 checked: settingsManager.scanPause
@@ -711,6 +714,7 @@ Loader {
 
                             SwitchThemedDesktop {
                                 anchors.right: parent.right
+                                anchors.rightMargin: 8
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 checked: settingsManager.scanCacheAuto
@@ -950,7 +954,7 @@ Loader {
                                 text: settingsManager.ubertooth_path
                                 placeholderText: "ubertooth-specan"
 
-                                dialogTitle: qsTr("Please select the path to the ubertooth-specan binary")
+                                dialogTitle: qsTr("Please specify the path to the ubertooth-specan binary")
                                 dialogFilter: ["specan binary (ubertooth-specan)"]
                                 dialogFileMode: FileDialog.OpenFile
 
@@ -1108,162 +1112,239 @@ Loader {
                             }
                         }
 
-                        Row {
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            spacing: 2
-
-                            Rectangle {
-                                width: parent.width * 0.7 - 1
-                                height: 32
-                                color: Theme.colorForeground
-
-                                Text {
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 20
-                                    anchors.verticalCenter: parent.verticalCenter
-
-                                    text: "- Qt6"
-                                    textFormat: Text.PlainText
-                                    color: Theme.colorText
-                                    font.pixelSize: Theme.fontSizeContent
-                                    wrapMode: Text.WordWrap
-                                }
+                        Repeater {
+                            model: ListModel {
+                                ListElement { txt: "Qt6"; license: "LGPL v3"; link: "https://qt.io" }
+                                ListElement { txt: "SingleApplication"; license: "MIT"; link: "https://github.com/itay-grudev/SingleApplication" }
+                                ListElement { txt: "Google Material Icons"; license: "MIT"; link: "https://fonts.google.com/icons" }
+                                ListElement { txt: "Bootstrap Icons"; license: "MIT"; link: "https://icons.getbootstrap.com/" }
                             }
+                            delegate: Row {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                spacing: 2
 
-                            Rectangle {
-                                width: parent.width * 0.3 - 1
-                                height: 32
-                                color: Theme.colorForeground
+                                Rectangle {
+                                    width: parent.width * 0.66 - 1
+                                    height: 32
+                                    color: Theme.colorForeground
 
-                                Text {
-                                    anchors.centerIn: parent
+                                    Text {
+                                        anchors.left: parent.left
+                                        anchors.leftMargin: 20
+                                        anchors.verticalCenter: parent.verticalCenter
 
-                                    text: "LGPL v3"
-                                    textFormat: Text.PlainText
-                                    color: Theme.colorText
-                                    font.pixelSize: Theme.fontSizeContent
-                                    wrapMode: Text.WordWrap
+                                        text: "- " + txt
+                                        textFormat: Text.PlainText
+                                        color: Theme.colorText
+                                        font.pixelSize: Theme.fontSizeContent
+                                        wrapMode: Text.WordWrap
+                                    }
                                 }
-                            }
-                        }
 
-                        Row {
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            spacing: 2
+                                Rectangle {
+                                    width: parent.width * 0.24 - 1
+                                    height: 32
+                                    color: Theme.colorForeground
 
-                            Rectangle {
-                                width: parent.width * 0.7 - 1
-                                height: 32
-                                color: Theme.colorForeground
+                                    Text {
+                                        anchors.centerIn: parent
 
-                                Text {
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 20
-                                    anchors.verticalCenter: parent.verticalCenter
-
-                                    text: "- SingleApplication"
-                                    textFormat: Text.PlainText
-                                    color: Theme.colorText
-                                    font.pixelSize: Theme.fontSizeContent
-                                    wrapMode: Text.WordWrap
+                                        text: license
+                                        textFormat: Text.PlainText
+                                        color: Theme.colorText
+                                        font.pixelSize: Theme.fontSizeContent
+                                        wrapMode: Text.WordWrap
+                                    }
                                 }
-                            }
 
-                            Rectangle {
-                                width: parent.width * 0.3 - 1
-                                height: 32
-                                color: Theme.colorForeground
+                                Rectangle {
+                                    width: parent.width * 0.1 - 1
+                                    height: 32
+                                    color: Theme.colorForeground
 
-                                Text {
-                                    anchors.centerIn: parent
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: Qt.openUrlExternally(link)
+                                        hoverEnabled: true
 
-                                    text: "MIT"
-                                    textFormat: Text.PlainText
-                                    color: Theme.colorText
-                                    font.pixelSize: Theme.fontSizeContent
-                                    wrapMode: Text.WordWrap
+                                        IconSvg {
+                                            anchors.centerIn: parent
+                                            width: 20
+                                            height: 20
+
+                                            source: "qrc:/assets/icons_material/duotone-launch-24px"
+                                            color: parent.containsMouse ? Theme.colorPrimary : Theme.colorText
+                                            Behavior on color { ColorAnimation { duration: 133 } }
+                                        }
+                                    }
                                 }
                             }
                         }
+                    }
 
-                        Row {
-                            anchors.left: parent.left
-                            anchors.right: parent.right
+                    ////
+
+                    Loader { // DEBUG PANEL
+                        active: utilsApp.isDebugBuild()
+                        asynchronous: true
+
+                        sourceComponent: Column {
+                            width: settingsColumn.flowElementWidth
                             spacing: 2
 
                             Rectangle {
-                                width: parent.width * 0.7 - 1
-                                height: 32
-                                color: Theme.colorForeground
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                height: 48
+                                color: Theme.colorActionbar
 
                                 Text {
                                     anchors.left: parent.left
                                     anchors.leftMargin: 20
                                     anchors.verticalCenter: parent.verticalCenter
 
-                                    text: "- Google Material Icons"
+                                    text: qsTr("System info")
                                     textFormat: Text.PlainText
+                                    font.pixelSize: Theme.fontSizeContentVeryBig
+                                    font.bold: false
                                     color: Theme.colorText
-                                    font.pixelSize: Theme.fontSizeContent
                                     wrapMode: Text.WordWrap
+                                    verticalAlignment: Text.AlignVCenter
                                 }
                             }
 
-                            Rectangle {
-                                width: parent.width * 0.3 - 1
-                                height: 32
-                                color: Theme.colorForeground
+                            Row {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                spacing: 2
 
-                                Text {
-                                    anchors.centerIn: parent
+                                Rectangle {
+                                    width: parent.width * 0.5 - 1
+                                    height: 32
+                                    color: Theme.colorForeground
 
-                                    text: "MIT"
-                                    textFormat: Text.PlainText
-                                    color: Theme.colorText
-                                    font.pixelSize: Theme.fontSizeContent
-                                    wrapMode: Text.WordWrap
+                                    Text {
+                                        anchors.left: parent.left
+                                        anchors.leftMargin: 20
+                                        anchors.verticalCenter: parent.verticalCenter
+
+                                        text: {
+                                            var txt = utilsSysInfo.getOsName()
+                                            if (utilsSysInfo.getOsVersion() !== "unknown")
+                                            {
+                                                if (txt.length) txt += " "
+                                                txt += utilsSysInfo.getOsVersion()
+                                            }
+                                            return txt
+                                        }
+
+                                        textFormat: Text.PlainText
+                                        color: Theme.colorText
+                                        font.pixelSize: Theme.fontSizeContent
+                                        wrapMode: Text.WordWrap
+                                    }
+                                }
+
+                                Rectangle {
+                                    width: parent.width * 0.5 - 1
+                                    height: 32
+                                    color: Theme.colorForeground
+
+                                    Text {
+                                        anchors.centerIn: parent
+
+                                        text: {
+                                            var txt = utilsSysInfo.getOsDisplayServer()
+                                            if (txt.length) txt += " / "
+                                            txt += utilsApp.qtRhiBackend()
+                                            return txt
+                                        }
+                                        textFormat: Text.PlainText
+                                        color: Theme.colorText
+                                        font.pixelSize: Theme.fontSizeContent
+                                        wrapMode: Text.WordWrap
+                                    }
                                 }
                             }
-                        }
 
-                        Row {
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            spacing: 2
+                            Row {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                spacing: 2
 
-                            Rectangle {
-                                width: parent.width * 0.7 - 1
-                                height: 32
-                                color: Theme.colorForeground
+                                Rectangle {
+                                    width: parent.width * 0.5 - 1
+                                    height: 32
+                                    color: Theme.colorForeground
 
-                                Text {
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 20
-                                    anchors.verticalCenter: parent.verticalCenter
+                                    Text {
+                                        anchors.left: parent.left
+                                        anchors.leftMargin: 20
+                                        anchors.verticalCenter: parent.verticalCenter
 
-                                    text: "- Bootstrap Icons"
-                                    textFormat: Text.PlainText
-                                    color: Theme.colorText
-                                    font.pixelSize: Theme.fontSizeContent
-                                    wrapMode: Text.WordWrap
+                                        text: "Qt version"
+                                        textFormat: Text.PlainText
+                                        color: Theme.colorText
+                                        font.pixelSize: Theme.fontSizeContent
+                                        wrapMode: Text.WordWrap
+                                    }
+                                }
+
+                                Rectangle {
+                                    width: parent.width * 0.5 - 1
+                                    height: 32
+                                    color: Theme.colorForeground
+
+                                    Text {
+                                        anchors.centerIn: parent
+
+                                        text: utilsApp.qtVersion()
+                                        textFormat: Text.PlainText
+                                        color: Theme.colorText
+                                        font.pixelSize: Theme.fontSizeContent
+                                        wrapMode: Text.WordWrap
+                                    }
                                 }
                             }
 
-                            Rectangle {
-                                width: parent.width * 0.3 - 1
-                                height: 32
-                                color: Theme.colorForeground
+                            Row {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                spacing: 2
 
-                                Text {
-                                    anchors.centerIn: parent
+                                Rectangle {
+                                    width: parent.width * 0.5 - 1
+                                    height: 32
+                                    color: Theme.colorForeground
 
-                                    text: "MIT"
-                                    textFormat: Text.PlainText
-                                    color: Theme.colorText
-                                    font.pixelSize: Theme.fontSizeContent
-                                    wrapMode: Text.WordWrap
+                                    Text {
+                                        anchors.left: parent.left
+                                        anchors.leftMargin: 20
+                                        anchors.verticalCenter: parent.verticalCenter
+
+                                        text: "Qt architecture"
+                                        textFormat: Text.PlainText
+                                        color: Theme.colorText
+                                        font.pixelSize: Theme.fontSizeContent
+                                        wrapMode: Text.WordWrap
+                                    }
+                                }
+
+                                Rectangle {
+                                    width: parent.width * 0.5 - 1
+                                    height: 32
+                                    color: Theme.colorForeground
+
+                                    Text {
+                                        anchors.centerIn: parent
+
+                                        text: utilsApp.qtArchitecture()
+                                        textFormat: Text.PlainText
+                                        color: Theme.colorText
+                                        font.pixelSize: Theme.fontSizeContent
+                                        wrapMode: Text.WordWrap
+                                    }
                                 }
                             }
                         }

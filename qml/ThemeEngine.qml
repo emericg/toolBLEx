@@ -23,6 +23,9 @@ Item {
 
     ////////////////
 
+    property bool isLight
+    property bool isDark
+
     // Status bar (mobile)
     property int themeStatusbar
     property color colorStatusbar
@@ -195,6 +198,9 @@ Item {
 
         if (themeIndex === ThemeEngine.THEME_DESKTOP_LIGHT) {
 
+            isLight = true
+            isDark = false
+
             colorYellow = "#facb00"
             colorOrange = "#ffa635"
             colorRed    = "#ff7657"
@@ -251,6 +257,9 @@ Item {
 
         } else if (themeIndex === ThemeEngine.THEME_DESKTOP_DARK) {
 
+            isLight = false
+            isDark = true
+
             colorYellow = "#fcc632"
             colorOrange = "#ff8f35"
             colorRed    = "#e8635a"
@@ -285,7 +294,7 @@ Item {
             colorText                   = "#eee"
             colorSubText                = "#999"
             colorIcon                   = "#eee"
-            colorSeparator              = "#333"
+            colorSeparator              = "#444"
             colorLowContrast            = "#111"
             colorHighContrast           = "white"
 
