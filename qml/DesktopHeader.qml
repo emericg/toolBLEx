@@ -269,7 +269,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
 
                 visible: deviceManager.scanning
-                text: qsTr("%n device(s) found", "", deviceManager.deviceCount)
+                text: qsTr("%n device(s) found", "", deviceManager.deviceCountFound)
                 color: Theme.colorText
             }
         }

@@ -88,10 +88,10 @@ DeviceManager::DeviceManager(bool daemon)
             }
         }
 
-        // Count saved devices
+        // Count cached devices
         countDeviceSeenCached();
 
-        // Load saved devices
+        // Load cached devices
         QSqlQuery queryDevices;
         queryDevices.exec("SELECT deviceAddr, deviceName FROM devices");
         while (queryDevices.next())
@@ -102,6 +102,7 @@ DeviceManager::DeviceManager(bool daemon)
             DeviceToolBLEx *d = new DeviceToolBLEx(deviceAddr, deviceName, this);
             if (d)
             {
+                d->setCached(true);
                 d->setDeviceColor(getAvailableColor());
 
                 m_devices_model->addDevice(d);
@@ -115,6 +116,11 @@ DeviceManager::DeviceManager(bool daemon)
 
     // Check if we have Bluetooth classic device paired
     checkPaired();
+
+    // Stats
+    countDevices();
+    connect(this, &DeviceManager::devicesListUpdated, this, &DeviceManager::countDevices);
+    connect(this, &DeviceManager::devicesSeenCacheUpdated, this, &DeviceManager::countDevices);
 
     // Device colors
     m_colorsLeft = m_colorsAvailable;
@@ -978,16 +984,17 @@ void DeviceManager::addBleDevice(const QBluetoothDeviceInfo &info)
         // Get a random color
         d->setDeviceColor(getAvailableColor());
 
-        // Add it to the UI
-        m_devices_model->addDevice(d);
-        Q_EMIT devicesListUpdated();
-
         // Add it to the cache? But not if it's a beacon...
         SettingsManager *sm = SettingsManager::getInstance();
         if (sm->getScanCacheAuto() && !d->isBeacon())
         {
             cacheDeviceSeen(d->getAddress());
+            d->setCached(true);
         }
+
+        // Add it to the UI
+        m_devices_model->addDevice(d);
+        Q_EMIT devicesListUpdated();
 
         //qDebug() << "Device added (from BLE discovery): " << d->getName() << "/" << d->getAddress();
     }
@@ -1022,6 +1029,52 @@ void DeviceManager::checkPaired()
             }
         }
     }
+}
+
+void DeviceManager::countDevices()
+{
+    SettingsManager *sm = SettingsManager::getInstance();
+    bool filterShowBeacon = sm->getScanShowBeacon();
+    bool filterShowBlacklisted = sm->getScanShowBlacklisted();
+    bool filterShowCached = sm->getScanShowCached();
+    bool filterShowBluetoothClassic = sm->getScanShowClassic();
+    bool filterShowBluetoothLowEnergy = sm->getScanShowLowEnergy();
+
+    m_countFound = 0;
+    m_countShown = 0;
+    m_countHidden = 0;
+    m_countClassic = 0;
+    m_countBLE = 0;
+    m_countBeacon = 0;
+
+    m_countBlacklisted = m_devices_blacklist.count();
+    m_countCached = m_devicesSeenCachedCount;
+
+    for (auto dd: std::as_const(m_devices_model->m_devices))
+    {
+        DeviceToolBLEx *d = qobject_cast<DeviceToolBLEx *>(dd);
+        if (d)
+        {
+            bool accepted = true;
+
+            if (!filterShowBluetoothClassic && !filterShowBluetoothLowEnergy) accepted = false;
+            else if (!filterShowBluetoothClassic && d->isBluetoothClassic() && !d->isBluetoothLowEnergy()) accepted = false;
+            else if (!filterShowBluetoothLowEnergy && d->isBluetoothLowEnergy() && !d->isBluetoothClassic()) accepted = false;
+            else if (!filterShowBeacon && d->isBeacon()) accepted = false;
+            else if (!filterShowBlacklisted && d->isBlacklisted()) accepted = false;
+            else if (!filterShowCached && d->isCached() && d->getRssi() == 0) accepted = false;
+
+            if (d->isBluetoothClassic() != 0) m_countClassic++;
+            if (d->isBluetoothLowEnergy() != 0) m_countBLE++;
+            if (d->isBeacon() != 0) m_countBeacon++;
+
+            if (d->getRssi() != 0) m_countFound++;
+            if (accepted) m_countShown++;
+            else m_countHidden++;
+        }
+    }
+
+    Q_EMIT statsChanged();
 }
 
 /* ************************************************************************** */
@@ -1401,6 +1454,8 @@ void DeviceManager::updateBoolFilters()
 {
     m_devices_filter->updateBoolFilters();
     m_devices_filter->invalidatefilter();
+
+    countDevices(); // stats
 }
 
 /* ************************************************************************** */

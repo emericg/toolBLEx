@@ -86,6 +86,16 @@ class DeviceManager: public QObject
     Q_PROPERTY(QString orderBy_role READ getOrderByRole NOTIFY filteringChanged)
     Q_PROPERTY(int orderBy_order READ getOrderByOrder NOTIFY filteringChanged)
 
+    Q_PROPERTY(int deviceCountTotal READ getDeviceCount NOTIFY devicesListUpdated)
+    Q_PROPERTY(int deviceCountFound READ getCountFound NOTIFY statsChanged)
+    Q_PROPERTY(int deviceCountShown READ getCountShown NOTIFY statsChanged)
+    Q_PROPERTY(int deviceCountHidden READ getCountHidden NOTIFY statsChanged)
+    Q_PROPERTY(int deviceCountBlacklisted READ getCountBlacklisted NOTIFY devicesBlacklistUpdated)
+    Q_PROPERTY(int deviceCountCached READ getCountCached NOTIFY devicesSeenCacheUpdated)
+    Q_PROPERTY(int deviceCountClassic READ getCountClassic NOTIFY statsChanged)
+    Q_PROPERTY(int deviceCountBLE READ getCountBLE NOTIFY statsChanged)
+    Q_PROPERTY(int deviceCountBeacon READ getCountBeacon NOTIFY statsChanged)
+
     bool m_dbInternal = false;  //!< do we have an internal SQLite database?
     bool m_dbExternal = false;  //!< do we have a remote MySQL database?
 
@@ -171,6 +181,17 @@ class DeviceManager: public QObject
     QStringList m_colorsLeft;
     QString getAvailableColor();
 
+    // stats
+    void countDevices();
+    int m_countFound = 0;               //!< devices that have been detected
+    int m_countShown = 0;               //!< devices shown by the UI
+    int m_countHidden = 0;              //!< devices hidden by the UI
+    int m_countBlacklisted = 0;         //!< devices in the hidden list
+    int m_countCached = 0;              //!< devices in the cache list
+    int m_countClassic = 0;             //!< Bluetooth Classic devices
+    int m_countBLE = 0;                 //!< Bluetooth LE devices
+    int m_countBeacon = 0;              //!< Beacon devices
+
 Q_SIGNALS:
     void bluetoothChanged();
     void hostModeChanged();
@@ -191,6 +212,8 @@ Q_SIGNALS:
     void syncingChanged();
 
     void filteringChanged();
+
+    void statsChanged();
 
 private slots:
     // QBluetoothLocalDevice related
@@ -264,6 +287,16 @@ public:
     int getDeviceCount() const { return m_devices_model->getDeviceCount(); }
     DeviceFilter *getDevicesFiltered() const { return m_devices_filter; }
     DeviceHeader *getDeviceHeader() const { return m_device_header; }
+
+    // UI stats
+    int getCountFound() const { return m_countFound; }
+    int getCountShown() const { return m_countShown; }
+    int getCountHidden() const { return m_countHidden; }
+    int getCountBlacklisted() const { return m_devices_blacklist.count(); }
+    int getCountCached() const { return m_devicesSeenCachedCount; }
+    int getCountClassic() const { return m_countClassic; }
+    int getCountBLE() const { return m_countBLE; }
+    int getCountBeacon() const { return m_countBeacon; }
 
     // Sorting and filtering
     Q_INVOKABLE void orderby_default();

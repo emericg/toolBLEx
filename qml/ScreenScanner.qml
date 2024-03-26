@@ -467,10 +467,19 @@ Loader {
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     text: {
-                        var txt = qsTr("%n device(s) found", "", deviceManager.deviceCount)
-                        if (deviceManager.deviceCount !== devicesView.count) {
-                            txt += "  |  " + qsTr("%n device(s) shown", "", devicesView.count)
+                        var txt = qsTr("%n device(s) found", "", deviceManager.deviceCountFound)
+                        if (deviceManager.deviceCountShown !== deviceManager.deviceCountFound) {
+                            txt += "  |  " + qsTr("%n device(s) shown", "", deviceManager.deviceCountShown)
                         }
+                        if (deviceManager.deviceCountTotal !== deviceManager.deviceCountCached) {
+                            txt += "  |  " + qsTr("%n device(s) cached", "", deviceManager.deviceCountCached)
+                        }
+                        //if (deviceManager.deviceCountBlacklisted > 0) {
+                        //    txt += "  |  " + qsTr("%n device(s) blacklisted", "", deviceManager.deviceCountBlacklisted)
+                        //}
+                        //if (deviceManager.deviceCountTotal !== deviceManager.deviceCountShown) {
+                        //    txt += "  |  " + qsTr("%n device(s) total", "", deviceManager.deviceCountTotal)
+                        //}
                         return txt
                     }
                     color: Theme.colorSubText

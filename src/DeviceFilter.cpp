@@ -94,12 +94,13 @@ bool DeviceFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourcePare
     DeviceToolBLEx *d = static_cast<DeviceToolBLEx *>(static_cast<DeviceModel *>(sourceModel())->device(index));
     if (d)
     {
-        if (!m_filterShowBluetoothClassic && d->isBluetoothClassic() && !d->isBluetoothLowEnergy()) accepted = false;
-        if (!m_filterShowBluetoothLowEnergy && d->isBluetoothLowEnergy() && !d->isBluetoothClassic()) accepted = false;
+        if (!m_filterShowBluetoothClassic && !m_filterShowBluetoothLowEnergy) accepted = false;
+        else if (!m_filterShowBluetoothClassic && d->isBluetoothClassic() && !d->isBluetoothLowEnergy()) accepted = false;
+        else if (!m_filterShowBluetoothLowEnergy && d->isBluetoothLowEnergy() && !d->isBluetoothClassic()) accepted = false;
 
-        if (!m_filterShowBeacon && d->isBeacon()) accepted = false;
-        if (!m_filterShowBlacklisted && d->isBlacklisted()) accepted = false;
-        if (!m_filterShowCached && d->isCached()) accepted = false;
+        else if (!m_filterShowBeacon && d->isBeacon()) accepted = false;
+        else if (!m_filterShowBlacklisted && d->isBlacklisted()) accepted = false;
+        else if (!m_filterShowCached && d->isCached() && d->getRssi() == 0) accepted = false;
     }
 
     return accepted;
