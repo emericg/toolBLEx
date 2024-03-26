@@ -94,7 +94,14 @@ Loader {
                     z: 5
                     clip: true
                     height: isHdpi ? 200 : 230
-                    color: Theme.colorActionbar
+                    color: (Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT) ? "#69b7ff" : "#b184f6"
+
+                    Image {
+                        anchors.fill: parent
+                        source: "qrc:/assets/logos/pattern_ble.png"
+                        fillMode: Image.Tile
+                        opacity: 0.20
+                    }
 
                     Row {
                         anchors.verticalCenter: parent.verticalCenter
@@ -107,9 +114,9 @@ Loader {
                             width: 160
                             height: 160
                             radius: 160
-                            color: Theme.colorBackground
+                            color: "#f9f8f7" // Theme.colorBackground
                             border.width: 2
-                            border.color: Theme.colorSeparator
+                            border.color: "#e8e8e8" // Theme.colorSeparator
 
                             IconSvg {
                                 anchors.centerIn: parent
@@ -129,7 +136,7 @@ Loader {
 
                                 z: -1
                                 opacity: 1
-                                color: Theme.colorBackground
+                                color: "#f9f8f7" // Theme.colorBackground
 
                                 ParallelAnimation {
                                     running: (deviceManager.scanning && !deviceManager.scanningPaused && appContent.state === "Settings")
@@ -138,7 +145,7 @@ Loader {
 
                                     NumberAnimation { target: circlePulseAnimation; property: "width"; from: 160; to: 400; duration: 2000; }
                                     NumberAnimation { target: circlePulseAnimation; property: "height"; from: 160; to: 400; duration: 2000; }
-                                    OpacityAnimator { target: circlePulseAnimation; from: 0.8; to: 0; duration: 2000; }
+                                    OpacityAnimator { target: circlePulseAnimation; from: 0.33; to: 0; duration: 2000; }
                                 }
                             }
                         }
@@ -157,7 +164,7 @@ Loader {
                                     text: "toolBLEx"
                                     textFormat: Text.PlainText
                                     font.pixelSize: 40
-                                    color: Theme.colorText
+                                    color: "white" // Theme.colorText
                                 }
 
                                 Text {
@@ -166,7 +173,7 @@ Loader {
                                     text: qsTr("version %1 %2").arg(utilsApp.appVersion()).arg(utilsApp.appBuildMode())
                                     textFormat: Text.PlainText
                                     font.pixelSize: Theme.fontSizeContentBig
-                                    color: Theme.colorSubText
+                                    color: "white" // Theme.colorSubText
                                 }
 
                                 Text {
@@ -176,14 +183,14 @@ Loader {
                                     text: qsTr("built on %1").arg(utilsApp.appBuildDateTime())
                                     textFormat: Text.PlainText
                                     font.pixelSize: Theme.fontSizeContentBig
-                                    color: Theme.colorSubText
+                                    color: "white" // Theme.colorSubText
                                 }
                             }
 
                             Text {
                                 text: qsTr("A Bluetooth Low Energy device scanner and analyzer")
                                 font.pixelSize: Theme.fontSizeContentVeryVeryBig
-                                color: Theme.colorSubText
+                                color: "white" // Theme.colorSubText
                             }
 
                             Item { width: 8; height: 8; }

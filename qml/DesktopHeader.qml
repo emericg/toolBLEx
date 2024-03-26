@@ -77,7 +77,7 @@ Rectangle {
                 sourceSize: 32
 
                 enabled: deviceManager.bluetooth
-                highlightMode: "off"
+                highlightMode: (opacity !== 1) ? "color" : "off"
                 iconColor: Theme.colorHeaderContent
                 source: (deviceManager.scanningPaused) ?
                             "qrc:/assets/icons_material/baseline-play_arrow-24px.svg" :
@@ -97,6 +97,7 @@ Rectangle {
                     if (appContent.state === "Ubertooth" && ubertooth.running) return 1
                     return 0.4
                 }
+
                 onClicked: {
                     if (appContent.state === "Scanner") deviceManager.scanDevices_start()
                     if (appContent.state === "Advertiser") deviceManager.advertise_start()
@@ -111,7 +112,7 @@ Rectangle {
                 sourceSize: 32
 
                 enabled: deviceManager.bluetooth
-                highlightMode: "color"
+                highlightMode: (opacity !== 1) ? "color" : "off"
                 iconColor: Theme.colorHeaderContent
                 source: "qrc:/assets/icons_material/baseline-stop-24px.svg"
 

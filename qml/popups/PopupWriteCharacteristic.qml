@@ -40,22 +40,17 @@ Popup {
         opacity: ThemeEngine.isLight ? 0.333 : 0.666
     }
 
-    background: Item {
-        MultiEffect {
-            anchors.fill: parent
-            source: bgrect
+    background: Rectangle {
+        radius: Theme.componentRadius
+        color: Theme.colorBackground
+        border.color: Theme.colorSeparator
+        border.width: Theme.componentBorderWidth
+
+        layer.enabled: true
+        layer.effect: MultiEffect {
             autoPaddingEnabled: true
             shadowEnabled: true
             shadowColor: ThemeEngine.isLight ? "#aa000000" : "#aaffffff"
-        }
-        Rectangle {
-            id: bgrect
-            anchors.fill: parent
-
-            radius: Theme.componentRadius
-            color: Theme.colorBackground
-            border.color: Theme.colorSeparator
-            border.width: Theme.componentBorderWidth
         }
     }
 
