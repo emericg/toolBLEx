@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2020 Emeric Grange
+ * Copyright (c) 2024 Emeric Grange
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,8 +20,8 @@
  * SOFTWARE.
  */
 
-#ifndef UTILS_OS_IOS_H
-#define UTILS_OS_IOS_H
+#ifndef UTILS_OS_IOS_WIFI_H
+#define UTILS_OS_IOS_WIFI_H
 
 #include <QtGlobal>
 #include <QString>
@@ -30,30 +30,14 @@
 /* ************************************************************************** */
 
 /*!
- * \brief iOS utils
+ * \brief iOS WiFi info
  */
-class UtilsIOS
+class UtilsIOSWiFi
 {
 public:
-    /*!
-     * \return True if notification permission has been previously obtained.
-     */
-    static bool checkPermission_notification();
-
-    /*!
-     * \return True if notification permission has been explicitly obtained.
-     */
-    static bool getPermission_notification();
-
-    static void screenKeepOn(bool on);
-
-    static void screenLockOrientation(int orientation);
-
-    static void screenLockOrientation(int orientation, bool autoRotate);
-
-    static void vibrate(int milliseconds);
+    static QString UtilsIOS::getWifiSSID()
 };
 
 /* ************************************************************************** */
 #endif // Q_OS_IOS
-#endif // UTILS_OS_IOS_H
+#endif // UTILS_OS_IOS_WIFI_H

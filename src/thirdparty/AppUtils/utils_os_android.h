@@ -253,6 +253,16 @@ public:
     /* ********************************************************************** */
 
     /*!
+     * \brief Get the SSID of the currently connected WiFi network.
+     *
+     * Needs android.permission.ACCESS_WIFI_STATE
+     * AND either android.permission.ACCESS_COARSE_LOCATION or ACCESS_FINE_LOCATION
+     */
+    static QString getWifiSSID();
+
+    /* ********************************************************************** */
+
+    /*!
      * \brief Open the Android application info intent for the given package name.
      * \param packageName: the application package, for instance 'com.application.identifier'.
      */

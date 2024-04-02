@@ -26,6 +26,9 @@
 #include "utils_os_android.h"
 #elif defined(Q_OS_IOS)
 #include "utils_os_ios.h"
+#if defined(UTILS_NOTIFICATIONS_ENABLED)
+#include "utils_os_ios_notif.h"
+#endif
 #endif
 
 #include <QDir>
@@ -288,7 +291,8 @@ bool UtilsApp::isOsThemeDark()
     isDark = (defaultPalette.color(QPalette::WindowText).lightness() >
               defaultPalette.color(QPalette::Window).lightness());
 
-#endif // Qt 6.5
+#endif
+
     return isDark;
 }
 
@@ -597,8 +601,8 @@ bool UtilsApp::checkMobileNotificationPermission()
 {
 #if defined(Q_OS_ANDROID)
     return UtilsAndroid::checkPermission_notification();
-#elif defined(Q_OS_IOS)
-    return UtilsIOS::checkPermission_notification();
+#elif defined(Q_OS_IOS) && defined(UTILS_NOTIFICATIONS_ENABLED)
+    return UtilsIOSNotifications::checkPermission_notification();
 #endif
 
     return true;
@@ -608,8 +612,8 @@ bool UtilsApp::getMobileNotificationPermission()
 {
 #if defined(Q_OS_ANDROID)
     return UtilsAndroid::getPermission_notification();
-#elif defined(Q_OS_IOS)
-    return UtilsIOS::getPermission_notification();
+#elif defined(Q_OS_IOS) && defined(UTILS_NOTIFICATIONS_ENABLED)
+    return UtilsIOSNotifications::getPermission_notification();
 #endif
 
     return true;

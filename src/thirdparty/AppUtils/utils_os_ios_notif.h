@@ -24,6 +24,7 @@
 #define UTILS_OS_IOS_NOTIF_H
 
 #include <QtGlobal>
+#include <QString>
 
 #if defined(Q_OS_IOS)
 /* ************************************************************************** */

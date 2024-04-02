@@ -24,76 +24,8 @@
 
 #if defined(Q_OS_IOS)
 
-#import <UserNotifications/UserNotifications.h>
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-
-/* ************************************************************************** */
-
-bool UtilsIOS::checkPermission_notification()
-{
-    __block BOOL status = false;
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-
-    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-    UNAuthorizationOptions options = (UNAuthorizationOptionAlert | UNAuthorizationOptionBadge | UNAuthorizationOptionSound);
-
-    [center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *settings) {
-        switch (settings.authorizationStatus) {
-            case UNAuthorizationStatusAuthorized:
-                //NSLog(@"Notifications are allowed");
-                status = true;
-                break;
-            case UNAuthorizationStatusDenied:
-                //NSLog(@"Notifications are denied");
-                break;
-            case UNAuthorizationStatusNotDetermined:
-                //NSLog(@"Notification permissions not determined yet");
-                break;
-            case UNAuthorizationStatusProvisional:
-                //NSLog(@"Provisional authorization granted");
-                status = true;
-                break;
-            default:
-                //NSLog(@"Unknown notification authorization status");
-                break;
-        }
-
-        dispatch_semaphore_signal(semaphore);
-    }];
-
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-
-    return status;
-}
-
-bool UtilsIOS::getPermission_notification()
-{
-    __block bool status = false;
-
-    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-    UNAuthorizationOptions options = (UNAuthorizationOptionAlert | UNAuthorizationOptionBadge | UNAuthorizationOptionSound);
-
-    [center requestAuthorizationWithOptions:options
-      completionHandler:^(BOOL granted, NSError *_Nullable error) {
-        if (granted)
-        {
-            NSLog(@"Notification permission granted");
-            status = true;
-        }
-
-        if (error)
-        {
-            NSLog(@"Local Notification setup failed");
-        }
-        else
-        {
-            [[UIApplication sharedApplication] registerForRemoteNotifications];
-        }
-    }];
-
-    return status;
-}
 
 /* ************************************************************************** */
 

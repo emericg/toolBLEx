@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2020 Emeric Grange
+ * Copyright (c) 2024 Emeric Grange
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,40 +20,31 @@
  * SOFTWARE.
  */
 
-#ifndef UTILS_OS_IOS_H
-#define UTILS_OS_IOS_H
-
-#include <QtGlobal>
-#include <QString>
+#include "utils_os_ios_wifi.h"
 
 #if defined(Q_OS_IOS)
+
+#import <SystemConfiguration/CaptiveNetwork.h>
+
 /* ************************************************************************** */
 
-/*!
- * \brief iOS utils
- */
-class UtilsIOS
+QString UtilsIOSWiFi::getWifiSSID()
 {
-public:
-    /*!
-     * \return True if notification permission has been previously obtained.
-     */
-    static bool checkPermission_notification();
+    NSString *ssid = nil;
+    NSArray *interfaces = (__bridge_transfer id)CNCopySupportedInterfaces();
 
-    /*!
-     * \return True if notification permission has been explicitly obtained.
-     */
-    static bool getPermission_notification();
+    for (NSString *interfaceName in interfaces)
+    {
+        NSDictionary *networkInfo = (__bridge_transfer id)CNCopyCurrentNetworkInfo((__bridge CFStringRef)interfaceName);
+        if (networkInfo[@"SSID"])
+        {
+            ssid = networkInfo[@"SSID"];
+            break;
+        }
+    }
 
-    static void screenKeepOn(bool on);
-
-    static void screenLockOrientation(int orientation);
-
-    static void screenLockOrientation(int orientation, bool autoRotate);
-
-    static void vibrate(int milliseconds);
-};
+    return QString::fromNSString(ssid);
+}
 
 /* ************************************************************************** */
 #endif // Q_OS_IOS
-#endif // UTILS_OS_IOS_H

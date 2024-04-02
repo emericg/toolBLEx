@@ -752,6 +752,49 @@ void UtilsAndroid::vibrate(int milliseconds)
 
 /* ************************************************************************** */
 
+QString UtilsAndroid::getWifiSSID()
+{
+    QJniObject activity = QNativeInterface::QAndroidApplication::context();
+    if (activity.isValid())
+    {
+        QJniObject wifiManager = activity.callObjectMethod("getSystemService",
+                                                           "(Ljava/lang/String;)Ljava/lang/Object;",
+                                                           QJniObject::fromString("wifi").object());
+
+        if (wifiManager.isValid())
+        {
+            QJniObject wifiInfo = wifiManager.callObjectMethod("getConnectionInfo",
+                                                               "()Landroid/net/wifi/WifiInfo;");
+
+            if (wifiInfo.isValid())
+            {
+                QString ssid = wifiInfo.callObjectMethod("getSSID", "()Ljava/lang/String;").toString();
+
+                if (ssid.startsWith("\"")) ssid.removeFirst();
+                if (ssid.endsWith("\"")) ssid.removeLast();
+
+                return ssid;
+            }
+            else
+            {
+                qDebug() << "Failed to get WiFi Info";
+            }
+        }
+        else
+        {
+            qDebug() << "Failed to get WifiManager";
+        }
+    }
+    else
+    {
+        qDebug() << "Invalid Activity";
+    }
+
+    return QString();
+}
+
+/* ************************************************************************** */
+
 void UtilsAndroid::openApplicationInfo(const QString &packageName)
 {
     //qDebug() << "> openApplicationInfo(" << packageName << ")";
