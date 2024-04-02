@@ -118,7 +118,9 @@ T.Button {
 
                 text: control.badgeText
                 textFormat: Text.PlainText
+                fontSizeMode: Text.HorizontalFit
                 font.pixelSize: Theme.fontSizeContentVerySmall
+                minimumPixelSize: Theme.fontSizeContentVeryVerySmall
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
 
