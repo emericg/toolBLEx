@@ -81,8 +81,6 @@ OTHER_FILES += README.md \
 
 # Build settings ###############################################################
 
-win32 { DEFINES += _USE_MATH_DEFINES }
-
 CONFIG(release, debug|release) : DEFINES += NDEBUG QT_NO_DEBUG QT_NO_DEBUG_OUTPUT
 
 # Build artifacts ##############################################################

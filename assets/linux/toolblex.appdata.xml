@@ -40,9 +40,8 @@
   <content_rating type="oars-1.1" />
 
   <developer_name>Emeric Grange</developer_name>
-  <updatecontact>emeric.grange@gmail.com</updatecontact>
   <url type="homepage">https://emeric.io/toolBLEx</url>
-  <url type="contact">https://emeric.io/toolBLEx/support.html</url>
+  <url type="contact">https://github.com/emericg/toolBLEx/issues</url>
   <url type="bugtracker">https://github.com/emericg/toolBLEx/issues</url>
   <url type="translate">https://github.com/emericg/toolBLEx/blob/master/i18n/README.md</url>
   <url type="donation">https://paypal.me/EmericGrange</url>
