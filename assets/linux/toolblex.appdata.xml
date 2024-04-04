@@ -6,9 +6,9 @@
   <name>toolBLEx</name>
   <launchable type="desktop-id">toolblex.desktop</launchable>
 
-  <summary>A Bluetooth Low Energy device scanner and analyzer</summary>
+  <summary>Bluetooth device scanner and analyzer</summary>
   <description>
-    <p>A Bluetooth Low Energy scanner device and analyzer</p>
+    <p>A multiplatform Bluetooth Low Energy (and Classic) device scanner and analyzer.</p>
     <p>Features:</p>
     <ul>
       <li>host adapters info</li>
@@ -22,8 +22,8 @@
   </description>
 
   <releases>
-    <release version="0.11" date="2024-03-12" />
-    <release version="0.10" date="2023-12-01" />
+    <release version="0.11" date="2024-04-04"> <url type="details">https://github.com/emericg/toolBLEx/releases/tag/v0.11</url> </release>
+    <release version="0.10" date="2023-12-01"> <url type="details">https://github.com/emericg/toolBLEx/releases/tag/v0.10</url> </release>
     <release version="0.9" date="2023-09-28" />
     <release version="0.8" date="2023-09-18" />
     <release version="0.7" date="2023-09-09" />
@@ -39,11 +39,13 @@
   <metadata_license>CC0-1.0</metadata_license>
   <content_rating type="oars-1.1" />
 
-  <developer_name>Emeric Grange</developer_name>
+  <developer id="io.emeric">
+    <name>Emeric Grange</name>
+  </developer>
+
   <url type="homepage">https://emeric.io/toolBLEx</url>
   <url type="contact">https://github.com/emericg/toolBLEx/issues</url>
   <url type="bugtracker">https://github.com/emericg/toolBLEx/issues</url>
-  <url type="translate">https://github.com/emericg/toolBLEx/blob/master/i18n/README.md</url>
   <url type="donation">https://paypal.me/EmericGrange</url>
 
   <screenshots>
