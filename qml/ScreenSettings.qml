@@ -321,7 +321,7 @@ Loader {
 
                             Row {
                                 anchors.right: parent.right
-                                anchors.rightMargin: 16
+                                anchors.rightMargin: Theme.componentMargin
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 z: 1
@@ -400,7 +400,7 @@ Loader {
 
                             ComboBoxThemed {
                                 anchors.right: parent.right
-                                anchors.rightMargin: 16
+                                anchors.rightMargin: Theme.componentMargin
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 enabled: false
@@ -431,7 +431,7 @@ Loader {
                             SelectorMenu {
                                 height: 32
                                 anchors.right: parent.right
-                                anchors.rightMargin: 16
+                                anchors.rightMargin: Theme.componentMargin
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 model: ListModel {
@@ -473,7 +473,7 @@ Loader {
                                 id: selector_prefscreen
                                 height: 32
                                 anchors.right: parent.right
-                                anchors.rightMargin: 16
+                                anchors.rightMargin: Theme.componentMargin
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 ListModel {
@@ -651,7 +651,7 @@ Loader {
 
                             SpinBoxThemedDesktop {
                                 anchors.right: parent.right
-                                anchors.rightMargin: 16
+                                anchors.rightMargin: Theme.componentMargin
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 editable: false
@@ -686,7 +686,7 @@ Loader {
 
                             SpinBoxThemedDesktop {
                                 anchors.right: parent.right
-                                anchors.rightMargin: 16
+                                anchors.rightMargin: Theme.componentMargin
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 editable: false
@@ -746,7 +746,7 @@ Loader {
                                 anchors.right: parent.right
                                 anchors.rightMargin: 64
                                 anchors.verticalCenter: parent.verticalCenter
-                                spacing: 24
+                                spacing: Theme.componentMarginXL
 
                                 Text {
                                     anchors.verticalCenter: parent.verticalCenter
@@ -776,7 +776,7 @@ Loader {
 
                             ButtonWireframe {
                                 anchors.right: parent.right
-                                anchors.rightMargin: 16
+                                anchors.rightMargin: Theme.componentMargin
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 fullColor: true
@@ -802,7 +802,7 @@ Loader {
                                 anchors.right: parent.right
                                 anchors.rightMargin: 64
                                 anchors.verticalCenter: parent.verticalCenter
-                                spacing: 24
+                                spacing: Theme.componentMarginXL
 
                                 Text {
                                     anchors.verticalCenter: parent.verticalCenter
@@ -832,7 +832,7 @@ Loader {
 
                             ButtonWireframe {
                                 anchors.right: parent.right
-                                anchors.rightMargin: 16
+                                anchors.rightMargin: Theme.componentMargin
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 fullColor: true
@@ -953,12 +953,11 @@ Loader {
                             TextFieldFileDialog {
                                 id: ubertoothPath
                                 anchors.left: parent.left
-                                anchors.leftMargin: 16
+                                anchors.leftMargin: Theme.componentMargin
                                 anchors.right: parent.right
-                                anchors.rightMargin: 16
+                                anchors.rightMargin: Theme.componentMargin
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                height: 36
                                 selectByMouse: true
 
                                 text: settingsManager.ubertooth_path
@@ -1021,7 +1020,7 @@ Loader {
 
                             SpinBoxThemedDesktop {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 16
+                                anchors.leftMargin: Theme.componentMargin
                                 anchors.verticalCenter: parent.verticalCenter
                                 z: 2
 
@@ -1048,7 +1047,7 @@ Loader {
 
                             SpinBoxThemedDesktop {
                                 anchors.right: parent.right
-                                anchors.rightMargin: 16
+                                anchors.rightMargin: Theme.componentMargin
                                 anchors.verticalCenter: parent.verticalCenter
                                 z: 2
 
@@ -1183,7 +1182,7 @@ Loader {
                                             width: 20
                                             height: 20
 
-                                            source: "qrc:/assets/icons_material/duotone-launch-24px"
+                                            source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
                                             color: parent.containsMouse ? Theme.colorPrimary : Theme.colorText
                                             Behavior on color { ColorAnimation { duration: 133 } }
                                         }

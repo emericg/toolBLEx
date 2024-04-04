@@ -58,7 +58,7 @@ Popup {
 
     contentItem: Column {
         id: columnContent
-        spacing: 24
+        spacing: Theme.componentMarginXL
 
         ////////
 
@@ -75,9 +75,9 @@ Popup {
 
             Column {
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.right: parent.right
-                anchors.rightMargin: 24
+                anchors.rightMargin: Theme.componentMarginXL
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 4
 
@@ -129,9 +129,9 @@ Popup {
 
         Column { // contentArea
             anchors.left: parent.left
-            anchors.leftMargin: 24
+            anchors.leftMargin: Theme.componentMarginXL
             anchors.right: parent.right
-            anchors.rightMargin: 24
+            anchors.rightMargin: Theme.componentMarginXL
             spacing: 8
 
             Text {
@@ -387,9 +387,9 @@ Popup {
         Column {
             id: columnTf
             anchors.left: parent.left
-            anchors.leftMargin: 24
+            anchors.leftMargin: Theme.componentMarginXL
             anchors.right: parent.right
-            anchors.rightMargin: 24
+            anchors.rightMargin: Theme.componentMarginXL
             spacing: 8
 
             Text {
@@ -521,9 +521,9 @@ Popup {
 
         Column {
             anchors.left: parent.left
-            anchors.leftMargin: 24
+            anchors.leftMargin: Theme.componentMarginXL
             anchors.right: parent.right
-            anchors.rightMargin: 24
+            anchors.rightMargin: Theme.componentMarginXL
             spacing: 8
 
             Text {
@@ -599,8 +599,8 @@ Popup {
 
         Row {
             anchors.right: parent.right
-            anchors.rightMargin: 24
-            spacing: 16
+            anchors.rightMargin: Theme.componentMarginXL
+            spacing: Theme.componentMargin
 
             ButtonWireframe {
                 primaryColor: Theme.colorSubText

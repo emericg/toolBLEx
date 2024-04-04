@@ -562,7 +562,6 @@ Flickable {
                 TextFieldThemed { // user comment
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: parent.width
-                    height: 36
 
                     colorBackground: Theme.colorBox
                     placeholderText: qsTr("Comment")

@@ -66,7 +66,7 @@ Popup {
 
     contentItem: Column {
         id: columnContent
-        spacing: 24
+        spacing: Theme.componentMarginXL
 
         ////////
 
@@ -83,9 +83,9 @@ Popup {
 
             Column {
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.right: parent.right
-                anchors.rightMargin: 24
+                anchors.rightMargin: Theme.componentMarginXL
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 4
 
@@ -129,10 +129,10 @@ Popup {
 
         Column { // contentArea
             anchors.left: parent.left
-            anchors.leftMargin: 24
+            anchors.leftMargin: Theme.componentMarginXL
             anchors.right: parent.right
-            anchors.rightMargin: 24
-            spacing: 24
+            anchors.rightMargin: Theme.componentMarginXL
+            spacing: Theme.componentMarginXL
 
             Column {
                 anchors.left: parent.left
@@ -150,7 +150,7 @@ Popup {
 
                     IconSvg {
                         anchors.left: parent.left
-                        anchors.leftMargin: 16
+                        anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
                         width: 24
                         height: 24
@@ -162,7 +162,7 @@ Popup {
                         anchors.left: parent.left
                         anchors.leftMargin: 52
                         anchors.right: parent.right
-                        anchors.rightMargin: 16
+                        anchors.rightMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Services info loaded from cache")
@@ -258,7 +258,6 @@ Popup {
                     id: tfExportPath
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    height: 40
 
                     dialogTitle: qsTr("Please select the export file")
                     dialogFilter: ["Text file (*.txt)"]
@@ -275,9 +274,9 @@ Popup {
 
         Item {
             anchors.left: parent.left
-            anchors.leftMargin: 24
+            anchors.leftMargin: Theme.componentMarginXL
             anchors.right: parent.right
-            anchors.rightMargin: 24
+            anchors.rightMargin: Theme.componentMarginXL
             height: Theme.componentHeight
 
             ButtonWireframe {
@@ -290,7 +289,7 @@ Popup {
 
             Row {
                 anchors.right: parent.right
-                spacing: 16
+                spacing: Theme.componentMargin
 
                 ButtonWireframe {
                     primaryColor: Theme.colorSubText
