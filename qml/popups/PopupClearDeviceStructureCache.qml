@@ -16,7 +16,7 @@ Popup {
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
-    enter: Transition { NumberAnimation { property: "opacity"; from: 0.333; to: 1.0; duration: 233; } }
+    enter: Transition { NumberAnimation { property: "opacity"; from: 0.333; to: 1.0; duration: 133; } }
 
     onAboutToShow: deviceManager.countDeviceStructureCached()
     onAboutToHide: deviceManager.countDeviceStructureCached()

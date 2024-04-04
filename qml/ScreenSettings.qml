@@ -78,8 +78,8 @@ Loader {
                 anchors.right: parent.right
 
                 topPadding: 0
-                bottomPadding: 20
-                spacing: 20
+                bottomPadding: Theme.componentMarginL
+                spacing: Theme.componentMarginL
 
                 property int flowElementWidth: (width >= 1080) ? (width / 3) - (spacing*1) - (spacing / 3)
                                                                : (width / 2) - (spacing*1) - (spacing / 2)
@@ -196,7 +196,7 @@ Loader {
                             Item { width: 8; height: 8; }
 
                             Row {
-                                spacing: 20
+                                spacing: Theme.componentMarginL
 
                                 ButtonWireframeIconCentered {
                                     width: 160
@@ -258,10 +258,10 @@ Loader {
                 Flow {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.margins: 20
+                    anchors.margins: Theme.componentMarginL
 
                     flow: Flow.LeftToRight // Flow.TopToBottom
-                    spacing: 20
+                    spacing: Theme.componentMarginL
 
                     Column {
                         width: settingsColumn.flowElementWidth
@@ -275,7 +275,7 @@ Loader {
 
                             Text {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 20
+                                anchors.leftMargin: Theme.componentMarginL
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 text: qsTr("Application settings")
@@ -291,7 +291,7 @@ Loader {
                                 width: 28
                                 height: 28
                                 anchors.right: parent.right
-                                anchors.rightMargin: 20
+                                anchors.rightMargin: Theme.componentMarginL
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 source: "qrc:/assets/icons_material/duotone-tune-24px.svg"
@@ -307,7 +307,7 @@ Loader {
 
                             Text {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 20
+                                anchors.leftMargin: Theme.componentMarginL
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 text: qsTr("Theme")
@@ -386,7 +386,7 @@ Loader {
 
                             Text {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 20
+                                anchors.leftMargin: Theme.componentMarginL
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 text: qsTr("Language")
@@ -416,7 +416,7 @@ Loader {
 
                             Text {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 20
+                                anchors.leftMargin: Theme.componentMarginL
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 text: qsTr("Unit system")
@@ -455,7 +455,9 @@ Loader {
 
                             Text {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 20
+                                anchors.leftMargin: Theme.componentMarginL
+                                anchors.right: selector_prefscreen.left
+                                anchors.rightMargin: Theme.componentMarginL
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 text: qsTr("Preferred screen")
@@ -468,6 +470,7 @@ Loader {
                             }
 
                             SelectorMenu {
+                                id: selector_prefscreen
                                 height: 32
                                 anchors.right: parent.right
                                 anchors.rightMargin: 16
@@ -499,7 +502,7 @@ Loader {
 
                             Text {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 20
+                                anchors.leftMargin: Theme.componentMarginL
                                 anchors.right: parent.right
                                 anchors.rightMargin: 64
                                 anchors.verticalCenter: parent.verticalCenter
@@ -538,7 +541,7 @@ Loader {
 
                             Text {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 20
+                                anchors.leftMargin: Theme.componentMarginL
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 text: qsTr("Scanner")
@@ -554,7 +557,7 @@ Loader {
                                 width: 28
                                 height: 28
                                 anchors.right: parent.right
-                                anchors.rightMargin: 20
+                                anchors.rightMargin: Theme.componentMarginL
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 source: "qrc:/assets/icons_material/duotone-devices-24px.svg"
@@ -570,7 +573,7 @@ Loader {
 
                             Text {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 20
+                                anchors.leftMargin: Theme.componentMarginL
                                 anchors.right: parent.right
                                 anchors.rightMargin: 64
                                 anchors.verticalCenter: parent.verticalCenter
@@ -602,7 +605,7 @@ Loader {
 
                             Text {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 20
+                                anchors.leftMargin: Theme.componentMarginL
                                 anchors.right: parent.right
                                 anchors.rightMargin: 64
                                 anchors.verticalCenter: parent.verticalCenter
@@ -634,7 +637,7 @@ Loader {
 
                             Text {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 20
+                                anchors.leftMargin: Theme.componentMarginL
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 text: qsTr("Scanning timeout")
@@ -669,7 +672,7 @@ Loader {
 
                             Text {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 20
+                                anchors.leftMargin: Theme.componentMarginL
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 text: qsTr("RSSI graph interval")
@@ -705,7 +708,7 @@ Loader {
 
                             Text {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 20
+                                anchors.leftMargin: Theme.componentMarginL
                                 anchors.right: parent.right
                                 anchors.rightMargin: 64
                                 anchors.verticalCenter: parent.verticalCenter
@@ -739,7 +742,7 @@ Loader {
 
                             Row {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 20
+                                anchors.leftMargin: Theme.componentMarginL
                                 anchors.right: parent.right
                                 anchors.rightMargin: 64
                                 anchors.verticalCenter: parent.verticalCenter
@@ -795,7 +798,7 @@ Loader {
 
                             Row {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 20
+                                anchors.leftMargin: Theme.componentMarginL
                                 anchors.right: parent.right
                                 anchors.rightMargin: 64
                                 anchors.verticalCenter: parent.verticalCenter
@@ -858,7 +861,7 @@ Loader {
 
                             Text {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 20
+                                anchors.leftMargin: Theme.componentMarginL
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 text: qsTr("Spectrum analyzer")
@@ -874,7 +877,7 @@ Loader {
                                 width: 28
                                 height: 28
                                 anchors.right: parent.right
-                                anchors.rightMargin: 20
+                                anchors.rightMargin: Theme.componentMarginL
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 source: "qrc:/assets/icons_material/duotone-microwave-48px.svg"
@@ -891,7 +894,7 @@ Loader {
                             Column {
                                 id: colUber
                                 anchors.left: parent.left
-                                anchors.leftMargin: 20
+                                anchors.leftMargin: Theme.componentMarginL
                                 anchors.right: parent.right
                                 anchors.rightMargin: 52
                                 anchors.verticalCenter: parent.verticalCenter
@@ -933,7 +936,7 @@ Loader {
                                 width: 28
                                 height: 28
                                 anchors.right: parent.right
-                                anchors.rightMargin: 20
+                                anchors.rightMargin: Theme.componentMarginL
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 source: "qrc:/assets/icons_material/baseline-help-24px.svg"
@@ -1069,9 +1072,9 @@ Loader {
                 Flow {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.margins: 20
+                    anchors.margins: Theme.componentMarginL
                     flow: Flow.LeftToRight // Flow.TopToBottom
-                    spacing: 20
+                    spacing: Theme.componentMarginL
 
                     Column {
                         width: settingsColumn.flowElementWidth
@@ -1085,7 +1088,7 @@ Loader {
 
                             Text {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 20
+                                anchors.leftMargin: Theme.componentMarginL
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 text: qsTr("Third parties")
@@ -1106,7 +1109,7 @@ Loader {
 
                             Text {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 20
+                                anchors.leftMargin: Theme.componentMarginL
                                 anchors.right: parent.right
                                 anchors.rightMargin: 8
                                 anchors.verticalCenter: parent.verticalCenter
@@ -1138,7 +1141,7 @@ Loader {
 
                                     Text {
                                         anchors.left: parent.left
-                                        anchors.leftMargin: 20
+                                        anchors.leftMargin: Theme.componentMarginL
                                         anchors.verticalCenter: parent.verticalCenter
 
                                         text: "- " + txt
@@ -1208,7 +1211,7 @@ Loader {
 
                                 Text {
                                     anchors.left: parent.left
-                                    anchors.leftMargin: 20
+                                    anchors.leftMargin: Theme.componentMarginL
                                     anchors.verticalCenter: parent.verticalCenter
 
                                     text: qsTr("System info")
@@ -1233,7 +1236,7 @@ Loader {
 
                                     Text {
                                         anchors.left: parent.left
-                                        anchors.leftMargin: 20
+                                        anchors.leftMargin: Theme.componentMarginL
                                         anchors.verticalCenter: parent.verticalCenter
 
                                         text: {
@@ -1287,7 +1290,7 @@ Loader {
 
                                     Text {
                                         anchors.left: parent.left
-                                        anchors.leftMargin: 20
+                                        anchors.leftMargin: Theme.componentMarginL
                                         anchors.verticalCenter: parent.verticalCenter
 
                                         text: "Qt version"
@@ -1327,7 +1330,7 @@ Loader {
 
                                     Text {
                                         anchors.left: parent.left
-                                        anchors.leftMargin: 20
+                                        anchors.leftMargin: Theme.componentMarginL
                                         anchors.verticalCenter: parent.verticalCenter
 
                                         text: "Qt architecture"

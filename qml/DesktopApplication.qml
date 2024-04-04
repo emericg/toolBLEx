@@ -326,6 +326,7 @@ ApplicationWindow {
                 name: "Scanner"
                 PropertyChanges { target: screenScanner; visible: true; enabled: true; focus: true; }
                 PropertyChanges { target: screenAdvertiser; visible: false; enabled: false; }
+                PropertyChanges { target: screenBluetooth; visible: true; enabled: true; }
                 PropertyChanges { target: screenUbertooth; visible: false; enabled: false; }
                 PropertyChanges { target: screenSettings; visible: false; enabled: false; }
             },
@@ -333,6 +334,7 @@ ApplicationWindow {
                 name: "Advertiser"
                 PropertyChanges { target: screenScanner; visible: false; enabled: false; }
                 PropertyChanges { target: screenAdvertiser; visible: true; enabled: true; focus: true; }
+                PropertyChanges { target: screenBluetooth; visible: true; enabled: true; }
                 PropertyChanges { target: screenUbertooth; visible: false; enabled: false; }
                 PropertyChanges { target: screenSettings; visible: false; enabled: false; }
             },
@@ -340,6 +342,7 @@ ApplicationWindow {
                 name: "Ubertooth"
                 PropertyChanges { target: screenScanner; visible: false; enabled: false; }
                 PropertyChanges { target: screenAdvertiser; visible: false; enabled: false; }
+                PropertyChanges { target: screenBluetooth; visible: false; enabled: false; }
                 PropertyChanges { target: screenUbertooth; visible: true; enabled: true; focus: true; }
                 PropertyChanges { target: screenSettings; visible: false; enabled: false; }
             },
@@ -347,6 +350,7 @@ ApplicationWindow {
                 name: "Settings"
                 PropertyChanges { target: screenScanner; visible: false; enabled: false; }
                 PropertyChanges { target: screenAdvertiser; visible: false; enabled: false; }
+                PropertyChanges { target: screenBluetooth; visible: false; enabled: false; }
                 PropertyChanges { target: screenUbertooth; visible: false; enabled: false; }
                 PropertyChanges { target: screenSettings; visible: true; enabled: true; focus: true; }
             }
