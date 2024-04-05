@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 export APP_NAME="toolBLEx"
-export APP_VERSION=0.11
+export APP_VERSION=0.12
 export GIT_VERSION=$(git rev-parse --short HEAD)
 
 echo "> $APP_NAME packager (Windows x86_64) [v$APP_VERSION]"
