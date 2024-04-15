@@ -86,15 +86,19 @@ function getDeviceBatteryIcon(batteryLevel) {
         src = "qrc:/assets/icons/material-icons/duotone/battery_90.svg";
     } else if (batteryLevel > 75) {
         src = "qrc:/assets/icons/material-icons/duotone/battery_80.svg";
+    } else if (batteryLevel > 65) {
+        src = "qrc:/assets/icons/material-icons/duotone/battery_70.svg";
     } else if (batteryLevel > 55) {
         src = "qrc:/assets/icons/material-icons/duotone/battery_60.svg";
     } else if (batteryLevel > 45) {
         src = "qrc:/assets/icons/material-icons/duotone/battery_50.svg";
+    } else if (batteryLevel > 35) {
+        src = "qrc:/assets/icons/material-icons/duotone/battery_40.svg";
     } else if (batteryLevel > 25) {
         src = "qrc:/assets/icons/material-icons/duotone/battery_30.svg";
     } else if (batteryLevel > 15) {
         src = "qrc:/assets/icons/material-icons/duotone/battery_20.svg";
-    } else if (batteryLevel > 1) {
+    } else if (batteryLevel >  1) {
         src = "qrc:/assets/icons/material-icons/duotone/battery_10.svg";
     } else if (batteryLevel >= 0) {
         src = "qrc:/assets/icons/material-icons/duotone/battery_unknown.svg";
