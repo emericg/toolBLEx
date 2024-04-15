@@ -132,8 +132,10 @@ public:
         DEVICE_OFFLINE              =  0, //!< Not connected
 
         DEVICE_QUEUED               =  1, //!< In the update queue, not started
-        DEVICE_CONNECTING           =  2, //!< Trying to connect to the device
-        DEVICE_CONNECTED            =  3, //!< Connected
+
+        DEVICE_DISCONNECTING        =  2, //!< Trying to connect to the device
+        DEVICE_CONNECTING           =  3, //!< Trying to connect to the device
+        DEVICE_CONNECTED            =  4, //!< Connected
 
         DEVICE_WORKING              =  8, //!< Connected, doing something
         DEVICE_UPDATING             =  9, //!< Connected, reading latest data

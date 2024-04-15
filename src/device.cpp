@@ -188,6 +188,9 @@ void Device::deviceConnect()
     // Start the actual connection process
     if (m_bleController)
     {
+        m_ble_status = DeviceUtils::DEVICE_CONNECTING;
+        Q_EMIT statusUpdated();
+
         setTimeoutTimer();
         m_bleController->connectToDevice();
     }
@@ -199,6 +202,9 @@ void Device::deviceDisconnect()
 
     if (m_bleController && m_bleController->state() != QLowEnergyController::UnconnectedState)
     {
+        m_ble_status = DeviceUtils::DEVICE_DISCONNECTING;
+        Q_EMIT statusUpdated();
+
         m_bleController->disconnectFromDevice();
     }
 }
@@ -214,6 +220,7 @@ void Device::actionConnect()
     {
         m_ble_action = DeviceUtils::ACTION_IDLE;
         actionStarted();
+
         deviceConnect();
     }
 }
@@ -343,9 +350,6 @@ void Device::refreshRetry()
 void Device::actionStarted()
 {
     //qDebug() << "Device::actionStarted()" << getAddress() << getName();
-
-    m_ble_status = DeviceUtils::DEVICE_CONNECTING;
-    Q_EMIT statusUpdated();
 }
 
 /* ************************************************************************** */
