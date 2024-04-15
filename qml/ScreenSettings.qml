@@ -529,6 +529,54 @@ Loader {
                                 onClicked: settingsManager.appSplashScreen = checked
                             }
                         }
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 48
+                            color: Theme.colorForeground
+
+                            Text {
+                                anchors.left: parent.left
+                                anchors.leftMargin: Theme.componentMarginL
+                                anchors.right: parent.right
+                                anchors.rightMargin: Theme.componentMarginL
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                text: qsTr("Default export directory:")
+                                textFormat: Text.PlainText
+                                font.pixelSize: Theme.fontSizeContent
+                                font.bold: false
+                                color: Theme.colorText
+                                wrapMode: Text.WordWrap
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                        }
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 48
+                            color: Theme.colorForeground
+
+                            TextField_FolderDialog { // exportDirectory
+                                anchors.left: parent.left
+                                anchors.leftMargin: Theme.componentMargin
+                                anchors.right: parent.right
+                                anchors.rightMargin: Theme.componentMargin
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                text: settingsManager.exportDirectory
+                                placeholderText: qsTr("Default export directory")
+                                selectByMouse: true
+
+                                dialogTitle: qsTr("Please specify the default export directory")
+
+                                onTextEdited: {
+                                    //settingsManager.exportDirectory = text
+                                }
+                            }
+                        }
                     }
 
                     ////

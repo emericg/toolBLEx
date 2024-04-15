@@ -1150,7 +1150,7 @@ void DeviceToolBLEx::restoreServiceCache()
 
 QString DeviceToolBLEx::getExportDirectory() const
 {
-    return QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/toolBLEx";
+    return QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/toolBLEx";
 }
 
 bool DeviceToolBLEx::exportDeviceInfo(const QString &exportPath,

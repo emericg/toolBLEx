@@ -71,6 +71,8 @@ class SettingsManager: public QObject
     Q_PROPERTY(QString preferredAdapter_scan READ getPreferredAdapter_scan WRITE setPreferredAdapter_scan NOTIFY preferredAdapterScanChanged)
     Q_PROPERTY(QString preferredAdapter_adv READ getPreferredAdapter_adv WRITE setPreferredAdapter_adv NOTIFY preferredAdapterAdvChanged)
 
+    Q_PROPERTY(QString exportDirectory READ getExportDirectory WRITE setExportDirectory NOTIFY exportDirectoryChanged)
+
     Q_PROPERTY(QString ubertooth_path READ getUbertoothPath WRITE setUbertoothPath NOTIFY ubertoothPathChanged)
     Q_PROPERTY(int ubertooth_freqMin READ getUbertoothFreqMin WRITE setUbertoothFreqMin NOTIFY ubertoothFreqChanged)
     Q_PROPERTY(int ubertooth_freqMax READ getUbertoothFreqMax WRITE setUbertoothFreqMax NOTIFY ubertoothFreqChanged)
@@ -110,6 +112,8 @@ class SettingsManager: public QObject
     QString m_preferredAdapter_scan;
     QString m_preferredAdapter_adv;
 
+    QString m_exportDirectory;
+
     QString m_ubertooth_path = "ubertooth-specan";
     int m_ubertooth_freqMin = 2400;
     int m_ubertooth_freqMax = 2483;
@@ -142,6 +146,7 @@ Q_SIGNALS:
     void preferredScreenChanged();
     void preferredAdapterScanChanged();
     void preferredAdapterAdvChanged();
+    void exportDirectoryChanged();
     void ubertoothPathChanged();
     void ubertoothFreqChanged();
 
@@ -214,6 +219,9 @@ public:
     void setPreferredAdapter_scan(const QString &value);
     QString getPreferredAdapter_adv() const { return m_preferredAdapter_adv; }
     void setPreferredAdapter_adv(const QString &value);
+
+    QString getExportDirectory() const { return m_exportDirectory; }
+    void setExportDirectory(const QString &value);
 
     QString getUbertoothPath() const { return m_ubertooth_path; }
     void setUbertoothPath(const QString &value);

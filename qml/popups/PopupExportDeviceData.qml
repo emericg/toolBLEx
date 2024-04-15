@@ -30,10 +30,10 @@ Popup {
     onAboutToShow: {
         buttonError.visible = false
 
-        tfExportPath.currentFolder = UtilsPath.cleanUrl(StandardPaths.writableLocation(StandardPaths.DocumentsLocation))
-        tfExportPath.text = tfExportPath.currentFolder +
-                            "/" + selectedDevice.deviceName_export +
-                            "-" + selectedDevice.deviceAddr_export + ".txt"
+        tfExportPath.currentFolder = UtilsPath.cleanUrl(StandardPaths.writableLocation(StandardPaths.DocumentsLocation) + "/toolBLEx")
+        tfExportPath.text = tfExportPath.currentFolder + "/" +
+                            selectedDevice.deviceName_export + "-" +
+                            selectedDevice.deviceAddr_export + ".txt"
 
         cbGenericInfo.checked = true
         cbAdvPackets.checked = true
@@ -263,7 +263,7 @@ Popup {
                     dialogFilter: ["Text file (*.txt)"]
                     dialogFileMode: FileDialog.SaveFile
 
-                    currentFolder: StandardPaths.writableLocation(StandardPaths.DocumentsLocation)
+                    currentFolder: StandardPaths.writableLocation(StandardPaths.DocumentsLocation) + "toolBLEx/"
                 }
             }
         }

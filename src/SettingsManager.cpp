@@ -142,6 +142,9 @@ bool SettingsManager::readSettings()
         if (settings.contains("settings/preferredAdapter_adv"))
             m_preferredAdapter_adv = settings.value("settings/preferredAdapter_adv").toString();
 
+        if (settings.contains("settings/exportDirectory"))
+            m_exportDirectory = settings.value("settings/exportDirectory").toString();
+
         if (settings.contains("settings/ubertooth_path"))
             m_ubertooth_path = settings.value("settings/ubertooth_path").toString();
         if (settings.contains("settings/ubertooth_freqMin"))
@@ -192,6 +195,8 @@ bool SettingsManager::writeSettings()
 
         settings.setValue("settings/preferredAdapter_scan", m_preferredAdapter_scan);
         settings.setValue("settings/preferredAdapter_adv", m_preferredAdapter_adv);
+
+        settings.setValue("settings/exportDirectory", m_exportDirectory);
 
         settings.setValue("settings/ubertooth_path", m_ubertooth_path);
         settings.setValue("settings/ubertooth_freqMin", m_ubertooth_freqMin);
@@ -446,6 +451,18 @@ void SettingsManager::setPreferredAdapter_adv(const QString &value)
         m_preferredAdapter_adv = value;
         writeSettings();
         Q_EMIT preferredAdapterAdvChanged();
+    }
+}
+
+/* ************************************************************************** */
+
+void SettingsManager::setExportDirectory(const QString &value)
+{
+    if (m_exportDirectory != value)
+    {
+        m_exportDirectory = value;
+        writeSettings();
+        Q_EMIT exportDirectoryChanged();
     }
 }
 
