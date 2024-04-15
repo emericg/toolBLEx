@@ -7,7 +7,7 @@ import QtQuick.Dialogs
 import ThemeEngine
 import DeviceUtils
 import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
-import "qrc:/js/UtilsPath.js" as UtilsPath
+import "qrc:/utils/UtilsPath.js" as UtilsPath
 
 Flickable {
     id: panelDeviceInfos
@@ -209,15 +209,17 @@ Flickable {
                         Layout.fillWidth: true
                         spacing: 6
 
-                        ItemTag {
+                        TagDesktop {
                             visible: (selectedDevice && selectedDevice.isClassic)
                             text: qsTr("Classic")
-                            color: Theme.colorForeground
+                            colorBackground: Theme.colorComponent
+                            colorBorder: Theme.colorComponent
                         }
-                        ItemTag {
+                        TagDesktop {
                             visible: (selectedDevice && selectedDevice.isLowEnergy)
                             text: qsTr("Low Energy")
-                            color: Theme.colorForeground
+                            colorBackground: Theme.colorComponent
+                            colorBorder: Theme.colorComponent
                         }
                         //TextSelectable {
                         //    text: UtilsBluetooth.getBluetoothCoreConfigurationText(selectedDevice.bluetoothConfiguration)
@@ -256,12 +258,14 @@ Flickable {
                     }
                 }
 
-                ItemTag {
+                TagDesktop {
                     anchors.horizontalCenter: parent.horizontalCenter
 
-                    text: UtilsBluetooth.getBluetoothPairingText(selectedDevice.pairingStatus)
-                    color: Theme.colorBackground
                     visible: (selectedDevice && selectedDevice.pairingStatus > 0)
+
+                    text: UtilsBluetooth.getBluetoothPairingText(selectedDevice.pairingStatus)
+                    colorBackground: Theme.colorComponent
+                    colorBorder: Theme.colorComponent
                 }
             }
         }
@@ -426,11 +430,11 @@ Flickable {
                         width: parent.www
                     }
 
-                    ButtonWireframeIcon {
+                    ButtonSolid {
                         id: exportButton
                         width: parent.www
-                        fullColor: true
-                        primaryColor: Theme.colorGrey
+
+                        color: Theme.colorGrey
 
                         enabled: (selectedDevice &&
                                   (selectedDevice.advCount > 0 || selectedDevice.servicesCount > 0 || selectedDevice.hasServiceCache))
@@ -485,9 +489,8 @@ Flickable {
                     width: parent.width
                     spacing: 12
 
-                    ButtonWireframeIcon {
-                        fullColor: true
-                        primaryColor: (selectedDevice && selectedDevice.isStarred) ? Theme.colorPrimary : Theme.colorLightGrey
+                    ButtonSolid {
+                        color: (selectedDevice && selectedDevice.isStarred) ? Theme.colorPrimary : Theme.colorGrey
 
                         text: (selectedDevice && selectedDevice.isStarred) ? qsTr("starred") : qsTr("star")
                         source: (selectedDevice && selectedDevice.isStarred) ?
@@ -496,9 +499,8 @@ Flickable {
                         onClicked: selectedDevice.isStarred = !selectedDevice.isStarred
                     }
 
-                    ButtonWireframeIcon {
-                        fullColor: true
-                        primaryColor: Theme.colorLightGrey
+                    ButtonSolid {
+                        color: Theme.colorGrey
 
                         visible: (selectedDevice && !selectedDevice.isBeacon)
 
@@ -509,9 +511,8 @@ Flickable {
                         onClicked: selectedDevice.cache(!selectedDevice.isCached)
                     }
 
-                    ButtonWireframeIcon {
-                        fullColor: true
-                        primaryColor: Theme.colorLightGrey
+                    ButtonSolid {
+                        color: Theme.colorGrey
 
                         text: (selectedDevice && selectedDevice.isBlacklisted) ? qsTr("show") : qsTr("hide")
                         source: (selectedDevice && selectedDevice.isBlacklisted) ?
@@ -520,10 +521,9 @@ Flickable {
                         onClicked: selectedDevice.blacklist(!selectedDevice.isBlacklisted)
                     }
 
-                    ButtonWireframe {
-                        fullColor: true
-                        primaryColor: (selectedDevice && selectedDevice.userColor)
-                        fulltextColor: (selectedDevice && utilsApp.isQColorLight(selectedDevice.userColor)) ? "#333" : "#f4f4f4"
+                    ButtonSolid {
+                        color: (selectedDevice && selectedDevice.userColor)
+                        //fulltextColor: (selectedDevice && utilsApp.isQColorLight(selectedDevice.userColor)) ? "#333" : "#f4f4f4"
                         font.bold: true
 
                         text: qsTr("color")

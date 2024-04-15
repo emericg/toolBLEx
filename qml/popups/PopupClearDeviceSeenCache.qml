@@ -151,16 +151,14 @@ Popup {
             anchors.rightMargin: Theme.componentMarginXL
             spacing: Theme.componentMargin
 
-            ButtonWireframe {
-                primaryColor: Theme.colorSubText
-                secondaryColor: Theme.colorForeground
+            ButtonSolid {
+                color: Theme.colorMaterialGrey
 
                 text: qsTr("Cancel")
                 onClicked: popupClearDeviceSeenCache.close()
             }
-            ButtonWireframe {
-                fullColor: true
-                primaryColor: Theme.colorOrange
+            ButtonSolid {
+                color: Theme.colorMaterialOrange
 
                 text: qsTr("Clear cache")
                 onClicked: {

@@ -3,7 +3,7 @@ import QtQuick.Controls
 import QtQuick.Dialogs
 
 import ThemeEngine
-import "qrc:/js/UtilsPath.js" as UtilsPath
+import "qrc:/utils/UtilsPath.js" as UtilsPath
 
 Loader {
     id: screenSettings
@@ -109,14 +109,21 @@ Loader {
                         anchors.leftMargin: 64
                         spacing: 64
 
-                        Rectangle {
+                        Item {
                             anchors.verticalCenter: parent.verticalCenter
                             width: 160
                             height: 160
-                            radius: 160
-                            color: "#f9f8f7" // Theme.colorBackground
-                            border.width: 2
-                            border.color: "#e8e8e8" // Theme.colorSeparator
+
+                            Rectangle {
+                                anchors.verticalCenter: parent.verticalCenter
+                                width: 160
+                                height: 160
+                                radius: 160
+                                color: "#f9f8f7" // Theme.colorBackground
+                                border.width: 2
+                                border.color: "#e8e8e8" // Theme.colorSeparator
+                                opacity: 0.8
+                            }
 
                             IconSvg {
                                 anchors.centerIn: parent
@@ -198,11 +205,10 @@ Loader {
                             Row {
                                 spacing: Theme.componentMarginL
 
-                                ButtonWireframeIconCentered {
+                                ButtonSolid {
                                     width: 160
                                     height: 40
-                                    fullColor: true
-                                    primaryColor: "#5483EF"
+                                    color: "#5483EF"
                                     font.bold: true
 
                                     text: qsTr("WEBSITE")
@@ -214,12 +220,11 @@ Loader {
                                     onClicked: Qt.openUrlExternally("https://github.com/emericg/toolBLEx")
                                 }
 
-                                ButtonWireframeIconCentered {
+                                ButtonSolid {
                                     width: 160
                                     height: 40
                                     sourceSize: 22
-                                    fullColor: true
-                                    primaryColor: "#5483EF"
+                                    color: "#5483EF"
                                     font.bold: true
 
                                     text: qsTr("SUPPORT")
@@ -227,11 +232,10 @@ Loader {
                                     onClicked: Qt.openUrlExternally("https://github.com/emericg/toolBLEx/issues")
                                 }
 
-                                ButtonWireframeIcon {
+                                ButtonSolid {
                                     height: 40
                                     sourceSize: 22
-                                    fullColor: true
-                                    primaryColor: "#5483EF"
+                                    color: "#5483EF"
                                     font.bold: true
 
                                     text: qsTr("RELEASE NOTES")
@@ -428,7 +432,7 @@ Loader {
                                 verticalAlignment: Text.AlignVCenter
                             }
 
-                            SelectorMenu {
+                            SelectorMenuColorful {
                                 height: 32
                                 anchors.right: parent.right
                                 anchors.rightMargin: Theme.componentMargin
@@ -469,7 +473,7 @@ Loader {
                                 verticalAlignment: Text.AlignVCenter
                             }
 
-                            SelectorMenu {
+                            SelectorMenuColorful {
                                 id: selector_prefscreen
                                 height: 32
                                 anchors.right: parent.right
@@ -774,12 +778,11 @@ Loader {
                                 }
                             }
 
-                            ButtonWireframe {
+                            ButtonSolid {
                                 anchors.right: parent.right
                                 anchors.rightMargin: Theme.componentMargin
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                fullColor: true
                                 text: qsTr("Clear cache")
                                 onClicked: {
                                     popupLoader_cacheseen.active = true
@@ -830,12 +833,11 @@ Loader {
                                 }
                             }
 
-                            ButtonWireframe {
+                            ButtonSolid {
                                 anchors.right: parent.right
                                 anchors.rightMargin: Theme.componentMargin
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                fullColor: true
                                 text: qsTr("Clear cache")
                                 onClicked: {
                                     popupLoader_cachestructure.active = true
@@ -950,8 +952,7 @@ Loader {
                             height: 48
                             color: Theme.colorForeground
 
-                            TextFieldFileDialog {
-                                id: ubertoothPath
+                            TextField_FileDialog { // ubertoothPath
                                 anchors.left: parent.left
                                 anchors.leftMargin: Theme.componentMargin
                                 anchors.right: parent.right
@@ -1034,11 +1035,11 @@ Loader {
                                 onValueModified: settingsManager.ubertooth_freqMin = value
                             }
 
-                            ButtonThemed {
+                            ButtonDesktop {
                                 anchors.centerIn: parent
                                 visible: (settingsManager.ubertooth_freqMin !== 2402 || settingsManager.ubertooth_freqMax !== 2480)
 
-                                text: qsTr("set default")
+                                text: qsTr("Default")
                                 onClicked: {
                                     settingsManager.ubertooth_freqMin = 2402
                                     settingsManager.ubertooth_freqMax = 2480

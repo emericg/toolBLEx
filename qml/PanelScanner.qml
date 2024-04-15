@@ -27,7 +27,7 @@ Item {
             anchors.verticalCenterOffset: -1
             spacing: 16
 
-            SelectorMenuThemed {
+            SelectorMenu {
                 id: hostMenu
                 height: 32
 

@@ -6,7 +6,7 @@ import QtQuick.Templates as T
 
 import ThemeEngine
 import DeviceUtils
-import "qrc:/js/UtilsNumber.js" as UtilsNumber
+import "qrc:/utils/UtilsNumber.js" as UtilsNumber
 
 T.Button {
     id: control
@@ -314,11 +314,10 @@ T.Button {
             bottomPadding: 0
             spacing: -Theme.componentBorderWidth
 
-            ButtonWireframeIcon {
+            ButtonFlat {
                 width: control.width - 32
 
-                fullColor: true
-                primaryColor: control.color
+                color: control.color
                 layoutDirection: Qt.RightToLeft
                 visible: (selectedDevice && selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
 
@@ -333,11 +332,10 @@ T.Button {
                     }
                 }
             }
-            ButtonWireframeIcon {
+            ButtonFlat {
                 width: control.width - 32
 
-                fullColor: true
-                primaryColor: control.color
+                color: control.color
                 layoutDirection: Qt.RightToLeft
                 visible: (selectedDevice && selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
 
@@ -352,11 +350,10 @@ T.Button {
                     }
                 }
             }
-            ButtonWireframeIcon {
+            ButtonFlat {
                 width: control.width - 32
 
-                fullColor: true
-                primaryColor: control.color
+                color: control.color
                 layoutDirection: Qt.RightToLeft
                 visible: (selectedDevice && selectedDevice.hasServiceCache &&
                           selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
@@ -373,11 +370,10 @@ T.Button {
                 }
             }
 
-            ButtonWireframeIcon { // status
+            ButtonFlat { // status
                 width: control.width - 32
 
-                fullColor: true
-                primaryColor: control.color
+                color: control.color
                 visible: (selectedDevice && selectedDevice.status !== DeviceUtils.DEVICE_OFFLINE)
 
                 text: {
@@ -407,11 +403,10 @@ T.Button {
                     //
                 }
             }
-            ButtonWireframeIcon {
+            ButtonFlat {
                 width: control.width - 32
 
-                fullColor: true
-                primaryColor: control.color
+                color: control.color
                 visible: (selectedDevice && selectedDevice.status !== DeviceUtils.DEVICE_OFFLINE)
 
                 text: (selectedDevice && selectedDevice.connected) ? qsTr("disconnect") : qsTr("abort")

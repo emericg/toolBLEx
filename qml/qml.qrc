@@ -39,8 +39,10 @@
         <file alias="PopupClearDeviceStructureCache.qml">popups/PopupClearDeviceStructureCache.qml</file>
         <file alias="PopupExportDeviceData.qml">popups/PopupExportDeviceData.qml</file>
         <file alias="PopupWriteCharacteristic.qml">popups/PopupWriteCharacteristic.qml</file>
+    </qresource>
 
-        <file>ThemeEngine.qml</file>
-        <file>WindowGeometrySaver.qml</file>
+    <qresource prefix="/js">
+        <file alias="UtilsBluetooth.js">components_js/UtilsBluetooth.js</file>
+        <file alias="UtilsDeviceSensors.js">components_js/UtilsDeviceSensors.js</file>
     </qresource>
 </RCC>

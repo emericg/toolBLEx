@@ -112,12 +112,11 @@ Loader {
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 8
 
-                        ButtonWireframe {
+                        ButtonToggle {
                             height: 28
-                            fullColor: true
-                            primaryColor: Theme.colorPrimary
-                            opacity: settingsManager.scanShowLowEnergy ? 1 : 0.5
-                            font.bold: false
+                            colorBackground: Theme.colorActionbar
+                            colorHighlight: Theme.colorActionbarHighlight
+                            checked: settingsManager.scanShowLowEnergy
 
                             text: qsTr("BLE")
                             onClicked: {
@@ -125,12 +124,11 @@ Loader {
                                 deviceManager.updateBoolFilters()
                             }
                         }
-                        ButtonWireframe {
+                        ButtonToggle {
                             height: 28
-                            fullColor: true
-                            primaryColor: Theme.colorPrimary
-                            opacity: settingsManager.scanShowClassic ? 1 : 0.5
-                            font.bold: false
+                            colorBackground: Theme.colorActionbar
+                            colorHighlight: Theme.colorActionbarHighlight
+                            checked: settingsManager.scanShowClassic
 
                             text: qsTr("Classic")
                             onClicked: {
@@ -138,12 +136,11 @@ Loader {
                                 deviceManager.updateBoolFilters()
                             }
                         }
-                        ButtonWireframe {
+                        ButtonToggle {
                             height: 28
-                            fullColor: true
-                            primaryColor: Theme.colorPrimary
-                            opacity: settingsManager.scanShowCached ? 1 : 0.5
-                            font.bold: false
+                            colorBackground: Theme.colorActionbar
+                            colorHighlight: Theme.colorActionbarHighlight
+                            checked: settingsManager.scanShowCached
 
                             text: qsTr("cached")
                             onClicked: {
@@ -151,12 +148,11 @@ Loader {
                                 deviceManager.updateBoolFilters()
                             }
                         }
-                        ButtonWireframe {
+                        ButtonToggle {
                             height: 28
-                            fullColor: true
-                            primaryColor: Theme.colorPrimary
-                            opacity: settingsManager.scanShowBlacklisted ? 1 : 0.5
-                            font.bold: false
+                            colorBackground: Theme.colorActionbar
+                            colorHighlight: Theme.colorActionbarHighlight
+                            checked: settingsManager.scanShowBlacklisted
 
                             text: qsTr("hidden")
                             onClicked: {
@@ -164,12 +160,11 @@ Loader {
                                 deviceManager.updateBoolFilters()
                             }
                         }
-                        ButtonWireframe {
+                        ButtonToggle {
                             height: 28
-                            fullColor: true
-                            primaryColor: Theme.colorPrimary
-                            opacity: settingsManager.scanShowBeacon ? 1 : 0.5
-                            font.bold: false
+                            colorBackground: Theme.colorActionbar
+                            colorHighlight: Theme.colorActionbarHighlight
+                            checked: settingsManager.scanShowBeacon
 
                             text: qsTr("beacons")
                             onClicked: {
@@ -490,11 +485,11 @@ Loader {
                 anchors.right: parent.right
                 anchors.rightMargin: 8
                 anchors.verticalCenter: parent.verticalCenter
-                anchors.verticalCenterOffset: 1
                 spacing: 8
 
                 RoundButtonIcon {
-                    width: 24; height: 24;
+                    width: 28; height: 28;
+                    anchors.verticalCenter: parent.verticalCenter
                     highlightMode: "color"
                     highlighted: (settingsManager.scanviewOrientation === Qt.Vertical)
                     source: "qrc:/assets/icons/material-symbols/bottom_panel_open-fill.svg"
@@ -508,7 +503,8 @@ Loader {
                     }
                 }
                 RoundButtonIcon {
-                    width: 24; height: 24;
+                    width: 28; height: 28;
+                    anchors.verticalCenter: parent.verticalCenter
                     highlightMode: "color"
                     highlighted: (settingsManager.scanviewOrientation === Qt.Horizontal)
                     source: "qrc:/assets/icons/material-symbols/right_panel_open-fill.svg"

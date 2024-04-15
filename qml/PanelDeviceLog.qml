@@ -8,7 +8,7 @@ import ThemeEngine
 import DeviceUtils
 import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
 import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
-import "qrc:/js/UtilsPath.js" as UtilsPath
+import "qrc:/utils/UtilsPath.js" as UtilsPath
 
 Flickable {
     id: panelDeviceLog
@@ -125,9 +125,8 @@ Flickable {
         Row {
             spacing: 8
 
-            ButtonWireframeIcon { // formatButton
-                fullColor: true
-                primaryColor: Theme.colorLightGrey
+            ButtonSolid { // formatButton
+                color: Theme.colorGrey
 
                 visible: (selectedDevice && selectedDevice.deviceLog)
 
@@ -139,9 +138,8 @@ Flickable {
                 }
             }
 
-            ButtonWireframeIcon { // legendButton
-                fullColor: true
-                primaryColor: logLegend ? Theme.colorGrey : Theme.colorLightGrey
+            ButtonSolid { // legendButton
+                color: logLegend ? Theme.colorGrey : Theme.colorGrey
 
                 visible: (selectedDevice && selectedDevice.deviceLog)
 
@@ -164,11 +162,9 @@ Flickable {
 
         visible: (selectedDevice && selectedDevice.deviceLogCount > 0)
 
-        ButtonWireframeIcon { // clearButton
-            fullColor: true
-            primaryColor: Theme.colorLightGrey
-
+        ButtonSolid { // clearButton
             visible: (selectedDevice && selectedDevice.deviceLog)
+            color: Theme.colorGrey
 
             text: qsTr("Clear")
             //source: "qrc:/assets/icons/material-symbols/save.svg"
@@ -178,12 +174,9 @@ Flickable {
             }
         }
 
-        ButtonWireframeIcon { // saveButton
-
-            fullColor: true
-            primaryColor: Theme.colorGrey
-
+        ButtonSolid { // saveButton
             visible: (selectedDevice && selectedDevice.deviceLog)
+            color: Theme.colorGrey
 
             text: qsTr("Save")
             source: "qrc:/assets/icons/material-symbols/save.svg"

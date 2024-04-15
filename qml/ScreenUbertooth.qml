@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls
 
 import ThemeEngine
-import "qrc:/js/UtilsNumber.js" as UtilsNumber
+import "qrc:/utils/UtilsNumber.js" as UtilsNumber
 
 
 Loader {
@@ -77,12 +77,11 @@ Loader {
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 8
 
-                ButtonWireframe {
+                ButtonToggle {
                     height: 28
-                    fullColor: true
-                    primaryColor: Theme.colorActionbarHighlight
-                    opacity: actionBar.wifi ? 1 : 0.5
-                    font.bold: false
+                    colorBackground: Theme.colorActionbar
+                    colorHighlight: Theme.colorActionbarHighlight
+                    checked: actionBar.wifi
 
                     text: qsTr("wifi")
                     onClicked: {
@@ -91,12 +90,11 @@ Loader {
                         actionBar.zigbee = false
                     }
                 }
-                ButtonWireframe {
+                ButtonToggle {
                     height: 28
-                    fullColor: true
-                    primaryColor: Theme.colorActionbarHighlight
-                    opacity: actionBar.bluetooth ? 1 : 0.5
-                    font.bold: false
+                    colorBackground: Theme.colorActionbar
+                    colorHighlight: Theme.colorActionbarHighlight
+                    checked: actionBar.bluetooth
 
                     text: qsTr("bluetooth")
                     onClicked: {
@@ -105,12 +103,11 @@ Loader {
                         actionBar.zigbee = false
                     }
                 }
-                ButtonWireframe {
+                ButtonToggle {
                     height: 28
-                    fullColor: true
-                    primaryColor: Theme.colorActionbarHighlight
-                    opacity: actionBar.zigbee ? 1 : 0.5
-                    font.bold: false
+                    colorBackground: Theme.colorActionbar
+                    colorHighlight: Theme.colorActionbarHighlight
+                    checked: actionBar.zigbee
 
                     text: qsTr("zigbee")
                     onClicked: {
@@ -137,12 +134,11 @@ Loader {
 
                 ////
 
-                ButtonWireframe {
+                ButtonToggle {
                     height: 28
-                    fullColor: true
-                    primaryColor: Theme.colorActionbarHighlight
-                    opacity: actionBar.wifi_b ? 1 : 0.5
-                    font.bold: false
+                    colorBackground: Theme.colorActionbar
+                    colorHighlight: Theme.colorActionbarHighlight
+                    checked: actionBar.wifi_b
 
                     visible: actionBar.wifi
                     text: qsTr("802.11 b")
@@ -152,12 +148,11 @@ Loader {
                         actionBar.wifi_n = false
                     }
                 }
-                ButtonWireframe {
+                ButtonToggle {
                     height: 28
-                    fullColor: true
-                    primaryColor: Theme.colorActionbarHighlight
-                    opacity: actionBar.wifi_gn ? 1 : 0.5
-                    font.bold: false
+                    colorBackground: Theme.colorActionbar
+                    colorHighlight: Theme.colorActionbarHighlight
+                    checked: actionBar.wifi_gn
 
                     visible: actionBar.wifi
                     text: qsTr("802.11 g/n")
@@ -167,12 +162,11 @@ Loader {
                         actionBar.wifi_n = false
                     }
                 }
-                ButtonWireframe {
+                ButtonToggle {
                     height: 28
-                    fullColor: true
-                    primaryColor: Theme.colorActionbarHighlight
-                    opacity: actionBar.wifi_n ? 1 : 0.5
-                    font.bold: false
+                    colorBackground: Theme.colorActionbar
+                    colorHighlight: Theme.colorActionbarHighlight
+                    checked: actionBar.wifi_n
 
                     visible: false // actionBar.wifi
                     text: qsTr("802.11 n")
@@ -183,12 +177,11 @@ Loader {
                     }
                 }
 
-                ButtonWireframe {
+                ButtonToggle {
                     height: 28
-                    fullColor: true
-                    primaryColor: Theme.colorActionbarHighlight
-                    opacity: actionBar.bluetooth_classic ? 1 : 0.5
-                    font.bold: false
+                    colorBackground: Theme.colorActionbar
+                    colorHighlight: Theme.colorActionbarHighlight
+                    checked: actionBar.bluetooth_classic
 
                     visible: actionBar.bluetooth
                     text: qsTr("classic")
@@ -197,12 +190,11 @@ Loader {
                         actionBar.bluetooth_lowenergy = false
                     }
                 }
-                ButtonWireframe {
+                ButtonToggle {
                     height: 28
-                    fullColor: true
-                    primaryColor: Theme.colorActionbarHighlight
-                    opacity: actionBar.bluetooth_lowenergy ? 1 : 0.5
-                    font.bold: false
+                    colorBackground: Theme.colorActionbar
+                    colorHighlight: Theme.colorActionbarHighlight
+                    checked: actionBar.bluetooth_lowenergy
 
                     visible: actionBar.bluetooth
                     text: qsTr("low energy")
@@ -269,10 +261,9 @@ Loader {
                     }
                 }
 
-                ButtonWireframeIcon {
+                ButtonSolid {
                     height: 28
-                    fullColor: true
-                    primaryColor: ubertooth.hardwareAvailable ? Theme.colorSuccess: Theme.colorWarning
+                    color: ubertooth.hardwareAvailable ? Theme.colorSuccess: Theme.colorWarning
                     text: ubertooth.hardwareAvailable ? qsTr("hardware ready") : qsTr("hardware not ready")
                     source: ubertooth.hardwareAvailable ? "qrc:/assets/icons/material-symbols/check_circle.svg" : ""
                     onClicked: ubertooth.checkUbertooth()

@@ -7,7 +7,7 @@ import QtQuick.Effects
 
 import ThemeEngine
 import DeviceUtils
-import "qrc:/js/UtilsPath.js" as UtilsPath
+import "qrc:/utils/UtilsPath.js" as UtilsPath
 
 Popup {
     id: popupExportDeviceData
@@ -175,27 +175,27 @@ Popup {
                     anchors.right: parent.right
                     spacing: 12
 
-                    ItemTag {
+                    TagClear {
                         height: 36
                         text: qsTr("%n adv packet(s)", "", selectedDevice.advCount)
-                        textColor: Theme.colorSubText
+                        //colorText: Theme.colorSubText
                     }
-                    ItemTag {
+                    TagClear {
                         height: 36
                         text: qsTr("%n service(s)", "", selectedDevice.servicesCount)
-                        textColor: Theme.colorSubText
+                        //colorText: Theme.colorSubText
                     }
-                    ItemTag {
+                    TagClear {
                         height: 36
                         text: qsTr("%n characteristic(s)", "", selectedDevice.characteristicsCount)
-                        textColor: Theme.colorSubText
+                        //colorText: Theme.colorSubText
                     }
 
-                    ButtonWireframe {
+                    ButtonClear {
                         height: 36
 
                         text: qsTr("load cache")
-                        primaryColor: Theme.colorSubText
+                        //color: Theme.colorSubText
 
                         visible: (selectedDevice && selectedDevice.hasServiceCache &&
                                   !selectedDevice.servicesCached &&
@@ -254,7 +254,7 @@ Popup {
                     color: Theme.colorText
                 }
 
-                TextFieldFileDialog {
+                TextField_FileDialog {
                     id: tfExportPath
                     anchors.left: parent.left
                     anchors.right: parent.right
@@ -279,10 +279,9 @@ Popup {
             anchors.rightMargin: Theme.componentMarginXL
             height: Theme.componentHeight
 
-            ButtonWireframe {
+            ButtonSolid {
                 id: buttonError
-                fullColor: true
-                primaryColor: Theme.colorWarning
+                color: Theme.colorWarning
                 visible: false
                 text: qsTr("Export error :(")
             }
@@ -291,17 +290,15 @@ Popup {
                 anchors.right: parent.right
                 spacing: Theme.componentMargin
 
-                ButtonWireframe {
-                    primaryColor: Theme.colorSubText
-                    secondaryColor: Theme.colorForeground
+                ButtonSolid {
+                    color: Theme.colorMaterialGrey
 
                     text: qsTr("Cancel")
                     onClicked: popupExportDeviceData.close()
                 }
 
-                ButtonWireframe {
-                    fullColor: true
-                    primaryColor: Theme.colorOrange
+                ButtonSolid {
+                    color: Theme.colorMaterialAmber
 
                     text: qsTr("Export data")
                     onClicked: {

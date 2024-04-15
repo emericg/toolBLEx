@@ -116,16 +116,14 @@ Loader {
                     anchors.verticalCenter: parent.verticalCenter
                     spacing: 16
 
-                    ButtonWireframe {
+                    ButtonSolid {
                         text: qsTr("Ignore")
-                        fullColor: true
-                        primaryColor: Theme.colorSecondary
+                        color: Theme.colorSecondary
                         onClicked: screenBluetooth.unloadScreen()
                     }
 
-                    ButtonWireframe {
+                    ButtonSolid {
                         text: qsTr("Retry")
-                        fullColor: true
                         onClicked: deviceManager.enableBluetooth()
                     }
                 }
@@ -200,16 +198,14 @@ Loader {
                     anchors.verticalCenter: parent.verticalCenter
                     spacing: 16
 
-                    ButtonWireframe {
+                    ButtonSolid {
                         text: qsTr("Ignore")
-                        fullColor: true
-                        primaryColor: Theme.colorSecondary
+                        color: Theme.colorSecondary
                         onClicked: screenBluetooth.unloadScreen()
                     }
 
-                    ButtonWireframe {
+                    ButtonSolid {
                         text: qsTr("Retry")
-                        fullColor: true
                         onClicked: deviceManager.enableBluetooth()
                     }
                 }
@@ -284,16 +280,14 @@ Loader {
                     anchors.verticalCenter: parent.verticalCenter
                     spacing: 16
 
-                    ButtonWireframe {
+                    ButtonSolid {
                         text: qsTr("Ignore")
-                        fullColor: true
-                        primaryColor: Theme.colorSecondary
+                        color: Theme.colorSecondary
                         onClicked: screenBluetooth.unloadScreen()
                     }
 
-                    ButtonWireframe {
+                    ButtonSolid {
                         text: qsTr("Retry")
-                        fullColor: true
                         onClicked: deviceManager.enableBluetooth()
                     }
                 }

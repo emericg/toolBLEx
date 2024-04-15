@@ -41,7 +41,8 @@ Loader {
 
             FrameBox { // not implemented
                 width: screenAdvertiser.width * 0.666
-                padding: 0
+
+                highlighted: true
 
                 Item {
                     anchors.left: parent.left
@@ -61,7 +62,7 @@ Loader {
 
                 Column {
                     anchors.left: parent.left
-                    anchors.leftMargin: 128
+                    anchors.leftMargin: 128+16
                     anchors.right: parent.right
                     anchors.rightMargin: 32
                     anchors.verticalCenter: parent.verticalCenter

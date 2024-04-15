@@ -154,16 +154,14 @@ Popup {
             anchors.rightMargin: Theme.componentMarginXL
             spacing: Theme.componentMargin
 
-            ButtonWireframe {
-                primaryColor: Theme.colorSubText
-                secondaryColor: Theme.colorForeground
+            ButtonSolid {
+                color: Theme.colorMaterialGrey
 
                 text: qsTr("Cancel")
                 onClicked: popupClearDeviceStructureCache.close()
             }
-            ButtonWireframe {
-                primaryColor: Theme.colorSubText
-                secondaryColor: Theme.colorForeground
+            ButtonSolid {
+                color: Theme.colorMaterialAmber
 
                 text: qsTr("Open folder")
                 onClicked: {
@@ -171,9 +169,8 @@ Popup {
                     Qt.openUrlExternally("file://" +deviceManager.getDeviceStructureDirectory())
                 }
             }
-            ButtonWireframe {
-                fullColor: true
-                primaryColor: Theme.colorOrange
+            ButtonSolid {
+                color: Theme.colorMaterialOrange
 
                 text: qsTr("Clear cache")
                 onClicked: {

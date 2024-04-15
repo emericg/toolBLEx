@@ -161,10 +161,11 @@ Rectangle {
                 color: Theme.colorSubText
             }
 
-            ItemTag {
+            TagDesktop {
                 anchors.verticalCenter: parent.verticalCenter
                 text: modelData.version
-                color: Theme.colorForeground
+                colorBackground: Theme.colorComponent
+                colorBorder: Theme.colorComponent
             }
         }
 
@@ -184,10 +185,11 @@ Rectangle {
                 color: Theme.colorSubText
             }
 
-            ItemTag {
+            TagDesktop {
                 anchors.verticalCenter: parent.verticalCenter
                 text: UtilsBluetooth.getBluetoothAdapterModeText(modelData.mode)
-                color: Theme.colorForeground
+                colorBackground: Theme.colorComponent
+                colorBorder: Theme.colorComponent
             }
         }
     }

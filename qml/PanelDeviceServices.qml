@@ -8,7 +8,7 @@ import ThemeEngine
 import DeviceUtils
 import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
 import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
-import "qrc:/js/UtilsPath.js" as UtilsPath
+import "qrc:/utils/UtilsPath.js" as UtilsPath
 
 Item {
     id: panelDeviceService
@@ -68,11 +68,10 @@ Item {
                         width: parent.www
                     }
 
-                    ButtonWireframeIcon {
+                    ButtonSolid {
                         width: parent.www
 
-                        fullColor: true
-                        primaryColor: Theme.colorLightGrey
+                        color: Theme.colorMaterialGrey
 
                         text: qsTr("load from cache")
                         source: "qrc:/assets/icons/material-symbols/save.svg"
@@ -155,11 +154,10 @@ Item {
         anchors.margins: -4
         spacing: 8
 
-        ButtonWireframeIcon {
+        ButtonSolid {
             id: cacheButton
 
-            fullColor: true
-            primaryColor: Theme.colorGrey
+            color: Theme.colorGrey
 
             visible: (selectedDevice &&
                       selectedDevice.hasServices &&

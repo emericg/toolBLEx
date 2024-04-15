@@ -58,11 +58,11 @@ Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                     spacing: 8
 
-                    ItemTag { // serviceType
+                    TagClear { // serviceType
                         anchors.verticalCenter: parent.verticalCenter
                         text: modelData.serviceType
                     }
-                    ItemTag { // serviceStatus
+                    TagClear { // serviceStatus
                         anchors.verticalCenter: parent.verticalCenter
                         text: modelData.serviceStatusStr
                     }

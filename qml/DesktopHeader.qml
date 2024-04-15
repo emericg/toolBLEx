@@ -305,7 +305,7 @@ Rectangle {
                 colorContent: Theme.colorHeaderContent
                 colorHighlight: Theme.colorHeaderHighlight
 
-                selected: (appContent.state === "Scanner")
+                highlighted: (appContent.state === "Scanner")
                 onClicked: scannerButtonClicked()
 
                 Rectangle {
@@ -331,7 +331,7 @@ Rectangle {
                 colorContent: Theme.colorHeaderContent
                 colorHighlight: Theme.colorHeaderHighlight
 
-                selected: (appContent.state === "Advertiser")
+                highlighted: (appContent.state === "Advertiser")
                 onClicked: advertiserButtonClicked()
 
                 Rectangle {
@@ -358,7 +358,7 @@ Rectangle {
                 colorHighlight: Theme.colorHeaderHighlight
 
                 visible: ubertooth.toolsAvailable
-                selected: (appContent.state === "Ubertooth")
+                highlighted: (appContent.state === "Ubertooth")
                 onClicked: ubertoothButtonClicked()
 
                 Rectangle {
@@ -384,7 +384,7 @@ Rectangle {
                 colorContent: Theme.colorHeaderContent
                 colorHighlight: Theme.colorHeaderHighlight
 
-                selected: (appContent.state === "Settings")
+                highlighted: (appContent.state === "Settings")
                 onClicked: settingsButtonClicked()
             }
         }

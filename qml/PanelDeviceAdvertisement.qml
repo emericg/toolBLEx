@@ -130,11 +130,10 @@ Flickable {
                 Repeater {
                     model: (selectedDevice && selectedDevice.svd_uuid)
 
-                    ButtonWireframe {
+                    ButtonSolid {
                         height: 28
-                        fullColor: true
-                        fulltextColor: Theme.colorText
-                        primaryColor: Theme.colorComponent
+                        color: Theme.colorComponent
+                        colorText: Theme.colorText
                         opacity: modelData.selected ? 1 : 0.5
 
                         text: "0x" + modelData.uuid.toUpperCase()
@@ -161,11 +160,10 @@ Flickable {
                 Repeater {
                     model: (selectedDevice && selectedDevice.mfd_uuid)
 
-                    ButtonWireframe {
+                    ButtonSolid {
                         height: 28
-                        fullColor: true
-                        fulltextColor: Theme.colorText
-                        primaryColor: Theme.colorComponent
+                        color: Theme.colorComponent
+                        colorText: Theme.colorText
                         opacity: modelData.selected ? 1 : 0.5
 
                         text: "0x" + modelData.uuid.toUpperCase()

@@ -64,7 +64,7 @@ RESOURCES   += assets/icons.qrc \
                assets/vendors.qrc \
                i18n/i18n.qrc \
                qml/qml.qrc \
-               qml/components.qrc
+               qml/ComponentLibrary/ComponentLibrary.qrc
 
 TRANSLATIONS = i18n/toolBLEx_en.ts
 

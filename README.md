@@ -42,7 +42,6 @@ A Bluetooth Low Energy device scanner and analyzer.
 #### Build dependencies
 
 You will need a C++17 compiler and Qt 6.5+ with the following 'additional librairies':  
-- Qt 5 Compatibility Module
 - Qt Connectivity
 - Qt Charts
 
@@ -62,7 +61,7 @@ $ make
 
 ##### Linux
 
-Bluetooth support might be a little shaky?!
+Double click.
 
 ##### macOS
 
