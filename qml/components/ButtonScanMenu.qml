@@ -26,15 +26,10 @@ T.Button {
 
     // icon
     property url source: {
-        if (!selectedDevice) return ""
-        if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
-            return "qrc:/assets/icons_material/baseline-bluetooth-24px.svg"
-        else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
-            return "qrc:/assets/icons_material/duotone-bluetooth_searching-24px.svg"
-        else if (selectedDevice.status === DeviceUtils.DEVICE_WORKING)
-            return "qrc:/assets/icons_material/duotone-bluetooth_searching-24px.svg"
-        else
-            return "qrc:/assets/icons_material/duotone-bluetooth_connected-24px.svg"
+        if (!selectedDevice || selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
+            return "qrc:/assets/icons/material-icons/outlined/bluetooth.svg"
+
+        return getDeviceStatusIcon(selectedDevice.status)
     }
     property int sourceSize: UtilsNumber.alignTo(height * 0.666, 2)
 
@@ -49,14 +44,11 @@ T.Button {
 
     text: {
         if (!selectedDevice) return ""
-        if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
-            return qsTr("scan device")
-        else if (selectedDevice.status === DeviceUtils.DEVICE_WORKING)
-            return qsTr("scanning...")
-        else if (selectedDevice.status >= DeviceUtils.DEVICE_CONNECTED)
-            return qsTr("connected")
-        else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
-            return qsTr("connecting...")
+        if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE) return qsTr("scan device")
+        if (selectedDevice.status === DeviceUtils.DEVICE_DISCONNECTING) return qsTr("disconnecting...")
+        if (selectedDevice.status === DeviceUtils.DEVICE_CONNECTING) return qsTr("connecting...")
+        if (selectedDevice.status === DeviceUtils.DEVICE_WORKING) return qsTr("scanning...")
+        if (selectedDevice.status >= DeviceUtils.DEVICE_CONNECTED) return qsTr("connected")
     }
 
     ////////////////
@@ -378,25 +370,23 @@ T.Button {
 
                 text: {
                     if (!selectedDevice) return ""
-                    if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
-                        return qsTr("scan device")
-                    else if (selectedDevice.status === DeviceUtils.DEVICE_WORKING)
-                        return qsTr("scanning...")
-                    else if (selectedDevice.status >= DeviceUtils.DEVICE_CONNECTED)
-                        return qsTr("connected")
-                    else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
-                        return qsTr("connecting...")
+                    if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE) return qsTr("scan device")
+                    if (selectedDevice.status === DeviceUtils.DEVICE_WORKING) return qsTr("scanning...")
+                    if (selectedDevice.status === DeviceUtils.DEVICE_DISCONNECTING) return qsTr("disconnecting...")
+                    if (selectedDevice.status === DeviceUtils.DEVICE_CONNECTING) return qsTr("connecting...")
+                    if (selectedDevice.status >= DeviceUtils.DEVICE_CONNECTED) return qsTr("connected")
                 }
                 source: {
                     if (!selectedDevice) return ""
                     if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
-                        return "qrc:/assets/icons_material/baseline-bluetooth-24px.svg"
-                    else if (selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
-                        return "qrc:/assets/icons_material/duotone-bluetooth_searching-24px.svg"
+                        return "qrc:/assets/icons/material-icons/outlined/bluetooth.svg"
+                    else if (selectedDevice.status <= DeviceUtils.DEVICE_DISCONNECTING ||
+                             selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
+                        return "qrc:/assets/icons/material-icons/duotone/bluetooth_searching.svg"
                     else if (selectedDevice.status === DeviceUtils.DEVICE_WORKING)
-                        return "qrc:/assets/icons_material/duotone-bluetooth_searching-24px.svg"
+                        return "qrc:/assets/icons/material-icons/duotone/bluetooth_searching.svg"
                     else
-                        return "qrc:/assets/icons_material/duotone-bluetooth_connected-24px.svg"
+                        return "qrc:/assets/icons/material-icons/duotone/bluetooth_connected.svg"
                 }
 
                 onClicked: {
