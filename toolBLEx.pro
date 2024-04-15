@@ -59,7 +59,8 @@ HEADERS  += src/SettingsManager.h \
 
 INCLUDEPATH += src/ src/thirdparty/
 
-RESOURCES   += assets/assets.qrc \
+RESOURCES   += assets/icons.qrc \
+               assets/assets.qrc \
                assets/vendors.qrc \
                i18n/i18n.qrc \
                qml/qml.qrc \

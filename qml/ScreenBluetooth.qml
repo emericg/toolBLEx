@@ -77,7 +77,7 @@ Loader {
                         height: 96
                         anchors.centerIn: parent
 
-                        source: "qrc:/assets/icons_material/baseline-bluetooth_disabled-24px.svg"
+                        source: "qrc:/assets/icons/material-icons/outlined/bluetooth_disabled.svg"
                         color: Theme.colorIcon
                     }
                 }
@@ -161,7 +161,7 @@ Loader {
                         height: 96
                         anchors.centerIn: parent
 
-                        source: "qrc:/assets/icons_material/baseline-bluetooth_disabled-24px.svg"
+                        source: "qrc:/assets/icons/material-icons/outlined/bluetooth_disabled.svg"
                         color: Theme.colorIcon
                     }
                 }
@@ -245,7 +245,7 @@ Loader {
                         height: 96
                         anchors.centerIn: parent
 
-                        source: "qrc:/assets/icons_material/duotone-settings_bluetooth-24px.svg"
+                        source: "qrc:/assets/icons/material-icons/duotone/settings_bluetooth.svg"
                         color: Theme.colorIcon
                     }
                 }

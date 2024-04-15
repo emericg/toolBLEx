@@ -248,7 +248,7 @@ Flickable {
                         color: Theme.colorSubText
                         source: {
                             if (selectedDevice) {
-                                if (selectedDevice.isBeacon) return "qrc:/assets/icons_bootstrap/tags.svg"
+                                if (selectedDevice.isBeacon) return "qrc:/assets/icons/bootstrap/tags.svg"
                                 if (selectedDevice.majorClass) return UtilsBluetooth.getBluetoothMinorClassIcon(selectedDevice.majorClass, selectedDevice.minorClass)
                             }
                             return ""
@@ -436,7 +436,7 @@ Flickable {
                                   (selectedDevice.advCount > 0 || selectedDevice.servicesCount > 0 || selectedDevice.hasServiceCache))
 
                         text: qsTr("export available data")
-                        source: "qrc:/assets/icons_material/baseline-save-24px.svg"
+                        source: "qrc:/assets/icons/material-symbols/save-fill.svg"
 
                         onClicked: {
                             popupLoader_export.active = true
@@ -491,8 +491,8 @@ Flickable {
 
                         text: (selectedDevice && selectedDevice.isStarred) ? qsTr("starred") : qsTr("star")
                         source: (selectedDevice && selectedDevice.isStarred) ?
-                                    "qrc:/assets/icons_material/baseline-stars-24px.svg" :
-                                    "qrc:/assets/icons_material/outline-add_circle-24px.svg"
+                                    "qrc:/assets/icons/material-symbols/stars-fill.svg" :
+                                    "qrc:/assets/icons/material-symbols/add_circle.svg"
                         onClicked: selectedDevice.isStarred = !selectedDevice.isStarred
                     }
 
@@ -504,8 +504,8 @@ Flickable {
 
                         text: (selectedDevice && selectedDevice.isCached) ? qsTr("forget") : qsTr("cache")
                         source: (selectedDevice && selectedDevice.isCached) ?
-                                    "qrc:/assets/icons_material/baseline-loupe_minus-24px.svg" :
-                                    "qrc:/assets/icons_material/baseline-loupe-24px.svg"
+                                    "qrc:/assets/icons/material-symbols/loupe_minus.svg" :
+                                    "qrc:/assets/icons/material-symbols/loupe_plus.svg"
                         onClicked: selectedDevice.cache(!selectedDevice.isCached)
                     }
 
@@ -515,8 +515,8 @@ Flickable {
 
                         text: (selectedDevice && selectedDevice.isBlacklisted) ? qsTr("show") : qsTr("hide")
                         source: (selectedDevice && selectedDevice.isBlacklisted) ?
-                                    "qrc:/assets/icons_material/outline-add_circle-24px.svg" :
-                                    "qrc:/assets/icons_material/baseline-cancel-24px.svg"
+                                    "qrc:/assets/icons/material-symbols/add_circle.svg" :
+                                    "qrc:/assets/icons/material-symbols/cancel_circle.svg"
                         onClicked: selectedDevice.blacklist(!selectedDevice.isBlacklisted)
                     }
 
@@ -663,8 +663,8 @@ Flickable {
                                 anchors.verticalCenter: parent.verticalCenter
                                 anchors.verticalCenterOffset: -1
                                 source: (selectedDevice && selectedDevice.rssi < 0) ?
-                                            "qrc:/assets/icons_material/baseline-signal_cellular_full-24px.svg" :
-                                            "qrc:/assets/icons_material/baseline-signal_cellular_off-24px.svg"
+                                            "qrc:/assets/icons/material-symbols/signal_cellular_full-fill.svg" :
+                                            "qrc:/assets/icons/material-symbols/signal_cellular_off-fill.svg"
                                 color: Theme.colorIcon
                             }
                         }
@@ -718,7 +718,7 @@ Flickable {
                         IconSvg {
                             width: 20; height: 20;
 
-                            source: "qrc:/assets/icons_material/baseline-arrow_left_right-24px.svg"
+                            source: "qrc:/assets/icons/material-symbols/arrow_range.svg"
                             color: Theme.colorIcon
                         }
                         Text {

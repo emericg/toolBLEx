@@ -274,7 +274,7 @@ Loader {
                     fullColor: true
                     primaryColor: ubertooth.hardwareAvailable ? Theme.colorSuccess: Theme.colorWarning
                     text: ubertooth.hardwareAvailable ? qsTr("hardware ready") : qsTr("hardware not ready")
-                    source: ubertooth.hardwareAvailable ? "qrc:/assets/icons_material/baseline-check_circle-24px.svg" : ""
+                    source: ubertooth.hardwareAvailable ? "qrc:/assets/icons/material-symbols/check_circle.svg" : ""
                     onClicked: ubertooth.checkUbertooth()
                 }
             }

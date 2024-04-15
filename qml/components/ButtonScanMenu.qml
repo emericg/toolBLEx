@@ -133,7 +133,7 @@ T.Button {
 
                 opacity: enabled ? 1.0 : 0.66
                 color: control.colorText
-                source: "qrc:/assets/icons_material/baseline-more_vert-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/more_vert.svg"
             }
         }
 
@@ -270,7 +270,7 @@ T.Button {
 
                     opacity: enabled ? 1.0 : 0.66
                     color: control.colorText
-                    source: "qrc:/assets/icons_material/baseline-more_vert-24px.svg"
+                    source: "qrc:/assets/icons/material-symbols/more_vert.svg"
                 }
             }
 
@@ -323,7 +323,7 @@ T.Button {
                 visible: (selectedDevice && selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
 
                 text: qsTr("scan services & data")
-                source: "qrc:/assets/icons_material/duotone-bluetooth_searching-24px.svg"
+                source: "qrc:/assets/icons/material-icons/duotone/bluetooth_searching.svg"
                 sourceSize: 20
 
                 onClicked: {
@@ -342,7 +342,7 @@ T.Button {
                 visible: (selectedDevice && selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
 
                 text: qsTr("scan services only")
-                source: "qrc:/assets/icons_material/duotone-bluetooth_searching-24px.svg"
+                source: "qrc:/assets/icons/material-icons/duotone/bluetooth_searching.svg"
                 sourceSize: 20
 
                 onClicked: {
@@ -362,7 +362,7 @@ T.Button {
                           selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
 
                 text: qsTr("load from cache")
-                source: "qrc:/assets/icons_material/baseline-save-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/save.svg"
                 sourceSize: 20
 
                 onClicked: {
@@ -415,7 +415,7 @@ T.Button {
                 visible: (selectedDevice && selectedDevice.status !== DeviceUtils.DEVICE_OFFLINE)
 
                 text: (selectedDevice && selectedDevice.connected) ? qsTr("disconnect") : qsTr("abort")
-                source: "qrc:/assets/icons_material/baseline-bluetooth_disabled-24px.svg"
+                source: "qrc:/assets/icons/material-icons/outlined/bluetooth_disabled.svg"
 
                 onClicked: {
                     if (selectedDevice.status !== DeviceUtils.DEVICE_OFFLINE) {

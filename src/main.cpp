@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 
 #if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
     // Application icon
-    QIcon appIcon(":/assets/logos/icon.svg");
+    QIcon appIcon(":/assets/gfx/logos/icon.svg");
     app.setWindowIcon(appIcon);
 #endif
 

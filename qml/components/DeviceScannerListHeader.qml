@@ -328,7 +328,7 @@ Rectangle {
                     width: 14; height: 14;
                     anchors.verticalCenter: parent.verticalCenter
 
-                    source: "qrc:/assets/icons_material/baseline-signal_cellular_full-24px.svg"
+                    source: "qrc:/assets/icons/material-symbols/signal_cellular_full-fill.svg"
                     color: Theme.colorSubText
                     opacity: 0.8
                 }
@@ -430,7 +430,7 @@ Rectangle {
                     width: 14; height: 14;
                     anchors.verticalCenter: parent.verticalCenter
 
-                    source: "qrc:/assets/icons_material/baseline-arrow_left_right-24px.svg"
+                    source: "qrc:/assets/icons/material-symbols/arrow_range.svg"
                     color: Theme.colorSubText
                     opacity: 0.8
                 }

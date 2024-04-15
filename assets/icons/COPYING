@@ -1,0 +1,16 @@
+
+# Bootstrap icons:
+- assets/icons/material/*                       // Mark Otto        // MIT
+
+# Font Awesome icons:
+- assets/icons_fontawesome/*                    // Font Awesome     // CC BY 4.0
+
+# Google Material Design icons:
+- assets/icons/material-icons/*                 // Google           // CC BY-SA 4.0
+- assets/icons/material-icons/custom/*          // Google + Emeric  // CC BY-SA 4.0
+- assets/icons/material-icons/duotone/*         // Google + Emeric  // CC BY-SA 4.0
+
+# Google Material Design symbols:
+- assets/icons/material-symbols/*               // Google           // CC BY-SA 4.0
+- assets/icons/material-symbols/custom/*        // Google + Emeric  // CC BY-SA 4.0
+- assets/icons/material-symbols/duotone/*       // Google + Emeric  // CC BY-SA 4.0

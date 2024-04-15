@@ -171,7 +171,7 @@ Flickable {
             visible: (selectedDevice && selectedDevice.deviceLog)
 
             text: qsTr("Clear")
-            //source: "qrc:/assets/icons_material/baseline-save-24px.svg"
+            //source: "qrc:/assets/icons/material-symbols/save.svg"
 
             onClicked: {
                 selectedDevice.clearLog()
@@ -186,7 +186,7 @@ Flickable {
             visible: (selectedDevice && selectedDevice.deviceLog)
 
             text: qsTr("Save")
-            source: "qrc:/assets/icons_material/baseline-save-24px.svg"
+            source: "qrc:/assets/icons/material-symbols/save.svg"
 
             onClicked: {
                 selectedDevice.saveLog("")

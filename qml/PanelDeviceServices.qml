@@ -75,7 +75,7 @@ Item {
                         primaryColor: Theme.colorLightGrey
 
                         text: qsTr("load from cache")
-                        source: "qrc:/assets/icons_material/baseline-save-24px.svg"
+                        source: "qrc:/assets/icons/material-symbols/save.svg"
 
                         visible: (selectedDevice && selectedDevice.hasServiceCache)
                         enabled: (selectedDevice && selectedDevice.hasServiceCache &&
@@ -113,7 +113,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 width: 24
                 height: 24
-                source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/warning-fill.svg"
                 color: Theme.colorSubText
             }
 
@@ -166,7 +166,7 @@ Item {
                       selectedDevice.servicesScanned)
 
             text: qsTr("Cache")
-            source: "qrc:/assets/icons_material/baseline-save-24px.svg"
+            source: "qrc:/assets/icons/material-symbols/save.svg"
 
             onClicked: {
                 selectedDevice.saveServiceCache()

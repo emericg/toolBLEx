@@ -228,7 +228,7 @@ Rectangle {
             width: 64
             height: 64
 
-            source: "qrc:/assets/icons_bootstrap/bluetooth.svg"
+            source: "qrc:/assets/icons/bootstrap/bluetooth.svg"
             color: Theme.colorSubText
         }
     }

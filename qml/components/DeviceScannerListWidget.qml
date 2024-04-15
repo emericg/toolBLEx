@@ -135,7 +135,7 @@ Item {
 
                 visible: (source.toString().length)
                 source: {
-                    if (boxDevice.isBeacon) return "qrc:/assets/icons_bootstrap/tags.svg"
+                    if (boxDevice.isBeacon) return "qrc:/assets/icons/bootstrap/tags.svg"
                     if (boxDevice.majorClass) return UtilsBluetooth.getBluetoothMinorClassIcon(boxDevice.majorClass, boxDevice.minorClass)
                     return ""
                 }
@@ -178,7 +178,7 @@ Item {
                     height: 20
                     visible: (boxDevice.connected)
 
-                    source: "qrc:/assets/icons_material/duotone-bluetooth_connected-24px.svg"
+                    source: "qrc:/assets/icons/material-icons/duotone/bluetooth_connected.svg"
                     color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorIcon
                 }
 
@@ -187,7 +187,7 @@ Item {
                     height: 20
                     visible: (boxDevice.isStarred)
 
-                    source: "qrc:/assets/icons_material/baseline-stars-24px.svg"
+                    source: "qrc:/assets/icons/material-symbols/stars-fill.svg"
                     color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorIcon
                 }
 
@@ -196,7 +196,7 @@ Item {
                     height: 20
                     visible: (boxDevice.isPaired)
 
-                    source: "qrc:/assets/icons_material/baseline-insert_link-24px.svg"
+                    source: "qrc:/assets/icons/material-symbols/link.svg"
                     color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorIcon
                 }
             }

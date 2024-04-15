@@ -81,23 +81,23 @@ function getDeviceBatteryIcon(batteryLevel) {
     var src = ""
 
     if (batteryLevel > 95) {
-        src = "qrc:/assets/icons_material/baseline-battery_full-24px.svg";
+        src = "qrc:/assets/icons/material-icons/duotone/battery_full.svg";
     } else if (batteryLevel > 85) {
-        src = "qrc:/assets/icons_material/baseline-battery_90-24px.svg";
+        src = "qrc:/assets/icons/material-icons/duotone/battery_90.svg";
     } else if (batteryLevel > 75) {
-        src = "qrc:/assets/icons_material/baseline-battery_80-24px.svg";
+        src = "qrc:/assets/icons/material-icons/duotone/battery_80.svg";
     } else if (batteryLevel > 55) {
-        src = "qrc:/assets/icons_material/baseline-battery_60-24px.svg";
+        src = "qrc:/assets/icons/material-icons/duotone/battery_60.svg";
     } else if (batteryLevel > 45) {
-        src = "qrc:/assets/icons_material/baseline-battery_50-24px.svg";
+        src = "qrc:/assets/icons/material-icons/duotone/battery_50.svg";
     } else if (batteryLevel > 25) {
-        src = "qrc:/assets/icons_material/baseline-battery_30-24px.svg";
+        src = "qrc:/assets/icons/material-icons/duotone/battery_30.svg";
     } else if (batteryLevel > 15) {
-        src = "qrc:/assets/icons_material/baseline-battery_20-24px.svg";
+        src = "qrc:/assets/icons/material-icons/duotone/battery_20.svg";
     } else if (batteryLevel > 1) {
-        src = "qrc:/assets/icons_material/baseline-battery_10-24px.svg";
+        src = "qrc:/assets/icons/material-icons/duotone/battery_10.svg";
     } else if (batteryLevel >= 0) {
-        src = "qrc:/assets/icons_material/baseline-battery_unknown-24px.svg";
+        src = "qrc:/assets/icons/material-icons/duotone/battery_unknown.svg";
     }
 
     return src

@@ -409,7 +409,7 @@ ApplicationWindow {
                 anchors.centerIn: parent
                 width: 320
                 height: 320
-                source: "qrc:/assets/logos/splash.svg"
+                source: "qrc:/assets/gfx/logos/splash.svg"
                 sourceSize: Qt.size(width, height)
 
                 Behavior on opacity { OpacityAnimator { duration: 666; } }

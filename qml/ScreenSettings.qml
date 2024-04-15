@@ -98,7 +98,7 @@ Loader {
 
                     Image {
                         anchors.fill: parent
-                        source: "qrc:/assets/logos/pattern_ble.png"
+                        source: "qrc:/assets/gfx/logos/pattern_ble.png"
                         fillMode: Image.Tile
                         opacity: 0.20
                     }
@@ -122,7 +122,7 @@ Loader {
                                 anchors.centerIn: parent
                                 width: 140
                                 height: 140
-                                source: "qrc:/assets/icons_material/duotone-bluetooth_connected-24px.svg"
+                                source: "qrc:/assets/icons/material-icons/duotone/bluetooth_connected.svg"
                                 color: "#5483EF" // Theme.colorBlue
                             }
 
@@ -207,10 +207,10 @@ Loader {
 
                                     text: qsTr("WEBSITE")
                                     //sourceSize: 28
-                                    //source: "qrc:/assets/icons_material/baseline-insert_link-24px.svg"
+                                    //source: "qrc:/assets/icons/material-symbols/link.svg"
                                     //onClicked: Qt.openUrlExternally("https://emeric.io/toolBLEx")
                                     sourceSize: 20
-                                    source: "qrc:/assets/logos/github.svg"
+                                    source: "qrc:/assets/gfx/logos/github.svg"
                                     onClicked: Qt.openUrlExternally("https://github.com/emericg/toolBLEx")
                                 }
 
@@ -223,7 +223,7 @@ Loader {
                                     font.bold: true
 
                                     text: qsTr("SUPPORT")
-                                    source: "qrc:/assets/icons_material/baseline-support-24px.svg"
+                                    source: "qrc:/assets/icons/material-symbols/support.svg"
                                     onClicked: Qt.openUrlExternally("https://github.com/emericg/toolBLEx/issues")
                                 }
 
@@ -235,7 +235,7 @@ Loader {
                                     font.bold: true
 
                                     text: qsTr("RELEASE NOTES")
-                                    source: "qrc:/assets/icons_material/outline-new_releases-24px.svg"
+                                    source: "qrc:/assets/icons/material-symbols/new_releases.svg"
                                     onClicked: Qt.openUrlExternally("https://github.com/emericg/toolBLEx/releases")
                                 }
                             }
@@ -294,7 +294,7 @@ Loader {
                                 anchors.rightMargin: Theme.componentMarginL
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                source: "qrc:/assets/icons_material/duotone-tune-24px.svg"
+                                source: "qrc:/assets/icons/material-icons/duotone/tune.svg"
                                 color: Theme.colorIcon
                             }
                         }
@@ -560,7 +560,7 @@ Loader {
                                 anchors.rightMargin: Theme.componentMarginL
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                source: "qrc:/assets/icons_material/duotone-devices-24px.svg"
+                                source: "qrc:/assets/icons/material-icons/duotone/devices.svg"
                                 color: Theme.colorIcon
                             }
                         }
@@ -880,7 +880,7 @@ Loader {
                                 anchors.rightMargin: Theme.componentMarginL
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                source: "qrc:/assets/icons_material/duotone-microwave-48px.svg"
+                                source: "qrc:/assets/icons/material-icons/duotone/microwave.svg"
                                 color: Theme.colorIcon
                             }
                         }
@@ -939,7 +939,7 @@ Loader {
                                 anchors.rightMargin: Theme.componentMarginL
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                source: "qrc:/assets/icons_material/baseline-help-24px.svg"
+                                source: "qrc:/assets/icons/material-symbols/help-fill.svg"
                                 color: Theme.colorSubText
                             }
                         }
@@ -975,7 +975,7 @@ Loader {
                                     height: 24
 
                                     visible: ubertooth.toolsAvailable
-                                    source: "qrc:/assets/icons_material/baseline-check_circle-24px.svg"
+                                    source: "qrc:/assets/icons/material-symbols/check_circle.svg"
                                     color: Theme.colorSuccess
                                 }
 
@@ -1182,7 +1182,7 @@ Loader {
                                             width: 20
                                             height: 20
 
-                                            source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
+                                            source: "qrc:/assets/icons/material-icons/duotone/launch.svg"
                                             color: parent.containsMouse ? Theme.colorPrimary : Theme.colorText
                                             Behavior on color { ColorAnimation { duration: 133 } }
                                         }

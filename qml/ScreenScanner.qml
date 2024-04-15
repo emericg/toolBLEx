@@ -211,7 +211,7 @@ Loader {
                                     width: 16
                                     height: 16
 
-                                    source: "qrc:/assets/icons_material/baseline-backspace-24px.svg"
+                                    source: "qrc:/assets/icons/material-symbols/backspace-fill.svg"
                                     color: parent.containsMouse ? Theme.colorPrimary : Theme.colorIcon
                                     opacity: 0.8
                                 }
@@ -224,7 +224,7 @@ Loader {
                                 width: 24
                                 height: 24
 
-                                source: "qrc:/assets/icons_material/baseline-search-24px.svg"
+                                source: "qrc:/assets/icons/material-symbols/search.svg"
                                 color: Theme.colorIcon
                             }
 
@@ -497,7 +497,7 @@ Loader {
                     width: 24; height: 24;
                     highlightMode: "color"
                     highlighted: (settingsManager.scanviewOrientation === Qt.Vertical)
-                    source: "qrc:/assets/icons_bootstrap/layout-bottombar.svg"
+                    source: "qrc:/assets/icons/material-symbols/bottom_panel_open-fill.svg"
                     iconColor: Theme.colorSubText
 
                     onClicked: {
@@ -511,7 +511,7 @@ Loader {
                     width: 24; height: 24;
                     highlightMode: "color"
                     highlighted: (settingsManager.scanviewOrientation === Qt.Horizontal)
-                    source: "qrc:/assets/icons_bootstrap/layout-sidebar.svg"
+                    source: "qrc:/assets/icons/material-symbols/right_panel_open-fill.svg"
                     iconColor: Theme.colorSubText
 
                     onClicked: {

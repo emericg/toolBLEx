@@ -74,8 +74,8 @@ Rectangle {
 
                         color: Theme.colorIcon
                         source: bleServiceWidget.extended ?
-                                    "qrc:/assets/icons_material/baseline-unfold_less-24px.svg" :
-                                    "qrc:/assets/icons_material/baseline-unfold_more-24px.svg"
+                                    "qrc:/assets/icons/material-symbols/unfold_less.svg" :
+                                    "qrc:/assets/icons/material-symbols/unfold_more.svg"
                     }
                 }
             }

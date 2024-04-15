@@ -154,7 +154,7 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
                         width: 24
                         height: 24
-                        source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
+                        source: "qrc:/assets/icons/material-symbols/warning-fill.svg"
                         color: Theme.colorSubText
                     }
 

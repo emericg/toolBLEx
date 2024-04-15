@@ -32,15 +32,15 @@ function getBluetoothPairingText(pairing) {
 /* ************************************************************************** */
 
 function getBluetoothMajorClassIcon(majorClass) {
-    if (majorClass === 1) return "qrc:/assets/icons_bootstrap/laptop.svg"
-    if (majorClass === 2) return "qrc:/assets/icons_bootstrap/phone.svg"
-    if (majorClass === 3) return "qrc:/assets/icons_bootstrap/router.svg"
-    if (majorClass === 4) return "qrc:/assets/icons_bootstrap/speaker.svg"
-    if (majorClass === 5) return "qrc:/assets/icons_bootstrap/keyboard.svg"
-    if (majorClass === 6) return "qrc:/assets/icons_bootstrap/printer.svg"
-    if (majorClass === 7) return "qrc:/assets/icons_bootstrap/smartwatch.svg"
-    if (majorClass === 8) return "qrc:/assets/icons_bootstrap/joystick.svg"
-    if (majorClass === 9) return "qrc:/assets/icons_bootstrap/heart-pulse.svg"
+    if (majorClass === 1) return "qrc:/assets/icons/bootstrap/laptop.svg"
+    if (majorClass === 2) return "qrc:/assets/icons/bootstrap/phone.svg"
+    if (majorClass === 3) return "qrc:/assets/icons/bootstrap/router.svg"
+    if (majorClass === 4) return "qrc:/assets/icons/bootstrap/speaker.svg"
+    if (majorClass === 5) return "qrc:/assets/icons/bootstrap/keyboard.svg"
+    if (majorClass === 6) return "qrc:/assets/icons/bootstrap/printer.svg"
+    if (majorClass === 7) return "qrc:/assets/icons/bootstrap/smartwatch.svg"
+    if (majorClass === 8) return "qrc:/assets/icons/bootstrap/joystick.svg"
+    if (majorClass === 9) return "qrc:/assets/icons/bootstrap/heart-pulse.svg"
     return ""
 }
 
@@ -64,72 +64,72 @@ function getBluetoothMajorClassText(majorClass) {
 function getBluetoothMinorClassIcon(majorClass, minorClass) {
     if (majorClass === 1) { // Computer
 
-        if (minorClass === 1) return "qrc:/assets/icons_bootstrap/pc.svg"
-        if (minorClass === 2) return "qrc:/assets/icons_bootstrap/pc.svg"
-        if (minorClass === 3) return "qrc:/assets/icons_bootstrap/laptop.svg"
-        if (minorClass === 6) return "qrc:/assets/icons_bootstrap/smartwatch.svg"
+        if (minorClass === 1) return "qrc:/assets/icons/bootstrap/pc.svg"
+        if (minorClass === 2) return "qrc:/assets/icons/bootstrap/pc.svg"
+        if (minorClass === 3) return "qrc:/assets/icons/bootstrap/laptop.svg"
+        if (minorClass === 6) return "qrc:/assets/icons/bootstrap/smartwatch.svg"
 
     } else if (majorClass === 2) { // Phone
 
-        if (minorClass === 1) return "qrc:/assets/icons_bootstrap/phone.svg"
-        if (minorClass === 2) return "qrc:/assets/icons_bootstrap/telephone.svg"
-        if (minorClass === 3) return "qrc:/assets/icons_bootstrap/phone.svg"
-        if (minorClass === 4) return "qrc:/assets/icons_bootstrap/modem.svg"
-        if (minorClass === 5) return "qrc:/assets/icons_bootstrap/telephone.svg"
+        if (minorClass === 1) return "qrc:/assets/icons/bootstrap/phone.svg"
+        if (minorClass === 2) return "qrc:/assets/icons/bootstrap/telephone.svg"
+        if (minorClass === 3) return "qrc:/assets/icons/bootstrap/phone.svg"
+        if (minorClass === 4) return "qrc:/assets/icons/bootstrap/modem.svg"
+        if (minorClass === 5) return "qrc:/assets/icons/bootstrap/telephone.svg"
 
     } else if (majorClass === 4) { // Audio Video
 
-        if (minorClass === 1) return "qrc:/assets/icons_bootstrap/headset.svg"
-        if (minorClass === 2) return "qrc:/assets/icons_bootstrap/headset.svg"
-        if (minorClass === 4) return "qrc:/assets/icons_bootstrap/mic.svg"
-        if (minorClass === 5) return "qrc:/assets/icons_bootstrap/speaker.svg"
-        if (minorClass === 6) return "qrc:/assets/icons_bootstrap/headphones.svg"
-        if (minorClass === 7) return "qrc:/assets/icons_bootstrap/boombox.svg"
-        if (minorClass === 8) return "qrc:/assets/icons_bootstrap/car-front-fill.svg"
-        if (minorClass === 9) return "qrc:/assets/icons_bootstrap/cast.svg"
-        if (minorClass === 10) return "qrc:/assets/icons_bootstrap/boombox.svg"
-        if (minorClass === 11) return "qrc:/assets/icons_bootstrap/cassette.svg"
-        if (minorClass === 12) return "qrc:/assets/icons_bootstrap/camera-reels.svg"
-        if (minorClass === 13) return "qrc:/assets/icons_bootstrap/camera-reels.svg"
-        if (minorClass === 14) return "qrc:/assets/icons_bootstrap/tv.svg"
-        if (minorClass === 15) return "qrc:/assets/icons_bootstrap/tv.svg"
-        if (minorClass === 16) return "qrc:/assets/icons_bootstrap/webcam.svg"
-        if (minorClass === 18) return "qrc:/assets/icons_bootstrap/joystick.svg"
+        if (minorClass === 1) return "qrc:/assets/icons/bootstrap/headset.svg"
+        if (minorClass === 2) return "qrc:/assets/icons/bootstrap/headset.svg"
+        if (minorClass === 4) return "qrc:/assets/icons/bootstrap/mic.svg"
+        if (minorClass === 5) return "qrc:/assets/icons/bootstrap/speaker.svg"
+        if (minorClass === 6) return "qrc:/assets/icons/bootstrap/headphones.svg"
+        if (minorClass === 7) return "qrc:/assets/icons/bootstrap/boombox.svg"
+        if (minorClass === 8) return "qrc:/assets/icons/bootstrap/car-front-fill.svg"
+        if (minorClass === 9) return "qrc:/assets/icons/bootstrap/cast.svg"
+        if (minorClass === 10) return "qrc:/assets/icons/bootstrap/boombox.svg"
+        if (minorClass === 11) return "qrc:/assets/icons/bootstrap/cassette.svg"
+        if (minorClass === 12) return "qrc:/assets/icons/bootstrap/camera-reels.svg"
+        if (minorClass === 13) return "qrc:/assets/icons/bootstrap/camera-reels.svg"
+        if (minorClass === 14) return "qrc:/assets/icons/bootstrap/tv.svg"
+        if (minorClass === 15) return "qrc:/assets/icons/bootstrap/tv.svg"
+        if (minorClass === 16) return "qrc:/assets/icons/bootstrap/webcam.svg"
+        if (minorClass === 18) return "qrc:/assets/icons/bootstrap/joystick.svg"
 
     } else if (majorClass === 5) { // Peripheral
 
-        if (minorClass === 0x10) return "qrc:/assets/icons_bootstrap/keyboard.svg"
-        if (minorClass === 0x20) return "qrc:/assets/icons_bootstrap/mouse.svg"
-        if (minorClass === 0x30) return "qrc:/assets/icons_bootstrap/keyboard.svg"
+        if (minorClass === 0x10) return "qrc:/assets/icons/bootstrap/keyboard.svg"
+        if (minorClass === 0x20) return "qrc:/assets/icons/bootstrap/mouse.svg"
+        if (minorClass === 0x30) return "qrc:/assets/icons/bootstrap/keyboard.svg"
 
-        if (minorClass === 1) return "qrc:/assets/icons_bootstrap/joystick.svg"
-        if (minorClass === 2) return "qrc:/assets/icons_bootstrap/controller.svg"
-        if (minorClass === 3) return "qrc:/assets/icons_bootstrap/dpad.svg"
-        if (minorClass === 4) return "qrc:/assets/icons_bootstrap/thermometer-half.svg"
-        if (minorClass === 5) return "qrc:/assets/icons_bootstrap/pencil.svg"
-        if (minorClass === 6) return "qrc:/assets/icons_bootstrap/credit-card.svg"
+        if (minorClass === 1) return "qrc:/assets/icons/bootstrap/joystick.svg"
+        if (minorClass === 2) return "qrc:/assets/icons/bootstrap/controller.svg"
+        if (minorClass === 3) return "qrc:/assets/icons/bootstrap/dpad.svg"
+        if (minorClass === 4) return "qrc:/assets/icons/bootstrap/thermometer-half.svg"
+        if (minorClass === 5) return "qrc:/assets/icons/bootstrap/pencil.svg"
+        if (minorClass === 6) return "qrc:/assets/icons/bootstrap/credit-card.svg"
 
     } else if (majorClass === 6) { // Imaging device
 
-        if (minorClass & 0x04) return "qrc:/assets/icons_bootstrap/tv.svg"
-        if (minorClass & 0x08) return "qrc:/assets/icons_bootstrap/webcam.svg"
-        if (minorClass & 0x10) return "qrc:/assets/icons_bootstrap/printer.svg"
-        if (minorClass & 0x20) return "qrc:/assets/icons_bootstrap/printer.svg"
+        if (minorClass & 0x04) return "qrc:/assets/icons/bootstrap/tv.svg"
+        if (minorClass & 0x08) return "qrc:/assets/icons/bootstrap/webcam.svg"
+        if (minorClass & 0x10) return "qrc:/assets/icons/bootstrap/printer.svg"
+        if (minorClass & 0x20) return "qrc:/assets/icons/bootstrap/printer.svg"
 
     } else if (majorClass === 7) { // Wearable device
 
-        if (minorClass === 1) return "qrc:/assets/icons_bootstrap/smartwatch.svg"
-        if (minorClass === 5) return "qrc:/assets/icons_bootstrap/eyeglasses.svg"
+        if (minorClass === 1) return "qrc:/assets/icons/bootstrap/smartwatch.svg"
+        if (minorClass === 5) return "qrc:/assets/icons/bootstrap/eyeglasses.svg"
 
     } else if (majorClass === 8) { // Toy
 
-        if (minorClass === 1) return "qrc:/assets/icons_bootstrap/robot.svg"
-        if (minorClass === 2) return "qrc:/assets/icons_bootstrap/car-front-fill.svg"
-        if (minorClass === 4) return "qrc:/assets/icons_bootstrap/controller.svg"
+        if (minorClass === 1) return "qrc:/assets/icons/bootstrap/robot.svg"
+        if (minorClass === 2) return "qrc:/assets/icons/bootstrap/car-front-fill.svg"
+        if (minorClass === 4) return "qrc:/assets/icons/bootstrap/controller.svg"
 
     } else if (majorClass === 9) { // Health device
 
-        if (minorClass === 2) return "qrc:/assets/icons_bootstrap/thermometer-half.svg"
+        if (minorClass === 2) return "qrc:/assets/icons/bootstrap/thermometer-half.svg"
 
     }
 
