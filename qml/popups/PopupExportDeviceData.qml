@@ -1,9 +1,9 @@
 import QtCore
 import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
-import QtQuick.Dialogs
 import QtQuick.Effects
+import QtQuick.Layouts
+import QtQuick.Controls
+import QtQuick.Dialogs
 
 import ThemeEngine
 import DeviceUtils
@@ -20,10 +20,6 @@ Popup {
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-
-    enter: Transition { NumberAnimation { property: "opacity"; from: 0.333; to: 1.0; duration: 133; } }
-
-    signal confirmed()
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -43,6 +39,8 @@ Popup {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    enter: Transition { NumberAnimation { property: "opacity"; from: 0.333; to: 1.0; duration: 133; } }
+
     Overlay.modal: Rectangle {
         color: "#000"
         opacity: ThemeEngine.isLight ? 0.333 : 0.666
@@ -51,8 +49,44 @@ Popup {
     background: Rectangle {
         radius: Theme.componentRadius
         color: Theme.colorBackground
-        border.color: Theme.colorSeparator
-        border.width: Theme.componentBorderWidth
+
+        Item {
+            anchors.fill: parent
+
+            Rectangle { // titleArea
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 96
+                color: Theme.colorPrimary
+            }
+
+            Rectangle {
+                anchors.fill: parent
+                radius: Theme.componentRadius
+                color: "transparent"
+                border.color: Theme.colorSeparator
+                border.width: Theme.componentBorderWidth
+                opacity: 0.4
+            }
+
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                maskEnabled: true
+                maskInverted: false
+                maskThresholdMin: 0.5
+                maskSpreadAtMin: 1.0
+                maskSpreadAtMax: 0.0
+                maskSource: ShaderEffectSource {
+                    sourceItem: Rectangle {
+                        x: background.x
+                        y: background.y
+                        width: background.width
+                        height: background.height
+                        radius: background.radius
+                    }
+                }
+            }
+        }
 
         layer.enabled: true
         layer.effect: MultiEffect {
@@ -65,21 +99,14 @@ Popup {
     ////////////////////////////////////////////////////////////////////////////
 
     contentItem: Column {
-        id: columnContent
         spacing: Theme.componentMarginXL
 
         ////////
 
-        Rectangle { // titleArea
+        Item { // titleArea
             anchors.left: parent.left
             anchors.right: parent.right
-
             height: 96
-            color: Theme.colorPrimary
-            radius: Theme.componentRadius
-
-            border.color: Qt.darker(color, 1.05)
-            border.width: Theme.componentBorderWidth
 
             Column {
                 anchors.left: parent.left
@@ -191,7 +218,7 @@ Popup {
                         //colorText: Theme.colorSubText
                     }
 
-                    ButtonClear {
+                    ButtonFlat {
                         height: 36
 
                         text: qsTr("load cache")
@@ -307,7 +334,6 @@ Popup {
                                                                      cbServices.checked, cbData.checked)
                         if (status) {
                             buttonError.visible = false
-                            popupExportDeviceData.confirmed()
                             popupExportDeviceData.close()
                         } else {
                             buttonError.visible = true

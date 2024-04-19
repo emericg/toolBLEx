@@ -27,12 +27,8 @@ Item {
         active: false
         asynchronous: false
         sourceComponent: PopupExportDeviceData {
-            id: popupClearCache
+            id: popupExportDeviceData
             parent: appContent
-
-            onConfirmed: {
-                //
-            }
         }
     }
 

@@ -25,10 +25,6 @@ Rectangle {
         sourceComponent: PopupWriteCharacteristic {
             id: popupWriteCharacteristic
             parent: appContent
-
-            onConfirmed: {
-                // the popup itself is triggering the write
-            }
         }
     }
 
