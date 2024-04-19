@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 import QtQuick.Controls
 
 import ThemeEngine
@@ -67,64 +68,65 @@ Loader {
                     color: Theme.colorPrimary
                 }
 
-                Item {
+                RowLayout {
                     anchors.left: parent.left
-                    width: 128
-                    height: 128
-
-                    IconSvg {
-                        width: 96
-                        height: 96
-                        anchors.centerIn: parent
-
-                        source: "qrc:/assets/icons/material-icons/outlined/bluetooth_disabled.svg"
-                        color: Theme.colorIcon
-                    }
-                }
-
-                Column {
-                    anchors.left: parent.left
-                    anchors.leftMargin: 128
+                    anchors.leftMargin: 16
                     anchors.right: parent.right
-                    anchors.rightMargin: 128
-                    anchors.verticalCenter: parent.verticalCenter
-                    spacing: 8
-
-                    Text {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-
-                        text: qsTr("No Bluetooth adapter detected")
-                        font.pixelSize: Theme.fontSizeContentVeryVeryBig
-                        wrapMode: Text.WordWrap
-                        color: Theme.colorText
-                    }
-                    Text {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-
-                        text: qsTr("Please check if a Bluetooth adapter is connected and configured on your machine.")
-                        font.pixelSize: Theme.fontSizeContentBig
-                        wrapMode: Text.WordWrap
-                        color: Theme.colorText
-                    }
-                }
-
-                Row {
-                    anchors.right: parent.right
-                    anchors.rightMargin: 24
+                    anchors.rightMargin: 32
                     anchors.verticalCenter: parent.verticalCenter
                     spacing: 16
 
-                    ButtonSolid {
-                        text: qsTr("Ignore")
-                        color: Theme.colorSecondary
-                        onClicked: screenBluetooth.unloadScreen()
+                    Item {
+                        Layout.preferredWidth: 128
+                        Layout.preferredHeight: 128
+
+                        IconSvg {
+                            width: 96
+                            height: 96
+                            anchors.centerIn: parent
+
+                            source: "qrc:/assets/icons/material-icons/outlined/bluetooth_disabled.svg"
+                            color: Theme.colorIcon
+                        }
                     }
 
-                    ButtonSolid {
-                        text: qsTr("Retry")
-                        onClicked: deviceManager.enableBluetooth()
+                    Column {
+                        Layout.fillWidth: true
+                        spacing: 8
+
+                        Text {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+
+                            text: qsTr("No Bluetooth adapter detected")
+                            font.pixelSize: Theme.fontSizeContentVeryVeryBig
+                            wrapMode: Text.WordWrap
+                            color: Theme.colorText
+                        }
+                        Text {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+
+                            text: qsTr("Please check if a Bluetooth adapter is connected and configured on your machine.")
+                            font.pixelSize: Theme.fontSizeContentBig
+                            wrapMode: Text.WordWrap
+                            color: Theme.colorText
+                        }
+                    }
+
+                    Row {
+                        spacing: 16
+
+                        ButtonSolid {
+                            text: qsTr("Ignore")
+                            color: Theme.colorSecondary
+                            onClicked: screenBluetooth.unloadScreen()
+                        }
+
+                        ButtonSolid {
+                            text: qsTr("Retry")
+                            onClicked: deviceManager.enableBluetooth()
+                        }
                     }
                 }
             }

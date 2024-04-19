@@ -328,7 +328,7 @@ Rectangle {
                     width: 14; height: 14;
                     anchors.verticalCenter: parent.verticalCenter
 
-                    source: "qrc:/assets/icons/material-symbols/signal_cellular_full-fill.svg"
+                    source: "qrc:/assets/icons/material-symbols/signal_cellular_4_bar.svg"
                     color: Theme.colorSubText
                     opacity: 0.8
                 }

@@ -130,14 +130,15 @@ Flickable {
                 Repeater {
                     model: (selectedDevice && selectedDevice.svd_uuid)
 
-                    ButtonSolid {
+                    ButtonToggle {
                         height: 28
-                        color: Theme.colorComponent
-                        colorText: Theme.colorText
-                        opacity: modelData.selected ? 1 : 0.5
 
                         text: "0x" + modelData.uuid.toUpperCase()
                         font.bold: false
+                        colorBackground: Theme.colorComponent
+                        colorText: Theme.colorText
+
+                        checked: modelData.selected
                         onClicked: {
                             modelData.selected = !modelData.selected
                             //selectedDevice.svdFilterUpdate()
@@ -160,14 +161,15 @@ Flickable {
                 Repeater {
                     model: (selectedDevice && selectedDevice.mfd_uuid)
 
-                    ButtonSolid {
+                    ButtonToggle {
                         height: 28
-                        color: Theme.colorComponent
-                        colorText: Theme.colorText
-                        opacity: modelData.selected ? 1 : 0.5
 
                         text: "0x" + modelData.uuid.toUpperCase()
                         font.bold: false
+                        colorBackground: Theme.colorComponent
+                        colorText: Theme.colorText
+
+                        checked: modelData.selected
                         onClicked: {
                             modelData.selected = !modelData.selected
                             //selectedDevice.mfdFilterUpdate()

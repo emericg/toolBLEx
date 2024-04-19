@@ -430,11 +430,12 @@ Flickable {
                         width: parent.www
                     }
 
-                    ButtonSolid {
+                    ButtonFlat {
                         id: exportButton
                         width: parent.www
 
-                        color: Theme.colorGrey
+                        color: Theme.colorComponent
+                        colorText: Theme.colorComponentContent
 
                         enabled: (selectedDevice &&
                                   (selectedDevice.advCount > 0 || selectedDevice.servicesCount > 0 || selectedDevice.hasServiceCache))
@@ -528,6 +529,7 @@ Flickable {
 
                         text: qsTr("color")
                         onClicked: colorDialog.open()
+                        colorText: utilsApp.isQColorLight(colorBackground) ? "dark" : "white"
 
                         ColorDialog {
                             id: colorDialog
@@ -663,7 +665,7 @@ Flickable {
                                 anchors.verticalCenter: parent.verticalCenter
                                 anchors.verticalCenterOffset: -1
                                 source: (selectedDevice && selectedDevice.rssi < 0) ?
-                                            "qrc:/assets/icons/material-symbols/signal_cellular_full-fill.svg" :
+                                            "qrc:/assets/icons/material-symbols/signal_cellular_4_bar.svg" :
                                             "qrc:/assets/icons/material-symbols/signal_cellular_off-fill.svg"
                                 color: Theme.colorIcon
                             }

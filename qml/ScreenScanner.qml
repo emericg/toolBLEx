@@ -107,6 +107,7 @@ Loader {
                     MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
 
                     Row { // left
+                        id: rowLeft
                         anchors.left: parent.left
                         anchors.leftMargin: 12
                         anchors.verticalCenter: parent.verticalCenter
@@ -183,8 +184,15 @@ Loader {
                         TextFieldThemed { // filter
                             id: filterField
                             anchors.verticalCenter: parent.verticalCenter
-                            width: 300
+                            width: toggled ? 300 : 32
                             height: 30
+                            clip: true
+
+                            rightPadding: 52
+
+                            property bool toggled: (actionBar.width - rowLeft.width > 300)
+                            property bool toggledEnabled: (actionBar.width - rowLeft.width > 320)
+                            Behavior on width { NumberAnimation { duration: 233; easing.type: Easing.InOutQuad; } }
 
                             onTextChanged: {
                                 deviceManager.setFilterString(text)
@@ -192,8 +200,7 @@ Loader {
 
                             MouseArea {
                                 anchors.right: parent.right
-                                anchors.rightMargin: 32
-                                anchors.verticalCenter: parent.verticalCenter
+                                anchors.rightMargin: 24
                                 width: 30
                                 height: 30
 
@@ -203,8 +210,8 @@ Loader {
 
                                 IconSvg {
                                     anchors.centerIn: parent
-                                    width: 16
-                                    height: 16
+                                    width: 18
+                                    height: 18
 
                                     source: "qrc:/assets/icons/material-symbols/backspace-fill.svg"
                                     color: parent.containsMouse ? Theme.colorPrimary : Theme.colorIcon
@@ -212,15 +219,35 @@ Loader {
                                 }
                             }
 
-                            IconSvg {
+                            MouseArea {
                                 anchors.right: parent.right
-                                anchors.rightMargin: 4
-                                anchors.verticalCenter: parent.verticalCenter
-                                width: 24
-                                height: 24
+                                width: 30
+                                height: 30
 
-                                source: "qrc:/assets/icons/material-symbols/search.svg"
-                                color: Theme.colorIcon
+                                hoverEnabled: filterField.toggledEnabled
+                                onClicked: {
+                                    filterField.toggled = !filterField.toggled
+                                    if (!filterField.toggled) filterField.focus = false
+                                }
+
+                                Rectangle {
+                                    anchors.centerIn: parent
+                                    width: 26
+                                    height: 26
+                                    radius: 4
+                                    color: Theme.colorComponentBackground
+                                }
+
+                                IconSvg {
+                                    anchors.right: parent.right
+                                    anchors.rightMargin: 4
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    width: 22
+                                    height: 22
+
+                                    source: "qrc:/assets/icons/material-symbols/search.svg"
+                                    color: Theme.colorIcon
+                                }
                             }
 
                             Keys.onPressed: (event) => {
