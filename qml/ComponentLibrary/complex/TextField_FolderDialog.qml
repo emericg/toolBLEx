@@ -32,17 +32,17 @@ T.TextField {
     placeholderText: ""
     placeholderTextColor: colorPlaceholderText
 
-    selectByMouse: false
+    selectByMouse: true
     selectionColor: colorSelection
     selectedTextColor: colorSelectedText
 
     onEditingFinished: focus = false
     Keys.onBackPressed: focus = false
 
+    property var currentFolder: StandardPaths.writableLocation(StandardPaths.HomeLocation)
+
     // settings
     property string dialogTitle: qsTr("Please choose a folder!")
-
-    property var currentFolder: StandardPaths.writableLocation(StandardPaths.HomeLocation)
 
     // button
     property string buttonText: qsTr("change")

@@ -566,14 +566,15 @@ Loader {
                                 anchors.rightMargin: Theme.componentMargin
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                text: settingsManager.exportDirectory
                                 placeholderText: qsTr("Default export directory")
                                 selectByMouse: true
 
                                 dialogTitle: qsTr("Please specify the default export directory")
+                                //currentFolder: StandardPaths.writableLocation(StandardPaths.HomeLocation)
 
-                                onTextEdited: {
-                                    //settingsManager.exportDirectory = text
+                                text: settingsManager.exportDirectory
+                                onTextChanged: {
+                                    settingsManager.exportDirectory = text
                                 }
                             }
                         }
@@ -1028,7 +1029,7 @@ Loader {
                                     color: Theme.colorSuccess
                                 }
 
-                                onTextEdited: {
+                                onTextChanged: {
                                     settingsManager.ubertooth_path = text
                                     ubertooth.checkPath()
                                 }

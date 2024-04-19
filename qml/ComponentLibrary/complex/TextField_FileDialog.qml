@@ -18,8 +18,8 @@ T.TextField {
                              contentHeight + topPadding + bottomPadding,
                              placeholder.implicitHeight + topPadding + bottomPadding)
 
-    leftPadding: 12
-    rightPadding: 12
+    leftPadding: 8
+    rightPadding: buttonWidth + 6
 
     clip: true
     color: colorText
@@ -32,7 +32,7 @@ T.TextField {
     placeholderText: ""
     placeholderTextColor: colorPlaceholderText
 
-    selectByMouse: false
+    selectByMouse: true
     selectionColor: colorSelection
     selectedTextColor: colorSelectedText
 

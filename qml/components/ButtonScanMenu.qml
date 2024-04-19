@@ -345,7 +345,8 @@ T.Button {
             ButtonFlat {
                 width: control.width - 32
 
-                color: control.color
+                color: Theme.colorComponent
+                colorText: Theme.colorComponentContent
                 layoutDirection: Qt.RightToLeft
                 visible: (selectedDevice && selectedDevice.hasServiceCache &&
                           selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
