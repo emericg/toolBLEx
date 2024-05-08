@@ -29,6 +29,10 @@ Loader {
         anchors.fill: parent
 
         function backAction() {
+            if (exportDirectory.focus) {
+                exportDirectory.focus = false
+                return
+            }
             if (ubertoothPath.focus) {
                 ubertoothPath.focus = false
                 return
@@ -559,7 +563,8 @@ Loader {
                             height: 48
                             color: Theme.colorForeground
 
-                            TextField_FolderDialog { // exportDirectory
+                            TextField_FolderDialog {
+                                id: exportDirectory
                                 anchors.left: parent.left
                                 anchors.leftMargin: Theme.componentMargin
                                 anchors.right: parent.right
@@ -827,10 +832,11 @@ Loader {
                                 }
                             }
 
-                            ButtonSolid {
+                            ButtonFlat {
                                 anchors.right: parent.right
                                 anchors.rightMargin: Theme.componentMargin
                                 anchors.verticalCenter: parent.verticalCenter
+                                height: 34
 
                                 text: qsTr("Clear cache")
                                 onClicked: {
@@ -882,10 +888,11 @@ Loader {
                                 }
                             }
 
-                            ButtonSolid {
+                            ButtonFlat {
                                 anchors.right: parent.right
                                 anchors.rightMargin: Theme.componentMargin
                                 anchors.verticalCenter: parent.verticalCenter
+                                height: 34
 
                                 text: qsTr("Clear cache")
                                 onClicked: {
@@ -1001,7 +1008,8 @@ Loader {
                             height: 48
                             color: Theme.colorForeground
 
-                            TextField_FileDialog { // ubertoothPath
+                            TextField_FileDialog {
+                                id: ubertoothPath
                                 anchors.left: parent.left
                                 anchors.leftMargin: Theme.componentMargin
                                 anchors.right: parent.right

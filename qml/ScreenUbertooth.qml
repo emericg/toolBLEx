@@ -261,8 +261,8 @@ Loader {
                     }
                 }
 
-                ButtonSolid {
-                    height: 28
+                ButtonFlat {
+                    height: 30
                     color: ubertooth.hardwareAvailable ? Theme.colorSuccess: Theme.colorWarning
                     text: ubertooth.hardwareAvailable ? qsTr("hardware ready") : qsTr("hardware not ready")
                     source: ubertooth.hardwareAvailable ? "qrc:/assets/icons/material-symbols/check_circle.svg" : ""

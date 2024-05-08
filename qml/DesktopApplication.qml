@@ -181,7 +181,6 @@ ApplicationWindow {
 
     MouseArea {
         anchors.fill: parent
-        z: 99
         acceptedButtons: Qt.BackButton | Qt.ForwardButton
         onClicked: (mouse) => {
             if (mouse.button === Qt.BackButton) {

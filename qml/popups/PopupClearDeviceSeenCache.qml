@@ -9,12 +9,15 @@ Popup {
 
     x: ((appWindow.width / 2) - (width / 2))
     y: ((appWindow.height / 2) - (height / 2) - (appHeader.height))
+
     width: 720
     padding: 0
+    margins: 0
 
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+    parent: Overlay.overlay
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -32,14 +35,14 @@ Popup {
         Item {
             anchors.fill: parent
 
-            Rectangle { // titleArea
+            Rectangle { // title area
                 anchors.left: parent.left
                 anchors.right: parent.right
                 height: 96
                 color: Theme.colorPrimary
             }
 
-            Rectangle {
+            Rectangle { // border
                 anchors.fill: parent
                 radius: Theme.componentRadius
                 color: "transparent"
@@ -49,7 +52,7 @@ Popup {
             }
 
             layer.enabled: true
-            layer.effect: MultiEffect {
+            layer.effect: MultiEffect { // clip
                 maskEnabled: true
                 maskInverted: false
                 maskThresholdMin: 0.5
@@ -68,7 +71,7 @@ Popup {
         }
 
         layer.enabled: true
-        layer.effect: MultiEffect {
+        layer.effect: MultiEffect { // shadow
             autoPaddingEnabled: true
             shadowEnabled: true
             shadowColor: ThemeEngine.isLight ? "#aa000000" : "#aaffffff"

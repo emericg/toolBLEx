@@ -53,14 +53,14 @@ Popup {
         Item {
             anchors.fill: parent
 
-            Rectangle { // titleArea
+            Rectangle { // title area
                 anchors.left: parent.left
                 anchors.right: parent.right
                 height: 96
                 color: Theme.colorPrimary
             }
 
-            Rectangle {
+            Rectangle { // border
                 anchors.fill: parent
                 radius: Theme.componentRadius
                 color: "transparent"
@@ -70,7 +70,7 @@ Popup {
             }
 
             layer.enabled: true
-            layer.effect: MultiEffect {
+            layer.effect: MultiEffect { // clip
                 maskEnabled: true
                 maskInverted: false
                 maskThresholdMin: 0.5
@@ -89,7 +89,7 @@ Popup {
         }
 
         layer.enabled: true
-        layer.effect: MultiEffect {
+        layer.effect: MultiEffect { // shadow
             autoPaddingEnabled: true
             shadowEnabled: true
             shadowColor: ThemeEngine.isLight ? "#aa000000" : "#aaffffff"
