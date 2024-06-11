@@ -26,15 +26,18 @@ Popup {
     onAboutToShow: {
         buttonError.visible = false
 
-        tfExportPath.currentFolder = UtilsPath.cleanUrl(StandardPaths.writableLocation(StandardPaths.DocumentsLocation) + "/toolBLEx")
-        tfExportPath.text = tfExportPath.currentFolder + "/" +
-                            selectedDevice.deviceName_export + "-" +
-                            selectedDevice.deviceAddr_export + ".txt"
-
         cbGenericInfo.checked = true
         cbAdvPackets.checked = true
         cbServices.checked = true
         cbData.checked = true
+
+        var foldersep = "/"
+        if (settingsManager.exportDirectory_str.substr(-1) === "/") foldersep = ""
+
+        tfExportPath.currentFolder = settingsManager.exportDirectory_url
+        tfExportPath.text = settingsManager.exportDirectory_str + foldersep +
+                            selectedDevice.deviceName_export + "-" +
+                            selectedDevice.deviceAddr_export + ".txt"
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -290,7 +293,7 @@ Popup {
                     dialogFilter: ["Text file (*.txt)"]
                     dialogFileMode: FileDialog.SaveFile
 
-                    currentFolder: StandardPaths.writableLocation(StandardPaths.DocumentsLocation) + "toolBLEx/"
+                    currentFolder: settingsManager.exportDirectory_url
                 }
             }
         }

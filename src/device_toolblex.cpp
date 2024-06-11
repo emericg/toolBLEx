@@ -24,6 +24,7 @@
 #include "BleCharacteristicInfo.h"
 #include "utils_bits.h"
 #include "DeviceManager.h"
+#include "SettingsManager.h"
 
 #include <QBluetoothUuid>
 #include <QBluetoothAddress>
@@ -1148,12 +1149,95 @@ void DeviceToolBLEx::restoreServiceCache()
 
 /* ************************************************************************** */
 
-QString DeviceToolBLEx::getExportDirectory() const
+bool DeviceToolBLEx::getExportFile(QString &filename, bool log) const
 {
-    return QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/toolBLEx";
+    bool status = false;
+
+    // No path given by the UI? Generate a "default" path
+    if (filename.isEmpty())
+    {
+        filename = SettingsManager::getInstance()->getExportDirectory_str();
+        filename += "/" + getName_display() + "-" + getAddr_display();
+        if (log) filename += "-log";
+        filename += ".txt";
+    }
+
+    // Check if the directory exist, or try to create it
+    QDir exportDirectory = QFileInfo(filename).dir();
+    if (!exportDirectory.exists())
+    {
+        exportDirectory.mkpath(exportDirectory.path());
+    }
+
+    if (exportDirectory.exists())
+    {
+        status = true;
+    }
+    else
+    {
+        filename.clear();
+        status = false;
+    }
+
+    return status;
 }
 
-bool DeviceToolBLEx::exportDeviceInfo(const QString &exportPath,
+/* ************************************************************************** */
+
+void DeviceToolBLEx::logEvent(const QString &logline, const int event)
+{
+    if (!logline.isEmpty())
+    {
+        // log format
+        LogEvent *log = new LogEvent(QDateTime::currentDateTime(), event, logline, this);
+        if (log)
+        {
+            m_deviceLog.push_back(log);
+            Q_EMIT logUpdated();
+        }
+
+        // text format
+        m_deviceLogString += QDateTime::currentDateTime().toString("[hh:mm:ss.zzz] ") + logline + QChar('\n');
+    }
+}
+
+bool DeviceToolBLEx::saveLog(const QString &filename)
+{
+    bool status = false;
+
+    QString exportFilePath = filename;
+
+    if (getExportFile(exportFilePath, true))
+    {
+        qDebug() << "DeviceToolBLEx::saveLog(" << exportFilePath << ")";
+
+        // Open file and save content
+        QFile efile(exportFilePath);
+        if (efile.open(QFile::WriteOnly | QIODevice::Text))
+        {
+            QTextStream eout(&efile);
+            eout.setEncoding(QStringConverter::Utf8);
+            eout << m_deviceLogString;
+
+            status = true;
+            efile.close();
+        }
+    }
+
+    return status;
+}
+
+void DeviceToolBLEx::clearLog()
+{
+    qDeleteAll(m_deviceLog);
+    m_deviceLog.clear();
+
+    Q_EMIT logUpdated();
+}
+
+/* ************************************************************************** */
+
+bool DeviceToolBLEx::exportDeviceInfo(const QString &filename,
                                       bool withGenericInfo, bool withAdvertisements,
                                       bool withServices, bool withValues)
 {
@@ -1277,27 +1361,9 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &exportPath,
 
     // Save export string to file //////////////////////////////////////////////
 
-    QString exportFilePath;
+    QString exportFilePath = filename;
 
-    if (exportPath.isEmpty())
-    {
-        // Generate a file path
-        exportFilePath = getExportDirectory();
-        exportFilePath += "/" + getName_display() + "-" + getAddr_display() + ".txt";
-    }
-    else
-    {
-        // Use file path from UI
-        exportFilePath = exportPath;
-    }
-
-    QDir exportDirectory = QFileInfo(exportFilePath).dir();
-    if (!exportDirectory.exists())
-    {
-        exportDirectory.mkpath(exportDirectory.path());
-    }
-
-    if (exportDirectory.exists())
+    if (getExportFile(exportFilePath, false))
     {
         qDebug() << "DeviceToolBLEx::exportDeviceInfo(" << exportFilePath << ")";
 
@@ -1315,77 +1381,6 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &exportPath,
     }
 
     return status;
-}
-
-/* ************************************************************************** */
-
-void DeviceToolBLEx::logEvent(const QString &logline, const int event)
-{
-    if (!logline.isEmpty())
-    {
-        // log format
-        LogEvent *log = new LogEvent(QDateTime::currentDateTime(), event, logline, this);
-        if (log)
-        {
-            m_deviceLog.push_back(log);
-            Q_EMIT logUpdated();
-        }
-
-        // text format
-        m_deviceLogString += QDateTime::currentDateTime().toString("[hh:mm:ss.zzz] ") + logline + QChar('\n');
-    }
-}
-
-bool DeviceToolBLEx::saveLog(const QString &filename)
-{
-    bool status = false;
-
-    QString exportFilePath;
-
-    if (filename.isEmpty())
-    {
-        // Generate a file path
-        exportFilePath = getExportDirectory();
-        exportFilePath += "/" + getName_display() + "-log.txt";
-    }
-    else
-    {
-        // Use file path from UI
-        exportFilePath = filename;
-    }
-
-    QDir exportDirectory = QFileInfo(exportFilePath).dir();
-    if (!exportDirectory.exists())
-    {
-        exportDirectory.mkpath(exportDirectory.path());
-    }
-
-    if (exportDirectory.exists())
-    {
-        qDebug() << "DeviceToolBLEx::saveLog(" << exportFilePath << ")";
-
-        // Open file and save content
-        QFile efile(exportFilePath);
-        if (efile.open(QFile::WriteOnly | QIODevice::Text))
-        {
-            QTextStream eout(&efile);
-            eout.setEncoding(QStringConverter::Utf8);
-            eout << m_deviceLogString;
-
-            status = true;
-            efile.close();
-        }
-    }
-
-    return status;
-}
-
-void DeviceToolBLEx::clearLog()
-{
-    qDeleteAll(m_deviceLog);
-    m_deviceLog.clear();
-
-    Q_EMIT logUpdated();
 }
 
 /* ************************************************************************** */

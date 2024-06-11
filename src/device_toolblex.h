@@ -299,15 +299,6 @@ public:
     bool isBluetoothClassic() const { return m_isClassic; }
     bool isBluetoothLowEnergy() const { return m_isBLE; }
 
-    // Logging
-    const QVariant getDeviceLog() const { return QVariant::fromValue(m_deviceLog); }
-    const QString &getDeviceLogStr() const { return m_deviceLogString; }
-    int getDeviceLogCount() const { return m_deviceLog.size(); }
-    void logEvent(const QString &logline, const int event = 0);
-
-    Q_INVOKABLE bool saveLog(const QString &filename);
-    Q_INVOKABLE void clearLog();
-
     Q_INVOKABLE void blacklist(bool blacklist);
     Q_INVOKABLE void cache(bool cache);
 
@@ -329,8 +320,17 @@ public:
     Q_INVOKABLE bool saveServiceCache();
     Q_INVOKABLE void restoreServiceCache();
 
-    Q_INVOKABLE QString getExportDirectory() const;
-    Q_INVOKABLE bool exportDeviceInfo(const QString &exportPath,
+    bool getExportFile(QString &filename, bool log) const;
+
+    const QVariant getDeviceLog() const { return QVariant::fromValue(m_deviceLog); }
+    const QString &getDeviceLogStr() const { return m_deviceLogString; }
+    int getDeviceLogCount() const { return m_deviceLog.size(); }
+    void logEvent(const QString &logline, const int event = 0);
+
+    Q_INVOKABLE bool saveLog(const QString &filename);
+    Q_INVOKABLE void clearLog();
+
+    Q_INVOKABLE bool exportDeviceInfo(const QString &filename,
                                       bool withGenericInfo = true, bool withAdvertisements = true,
                                       bool withServices = true, bool withValues = true);
 };

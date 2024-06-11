@@ -42,7 +42,13 @@ function makeUrl(pathInput) {
     var urlOut = '';
 
     if (typeof pathInput === 'string' || pathInput instanceof String) {
-        urlOut = "file://" + pathInput;
+        if (pathInput.slice(0, 7) != "file://") {
+            urlOut = "file://" + pathInput;
+        } else {
+            urlOut = pathInput;
+        }
+    } else {
+        urlOut = pathInput;
     }
 
     //console.log("makeUrl() in: " + pathInput + " / out: " + urlOut)

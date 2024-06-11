@@ -24,10 +24,11 @@
 /* ************************************************************************** */
 
 #include <QObject>
-#include <QLocale>
 #include <QByteArray>
+#include <QLocale>
 #include <QString>
 #include <QSize>
+#include <QUrl>
 
 /* ************************************************************************** */
 
@@ -72,6 +73,8 @@ class SettingsManager: public QObject
     Q_PROPERTY(QString preferredAdapter_adv READ getPreferredAdapter_adv WRITE setPreferredAdapter_adv NOTIFY preferredAdapterAdvChanged)
 
     Q_PROPERTY(QString exportDirectory READ getExportDirectory WRITE setExportDirectory NOTIFY exportDirectoryChanged)
+    Q_PROPERTY(QString exportDirectory_str READ getExportDirectory_str NOTIFY exportDirectoryChanged)
+    Q_PROPERTY(QUrl exportDirectory_url READ getExportDirectory_url NOTIFY exportDirectoryChanged)
 
     Q_PROPERTY(QString ubertooth_path READ getUbertoothPath WRITE setUbertoothPath NOTIFY ubertoothPathChanged)
     Q_PROPERTY(int ubertooth_freqMin READ getUbertoothFreqMin WRITE setUbertoothFreqMin NOTIFY ubertoothFreqChanged)
@@ -221,6 +224,8 @@ public:
     void setPreferredAdapter_adv(const QString &value);
 
     QString getExportDirectory() const { return m_exportDirectory; }
+    QString getExportDirectory_str() const;
+    QUrl getExportDirectory_url() const;
     void setExportDirectory(const QString &value);
 
     QString getUbertoothPath() const { return m_ubertooth_path; }

@@ -26,6 +26,10 @@
 #include <QLocale>
 #include <QDebug>
 
+#include <QStandardPaths>
+#include <QFile>
+#include <QDir>
+
 /* ************************************************************************** */
 
 SettingsManager *SettingsManager::instance = nullptr;
@@ -455,6 +459,52 @@ void SettingsManager::setPreferredAdapter_adv(const QString &value)
 }
 
 /* ************************************************************************** */
+
+QString SettingsManager::getExportDirectory_str() const
+{
+    QString exportDirectoryString;
+    QDir exportDirectory;
+
+    // from saved settings
+    exportDirectoryString = m_exportDirectory;
+    if (!exportDirectoryString.isEmpty())
+    {
+        exportDirectory = QFileInfo(exportDirectoryString).dir();
+
+        if (!exportDirectory.exists())
+        {
+            exportDirectory.mkpath(exportDirectory.path());
+        }
+        if (exportDirectory.exists())
+        {
+            return exportDirectoryString;
+        }
+    }
+
+    // from default
+    exportDirectoryString = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/toolBLEx";
+    if (!exportDirectoryString.isEmpty())
+    {
+        exportDirectory = QFileInfo(exportDirectoryString).dir();
+
+        if (!exportDirectory.exists())
+        {
+            exportDirectory.mkpath(exportDirectory.path());
+        }
+        if (exportDirectory.exists())
+        {
+            return exportDirectoryString;
+        }
+    }
+
+    // fail
+    return QString();
+}
+
+QUrl SettingsManager::getExportDirectory_url() const
+{
+    return QUrl::fromLocalFile(getExportDirectory_str());
+}
 
 void SettingsManager::setExportDirectory(const QString &value)
 {

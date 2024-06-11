@@ -1,7 +1,6 @@
+import QtCore
 import QtQuick
 import QtQuick.Controls
-
-import QtCore
 import QtQuick.Dialogs
 
 import ThemeEngine
@@ -182,8 +181,36 @@ Flickable {
             source: "qrc:/assets/icons/material-symbols/save.svg"
 
             onClicked: {
-                selectedDevice.saveLog("")
+                var foldersep = "/"
+                if (settingsManager.exportDirectory_str.substr(-1) === "/") foldersep = ""
+
+                pathDialog.currentFolder = settingsManager.exportDirectory_url
+                pathDialog.selectedFile = settingsManager.exportDirectory_str + foldersep +
+                                          selectedDevice.deviceName_export + "-" +
+                                          selectedDevice.deviceAddr_export + "-log.txt"
+                pathDialog.open()
             }
+
+            ////
+
+            FileDialog {
+                id: pathDialog
+                title: qsTr("Please choose a file!")
+                nameFilters: ["All files (*)"]
+
+                fileMode: FileDialog.SaveFile
+                currentFolder: settingsManager.exportDirectory_url
+                selectedFile: UtilsPath.makeUrl("log.txt")
+
+                onAccepted: {
+                    //console.log("fileDialog currentFolder: " + currentFolder)
+                    //console.log("fileDialog selectedFile: " + selectedFile)
+
+                    selectedDevice.saveLog(UtilsPath.cleanUrl(selectedFile))
+                }
+            }
+
+            ////
         }
     }
 

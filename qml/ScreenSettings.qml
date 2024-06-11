@@ -1,9 +1,9 @@
+import QtCore
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Dialogs
 
 import ThemeEngine
-import "qrc:/utils/UtilsPath.js" as UtilsPath
 
 Loader {
     id: screenSettings
@@ -575,12 +575,15 @@ Loader {
                                 selectByMouse: true
 
                                 dialogTitle: qsTr("Please specify the default export directory")
-                                //currentFolder: StandardPaths.writableLocation(StandardPaths.HomeLocation)
+                                currentFolder: {
+                                    if (settingsManager.exportDirectory.length) {
+                                        return settingsManager.exportDirectory
+                                    }
+                                    return StandardPaths.writableLocation(StandardPaths.HomeLocation)
+                                }
 
                                 text: settingsManager.exportDirectory
-                                onTextChanged: {
-                                    settingsManager.exportDirectory = text
-                                }
+                                onTextChanged: settingsManager.exportDirectory = text
                             }
                         }
                     }
