@@ -345,8 +345,15 @@ void DeviceToolBLEx::setUserStar(bool star)
 
 void DeviceToolBLEx::setLastSeen(const QDateTime &dt)
 {
-    m_lastSeen = dt;
-    Q_EMIT seenChanged();
+    if (m_lastSeen != dt)
+    {
+        m_lastSeen = dt;
+        Q_EMIT seenChanged();
+
+        static_cast<DeviceManager *>(parent())->invalidateFilter();
+
+        updateCache();
+    }
 }
 
 bool DeviceToolBLEx::isLastSeenToday()
