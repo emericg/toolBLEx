@@ -8,207 +8,69 @@ import ThemeEngine
 import DeviceUtils
 import "qrc:/utils/UtilsNumber.js" as UtilsNumber
 
-T.Button {
+Rectangle {
     id: control
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            implicitContentWidth + 28 + leftPadding + rightPadding)
-    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             implicitContentHeight + topPadding + bottomPadding)
-
-    leftPadding: 12
-    rightPadding: 12 + (control.source.toString().length && control.text ? 2 : 0)
-
-    font.pixelSize: Theme.componentFontSize
-    font.bold: false
-
-    focusPolicy: Qt.NoFocus
-
-    // icon
-    property url source: {
-        if (!selectedDevice || selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
-            return "qrc:/assets/icons/material-icons/outlined/bluetooth.svg"
-
-        return getDeviceStatusIcon(selectedDevice.status)
-    }
-    property int sourceSize: UtilsNumber.alignTo(height * 0.666, 2)
-
-    // colors
-    property string color: Theme.colorPrimary
-    property string colorText: "white"
-
-    // animation
-    property bool hoverAnimation: isDesktop
+    height: Theme.componentHeight
+    radius: Theme.componentRadius
+    color: Theme.colorPrimary
+    clip: true
 
     ////////////////
 
-    text: {
-        if (!selectedDevice) return ""
-        if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE) return qsTr("scan device")
-        if (selectedDevice.status === DeviceUtils.DEVICE_DISCONNECTING) return qsTr("disconnecting...")
-        if (selectedDevice.status === DeviceUtils.DEVICE_CONNECTING) return qsTr("connecting...")
-        if (selectedDevice.status === DeviceUtils.DEVICE_WORKING) return qsTr("scanning...")
-        if (selectedDevice.status >= DeviceUtils.DEVICE_CONNECTED) return qsTr("connected")
-    }
-
-    ////////////////
-
-    onClicked: {
-        if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE) {
-            selectedDevice.actionScanWithValues()
-        }
-    }
-
-    Connections {
-        target: screenScanner.item
-        function onSelectedDeviceChanged() { actionMenu.close() }
-    }
-
-    ////////////////
-
-    MouseArea {
-        id: mousearea
-        anchors.fill: control
-
-        enabled: control.hoverAnimation
-        hoverEnabled: control.hoverAnimation
-
-        onClicked: control.clicked()
-        onPressAndHold: control.pressAndHold()
-
-        onPressed: {
-            mouseBackground.width = (control.width * 2)
-        }
-        onReleased: {
-            //mouseBackground.width = 0 // disabled, we let the click expand the ripple
-        }
-
-        onEntered: {
-            mouseBackground.width = 72
-        }
-        onExited: {
-            mouseBackground.width = 0
-        }
-        onCanceled: {
-            mouseBackground.width = 0
-        }
-    }
-
-    ////////////////
-
-    background: Rectangle {
-        implicitWidth: 80
-        implicitHeight: Theme.componentHeight
-
-        radius: Theme.componentRadius
-        opacity: enabled ? (mousearea.containsPress && !control.hoverAnimation ? 0.8 : 1.0) : 0.4
-        color: control.color
-        border.width: Theme.componentBorderWidth
-        border.color: Qt.darker(color, 1.03)
-
-        Rectangle { // menu toggle
-            anchors.top: parent.top
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-
-            width: 32
-            color: Qt.darker(control.color, 1.03)
-
-            IconSvg {
-                anchors.centerIn: parent
-                width: 28
-                height: 28
-
-                Layout.maximumWidth: control.sourceSize
-                Layout.maximumHeight: control.sourceSize
-                Layout.alignment: Qt.AlignVCenter
-
-                opacity: enabled ? 1.0 : 0.66
-                color: control.colorText
-                source: "qrc:/assets/icons/material-symbols/more_vert.svg"
-            }
-        }
-
-        Rectangle { // mouse circle
-            id: mouseBackground
-            width: 0; height: width; radius: width;
-            x: mousearea.mouseX - (width / 2)
-            y: mousearea.mouseY - (width / 2)
-
-            visible: control.hoverAnimation
-            color: "white"
-            opacity: mousearea.containsMouse ? 0.16 : 0
-            Behavior on opacity { NumberAnimation { duration: 333 } }
-            Behavior on width { NumberAnimation { duration: 200 } }
-        }
-
-        layer.enabled: true
-        layer.effect: MultiEffect {
-            maskEnabled: true
-            maskThresholdMin: 0.5
-            maskSpreadAtMin: 1.0
-            maskSpreadAtMax: 0.0
-            maskSource: ShaderEffectSource {
-                sourceItem: Rectangle {
-                    x: background.x
-                    y: background.y
-                    width: background.width
-                    height: background.height
-                    radius: background.radius
-                }
-            }
-        }
-    }
-
-    ////////////////
-
-    contentItem: RowLayout {
-        x: leftPadding
+    ButtonFlat {
+        width: control.width - control.height
         height: control.height
-        spacing: 6
 
-        IconSvg {
-            source: control.source
-            width: control.sourceSize
-            height: control.sourceSize
+        layoutAlignment: Qt.AlignLeft
+        colorBackground: Theme.colorPrimary
+        colorText: "white"
 
-            visible: control.source.toString().length
-            Layout.maximumWidth: control.sourceSize
-            Layout.maximumHeight: control.sourceSize
-            Layout.alignment: Qt.AlignVCenter
+        ////////////////
 
-            opacity: enabled ? 1.0 : 0.66
-            color: control.colorText
+        text: {
+            if (!selectedDevice) return ""
+            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE) return qsTr("scan device")
+            if (selectedDevice.status === DeviceUtils.DEVICE_DISCONNECTING) return qsTr("disconnecting...")
+            if (selectedDevice.status === DeviceUtils.DEVICE_CONNECTING) return qsTr("connecting...")
+            if (selectedDevice.status === DeviceUtils.DEVICE_WORKING) return qsTr("scanning...")
+            if (selectedDevice.status >= DeviceUtils.DEVICE_CONNECTED) return qsTr("connected")
         }
-        Text {
-            text: control.text
-            textFormat: Text.PlainText
 
-            visible: control.text
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignVCenter
+        source: {
+            if (!selectedDevice || selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
+                return "qrc:/assets/icons/material-icons/outlined/bluetooth.svg"
 
-            font: control.font
-            elide: Text.ElideMiddle
-            horizontalAlignment: Text.AlignLeft
-            verticalAlignment: Text.AlignVCenter
+            return getDeviceStatusIcon(selectedDevice.status)
+        }
 
-            opacity: enabled ? (mousearea.containsPress && !control.hoverAnimation ? 0.8 : 1.0) : 0.66
-            color: control.colorText
+        ////////////////
+
+        onClicked: {
+            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE) {
+                selectedDevice.actionScanWithValues()
+            }
+        }
+
+        Connections {
+            target: screenScanner.item
+            function onSelectedDeviceChanged() { actionMenu.close() }
         }
     }
 
-    MouseArea { // menu toggle clickable area
-        anchors.top: parent.top
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        width: 32
+    ////////////////
 
-        hoverEnabled: false
-        onClicked: (mouse) => {
-            actionMenu.open()
-            mouse.accepted = true
-        }
+    ButtonFlat { // menu toggle
+        anchors.right: parent.right
+        width: parent.height //+ Theme.componentRadius
+        height: parent.height
+
+        color: Qt.darker(control.color, 1.03)
+        colorHighlight: "grey"
+        source: "qrc:/assets/icons/material-symbols/more_vert.svg"
+        sourceSize: 24
+
+        onClicked: actionMenu.open()
     }
 
     ////////////////
@@ -233,66 +95,36 @@ T.Button {
         ////////
 
         background: Rectangle {
-            color: control.color
             radius: Theme.componentRadius
-            border.color: Theme.colorPrimary
-            border.width: Theme.componentBorderWidth
+            color: Qt.darker(control.color, 1.03)
 
-            Rectangle { // menu toggle
-                anchors.top: parent.top
+            ButtonFlat {
                 anchors.right: parent.right
-                anchors.bottom: parent.bottom
+                width: control.height
+                height: parent.height
 
-                width: 32
-                //height: 32
                 color: Qt.darker(control.color, 1.03)
+                colorHighlight: "grey"
 
-                IconSvg {
-                    anchors.top: parent.top
-                    anchors.topMargin: 4
+                Item {
                     anchors.right: parent.right
-                    anchors.rightMargin: 2
-                    //anchors.centerIn: parent
-                    width: 28
-                    height: 28
+                    width: control.height
+                    height: control.height
 
-                    Layout.maximumWidth: control.sourceSize
-                    Layout.maximumHeight: control.sourceSize
-                    Layout.alignment: Qt.AlignVCenter
+                    IconSvg {
+                        anchors.centerIn: parent
+                        width: 24
+                        height: 24
 
-                    opacity: enabled ? 1.0 : 0.66
-                    color: control.colorText
-                    source: "qrc:/assets/icons/material-symbols/more_vert.svg"
+                        opacity: enabled ? 1.0 : 0.66
+                        color: "white"
+                        source: "qrc:/assets/icons/material-symbols/more_vert.svg"
+                    }
                 }
-            }
 
-            MouseArea { // menu toggle clickable area
-                anchors.top: parent.top
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                width: 32
-
-                hoverEnabled: false
                 onClicked: (mouse) => {
                     actionMenu.close()
-                    mouse.accepted = true
-                }
-            }
-
-            layer.enabled: control.hoverAnimation
-            layer.effect: MultiEffect {
-                maskEnabled: true
-                maskThresholdMin: 0.5
-                maskSpreadAtMin: 1.0
-                maskSpreadAtMax: 0.0
-                maskSource: ShaderEffectSource {
-                    sourceItem:Rectangle {
-                        x: background.x
-                        y: background.y
-                        width: background.width
-                        height: background.height
-                        radius: background.radius
-                    }
+                    //mouse.accepted = true
                 }
             }
         }
@@ -300,19 +132,20 @@ T.Button {
         ////////
 
         contentItem: Column {
-            width: control.width - 32
-
             topPadding: 0
             bottomPadding: 0
             spacing: -Theme.componentBorderWidth
 
+            ////
+
             ButtonFlat {
-                width: control.width - 32
+                width: control.width - control.height
+                height: control.height
+
+                visible: (selectedDevice && selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
+                layoutAlignment: Qt.AlignLeft
 
                 color: control.color
-                layoutDirection: Qt.RightToLeft
-                visible: (selectedDevice && selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
-
                 text: qsTr("scan services & data")
                 source: "qrc:/assets/icons/material-icons/duotone/bluetooth_searching.svg"
                 sourceSize: 20
@@ -324,13 +157,17 @@ T.Button {
                     }
                 }
             }
+
+            ////
+
             ButtonFlat {
-                width: control.width - 32
+                width: control.width - control.height
+                height: control.height
+
+                visible: (selectedDevice && selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
+                layoutAlignment: Qt.AlignLeft
 
                 color: control.color
-                layoutDirection: Qt.RightToLeft
-                visible: (selectedDevice && selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
-
                 text: qsTr("scan services only")
                 source: "qrc:/assets/icons/material-icons/duotone/bluetooth_searching.svg"
                 sourceSize: 20
@@ -342,15 +179,18 @@ T.Button {
                     }
                 }
             }
-            ButtonFlat {
-                width: control.width - 32
 
-                color: Theme.colorComponent
-                colorText: Theme.colorComponentContent
-                layoutDirection: Qt.RightToLeft
+            ////
+
+            ButtonFlat {
+                width: control.width - control.height
+                height: control.height
+
                 visible: (selectedDevice && selectedDevice.hasServiceCache &&
                           selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
+                layoutAlignment: Qt.AlignLeft
 
+                color: control.color
                 text: qsTr("load from cache")
                 source: "qrc:/assets/icons/material-symbols/save.svg"
                 sourceSize: 20
@@ -363,12 +203,16 @@ T.Button {
                 }
             }
 
+            ////
+
             ButtonFlat { // status
-                width: control.width - 32
+                width: control.width - control.height
+                height: control.height
+
+                visible: (selectedDevice && selectedDevice.status !== DeviceUtils.DEVICE_OFFLINE)
+                layoutAlignment: Qt.AlignLeft
 
                 color: control.color
-                visible: (selectedDevice && selectedDevice.status !== DeviceUtils.DEVICE_OFFLINE)
-
                 text: {
                     if (!selectedDevice) return ""
                     if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE) return qsTr("scan device")
@@ -394,12 +238,17 @@ T.Button {
                     //
                 }
             }
+
+            ////
+
             ButtonFlat {
-                width: control.width - 32
+                width: control.width - control.height
+                height: control.height
+
+                visible: (selectedDevice && selectedDevice.status !== DeviceUtils.DEVICE_OFFLINE)
+                layoutAlignment: Qt.AlignLeft
 
                 color: control.color
-                visible: (selectedDevice && selectedDevice.status !== DeviceUtils.DEVICE_OFFLINE)
-
                 text: (selectedDevice && selectedDevice.connected) ? qsTr("disconnect") : qsTr("abort")
                 source: "qrc:/assets/icons/material-icons/outlined/bluetooth_disabled.svg"
 
@@ -410,6 +259,8 @@ T.Button {
                     }
                 }
             }
+
+            ////
         }
 
         ////////
