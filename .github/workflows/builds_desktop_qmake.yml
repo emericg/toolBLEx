@@ -15,7 +15,7 @@ on:
 env:
   APP_NAME: "toolBLEx"
   APP_VERSION: "0.12"
-  QT_VERSION: "6.6.3"
+  QT_VERSION: "6.7.2"
 
 #-------------------------------------------------------------------------------
 # Workflow jobs
@@ -35,10 +35,10 @@ jobs:
 
       # Install Qt
       - name: Install Qt
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           version: ${{env.QT_VERSION}}
-          modules: qtconnectivity qtcharts qtshadertools qt5compat
+          modules: qtconnectivity qtcharts
 
       # Install dependencies (from package manager)
       - name: Install dependencies (from package manager)
@@ -94,10 +94,10 @@ jobs:
 
       # Install Qt
       - name: Install Qt
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           version: ${{env.QT_VERSION}}
-          modules: qtconnectivity qtcharts qtshadertools qt5compat
+          modules: qtconnectivity qtcharts
 
       # Setup env
       - name: Setup env
@@ -137,14 +137,13 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: x64
-          spectre: true
 
       # Install Qt
       - name: Install Qt
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           version: ${{env.QT_VERSION}}
-          modules: qtconnectivity qtcharts qtshadertools qt5compat
+          modules: qtconnectivity qtcharts
 
       # Install NSIS (already installed in 'windows-2022')
       #- name: Install NSIS
