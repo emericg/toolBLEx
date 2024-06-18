@@ -114,10 +114,12 @@ function isPictureFile(filePath) {
     var valid = false;
 
     if (extension.length !== 0) {
-        if (extension === "jpg" || extension === "jpeg" || extension === "webp" ||
+        if (extension === "jpg" || extension === "jpeg" ||
+            extension === "jp2" || extension === "j2k" || extension === "jxl" ||
+            extension === "webp" ||
             extension === "png" || extension === "gpr" ||
             extension === "gif" ||
-            extension === "heif" || extension === "heic" || extension === "avif" ||
+            extension === "avif" || extension === "heif" || extension === "heic" ||
             extension === "tga" || extension === "bmp" ||
             extension === "tif" || extension === "tiff" ||
             extension === "svg" ||

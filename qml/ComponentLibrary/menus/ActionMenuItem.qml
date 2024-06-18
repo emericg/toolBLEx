@@ -73,7 +73,7 @@ T.Button {
     ////////////////
 
     contentItem: RowLayout {
-        spacing: (Theme.componentMargin / 1)
+        spacing: Theme.componentMargin
         layoutDirection: control.layoutDirection
 
         IconSvg {
@@ -95,7 +95,7 @@ T.Button {
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
-            color: Theme.colorText
+            color: Theme.colorComponentText
         }
     }
 

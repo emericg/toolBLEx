@@ -552,8 +552,8 @@ Item {
             colorBackground             = "#f9f8f7"
             colorForeground             = "#f3f2f1"
 
-            colorPrimary                = "#ffc900" // "#2794ff"
-            colorSecondary              = "#ffeb00" // "#69b7ff"
+            colorPrimary                = "#ffc900"
+            colorSecondary              = "#ffeb00"
             colorSuccess                = colorGreen
             colorWarning                = colorOrange
             colorError                  = colorRed
@@ -957,13 +957,13 @@ Item {
             themeStatusbar = Material.Dark
             colorStatusbar = "#BBB"
 
-            colorHeader =               "#DADADA"
+            colorHeader =               "#e4e5e6"
             colorHeaderContent =        "#353637"
-            colorHeaderHighlight =      Qt.darker(colorHeader, 1.1)
+            colorHeaderHighlight =      Qt.darker(colorHeader, 1.08)
 
-            colorSidebar =              "#3A3A3A"
+            colorSidebar =              "#555"
             colorSidebarContent =       "white"
-            colorSidebarHighlight =     Qt.lighter(colorSidebar, 1.5)
+            colorSidebarHighlight =     Qt.lighter(colorSidebar, 1.33)
 
             colorActionbar =            "#e9e9e9"
             colorActionbarContent =     "#333"
@@ -1036,7 +1036,7 @@ Item {
             colorError =                "#D33E39"
 
             colorText =                 "white"
-            colorSubText =              "#AAA"
+            colorSubText =              "#999"
             colorIcon =                 "white"
             colorSeparator =            "#666" // darker: "#333" // lighter: "#666"
             colorLowContrast =          "black"
@@ -1063,24 +1063,24 @@ Item {
             themeStatusbar = Material.Dark
             colorStatusbar = "#BBB"
 
-            colorHeader =               "#CBCBCB"
-            colorHeaderContent =        "#353637"
-            colorHeaderHighlight =      Qt.darker(colorHeader, 1.1)
+            colorHeader =               "#eee"
+            colorHeaderContent =        "#444"
+            colorHeaderHighlight =      Qt.darker(colorHeader, 1.08)
 
-            colorSidebar                = "#eee"
-            colorSidebarContent         = "#777"
-            colorSidebarHighlight       = "#ddd"
+            colorSidebar =              "#eee"
+            colorSidebarContent =       "#444"
+            colorSidebarHighlight =     Qt.darker(colorSidebar, 1.08)
 
             colorActionbar =            "#dadada"
             colorActionbarContent =     "#444"
-            colorActionbarHighlight =   Qt.darker(colorActionbar, 1.1)
+            colorActionbarHighlight =   Qt.darker(colorActionbar, 1.08)
 
             colorTabletmenu =           "#f3f3f3"
             colorTabletmenuContent =    "#9d9d9d"
             colorTabletmenuHighlight =  "#0079fe"
 
             colorBackground =           "#fefefe"
-            colorForeground =           "#e9e9e9"
+            colorForeground =           "#f6f6f6"
 
             colorPrimary =              "#ffca28"
             colorSecondary =            "#ffdb28"
@@ -1091,16 +1091,16 @@ Item {
             colorText =                 "#222222"
             colorSubText =              "#555555"
             colorIcon =                 "#333333"
-            colorSeparator =            "#E4E4E4"
+            colorSeparator =            "#e4e4e4"
             colorLowContrast =          "white"
             colorHighContrast =         "black"
 
-            colorComponent =            "#EAEAEA"
+            colorComponent =            "#f5f5f5"
             colorComponentText =        "black"
             colorComponentContent =     "black"
-            colorComponentBorder =      "#DDD"
-            colorComponentDown =        "#E6E6E6"
-            colorComponentBackground =  "#FAFAFA"
+            colorComponentBorder =      "#ddd"
+            colorComponentDown =        "#eee"
+            colorComponentBackground =  "#f8f8f8"
 
             componentRadius = 4
             componentBorderWidth = 2
@@ -1141,18 +1141,18 @@ Item {
             colorWarning =              "#FFDB63"
             colorError =                "#FA6871"
 
-            colorText =                 "#D2D2D2"
-            colorSubText =              "#A3A3A3"
+            colorText =                 "#D4D4D4"
+            colorSubText =              "#888"
             colorIcon =                 "#A0A0A0"
             colorSeparator =            "#666"
             colorLowContrast =          "black"
             colorHighContrast =         "white"
 
-            colorComponent =            "white"
+            colorComponent =            "#fcfcfc"
             colorComponentText =        "black"
             colorComponentContent =     "black"
-            colorComponentBorder =      "#E4E4E4"
-            colorComponentDown =        "#DDD"
+            colorComponentBorder =      "#e4e4e4"
+            colorComponentDown =        "#ddd"
             colorComponentBackground =  "white"
 
             componentRadius = 2
@@ -1170,11 +1170,11 @@ Item {
             colorStatusbar = "#944197"
 
             colorHeader =               "#FFB4DC"
-            colorHeaderContent =        "#944197"
+            colorHeaderContent =        "#aa39ae"
             colorHeaderHighlight =      Qt.darker(colorHeader, 1.1)
 
             colorSidebar =              "#E31D8D"
-            colorSidebarContent =       "#FFAED6"
+            colorSidebarContent =       "#ffc8e4"
             colorSidebarHighlight =     Qt.darker(colorSidebar, 1.15)
 
             colorActionbar =            "#FFE400"
@@ -1186,7 +1186,7 @@ Item {
             colorTabletmenuHighlight =  "#944197"
 
             colorBackground =           "white"
-            colorForeground =           "#FFDDEE"
+            colorForeground =           "#ffe0ef"
 
             colorPrimary =              "#FFE400"
             colorSecondary =            "#FFF600"
@@ -1196,7 +1196,7 @@ Item {
 
             colorText =                 "#932A97"
             colorSubText =              "#B746BB"
-            colorIcon =                 "#FFDD48"
+            colorIcon =                 "#ffd947"
             colorSeparator =            "#FFDCED"
             colorLowContrast =          "white"
             colorHighContrast =         "#944197"

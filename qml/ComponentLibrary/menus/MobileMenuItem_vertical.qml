@@ -34,7 +34,7 @@ T.Button {
     ////////////////
 
     contentItem: ColumnLayout {
-        spacing: -6
+        spacing: 0
 
         Item {
             Layout.preferredWidth: 32

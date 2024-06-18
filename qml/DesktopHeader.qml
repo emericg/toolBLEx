@@ -80,8 +80,8 @@ Rectangle {
                 highlightMode: (opacity !== 1) ? "color" : "off"
                 iconColor: Theme.colorHeaderContent
                 source: (deviceManager.scanningPaused) ?
-                            "qrc:/assets/icons/material-symbols/pause-fill.svg" :
-                            "qrc:/assets/icons/material-symbols/play_arrow-fill.svg"
+                            "qrc:/assets/icons/material-symbols/media/pause-fill.svg" :
+                            "qrc:/assets/icons/material-symbols/media/play_arrow-fill.svg"
 
                 backgroundVisible: {
                     if (appContent.state === "Scanner" && deviceManager.scanning) return true

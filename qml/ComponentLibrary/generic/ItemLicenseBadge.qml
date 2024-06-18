@@ -1,16 +1,15 @@
 import QtQuick
+import QtQuick.Controls
 
 import ThemeEngine
 
-Item {
+AbstractButton {
     id: control
     width: leftText.contentWidth + rightText.contentWidth + 24
     height: 22
 
+    text: "text"
     property string legend: "legend"
-    property string text: "text"
-
-    signal clicked()
 
     Rectangle {
         id: leftRect
@@ -69,9 +68,8 @@ Item {
         font.bold: true
     }
 
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-        onClicked: control.clicked()
+    HoverHandler {
+        acceptedDevices: PointerDevice.Mouse
+        cursorShape: Qt.PointingHandCursor
     }
 }

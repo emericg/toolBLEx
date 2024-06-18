@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/assets">
-
         <file>icons/bootstrap/android.svg</file>
         <file>icons/bootstrap/apple.svg</file>
         <file>icons/bootstrap/bandaid.svg</file>
@@ -176,6 +175,7 @@
 
         <file>icons/material-symbols/hardware/computer.svg</file>
         <file>icons/material-symbols/hardware/computer-fill.svg</file>
+        <file>icons/material-symbols/hardware/electrical_services.svg</file>
         <file>icons/material-symbols/hardware/gamepad.svg</file>
         <file>icons/material-symbols/hardware/gamepad-fill.svg</file>
         <file>icons/material-symbols/hardware/headphones-fill.svg</file>
@@ -189,14 +189,17 @@
         <file>icons/material-symbols/hardware/laptop_mac.svg</file>
         <file>icons/material-symbols/hardware/phonelink_ring.svg</file>
         <file>icons/material-symbols/hardware/phonelink_ring-fill.svg</file>
-        <file>icons/material-symbols/hardware/power.svg</file>
         <file>icons/material-symbols/hardware/smartphone.svg</file>
         <file>icons/material-symbols/hardware/smartphone-fill.svg</file>
         <file>icons/material-symbols/hardware/sports_esports.svg</file>
+        <file>icons/material-symbols/hardware/sports_esports-fill.svg</file>
         <file>icons/material-symbols/hardware/tv_gen.svg</file>
         <file>icons/material-symbols/hardware/tv_gen-fill.svg</file>
 
+        <file>icons/material-symbols/location/distance.svg</file>
+        <file>icons/material-symbols/location/distance-fill.svg</file>
         <file>icons/material-symbols/location/explore.svg</file>
+        <file>icons/material-symbols/location/explore-fill.svg</file>
         <file>icons/material-symbols/location/explore_off.svg</file>
         <file>icons/material-symbols/location/location_disabled.svg</file>
         <file>icons/material-symbols/location/location_off.svg</file>
@@ -223,6 +226,10 @@
         <file>icons/material-symbols/media/4k-fill.svg</file>
         <file>icons/material-symbols/media/360.svg</file>
         <file>icons/material-symbols/media/airplay.svg</file>
+        <file>icons/material-symbols/media/album.svg</file>
+        <file>icons/material-symbols/media/album-fill.svg</file>
+        <file>icons/material-symbols/media/aspect_ratio.svg</file>
+        <file>icons/material-symbols/media/aspect_ratio-fill.svg</file>
         <file>icons/material-symbols/media/audio_description.svg</file>
         <file>icons/material-symbols/media/audio_file.svg</file>
         <file>icons/material-symbols/media/audio_video_receiver.svg</file>
@@ -238,6 +245,8 @@
         <file>icons/material-symbols/media/cable.svg</file>
         <file>icons/material-symbols/media/camera.svg</file>
         <file>icons/material-symbols/media/camera-fill.svg</file>
+        <file>icons/material-symbols/media/camera_front.svg</file>
+        <file>icons/material-symbols/media/camera_rear.svg</file>
         <file>icons/material-symbols/media/center_focus_strong.svg</file>
         <file>icons/material-symbols/media/center_focus_strong-fill.svg</file>
         <file>icons/material-symbols/media/center_focus_weak.svg</file>
@@ -286,6 +295,9 @@
         <file>icons/material-symbols/media/library_music.svg</file>
         <file>icons/material-symbols/media/library_music-fill.svg</file>
         <file>icons/material-symbols/media/movie.svg</file>
+        <file>icons/material-symbols/media/movie_edit.svg</file>
+        <file>icons/material-symbols/media/movie_edit-fill.svg</file>
+        <file>icons/material-symbols/media/movie-fill.svg</file>
         <file>icons/material-symbols/media/movie_info.svg</file>
         <file>icons/material-symbols/media/movie_info-fill.svg</file>
         <file>icons/material-symbols/media/music_video.svg</file>
@@ -304,6 +316,10 @@
         <file>icons/material-symbols/media/panorama_vertical-fill.svg</file>
         <file>icons/material-symbols/media/panorama_wide_angle.svg</file>
         <file>icons/material-symbols/media/panorama_wide_angle-fill.svg</file>
+        <file>icons/material-symbols/media/pause.svg</file>
+        <file>icons/material-symbols/media/pause_circle.svg</file>
+        <file>icons/material-symbols/media/pause_circle-fill.svg</file>
+        <file>icons/material-symbols/media/pause-fill.svg</file>
         <file>icons/material-symbols/media/perm_media.svg</file>
         <file>icons/material-symbols/media/perm_media-fill.svg</file>
         <file>icons/material-symbols/media/photo_camera.svg</file>
@@ -314,6 +330,12 @@
         <file>icons/material-symbols/media/photo_frame-fill.svg</file>
         <file>icons/material-symbols/media/photo_library.svg</file>
         <file>icons/material-symbols/media/photo_library-fill.svg</file>
+        <file>icons/material-symbols/media/play_arrow-fill.svg</file>
+        <file>icons/material-symbols/media/play_pause.svg</file>
+        <file>icons/material-symbols/media/play_circle.svg</file>
+        <file>icons/material-symbols/media/play_circle-fill.svg</file>
+        <file>icons/material-symbols/media/resume.svg</file>
+        <file>icons/material-symbols/media/resume-fill.svg</file>
         <file>icons/material-symbols/media/sd.svg</file>
         <file>icons/material-symbols/media/sd_card.svg</file>
         <file>icons/material-symbols/media/sd_card-fill.svg</file>
@@ -331,13 +353,17 @@
         <file>icons/material-symbols/media/speaker-fill.svg</file>
         <file>icons/material-symbols/media/speaker_group.svg</file>
         <file>icons/material-symbols/media/speaker_group-fill.svg</file>
+        <file>icons/material-symbols/media/stop_circle.svg</file>
+        <file>icons/material-symbols/media/stop_circle-fill.svg</file>
         <file>icons/material-symbols/media/surround_sound.svg</file>
         <file>icons/material-symbols/media/surround_sound-fill.svg</file>
         <file>icons/material-symbols/media/switch_camera.svg</file>
         <file>icons/material-symbols/media/switch_camera-fill.svg</file>
+        <file>icons/material-symbols/media/theaters.svg</file>
+        <file>icons/material-symbols/media/theaters-fill.svg</file>
+        <file>icons/material-symbols/media/video_stable.svg</file>
+        <file>icons/material-symbols/media/video_stable-fill.svg</file>
         <file>icons/material-symbols/media/volume_down.svg</file>
-        <file>icons/material-symbols/media/volume_down_alt.svg</file>
-        <file>icons/material-symbols/media/volume_down_alt-fill.svg</file>
         <file>icons/material-symbols/media/volume_down-fill.svg</file>
         <file>icons/material-symbols/media/volume_mute.svg</file>
         <file>icons/material-symbols/media/volume_mute-fill.svg</file>
@@ -369,8 +395,23 @@
         <file>icons/material-symbols/sensors/climate_mini_split.svg</file>
         <file>icons/material-symbols/sensors/climate_mini_split-fill.svg</file>
         <file>icons/material-symbols/sensors/co2.svg</file>
+        <file>icons/material-symbols/sensors/cool_to_dry.svg</file>
+        <file>icons/material-symbols/sensors/cool_to_dry-fill.svg</file>
+        <file>icons/material-symbols/sensors/detector.svg</file>
+        <file>icons/material-symbols/sensors/detector_alarm.svg</file>
+        <file>icons/material-symbols/sensors/detector_alarm-fill.svg</file>
+        <file>icons/material-symbols/sensors/detector_battery.svg</file>
+        <file>icons/material-symbols/sensors/detector_battery-fill.svg</file>
+        <file>icons/material-symbols/sensors/detector_co.svg</file>
+        <file>icons/material-symbols/sensors/detector_co-fill.svg</file>
+        <file>icons/material-symbols/sensors/detector-fill.svg</file>
+        <file>icons/material-symbols/sensors/detector_offline.svg</file>
+        <file>icons/material-symbols/sensors/detector_offline-fill.svg</file>
         <file>icons/material-symbols/sensors/detector_smoke.svg</file>
         <file>icons/material-symbols/sensors/detector_smoke-fill.svg</file>
+        <file>icons/material-symbols/sensors/detector_status.svg</file>
+        <file>icons/material-symbols/sensors/detector_status-fill.svg</file>
+        <file>icons/material-symbols/sensors/dew_point.svg</file>
         <file>icons/material-symbols/sensors/gas_meter.svg</file>
         <file>icons/material-symbols/sensors/gas_meter-fill.svg</file>
         <file>icons/material-symbols/sensors/glass_cup-fill.svg</file>
@@ -424,12 +465,17 @@
         <file>icons/material-symbols/sensors/switch.svg</file>
         <file>icons/material-symbols/sensors/switch-fill.svg</file>
         <file>icons/material-symbols/sensors/temp_preferences_eco.svg</file>
+        <file>icons/material-symbols/sensors/thermometer-fill.svg</file>
+        <file>icons/material-symbols/sensors/thermostat.svg</file>
         <file>icons/material-symbols/sensors/tonality.svg</file>
         <file>icons/material-symbols/sensors/total_dissolved_solids.svg</file>
         <file>icons/material-symbols/sensors/total_dissolved_solids-fill.svg</file>
+        <file>icons/material-symbols/sensors/track_changes.svg</file>
         <file>icons/material-symbols/sensors/tv_remote.svg</file>
         <file>icons/material-symbols/sensors/tv_remote-fill.svg</file>
         <file>icons/material-symbols/sensors/water.svg</file>
+        <file>icons/material-symbols/sensors/water_do.svg</file>
+        <file>icons/material-symbols/sensors/water_do-fill.svg</file>
         <file>icons/material-symbols/sensors/water_drop.svg</file>
         <file>icons/material-symbols/sensors/water_drop-fill.svg</file>
         <file>icons/material-symbols/sensors/water_ec.svg</file>
@@ -450,6 +496,7 @@
         <file>icons/material-symbols/sport/directions_walk.svg</file>
         <file>icons/material-symbols/sport/paragliding-fill.svg</file>
         <file>icons/material-symbols/sport/rowing.svg</file>
+        <file>icons/material-symbols/sport/sports_score.svg</file>
 
         <file>icons/material-symbols/weather/brightness_1.svg</file>
         <file>icons/material-symbols/weather/brightness_1-fill.svg</file>
@@ -467,10 +514,17 @@
         <file>icons/material-symbols/weather/brightness_7-fill.svg</file>
         <file>icons/material-symbols/weather/cloudy_snowing.svg</file>
         <file>icons/material-symbols/weather/cloudy_snowing-fill.svg</file>
+        <file>icons/material-symbols/weather/foggy.svg</file>
+        <file>icons/material-symbols/weather/foggy-fill.svg</file>
         <file>icons/material-symbols/weather/partly_cloudy_day.svg</file>
         <file>icons/material-symbols/weather/partly_cloudy_day-fill.svg</file>
         <file>icons/material-symbols/weather/partly_cloudy_night.svg</file>
         <file>icons/material-symbols/weather/partly_cloudy_night-fill.svg</file>
+        <file>icons/material-symbols/weather/rainy.svg</file>
+        <file>icons/material-symbols/weather/rainy-fill.svg</file>
+        <file>icons/material-symbols/weather/rainy_heavy.svg</file>
+        <file>icons/material-symbols/weather/rainy_light.svg</file>
+        <file>icons/material-symbols/weather/rainy_snow.svg</file>
         <file>icons/material-symbols/weather/snowing.svg</file>
         <file>icons/material-symbols/weather/snowing_heavy.svg</file>
         <file>icons/material-symbols/weather/sunny.svg</file>
@@ -479,6 +533,10 @@
         <file>icons/material-symbols/weather/sunny_snowing-fill.svg</file>
         <file>icons/material-symbols/weather/thunderstorm.svg</file>
         <file>icons/material-symbols/weather/thunderstorm-fill.svg</file>
+        <file>icons/material-symbols/weather/weather_hail.svg</file>
+        <file>icons/material-symbols/weather/weather_hail-fill.svg</file>
+        <file>icons/material-symbols/weather/weather_mix.svg</file>
+        <file>icons/material-symbols/weather/weather_mix-fill.svg</file>
 
         <file>icons/material-symbols/360.svg</file>
         <file>icons/material-symbols/accessibility.svg</file>
@@ -494,11 +552,22 @@
         <file>icons/material-symbols/archive.svg</file>
         <file>icons/material-symbols/archive-fill.svg</file>
         <file>icons/material-symbols/arrow_back.svg</file>
+        <file>icons/material-symbols/arrow_back_ios_new.svg</file>
         <file>icons/material-symbols/arrow_circle_down.svg</file>
+        <file>icons/material-symbols/arrow_circle_down-fill.svg</file>
         <file>icons/material-symbols/arrow_circle_left.svg</file>
+        <file>icons/material-symbols/arrow_circle_left-fill.svg</file>
         <file>icons/material-symbols/arrow_circle_right.svg</file>
+        <file>icons/material-symbols/arrow_circle_right-fill.svg</file>
         <file>icons/material-symbols/arrow_circle_up.svg</file>
+        <file>icons/material-symbols/arrow_circle_up-fill.svg</file>
+        <file>icons/material-symbols/arrow_drop_down.svg</file>
+        <file>icons/material-symbols/arrow_drop_down_circle.svg</file>
+        <file>icons/material-symbols/arrow_drop_down_circle-fill.svg</file>
+        <file>icons/material-symbols/arrow_drop_up.svg</file>
+        <file>icons/material-symbols/arrow_left.svg</file>
         <file>icons/material-symbols/arrow_range.svg</file>
+        <file>icons/material-symbols/arrow_right.svg</file>
         <file>icons/material-symbols/autorenew.svg</file>
         <file>icons/material-symbols/backspace-fill.svg</file>
         <file>icons/material-symbols/barcode.svg</file>
@@ -507,6 +576,10 @@
         <file>icons/material-symbols/bottom_panel_open-fill.svg</file>
         <file>icons/material-symbols/bug_report.svg</file>
         <file>icons/material-symbols/bug_report-fill.svg</file>
+        <file>icons/material-symbols/calendar_month.svg</file>
+        <file>icons/material-symbols/calendar_month-fill.svg</file>
+        <file>icons/material-symbols/calendar_today.svg</file>
+        <file>icons/material-symbols/calendar_today-fill.svg</file>
         <file>icons/material-symbols/cancel_circle.svg</file>
         <file>icons/material-symbols/cancel_circle-fill.svg</file>
         <file>icons/material-symbols/check.svg</file>
@@ -586,8 +659,6 @@
         <file>icons/material-symbols/join_inner.svg</file>
         <file>icons/material-symbols/join_left.svg</file>
         <file>icons/material-symbols/join_right.svg</file>
-        <file>icons/material-symbols/keyboard_arrow_left.svg</file>
-        <file>icons/material-symbols/keyboard_arrow_right.svg</file>
         <file>icons/material-symbols/label.svg</file>
         <file>icons/material-symbols/label-fill.svg</file>
         <file>icons/material-symbols/label_important.svg</file>
@@ -636,16 +707,16 @@
         <file>icons/material-symbols/note_stack-fill.svg</file>
         <file>icons/material-symbols/notifications.svg</file>
         <file>icons/material-symbols/notifications-fill.svg</file>
+        <file>icons/material-symbols/open_with.svg</file>
         <file>icons/material-symbols/package_2.svg</file>
         <file>icons/material-symbols/package_2-fill.svg</file>
+        <file>icons/material-symbols/pan_zoom.svg</file>
         <file>icons/material-symbols/password.svg</file>
-        <file>icons/material-symbols/pause-fill.svg</file>
         <file>icons/material-symbols/pin.svg</file>
-        <file>icons/material-symbols/play_arrow-fill.svg</file>
-        <file>icons/material-symbols/play_pause.svg</file>
         <file>icons/material-symbols/publish.svg</file>
         <file>icons/material-symbols/qr_code.svg</file>
         <file>icons/material-symbols/qr_code_2.svg</file>
+        <file>icons/material-symbols/qr_code_2_add.svg</file>
         <file>icons/material-symbols/qr_code_scanner.svg</file>
         <file>icons/material-symbols/refresh.svg</file>
         <file>icons/material-symbols/remove.svg</file>
@@ -659,6 +730,8 @@
         <file>icons/material-symbols/rotate_90_degrees_cw-fill.svg</file>
         <file>icons/material-symbols/rotate_left.svg</file>
         <file>icons/material-symbols/rotate_right.svg</file>
+        <file>icons/material-symbols/routine.svg</file>
+        <file>icons/material-symbols/routine-fill.svg</file>
         <file>icons/material-symbols/save.svg</file>
         <file>icons/material-symbols/save-fill.svg</file>
         <file>icons/material-symbols/search.svg</file>

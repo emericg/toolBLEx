@@ -221,7 +221,7 @@ function framerateToString(framerate) {
     var text = '';
 
     if (framerate > 0) {
-        text = framerate.toFixed(3) + " " + qsTr("fps");
+        text = framerate.toFixed(3) + " " + qsTr("FPS");
     } else {
         text = qsTr("Unknown");
     }

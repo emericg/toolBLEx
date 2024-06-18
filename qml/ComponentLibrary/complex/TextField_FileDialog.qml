@@ -1,9 +1,9 @@
+import QtCore
+
 import QtQuick
+import QtQuick.Dialogs
 import QtQuick.Controls.impl
 import QtQuick.Templates as T
-
-import QtQuick.Dialogs
-import QtCore
 
 import ThemeEngine
 import "qrc:/utils/UtilsPath.js" as UtilsPath
@@ -39,12 +39,12 @@ T.TextField {
     onEditingFinished: focus = false
     Keys.onBackPressed: focus = false
 
+    property var currentFolder: StandardPaths.writableLocation(StandardPaths.HomeLocation)
+
     // settings
     property string dialogTitle: qsTr("Please choose a file!")
     property var dialogFilter: ["All files (*)"]
     property int dialogFileMode: FileDialog.SaveFile
-
-    property var currentFolder: StandardPaths.writableLocation(StandardPaths.HomeLocation)
 
     // button
     property string buttonText: qsTr("change")

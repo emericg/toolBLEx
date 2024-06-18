@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Effects
 
 import ThemeEngine
 
@@ -20,11 +21,14 @@ Rectangle {
 
     property string source
     property int sourceSize: 24
+    property int sourceRotation: 0
     property color sourceColor: Theme.colorIcon
 
     property string text: "title"
     property color textColor: Theme.colorText
     property int textSize: source ? Theme.fontSizeContentBig : Theme.fontSizeContentVeryBig
+
+    property bool shadow: !singleColumn
 
     ////////////////
 
@@ -33,12 +37,13 @@ Rectangle {
         anchors.leftMargin: Theme.componentMarginL
         anchors.verticalCenter: control.verticalCenter
 
+        visible: control.source
         width: control.sourceSize
         height: control.sourceSize
+        rotation: control.sourceRotation
 
-        source: control.source
-        visible: control.source
         color: control.sourceColor
+        source: control.source
     }
 
     Text {
@@ -59,4 +64,11 @@ Rectangle {
     }
 
     ////////////////
+
+    layer.enabled: control.shadow
+    layer.effect: MultiEffect {
+        autoPaddingEnabled: true
+        shadowEnabled: true
+        shadowColor: ThemeEngine.isLight ? "#16000000" : "#88ffffff"
+    }
 }

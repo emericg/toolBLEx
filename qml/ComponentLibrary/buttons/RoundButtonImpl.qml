@@ -28,6 +28,7 @@ T.Button {
     property color colorRipple: Qt.rgba(colorHighlight.r, colorHighlight.g, colorHighlight.b, 0.2)
     property color colorBorder: Theme.colorComponentBorder
     property color colorIcon: "white"
+    property color colorIconHighlight: colorIcon
 
     // animation
     property string animation // available: rotate, fade, both
@@ -99,9 +100,11 @@ T.Button {
             height: control.sourceSize
 
             visible: control.source.toString().length
-            color: control.colorIcon
             opacity: control.enabled ? 1 : 0.66
             rotation: control.sourceRotation
+
+            color: control.hovered ? control.colorIconHighlight : control.colorIcon
+            Behavior on color { ColorAnimation { duration: 133 } }
 
             source: control.source
 

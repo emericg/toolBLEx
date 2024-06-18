@@ -169,8 +169,8 @@ T.SpinBox {
             id: arrowup
             anchors.centerIn: parent
             anchors.verticalCenterOffset: 2
-            width: Theme.componentHeight * 0.333
-            height: Theme.componentHeight * 0.166
+            width: control.height * 0.333
+            height: control.height * 0.166
             rotation: 180
 
             Connections {
@@ -208,8 +208,8 @@ T.SpinBox {
             id: arrowdown
             anchors.centerIn: parent
             anchors.verticalCenterOffset: -2
-            width: Theme.componentHeight * 0.333
-            height: Theme.componentHeight * 0.166
+            width: control.height * 0.333
+            height: control.height * 0.166
             rotation: 0
 
             Connections {
