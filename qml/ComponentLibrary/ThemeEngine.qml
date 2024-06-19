@@ -543,7 +543,7 @@ Item {
 
             colorActionbar              = "#eaeaea"
             colorActionbarContent       = "#444"
-            colorActionbarHighlight     = "#dadada"
+            colorActionbarHighlight     = "#f6e148"
 
             colorTabletmenu             = "#ffffff"
             colorTabletmenuContent      = "#9d9d9d"
@@ -569,7 +569,7 @@ Item {
             colorComponentText          = "black"
             colorComponentContent       = "black"
             colorComponentBorder        = "#ddd"
-            colorComponentDown          = "#dadada"
+            colorComponentDown          = "#d0d0d0"
             colorComponentBackground    = "#fcfcfc"
 
             componentRadius = 6

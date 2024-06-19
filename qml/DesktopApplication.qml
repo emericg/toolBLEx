@@ -40,9 +40,6 @@ ApplicationWindow {
 
     WindowGeometrySaver {
         windowInstance: appWindow
-        Component.onCompleted: {
-            //
-        }
     }
 
     // Mobile stuff ////////////////////////////////////////////////////////////
@@ -73,7 +70,6 @@ ApplicationWindow {
 
     Connections {
         target: appHeader
-
         function onScannerButtonClicked() { screenScanner.loadScreen() }
         function onAdvertiserButtonClicked() { screenAdvertiser.loadScreen() }
         function onUbertoothButtonClicked() { screenUbertooth.loadScreen() }
@@ -371,47 +367,49 @@ ApplicationWindow {
             appSplashLoader.active = settingsManager.appSplashScreen
         }
 
-        sourceComponent: Rectangle {
-            id: appSplash
-            anchors.centerIn: parent
-            color: Theme.colorBackground
-
-            Timer {
-                id: splashTimer_fadeout
-                running: true
-                repeat: false
-                interval: 333
-                onTriggered: {
-                    appSplash.width = 0
-                    appSplashImage.opacity = 0
-                    splashTimer_unload.start()
-                }
-            }
-            Timer {
-                id: splashTimer_unload
-                running: false
-                repeat: false
-                interval: 1000
-                onTriggered: {
-                    appSplashLoader.sourceComponent = undefined
-                }
-            }
-
-            clip: true
-            width: appWindow.width*2
-            height: width
-            radius: width
-            Behavior on width { NumberAnimation { duration: 500; } }
-
-            Image {
-                id: appSplashImage
+        sourceComponent: Item {
+            Rectangle {
+                id: appSplash
                 anchors.centerIn: parent
-                width: 320
-                height: 320
-                source: "qrc:/assets/gfx/logos/splash.svg"
-                sourceSize: Qt.size(width, height)
+                color: Theme.colorBackground
 
-                Behavior on opacity { OpacityAnimator { duration: 666; } }
+                Timer {
+                    id: splashTimer_fadeout
+                    running: true
+                    repeat: false
+                    interval: 333
+                    onTriggered: {
+                        appSplash.width = 0
+                        appSplashImage.opacity = 0
+                        splashTimer_unload.start()
+                    }
+                }
+                Timer {
+                    id: splashTimer_unload
+                    running: false
+                    repeat: false
+                    interval: 1000
+                    onTriggered: {
+                        appSplashLoader.sourceComponent = undefined
+                    }
+                }
+
+                clip: true
+                width: appWindow.width*2
+                height: width
+                radius: width
+                Behavior on width { NumberAnimation { duration: 500; } }
+
+                Image {
+                    id: appSplashImage
+                    anchors.centerIn: parent
+                    width: 320
+                    height: 320
+                    source: "qrc:/assets/gfx/logos/splash.svg"
+                    sourceSize: Qt.size(width, height)
+
+                    Behavior on opacity { OpacityAnimator { duration: 666; } }
+                }
             }
         }
     }

@@ -496,7 +496,7 @@ Flickable {
                         text: (selectedDevice && selectedDevice.isStarred) ? qsTr("starred") : qsTr("star")
                         source: (selectedDevice && selectedDevice.isStarred) ?
                                     "qrc:/assets/icons/material-symbols/stars-fill.svg" :
-                                    "qrc:/assets/icons/material-symbols/add_circle.svg"
+                                    "qrc:/assets/icons/material-symbols/stars.svg"
                         onClicked: selectedDevice.isStarred = !selectedDevice.isStarred
                     }
 
