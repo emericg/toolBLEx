@@ -1,6 +1,6 @@
 TARGET  = toolBLEx
 
-VERSION = 0.12
+VERSION = 0.13
 DEFINES+= APP_NAME=\\\"$$TARGET\\\"
 DEFINES+= APP_VERSION=\\\"$$VERSION\\\"
 
@@ -110,12 +110,12 @@ linux:!android {
 
     # Installation steps
     isEmpty(PREFIX) { PREFIX = /usr/local }
-    target_app.files       += $${OUT_PWD}/$${DESTDIR}/$$lower($${TARGET})
-    target_app.path         = $${PREFIX}/bin/
-    target_appentry.files  += $${OUT_PWD}/assets/linux/$$lower($${TARGET}).desktop
-    target_appentry.path    = $${PREFIX}/share/applications
-    target_appdata.files   += $${OUT_PWD}/assets/linux/$$lower($${TARGET}).appdata.xml
-    target_appdata.path     = $${PREFIX}/share/appdata
+    target_app.files           += $${OUT_PWD}/$${DESTDIR}/$$lower($${TARGET})
+    target_app.path             = $${PREFIX}/bin/
+    target_appentry.files      += $${OUT_PWD}/assets/linux/$$lower($${TARGET}).desktop
+    target_appentry.path        = $${PREFIX}/share/applications
+    target_appdata.files       += $${OUT_PWD}/assets/linux/$$lower($${TARGET}).appdata.xml
+    target_appdata.path         = $${PREFIX}/share/appdata
     target_icon_appimage.files += $${OUT_PWD}/assets/linux/$$lower($${TARGET}).svg
     target_icon_appimage.path   = $${PREFIX}/share/pixmaps/
     target_icon_flatpak.files  += $${OUT_PWD}/assets/linux/$$lower($${TARGET}).svg
@@ -149,7 +149,7 @@ macx {
     QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
 
     # Target OS
-    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.15
+    QMAKE_MACOSX_DEPLOYMENT_TARGET = 11.0
 
     # Automatic bundle packaging
 
