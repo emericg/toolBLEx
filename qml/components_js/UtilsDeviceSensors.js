@@ -58,7 +58,7 @@ function getDeviceStatusIcon(deviceStatus) {
     var src = "qrc:/assets/icons/material-icons/outlined/bluetooth.svg"
 
     if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_OFFLINE) {
-        src = "qrc:/assets/icons/material/bluetooth_disabled.svg"
+        src = "qrc:/assets/icons/material-icons/outlined/bluetooth_disabled.svg"
     } else if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_QUEUED ||
                deviceStatus === DeviceUtils.DeviceUtils.DEVICE_DISCONNECTING ||
                deviceStatus === DeviceUtils.DeviceUtils.DEVICE_CONNECTING) {

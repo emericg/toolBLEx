@@ -7,6 +7,7 @@ import QtQuick.Templates as T
 import ThemeEngine
 import DeviceUtils
 import "qrc:/utils/UtilsNumber.js" as UtilsNumber
+import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
 
 Rectangle {
     id: control
@@ -41,7 +42,7 @@ Rectangle {
             if (!selectedDevice || selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
                 return "qrc:/assets/icons/material-icons/outlined/bluetooth.svg"
 
-            return getDeviceStatusIcon(selectedDevice.status)
+            return UtilsDeviceSensors.getDeviceStatusIcon(selectedDevice.status)
         }
 
         ////////////////
