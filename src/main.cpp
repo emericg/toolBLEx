@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
     QSurfaceFormat::setDefaultFormat(format);
 #endif
 
-    SingleApplication app(argc, argv, false);
+    SingleApplication app(argc, argv, true);
 
     // Application name
     app.setApplicationName("toolBLEx");
