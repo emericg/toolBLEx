@@ -355,12 +355,12 @@ Loader {
                     contentHeight: -1
                     contentWidth: deviceManager.deviceHeader.width
 
-                    ScrollBar.vertical: ScrollBar {
+                    ScrollBar.vertical: ScrollBarThemed {
                         id: devicesViewVertScrollbar
                         topPadding: 36
                         policy: ScrollBar.AsNeeded
                     }
-                    ScrollBar.horizontal: ScrollBar {
+                    ScrollBar.horizontal: ScrollBarThemed {
                         policy: ScrollBar.AsNeeded
                     }
 

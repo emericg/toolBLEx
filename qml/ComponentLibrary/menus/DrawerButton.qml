@@ -20,6 +20,7 @@ T.ItemDelegate {
 
     property string source
     property int sourceSize: 24
+    property int sourceRotation: 0
     property color sourceColor: Theme.colorIcon
 
     //property string text
@@ -41,8 +42,8 @@ T.ItemDelegate {
             anchors.rightMargin: 8
 
             RippleThemed {
-                width: parent.width
-                height: parent.height
+                anchors.fill: parent
+                anchor: control
 
                 pressed: control.pressed
                 active: enabled && (control.down || control.visualFocus || control.hovered)
@@ -92,8 +93,10 @@ T.ItemDelegate {
 
                 width: control.sourceSize
                 height: control.sourceSize
-                color: control.sourceColor
+                rotation: control.sourceRotation
+
                 source: control.source
+                color: control.sourceColor
 
                 NumberAnimation on rotation { // rotate animation // icon only
                     duration: 2000

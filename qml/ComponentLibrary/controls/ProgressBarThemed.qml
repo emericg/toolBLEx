@@ -15,6 +15,7 @@ T.ProgressBar {
 
     property color colorBackground: Theme.colorComponentBackground
     property color colorForeground: Theme.colorPrimary
+    property bool rounded: false
 
     ////////////////
 
@@ -23,32 +24,35 @@ T.ProgressBar {
         implicitHeight: 12
         y: (control.height - height) / 2
         color: control.colorBackground
+        radius: Theme.componentRadius
     }
 
     ////////////////
 
     contentItem: Item {
+        width: control.width
+        height: control.height
+
         Rectangle {
             width: control.visualPosition * control.width
             height: control.height
             color: control.colorForeground
+            radius: control.rounded ? Theme.componentRadius : 0
         }
-    }
 
-    ////////////////
-
-    layer.enabled: true
-    layer.effect: MultiEffect {
-        maskEnabled: true
-        maskInverted: false
-        maskThresholdMin: 0.5
-        maskSpreadAtMin: 1.0
-        maskSpreadAtMax: 0.0
-        maskSource: ShaderEffectSource {
-            sourceItem: Rectangle {
-                width: control.width
-                height: control.height
-                radius: Theme.componentRadius
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            maskEnabled: true
+            maskInverted: false
+            maskThresholdMin: 0.5
+            maskSpreadAtMin: 1.0
+            maskSpreadAtMax: 0.0
+            maskSource: ShaderEffectSource {
+                sourceItem: Rectangle {
+                    width: control.width
+                    height: control.height
+                    radius: Theme.componentRadius
+                }
             }
         }
     }

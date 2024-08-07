@@ -6,17 +6,17 @@ Item {
     id: selectorGrid
 
     implicitWidth: 512
-    implicitHeight: 40
+    implicitHeight: Theme.componentHeight
 
     width: parent.width
-    height: (selectorGrid.btnRows * btnHeight) + (selectorGrid.btnRows * contentPositioner.spacing)
+    height: (selectorGrid.btnRows * btnHeight) + ((selectorGrid.btnRows-1) * contentPositioner.spacing)
 
     opacity: enabled ? 1 : 0.66
 
     property int btnCols: 4
     property int btnRows: 3
-    property int btnWidth: width / selectorGrid.btnCols
-    property int btnHeight: 40
+    property int btnWidth: ((width - ((selectorGrid.btnCols-1) * contentPositioner.spacing)) / selectorGrid.btnCols)
+    property int btnHeight: Theme.componentHeight
 
     signal menuSelected(var index)
     property int currentSelection: 0
@@ -36,7 +36,6 @@ Item {
     Grid {
         id: contentPositioner
         anchors.fill: parent
-        anchors.margins: 0
         spacing: 1
 
         columns: selectorGrid.btnCols

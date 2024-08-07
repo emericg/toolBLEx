@@ -12,8 +12,18 @@ T.ScrollBar {
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              implicitContentHeight + topPadding + bottomPadding)
 
+    leftPadding: 0
+    rightPadding: 0
+
     visible: (policy !== T.ScrollBar.AlwaysOff)
-    minimumSize: (orientation === Qt.Horizontal) ? height / width : width / height
+
+    minimumSize: (orientation === Qt.Horizontal) ? (height / width) : (width / height)
+
+    property int radius: isDesktop ? 0 : 8
+
+    property color colorBackground: Theme.colorBackground
+    property color colorMoving: Theme.colorSecondary
+    property color colorPressed: Theme.colorPrimary
 
     ////////////////
 
@@ -45,7 +55,8 @@ T.ScrollBar {
         y: control.topPadding
         height: control.height - control.topPadding - control.bottomPadding
 
-        color: Theme.colorBackground
+        radius: control.radius
+        color: control.colorBackground
         opacity: 0.0
     }
 
@@ -55,7 +66,8 @@ T.ScrollBar {
         implicitWidth: control.interactive ? 12 : 6
         implicitHeight: control.interactive ? 12 : 6
 
-        color: control.pressed ? Theme.colorSecondary : Theme.colorForeground
+        radius: control.radius
+        color: control.pressed ? control.colorPressed : control.colorMoving
         opacity: 0.0
     }
 

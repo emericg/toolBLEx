@@ -27,6 +27,7 @@ T.Button {
     property int index
     property url source
     property int sourceSize: 20
+    property int sourceRotation: 0
     property int layoutDirection: Qt.RightToLeft
 
     ////////////////
@@ -81,6 +82,7 @@ T.Button {
             Layout.preferredHeight: control.sourceSize
 
             source: control.source
+            rotation: control.sourceRotation
             color: Theme.colorIcon
         }
 

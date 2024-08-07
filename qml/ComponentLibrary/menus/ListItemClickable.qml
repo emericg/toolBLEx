@@ -39,11 +39,10 @@ T.ItemDelegate {
         color: control.highlighted ? Theme.colorForeground : Theme.colorBackground
 
         RippleThemed {
-            width: parent.width
-            height: parent.height
+            anchors.fill: parent
+            anchor: control
 
             clip: visible
-            anchor: control
             pressed: control.pressed
             active: enabled && (control.down || control.visualFocus || control.hovered)
             color: Qt.rgba(Theme.colorForeground.r, Theme.colorForeground.g, Theme.colorForeground.b, 0.5)

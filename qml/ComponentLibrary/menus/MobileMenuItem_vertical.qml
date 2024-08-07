@@ -19,6 +19,7 @@ T.Button {
     // icon
     property url source
     property int sourceSize: 24
+    property int sourceRotation: 0
 
     // colors
     property color colorContent: Theme.colorTabletmenuContent
@@ -27,14 +28,14 @@ T.Button {
     ////////////////
 
     background: Item {
-        implicitWidth: 72
+        implicitWidth: 56
         implicitHeight: Theme.componentHeight
     }
 
     ////////////////
 
     contentItem: ColumnLayout {
-        spacing: 0
+        spacing: -8
 
         Item {
             Layout.preferredWidth: 32
@@ -49,6 +50,7 @@ T.Button {
                 visible: control.source.toString().length
                 source: control.source
 
+                rotation: control.sourceRotation
                 opacity: control.enabled ? 1 : 0.66
                 color: control.highlighted ? control.colorHighlight : control.colorContent
                 Behavior on color { ColorAnimation { duration: 133 } }
@@ -60,6 +62,7 @@ T.Button {
                     height: 32
                     radius: height
                     color: control.colorHighlight
+                    rotation: -control.sourceRotation
 
                     width: control.highlighted ? 60 : 0
                     Behavior on width { NumberAnimation { duration: 133 } }

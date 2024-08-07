@@ -37,7 +37,6 @@ T.Dial {
 
         opacity: control.enabled ? 1 : 0.66
         color: control.pressed ? Theme.colorSecondary : Theme.colorPrimary
-        antialiasing: true
 
         transform: [
             Translate { y: -Math.min(control.background.width, control.background.height) * 0.4 + 8; },

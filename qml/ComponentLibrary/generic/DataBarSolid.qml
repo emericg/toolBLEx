@@ -69,7 +69,7 @@ Item {
                 radius: control.hhh
                 color: control.colorBackground
 
-                layer.enabled: !isDesktop
+                layer.enabled: true
                 layer.effect: MultiEffect {
                     maskEnabled: true
                     maskInverted: false

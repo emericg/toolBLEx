@@ -13,26 +13,37 @@ Item {
 
     property Map map: null
 
-    property variant scaleLengths: [5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000,
-                                    20000, 50000, 100000, 200000, 500000, 1000000, 2000000]
+    ////////////////
+
+    Connections {
+        target: map
+
+        function onMapReadyChanged() {
+            computeScale()
+        }
+        function onZoomLevelChanged() {
+            computeScale()
+        }
+    }
 
     ////////////////
 
-    Component.onCompleted: computeScale()
+    property variant scaleLengths: [5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000,
+                                    20000, 50000, 100000, 200000, 500000, 1000000, 2000000]
 
     function computeScale() {
-        if (!map) return
+        if (!map || !map.mapReady) return
 
+        var f = 0
         var coord1 = map.toCoordinate(Qt.point(0, 100))
         var coord2 = map.toCoordinate(Qt.point(100, 100))
         var dist = Math.round(coord1.distanceTo(coord2))
-        var f = 0
 
         //console.log("computeScale(zoom: " + map.zoomLevel + " | dist: " + dist +")")
 
-        if (dist === 0) {
-            // not visible
-        } else {
+        if (dist <= 0) {
+            return // not visible // not ready yet
+        } else {           
             for (var i = 0; i < scaleLengths.length-1; i++) {
                 if (dist < (scaleLengths[i] + scaleLengths[i+1]) / 2 ) {
                     f = scaleLengths[i] / dist
@@ -56,6 +67,7 @@ Item {
         id: mapScaleText
         anchors.centerIn: parent
         text: "100m"
+        textFormat: Text.PlainText
         color: "#555"
         font.pixelSize: Theme.fontSizeContentVerySmall
     }
@@ -69,9 +81,10 @@ Item {
         color: "#555"
     }
     Rectangle {
+        anchors.left: parent.left
+        anchors.right: parent.right
         anchors.bottom: parent.bottom
 
-        width: parent.width
         height: 2
         color: "#555"
     }

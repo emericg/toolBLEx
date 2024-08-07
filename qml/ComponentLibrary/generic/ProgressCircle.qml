@@ -11,7 +11,7 @@ Item {
 
     property real value: 0.5
     property real valueMin: 0
-    property real valueMax: 4
+    property real valueMax: 1
 
     property bool isPie: false              // paint a pie instead of an arc
 
@@ -66,30 +66,30 @@ Item {
     }
 
     Behavior on arcBegin {
-       id: animationArcBegin
-       enabled: true
-       NumberAnimation {
-           duration: control.animationDuration
-           easing.type: Easing.InOutCubic
-       }
+        id: animationArcBegin
+        enabled: true
+        NumberAnimation {
+            duration: control.animationDuration
+            easing.type: Easing.InOutCubic
+        }
     }
 
     Behavior on arcEnd {
-       id: animationArcEnd
-       enabled: true
-       NumberAnimation {
-           duration: control.animationDuration
-           easing.type: Easing.InOutCubic
-       }
+        id: animationArcEnd
+        enabled: true
+        NumberAnimation {
+            duration: control.animationDuration
+            easing.type: Easing.InOutCubic
+        }
     }
 
     Behavior on arcValue {
-       id: animationArcValue
-       enabled: true
-       NumberAnimation {
-           duration: control.animationDuration
-           easing.type: Easing.InOutCubic
-       }
+        id: animationArcValue
+        enabled: true
+        NumberAnimation {
+            duration: control.animationDuration
+            easing.type: Easing.InOutCubic
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////

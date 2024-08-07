@@ -65,10 +65,9 @@ T.Button {
         }
 
         RippleThemed {
-            width: parent.width
-            height: parent.height
-
+            anchors.fill: parent
             anchor: control
+
             pressed: control.pressed
             active: control.enabled && (control.down || control.hovered || control.visualFocus)
             color: control.colorRipple

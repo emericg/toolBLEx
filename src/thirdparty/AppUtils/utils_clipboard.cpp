@@ -1,6 +1,5 @@
 /*!
- * Copyright (c) 2022 Luca Carlon
- * Copyright (c) 2023 Emeric Grange
+ * Copyright (c) 2024 Emeric Grange
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,53 +20,43 @@
  * SOFTWARE.
  */
 
-#ifndef UTILS_FPSMONITOR_H
-#define UTILS_FPSMONITOR_H
-/* ************************************************************************** */
+#include "utils_clipboard.h"
 
-#include <QObject>
-#include <QList>
-#include <QMutex>
-#include <QDateTime>
-
-class QTimer;
-class QQuickWindow;
+#include <QGuiApplication>
+#include <QClipboard>
+#include <QMimeData>
 
 /* ************************************************************************** */
 
-/*!
- * \brief The FrameRateMonitor class
- *
- * This class use the QQuickWindow::frameSwapped method from Luca Carlon.
- * - https://github.com/carlonluca/lqtutils/blob/master/lqtutils_freq.h
- *
- * The FrameMonitor widget uses a simpler and pure QML method from qnanopainter.
- * - https://github.com/QUItCoding/qnanopainter/blob/master/examples/qnanopainter_vs_qpainter_demo/qml/FpsItem.qml
- */
-class FrameRateMonitor : public QObject
+void UtilsClipboard::clear()
 {
-    Q_OBJECT
+    //
+}
 
-    Q_PROPERTY(int fps READ fps NOTIFY fpsChanged)
+void UtilsClipboard::setText(const QString &txt)
+{
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QString originalText = clipboard->text();
 
-    QMutex m_mutex;
-    QList <QDateTime> m_timestamps;
-    QTimer *m_refreshTimer = nullptr;
+    clipboard->setText(txt);
+}
 
-    int m_fps = 0;
-    int fps() const { return m_fps; }
+QString UtilsClipboard::getText()
+{
+    const QClipboard *clipboard = QGuiApplication::clipboard();
+    const QMimeData *mimeData = clipboard->mimeData();
 
-Q_SIGNALS:
-    void fpsChanged();
+    if (mimeData->hasText())
+    {
+        return mimeData->text();
+        // Qt::PlainText;
+    }
+    else
+    {
+        // not handled
+    }
 
-public:
-    FrameRateMonitor(QQuickWindow *window = nullptr, QObject *parent = nullptr);
-    Q_INVOKABLE void setQuickWindow(QQuickWindow *window);
-
-public slots:
-    void registerSample();
-    void refresh();
-};
+    return QString();
+}
 
 /* ************************************************************************** */
-#endif // UTILS_FPSMONITOR_H

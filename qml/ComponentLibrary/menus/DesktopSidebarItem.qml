@@ -13,13 +13,14 @@ T.Button {
     implicitHeight: 64
 
     width: parent.width // width drive the size of this element
-    height: Math.max(parent.width, content.height + 24)
+    height: Math.max(parent.width, contentColumn.height + 24)
 
     focusPolicy: Qt.NoFocus
 
     // settings
     property url source
     property int sourceSize: 40
+    property int sourceRotation: 0
     property string highlightMode: "background" // available: background, indicator, circle, content
 
     // colors
@@ -30,7 +31,7 @@ T.Button {
     property bool indicatorVisible: false
     property bool indicatorAnimated: false
     property color indicatorColor: "white"
-    property url indicatorSource: ""
+    property url indicatorSource
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -38,8 +39,8 @@ T.Button {
         implicitWidth: 64
         implicitHeight: 64
 
-        width: (control.highlightMode === "circle") ? height : parent.width
-        height: parent.height
+        width: control.width
+        height: control.height
         radius: (control.highlightMode === "circle") ? width : 0
 
         visible: (control.highlightMode === "background" ||
@@ -67,31 +68,25 @@ T.Button {
     ////////////////////////////////////////////////////////////////////////////
 
     ColumnLayout {
-        id: content
+        id: contentColumn
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         spacing: -4
 
-        IconSvg {
-            id: contentImage
-            width: control.sourceSize
-            height: control.sourceSize
-
+        IconSvg { // contentImage
+            Layout.preferredWidth: control.sourceSize
+            Layout.preferredHeight: control.sourceSize
             Layout.alignment: Qt.AlignHCenter
-            Layout.minimumWidth: control.sourceSize
-            Layout.minimumHeight: control.sourceSize
-            Layout.maximumWidth: control.sourceSize
-            Layout.maximumHeight: control.sourceSize
 
             visible: source.toString().length
 
             source: control.source
+            rotation: control.sourceRotation
             color: (!control.highlighted && control.highlightMode === "content") ? control.colorHighlight : control.colorContent
             opacity: control.enabled ? 1 : 0.66
 
-            Item {
-                id: contentIndicator
+            Item { // activityIndicator
                 width: 24; height: 24;
                 anchors.right: parent.right
                 anchors.rightMargin: -4
@@ -124,9 +119,9 @@ T.Button {
             }
         }
 
-        Text {
-            id: contentText
-            width: parent.width
+        Text { // contentText
+            Layout.preferredWidth: control.sourceSize
+            Layout.alignment: Qt.AlignHCenter
 
             visible: control.text
             text: control.text
@@ -135,7 +130,6 @@ T.Button {
             font.pixelSize: Theme.fontSizeContentVerySmall
             font.bold: true
 
-            Layout.alignment: Qt.AlignHCenter
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }

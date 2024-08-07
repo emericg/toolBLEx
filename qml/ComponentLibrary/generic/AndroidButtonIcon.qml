@@ -24,6 +24,7 @@ T.Button {
     // settings
     property url source
     property int sourceSize: 26
+    property int sourceRotation: 0
     property int layoutDirection: Qt.LeftToRight
 
     // colors
@@ -37,9 +38,9 @@ T.Button {
 
         opacity: control.enabled ? 1 : 0.66
 
-        Rectangle {
-            id: shadowarea
+        Rectangle { // shadowarea
             anchors.fill: parent
+
             border.color: "#eee"
             radius: 8
             border.width: 1
@@ -54,10 +55,9 @@ T.Button {
         }
 
         RippleThemed {
-            width: parent.width
-            height: parent.height
-
+            anchors.fill: parent
             anchor: control
+
             pressed: control.pressed
             active: enabled && (control.down || control.visualFocus)
             color: Qt.rgba(Theme.colorForeground.r, Theme.colorForeground.g, Theme.colorForeground.b, 0.5)
@@ -94,6 +94,7 @@ T.Button {
 
             width: control.sourceSize
             height: control.sourceSize
+            rotation: control.sourceRotation
 
             source: control.source
             color: control.colorPrimary

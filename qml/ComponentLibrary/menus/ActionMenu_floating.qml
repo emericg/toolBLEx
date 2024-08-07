@@ -56,7 +56,8 @@ T.Popup {
     contentItem: Item {
         Column {
             id: contentColumn
-            width: parent.width
+            anchors.left: parent.left
+            anchors.right: parent.right
 
             topPadding: 10
             bottomPadding: 10

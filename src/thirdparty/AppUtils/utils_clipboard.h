@@ -1,6 +1,5 @@
 /*!
- * Copyright (c) 2022 Luca Carlon
- * Copyright (c) 2023 Emeric Grange
+ * Copyright (c) 2024 Emeric Grange
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,53 +20,28 @@
  * SOFTWARE.
  */
 
-#ifndef UTILS_FPSMONITOR_H
-#define UTILS_FPSMONITOR_H
+#ifndef UTILS_CLIPBOARD_H
+#define UTILS_CLIPBOARD_H
 /* ************************************************************************** */
 
 #include <QObject>
-#include <QList>
-#include <QMutex>
-#include <QDateTime>
-
-class QTimer;
-class QQuickWindow;
-
-/* ************************************************************************** */
+#include <QString>
 
 /*!
- * \brief The FrameRateMonitor class
+ * \brief Clipboard wrapper for QML
  *
- * This class use the QQuickWindow::frameSwapped method from Luca Carlon.
- * - https://github.com/carlonluca/lqtutils/blob/master/lqtutils_freq.h
- *
- * The FrameMonitor widget uses a simpler and pure QML method from qnanopainter.
- * - https://github.com/QUItCoding/qnanopainter/blob/master/examples/qnanopainter_vs_qpainter_demo/qml/FpsItem.qml
+ * https://doc.qt.io/qt-6/qclipboard.html
  */
-class FrameRateMonitor : public QObject
+class UtilsClipboard : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(int fps READ fps NOTIFY fpsChanged)
-
-    QMutex m_mutex;
-    QList <QDateTime> m_timestamps;
-    QTimer *m_refreshTimer = nullptr;
-
-    int m_fps = 0;
-    int fps() const { return m_fps; }
-
-Q_SIGNALS:
-    void fpsChanged();
-
 public:
-    FrameRateMonitor(QQuickWindow *window = nullptr, QObject *parent = nullptr);
-    Q_INVOKABLE void setQuickWindow(QQuickWindow *window);
+    Q_INVOKABLE static void clear();
 
-public slots:
-    void registerSample();
-    void refresh();
+    Q_INVOKABLE static void setText(const QString &txt);
+    Q_INVOKABLE static  QString getText();
 };
 
 /* ************************************************************************** */
-#endif // UTILS_FPSMONITOR_H
+#endif // UTILS_CLIPBOARD_H

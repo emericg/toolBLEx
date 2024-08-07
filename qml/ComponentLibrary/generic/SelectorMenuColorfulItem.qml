@@ -25,6 +25,7 @@ T.Button {
     // icon
     property url source
     property int sourceSize: 32
+    property int sourceRotation: 0
 
     // colors
     property color colorContent: Theme.colorComponentText
@@ -58,6 +59,7 @@ T.Button {
 
             width: control.sourceSize
             height: control.sourceSize
+            rotation: control.sourceRotation
 
             source: control.source
             color: control.highlighted ? control.colorContentHighlight : control.colorContent

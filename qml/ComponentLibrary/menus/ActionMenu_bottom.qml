@@ -47,8 +47,10 @@ T.Popup {
 
     background: Rectangle {
         color: Theme.colorComponentBackground
+
         Rectangle {
-            width: parent.width
+            anchors.left: parent.left
+            anchors.right: parent.right
             height: Theme.componentBorderWidth
             color: Theme.colorSeparator
         }
@@ -59,7 +61,8 @@ T.Popup {
     contentItem: Item {
         Column {
             id: contentColumn
-            width: parent.width
+            anchors.left: parent.left
+            anchors.right: parent.right
 
             topPadding: 12
             bottomPadding: 8

@@ -11,7 +11,7 @@ Item {
 
     property real value: 0.5
     property real valueMin: 0
-    property real valueMax: 4
+    property real valueMax: 1
 
     property real arcOffset: 0              // rotation (0 means starts at bottom center)
     property real arcSpan: 270              // arc span (in degree)
@@ -19,7 +19,7 @@ Item {
 
     property color arcColor: Theme.colorPrimary
     property real arcOpacity: 1
-    property string arcCap: "butt"          // butt, round or square // Qt.RoundCap // //
+    property string arcCap: "butt"          // "butt", "round", "square" // Qt.FlatCap, Qt.RoundCap, Qt.SquareCap
 
     property bool background: true          // draw a background arc (full arc span)
     property real backgroundOpacity: 1
@@ -60,13 +60,31 @@ Item {
         function onCurrentThemeChanged() { canvas.requestPaint() }
     }
 
+    Behavior on arcBegin {
+        id: animationArcBegin
+        enabled: true
+        NumberAnimation {
+            duration: control.animationDuration
+            easing.type: Easing.InOutCubic
+        }
+    }
+
+    Behavior on arcEnd {
+        id: animationArcEnd
+        enabled: true
+        NumberAnimation {
+            duration: control.animationDuration
+            easing.type: Easing.InOutCubic
+        }
+    }
+
     Behavior on arcValue {
-       id: animationArcValue
-       enabled: true
-       NumberAnimation {
-           duration: control.animationDuration
-           easing.type: Easing.InOutCubic
-       }
+        id: animationArcValue
+        enabled: true
+        NumberAnimation {
+            duration: control.animationDuration
+            easing.type: Easing.InOutCubic
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////

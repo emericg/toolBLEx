@@ -10,6 +10,7 @@ Item {
     property alias source: sourceImg.source
     property alias color: overlayImg.colorizationColor
     property alias fillMode: sourceImg.fillMode
+    property alias smooth: sourceImg.smooth
     property alias asynchronous: sourceImg.asynchronous
 
     Image {
@@ -19,7 +20,7 @@ Item {
         visible: parent.color ? false : true
         sourceSize: Qt.size(width, height)
         fillMode: Image.PreserveAspectFit
-        smooth: control.smooth
+        smooth: false
         asynchronous: false
     }
 

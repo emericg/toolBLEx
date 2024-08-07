@@ -30,11 +30,13 @@ T.Button {
     // colors
     property color color: Theme.colorPrimary
 
-    // icon
+    // icons
     property string leftIcon
     property int leftIconSize: UtilsNumber.alignTo(height * 1.0, 2)
+    property int leftIconRotation: 0
     property string rightIcon
     property int rightIconSize: UtilsNumber.alignTo(height * 0.5, 2)
+    property int rightIconRotation: 0
 
     ////////////////
 
@@ -55,10 +57,9 @@ T.Button {
         }
 
         RippleThemed {
-            width: parent.width
-            height: parent.height
-
+            anchors.fill: parent
             anchor: control
+
             pressed: control.pressed
             active: control.enabled && (control.down || control.visualFocus)
             color: Qt.rgba(control.color.r, control.color.g, control.color.b, 0.16)
@@ -100,9 +101,10 @@ T.Button {
                 visible: control.leftIcon.length
 
                 IconSvg {
+                    anchors.centerIn: parent
                     width: control.leftIconSize
                     height: control.leftIconSize
-                    anchors.centerIn: parent
+                    rotation: control.leftIconRotation
 
                     color: control.color
                     source: control.leftIcon
@@ -130,9 +132,10 @@ T.Button {
                 visible: control.rightIcon.length
 
                 IconSvg {
+                    anchors.centerIn: parent
                     width: control.rightIconSize
                     height: control.rightIconSize
-                    anchors.centerIn: parent
+                    rotation: control.rightIconRotation
 
                     color: control.color
                     source: control.rightIcon

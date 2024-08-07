@@ -27,7 +27,6 @@
 #include <QObject>
 #include <QVariantMap>
 
-class QGuiApplication;
 class QScreen;
 class QQuickWindow;
 

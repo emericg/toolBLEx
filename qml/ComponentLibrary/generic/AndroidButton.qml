@@ -29,10 +29,9 @@ T.Button {
         implicitHeight: 48
 
         RippleThemed {
-            width: parent.width
-            height: parent.height
-
+            anchors.fill: parent
             anchor: control
+
             pressed: control.pressed
             active: control.enabled && (control.down || control.visualFocus)
             color: Qt.rgba(control.colorPrimary.r, control.colorPrimary.g, control.colorPrimary.b, 0.1)
