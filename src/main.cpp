@@ -31,6 +31,7 @@
 #include "utils_screen.h"
 #include "utils_sysinfo.h"
 #include "utils_language.h"
+#include "utils_clipboard.h"
 #if defined(Q_OS_MACOS)
 #include "utils_os_macos_dock.h"
 #endif
@@ -104,7 +105,8 @@ int main(int argc, char *argv[])
     UtilsScreen *utilsScreen = UtilsScreen::getInstance();
     UtilsSysInfo *utilsSysInfo = UtilsSysInfo::getInstance();
     UtilsLanguage *utilsLanguage = UtilsLanguage::getInstance();
-    if (!utilsScreen || !utilsApp || !utilsLanguage)
+    UtilsClipboard *utilsClipboard = new UtilsClipboard();
+    if (!utilsScreen || !utilsApp|| !utilsLanguage || !utilsClipboard)
     {
         qWarning() << "Cannot init toolBLEx utils!";
         return EXIT_FAILURE;
@@ -132,6 +134,7 @@ int main(int argc, char *argv[])
     engine_context->setContextProperty("utilsScreen", utilsScreen);
     engine_context->setContextProperty("utilsSysInfo", utilsSysInfo);
     engine_context->setContextProperty("utilsLanguage", utilsLanguage);
+    engine_context->setContextProperty("utilsClipboard", utilsClipboard);
 
     // Load the main view
     engine.load(QUrl(QStringLiteral("qrc:/qml/DesktopApplication.qml")));

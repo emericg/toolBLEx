@@ -211,6 +211,20 @@ Rectangle {
                         }
                     }
                 }
+
+                Item { width: 4; height: 4; } // spacer
+
+                SquareButtonSunken {
+                    width: 26; height: 26;
+
+                    tooltipText: qsTr("copy")
+                    tooltipPosition: "right"
+                    source: "qrc:/assets/icons/material-symbols/content_copy.svg"
+
+                    onClicked: {
+                        utilsClipboard.setText(modelData.valueHex)
+                    }
+                }
             }
         }
 
@@ -267,6 +281,20 @@ Rectangle {
                             color: Theme.colorText
                             font.family: fontMonospace
                         }
+                    }
+                }
+
+                Item { width: 4; height: 4; } // spacer
+
+                SquareButtonSunken {
+                    width: 26; height: 26;
+
+                    tooltipText: qsTr("copy")
+                    tooltipPosition: "right"
+                    source: "qrc:/assets/icons/material-symbols/content_copy.svg"
+
+                    onClicked: {
+                        utilsClipboard.setText(modelData.valueAscii)
                     }
                 }
             }
