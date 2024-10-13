@@ -7,6 +7,7 @@ import "qrc:/utils/UtilsNumber.js" as UtilsNumber
 
 Loader {
     id: screenUbertooth
+    anchors.fill: parent
 
     ////////////////
 

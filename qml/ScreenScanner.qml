@@ -5,6 +5,7 @@ import ThemeEngine
 
 Loader {
     id: screenScanner
+    anchors.fill: parent
 
     ////////////////
 
@@ -505,6 +506,19 @@ Loader {
                         return txt
                     }
                     color: Theme.colorSubText
+                }
+
+                ButtonSunken {
+                    anchors.verticalCenter: parent.verticalCenter
+                    height: statusBar.height
+
+                    colorBackground: Theme.colorActionbar
+                    colorHighlight: Theme.colorActionbarHighlight
+
+                    text: qsTr("clear results")
+                    onClicked: {
+                        deviceManager.clearResults()
+                    }
                 }
             }
 

@@ -7,6 +7,7 @@ import ThemeEngine
 
 Loader {
     id: screenSettings
+    anchors.fill: parent
 
     ////////////////
 

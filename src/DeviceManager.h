@@ -263,6 +263,8 @@ public:
 
     Q_INVOKABLE void checkPaired();
 
+    Q_INVOKABLE void clearResults();
+
     // Device saved
     int getDeviceSeenCached() const { return m_devicesSeenCachedCount; }
     void cacheDeviceSeen(const QString &addr);

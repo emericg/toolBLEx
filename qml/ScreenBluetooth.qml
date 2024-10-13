@@ -6,6 +6,7 @@ import ThemeEngine
 
 Loader {
     id: screenBluetooth
+    anchors.fill: parent
 
     ////////////////
 

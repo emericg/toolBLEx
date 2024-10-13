@@ -221,6 +221,13 @@ Flickable {
                             colorBackground: Theme.colorComponent
                             colorBorder: Theme.colorComponent
                         }
+                        TagDesktop {
+                            visible: (selectedDevice && !selectedDevice.isClassic && !selectedDevice.isLowEnergy)
+                            text: qsTr("Unknown")
+                            colorBackground: Theme.colorComponent
+                            colorBorder: Theme.colorComponent
+                        }
+
                         //TextSelectable {
                         //    text: UtilsBluetooth.getBluetoothCoreConfigurationText(selectedDevice.bluetoothConfiguration)
                         //}

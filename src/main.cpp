@@ -50,7 +50,7 @@
 
 int main(int argc, char *argv[])
 {
-    // GUI application /////////////////////////////////////////////////////////
+    // Hacks ///////////////////////////////////////////////////////////////////
 
 #if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
     // NVIDIA suspend&resume hack
@@ -58,6 +58,13 @@ int main(int argc, char *argv[])
     format.setOption(QSurfaceFormat::ResetNotification);
     QSurfaceFormat::setDefaultFormat(format);
 #endif
+
+#if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
+    // Qt 6.6+ mouse wheel hack
+    qputenv("QT_QUICK_FLICKABLE_WHEEL_DECELERATION", "2500");
+#endif
+
+    // GUI application /////////////////////////////////////////////////////////
 
     SingleApplication app(argc, argv, true);
 
@@ -67,11 +74,9 @@ int main(int argc, char *argv[])
     app.setOrganizationName("toolBLEx");
     app.setOrganizationDomain("toolBLEx");
 
-#if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
     // Application icon
     QIcon appIcon(":/assets/gfx/logos/icon.svg");
     app.setWindowIcon(appIcon);
-#endif
 
     // Preload components
     VendorsDatabase::getInstance();
@@ -140,13 +145,10 @@ int main(int argc, char *argv[])
     // For i18n retranslate
     utilsLanguage->setQmlEngine(&engine);
 
-#if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS) // desktop section
-
     // QQuickWindow must be valid at this point
     QQuickWindow *window = qobject_cast<QQuickWindow *>(engine.rootObjects().value(0));
 
-    // Infos
-    utilsApp->setQuickWindow(window);
+    utilsApp->setQuickWindow(window); // to get additional infos
 
     // React to secondary instances
     QObject::connect(&app, &SingleApplication::instanceStarted, window, &QQuickWindow::show);
@@ -161,8 +163,6 @@ int main(int argc, char *argv[])
     dockIconHandler->setupDock(window);
     engine_context->setContextProperty("utilsDock", dockIconHandler);
 #endif // Q_OS_MACOS
-
-#endif // desktop section
 
     return app.exec();
 }

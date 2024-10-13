@@ -1077,6 +1077,16 @@ void DeviceManager::countDevices()
     Q_EMIT statsChanged();
 }
 
+void DeviceManager::clearResults()
+{
+    qDebug() << "DeviceManager::clearResults()";
+
+    if (m_devices_model /*&& !m_scanning*/)
+    {
+        m_devices_model->clearDevices();
+    }
+}
+
 /* ************************************************************************** */
 /* ************************************************************************** */
 
