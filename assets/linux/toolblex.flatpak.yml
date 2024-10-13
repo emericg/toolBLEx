@@ -177,5 +177,5 @@ modules:
     buildsystem: qmake
     sources:
       - type: archive
-        url: https://github.com/emericg/toolBLEx/archive/refs/tags/v0.13.tar.gz
+        url: https://github.com/emericg/toolBLEx/archive/refs/tags/v0.14.tar.gz
         sha256: 
