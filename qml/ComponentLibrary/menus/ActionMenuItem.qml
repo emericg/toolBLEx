@@ -23,6 +23,8 @@ T.Button {
 
     focusPolicy: Qt.NoFocus
 
+    opacity: control.enabled ? 1 : 0.66
+
     // settings
     property int index
     property url source
@@ -42,7 +44,7 @@ T.Button {
             color: Theme.colorComponent
             //Behavior on color { ColorAnimation { duration: 133 } }
 
-            opacity: control.hovered ? 1 : 0
+            opacity: control.enabled && control.hovered ? 1 : 0
             //Behavior on opacity { OpacityAnimator { duration: 233 } }
         }
 

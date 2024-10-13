@@ -71,12 +71,12 @@ public:
     static Q_INVOKABLE bool qtIsShared();
     static Q_INVOKABLE bool qtIsStatic();
 
-    Q_INVOKABLE QString qtRhiBackend();
+    Q_INVOKABLE QString qtRhiBackend() const;
     void setQuickWindow(QQuickWindow *window);
 
     // tools
 
-    QString getAppPath() const { return m_appPath; }
+    Q_INVOKABLE QString getAppPath() const { return m_appPath; }
     void setAppPath(const QString &value);
 
     static Q_INVOKABLE void appExit();

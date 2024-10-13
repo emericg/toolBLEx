@@ -165,15 +165,23 @@ bool UtilsApp::qtIsRelease()
 
 bool UtilsApp::qtIsStatic()
 {
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
     return !QLibraryInfo::isSharedBuild();
+#endif
+
+    return false;
 }
 
 bool UtilsApp::qtIsShared()
 {
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
     return QLibraryInfo::isSharedBuild();
+#endif
+
+    return false;
 }
 
-QString UtilsApp::qtRhiBackend()
+QString UtilsApp::qtRhiBackend() const
 {
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 6, 0))
     if (m_quickwindow && m_quickwindow->rhi())
@@ -285,7 +293,7 @@ bool UtilsApp::isOsThemeDark()
     const QStyleHints *styleHints = static_cast<QGuiApplication*>qApp->styleHints();
     isDark = (styleHints && styleHints->colorScheme() == Qt::ColorScheme::Dark);
 
-#else
+#elif (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
 
     const QPalette defaultPalette = static_cast<QGuiApplication*>qApp->palette();
     isDark = (defaultPalette.color(QPalette::WindowText).lightness() >
@@ -386,7 +394,7 @@ bool UtilsApp::checkMobileBluetoothPermission()
 #if defined(Q_OS_ANDROID)
     return UtilsAndroid::checkPermission_bluetooth();
 #elif defined(Q_OS_IOS)
-    #warning("Please use Qt permission system directly on iOS")
+    qWarning() << "Please use Qt permission system directly on iOS";
     return false;
 #endif
 
@@ -398,7 +406,7 @@ bool UtilsApp::getMobileBluetoothPermission()
 #if defined(Q_OS_ANDROID)
     return UtilsAndroid::getPermission_bluetooth();
 #elif defined(Q_OS_IOS)
-    #warning("Please use Qt permission system directly on iOS")
+    qWarning() << "Please use Qt permission system directly on iOS";
     return false;
 #endif
 
@@ -601,8 +609,12 @@ bool UtilsApp::checkMobileNotificationPermission()
 {
 #if defined(Q_OS_ANDROID)
     return UtilsAndroid::checkPermission_notification();
-#elif defined(Q_OS_IOS) && defined(UTILS_NOTIFICATIONS_ENABLED)
-    return UtilsIOSNotifications::checkPermission_notification();
+#elif defined(Q_OS_IOS)
+    #if defined(UTILS_NOTIFICATIONS_ENABLED)
+        return UtilsIOSNotifications::checkPermission_notification();
+    #else
+        qWarning() << "UTILS_NOTIFICATIONS_ENABLED is not enabled";
+    #endif
 #endif
 
     return true;
@@ -612,8 +624,12 @@ bool UtilsApp::getMobileNotificationPermission()
 {
 #if defined(Q_OS_ANDROID)
     return UtilsAndroid::getPermission_notification();
-#elif defined(Q_OS_IOS) && defined(UTILS_NOTIFICATIONS_ENABLED)
-    return UtilsIOSNotifications::getPermission_notification();
+#elif defined(Q_OS_IOS)
+    #if defined(UTILS_NOTIFICATIONS_ENABLED)
+        return UtilsIOSNotifications::getPermission_notification();
+    #else
+        qWarning() << "UTILS_NOTIFICATIONS_ENABLED is not enabled";
+    #endif
 #endif
 
     return true;

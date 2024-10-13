@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Window
 import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
@@ -14,8 +15,9 @@ T.Drawer {
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              contentHeight + topPadding + bottomPadding)
 
-    width: (appWindow.singleColumn || appWindow.screenOrientation === Qt.PortraitOrientation || appWindow.width < 480)
-            ? 0.8 * appWindow.width : 0.5 * appWindow.width
+    width: (appWindow.singleColumn || appWindow.width < 480 ||
+            appWindow.screenOrientation === Qt.PortraitOrientation)
+                ? 0.8 * appWindow.width : 0.5 * appWindow.width
     height: appWindow.height
 
     topPadding: 0

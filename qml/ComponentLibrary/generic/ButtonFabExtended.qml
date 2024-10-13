@@ -6,35 +6,39 @@ import QtQuick.Templates as T
 import ThemeEngine
 import "qrc:/utils/UtilsNumber.js" as UtilsNumber
 
+//Column {
+//    anchors.right: parent.right
+//    anchors.bottom: parent.bottom
+//    anchors.margins: Theme.componentMarginXL
+//    spacing: Theme.componentMarginXL
+//    z: 10
+//}
+
 T.Button {
     id: control
-
-    //anchors.right: parent.right
-    //anchors.bottom: parent.bottom
-    //anchors.margins: Theme.componentMarginXL
-    //z: 10
+    anchors.right: parent.right
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             rowrowrow.width + leftPadding + rightPadding)
     implicitHeight: implicitBackgroundHeight
 
     leftPadding: 16
-    rightPadding: 12
-    spacing: 6
+    rightPadding: 16
+    spacing: 12
 
     flat: false
     hoverEnabled: isDesktop
     focusPolicy: Qt.NoFocus
-    font.pixelSize: Theme.componentFontSize + 2
+    font.pixelSize: Theme.componentFontSize
     font.bold: true
 
     // settings
     property string shape: "squared" // available: rounded, squared
     property int shapeRadius: (shape === "rounded") ? 2 : 4
-
+    property bool extended: true
     // icon
     property url source: "qrc:/assets/icons/material-symbols/add.svg"
-    property int sourceSize: 32
+    property int sourceSize: 24
     property int sourceRotation: 0
 
     // colors
@@ -103,22 +107,6 @@ T.Button {
             anchors.centerIn: parent
             spacing: control.spacing
 
-            Text {
-                height: 56
-
-                color: control.colorIcon
-                opacity: control.enabled ? 1 : 0.66
-
-                visible: control.text
-                text: control.text
-                textFormat: Text.PlainText
-
-                font: control.font
-                elide: Text.ElideMiddle
-                horizontalAlignment: Text.AlignLeft
-                verticalAlignment: Text.AlignVCenter
-            }
-
             Item {
                 width: control.sourceSize
                 height: 56
@@ -155,6 +143,23 @@ T.Button {
                         easing.type: Easing.Linear
                     }
                 }
+            }
+
+
+            Text {
+                height: 56
+
+                color: control.colorIcon
+                opacity: control.enabled ? 1 : 0.66
+
+                visible: control.text
+                text: control.text
+                textFormat: Text.PlainText
+
+                font: control.font
+                elide: Text.ElideMiddle
+                horizontalAlignment: Text.AlignLeft
+                verticalAlignment: Text.AlignVCenter
             }
         }
     }

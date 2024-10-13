@@ -563,7 +563,7 @@ Loader {
                             height: 48
                             color: Theme.colorForeground
 
-                            TextField_FolderDialog {
+                            FolderInputArea {
                                 id: exportDirectory
                                 anchors.left: parent.left
                                 anchors.leftMargin: Theme.componentMargin
@@ -1011,7 +1011,7 @@ Loader {
                             height: 48
                             color: Theme.colorForeground
 
-                            TextField_FileDialog {
+                            FileInputArea {
                                 id: ubertoothPath
                                 anchors.left: parent.left
                                 anchors.leftMargin: Theme.componentMargin

@@ -28,8 +28,11 @@
 #include "utils_os_ios_wifi.h"
 #endif
 
+#if QT_CONFIG(permissions)
 #include <QCoreApplication>
 #include <QPermission>
+#endif
+
 #include <QDebug>
 
 /* ************************************************************************** */
@@ -63,12 +66,14 @@ bool UtilsWiFi::checkLocationPermissions()
     //qDebug() << "UtilsWiFi::checkLocationPermissions()";
     bool permOS_was = m_permOS;
 
+#if QT_CONFIG(permissions)
     m_permOS = (qApp->checkPermission(QLocationPermission{}) == Qt::PermissionStatus::Granted);
 
     if (permOS_was != m_permOS)
     {
         Q_EMIT permissionsChanged();
     }
+#endif
 
     return m_permOS;
 }
@@ -77,8 +82,10 @@ void UtilsWiFi::requestLocationPermissions()
 {
     //qDebug() << "UtilsWiFi::requestLocationPermissions()";
 
+#if QT_CONFIG(permissions)
     qApp->requestPermission(QBluetoothPermission{},
                             this, &UtilsWiFi::requestLocationPermissions_results);
+#endif
 }
 
 void UtilsWiFi::requestLocationPermissions_results()
@@ -112,13 +119,13 @@ void UtilsWiFi::refreshWiFi()
 void UtilsWiFi::refreshWiFi_internal()
 {
 #if defined(Q_OS_ANDROID)
-        m_currentSSID = UtilsAndroid::getWifiSSID();
+    m_currentSSID = UtilsAndroid::getWifiSSID();
     Q_EMIT wifiChanged();
 #elif defined(Q_OS_IOS) && defined(UTILS_WIFI_ENABLED)
-        m_currentSSID = UtilsIOS::getWifiSSID();
+    m_currentSSID = UtilsIOS::getWifiSSID();
     Q_EMIT wifiChanged();
 #else
-        m_currentSSID = "";
+    m_currentSSID = "";
 #endif
 }
 

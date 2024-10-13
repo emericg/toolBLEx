@@ -32,16 +32,19 @@ T.Button {
 
     // icons
     property string leftIcon
-    property int leftIconSize: UtilsNumber.alignTo(height * 1.0, 2)
+    property int leftIconSize: UtilsNumber.alignTo(height * 0.66, 2)
     property int leftIconRotation: 0
+    property bool leftIconBackground: true
+
     property string rightIcon
     property int rightIconSize: UtilsNumber.alignTo(height * 0.5, 2)
     property int rightIconRotation: 0
+    property bool rightIconBackground: true
 
     ////////////////
 
     background: Item {
-        implicitWidth: 80
+        implicitWidth: Theme.componentHeight
         implicitHeight: Theme.componentHeight
 
         //radius: (height / 2)
@@ -100,6 +103,17 @@ T.Button {
                 Layout.alignment: Qt.AlignVCenter
                 visible: control.leftIcon.length
 
+                Rectangle {
+                    anchors.centerIn: parent
+                    width: control.height - 4
+                    height: width
+                    radius: width
+
+                    visible: control.leftIconBackground
+                    color: control.color
+                    opacity: 0.1
+                }
+
                 IconSvg {
                     anchors.centerIn: parent
                     width: control.leftIconSize
@@ -130,6 +144,17 @@ T.Button {
                 Layout.preferredHeight: control.height
                 Layout.alignment: Qt.AlignVCenter
                 visible: control.rightIcon.length
+
+                Rectangle {
+                    anchors.centerIn: parent
+                    width: control.height - 4
+                    height: width
+                    radius: width
+
+                    visible: control.rightIconBackground
+                    color: control.color
+                    opacity: 0.1
+                }
 
                 IconSvg {
                     anchors.centerIn: parent

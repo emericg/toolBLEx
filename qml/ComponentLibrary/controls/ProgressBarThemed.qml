@@ -13,7 +13,7 @@ T.ProgressBar {
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              implicitContentHeight + topPadding + bottomPadding)
 
-    property color colorBackground: Theme.colorComponentBackground
+    property color colorBackground: Theme.colorComponent
     property color colorForeground: Theme.colorPrimary
     property bool rounded: false
 

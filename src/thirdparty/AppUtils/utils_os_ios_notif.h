@@ -39,9 +39,23 @@ class UtilsIOSNotifications
 public:
     UtilsIOSNotifications();
 
-    bool checkPermission_notification();
-    bool getPermission_notification();
+    /*!
+     * \return True if notification permission has been previously obtained.
+     */
+    static bool checkPermission_notification();
 
+    /*!
+     * \return True if notification permission has been explicitly obtained.
+     */
+    static bool getPermission_notification();
+
+    /*!
+     * \brief notify
+     * \param title
+     * \param message
+     * \param channel
+     * \return
+     */
     bool notify(const QString &title, const QString &message, const int channel);
 };
 

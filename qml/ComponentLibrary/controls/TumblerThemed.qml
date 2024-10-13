@@ -51,22 +51,22 @@ T.Tumbler {
     ////////////////
 
     delegate: Text {
+        required property var modelData
+        required property int index
+
         text: modelData
         textFormat: Text.PlainText
         font: control.font
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
 
-        color: (control.currentIndex === modelData) ? Theme.colorPrimary : Theme.colorText
+        color: (control.currentIndex === index) ? Theme.colorPrimary : Theme.colorText
         Behavior on color { ColorAnimation { duration: 133 } }
 
         opacity: 1.0 - Math.abs(T.Tumbler.displacement) / (control.visibleItemCount / 2)
 
         //scale: 1.0 + Math.max(0, 1 - Math.abs(T.Tumbler.displacement)) * 0.33
-        //scale: (control.currentIndex === modelData) ? 1.33 : 1.0
-
-        required property var modelData
-        required property int index
+        //scale: (control.currentIndex === index) ? 1.33 : 1.0
     }
 
     ////////////////

@@ -47,7 +47,7 @@ T.Button {
             layer.effect: MultiEffect {
                 autoPaddingEnabled: true
                 shadowEnabled: true
-                shadowColor: Theme.colorBoxShadow
+                shadowColor: "#66000000"
             }
         }
         Rectangle { // background

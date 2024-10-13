@@ -26,7 +26,7 @@ T.Slider {
 
         radius: 2
         opacity: control.enabled ? 1 : 0.66
-        color: Theme.colorComponentBackground
+        color: Theme.colorComponent
         scale: control.horizontal && control.mirrored ? -1 : 1
 
         Rectangle {

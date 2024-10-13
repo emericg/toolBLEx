@@ -37,9 +37,9 @@ T.ItemDelegate {
 
     contentItem: RowLayout {
         anchors.left: parent.left
-        anchors.leftMargin: screenPaddingLeft + Theme.componentMargin
+        anchors.leftMargin: Theme.componentMargin
         anchors.right: parent.right
-        anchors.rightMargin: screenPaddingRight + Theme.componentMargin
+        anchors.rightMargin: Theme.componentMargin
 
         opacity: control.enabled ? 1 : 0.4
         spacing: 0
@@ -53,7 +53,7 @@ T.ItemDelegate {
                 anchors.left: parent.left
                 anchors.leftMargin: (32 - control.sourceSize) / 2
                 anchors.verticalCenter: parent.verticalCenter
-                //anchors.verticalCenterOffset: (control.height !== Theme.componentHeightXL) ? -(Theme.componentMargin / 2) : 0
+                anchors.verticalCenterOffset: (control.height !== Theme.componentHeightXL) ? -(Theme.componentMargin / 2) : 0
 
                 width: control.sourceSize
                 height: control.sourceSize

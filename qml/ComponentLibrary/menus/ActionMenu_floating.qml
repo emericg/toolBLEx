@@ -19,7 +19,7 @@ T.Popup {
     dim: false
     focus: isMobile
     closePolicy: T.Popup.CloseOnEscape | T.Popup.CloseOnPressOutside
-    //parent: Overlay.overlay
+    parent: T.Overlay.overlay
 
     property string titleTxt
     property string titleSrc

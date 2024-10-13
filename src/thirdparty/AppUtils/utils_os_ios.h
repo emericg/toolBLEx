@@ -35,16 +35,6 @@
 class UtilsIOS
 {
 public:
-    /*!
-     * \return True if notification permission has been previously obtained.
-     */
-    static bool checkPermission_notification();
-
-    /*!
-     * \return True if notification permission has been explicitly obtained.
-     */
-    static bool getPermission_notification();
-
     static void screenKeepOn(bool on);
 
     static void screenLockOrientation(int orientation);

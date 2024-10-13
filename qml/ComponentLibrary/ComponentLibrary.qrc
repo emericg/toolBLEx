@@ -113,8 +113,8 @@
         <file alias="TumblerThemed.qml">controls/TumblerThemed.qml</file>
 
         <file alias="DatePicker.qml">complex/DatePicker.qml</file>
-        <file alias="TextField_FileDialog.qml">complex/TextField_FileDialog.qml</file>
-        <file alias="TextField_FolderDialog.qml">complex/TextField_FolderDialog.qml</file>
+        <file alias="FileInputArea.qml">complex/FileInputArea.qml</file>
+        <file alias="FolderInputArea.qml">complex/FolderInputArea.qml</file>
 
         <file alias="MapButton.qml">maps/MapButton.qml</file>
         <file alias="MapButtonCompass.qml">maps/MapButtonCompass.qml</file>

@@ -50,6 +50,7 @@ T.Slider {
 
             radius: control.hhh
             color: control.colorForeground
+            opacity: enabled ? 1 : 0.5
         }
 
         layer.enabled: control.horizontal
@@ -83,7 +84,7 @@ T.Slider {
         height: control.hhh
         radius: control.hhh
         color: control.colorForeground
-        border.color: control.colorForeground
+        opacity: enabled ? 1 : 0.5
 
         Text {
             id: t1

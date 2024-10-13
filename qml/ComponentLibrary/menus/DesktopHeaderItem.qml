@@ -24,6 +24,7 @@ T.Button {
     // colors
     property color colorContent: Theme.colorHeaderContent
     property color colorHighlight: Theme.colorHeaderHighlight
+    property color colorRipple: Qt.rgba(colorContent.r, colorContent.g, colorContent.b, 0.08)
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -45,6 +46,16 @@ T.Button {
             return 0
         }
         Behavior on opacity { OpacityAnimator { duration: 233 } }
+
+        RippleThemed {
+            anchors.fill: parent
+            anchor: control
+            clip: true
+
+            pressed: control.pressed
+            active: control.enabled && control.down
+            color: control.colorRipple
+        }
 
         Rectangle { // backgroundIndicator
             anchors.top: parent.top

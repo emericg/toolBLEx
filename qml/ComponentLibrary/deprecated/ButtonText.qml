@@ -34,7 +34,7 @@ T.Button {
         radius: 2
         opacity: {
             if (!control.enabled) return 0.4
-            if (control.hovered && !control.highlighted) return 0.3
+            if (control.hovered && !control.highlighted) return 0.66
             return 1
         }
         color: {

@@ -284,7 +284,7 @@ Popup {
                     color: Theme.colorText
                 }
 
-                TextField_FileDialog {
+                FileInputArea {
                     id: tfExportPath
                     anchors.left: parent.left
                     anchors.right: parent.right

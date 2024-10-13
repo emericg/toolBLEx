@@ -81,7 +81,7 @@ T.ItemDelegate {
         opacity: control.enabled ? 1 : 0.66
 
         Item {
-            Layout.preferredWidth: Theme.componentHeightL - screenPaddingLeft - Theme.componentMargin
+            Layout.preferredWidth: Theme.componentHeightL - Theme.componentMargin
             Layout.preferredHeight: Theme.componentHeightL
             Layout.alignment: Qt.AlignTop
 

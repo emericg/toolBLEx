@@ -75,6 +75,9 @@ T.ComboBox {
     ////////////////
 
     delegate: T.ItemDelegate {
+        required property var model
+        required property int index
+
         width: control.width - 2
         height: control.height
         highlighted: (control.highlightedIndex === index)
@@ -89,9 +92,8 @@ T.ComboBox {
 
         contentItem: Text {
             leftPadding: control.leftPadding
-            text: control.textRole
-                ? (Array.isArray(control.model) ? modelData[control.textRole] : model[control.textRole])
-                : modelData
+            rightPadding: control.rightPadding
+            text: model[control.textRole]
             color: highlighted ? "black" : Theme.colorSubText
             font.pixelSize: Theme.componentFontSize
             elide: Text.ElideRight

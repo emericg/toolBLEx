@@ -114,6 +114,37 @@ function durationToString_compact(duration) {
     return text;
 }
 
+/*!
+ * durationToString_supercompact()
+ * Format is 'XXh XXm [XXs XXms]'
+ *
+ * Seconds and milliseconds are hidden unless duration is less than a minute.
+ */
+function durationToString_supercompact(duration) {
+    var text = "";
+
+    if (duration < 0) return qsTr("unknown");
+    if (duration === 0) return qsTr("0s");
+
+    var hours = Math.floor(duration / 3600000);
+    var minutes = Math.floor((duration - (hours * 3600000)) / 60000);
+    var seconds = Math.floor((duration - (hours * 3600000) - (minutes * 60000)) / 1000);
+    var milliseconds = Math.round(duration - (hours * 3600000) - (minutes * 60000)) - (seconds * 1000);
+
+    if (hours > 0) {
+        text += hours.toString() + qsTr("h") + " ";
+    }
+    if (minutes > 0) {
+        text += minutes.toString() + qsTr("m") + " ";
+    }
+
+    if (seconds < 60 && milliseconds > 0) {
+        text += seconds.toString() + qsTr("s") + " " + milliseconds.toString() + qsTr("ms");
+    }
+
+    return text;
+}
+
 /* ************************************************************************** */
 
 /*!

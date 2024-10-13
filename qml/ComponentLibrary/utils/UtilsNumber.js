@@ -44,14 +44,14 @@ function trimNumber(n, p) {
  * example: mapNumber(5, 0, 10, 100, 200) => 150
  */
 function mapNumber(n, a1, a2, b1, b2) {
-    if (n < a1) n = a1
-    if (n > a2) n = a2
+    if (n < a1) n = a1;
+    if (n > a2) n = a2;
 
-    return (b1 + ((n-a1) * (b2-b1)) / (a2-a1))
+    return (b1 + ((n-a1) * (b2-b1)) / (a2-a1));
 }
 
 function mapNumber_nocheck(n, a1, a2, b1, b2) {
-    return (b1 + ((n-a1) * (b2-b1)) / (a2-a1))
+    return (b1 + ((n-a1) * (b2-b1)) / (a2-a1));
 }
 
 /*!
@@ -117,11 +117,11 @@ function isOdd(n) {
 /* ************************************************************************** */
 
 function radToDeg(radian) {
-    return radian * (180/Math.PI)
+    return radian * (180/Math.PI);
 }
 
 function degToRad(degree) {
-    return degree * (Math.PI/180)
+    return degree * (Math.PI/180);
 }
 
 /* ************************************************************************** */

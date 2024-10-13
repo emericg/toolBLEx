@@ -80,10 +80,13 @@ function openWith(filePath) {
 /* ************************************************************************** */
 
 function isMediaFile(filePath) {
+    if (!filePath) return false
     return (isVideoFile(filePath) || isAudioFile(filePath) || isPictureFile(filePath));
 }
 
 function isVideoFile(filePath) {
+    if (!filePath) return false
+
     if (!(typeof filePath === 'string' || filePath instanceof String)) {
         filePath = filePath.toString();
     }
@@ -106,6 +109,8 @@ function isVideoFile(filePath) {
 }
 
 function isPictureFile(filePath) {
+    if (!filePath) return false
+
     if (!(typeof filePath === 'string' || filePath instanceof String)) {
         filePath = filePath.toString();
     }
@@ -132,6 +137,8 @@ function isPictureFile(filePath) {
 }
 
 function isAudioFile(filePath) {
+    if (!filePath) return false
+
     if (!(typeof filePath === 'string' || filePath instanceof String)) {
         filePath = filePath.toString();
     }
