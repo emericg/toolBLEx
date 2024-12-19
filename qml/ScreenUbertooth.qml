@@ -1,9 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 
-import ThemeEngine
-import "qrc:/utils/UtilsNumber.js" as UtilsNumber
-
+import ComponentLibrary
 
 Loader {
     id: screenUbertooth
@@ -266,7 +264,7 @@ Loader {
                     height: 30
                     color: ubertooth.hardwareAvailable ? Theme.colorSuccess: Theme.colorWarning
                     text: ubertooth.hardwareAvailable ? qsTr("hardware ready") : qsTr("hardware not ready")
-                    source: ubertooth.hardwareAvailable ? "qrc:/assets/icons/material-symbols/check_circle.svg" : ""
+                    source: ubertooth.hardwareAvailable ? "qrc:/IconLibrary/material-symbols/check_circle.svg" : ""
                     onClicked: ubertooth.checkUbertooth()
                 }
             }

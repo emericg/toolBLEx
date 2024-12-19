@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import ThemeEngine
+import ComponentLibrary
 import DeviceUtils
 
 import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors

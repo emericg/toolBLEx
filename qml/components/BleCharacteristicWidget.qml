@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 
-import ThemeEngine
+import ComponentLibrary
 
 Rectangle {
     id: bleCharacteristicWidget
@@ -219,7 +219,7 @@ Rectangle {
 
                     tooltipText: qsTr("copy")
                     tooltipPosition: "right"
-                    source: "qrc:/assets/icons/material-symbols/content_copy.svg"
+                    source: "qrc:/IconLibrary/material-symbols/content_copy.svg"
 
                     onClicked: {
                         utilsClipboard.setText(modelData.valueHex)
@@ -291,7 +291,7 @@ Rectangle {
 
                     tooltipText: qsTr("copy")
                     tooltipPosition: "right"
-                    source: "qrc:/assets/icons/material-symbols/content_copy.svg"
+                    source: "qrc:/IconLibrary/material-symbols/content_copy.svg"
 
                     onClicked: {
                         utilsClipboard.setText(modelData.valueAscii)

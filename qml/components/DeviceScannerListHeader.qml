@@ -1,6 +1,6 @@
 import QtQuick
 
-import ThemeEngine
+import ComponentLibrary
 
 Rectangle {
     id: deviceScannerListHeader
@@ -328,7 +328,7 @@ Rectangle {
                     width: 14; height: 14;
                     anchors.verticalCenter: parent.verticalCenter
 
-                    source: "qrc:/assets/icons/material-symbols/signal_cellular_4_bar.svg"
+                    source: "qrc:/IconLibrary/material-symbols/signal_cellular_4_bar.svg"
                     color: Theme.colorSubText
                     opacity: 0.8
                 }
@@ -430,7 +430,7 @@ Rectangle {
                     width: 14; height: 14;
                     anchors.verticalCenter: parent.verticalCenter
 
-                    source: "qrc:/assets/icons/material-symbols/arrow_range.svg"
+                    source: "qrc:/IconLibrary/material-symbols/arrow_range.svg"
                     color: Theme.colorSubText
                     opacity: 0.8
                 }

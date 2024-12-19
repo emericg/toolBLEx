@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Templates as T
 
-import ThemeEngine
+import ComponentLibrary
 
 T.Button {
     id: control

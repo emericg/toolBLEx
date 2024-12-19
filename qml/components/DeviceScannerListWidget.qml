@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 
-import ThemeEngine
+import ComponentLibrary
 import DeviceUtils
 
 import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
@@ -135,7 +135,7 @@ Item {
 
                 visible: (source.toString().length)
                 source: {
-                    if (boxDevice.isBeacon) return "qrc:/assets/icons/bootstrap/tags.svg"
+                    if (boxDevice.isBeacon) return "qrc:/IconLibrary/bootstrap/tags.svg"
                     if (boxDevice.majorClass) return UtilsBluetooth.getBluetoothMinorClassIcon(boxDevice.majorClass, boxDevice.minorClass)
                     return ""
                 }
@@ -178,7 +178,7 @@ Item {
                     height: 20
                     visible: (boxDevice.connected)
 
-                    source: "qrc:/assets/icons/material-icons/duotone/bluetooth_connected.svg"
+                    source: "qrc:/IconLibrary/material-icons/duotone/bluetooth_connected.svg"
                     color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorIcon
                 }
 
@@ -187,7 +187,7 @@ Item {
                     height: 20
                     visible: (boxDevice.isStarred)
 
-                    source: "qrc:/assets/icons/material-symbols/stars-fill.svg"
+                    source: "qrc:/IconLibrary/material-symbols/stars-fill.svg"
                     color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorIcon
                 }
 
@@ -196,7 +196,7 @@ Item {
                     height: 20
                     visible: (boxDevice.isPaired)
 
-                    source: "qrc:/assets/icons/material-symbols/link.svg"
+                    source: "qrc:/IconLibrary/material-symbols/link.svg"
                     color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorIcon
                 }
             }

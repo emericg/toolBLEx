@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
-import ThemeEngine
+import ComponentLibrary
 import DeviceUtils
 
 Rectangle {
@@ -232,7 +232,7 @@ Rectangle {
 
                     tooltipText: qsTr("copy")
                     tooltipPosition: "right"
-                    source: "qrc:/assets/icons/material-symbols/content_copy.svg"
+                    source: "qrc:/IconLibrary/material-symbols/content_copy.svg"
 
                     onClicked: {
                         utilsClipboard.setText(packet.advDataHex)
@@ -298,7 +298,7 @@ Rectangle {
 
                     tooltipText: qsTr("copy")
                     tooltipPosition: "right"
-                    source: "qrc:/assets/icons/material-symbols/content_copy.svg"
+                    source: "qrc:/IconLibrary/material-symbols/content_copy.svg"
 
                     onClicked: {
                         utilsClipboard.setText(packet.advDataAscii)

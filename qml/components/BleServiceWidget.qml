@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 
-import ThemeEngine
+import ComponentLibrary
 
 Rectangle {
     id: bleServiceWidget
@@ -74,8 +74,8 @@ Rectangle {
 
                         color: Theme.colorIcon
                         source: bleServiceWidget.extended ?
-                                    "qrc:/assets/icons/material-symbols/unfold_less.svg" :
-                                    "qrc:/assets/icons/material-symbols/unfold_more.svg"
+                                    "qrc:/IconLibrary/material-symbols/unfold_less.svg" :
+                                    "qrc:/IconLibrary/material-symbols/unfold_more.svg"
                     }
                 }
             }

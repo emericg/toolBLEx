@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
-import ThemeEngine
+import ComponentLibrary
 
 Loader {
     id: screenBluetooth
@@ -86,7 +86,7 @@ Loader {
                             height: 96
                             anchors.centerIn: parent
 
-                            source: "qrc:/assets/icons/material-icons/outlined/bluetooth_disabled.svg"
+                            source: "qrc:/IconLibrary/material-icons/outlined/bluetooth_disabled.svg"
                             color: Theme.colorIcon
                         }
                     }
@@ -162,7 +162,7 @@ Loader {
                         height: 96
                         anchors.centerIn: parent
 
-                        source: "qrc:/assets/icons/material-icons/outlined/bluetooth_disabled.svg"
+                        source: "qrc:/IconLibrary/material-icons/outlined/bluetooth_disabled.svg"
                         color: Theme.colorIcon
                     }
                 }
@@ -244,7 +244,7 @@ Loader {
                         height: 96
                         anchors.centerIn: parent
 
-                        source: "qrc:/assets/icons/material-icons/duotone/settings_bluetooth.svg"
+                        source: "qrc:/IconLibrary/material-icons/duotone/settings_bluetooth.svg"
                         color: Theme.colorIcon
                     }
                 }

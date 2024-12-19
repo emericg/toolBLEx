@@ -1,6 +1,6 @@
 import QtQuick
 
-import ThemeEngine
+import ComponentLibrary
 
 Rectangle {
     id: desktopHeader
@@ -68,9 +68,9 @@ Rectangle {
                 highlightMode: "off"
                 iconColor: Theme.colorIcon
                 source: {
-                    if (appContent.state === "Advertiser") return "qrc:/assets/icons/material-icons/duotone/wifi_tethering.svg"
-                    if (appContent.state === "Ubertooth") return "qrc:/assets/icons/material-icons/duotone/microwave.svg"
-                    return "qrc:/assets/icons/material-icons/duotone/devices.svg"
+                    if (appContent.state === "Advertiser") return "qrc:/IconLibrary/material-icons/duotone/wifi_tethering.svg"
+                    if (appContent.state === "Ubertooth") return "qrc:/IconLibrary/material-icons/duotone/microwave.svg"
+                    return "qrc:/IconLibrary/material-icons/duotone/devices.svg"
                 }
             }
 
@@ -84,8 +84,8 @@ Rectangle {
                 highlightMode: (opacity !== 1) ? "color" : "off"
                 iconColor: Theme.colorHeaderContent
                 source: (deviceManager.scanningPaused) ?
-                            "qrc:/assets/icons/material-symbols/media/pause-fill.svg" :
-                            "qrc:/assets/icons/material-symbols/media/play_arrow-fill.svg"
+                            "qrc:/IconLibrary/material-symbols/media/pause-fill.svg" :
+                            "qrc:/IconLibrary/material-symbols/media/play_arrow-fill.svg"
 
                 backgroundVisible: {
                     if (appContent.state === "Scanner" && deviceManager.scanning) return true
@@ -118,7 +118,7 @@ Rectangle {
                 enabled: deviceManager.bluetooth
                 highlightMode: (opacity !== 1) ? "color" : "off"
                 iconColor: Theme.colorHeaderContent
-                source: "qrc:/assets/icons/material-symbols/stop-fill.svg"
+                source: "qrc:/IconLibrary/material-symbols/media/stop-fill.svg"
 
                 opacity: {
                     if (appContent.state === "Scanner" && !deviceManager.scanning) return 1
@@ -163,9 +163,9 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
 
                 source: {
-                    if (deviceManager.scanningPaused) return "qrc:/assets/icons/material-symbols/pause-fill.svg"
-                    if (deviceManager.scanning) return "qrc:/assets/icons/material-symbols/autorenew.svg"
-                    return "qrc:/assets/icons/material-symbols/stop-fill.svg"
+                    if (deviceManager.scanningPaused) return "qrc:/IconLibrary/material-symbols/pause-fill.svg"
+                    if (deviceManager.scanning) return "qrc:/IconLibrary/material-symbols/autorenew.svg"
+                    return "qrc:/IconLibrary/material-symbols/media/stop-fill.svg"
                 }
                 color: Theme.colorText
 
@@ -206,7 +206,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
 
                 visible: deviceManager.advertising
-                source: "qrc:/assets/icons/material-icons/duotone/wifi_tethering.svg"
+                source: "qrc:/IconLibrary/material-icons/duotone/wifi_tethering.svg"
                 color: Theme.colorText
 
                 SequentialAnimation on opacity {
@@ -240,7 +240,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
 
                 visible: ubertooth.running
-                source: "qrc:/assets/icons/material-icons/duotone/microwave.svg"
+                source: "qrc:/IconLibrary/material-icons/duotone/microwave.svg"
                 color: Theme.colorText
 
                 SequentialAnimation on opacity {
@@ -305,7 +305,7 @@ Rectangle {
                 width: headerHeight
                 height: headerHeight
 
-                source: "qrc:/assets/icons/material-icons/duotone/devices.svg"
+                source: "qrc:/IconLibrary/material-icons/duotone/devices.svg"
                 colorContent: Theme.colorHeaderContent
                 colorHighlight: Theme.colorHeaderHighlight
 
@@ -331,7 +331,7 @@ Rectangle {
                 width: headerHeight
                 height: headerHeight
 
-                source: "qrc:/assets/icons/material-icons/duotone/wifi_tethering.svg"
+                source: "qrc:/IconLibrary/material-icons/duotone/wifi_tethering.svg"
                 colorContent: Theme.colorHeaderContent
                 colorHighlight: Theme.colorHeaderHighlight
 
@@ -357,7 +357,7 @@ Rectangle {
                 width: headerHeight
                 height: headerHeight
 
-                source: "qrc:/assets/icons/material-icons/duotone/microwave.svg"
+                source: "qrc:/IconLibrary/material-icons/duotone/microwave.svg"
                 colorContent: Theme.colorHeaderContent
                 colorHighlight: Theme.colorHeaderHighlight
 
@@ -384,7 +384,7 @@ Rectangle {
                 width: headerHeight
                 height: headerHeight
 
-                source: "qrc:/assets/icons/material-icons/duotone/tune.svg"
+                source: "qrc:/IconLibrary/material-icons/duotone/tune.svg"
                 colorContent: Theme.colorHeaderContent
                 colorHighlight: Theme.colorHeaderHighlight
 

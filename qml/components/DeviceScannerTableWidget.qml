@@ -1,7 +1,7 @@
 import QtQuick
 import Qt.labs.qmlmodels
 
-import ThemeEngine
+import ComponentLibrary
 import DeviceUtils
 
 import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors

@@ -36,7 +36,7 @@
 #include "utils_os_macos_dock.h"
 #endif
 
-#include <SingleApplication/SingleApplication.h>
+#include <SingleApplication.h>
 
 #include <QtGlobal>
 #include <QLibraryInfo>
@@ -112,14 +112,14 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
+    DeviceUtils::registerQML();
+
     // Translate the application
     utilsLanguage->setAppName("toolBLEx");
     utilsLanguage->loadLanguage("English");
 
     // ThemeEngine
-    qmlRegisterSingletonType(QUrl("qrc:/qml/ThemeEngine.qml"), "ThemeEngine", 1, 0, "Theme");
-
-    DeviceUtils::registerQML();
+    qmlRegisterSingletonType(QUrl("qrc:/qml/ThemeEngine.qml"), "ComponentLibrary", 1, 0, "Theme");
 
     // Then we start the UI
     QQmlApplicationEngine engine;

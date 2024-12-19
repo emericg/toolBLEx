@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 
-import ThemeEngine
+import ComponentLibrary
 
 import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
 
@@ -230,7 +230,7 @@ Rectangle {
             width: 64
             height: 64
 
-            source: "qrc:/assets/icons/bootstrap/bluetooth.svg"
+            source: "qrc:/IconLibrary/bootstrap/bluetooth.svg"
             color: Theme.colorSubText
         }
     }

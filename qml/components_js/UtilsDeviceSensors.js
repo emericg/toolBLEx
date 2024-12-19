@@ -2,7 +2,7 @@
 // Version 5
 
 .import DeviceUtils as DeviceUtils
-.import ThemeEngine as ThemeEngine
+.import ComponentLibrary as ThemeEngine
 
 /* ************************************************************************** */
 
@@ -55,21 +55,21 @@ function getDeviceStatusColor(deviceStatus) {
 }
 
 function getDeviceStatusIcon(deviceStatus) {
-    var src = "qrc:/assets/icons/material-icons/outlined/bluetooth.svg"
+    var src = "qrc:/IconLibrary/material-icons/outlined/bluetooth.svg"
 
     if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_OFFLINE) {
-        src = "qrc:/assets/icons/material-icons/outlined/bluetooth_disabled.svg"
+        src = "qrc:/IconLibrary/material-icons/outlined/bluetooth_disabled.svg"
     } else if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_QUEUED ||
                deviceStatus === DeviceUtils.DeviceUtils.DEVICE_DISCONNECTING ||
                deviceStatus === DeviceUtils.DeviceUtils.DEVICE_CONNECTING) {
-        src = "qrc:/assets/icons/material-icons/duotone/settings_bluetooth.svg"
+        src = "qrc:/IconLibrary/material-icons/duotone/settings_bluetooth.svg"
     } else if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_CONNECTED) {
-        src = "qrc:/assets/icons/material-icons/duotone/bluetooth_connected.svg"
+        src = "qrc:/IconLibrary/material-icons/duotone/bluetooth_connected.svg"
     } else if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_WORKING ||
                deviceStatus === DeviceUtils.DeviceUtils.DEVICE_UPDATING ||
                deviceStatus === DeviceUtils.DeviceUtils.DEVICE_UPDATING_HISTORY ||
                deviceStatus === DeviceUtils.DeviceUtils.DEVICE_UPDATING_REALTIME) {
-        src = "qrc:/assets/icons/material-icons/duotone/bluetooth_searching.svg"
+        src = "qrc:/IconLibrary/material-icons/duotone/bluetooth_searching.svg"
     }
 
     return src
@@ -81,27 +81,27 @@ function getDeviceBatteryIcon(batteryLevel) {
     var src = ""
 
     if (batteryLevel > 95) {
-        src = "qrc:/assets/icons/material-icons/duotone/battery_full.svg";
+        src = "qrc:/IconLibrary/material-icons/duotone/battery_full.svg";
     } else if (batteryLevel > 85) {
-        src = "qrc:/assets/icons/material-icons/duotone/battery_90.svg";
+        src = "qrc:/IconLibrary/material-icons/duotone/battery_90.svg";
     } else if (batteryLevel > 75) {
-        src = "qrc:/assets/icons/material-icons/duotone/battery_80.svg";
+        src = "qrc:/IconLibrary/material-icons/duotone/battery_80.svg";
     } else if (batteryLevel > 65) {
-        src = "qrc:/assets/icons/material-icons/duotone/battery_70.svg";
+        src = "qrc:/IconLibrary/material-icons/duotone/battery_70.svg";
     } else if (batteryLevel > 55) {
-        src = "qrc:/assets/icons/material-icons/duotone/battery_60.svg";
+        src = "qrc:/IconLibrary/material-icons/duotone/battery_60.svg";
     } else if (batteryLevel > 45) {
-        src = "qrc:/assets/icons/material-icons/duotone/battery_50.svg";
+        src = "qrc:/IconLibrary/material-icons/duotone/battery_50.svg";
     } else if (batteryLevel > 35) {
-        src = "qrc:/assets/icons/material-icons/duotone/battery_40.svg";
+        src = "qrc:/IconLibrary/material-icons/duotone/battery_40.svg";
     } else if (batteryLevel > 25) {
-        src = "qrc:/assets/icons/material-icons/duotone/battery_30.svg";
+        src = "qrc:/IconLibrary/material-icons/duotone/battery_30.svg";
     } else if (batteryLevel > 15) {
-        src = "qrc:/assets/icons/material-icons/duotone/battery_20.svg";
+        src = "qrc:/IconLibrary/material-icons/duotone/battery_20.svg";
     } else if (batteryLevel >  1) {
-        src = "qrc:/assets/icons/material-icons/duotone/battery_10.svg";
+        src = "qrc:/IconLibrary/material-icons/duotone/battery_10.svg";
     } else if (batteryLevel >= 0) {
-        src = "qrc:/assets/icons/material-icons/duotone/battery_unknown.svg";
+        src = "qrc:/IconLibrary/material-icons/duotone/battery_unknown.svg";
     }
 
     return src

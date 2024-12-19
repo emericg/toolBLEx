@@ -1,8 +1,7 @@
 import QtQuick
 import QtCharts
 
-import ThemeEngine
-import "qrc:/utils/UtilsNumber.js" as UtilsNumber
+import ComponentLibrary
 
 ChartView {
     id: frequencyGraph

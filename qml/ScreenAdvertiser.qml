@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 
-import ThemeEngine
+import ComponentLibrary
 
 Loader {
     id: screenAdvertiser
@@ -55,7 +55,7 @@ Loader {
                         height: 96
                         anchors.centerIn: parent
 
-                        source: "qrc:/assets/icons/material-icons/outlined/bluetooth_disabled.svg"
+                        source: "qrc:/IconLibrary/material-icons/outlined/bluetooth_disabled.svg"
                         color: Theme.colorSubText
                     }
                 }

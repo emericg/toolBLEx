@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 
-import ThemeEngine
+import ComponentLibrary
 
 Rectangle {
     id: logWidget

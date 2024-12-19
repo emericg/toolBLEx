@@ -3,11 +3,10 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Dialogs
 
-import ThemeEngine
+import ComponentLibrary
 import DeviceUtils
 import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
 import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
-import "qrc:/utils/UtilsPath.js" as UtilsPath
 
 Flickable {
     id: panelDeviceLog
@@ -166,7 +165,7 @@ Flickable {
             color: Theme.colorGrey
 
             text: qsTr("Clear")
-            //source: "qrc:/assets/icons/material-symbols/save.svg"
+            //source: "qrc:/IconLibrary/material-symbols/save.svg"
 
             onClicked: {
                 selectedDevice.clearLog()
@@ -178,7 +177,7 @@ Flickable {
             color: Theme.colorGrey
 
             text: qsTr("Save")
-            source: "qrc:/assets/icons/material-symbols/save.svg"
+            source: "qrc:/IconLibrary/material-symbols/save.svg"
 
             onClicked: {
                 var foldersep = "/"

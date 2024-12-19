@@ -16,11 +16,11 @@ QT     += qml quick quickcontrols2 charts
 
 # SingleApplication for desktop OS
 DEFINES += QAPPLICATION_CLASS=QApplication
-include(src/thirdparty/SingleApplication/SingleApplication.pri)
+include(thirdparty/SingleApplication/SingleApplication.pri)
 
 # Various utils
 CONFIG += UTILS_DOCK_ENABLED
-include(src/thirdparty/AppUtils/AppUtils.pri)
+include(thirdparty/AppUtils/AppUtils.pri)
 
 # Project files ################################################################
 
@@ -59,12 +59,12 @@ HEADERS  += src/SettingsManager.h \
 
 INCLUDEPATH += src/ src/thirdparty/
 
-RESOURCES   += assets/icons.qrc \
-               assets/assets.qrc \
+RESOURCES   += assets/assets.qrc \
                assets/vendors.qrc \
                i18n/i18n.qrc \
                qml/qml.qrc \
-               qml/ComponentLibrary/ComponentLibrary.qrc
+               thirdparty/IconLibrary/IconLibrary.qrc \
+               thirdparty/ComponentLibrary/ComponentLibrary.qrc
 
 TRANSLATIONS = i18n/toolBLEx_en.ts
 

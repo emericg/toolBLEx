@@ -4,11 +4,10 @@ import QtQuick.Controls
 import QtCore
 import QtQuick.Dialogs
 
-import ThemeEngine
+import ComponentLibrary
 import DeviceUtils
 import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
 import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
-import "qrc:/utils/UtilsPath.js" as UtilsPath
 
 Item {
     id: panelDeviceService
@@ -75,7 +74,7 @@ Item {
                         colorText: Theme.colorComponentContent
 
                         text: qsTr("load from cache")
-                        source: "qrc:/assets/icons/material-symbols/save.svg"
+                        source: "qrc:/IconLibrary/material-symbols/save.svg"
 
                         visible: (selectedDevice && selectedDevice.hasServiceCache)
                         enabled: (selectedDevice && selectedDevice.hasServiceCache &&
@@ -113,7 +112,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 width: 24
                 height: 24
-                source: "qrc:/assets/icons/material-symbols/warning-fill.svg"
+                source: "qrc:/IconLibrary/material-symbols/warning-fill.svg"
                 color: Theme.colorSubText
             }
 
@@ -165,7 +164,7 @@ Item {
                       selectedDevice.servicesScanned)
 
             text: qsTr("Cache")
-            source: "qrc:/assets/icons/material-symbols/save.svg"
+            source: "qrc:/IconLibrary/material-symbols/save.svg"
 
             onClicked: {
                 selectedDevice.saveServiceCache()

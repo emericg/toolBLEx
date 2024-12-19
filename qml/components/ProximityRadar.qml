@@ -1,6 +1,6 @@
 import QtQuick
 
-import ThemeEngine
+import ComponentLibrary
 
 import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
 
@@ -81,7 +81,7 @@ Item {
 
         IconSvg {
             anchors.centerIn: parent
-            source: "qrc:/assets/icons/material-icons/duotone/devices.svg"
+            source: "qrc:/IconLibrary/material-icons/duotone/devices.svg"
             color: Theme.colorIcon
         }
     }
@@ -138,8 +138,8 @@ Item {
                     opacity: 0.66
                     color: "white"
                     source: {
-                        if (circleDevice.isStarred) return "qrc:/assets/icons/material-symbols/stars-fill.svg"
-                        if (circleDevice.isBeacon) return "qrc:/assets/icons/bootstrap/tags.svg"
+                        if (circleDevice.isStarred) return "qrc:/IconLibrary/material-symbols/stars-fill.svg"
+                        if (circleDevice.isBeacon) return "qrc:/IconLibrary/bootstrap/tags.svg"
                         if (circleDevice.majorClass) return UtilsBluetooth.getBluetoothMinorClassIcon(circleDevice.majorClass, circleDevice.minorClass)
                         return ""
                     }

@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 
-import ThemeEngine
+import ComponentLibrary
 
 Loader {
     id: screenScanner
@@ -214,7 +214,7 @@ Loader {
                                     width: 18
                                     height: 18
 
-                                    source: "qrc:/assets/icons/material-symbols/backspace-fill.svg"
+                                    source: "qrc:/IconLibrary/material-symbols/backspace-fill.svg"
                                     color: parent.containsMouse ? Theme.colorPrimary : Theme.colorIcon
                                     opacity: 0.8
                                 }
@@ -246,7 +246,7 @@ Loader {
                                     width: 22
                                     height: 22
 
-                                    source: "qrc:/assets/icons/material-symbols/search.svg"
+                                    source: "qrc:/IconLibrary/material-symbols/search.svg"
                                     color: Theme.colorIcon
                                 }
                             }
@@ -533,7 +533,7 @@ Loader {
                     anchors.verticalCenter: parent.verticalCenter
                     highlightMode: "color"
                     highlighted: (settingsManager.scanviewOrientation === Qt.Vertical)
-                    source: "qrc:/assets/icons/material-symbols/bottom_panel_open-fill.svg"
+                    source: "qrc:/IconLibrary/material-symbols/bottom_panel_open-fill.svg"
                     iconColor: Theme.colorSubText
 
                     onClicked: {
@@ -548,7 +548,7 @@ Loader {
                     anchors.verticalCenter: parent.verticalCenter
                     highlightMode: "color"
                     highlighted: (settingsManager.scanviewOrientation === Qt.Horizontal)
-                    source: "qrc:/assets/icons/material-symbols/right_panel_open-fill.svg"
+                    source: "qrc:/IconLibrary/material-symbols/right_panel_open-fill.svg"
                     iconColor: Theme.colorSubText
 
                     onClicked: {

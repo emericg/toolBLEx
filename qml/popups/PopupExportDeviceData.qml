@@ -5,9 +5,8 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Dialogs
 
-import ThemeEngine
+import ComponentLibrary
 import DeviceUtils
-import "qrc:/utils/UtilsPath.js" as UtilsPath
 
 Popup {
     id: popupExportDeviceData
@@ -184,7 +183,7 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
                         width: 24
                         height: 24
-                        source: "qrc:/assets/icons/material-symbols/warning-fill.svg"
+                        source: "qrc:/IconLibrary/material-symbols/warning-fill.svg"
                         color: Theme.colorSubText
                     }
 

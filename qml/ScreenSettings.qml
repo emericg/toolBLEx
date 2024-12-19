@@ -3,7 +3,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Dialogs
 
-import ThemeEngine
+import ComponentLibrary
 
 Loader {
     id: screenSettings
@@ -134,7 +134,7 @@ Loader {
                                 anchors.centerIn: parent
                                 width: 140
                                 height: 140
-                                source: "qrc:/assets/icons/material-icons/duotone/bluetooth_connected.svg"
+                                source: "qrc:/IconLibrary/material-icons/duotone/bluetooth_connected.svg"
                                 color: "#5483EF" // Theme.colorBlue
                             }
 
@@ -218,7 +218,7 @@ Loader {
 
                                     text: qsTr("WEBSITE")
                                     //sourceSize: 28
-                                    //source: "qrc:/assets/icons/material-symbols/link.svg"
+                                    //source: "qrc:/IconLibrary/material-symbols/link.svg"
                                     //onClicked: Qt.openUrlExternally("https://emeric.io/toolBLEx")
                                     sourceSize: 20
                                     source: "qrc:/assets/gfx/logos/github.svg"
@@ -233,7 +233,7 @@ Loader {
                                     font.bold: true
 
                                     text: qsTr("SUPPORT")
-                                    source: "qrc:/assets/icons/material-symbols/support.svg"
+                                    source: "qrc:/IconLibrary/material-symbols/support.svg"
                                     onClicked: Qt.openUrlExternally("https://github.com/emericg/toolBLEx/issues")
                                 }
 
@@ -244,7 +244,7 @@ Loader {
                                     font.bold: true
 
                                     text: qsTr("RELEASE NOTES")
-                                    source: "qrc:/assets/icons/material-symbols/new_releases.svg"
+                                    source: "qrc:/IconLibrary/material-symbols/new_releases.svg"
                                     onClicked: Qt.openUrlExternally("https://github.com/emericg/toolBLEx/releases")
                                 }
                             }
@@ -303,7 +303,7 @@ Loader {
                                 anchors.rightMargin: Theme.componentMarginL
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                source: "qrc:/assets/icons/material-icons/duotone/tune.svg"
+                                source: "qrc:/IconLibrary/material-icons/duotone/tune.svg"
                                 color: Theme.colorIcon
                             }
                         }
@@ -525,7 +525,7 @@ Loader {
                                 verticalAlignment: Text.AlignVCenter
                             }
 
-                            SwitchThemedDesktop {
+                            SwitchThemed {
                                 anchors.right: parent.right
                                 anchors.rightMargin: 8
                                 anchors.verticalCenter: parent.verticalCenter
@@ -622,7 +622,7 @@ Loader {
                                 anchors.rightMargin: Theme.componentMarginL
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                source: "qrc:/assets/icons/material-icons/duotone/devices.svg"
+                                source: "qrc:/IconLibrary/material-icons/duotone/devices.svg"
                                 color: Theme.colorIcon
                             }
                         }
@@ -649,7 +649,7 @@ Loader {
                                 verticalAlignment: Text.AlignVCenter
                             }
 
-                            SwitchThemedDesktop {
+                            SwitchThemed {
                                 anchors.right: parent.right
                                 anchors.rightMargin: 8
                                 anchors.verticalCenter: parent.verticalCenter
@@ -681,7 +681,7 @@ Loader {
                                 verticalAlignment: Text.AlignVCenter
                             }
 
-                            SwitchThemedDesktop {
+                            SwitchThemed {
                                 anchors.right: parent.right
                                 anchors.rightMargin: 8
                                 anchors.verticalCenter: parent.verticalCenter
@@ -784,7 +784,7 @@ Loader {
                                 verticalAlignment: Text.AlignVCenter
                             }
 
-                            SwitchThemedDesktop {
+                            SwitchThemed {
                                 anchors.right: parent.right
                                 anchors.rightMargin: 8
                                 anchors.verticalCenter: parent.verticalCenter
@@ -942,7 +942,7 @@ Loader {
                                 anchors.rightMargin: Theme.componentMarginL
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                source: "qrc:/assets/icons/material-icons/duotone/microwave.svg"
+                                source: "qrc:/IconLibrary/material-icons/duotone/microwave.svg"
                                 color: Theme.colorIcon
                             }
                         }
@@ -1001,7 +1001,7 @@ Loader {
                                 anchors.rightMargin: Theme.componentMarginL
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                source: "qrc:/assets/icons/material-symbols/help-fill.svg"
+                                source: "qrc:/IconLibrary/material-symbols/help-fill.svg"
                                 color: Theme.colorSubText
                             }
                         }
@@ -1037,7 +1037,7 @@ Loader {
                                     height: 24
 
                                     visible: ubertooth.toolsAvailable
-                                    source: "qrc:/assets/icons/material-symbols/check_circle.svg"
+                                    source: "qrc:/IconLibrary/material-symbols/check_circle.svg"
                                     color: Theme.colorSuccess
                                 }
 
@@ -1244,7 +1244,7 @@ Loader {
                                             width: 20
                                             height: 20
 
-                                            source: "qrc:/assets/icons/material-icons/duotone/launch.svg"
+                                            source: "qrc:/IconLibrary/material-icons/duotone/launch.svg"
                                             color: parent.containsMouse ? Theme.colorPrimary : Theme.colorText
                                             Behavior on color { ColorAnimation { duration: 133 } }
                                         }

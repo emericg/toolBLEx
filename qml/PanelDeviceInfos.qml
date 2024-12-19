@@ -4,10 +4,9 @@ import QtQuick.Controls
 
 import QtQuick.Dialogs
 
-import ThemeEngine
+import ComponentLibrary
 import DeviceUtils
 import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
-import "qrc:/utils/UtilsPath.js" as UtilsPath
 
 Flickable {
     id: panelDeviceInfos
@@ -257,7 +256,7 @@ Flickable {
                         color: Theme.colorSubText
                         source: {
                             if (selectedDevice) {
-                                if (selectedDevice.isBeacon) return "qrc:/assets/icons/bootstrap/tags.svg"
+                                if (selectedDevice.isBeacon) return "qrc:/IconLibrary/bootstrap/tags.svg"
                                 if (selectedDevice.majorClass) return UtilsBluetooth.getBluetoothMinorClassIcon(selectedDevice.majorClass, selectedDevice.minorClass)
                             }
                             return ""
@@ -448,7 +447,7 @@ Flickable {
                                   (selectedDevice.advCount > 0 || selectedDevice.servicesCount > 0 || selectedDevice.hasServiceCache))
 
                         text: qsTr("export available data")
-                        source: "qrc:/assets/icons/material-symbols/save-fill.svg"
+                        source: "qrc:/IconLibrary/material-symbols/save-fill.svg"
 
                         onClicked: {
                             popupLoader_export.active = true
@@ -502,8 +501,8 @@ Flickable {
 
                         text: (selectedDevice && selectedDevice.isStarred) ? qsTr("starred") : qsTr("star")
                         source: (selectedDevice && selectedDevice.isStarred) ?
-                                    "qrc:/assets/icons/material-symbols/stars-fill.svg" :
-                                    "qrc:/assets/icons/material-symbols/stars.svg"
+                                    "qrc:/IconLibrary/material-symbols/stars-fill.svg" :
+                                    "qrc:/IconLibrary/material-symbols/stars.svg"
                         onClicked: selectedDevice.isStarred = !selectedDevice.isStarred
                     }
 
@@ -514,8 +513,8 @@ Flickable {
 
                         text: (selectedDevice && selectedDevice.isCached) ? qsTr("forget") : qsTr("cache")
                         source: (selectedDevice && selectedDevice.isCached) ?
-                                    "qrc:/assets/icons/material-symbols/loupe_minus.svg" :
-                                    "qrc:/assets/icons/material-symbols/loupe_plus.svg"
+                                    "qrc:/IconLibrary/material-symbols/loupe_minus.svg" :
+                                    "qrc:/IconLibrary/material-symbols/loupe_plus.svg"
                         onClicked: selectedDevice.cache(!selectedDevice.isCached)
                     }
 
@@ -524,8 +523,8 @@ Flickable {
 
                         text: (selectedDevice && selectedDevice.isBlacklisted) ? qsTr("show") : qsTr("hide")
                         source: (selectedDevice && selectedDevice.isBlacklisted) ?
-                                    "qrc:/assets/icons/material-symbols/add_circle.svg" :
-                                    "qrc:/assets/icons/material-symbols/cancel_circle.svg"
+                                    "qrc:/IconLibrary/material-symbols/add_circle.svg" :
+                                    "qrc:/IconLibrary/material-symbols/cancel_circle.svg"
                         onClicked: selectedDevice.blacklist(!selectedDevice.isBlacklisted)
                     }
 
@@ -672,8 +671,8 @@ Flickable {
                                 anchors.verticalCenter: parent.verticalCenter
                                 anchors.verticalCenterOffset: -1
                                 source: (selectedDevice && selectedDevice.rssi < 0) ?
-                                            "qrc:/assets/icons/material-symbols/signal_cellular_4_bar.svg" :
-                                            "qrc:/assets/icons/material-symbols/signal_cellular_off-fill.svg"
+                                            "qrc:/IconLibrary/material-symbols/signal_cellular_4_bar.svg" :
+                                            "qrc:/IconLibrary/material-symbols/signal_cellular_off-fill.svg"
                                 color: Theme.colorIcon
                             }
                         }
@@ -727,7 +726,7 @@ Flickable {
                         IconSvg {
                             width: 20; height: 20;
 
-                            source: "qrc:/assets/icons/material-symbols/arrow_range.svg"
+                            source: "qrc:/IconLibrary/material-symbols/arrow_range.svg"
                             color: Theme.colorIcon
                         }
                         Text {

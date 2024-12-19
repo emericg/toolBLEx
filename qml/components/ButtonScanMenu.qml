@@ -4,9 +4,8 @@ import QtQuick.Effects
 import QtQuick.Controls
 import QtQuick.Templates as T
 
-import ThemeEngine
+import ComponentLibrary
 import DeviceUtils
-import "qrc:/utils/UtilsNumber.js" as UtilsNumber
 import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
 
 Rectangle {
@@ -40,7 +39,7 @@ Rectangle {
 
         source: {
             if (!selectedDevice || selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
-                return "qrc:/assets/icons/material-icons/outlined/bluetooth.svg"
+                return "qrc:/IconLibrary/material-icons/outlined/bluetooth.svg"
 
             return UtilsDeviceSensors.getDeviceStatusIcon(selectedDevice.status)
         }
@@ -68,7 +67,7 @@ Rectangle {
 
         color: Qt.darker(control.color, 1.03)
         colorHighlight: "grey"
-        source: "qrc:/assets/icons/material-symbols/more_vert.svg"
+        source: "qrc:/IconLibrary/material-symbols/more_vert.svg"
         sourceSize: 24
 
         onClicked: actionMenu.open()
@@ -119,7 +118,7 @@ Rectangle {
 
                         opacity: enabled ? 1.0 : 0.66
                         color: "white"
-                        source: "qrc:/assets/icons/material-symbols/more_vert.svg"
+                        source: "qrc:/IconLibrary/material-symbols/more_vert.svg"
                     }
                 }
 
@@ -148,7 +147,7 @@ Rectangle {
 
                 color: control.color
                 text: qsTr("scan services & data")
-                source: "qrc:/assets/icons/material-icons/duotone/bluetooth_searching.svg"
+                source: "qrc:/IconLibrary/material-icons/duotone/bluetooth_searching.svg"
                 sourceSize: 20
 
                 onClicked: {
@@ -170,7 +169,7 @@ Rectangle {
 
                 color: control.color
                 text: qsTr("scan services only")
-                source: "qrc:/assets/icons/material-icons/duotone/bluetooth_searching.svg"
+                source: "qrc:/IconLibrary/material-icons/duotone/bluetooth_searching.svg"
                 sourceSize: 20
 
                 onClicked: {
@@ -193,7 +192,7 @@ Rectangle {
 
                 color: control.color
                 text: qsTr("load from cache")
-                source: "qrc:/assets/icons/material-symbols/save.svg"
+                source: "qrc:/IconLibrary/material-symbols/save.svg"
                 sourceSize: 20
 
                 onClicked: {
@@ -225,14 +224,14 @@ Rectangle {
                 source: {
                     if (!selectedDevice) return ""
                     if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
-                        return "qrc:/assets/icons/material-icons/outlined/bluetooth.svg"
+                        return "qrc:/IconLibrary/material-icons/outlined/bluetooth.svg"
                     else if (selectedDevice.status <= DeviceUtils.DEVICE_DISCONNECTING ||
                              selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
-                        return "qrc:/assets/icons/material-icons/duotone/bluetooth_searching.svg"
+                        return "qrc:/IconLibrary/material-icons/duotone/bluetooth_searching.svg"
                     else if (selectedDevice.status === DeviceUtils.DEVICE_WORKING)
-                        return "qrc:/assets/icons/material-icons/duotone/bluetooth_searching.svg"
+                        return "qrc:/IconLibrary/material-icons/duotone/bluetooth_searching.svg"
                     else
-                        return "qrc:/assets/icons/material-icons/duotone/bluetooth_connected.svg"
+                        return "qrc:/IconLibrary/material-icons/duotone/bluetooth_connected.svg"
                 }
 
                 onClicked: {
@@ -251,7 +250,7 @@ Rectangle {
 
                 color: control.color
                 text: (selectedDevice && selectedDevice.connected) ? qsTr("disconnect") : qsTr("abort")
-                source: "qrc:/assets/icons/material-icons/outlined/bluetooth_disabled.svg"
+                source: "qrc:/IconLibrary/material-icons/outlined/bluetooth_disabled.svg"
 
                 onClicked: {
                     if (selectedDevice.status !== DeviceUtils.DEVICE_OFFLINE) {
