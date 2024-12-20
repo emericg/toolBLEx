@@ -33,6 +33,12 @@ jobs:
         with:
           submodules: recursive
 
+      # Install dependencies (from package manager)
+      - name: Install dependencies (from package manager)
+        run: |
+             sudo apt-get install libgl1-mesa-dev libxcb1-dev libxkbcommon-x11-dev libx11-xcb-dev libxcb-cursor0 libzstd-dev -y;
+             sudo apt-get install appstream -y;
+
       # Install Qt
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
@@ -40,21 +46,10 @@ jobs:
           version: ${{env.QT_VERSION}}
           modules: qtconnectivity qtcharts
 
-      # Install dependencies (from package manager)
-      - name: Install dependencies (from package manager)
-        run: |
-             sudo apt-get install libgl1-mesa-dev libxcb1-dev libxkbcommon-x11-dev libx11-xcb-dev libxcb-cursor0 libzstd-dev -y;
-             sudo apt-get install appstream -y;
-
-      # Setup env
-      - name: Setup env
-        run: |
-             qmake --version
-             sudo rm /home/runner/work/${{env.APP_NAME}}/Qt/${{env.QT_VERSION}}/gcc_64/plugins/sqldrivers/libqsqlmimer.so
-
       # Build application
       - name: Build application
         run: |
+             qmake --version
              qmake ${{env.APP_NAME}}.pro CONFIG+=release PREFIX=/usr
              make -j$(nproc)
 
@@ -79,7 +74,7 @@ jobs:
   ## macOS build ###############################################################
   build-mac:
     name: "macOS CI build"
-    runs-on: macos-12
+    runs-on: macos-13
     steps:
       # Checkout repository (and submodules)
       - name: Checkout repository (and submodules)
@@ -90,7 +85,7 @@ jobs:
       # Install dependencies (from package manager)
       #- name: Install dependencies (from package manager)
       #  run: |
-      #       brew install qt6 cmake
+      #       brew install qt6 cmake ninja
 
       # Install Qt
       - name: Install Qt
@@ -99,14 +94,10 @@ jobs:
           version: ${{env.QT_VERSION}}
           modules: qtconnectivity qtcharts
 
-      # Setup env
-      - name: Setup env
-        run: |
-             qmake --version
-
       # Build application
       - name: Build application
         run: |
+             qmake --version
              qmake ${{env.APP_NAME}}.pro CONFIG+=release
              make -j`sysctl -n hw.logicalcpu`
 
@@ -136,14 +127,7 @@ jobs:
       - name: Configure MSVC
         uses: ilammy/msvc-dev-cmd@v1
         with:
-          arch: x64
-
-      # Install Qt
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v4
-        with:
-          version: ${{env.QT_VERSION}}
-          modules: qtconnectivity qtcharts
+          arch: x86_64
 
       # Install NSIS (already installed in 'windows-2022')
       #- name: Install NSIS
@@ -152,14 +136,18 @@ jobs:
       #       scoop bucket add extras
       #       scoop install nsis
 
-      # Setup env
-      - name: Setup env
-        run: |
-             qmake --version
+      # Install Qt
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{env.QT_VERSION}}
+          modules: qtconnectivity qtcharts
+          arch: 'win64_msvc2019_64'
 
       # Build application
       - name: Build application
         run: |
+             qmake --version
              qmake ${{env.APP_NAME}}.pro CONFIG+=release
              nmake
 

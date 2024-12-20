@@ -57,7 +57,7 @@ if [[ $make_install = true ]] ; then
   #find bin/
 fi
 
-## DEPLOY ######################################################################
+## APP DEPLOY ##################################################################
 
 if [[ $use_contribs = true ]] ; then
   export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/macOS_x86_64/usr/lib/

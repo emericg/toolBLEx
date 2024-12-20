@@ -14,11 +14,11 @@ QT     += qml quick quickcontrols2 charts
 
 # Project modules ##############################################################
 
-# SingleApplication for desktop OS
+# SingleApplication
 DEFINES += QAPPLICATION_CLASS=QApplication
 include(thirdparty/SingleApplication/SingleApplication.pri)
 
-# Various utils
+# AppUtils
 CONFIG += UTILS_DOCK_ENABLED
 include(thirdparty/AppUtils/AppUtils.pri)
 
