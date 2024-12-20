@@ -558,12 +558,12 @@ Item {
             colorHeaderContent          = "#444"
             colorHeaderHighlight        = "#e2e1df"
 
-            colorSidebar                = "#f2f2f2"
-            colorSidebarContent         = "#e9e9e9"
-            colorSidebarHighlight       = "#c0c0c0"
+            colorSidebar                = "white"
+            colorSidebarContent         = "#444"
+            colorSidebarHighlight       = "#888"
 
             colorActionbar              = "#eaeaea"
-            colorActionbarContent       = "#eaeaea"
+            colorActionbarContent       = "#444"
             colorActionbarHighlight     = "#dadada"
 
             colorTabletmenu             = "#ffffff"
@@ -571,7 +571,7 @@ Item {
             colorTabletmenuHighlight    = "#cfcbcb"
 
             colorBackground             = "#f9f8f7"
-            colorForeground             = "#f4f3f2"
+            colorForeground             = "#f3f2f1"
 
             colorPrimary                = "#ffc900"
             colorSecondary              = "#ffeb00"
@@ -626,9 +626,9 @@ Item {
             colorHeaderContent          = "white"
             colorHeaderHighlight        = "#725595"
 
-            colorSidebar                = "#373949"
-            colorSidebarContent         = "#494a5a"
-            colorSidebarHighlight       = "#1f254a"
+            colorSidebar                = "#b16bee"
+            colorSidebarContent         = "white"
+            colorSidebarHighlight       = "#725595"
 
             colorActionbar              = "#252024"
             colorActionbarContent       = "white"
@@ -638,8 +638,8 @@ Item {
             colorTabletmenuContent      = "#808080"
             colorTabletmenuHighlight    = "#bb86fc"
 
-            colorBackground             = "#282a39"
-            colorForeground             = "#373949"
+            colorBackground             = "#2e2a2e"
+            colorForeground             = "#333"
 
             colorPrimary                = "#bb86fc"
             colorSecondary              = "#b16bee"
@@ -650,16 +650,16 @@ Item {
             colorText                   = "#eee"
             colorSubText                = "#999"
             colorIcon                   = "#eee"
-            colorSeparator              = "#1d1e27"
+            colorSeparator              = "#444"
             colorLowContrast            = "#111"
             colorHighContrast           = "white"
 
-            colorComponent              = "#53535c"
+            colorComponent              = "#757575"
             colorComponentText          = "#eee"
             colorComponentContent       = "white"
-            colorComponentBorder        = "#717181"
-            colorComponentDown          = "#46464f"
-            colorComponentBackground    = "#363746"
+            colorComponentBorder        = "#777"
+            colorComponentDown          = "#595959"
+            colorComponentBackground    = "#393939"
 
             componentRadius = 6
             componentBorderWidth = 2
