@@ -132,17 +132,6 @@ ApplicationWindow {
         }
     }
 
-    onClosing: (close) => {
-        //console.log("onClosing(" + close + ")")
-
-        deviceManager.disconnectDevices()
-
-        if (Qt.platform.os === "osx") {
-            close.accepted = false
-            appWindow.hide()
-        }
-    }
-
     Timer {
         id: pauseTimer
         running: false
@@ -413,4 +402,41 @@ ApplicationWindow {
             }
         }
     }
+
+    // Exit ////////////////////////////////////////////////////////////////////
+
+    Timer {
+        id: disconnectTimer
+        running: false
+        repeat: false
+        interval: 333
+        onTriggered: {
+            if (!deviceManager.areDevicesConnected()) {
+                appWindow.close()
+            }
+        }
+    }
+
+    onClosing: (close) => {
+        //console.log("onClosing(" + close + ")")
+
+        // macOS minimize to dock
+        if (Qt.platform.os === "osx") {
+            appWindow.hide()
+
+            close.accepted = false
+            return
+        }
+
+        // If devices are still connected, disconnect them first
+        if (deviceManager.areDevicesConnected()) {
+            deviceManager.disconnectDevices()
+            disconnectTimer.start()
+
+            close.accepted = false
+            return
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////
 }

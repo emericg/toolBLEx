@@ -284,7 +284,8 @@ public:
 
     // Devices list management
     Q_INVOKABLE bool areDevicesAvailable() const { return m_devices_model->hasDevices(); }
-    Q_INVOKABLE void disconnectDevices();
+    Q_INVOKABLE bool areDevicesConnected() const;
+    Q_INVOKABLE void disconnectDevices() const;
 
     int getDeviceCount() const { return m_devices_model->getDeviceCount(); }
     DeviceFilter *getDevicesFiltered() const { return m_devices_filter; }

@@ -1000,7 +1000,21 @@ void DeviceManager::addBleDevice(const QBluetoothDeviceInfo &info)
     }
 }
 
-void DeviceManager::disconnectDevices()
+bool DeviceManager::areDevicesConnected() const
+{
+    for (auto d: std::as_const(m_devices_model->m_devices))
+    {
+        Device *dd = qobject_cast<Device*>(d);
+        if (dd && dd->isConnected())
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void DeviceManager::disconnectDevices() const
 {
     //qDebug() << "DeviceManager::disconnectDevices()";
 
