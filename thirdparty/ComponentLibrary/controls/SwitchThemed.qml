@@ -56,7 +56,7 @@ T.Switch {
             radius: (width / 2)
             anchors.verticalCenter: parent.verticalCenter
 
-            color: control.checked ? Theme.colorPrimary : Theme.colorComponentBorder
+            color: (control.checked && control.enabled) ? Theme.colorPrimary : Theme.colorComponentBorder
 
             Rectangle {
                 anchors.fill: parent

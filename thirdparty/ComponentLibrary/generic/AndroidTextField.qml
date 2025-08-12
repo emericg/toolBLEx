@@ -20,12 +20,15 @@ T.TextField {
     font.pixelSize: Theme.componentFontSize
     verticalAlignment: Text.AlignVCenter
 
+    text: ""
     placeholderText: ""
     placeholderTextColor: colorPlaceholderText
 
     selectByMouse: false
     selectedTextColor: colorSelectedText
     selectionColor: colorSelection
+
+    EnterKey.type: Qt.EnterKeyDone
 
     onEditingFinished: focus = false
     Keys.onBackPressed: focus = false

@@ -577,6 +577,23 @@ QString UtilsAndroid::get_external_storage() // DEPRECATED
     return external_storage;
 }
 
+QString UtilsAndroid::getExternalFilesDirPath()
+{
+    QJniObject activity = QNativeInterface::QAndroidApplication::context();
+    if (activity.isValid())
+    {
+        QJniObject file = activity.callObjectMethod("getExternalFilesDir", "(Ljava/lang/String;)Ljava/io/File;", nullptr);
+
+        if (file.isValid())
+        {
+            QJniObject path = file.callObjectMethod("getAbsolutePath", "()Ljava/lang/String;");
+            return path.toString();
+        }
+    }
+
+    return QString();
+}
+
 /* ************************************************************************** */
 
 QString UtilsAndroid::getDeviceModel()
@@ -795,6 +812,26 @@ QString UtilsAndroid::getWifiSSID()
 
 /* ************************************************************************** */
 
+void UtilsAndroid::openStorePage(const QString &packageName)
+{
+    //qDebug() << "> openStorePage(" << packageName << ")";
+
+    QJniObject jappPackage = QJniObject::fromString("market://details?id=" + packageName);
+
+    QJniObject intent = QJniObject::callStaticObjectMethod("android/content/Intent", "parseUri",
+                                                           "(Ljava/lang/String;I)Landroid/content/Intent;",
+                                                           jappPackage.object<jstring>(), 0);
+    if (!intent.isValid())
+    {
+        qWarning("Unable to create Intent object for the store page");
+        return;
+    }
+
+    QtAndroidPrivate::startActivity(intent, 0);
+}
+
+/* ************************************************************************** */
+
 void UtilsAndroid::openApplicationInfo(const QString &packageName)
 {
     //qDebug() << "> openApplicationInfo(" << packageName << ")";
@@ -811,8 +848,7 @@ void UtilsAndroid::openApplicationInfo(const QString &packageName)
         return;
     }
 
-    QJniObject intent("android/content/Intent", "(Ljava/lang/String;)V",
-                      jintentName.object<jstring>());
+    QJniObject intent("android/content/Intent", "(Ljava/lang/String;)V", jintentName.object<jstring>());
     if (!intent.isValid())
     {
         qWarning("Unable to create Intent object for APPLICATION_DETAILS_SETTINGS");

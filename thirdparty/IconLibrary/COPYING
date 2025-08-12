@@ -1,16 +1,23 @@
 
 # Bootstrap icons:
-- assets/icons/bootstrap/*                      // Mark Otto        // MIT
+- assets/icons/bootstrap/*                  // The Bootstrap Authors            // MIT
 
-# Font Awesome icons:
-- assets/icons/fontawesome/*                    // Font Awesome     // CC BY 4.0
+# Font Awesome (5) icons:
+- assets/icons/fontawesome5/*                // Font Awesome                    // CC BY 4.0
+- assets/icons/fontawesome5/duotone/*        // Font Awesome + Emeric           // CC BY 4.0
+
+# Font Awesome (7) icons:
+- assets/icons/fontawesome7/*                // Fonticons, Inc                   // CC BY 4.0
 
 # Google Material Design icons:
-- assets/icons/material-icons/*                 // Google           // CC BY-SA 4.0
-- assets/icons/material-icons/custom/*          // Google + Emeric  // CC BY-SA 4.0
-- assets/icons/material-icons/duotone/*         // Google + Emeric  // CC BY-SA 4.0
+- assets/icons/material-icons/*             // Google                           // Apache 2.0
+- assets/icons/material-icons/custom/*      // Google + Emeric                  // Apache 2.0
+- assets/icons/material-icons/duotone/*     // Google + Emeric                  // Apache 2.0
 
 # Google Material Design symbols:
-- assets/icons/material-symbols/*               // Google           // CC BY-SA 4.0
-- assets/icons/material-symbols/custom/*        // Google + Emeric  // CC BY-SA 4.0
-- assets/icons/material-symbols/duotone/*       // Google + Emeric  // CC BY-SA 4.0
+- assets/icons/material-symbols/*           // Google                           // Apache 2.0
+- assets/icons/material-symbols/custom/*    // Google + Emeric                  // Apache 2.0
+- assets/icons/material-symbols/duotone/*   // Google + Emeric                  // Apache 2.0
+
+# Lucide icons:
+- assets/icons/fontawesome/*                // Cole Bemis + Lucide Contributors // ISC

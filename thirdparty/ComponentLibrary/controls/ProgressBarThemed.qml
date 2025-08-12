@@ -15,7 +15,7 @@ T.ProgressBar {
 
     property color colorBackground: Theme.colorComponentBackground
     property color colorForeground: Theme.colorPrimary
-    property bool rounded: false
+    property bool rounded: true
 
     ////////////////
 
@@ -24,7 +24,7 @@ T.ProgressBar {
         implicitHeight: 12
         y: (control.height - height) / 2
         color: control.colorBackground
-        radius: Theme.componentRadius
+        radius: control.rounded ? Theme.componentRadius : 0
     }
 
     ////////////////
@@ -40,7 +40,7 @@ T.ProgressBar {
             radius: control.rounded ? Theme.componentRadius : 0
         }
 
-        layer.enabled: true
+        layer.enabled: control.rounded
         layer.effect: MultiEffect {
             maskEnabled: true
             maskInverted: false

@@ -20,8 +20,9 @@ list(APPEND MODULE_QML_FILES
     menus/MobileMenuItem_vertical.qml
     menus/ActionMenu_bottom.qml
     menus/ActionMenu_floating.qml
-    menus/ActionMenuItem.qml
-    menus/ActionMenuSeparator.qml
+    menus/ActionMenuItem_button.qml
+    menus/ActionMenuItem_switch.qml
+    menus/ActionMenuItem_separator.qml
     menus/DrawerThemed.qml
     menus/DrawerItem.qml
     menus/DrawerButton.qml
@@ -133,6 +134,8 @@ list(APPEND MODULE_QML_FILES
     utils/CsdMac.qml
     utils/CsdWindows.qml
     utils/CsdLinux.qml
+    utils/FpsMonitor.qml
+    utils/MovablePoint.qml
     utils/RectangleDebug.qml
     utils/SwipeArea.qml
     utils/WindowGeometrySaver.qml
@@ -192,7 +195,6 @@ qt_add_qml_module(ComponentLibrary
     URI ComponentLibrary
     VERSION 1.0
     DEPENDENCIES QtCore QtQuick LabsQmlModels
-    RESOURCE_PREFIX "/ComponentLibrary"
     QML_FILES ${MODULE_QML_FILES} ${MODULE_JS_FILES}
     RESOURCES ${MODULE_ASSETS}
     SOURCES ${MODULE_SOURCES}

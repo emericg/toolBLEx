@@ -70,17 +70,9 @@ win32 {
 android {
     DEFINES += UTILS_NOTIFICATIONS_ENABLED UTILS_WIFI_ENABLED
 
-    versionAtLeast(QT_VERSION, 6.0) {
-        QT += core-private
-
-        SOURCES += $${PWD}/utils_os_android_qt6.cpp
-        HEADERS += $${PWD}/utils_os_android.h
-    } else {
-        QT += androidextras
-
-        SOURCES += $${PWD}/utils_os_android_qt5.cpp
-        HEADERS += $${PWD}/utils_os_android.h
-    }
+    QT += core-private
+    SOURCES += $${PWD}/utils_os_android.cpp
+    HEADERS += $${PWD}/utils_os_android.h
 }
 
 # iOS utils

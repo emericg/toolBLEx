@@ -315,7 +315,7 @@ function durationToString_ISO8601_full(duration_ms) {
  * unit: 0 is KB, 1 is KiB
  */
 function bytesToString(bytes, unit) {
-    var text = "";
+    var text = '0';
     unit = unit || 0;
 
     var base = (unit === 1) ? 1024 : 1000
@@ -342,7 +342,7 @@ function bytesToString(bytes, unit) {
  * unit: 0 is KB, 1 is KiB
  */
 function bytesToString_short(bytes, unit) {
-    var text = "";
+    var text = '0';
     unit = unit || 0;
 
     var base = (unit === 1) ? 1024 : 1000

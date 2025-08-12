@@ -66,7 +66,7 @@ T.Popup {
 
             ////
 
-            ActionMenuItem {
+            ActionMenuItem_button {
                 width: actionMenu.width
                 visible: actionMenu.titleTxt
                 text: actionMenu.titleTxt
@@ -75,7 +75,7 @@ T.Popup {
                 layoutDirection: actionMenu.layoutDirection
                 onClicked: actionMenu.close()
             }
-            ActionMenuSeparator {
+            ActionMenuItem_separator {
                 width: actionMenu.width
                 visible: actionMenu.titleTxt
                 opacity: 0.8
@@ -89,13 +89,13 @@ T.Popup {
                     role: "t"
                     DelegateChoice {
                         roleValue: "sep"
-                        ActionMenuSeparator {
+                        ActionMenuItem_separator {
                             width: actionMenu.width
                         }
                     }
                     DelegateChoice {
                         roleValue: "itm"
-                        ActionMenuItem {
+                        ActionMenuItem_button {
                             width: actionMenu.width
                             index: idx
                             text: txt

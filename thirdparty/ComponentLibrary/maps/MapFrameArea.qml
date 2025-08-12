@@ -18,7 +18,7 @@ T.Frame {
     rightPadding: 16
 
     // settings
-    property int radius: height * 0.28
+    property int radius: 12
 
     // colors
     property string borderColor: Theme.colorSeparator

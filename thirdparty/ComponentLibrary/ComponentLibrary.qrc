@@ -11,8 +11,9 @@
         <file alias="MobileMenuItem_vertical.qml">menus/MobileMenuItem_vertical.qml</file>
         <file alias="ActionMenu_bottom.qml">menus/ActionMenu_bottom.qml</file>
         <file alias="ActionMenu_floating.qml">menus/ActionMenu_floating.qml</file>
-        <file alias="ActionMenuItem.qml">menus/ActionMenuItem.qml</file>
-        <file alias="ActionMenuSeparator.qml">menus/ActionMenuSeparator.qml</file>
+        <file alias="ActionMenuItem_button.qml">menus/ActionMenuItem_button.qml</file>
+        <file alias="ActionMenuItem_separator.qml">menus/ActionMenuItem_separator.qml</file>
+        <file alias="ActionMenuItem_switch.qml">menus/ActionMenuItem_switch.qml</file>
         <file alias="DrawerThemed.qml">menus/DrawerThemed.qml</file>
         <file alias="DrawerItem.qml">menus/DrawerItem.qml</file>
         <file alias="DrawerButton.qml">menus/DrawerButton.qml</file>
@@ -138,6 +139,9 @@
         <file alias="CsdMac.qml">utils/CsdMac.qml</file>
         <file alias="CsdWindows.qml">utils/CsdWindows.qml</file>
         <file alias="CsdLinux.qml">utils/CsdLinux.qml</file>
+        <file alias="FpsMonitor.qml">utils/FpsMonitor.qml</file>
+        <file alias="MovablePoint.qml">utils/MovablePoint.qml</file>
+        <file alias="RectangleDebug.qml">utils/RectangleDebug.qml</file>
         <file alias="SwipeArea.qml">utils/SwipeArea.qml</file>
         <file alias="WindowGeometrySaver.qml">utils/WindowGeometrySaver.qml</file>
 

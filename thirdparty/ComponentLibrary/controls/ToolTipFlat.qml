@@ -82,12 +82,13 @@ T.Popup {
     ////////////////////////////////////////////////////////////////////////////
 
     background: Rectangle {
-        color: control.backgroundColor
+        color: "white"
         radius: 4
 
-        Rectangle { // arrow
+        Rectangle { // arrow bg
             width: 12; height: 12; rotation: 45;
-            color: control.backgroundColor
+            color: "white"
+            z: -1
 
             anchors.horizontalCenter: {
                 if (tooltipPosition === "left") return parent.right
@@ -105,6 +106,18 @@ T.Popup {
                 if (tooltipPosition === "left" || tooltipPosition === "right") return parent.verticalCenter
                 return parent.top
             }
+
+            Rectangle { // colored arrow
+                width: 12; height: 12; rotation: 0;
+                color: control.backgroundColor
+                anchors.centerIn: parent
+            }
+        }
+
+        Rectangle { // actual background
+            anchors.fill: parent
+            color: control.backgroundColor
+            radius: 4
         }
     }
 

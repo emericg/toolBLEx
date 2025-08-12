@@ -29,7 +29,7 @@ Item {
             width: 24
             height: 24
             color: "white"
-            source: "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
+            source: "qrc:/IconLibrary/material-symbols/autorenew.svg"
 
             NumberAnimation on rotation {
                 from: 0

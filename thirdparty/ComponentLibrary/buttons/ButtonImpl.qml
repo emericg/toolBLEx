@@ -51,7 +51,7 @@ T.Button {
     ////////////////
 
     background: Item {
-        implicitWidth: text ? 80 : Theme.componentHeight
+        implicitWidth: control.text ? 80 : Theme.componentHeight
         implicitHeight: Theme.componentHeight
 
         Rectangle {

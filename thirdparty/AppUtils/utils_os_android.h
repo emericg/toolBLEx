@@ -193,6 +193,8 @@ public:
      */
     static QString get_external_storage();
 
+    static QString getExternalFilesDirPath();
+
     /* ********************************************************************** */
 
     /*!
@@ -261,6 +263,12 @@ public:
     static QString getWifiSSID();
 
     /* ********************************************************************** */
+
+    /*!
+     * \brief Open the Android play store intent for the given package name.
+     * \param packageName: the application package, for instance 'com.application.identifier'.
+     */
+    static void openStorePage(const QString &packageName);
 
     /*!
      * \brief Open the Android application info intent for the given package name.

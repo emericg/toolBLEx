@@ -132,13 +132,13 @@ T.Popup {
                     role: "t"
                     DelegateChoice {
                         roleValue: "sep"
-                        ActionMenuSeparator {
+                        ActionMenuItem_separator {
                             width: actionMenu.width
                         }
                     }
                     DelegateChoice {
                         roleValue: "itm"
-                        ActionMenuItem {
+                        ActionMenuItem_button {
                             width: actionMenu.width
                             height: Theme.componentHeightL
                             layoutDirection: actionMenu.layoutDirection

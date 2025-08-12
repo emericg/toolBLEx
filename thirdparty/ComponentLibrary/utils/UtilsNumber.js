@@ -141,6 +141,21 @@ function tempCelsiusToFahrenheit(temp_c) {
 }
 
 /*!
+ * Celsius to Fahrenheit conversion, if needed
+ */
+function tempCelsiusOrFahrenheit(temp_c, unit) {
+    if (unit === 0) return temp_c
+    return (temp_c * 1.8 + 32);
+}
+/*!
+ * Fahrenheit to Celsius conversion, if needed
+ */
+function tempFahrenheitOrCelsius(temp_f, unit) {
+    if (unit !== 0) return temp_f
+    return (temp_f - 32) / 1.8;
+}
+
+/*!
  * Kilogramme to Pound conversion
  */
 function weightKiloToPound(weight_kg) {

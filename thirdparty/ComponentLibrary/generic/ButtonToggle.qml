@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Effects
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import ComponentLibrary
@@ -46,7 +45,7 @@ T.Button {
     ////////////////
 
     background: Item {
-        implicitWidth: text ? 80 : Theme.componentHeight
+        implicitWidth: control.text ? 80 : Theme.componentHeight
         implicitHeight: Theme.componentHeight
 
         Rectangle {

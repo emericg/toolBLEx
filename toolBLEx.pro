@@ -57,14 +57,17 @@ HEADERS  += src/SettingsManager.h \
             src/BleServiceInfo.h \
             src/BleCharacteristicInfo.h
 
-INCLUDEPATH += src/ src/thirdparty/
+INCLUDEPATH += src/ thirdparty/
 
 RESOURCES   += assets/assets.qrc \
                assets/vendors.qrc \
                i18n/i18n.qrc \
-               qml/qml.qrc \
-               thirdparty/IconLibrary/IconLibrary.qrc \
-               thirdparty/ComponentLibrary/ComponentLibrary.qrc
+               qml/qml.qrc
+
+RESOURCES   += thirdparty/IconLibrary/IconLibrary_material.qrc \
+               thirdparty/IconLibrary/IconLibrary_bootstrap.qrc
+
+RESOURCES   += thirdparty/ComponentLibrary/ComponentLibrary.qrc
 
 TRANSLATIONS = i18n/toolBLEx_en.ts
 

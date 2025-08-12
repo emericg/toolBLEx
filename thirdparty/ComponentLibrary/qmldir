@@ -11,7 +11,9 @@ MobileMenuItem_horizontal 1.0 MobileMenuItem_horizontal.qml
 MobileMenuItem_vertical 1.0 MobileMenuItem_vertical.qml
 ActionMenu_bottom 1.0 ActionMenu_bottom.qml
 ActionMenu_floating 1.0 ActionMenu_floating.qml
-ActionMenuItem 1.0 ActionMenuItem.qml
+ActionMenuItem_button 1.0 ActionMenuItem_button.qml
+ActionMenuItem_separator 1.0 ActionMenuItem_separator.qml
+ActionMenuItem_switch 1.0 ActionMenuItem_switch.qml
 ActionMenuSeparator 1.0 ActionMenuSeparator.qml
 DrawerThemed 1.0 DrawerThemed.qml
 DrawerItem 1.0 DrawerItem.qml

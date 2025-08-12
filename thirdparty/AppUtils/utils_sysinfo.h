@@ -68,19 +68,19 @@ public:
 
     void printInfos();
 
-    Q_INVOKABLE QString getCpuArch() const { return m_cpu_arch; };
+    Q_INVOKABLE QString getCpuArch() const { return m_cpu_arch; }
 
-    Q_INVOKABLE int getCpuCoreCountPhysical() const { return m_cpu_core_physical; };
+    Q_INVOKABLE int getCpuCoreCountPhysical() const { return m_cpu_core_physical; }
 
-    Q_INVOKABLE int getCpuCoreCountLogical() const { return m_cpu_core_logical; };
+    Q_INVOKABLE int getCpuCoreCountLogical() const { return m_cpu_core_logical; }
 
-    Q_INVOKABLE uint64_t getRamTotal() const  { return m_ram_total; };
+    Q_INVOKABLE uint64_t getRamTotal() const  { return m_ram_total; }
 
-    Q_INVOKABLE QString getOsName() const { return m_os_name; };
+    Q_INVOKABLE QString getOsName() const { return m_os_name; }
 
-    Q_INVOKABLE QString getOsVersion() const { return m_os_version; };
+    Q_INVOKABLE QString getOsVersion() const { return m_os_version; }
 
-    Q_INVOKABLE QString getOsDisplayServer() const { return m_os_displayserver; };
+    Q_INVOKABLE QString getOsDisplayServer() const { return m_os_displayserver; }
 };
 
 /* ************************************************************************** */

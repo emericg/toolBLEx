@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="640" viewBox="0 0 640 640">
+  <!-- Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) -->
+  <path d="M 608,64 H 160 a 32,32 0 0 0 -32,32 v 96 h 160 v -64 h 192 v 320 h 128 a 32,32 0 0 0 32,-32 V 96 A 32,32 0 0 0 608,64 Z M 232,167 a 9,9 0 0 1 -9,9 h -30 a 9,9 0 0 1 -9,-9 v -30 a 9,9 0 0 1 9,-9 h 30 a 9,9 0 0 1 9,9 z m 352,208 a 9,9 0 0 1 -9,9 h -30 a 9,9 0 0 1 -9,-9 v -30 a 9,9 0 0 1 9,-9 h 30 a 9,9 0 0 1 9,9 z m 0,-104 a 9,9 0 0 1 -9,9 h -30 a 9,9 0 0 1 -9,-9 v -30 a 9,9 0 0 1 9,-9 h 30 a 9,9 0 0 1 9,9 z m 0,-104 a 9,9 0 0 1 -9,9 h -30 a 9,9 0 0 1 -9,-9 v -30 a 9,9 0 0 1 9,-9 h 30 a 9,9 0 0 1 9,9 z M 416,224 H 32 A 32,32 0 0 0 0,256 v 288 a 32,32 0 0 0 32,32 h 384 a 32,32 0 0 0 32,-32 V 256 A 32,32 0 0 0 416,224 Z M 96,288 A 32,32 0 1 1 64,320 32,32 0 0 1 96,288 Z M 384,512 H 64 v -32 l 64,-64 32,32 128,-128 96,96 z" id="path1" />
+</svg>

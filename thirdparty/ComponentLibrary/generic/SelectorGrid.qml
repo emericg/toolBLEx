@@ -48,8 +48,9 @@ Item {
                 height: selectorGrid.btnHeight
 
                 highlighted: (selectorGrid.currentSelection === idx)
-                index: idx ?? 0
-                text: txt ?? ""
+                source: src
+                text: txt
+                index: idx
                 onClicked: selectorGrid.menuSelected(idx)
             }
         }

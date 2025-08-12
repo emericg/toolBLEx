@@ -3,9 +3,6 @@ project(AppUtils LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_AUTOMOC ON)
 
-# Use that find_package() call in the root project:
-find_package(Qt6 6.6 REQUIRED COMPONENTS Core Gui Qml Quick)
-
 ################################################################################
 
 # Optional stuff (for macOS)
@@ -18,6 +15,8 @@ find_package(Qt6 6.6 REQUIRED COMPONENTS Core Gui Qml Quick)
 ################################################################################
 
 # Generic dependencies
+find_package(Qt6 6.6 REQUIRED COMPONENTS Core Gui Qml Quick)
+
 set(CORE_LIBRARIES
     Qt::Core
     Qt::Gui

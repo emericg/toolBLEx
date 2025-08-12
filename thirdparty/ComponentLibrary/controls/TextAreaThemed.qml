@@ -19,16 +19,18 @@ T.TextArea {
     color: colorText
     opacity: control.enabled ? 1 : 0.66
 
-    text: ""
     font.pixelSize: Theme.componentFontSize
     verticalAlignment: Text.AlignTop
 
+    text: ""
     placeholderText: ""
     placeholderTextColor: colorPlaceholderText
 
-    selectByMouse: false
+    selectByMouse: isDesktop
     selectionColor: colorSelection
     selectedTextColor: colorSelectedText
+
+    EnterKey.type: Qt.EnterKeyDone
 
     onEditingFinished: focus = false
     Keys.onBackPressed: focus = false

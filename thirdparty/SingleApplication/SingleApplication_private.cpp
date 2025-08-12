@@ -29,10 +29,10 @@
 // version without notice, or may even be removed.
 //
 
-#include <cstdlib>
 #include <cstddef>
 
 #include <QtCore/QDir>
+#include <QtCore/QMap>
 #include <QtCore/QThread>
 #include <QtCore/QByteArray>
 #include <QtCore/QDataStream>

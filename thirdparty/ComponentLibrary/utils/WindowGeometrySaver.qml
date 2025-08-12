@@ -36,23 +36,30 @@ Item {
         if (Qt.platform.os === "android" || Qt.platform.os === "ios") return;
 
         // Startup verifications to ensure that app fits inside current screen
+        if ((windowSettings.x <= 0 && windowSettings.y <= 0) &&
+            (windowSettings.width <= 0 && windowSettings.height <= 0)) {
+            windowSettings.x = 64;
+            windowSettings.y = 64;
+        }
         if (windowSettings.x < 0 || windowSettings.x >= Screen.desktopAvailableWidth)
-            windowSettings.x = 100;
+            windowSettings.x = 64;
         if (windowSettings.y < 0 || windowSettings.y >= Screen.desktopAvailableHeight)
-            windowSettings.y = 100;
+            windowSettings.y = 64;
         if (windowSettings.width > Screen.desktopAvailableWidth) {
-            windowSettings.x = 100;
+            windowSettings.x = 64;
             windowSettings.width = Screen.desktopAvailableWidth - windowSettings.x;
         }
         if (windowSettings.height > Screen.desktopAvailableHeight) {
-            windowSettings.y = 100;
+            windowSettings.y = 64;
             windowSettings.height = Screen.desktopAvailableHeight - windowSettings.y;
         }
 
         // Now apply saved settings
-        if (windowSettings.width && windowSettings.height) {
+        if (windowSettings.x && windowSettings.y) {
             windowInstance.x = windowSettings.x;
             windowInstance.y = windowSettings.y;
+        }
+        if (windowSettings.width && windowSettings.height) {
             windowInstance.width = windowSettings.width;
             windowInstance.height = windowSettings.height;
             windowInstance.visibility = windowSettings.visibility;
@@ -76,7 +83,7 @@ Item {
     Timer {
         id: saveSettingsTimer
         interval: 2000 // 2s is probably good enough...
-        repeat: false // started by application geometry changes
+        repeat: false // started when ApplicationWindow geometry changes
         onTriggered: saveSettings()
     }
 
