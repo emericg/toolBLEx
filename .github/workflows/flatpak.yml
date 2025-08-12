@@ -13,9 +13,9 @@ jobs:
   ## GNU/Linux flatpak build ###################################################
   build-flatpak:
     name: "Flatpak build"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     container:
-      image: bilelmoussaoui/flatpak-github-actions:freedesktop-24.08
+      image: bilelmoussaoui/flatpak-github-actions:freedesktop-25.08
       options: --privileged
     steps:
     - uses: actions/checkout@v4
