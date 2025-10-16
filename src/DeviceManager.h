@@ -49,9 +49,13 @@ class DeviceManager: public QObject
 {
     Q_OBJECT
 
+    ////////
+
     Q_PROPERTY(bool hasAdapters READ areAdaptersAvailable NOTIFY adaptersListUpdated)
     Q_PROPERTY(QVariant adaptersList READ getAdapters NOTIFY adaptersListUpdated)
     Q_PROPERTY(int adaptersCount READ getAdaptersCount NOTIFY adaptersListUpdated)
+
+    ////////
 
     Q_PROPERTY(bool hasDevices READ areDevicesAvailable NOTIFY devicesListUpdated)
     Q_PROPERTY(int deviceCount READ getDeviceCount NOTIFY devicesListUpdated)
@@ -101,6 +105,8 @@ class DeviceManager: public QObject
 
     bool m_daemonMode = false;  //!< did we start without UI?
 
+    ////
+
     bool m_bleAdapter = false;      //!< do we have a BLE adapter?
     bool m_bleEnabled = false;      //!< is the BLE adapter enabled?
     bool m_blePermissions = false;  //!< do we have necessary BLE permissions? (brings together all other permsissions)
@@ -115,6 +121,8 @@ class DeviceManager: public QObject
     QBluetoothLocalDevice::HostMode m_ble_hostmode = QBluetoothLocalDevice::HostPoweredOff;
 
     QList <QObject *> m_bluetoothAdapters;
+
+    ////
 
     QList <QString> m_devices_blacklist;
 
@@ -222,14 +230,15 @@ private slots:
     void bluetoothPermissionsChanged();
 
     // QBluetoothDeviceDiscoveryAgent related
-    void addBleDevice(const QBluetoothDeviceInfo &info);
-    void updateBleDevice(const QBluetoothDeviceInfo &info, QBluetoothDeviceInfo::Fields updatedFields);
-    void updateBleDevice_simple(const QBluetoothDeviceInfo &info);
-    void updateBleDevice_discovery(const QBluetoothDeviceInfo &info);
     void deviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error);
     void deviceDiscoveryErrorIOS();
     void deviceDiscoveryFinished();
     void deviceDiscoveryStopped();
+
+    void addBleDevice(const QBluetoothDeviceInfo &info);
+
+    void bleDevice_discovered(const QBluetoothDeviceInfo &info);
+    void bleDevice_updated(const QBluetoothDeviceInfo &info, QBluetoothDeviceInfo::Fields updatedFields);
 
 public:
     DeviceManager(bool daemon = false);
@@ -278,9 +287,9 @@ public:
     Q_INVOKABLE void clearDeviceStructureCache();
     Q_INVOKABLE int countDeviceStructureCached();
 
-    void blacklistDevice(const QString &addr);
-    void whitelistDevice(const QString &addr);
-    bool isDeviceBlacklisted(const QString &addr);
+    void blacklistBleDevice(const QString &addr);
+    void whitelistBleDevice(const QString &addr);
+    bool isBleDeviceBlacklisted(const QString &addr);
 
     // Devices list management
     Q_INVOKABLE bool areDevicesAvailable() const { return m_devices_model->hasDevices(); }

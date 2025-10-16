@@ -40,8 +40,8 @@
 
 #include <QSqlDatabase>
 #include <QSqlDriver>
-#include <QSqlError>
 #include <QSqlQuery>
+#include <QSqlError>
 
 #if defined(Q_OS_MACOS) || defined(Q_OS_IOS) || defined(Q_OS_ANDROID)
 #if QT_CONFIG(permissions)
@@ -56,7 +56,7 @@ DeviceManager::DeviceManager(bool daemon)
 {
     m_daemonMode = daemon;
 
-    // Data model init
+    // Data model init (unified)
     m_device_header = new DeviceHeader(this);
     m_devices_model = new DeviceModel(this);
     m_devices_filter = new DeviceFilter(this);
@@ -245,7 +245,7 @@ bool DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
         qDeleteAll(m_bluetoothAdapters);
         m_bluetoothAdapters.clear();
 
-        QList <QBluetoothHostInfo> adaptersList = QBluetoothLocalDevice::allDevices();
+        const QList <QBluetoothHostInfo> adaptersList = QBluetoothLocalDevice::allDevices();
         if (adaptersList.size() > 0)
         {
             for (const QBluetoothHostInfo &hi: adaptersList)
@@ -600,11 +600,9 @@ void DeviceManager::checkBluetoothIOS()
     if (m_discoveryAgent)
     {
         disconnect(m_discoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
-                   this, &DeviceManager::addBleDevice);
-        disconnect(m_discoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
-                   this, &DeviceManager::updateBleDevice_simple);
+                   this, &DeviceManager::bleDevice_discovered);
         disconnect(m_discoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceUpdated,
-                   this, &DeviceManager::updateBleDevice);
+                   this, &DeviceManager::bleDevice_updated);
 
         connect(m_discoveryAgent, &QBluetoothDeviceDiscoveryAgent::finished,
                 this, &DeviceManager::deviceDiscoveryFinished, Qt::UniqueConnection);
@@ -809,8 +807,6 @@ void DeviceManager::scanDevices_start()
 
         if (m_discoveryAgent && !m_discoveryAgent->isActive())
         {
-            disconnect(m_discoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
-                       this, &DeviceManager::addBleDevice);
             disconnect(m_discoveryAgent, &QBluetoothDeviceDiscoveryAgent::finished,
                        this, &DeviceManager::deviceDiscoveryFinished);
 
@@ -820,9 +816,9 @@ void DeviceManager::scanDevices_start()
                     this, &DeviceManager::deviceDiscoveryStopped, Qt::UniqueConnection);
 
             connect(m_discoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
-                    this, &DeviceManager::updateBleDevice_discovery, Qt::UniqueConnection);
+                    this, &DeviceManager::bleDevice_discovered, Qt::UniqueConnection);
             connect(m_discoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceUpdated,
-                    this, &DeviceManager::updateBleDevice, Qt::UniqueConnection);
+                    this, &DeviceManager::bleDevice_updated, Qt::UniqueConnection);
 
             int scanningDuration = 0;
             int scanningMethod = QBluetoothDeviceDiscoveryAgent::ClassicMethod | QBluetoothDeviceDiscoveryAgent::LowEnergyMethod;
@@ -1104,9 +1100,9 @@ void DeviceManager::clearResults()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void DeviceManager::blacklistDevice(const QString &addr)
+void DeviceManager::blacklistBleDevice(const QString &addr)
 {
-    qDebug() << "DeviceManager::blacklistDevice(" << addr << ")";
+    qDebug() << "DeviceManager::blacklistBleDevice(" << addr << ")";
 
     if (m_dbInternal || m_dbExternal)
     {
@@ -1134,9 +1130,9 @@ void DeviceManager::blacklistDevice(const QString &addr)
     }
 }
 
-void DeviceManager::whitelistDevice(const QString &addr)
+void DeviceManager::whitelistBleDevice(const QString &addr)
 {
-    qDebug() << "DeviceManager::whitelistDevice(" << addr << ")";
+    qDebug() << "DeviceManager::whitelistBleDevice(" << addr << ")";
 
     if (m_dbInternal || m_dbExternal)
     {
@@ -1152,7 +1148,7 @@ void DeviceManager::whitelistDevice(const QString &addr)
     }
 }
 
-bool DeviceManager::isDeviceBlacklisted(const QString &addr)
+bool DeviceManager::isBleDeviceBlacklisted(const QString &addr)
 {
     if (m_dbInternal || m_dbExternal)
     {
@@ -1354,8 +1350,8 @@ void DeviceManager::clearDeviceStructureCache()
     if (cacheDirPath.isEmpty()) return;
 
     QDir cacheFolder = cacheDirPath;
-    QStringList filters("*.cache");
-    QStringList files = cacheFolder.entryList(filters, QDir::Files);
+    const QStringList filters("*.cache");
+    const QStringList files = cacheFolder.entryList(filters, QDir::Files);
     for (const auto &file: files)
     {
         if (!file.isEmpty())

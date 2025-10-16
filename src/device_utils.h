@@ -70,7 +70,7 @@ public:
         DEVICE_THERMOMETER,
         DEVICE_ENVIRONMENTAL,
 
-        DEVICE_LIGHT                 = 8,
+        DEVICE_LIGHT                = 8,
         DEVICE_BEACON,
         DEVICE_REMOTE,
         DEVICE_PBP,
@@ -130,38 +130,42 @@ public:
 
     enum DeviceStatus {
         DEVICE_OFFLINE              =  0, //!< Not connected
+        DEVICE_AVAILABLE            =  1, //!< Available for connection
 
-        DEVICE_QUEUED               =  1, //!< In the update queue, not started
+        DEVICE_DISCONNECTING        =  8, //!< Trying to disconnect the device
+        DEVICE_CONNECTING           =  9, //!< Trying to connect the device
+        DEVICE_CONNECTED            = 10, //!< Connected
 
-        DEVICE_DISCONNECTING        =  2, //!< Trying to connect to the device
-        DEVICE_CONNECTING           =  3, //!< Trying to connect to the device
-        DEVICE_CONNECTED            =  4, //!< Connected
-
-        DEVICE_WORKING              =  8, //!< Connected, doing something
-        DEVICE_UPDATING             =  9, //!< Connected, reading latest data
-        DEVICE_UPDATING_REALTIME    = 10, //!< Connected, reading realtime data
-        DEVICE_UPDATING_HISTORY     = 11, //!< Connected, reading data history
+        DEVICE_WORKING              = 12, //!< Connected, doing something
+        DEVICE_UPDATING             = 13, //!< Connected, reading latest data
+        DEVICE_UPDATING_REALTIME    = 14, //!< Connected, reading realtime data
+        DEVICE_UPDATING_HISTORY     = 15, //!< Connected, reading data history
     };
     Q_ENUM(DeviceStatus)
 
     enum DeviceActions {
         ACTION_IDLE                 = 0,  //!< No action, stay connected
 
-        ACTION_UPDATE,                    //!< Read sensor latest data
-        ACTION_UPDATE_REALTIME,           //!< Stay connected and read sensor data
-        ACTION_UPDATE_HISTORY,            //!< Sync sensor history
+        // BLE "standard" interactions
 
-        ACTION_LED_BLINK = 8,
-        ACTION_CLEAR_HISTORY,
-        ACTION_WATERING,
-        ACTION_CALIBRATE,
+        ACTION_CONNECT,
+        ACTION_RECONNECT,
+        ACTION_DISCONNECT,
+        ACTION_DISCONNECT_FORNOW,           //!< Disconnect for now, won't prevent reconnection
 
-        ACTION_SCAN = 64,                 //!< Scan for services and their characteristics
-        ACTION_SCAN_WITH_VALUES,          //!< Scan for services and their characteristics (and associated values)
-        ACTION_SCAN_WITHOUT_VALUES,       //!< Scan for services and their characteristics (without associated values)
+        ACTION_SCAN,                        //!< Scan for services and their characteristics
+        ACTION_SCAN_WITH_VALUES,            //!< Scan for services and their characteristics (and associated values)
+        ACTION_SCAN_WITHOUT_VALUES,         //!< Scan for services and their characteristics (without associated values)
 
-        ACTION_REBOOT = 256,
+        ACTION_REBOOT,
         ACTION_SHUTDOWN,
+        ACTION_FACTORYRESET,
+
+        // Sensor specific actions
+
+        ACTION_UPDATE = 16,                 //!< Read sensor latest data
+        ACTION_UPDATE_REALTIME,             //!< Stay connected and read sensor data
+        ACTION_UPDATE_HISTORY,              //!< Stay connected and read sensor history
     };
     Q_ENUM(DeviceActions)
 };
@@ -278,6 +282,7 @@ public:
         temperatureMax = dt.temperatureMax;
         luminosityLuxMax = dt.luminosityLuxMax;
     }
+
     ChartDataHistory(const QDateTime &dt,
                      float sm, float sc, float st,
                      float t, float h, float l,

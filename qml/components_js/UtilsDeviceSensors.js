@@ -1,5 +1,5 @@
 // UtilsDeviceSensors.js
-// Version 5
+// Version 6
 
 .pragma library
 
@@ -13,8 +13,8 @@ function getDeviceStatusText(deviceStatus) {
 
     if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_OFFLINE) {
         txt = qsTr("Offline")
-    } else if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_QUEUED) {
-        txt = qsTr("Queued")
+    } else if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_AVAILABLE) {
+        txt = qsTr("Available")
     } else if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_DISCONNECTING) {
         txt = qsTr("Disconnecting...")
     } else if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_CONNECTING) {
@@ -39,8 +39,9 @@ function getDeviceStatusColor(deviceStatus) {
 
     if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_OFFLINE) {
         clr = ThemeEngine.Theme.colorRed
-    } else if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_QUEUED ||
-               deviceStatus === DeviceUtils.DeviceUtils.DEVICE_DISCONNECTING ||
+    } else if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_AVAILABLE) {
+        clr = ThemeEngine.Theme.colorGreen
+    } else if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_DISCONNECTING ||
                deviceStatus === DeviceUtils.DeviceUtils.DEVICE_CONNECTING) {
         clr = ThemeEngine.Theme.colorYellow
     } else if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_CONNECTED) {
@@ -57,12 +58,11 @@ function getDeviceStatusColor(deviceStatus) {
 }
 
 function getDeviceStatusIcon(deviceStatus) {
-    var src = "qrc:/IconLibrary/material-icons/outlined/bluetooth.svg"
+    var src = "qrc:/IconLibrary/material-symbols/bluetooth.svg"
 
     if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_OFFLINE) {
-        src = "qrc:/IconLibrary/material-icons/outlined/bluetooth_disabled.svg"
-    } else if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_QUEUED ||
-               deviceStatus === DeviceUtils.DeviceUtils.DEVICE_DISCONNECTING ||
+        src = "qrc:/IconLibrary/material-symbols/bluetooth_disabled.svg"
+    } else if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_DISCONNECTING ||
                deviceStatus === DeviceUtils.DeviceUtils.DEVICE_CONNECTING) {
         src = "qrc:/IconLibrary/material-icons/duotone/settings_bluetooth.svg"
     } else if (deviceStatus === DeviceUtils.DeviceUtils.DEVICE_CONNECTED) {

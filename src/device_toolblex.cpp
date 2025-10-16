@@ -71,6 +71,8 @@ DeviceToolBLEx::DeviceToolBLEx(const QBluetoothDeviceInfo &d, QObject *parent):
     m_hasServiceCache = checkServiceCache();
     m_firstSeen = QDateTime::currentDateTime();
     m_bluetoothCoreConfiguration = d.coreConfigurations();
+
+    getSqlDeviceInfos();
 }
 
 DeviceToolBLEx::~DeviceToolBLEx()
@@ -94,6 +96,8 @@ DeviceToolBLEx::~DeviceToolBLEx()
     qDeleteAll(m_mfd_uuid);
     m_mfd_uuid.clear();
 }
+
+/* ************************************************************************** */
 
 bool DeviceToolBLEx::getSqlDeviceInfos()
 {
@@ -224,6 +228,8 @@ QString DeviceToolBLEx::getAddr_export() const
 
     return prettyaddr;
 }
+
+/* ************************************************************************** */
 
 void DeviceToolBLEx::setDeviceClass(const int major, const int minor, const int service)
 {
@@ -406,8 +412,8 @@ void DeviceToolBLEx::blacklist(bool b)
 {
     if (m_isBlacklisted != b)
     {
-        if (b) static_cast<DeviceManager *>(parent())->blacklistDevice(m_deviceAddress);
-        else static_cast<DeviceManager *>(parent())->whitelistDevice(m_deviceAddress);
+        if (b) static_cast<DeviceManager *>(parent())->blacklistBleDevice(m_deviceAddress);
+        else static_cast<DeviceManager *>(parent())->whitelistBleDevice(m_deviceAddress);
 
         setBlacklisted(b);
     }
@@ -432,7 +438,7 @@ void DeviceToolBLEx::actionScanWithValues()
     qDebug() << "DeviceToolBLEx::actionScanWithValues()" << getAddress() << getName();
     logEvent("User asked for connection (scan with values)", LogEvent::USER);
 
-    if (!isBusy())
+    if (!isWorking())
     {
         m_ble_action = DeviceUtils::ACTION_SCAN_WITH_VALUES;
         actionStarted();
@@ -445,7 +451,7 @@ void DeviceToolBLEx::actionScanWithoutValues()
     qDebug() << "DeviceToolBLEx::actionScanWithoutValues()" << getAddress() << getName();
     logEvent("User asked for connection (scan without values)", LogEvent::USER);
 
-    if (!isBusy())
+    if (!isWorking())
     {
         m_ble_action = DeviceUtils::ACTION_SCAN_WITHOUT_VALUES;
         actionStarted();

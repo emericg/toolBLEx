@@ -24,38 +24,24 @@
 #include "device_toolblex.h"
 
 #include <QBluetoothDeviceInfo>
+#include <QList>
 #include <QDebug>
 
 /* ************************************************************************** */
 
-void DeviceManager::updateBleDevice_discovery(const QBluetoothDeviceInfo &info)
+void DeviceManager::bleDevice_discovered(const QBluetoothDeviceInfo &info)
 {
-    //qDebug() << "updateBleDevice_discovery() " << info.name() << info.address(); // << info.deviceUuid(); // << " updatedFields: " << updatedFields;
-
-    addBleDevice(info);
+    //qDebug() << "bleDevice_discovered() " << info.name() << info.address(); // << info.deviceUuid();
+    bleDevice_updated(info, QBluetoothDeviceInfo::Field::None);
 }
 
-void DeviceManager::updateBleDevice_simple(const QBluetoothDeviceInfo &info)
-{
-    updateBleDevice(info, QBluetoothDeviceInfo::Field::None);
-}
+/* ************************************************************************** */
 
-void DeviceManager::updateBleDevice(const QBluetoothDeviceInfo &info,
-                                    QBluetoothDeviceInfo::Fields updatedFields)
+void DeviceManager::bleDevice_updated(const QBluetoothDeviceInfo &info, QBluetoothDeviceInfo::Fields updatedFields)
 {
-    //qDebug() << "updateBleDevice() " << info.name() << info.address(); // << info.deviceUuid(); // << " updatedFields: " << updatedFields;
+    //qDebug() << "bleDevice_updated() " << info.name() << info.address(); // << info.deviceUuid() // << " updatedFields: " << updatedFields
 
     Q_UNUSED(updatedFields) // We don't use QBluetoothDeviceInfo::Fields, it's unreliable
-    if (updatedFields > 1)
-    {
-        //QBluetoothDeviceInfo::Field::None	0x0000	None of the values changed.
-        //QBluetoothDeviceInfo::Field::RSSI	0x0001	The rssi() value of the device changed.
-        //QBluetoothDeviceInfo::Field::ManufacturerData	0x0002	The manufacturerData() field changed
-        //QBluetoothDeviceInfo::Field::ServiceData	0x0004	The serviceData() field changed
-        //QBluetoothDeviceInfo::Field::All	0x7fff	Matches every possible field.
-
-        //qDebug() << "updateBleDevice() " << info.name() << info.address() << " updatedFields: " << updatedFields;
-    }
 
     //qDebug() << "updateBleDevice() serviceUuids : " << info.serviceUuids();
 
@@ -92,8 +78,7 @@ void DeviceManager::updateBleDevice(const QBluetoothDeviceInfo &info,
                 //         << "bytes:" << info.manufacturerData(id).toHex();
 
                 hasmfd |= dd->parseAdvertisementToolBLEx(DeviceUtils::BLE_ADV_MANUFACTURERDATA,
-                                                         id, QBluetoothUuid(),
-                                                         info.manufacturerData(id));
+                                                         id, QBluetoothUuid(), info.manufacturerData(id));
             }
 
             const QList <QBluetoothUuid> &serviceIds = info.serviceIds();
@@ -105,8 +90,7 @@ void DeviceManager::updateBleDevice(const QBluetoothDeviceInfo &info,
                 //         << "bytes:" << info.serviceData(id).toHex();
 
                 hassvd |= dd->parseAdvertisementToolBLEx(DeviceUtils::BLE_ADV_SERVICEDATA,
-                                                         id.toUInt16(), id,
-                                                         info.serviceData(id));
+                                                         id.toUInt16(), id, info.serviceData(id));
             }
 
             dd->addAdvertisementEntry(info.rssi(), hasmfd, hassvd);
@@ -115,9 +99,11 @@ void DeviceManager::updateBleDevice(const QBluetoothDeviceInfo &info,
         }
     }
 
-    // Dynamic scanning ////////////////////////////////////////////////////////
+    /// Dynamic scanning ///////////////////////////////////////////////////////
+
+    if (m_scanning)
     {
-        //qDebug() << "addBleDevice() FROM DYNAMIC SCANNING";
+        //qDebug() << "addBleDevice(" << info.name() << ") FROM DYNAMIC SCANNING";
         addBleDevice(info);
         return;
     }

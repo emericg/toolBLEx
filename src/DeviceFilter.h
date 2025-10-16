@@ -26,6 +26,7 @@
 #include "device.h"
 
 #include <QObject>
+#include <QByteArray>
 #include <QMetaType>
 #include <QAbstractListModel>
 #include <QAbstractTableModel>
@@ -64,7 +65,7 @@ public:
 
 /* ************************************************************************** */
 
-// Also works as a QAbstractListModel
+// Can works as a QAbstractListModel or a QAbstractTableModel
 class DeviceModel : public QAbstractTableModel
 {
     Q_OBJECT

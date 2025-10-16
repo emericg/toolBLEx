@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 
 #if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
     // Qt 6.6+ mouse wheel hack
-    qputenv("QT_QUICK_FLICKABLE_WHEEL_DECELERATION", "2500");
+    qputenv("QT_QUICK_FLICKABLE_WHEEL_DECELERATION", "8000");
 #endif
 
     // GUI application /////////////////////////////////////////////////////////
@@ -79,11 +79,11 @@ int main(int argc, char *argv[])
     QIcon appIcon(":/assets/gfx/logos/icon.svg");
     app.setWindowIcon(appIcon);
 
-    // Preload components
+    // Init app components
     VendorsDatabase::getInstance();
     DatabaseManager::getInstance();
 
-    // Init components
+    // Init app components
     SettingsManager *sm = SettingsManager::getInstance();
     MenubarManager *mb = MenubarManager::getInstance();
     DeviceManager *dm = new DeviceManager;
@@ -115,12 +115,9 @@ int main(int argc, char *argv[])
     DeviceUtils::registerQML();
 
     // Translate the application
-    utilsLanguage->setAppName("toolBLEx");
-    utilsLanguage->loadLanguage("English");
+    utilsLanguage->loadLanguage(sm->getAppLanguage());
 
     // Start the application
-
-    // Then we start the UI
     QQmlApplicationEngine engine;
     QQmlContext *engine_context = engine.rootContext();
 
@@ -149,22 +146,21 @@ int main(int argc, char *argv[])
 
     // QQuickWindow must be valid at this point
     QQuickWindow *window = qobject_cast<QQuickWindow *>(engine.rootObjects().value(0));
-
-    utilsApp->setQuickWindow(window); // to get additional infos
+    utilsApp->setQuickWindow(window);
 
     // React to secondary instances
     QObject::connect(&app, &SingleApplication::instanceStarted, window, &QQuickWindow::show);
     QObject::connect(&app, &SingleApplication::instanceStarted, window, &QQuickWindow::raise);
 
-#if defined(Q_OS_MACOS)
     // Menu bar
     mb->setupMenubar(window, dm);
 
-    // Dock
+#if defined(Q_OS_MACOS)
+    // macOS dock
     MacOSDockHandler *dockIconHandler = MacOSDockHandler::getInstance();
     dockIconHandler->setupDock(window);
     engine_context->setContextProperty("utilsDock", dockIconHandler);
-#endif // Q_OS_MACOS
+#endif
 
     return app.exec();
 }

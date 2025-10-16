@@ -30,6 +30,7 @@ Rectangle {
         text: {
             if (!selectedDevice) return ""
             if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE) return qsTr("scan device")
+            if (selectedDevice.status === DeviceUtils.DEVICE_AVAILABLE) return qsTr("scan device")
             if (selectedDevice.status === DeviceUtils.DEVICE_DISCONNECTING) return qsTr("disconnecting...")
             if (selectedDevice.status === DeviceUtils.DEVICE_CONNECTING) return qsTr("connecting...")
             if (selectedDevice.status === DeviceUtils.DEVICE_WORKING) return qsTr("scanning...")
@@ -37,16 +38,14 @@ Rectangle {
         }
 
         source: {
-            if (!selectedDevice || selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
-                return "qrc:/IconLibrary/material-icons/outlined/bluetooth.svg"
-
+            if (!selectedDevice) return "qrc:/IconLibrary/material-symbols/bluetooth_disabled.svg"
             return UtilsDeviceSensors.getDeviceStatusIcon(selectedDevice.status)
         }
 
         ////////////////
 
         onClicked: {
-            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE) {
+            if (selectedDevice.status <= DeviceUtils.DEVICE_AVAILABLE) {
                 selectedDevice.actionScanWithValues()
             }
         }
@@ -141,7 +140,7 @@ Rectangle {
                 width: control.width - control.height
                 height: control.height
 
-                visible: (selectedDevice && selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
+                visible: (selectedDevice && selectedDevice.status <= DeviceUtils.DEVICE_AVAILABLE)
                 layoutAlignment: Qt.AlignLeft
 
                 color: control.color
@@ -150,7 +149,7 @@ Rectangle {
                 sourceSize: 20
 
                 onClicked: {
-                    if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE) {
+                    if (selectedDevice.status <= DeviceUtils.DEVICE_AVAILABLE) {
                         selectedDevice.actionScanWithValues()
                         actionMenu.close()
                     }
@@ -163,7 +162,7 @@ Rectangle {
                 width: control.width - control.height
                 height: control.height
 
-                visible: (selectedDevice && selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
+                visible: (selectedDevice && selectedDevice.status <= DeviceUtils.DEVICE_AVAILABLE)
                 layoutAlignment: Qt.AlignLeft
 
                 color: control.color
@@ -172,7 +171,7 @@ Rectangle {
                 sourceSize: 20
 
                 onClicked: {
-                    if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE) {
+                    if (selectedDevice.status <= DeviceUtils.DEVICE_AVAILABLE) {
                         selectedDevice.actionScanWithoutValues()
                         actionMenu.close()
                     }
@@ -186,7 +185,7 @@ Rectangle {
                 height: control.height
 
                 visible: (selectedDevice && selectedDevice.hasServiceCache &&
-                          selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
+                          selectedDevice.status <= DeviceUtils.DEVICE_AVAILABLE)
                 layoutAlignment: Qt.AlignLeft
 
                 color: control.color
@@ -195,7 +194,7 @@ Rectangle {
                 sourceSize: 20
 
                 onClicked: {
-                    if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE) {
+                    if (selectedDevice.status <= DeviceUtils.DEVICE_AVAILABLE) {
                         selectedDevice.restoreServiceCache()
                         actionMenu.close()
                     }
@@ -208,13 +207,14 @@ Rectangle {
                 width: control.width - control.height
                 height: control.height
 
-                visible: (selectedDevice && selectedDevice.status !== DeviceUtils.DEVICE_OFFLINE)
+                visible: (selectedDevice && selectedDevice.status > DeviceUtils.DEVICE_AVAILABLE)
                 layoutAlignment: Qt.AlignLeft
 
                 color: control.color
                 text: {
                     if (!selectedDevice) return ""
                     if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE) return qsTr("scan device")
+                    if (selectedDevice.status === DeviceUtils.DEVICE_AVAILABLE) return qsTr("scan device")
                     if (selectedDevice.status === DeviceUtils.DEVICE_WORKING) return qsTr("scanning...")
                     if (selectedDevice.status === DeviceUtils.DEVICE_DISCONNECTING) return qsTr("disconnecting...")
                     if (selectedDevice.status === DeviceUtils.DEVICE_CONNECTING) return qsTr("connecting...")
@@ -222,7 +222,8 @@ Rectangle {
                 }
                 source: {
                     if (!selectedDevice) return ""
-                    if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
+                    if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE ||
+                        selectedDevice.status === DeviceUtils.DEVICE_AVAILABLE)
                         return "qrc:/IconLibrary/material-icons/outlined/bluetooth.svg"
                     else if (selectedDevice.status <= DeviceUtils.DEVICE_DISCONNECTING ||
                              selectedDevice.status <= DeviceUtils.DEVICE_CONNECTING)
@@ -244,7 +245,7 @@ Rectangle {
                 width: control.width - control.height
                 height: control.height
 
-                visible: (selectedDevice && selectedDevice.status !== DeviceUtils.DEVICE_OFFLINE)
+                visible: (selectedDevice && selectedDevice.status >= DeviceUtils.DEVICE_CONNECTED)
                 layoutAlignment: Qt.AlignLeft
 
                 color: control.color
@@ -252,8 +253,8 @@ Rectangle {
                 source: "qrc:/IconLibrary/material-icons/outlined/bluetooth_disabled.svg"
 
                 onClicked: {
-                    if (selectedDevice.status !== DeviceUtils.DEVICE_OFFLINE) {
-                        selectedDevice.deviceDisconnect()
+                    if (selectedDevice.status >= DeviceUtils.DEVICE_CONNECTED) {
+                        selectedDevice.actionDisconnect()
                         actionMenu.close()
                     }
                 }

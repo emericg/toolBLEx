@@ -20,10 +20,10 @@
  */
 
 #include "DeviceFilter.h"
-#include "SettingsManager.h"
-
 #include "device.h"
 #include "device_toolblex.h"
+
+#include "SettingsManager.h"
 
 #include <cstdlib>
 #include <cmath>
@@ -161,12 +161,13 @@ QHash <int, QByteArray> DeviceModel::roleNames() const
 
     roles[Default] = "default";
 
-    roles[DeviceColorRole] = "color";
-    roles[DeviceAddressRole] = "address";
     roles[DeviceNameRole] = "name";
-    roles[DeviceModelRole] = "model";
-    roles[DeviceManufacturerRole] = "manufacturer";
+    roles[DeviceAddressRole] = "address";
     roles[DeviceRssiRole] = "rssi";
+    roles[DeviceManufacturerRole] = "manufacturer";
+    roles[DeviceModelRole] = "model";
+
+    roles[DeviceColorRole] = "color";
     roles[DeviceIntervalRole] = "interval";
     roles[DeviceFirstSeenRole] = "firstseen";
     roles[DeviceLastSeenRole] = "lastseen";
