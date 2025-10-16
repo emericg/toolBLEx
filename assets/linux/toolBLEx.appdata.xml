@@ -4,7 +4,7 @@
 <component type="desktop-application">
   <id>io.emeric.toolblex</id>
   <name>toolBLEx</name>
-  <launchable type="desktop-id">toolblex.desktop</launchable>
+  <launchable type="desktop-id">toolBLEx.desktop</launchable>
 
   <summary>Bluetooth device scanner and analyzer</summary>
   <description>

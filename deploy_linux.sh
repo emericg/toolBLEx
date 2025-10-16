@@ -4,8 +4,8 @@ export APP_NAME="toolBLEx"
 export APP_VERSION=0.14
 export GIT_VERSION=$(git rev-parse --short HEAD)
 
-export APP_NAME_LOWERCASE=${APP_NAME,,}   # lowercase
-#export APP_NAME_LOWERCASE=$APP_NAME      # not actually lowercase
+#export APP_NAME_LOWERCASE=${APP_NAME,,}  # lowercase
+export APP_NAME_LOWERCASE=$APP_NAME       # not actually lowercase
 
 echo "> $APP_NAME packager (Linux x86_64) [v$APP_VERSION]"
 

@@ -2,6 +2,6 @@
 Type=Application
 Name=toolBLEx
 Comment=A Bluetooth Low Energy device scanner and analyzer
-Exec=toolblex
-Icon=toolblex
+Exec=toolBLEx
+Icon=toolBLEx
 Categories=Utility;DataVisualization;Qt;
