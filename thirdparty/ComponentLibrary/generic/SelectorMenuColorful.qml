@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 
 import ComponentLibrary
 
@@ -13,6 +14,7 @@ Item {
 
     // settings
     property bool readOnly: false
+    property bool fullWidth: false
 
     // colors
     property color colorBackground: Theme.colorComponentBackground
@@ -38,7 +40,7 @@ Item {
 
     ////////////////
 
-    Row {
+    RowLayout {
         id: contentRow
         anchors.horizontalCenter: parent.horizontalCenter
         spacing: -4
@@ -46,7 +48,9 @@ Item {
         Repeater {
             model: selectorMenu.model
             delegate: SelectorMenuColorfulItem {
-                height: selectorMenu.height
+                Layout.preferredHeight: selectorMenu.height
+                Layout.preferredWidth: selectorMenu.fullWidth ? (selectorMenu.width / selectorMenu.model.count) : width
+
                 readOnly: selectorMenu.readOnly
                 highlighted: (selectorMenu.currentSelection === idx)
                 index: idx ?? 0

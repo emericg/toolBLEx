@@ -41,12 +41,14 @@
 #include <QLibraryInfo>
 #include <QSysInfo>
 
-#include <QQuickWindow>
-#include <rhi/qrhi.h> // <QRhi> // ?
-
 #include <QGuiApplication>
+#include <QQuickWindow>
 #include <QStyleHints>
 #include <QPalette>
+
+#if defined(UTILS_QT_RHI)
+#include <rhi/qrhi.h>
+#endif
 
 /* ************************************************************************** */
 
@@ -171,10 +173,12 @@ bool UtilsApp::qtIsShared()
 
 QString UtilsApp::qtRhiBackend() const
 {
+#if defined(UTILS_QT_RHI)
     if (m_quickwindow && m_quickwindow->rhi())
     {
         return m_quickwindow->rhi()->backendName();
     }
+#endif
 
     return QString();
 }

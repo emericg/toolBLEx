@@ -108,7 +108,7 @@ T.ComboBox {
     popup: T.Popup {
         y: control.height - 1
         width: control.width
-        implicitHeight: (contentItem.implicitHeight) ? contentItem.implicitHeight + 2 : 0
+        implicitHeight: contentItem.implicitHeight ? contentItem.implicitHeight + 2 : 0
         padding: 1
 
         topMargin: Math.max(screenPaddingStatusbar, screenPaddingTop)

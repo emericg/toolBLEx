@@ -1,6 +1,18 @@
 # AppUtils
 
-A collection of C++ helpers for (my) QML applications.
+A collection of C++ helpers for (my) Qt/QML applications.
+
+## Utils available
+- utils_app 
+- utils_bits
+- utils_clipboard
+- utils_fpsmonitor
+- utils_language
+- utils_log
+- utils_maths
+- utils_screen
+- utils_sysinfo
+- utils_wifi
 
 ## Quick start
 

@@ -35,7 +35,7 @@
 class UtilsIOSWiFi
 {
 public:
-    static QString UtilsIOS::getWifiSSID()
+    static QString getWifiSSID();
 };
 
 /* ************************************************************************** */

@@ -127,6 +127,22 @@ T.Button {
                 easing.type: Easing.Linear
             }
         }
+
+        Text {
+            anchors.centerIn: parent
+
+            color: control.colorIcon
+            opacity: control.enabled ? 1 : 0.66
+
+            visible: !control.source.toString().length
+            text: control.text
+            textFormat: Text.PlainText
+
+            font: control.font
+            elide: Text.ElideMiddle
+            horizontalAlignment: Text.AlignLeft
+            verticalAlignment: Text.AlignVCenter
+        }
     }
 
     ////////////////

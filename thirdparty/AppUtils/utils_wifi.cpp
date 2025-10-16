@@ -122,7 +122,7 @@ void UtilsWiFi::refreshWiFi_internal()
     m_currentSSID = UtilsAndroid::getWifiSSID();
     Q_EMIT wifiChanged();
 #elif defined(Q_OS_IOS) && defined(UTILS_WIFI_ENABLED)
-    m_currentSSID = UtilsIOS::getWifiSSID();
+    m_currentSSID = UtilsIOSWiFi::getWifiSSID();
     Q_EMIT wifiChanged();
 #else
     m_currentSSID = "";

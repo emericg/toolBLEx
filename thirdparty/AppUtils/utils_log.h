@@ -34,15 +34,23 @@ class UtilsLog : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(QString debugLog READ getDebugLog NOTIFY debuglogUpdated)
+
     bool m_logging = false;
     QString m_logPath;
     QFile m_logFile;
+
+    QString m_debuglog;
+    const QString &getDebugLog() const { return m_debuglog; }
 
     // Singleton
     static UtilsLog *instance;
     UtilsLog(const bool enabled);
     UtilsLog();
     ~UtilsLog();
+
+Q_SIGNALS:
+    void debuglogUpdated();
 
 public:
     static UtilsLog *getInstance(const bool enabled = true);

@@ -790,6 +790,9 @@ QString UtilsAndroid::getWifiSSID()
                 if (ssid.startsWith("\"")) ssid.removeFirst();
                 if (ssid.endsWith("\"")) ssid.removeLast();
 
+                if (ssid == "<unknown ssid>") ssid.clear();
+                if (ssid.startsWith("<") && ssid.endsWith(">")) ssid.clear();
+
                 return ssid;
             }
             else

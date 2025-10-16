@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 
 import ComponentLibrary
 
@@ -13,6 +14,7 @@ Item {
 
     // settings
     property bool readOnly: false
+    property bool fullWidth: false
 
     // states
     signal menuSelected(var index)
@@ -31,7 +33,7 @@ Item {
 
     ////////////////
 
-    Row {
+    RowLayout {
         id: contentRow
         anchors.horizontalCenter: parent.horizontalCenter
         spacing: Theme.componentBorderWidth
@@ -39,7 +41,9 @@ Item {
         Repeater {
             model: selectorMenu.model
             delegate: SelectorMenuItem {
-                height: selectorMenu.height
+                Layout.preferredHeight: selectorMenu.height
+                Layout.preferredWidth: selectorMenu.fullWidth ? (selectorMenu.width / selectorMenu.model.count) : width
+
                 readOnly: selectorMenu.readOnly
                 highlighted: (selectorMenu.currentSelection === idx)
                 index: idx ?? 0

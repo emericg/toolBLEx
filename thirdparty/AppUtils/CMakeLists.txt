@@ -1,29 +1,30 @@
+cmake_minimum_required(VERSION 3.20)
+
 project(AppUtils LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(QT_NO_PRIVATE_MODULE_WARNING ON)
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 
 ################################################################################
 
+# Optional stuff
+option(UTILS_QT_RHI "Qt RHI (Rendering Hardware Interface) utils" OFF)
+
 # Optional stuff (for macOS)
-#set(UTILS_DOCK_ENABLED true)
+option(UTILS_DOCK_ENABLED "macOS dock utils" OFF)
 
 # Optional stuff (for iOS)
-#set(UTILS_WIFI_ENABLED true)
-#set(UTILS_NOTIFICATIONS_ENABLED true)
+option(UTILS_WIFI_ENABLED "iOS WiFi SSID reading" OFF)
+option(UTILS_NOTIFICATIONS_ENABLED "iOS notification handling" OFF)
 
 ################################################################################
 
 # Generic dependencies
 find_package(Qt6 6.6 REQUIRED COMPONENTS Core Gui Qml Quick)
-
-set(CORE_LIBRARIES
-    Qt::Core
-    Qt::Gui
-    Qt::GuiPrivate # to get RHI infos
-    Qt::Qml
-    Qt::Quick
-)
+set(CORE_LIBRARIES Qt::Core Qt::Gui Qt::Qml Qt::Quick)
 
 # Generic sources
 set(CORE_SOURCES
@@ -49,32 +50,41 @@ set(CORE_SOURCES
     utils_wifi.h
     utils_versionchecker.h)
 
+# Qt optional tools
+if(UTILS_QT_RHI)
+    add_definitions(-DUTILS_QT_RHI)
+
+    find_package(Qt6 REQUIRED COMPONENTS GuiPrivate)
+    set(CORE_LIBRARIES ${CORE_LIBRARIES} Qt::GuiPrivate m)                      # to get RHI infos
+endif()
+
 # OS specific sources & dependencies
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    set(PLATFORM_SOURCES
+    set(PLATFORM_SOURCES ${PLATFORM_SOURCES}
         utils_os_linux.cpp
         utils_os_linux.h)
 
     find_package(Qt6 REQUIRED COMPONENTS DBus)
-    set(PLATFORM_LIBRARIES Qt::DBus m)
+    set(PLATFORM_LIBRARIES ${PLATFORM_LIBRARIES} Qt::DBus m)
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Android")
-    set(PLATFORM_SOURCES
+    set(PLATFORM_SOURCES ${PLATFORM_SOURCES}
         utils_os_android.cpp
         utils_os_android.h)
 
-    set(PLATFORM_LIBRARIES Qt::CorePrivate m)
+    find_package(Qt6 REQUIRED COMPONENTS CorePrivate)
+    set(PLATFORM_LIBRARIES ${PLATFORM_LIBRARIES} Qt::CorePrivate m)
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    set(PLATFORM_SOURCES
+    set(PLATFORM_SOURCES ${PLATFORM_SOURCES}
         utils_os_windows.cpp
         utils_os_windows.h)
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    set(PLATFORM_SOURCES
+    set(PLATFORM_SOURCES ${PLATFORM_SOURCES}
         utils_os_macos.mm
         utils_os_macos.h)
 
@@ -82,31 +92,32 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         set(PLATFORM_SOURCES ${PLATFORM_SOURCES}
             utils_os_macos_dock.mm
             utils_os_macos_dock.h)
-        set(PLATFORM_LIBRARIES "-framework AppKit" m)                           # dock control
+        set(PLATFORM_LIBRARIES ${PLATFORM_LIBRARIES}
+            "-framework AppKit" m) # dock control
     endif()
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
-    find_package(Qt6 REQUIRED COMPONENTS Quick)
-    set(PLATFORM_LIBRARIES Qt::Quick)
-    set(PLATFORM_LIBRARIES "-framework UIKit" m)
-
-    set(PLATFORM_SOURCES
+    set(PLATFORM_SOURCES ${PLATFORM_SOURCES}
         utils_os_ios.mm
         utils_os_ios.h)
+    set(PLATFORM_LIBRARIES ${PLATFORM_LIBRARIES}
+        "-framework UIKit" m)
 
     if(UTILS_NOTIFICATIONS_ENABLED)
         set(PLATFORM_SOURCES ${PLATFORM_SOURCES}
             utils_os_ios_notif.mm
             utils_os_ios_notif.h)
-        set(PLATFORM_LIBRARIES "-framework UserNotifications" m)                # show notifications
+        set(PLATFORM_LIBRARIES ${PLATFORM_LIBRARIES}
+            "-framework UserNotifications" m)                                   # show notifications
     endif()
 
     if(UTILS_WIFI_ENABLED)
         set(PLATFORM_SOURCES ${PLATFORM_SOURCES}
             utils_os_ios_wifi.mm
             utils_os_ios_wifi.h)
-        set(PLATFORM_LIBRARIES "-framework SystemConfiguration" m)              # get WiFi SSID
+        set(PLATFORM_LIBRARIES ${PLATFORM_LIBRARIES}
+            "-framework SystemConfiguration" m)                                 # get WiFi SSID
     endif()
 endif()
 

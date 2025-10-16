@@ -79,7 +79,7 @@ T.Slider {
         implicitWidth: control.hhh
         implicitHeight: control.hhh
 
-        width: (control.horizontal && control.showvalue) ? t1.contentWidth + 16 : control.hhh
+        width: (control.horizontal && control.showvalue) ? t1.contentWidth + control.hhh : control.hhh
         height: control.hhh
         radius: control.hhh
         color: enabled ? control.colorForeground : control.colorForegroundDisabled

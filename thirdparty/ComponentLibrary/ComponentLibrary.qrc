@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/qml">
+    <qresource prefix="/ComponentLibrary">
         <file>qmldir</file>
         <file>ThemeEngine.qml</file>
 
