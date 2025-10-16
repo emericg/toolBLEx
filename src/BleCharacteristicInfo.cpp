@@ -106,7 +106,7 @@ void CharacteristicInfo::setCharacteristic(const QJsonObject &characteristic_cac
         m_name = characteristic_cache["name"].toString();
         m_uuid = QBluetoothUuid(characteristic_cache["uuid"].toString());
 
-        QJsonArray props = characteristic_cache["properties"].toArray();
+        const QJsonArray props = characteristic_cache["properties"].toArray();
         for (const auto &p: props)
         {
             m_properties += p.toString();

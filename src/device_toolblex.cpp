@@ -464,7 +464,7 @@ void DeviceToolBLEx::actionScanWithoutValues()
 void DeviceToolBLEx::askForNotify(const QString &uuid)
 {
     // Iterate through services, until we find the characteristic we want to read
-    for (auto s: m_services)
+    for (const auto &s: std::as_const(m_services))
     {
         ServiceInfo *srv = qobject_cast<ServiceInfo *>(s);
         if (srv)
@@ -485,12 +485,12 @@ void DeviceToolBLEx::askForNotify(const QString &uuid)
 void DeviceToolBLEx::askForRead(const QString &uuid)
 {
     // Iterate through services, until we find the characteristic we want to read
-    for (auto s: m_services)
+    for (const auto &s: std::as_const(m_services))
     {
         ServiceInfo *srv = qobject_cast<ServiceInfo *>(s);
         if (srv)
         {
-            for (auto c: srv->getCharacteristicsInfos())
+            for (const auto &c: srv->getCharacteristicsInfos())
             {
                 CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
                 if (cst && cst->getUuidFull() == uuid)
@@ -506,12 +506,12 @@ void DeviceToolBLEx::askForRead(const QString &uuid)
 void DeviceToolBLEx::askForWrite(const QString &uuid, const QString &value, const QString &type)
 {
     // Iterate through services, until we find the characteristic we want to write
-    for (auto s: m_services)
+    for (const auto &s: std::as_const(m_services))
     {
         ServiceInfo *srv = qobject_cast<ServiceInfo *>(s);
         if (srv)
         {
-            for (auto c: srv->getCharacteristicsInfos())
+            for (const auto &c: srv->getCharacteristicsInfos())
             {
                 CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
                 if (cst && cst->getUuidFull() == uuid)
@@ -801,7 +801,7 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
         m_advertisementData.push_front(a); // always add it to the unfiltered list
 
         bool uuidFound = false;
-        for (auto uuu: m_mfd_uuid)
+        for (const auto &uuu: std::as_const(m_mfd_uuid))
         {
             if (uuu->getUuid() == id)
             {
@@ -833,6 +833,7 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
         Q_EMIT advertisementChanged();
 
         mfdFilterUpdate();
+        advertisementFilterUpdate();
     }
     else if (mode == DeviceUtils::BLE_ADV_SERVICEDATA)
     {
@@ -849,7 +850,7 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
         m_advertisementData.push_front(a); // always add it to the unfiltered list
 
         bool uuidFound = false;
-        for (auto uuu: m_svd_uuid)
+        for (auto uuu: std::as_const(m_svd_uuid))
         {
             if (uuu->getUuid() == id)
             {
@@ -881,9 +882,10 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
         Q_EMIT advertisementChanged();
 
         svdFilterUpdate();
+        advertisementFilterUpdate();
     }
 
-    if (m_mfd.length() > 0 || m_svd.length())
+    if (m_mfd.length() || m_svd.length())
     {
         if (!m_hasAdvertisement)
         {
@@ -949,7 +951,7 @@ void DeviceToolBLEx::setAdvertisedServices(const QList <QBluetoothUuid> &service
 void DeviceToolBLEx::mfdFilterUpdate()
 {
     QList <uint16_t> accepted_uuids;
-    for (auto u: m_mfd_uuid)
+    for (const auto &u: std::as_const(m_mfd_uuid))
     {
         if (u->getSelected())
         {
@@ -957,7 +959,7 @@ void DeviceToolBLEx::mfdFilterUpdate()
         }
     }
 
-    for (auto adv: m_advertisementData_filtered)
+    for (const auto &adv: std::as_const(m_advertisementData_filtered))
     {
         if (!accepted_uuids.contains(adv->getUUID_int()))
         {
@@ -971,7 +973,7 @@ void DeviceToolBLEx::mfdFilterUpdate()
 void DeviceToolBLEx::svdFilterUpdate()
 {
     QList <uint16_t> accepted_uuids;
-    for (auto u: m_svd_uuid)
+    for (const auto &u: std::as_const(m_svd_uuid))
     {
         if (u->getSelected())
         {
@@ -979,7 +981,7 @@ void DeviceToolBLEx::svdFilterUpdate()
         }
     }
 
-    for (auto adv: m_advertisementData_filtered)
+    for (const auto &adv: std::as_const(m_advertisementData_filtered))
     {
         if (!accepted_uuids.contains(adv->getUUID_int()))
         {
@@ -998,14 +1000,14 @@ bool comparefunc(AdvertisementData *c1, AdvertisementData *c2)
 void DeviceToolBLEx::advertisementFilterUpdate()
 {
     QList <uint16_t> accepted_uuids;
-    for (auto u: m_svd_uuid)
+    for (auto u: std::as_const(m_svd_uuid))
     {
         if (u->getSelected())
         {
             accepted_uuids.push_back(u->getUuid());
         }
     }
-    for (auto u: m_mfd_uuid)
+    for (auto u: std::as_const(m_mfd_uuid))
     {
         if (u->getSelected())
         {
@@ -1014,14 +1016,14 @@ void DeviceToolBLEx::advertisementFilterUpdate()
     }
 
     m_advertisementData_filtered.clear();
-    for (auto adv: m_svd)
+    for (const auto &adv: std::as_const(m_svd))
     {
         if (accepted_uuids.contains(adv->getUUID_int()))
         {
             m_advertisementData_filtered.push_front(adv);
         }
     }
-    for (auto adv: m_mfd)
+    for (const auto &adv: std::as_const(m_mfd))
     {
         if (accepted_uuids.contains(adv->getUUID_int()))
         {
@@ -1057,14 +1059,14 @@ bool DeviceToolBLEx::saveServiceCache()
 
     // Services
     QJsonArray servicesArray;
-    for (auto s: m_services)
+    for (const auto &s: std::as_const(m_services))
     {
         ServiceInfo *srv = qobject_cast<ServiceInfo *>(s);
         if (srv)
         {
             // Characteristics
             QJsonArray characteristicsArray;
-            for (auto c: srv->getCharacteristicsInfos())
+            for (const auto &c: srv->getCharacteristicsInfos())
             {
                 CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
                 if (cst)
@@ -1145,7 +1147,7 @@ void DeviceToolBLEx::restoreServiceCache()
         m_services.clear();
         m_services_scanmode = 1; // cache is in use
 
-        QJsonArray servicesArray = root["services"].toArray();
+        const QJsonArray servicesArray = root["services"].toArray();
         for (const auto &srv_json: servicesArray)
         {
             QJsonObject obj = srv_json.toObject();
@@ -1282,7 +1284,7 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &filename,
         str += "Last seen: " + m_lastSeen.toString() + endl;
 
         if (!m_advertised_services.isEmpty()) str += endl + "Service(s) advertised:" + endl;
-        for (const auto &srv: m_advertised_services)
+        for (const auto &srv: std::as_const(m_advertised_services))
         {
             str += "- " + srv + endl;
         }
@@ -1304,7 +1306,7 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &filename,
         {
             str += "Advertisement packet(s):" + endl;
 
-            for (auto adv: m_advertisementData)
+            for (const auto &adv: std::as_const(m_advertisementData))
             {
                 if (adv->getMode() == DeviceUtils::BLE_ADV_MANUFACTURERDATA)
                 {
@@ -1337,7 +1339,7 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &filename,
     // Services
     if (withServices)
     {
-        for (auto s: m_services)
+        for (const auto &s: std::as_const(m_services))
         {
             ServiceInfo *srv = qobject_cast<ServiceInfo *>(s);
             if (srv)
@@ -1345,7 +1347,7 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &filename,
                 str += "Service Name: \"" + srv->getName() + "\"" + endl;
                 str += "Service UUID: " + srv->getUuidFull() + endl;
 
-                for (auto c: srv->getCharacteristicsInfos())
+                for (const auto &c: srv->getCharacteristicsInfos())
                 {
                     CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
                     if (cst)

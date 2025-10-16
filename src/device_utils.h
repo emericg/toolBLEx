@@ -327,6 +327,17 @@ class ChartDataMinMax: public QObject
     int hygroMin;
     int hygroMax;
 
+    bool isToday() const { return (datetime.date() == QDate::currentDate()); }
+    int getDay() const { return datetime.date().day(); }
+    int getHour() const { return datetime.time().hour(); }
+    QDateTime getDateTime() const { return datetime; }
+
+    float getTempMin() const { return tempMin; }
+    float getTempMean() const { return tempMean; }
+    float getTempMax() const { return tempMax; }
+    int getHygroMin() const { return hygroMin; }
+    int getHygroMax() const { return hygroMax; }
+
 public:
     ChartDataMinMax(const QDateTime &dt,
                     float tmin, float t, float tmax,
@@ -338,18 +349,6 @@ public:
         tempMin = tmin; tempMean = t; tempMax = tmax;
         hygroMin = hmin; hygroMax = hmax;
     }
-
-public slots:
-    bool isToday() const { return (datetime.date() == QDate::currentDate()); }
-    int getDay() const { return datetime.date().day(); }
-    int getHour() const { return datetime.time().hour(); }
-    QDateTime getDateTime() const { return datetime; }
-
-    float getTempMin() const { return tempMin; }
-    float getTempMean() const { return tempMean; }
-    float getTempMax() const { return tempMax; }
-    int getHygroMin() const { return hygroMin; }
-    int getHygroMax() const { return hygroMax; }
 };
 
 /* ************************************************************************** */
@@ -405,25 +404,6 @@ class ChartDataEnv: public QObject
     float pm10Mean = -99.f;
     float pm10Max;
 
-public:
-    ChartDataEnv(const QDateTime &dt,
-                 float vmin, float v, float vmax,
-                 float hmin, float h, float hmax,
-                 float cmin, float c, float cmax,
-                 float p2min, float p2, float p2max,
-                 float p10min, float p10, float p10max,
-                 QObject *parent) : QObject(parent)
-    {
-        datetime = dt;
-
-        vocMin = vmin; vocMean = v; vocMax = vmax;
-        hchoMin = hmin; hchoMean = h; hchoMax = hmax;
-        co2Min = cmin; co2Mean = c; co2Max = cmax;
-        pm25Min = p2min; pm25Mean = p2; pm25Max = p2max;
-        pm10Min = p10min; pm10Mean = p10; pm10Max = p10max;
-    }
-
-public slots:
     bool isToday() const { return (datetime.date() == QDate::currentDate()); }
     int getDay() const { return datetime.date().day(); }
     int getHour() const { return datetime.time().hour(); }
@@ -448,6 +428,24 @@ public slots:
     float getPM10Min() const { return pm10Min; }
     float getPM10Mean() const { return pm10Mean; }
     float getPM10Max() const { return pm10Max; }
+
+public:
+    ChartDataEnv(const QDateTime &dt,
+                 float vmin, float v, float vmax,
+                 float hmin, float h, float hmax,
+                 float cmin, float c, float cmax,
+                 float p2min, float p2, float p2max,
+                 float p10min, float p10, float p10max,
+                 QObject *parent) : QObject(parent)
+    {
+        datetime = dt;
+
+        vocMin = vmin; vocMean = v; vocMax = vmax;
+        hchoMin = hmin; hchoMean = h; hchoMax = hmax;
+        co2Min = cmin; co2Mean = c; co2Max = cmax;
+        pm25Min = p2min; pm25Mean = p2; pm25Max = p2max;
+        pm10Min = p10min; pm10Mean = p10; pm10Max = p10max;
+    }
 };
 
 /* ************************************************************************** */

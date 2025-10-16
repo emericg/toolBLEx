@@ -75,7 +75,7 @@ bool Ubertooth::checkPath()
         process.start(path_util, QStringList("-v"), QIODevice::ReadOnly);
         process.waitForFinished(8000);
 
-        QString out(process.readAllStandardOutput());
+        //QString out(process.readAllStandardOutput());
         QString err(process.readAllStandardError());
         QProcess::ProcessError error = process.error();
 
@@ -269,12 +269,12 @@ void Ubertooth::processOutput()
         }
 
         // parsing
-        QStringList lines = output.split('\n', Qt::SkipEmptyParts);
+        const QStringList lines = output.split('\n', Qt::SkipEmptyParts);
         for (const auto &line: lines)
         {
             //qDebug() << "line (" << line.size() << ")" << line;
 
-            QStringList linesplit = line.split(',');
+            const QStringList linesplit = line.split(',');
             if (line.size() >= 19 && !line.endsWith('-') && linesplit.size() == 3)
             {
                 int freq = linesplit.at(1).toInt();
@@ -350,7 +350,7 @@ void Ubertooth::getFrequencyGraphMax(QLineSeries *serie)
     std::memset(max, s_default_raw_rssi, (m_freq_max-m_freq_min+1)*4);
     m_max_max = s_default_raw_rssi;
 
-    for (auto table: m_values)
+    for (const auto &table: std::as_const(m_values))
     {
         for (int i = 0, j = m_freq_min; j <= m_freq_max; i++, j++)
         {

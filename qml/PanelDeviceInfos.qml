@@ -631,7 +631,7 @@ Flickable {
 
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
-                        text: selectedDevice.mtu
+                        text: selectedDevice && selectedDevice.mtu
                         font.pixelSize: Theme.fontSizeContent
                         color: Theme.colorText
                     }

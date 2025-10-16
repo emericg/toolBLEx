@@ -51,7 +51,7 @@ Adapter::Adapter(const QBluetoothHostInfo &adapterInfo,
     //QString err(process.readAllStandardError());
     //qDebug() << err;
 
-    QStringList output_split = output.split('\n');
+    const QStringList output_split = output.split('\n');
     for (const auto &line: output_split)
     {
         if (line.contains("addr ") && line.contains(m_address))

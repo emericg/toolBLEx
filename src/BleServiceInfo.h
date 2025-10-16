@@ -89,8 +89,8 @@ public:
     int getServiceStatus() const;
     QString getServiceStatusStr() const;
 
-    QLowEnergyService *getService();
-    QList <QObject *> getCharacteristicsInfos();
+    const QLowEnergyService *getService();
+    const QList <QObject *> getCharacteristicsInfos();
     bool containsCharacteristic(const QString &uuid);
     int getCharacteristicsCount() const { return m_characteristics.count(); }
 

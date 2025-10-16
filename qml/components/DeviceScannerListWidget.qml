@@ -21,20 +21,22 @@ Item {
     Rectangle { // background
         anchors.fill: parent
         color: {
-            if (boxDevice.selected && !boxDevice.connected) {
-                return Theme.colorLVselected
-            }
-            if (boxDevice.selected && boxDevice.connected) {
-                if (Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT)
-                    return Theme.colorMaterialTeal
-                if (Theme.currentTheme === Theme.THEME_DESKTOP_DARK)
-                    return Theme.colorMaterialPurple
-            }
-            if (boxDevice.connected) {
-                if (Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT)
-                    return Qt.lighter(Theme.colorGreen, 1.1)
-                if (Theme.currentTheme === Theme.THEME_DESKTOP_DARK)
-                    return Qt.darker(Theme.colorGreen, 1.1)
+            if (boxDevice) {
+                if (boxDevice.selected && !boxDevice.connected) {
+                    return Theme.colorLVselected
+                }
+                if (boxDevice.selected && boxDevice.connected) {
+                    if (Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT)
+                        return Theme.colorMaterialTeal
+                    if (Theme.currentTheme === Theme.THEME_DESKTOP_DARK)
+                        return Theme.colorMaterialPurple
+                }
+                if (boxDevice.connected) {
+                    if (Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT)
+                        return Qt.lighter(Theme.colorGreen, 1.1)
+                    if (Theme.currentTheme === Theme.THEME_DESKTOP_DARK)
+                        return Qt.darker(Theme.colorGreen, 1.1)
+                }
             }
             if (index % 2 === 1) return Theme.colorLVimpair
             return Theme.colorLVpair
@@ -269,7 +271,7 @@ Item {
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: boxDevice.advInterval
+                    text: boxDevice && boxDevice.advInterval
                     textFormat: Text.PlainText
                     color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorText
                 }

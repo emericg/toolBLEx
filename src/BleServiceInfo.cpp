@@ -68,7 +68,7 @@ ServiceInfo::ServiceInfo(const QJsonObject &servicecache,
     {
         m_service_cache = servicecache;
 
-        QJsonArray characteristicsArray = m_service_cache["characteristics"].toArray();
+        const QJsonArray characteristicsArray = m_service_cache["characteristics"].toArray();
         for (const auto &car: characteristicsArray)
         {
             QJsonObject obj = car.toObject();
@@ -108,19 +108,19 @@ QString ServiceInfo::getServiceStatusStr() const
 
 /* ************************************************************************** */
 
-QLowEnergyService *ServiceInfo::getService()
+const QLowEnergyService *ServiceInfo::getService()
 {
     return m_ble_service;
 }
 
-QList <QObject *> ServiceInfo::getCharacteristicsInfos()
+const QList<QObject *> ServiceInfo::getCharacteristicsInfos()
 {
     return m_characteristics;
 }
 
 bool ServiceInfo::containsCharacteristic(const QString &uuid)
 {
-    for (auto c: m_characteristics)
+    for (const auto &c: std::as_const(m_characteristics))
     {
         CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
         if (cst && cst->getUuidFull() == uuid)
@@ -243,7 +243,7 @@ void ServiceInfo::serviceErrorOccured(QLowEnergyService::ServiceError error)
     }
     else if (error == QLowEnergyService::CharacteristicReadError)
     {
-        for (auto c: m_characteristics)
+        for (const auto &c: std::as_const(m_characteristics))
         {
             CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
             if (cst && cst->getReadInProgress()) cst->setReadInError(true);
@@ -252,7 +252,7 @@ void ServiceInfo::serviceErrorOccured(QLowEnergyService::ServiceError error)
     }
     else if (error == QLowEnergyService::CharacteristicWriteError)
     {
-        for (auto c: m_characteristics)
+        for (const auto &c: std::as_const(m_characteristics))
         {
             CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
             if (cst && cst->getWriteInProgress()) cst->setWriteInError(true);
@@ -295,7 +295,7 @@ void ServiceInfo::askForNotify(const QString &uuid)
         }
 
         m_ble_service->writeDescriptor(desc, descValue);
-        for (auto c: m_characteristics)
+        for (const auto &c: std::as_const(m_characteristics))
         {
             CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
             if (cst && cst->getUuidFull() == uuid)
@@ -317,7 +317,7 @@ void ServiceInfo::askForRead(const QString &uuid)
         QLowEnergyCharacteristic crst = m_ble_service->characteristic(toread);
         m_ble_service->readCharacteristic(crst);
 
-        for (auto c: m_characteristics)
+        for (const auto &c: std::as_const(m_characteristics))
         {
             CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
             if (cst && cst->getUuidFull() == uuid)
@@ -345,7 +345,7 @@ void ServiceInfo::askForWrite(const QString &uuid, const QString &value, const Q
         {
             m = QLowEnergyService::WriteWithResponse;
 
-            for (auto c: m_characteristics)
+            for (const auto &c: std::as_const(m_characteristics))
             {
                 CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
                 if (cst && cst->getUuidFull() == uuid)
@@ -384,7 +384,7 @@ void ServiceInfo::bleReadDone(const QLowEnergyCharacteristic &c, const QByteArra
 
     m_device->logEvent("Read done on " + c.uuid().toString() + " / " + QString::number(v.size()) + " bytes / 0x" + v.toHex(), LogEvent::DATA);
 
-    for (auto cc: m_characteristics)
+    for (const auto &cc: std::as_const(m_characteristics))
     {
         CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(cc);
         if (cst && cst->getUuidFull() == c.uuid().toString().toUpper())
@@ -405,7 +405,7 @@ void ServiceInfo::bleReadNotify(const QLowEnergyCharacteristic &c, const QByteAr
 
     m_device->logEvent("Read/Notify on " + c.uuid().toString() + " / " + QString::number(v.size()) + " bytes / 0x" + v.toHex(), LogEvent::DATA);
 
-    for (auto cc: m_characteristics)
+    for (const auto &cc: std::as_const(m_characteristics))
     {
         CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(cc);
         if (cst && cst->getUuidFull() == c.uuid().toString().toUpper())
@@ -424,7 +424,7 @@ void ServiceInfo::bleWriteDone(const QLowEnergyCharacteristic &c, const QByteArr
 
     m_device->logEvent("Write done on " + c.uuid().toString() + " / " + QString::number(v.size()) + " bytes / 0x" + v.toHex(), LogEvent::DATA);
 
-    for (auto cc: m_characteristics)
+    for (const auto &cc: std::as_const(m_characteristics))
     {
         CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(cc);
         if (cst && cst->getUuidFull() == c.uuid().toString().toUpper())
@@ -487,7 +487,7 @@ QString ServiceInfo::getType() const
     }
     else if (!m_service_cache.isEmpty())
     {
-        QJsonArray types = m_service_cache["type"].toArray();
+        const QJsonArray types = m_service_cache["type"].toArray();
         for (const auto &t: types)
         {
             if (!result.isEmpty()) result += QStringLiteral(" ");
@@ -524,7 +524,7 @@ QStringList ServiceInfo::getTypeList() const
     }
     else if (!m_service_cache.isEmpty())
     {
-        QJsonArray types = m_service_cache["type"].toArray();
+        const QJsonArray types = m_service_cache["type"].toArray();
         for (const auto &t: types)
         {
             tlist += t.toString();
