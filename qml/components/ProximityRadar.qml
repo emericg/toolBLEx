@@ -2,8 +2,6 @@ import QtQuick
 
 import ComponentLibrary
 
-import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
-
 Item {
     id: proximityRadar
 

@@ -5,8 +5,6 @@ import QtQuick.Dialogs
 
 import ComponentLibrary
 import DeviceUtils
-import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
-import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
 
 Flickable {
     id: panelDeviceLog

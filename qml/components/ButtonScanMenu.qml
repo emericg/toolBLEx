@@ -6,7 +6,6 @@ import QtQuick.Templates as T
 
 import ComponentLibrary
 import DeviceUtils
-import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
 
 Rectangle {
     id: control

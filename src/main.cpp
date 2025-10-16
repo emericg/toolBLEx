@@ -118,8 +118,7 @@ int main(int argc, char *argv[])
     utilsLanguage->setAppName("toolBLEx");
     utilsLanguage->loadLanguage("English");
 
-    // ThemeEngine
-    qmlRegisterSingletonType(QUrl("qrc:/qml/ThemeEngine.qml"), "ComponentLibrary", 1, 0, "Theme");
+    // Start the application
 
     // Then we start the UI
     QQmlApplicationEngine engine;
@@ -137,7 +136,7 @@ int main(int argc, char *argv[])
     engine_context->setContextProperty("utilsClipboard", utilsClipboard);
 
     // Load the main view
-    engine.load(QUrl(QStringLiteral("qrc:/qml/DesktopApplication.qml")));
+    engine.loadFromModule("toolBLEx", "DesktopApplication");
 
     if (engine.rootObjects().isEmpty())
     {

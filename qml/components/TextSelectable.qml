@@ -7,12 +7,11 @@ import ComponentLibrary
 T.TextField {
     id: control
 
-    implicitWidth: contentWidth + leftPadding + rightPadding
+    //implicitWidth: contentWidth + leftPadding + rightPadding
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              contentHeight + topPadding + bottomPadding,
                              topPadding + bottomPadding)
 
-    text: ""
     color: Theme.colorText
     font.pixelSize: Theme.fontSizeContent
     verticalAlignment: Text.AlignVCenter

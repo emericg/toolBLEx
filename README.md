@@ -41,27 +41,27 @@ A Bluetooth Low Energy device scanner and analyzer.
 
 #### Build dependencies
 
-You will need a C++17 compiler and Qt 6.5+ with the following 'additional librairies':  
+You will need a C++17 compiler and Qt 6.8+ with the following 'additional librairies':  
 - Qt Connectivity
 - Qt Charts
 
-For Windows builds, you'll need the MSVC 2019+ compiler. Bluetooth won't work with MinGW.  
-For macOS builds, you'll need Xcode 14+ installed.  
+For macOS builds, you'll need Xcode (15+) installed.  
+For Windows builds, you'll need the MSVC (2022) installed. Bluetooth won't work with MinGW.  
 
 #### Building toolBLEx
 
 ```bash
 $ git clone https://github.com/emericg/toolBLEx.git
 $ cd toolBLEx/
-$ qmake6
-$ make
+$ cmake -B build/
+$ cmake --build build/
 ```
 
 #### Using toolBLEx
 
 ##### Linux
 
-Double click.
+- Apple iBeacons are hidden by the OS and don't appear in scan results
 
 ##### macOS
 

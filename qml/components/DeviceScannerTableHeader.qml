@@ -85,7 +85,7 @@ T.HorizontalHeaderView {
             visible: ccc
 
             Connections {
-                target: ThemeEngine
+                target: Theme
                 function onCurrentThemeChanged() { indicatorName.requestPaint() }
             }
 

@@ -1,6 +1,8 @@
 // UtilsBluetooth.js
 // Version 2
 
+.pragma library
+
 /* ************************************************************************** */
 
 function getBluetoothCoreConfigurationText(coreConfiguration) {

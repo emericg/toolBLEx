@@ -96,7 +96,7 @@ Rectangle {
                 visible: (deviceManager.orderBy_role === "address")
 
                 Connections {
-                    target: ThemeEngine
+                    target: Theme
                     function onCurrentThemeChanged() { indicatorAddress.requestPaint() }
                 }
 
@@ -137,8 +137,8 @@ Rectangle {
                     anchors.centerIn: parent
                     width: 2; height: 18;
                     color: {
-                        if (parent.containsPress || parent.drag.active) return ThemeEngine.colorPrimary
-                        if (parent.containsMouse) return ThemeEngine.colorSecondary
+                        if (parent.containsPress || parent.drag.active) return Theme.colorPrimary
+                        if (parent.containsMouse) return Theme.colorSecondary
                         return Theme.colorLVseparator
                     }
                 }
@@ -179,7 +179,7 @@ Rectangle {
                 visible: (deviceManager.orderBy_role === "name")
 
                 Connections {
-                    target: ThemeEngine
+                    target: Theme
                     function onCurrentThemeChanged() { indicatorName.requestPaint() }
                 }
 
@@ -220,8 +220,8 @@ Rectangle {
                     anchors.centerIn: parent
                     width: 2; height: 18;
                     color: {
-                        if (parent.containsPress || parent.drag.active) return ThemeEngine.colorPrimary
-                        if (parent.containsMouse) return ThemeEngine.colorSecondary
+                        if (parent.containsPress || parent.drag.active) return Theme.colorPrimary
+                        if (parent.containsMouse) return Theme.colorSecondary
                         return Theme.colorLVseparator
                     }
                 }
@@ -263,7 +263,7 @@ Rectangle {
                 visible: (deviceManager.orderBy_role === "manufacturer")
 
                 Connections {
-                    target: ThemeEngine
+                    target: Theme
                     function onCurrentThemeChanged() { indicatorManuf.requestPaint() }
                 }
 
@@ -305,8 +305,8 @@ Rectangle {
                     anchors.centerIn: parent
                     width: 2; height: 18;
                     color: {
-                        if (parent.containsPress || parent.drag.active) return ThemeEngine.colorPrimary
-                        if (parent.containsMouse) return ThemeEngine.colorSecondary
+                        if (parent.containsPress || parent.drag.active) return Theme.colorPrimary
+                        if (parent.containsMouse) return Theme.colorSecondary
                         return Theme.colorLVseparator
                     }
                 }
@@ -366,7 +366,7 @@ Rectangle {
                 visible: (deviceManager.orderBy_role === "rssi")
 
                 Connections {
-                    target: ThemeEngine
+                    target: Theme
                     function onCurrentThemeChanged() { indicatorRSSI.requestPaint() }
                 }
 
@@ -407,8 +407,8 @@ Rectangle {
                     anchors.centerIn: parent
                     width: 2; height: 18;
                     color: {
-                        if (parent.containsPress || parent.drag.active) return ThemeEngine.colorPrimary
-                        if (parent.containsMouse) return ThemeEngine.colorSecondary
+                        if (parent.containsPress || parent.drag.active) return Theme.colorPrimary
+                        if (parent.containsMouse) return Theme.colorSecondary
                         return Theme.colorLVseparator
                     }
                 }
@@ -466,7 +466,7 @@ Rectangle {
                 visible: (deviceManager.orderBy_role === "interval")
 
                 Connections {
-                    target: ThemeEngine
+                    target: Theme
                     function onCurrentThemeChanged() { indicatorInterval.requestPaint() }
                 }
 
@@ -507,8 +507,8 @@ Rectangle {
                     anchors.centerIn: parent
                     width: 2; height: 18;
                     color: {
-                        if (parent.containsPress || parent.drag.active) return ThemeEngine.colorPrimary
-                        if (parent.containsMouse) return ThemeEngine.colorSecondary
+                        if (parent.containsPress || parent.drag.active) return Theme.colorPrimary
+                        if (parent.containsMouse) return Theme.colorSecondary
                         return Theme.colorLVseparator
                     }
                 }
@@ -547,7 +547,7 @@ Rectangle {
                 visible: (deviceManager.orderBy_role === "lastseen")
 
                 Connections {
-                    target: ThemeEngine
+                    target: Theme
                     function onCurrentThemeChanged() { indicatorLastSeen.requestPaint() }
                 }
 
@@ -606,7 +606,7 @@ Rectangle {
                 visible: (deviceManager.orderBy_role === "firstseen")
 
                 Connections {
-                    target: ThemeEngine
+                    target: Theme
                     function onCurrentThemeChanged() { indicatorFirstSeen.requestPaint() }
                 }
 

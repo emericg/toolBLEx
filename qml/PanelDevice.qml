@@ -4,8 +4,6 @@ import QtQuick.Controls
 import ComponentLibrary
 import DeviceUtils
 
-import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
-
 Item {
     id: panelDevice
     anchors.fill: parent

@@ -49,9 +49,11 @@ ApplicationWindow {
 
     property int screenPaddingStatusbar: 0
     property int screenPaddingNotch: 0
+    property int screenPaddingTop: 0
     property int screenPaddingLeft: 0
     property int screenPaddingRight: 0
     property int screenPaddingBottom: 0
+    property int screenPaddingNavbar: 0
 
     // Events handling /////////////////////////////////////////////////////////
 
@@ -201,7 +203,7 @@ ApplicationWindow {
         onActivated: appWindow.close()
     }
     Shortcut {
-        sequence: StandardKey.Quit
+        sequences: [StandardKey.Quit]
         onActivated: utilsApp.appExit()
     }
 

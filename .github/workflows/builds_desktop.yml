@@ -2,7 +2,7 @@
 # Workflow configuration
 #-------------------------------------------------------------------------------
 
-name: "Desktop CI builds (qmake)"
+name: "Desktop CI builds"
 on:
   push:
   pull_request:
@@ -15,7 +15,7 @@ on:
 env:
   APP_NAME: "toolBLEx"
   APP_VERSION: "0.14"
-  QT_VERSION: "6.7.3"
+  QT_VERSION: "6.10.0"
 
 #-------------------------------------------------------------------------------
 # Workflow jobs
@@ -36,8 +36,9 @@ jobs:
       # Install dependencies (from package manager)
       - name: Install dependencies (from package manager)
         run: |
-             sudo apt-get install libgl1-mesa-dev libxcb1-dev libxkbcommon-x11-dev libx11-xcb-dev libxcb-cursor0 libzstd-dev -y;
-             sudo apt-get install appstream -y;
+             sudo apt-get install libgl1-mesa-dev libxkbcommon-x11-dev libx11-xcb-dev libzstd-dev -y;
+             sudo apt-get install cmake ninja-build pkgconf libtool -y;
+             sudo apt-get install libfuse2 appstream -y;
 
       # Install Qt
       - name: Install Qt
@@ -49,9 +50,9 @@ jobs:
       # Build application
       - name: Build application
         run: |
-             qmake --version
-             qmake ${{env.APP_NAME}}.pro CONFIG+=release PREFIX=/usr
-             make -j$(nproc)
+             cmake --version
+             cmake -B build/ -DCMAKE_BUILD_TYPE=Release -G Ninja
+             cmake --build build/ --config Release
 
       # Deploy application
       - name: Deploy application
@@ -97,9 +98,10 @@ jobs:
       # Build application
       - name: Build application
         run: |
-             qmake --version
-             qmake ${{env.APP_NAME}}.pro CONFIG+=release
-             make -j`sysctl -n hw.logicalcpu`
+             export CMAKE_BUILD_PARALLEL_LEVEL=`sysctl -n hw.logicalcpu`
+             cmake --version
+             cmake -B build/ -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"
+             cmake --build build/ --config Release
 
       # Deploy application
       - name: Deploy application
@@ -142,13 +144,14 @@ jobs:
         with:
           version: ${{env.QT_VERSION}}
           modules: qtconnectivity qtcharts
-          arch: 'win64_msvc2019_64'
+          arch: 'win64_msvc2022_64'
 
       # Build application
       - name: Build application
         run: |
-             qmake --version
-             qmake ${{env.APP_NAME}}.pro CONFIG+=release
+             cmake --version
+             cmake -B build/ -DCMAKE_BUILD_TYPE=Release -G "NMake Makefiles"
+             cd build/
              nmake
 
       # Deploy application

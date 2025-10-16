@@ -32,8 +32,11 @@
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
 
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright Emeric Grange 2024</string>
+	<string>Copyright Emeric Grange 2025</string>
 
 	<key>NSHighResolutionCapable</key>
 	<true/>

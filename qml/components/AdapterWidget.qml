@@ -3,8 +3,6 @@ import QtQuick.Layouts
 
 import ComponentLibrary
 
-import "qrc:/js/UtilsBluetooth.js" as UtilsBluetooth
-
 Rectangle {
     id: adapterWidget
     height: box.height + 28
