@@ -2,11 +2,11 @@ app-id: io.emeric.toolblex
 runtime: org.freedesktop.Platform
 runtime-version: '25.08'
 sdk: org.freedesktop.Sdk
-command: toolblex
+command: toolBLEx
 
-rename-desktop-file: toolblex.desktop
-rename-appdata-file: toolblex.appdata.xml
-rename-icon: toolblex
+rename-desktop-file: toolBLEx.desktop
+rename-appdata-file: toolBLEx.appdata.xml
+rename-icon: toolBLEx
 
 finish-args:
   # Our UI is GPU accelerated

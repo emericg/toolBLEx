@@ -55,7 +55,7 @@ if(UTILS_QT_RHI)
     add_definitions(-DUTILS_QT_RHI)
 
     find_package(Qt6 REQUIRED COMPONENTS GuiPrivate)
-    set(CORE_LIBRARIES ${CORE_LIBRARIES} Qt::GuiPrivate m)                      # to get RHI infos
+    set(CORE_LIBRARIES ${CORE_LIBRARIES} Qt::GuiPrivate)                        # to get RHI infos
 endif()
 
 # OS specific sources & dependencies
@@ -65,7 +65,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         utils_os_linux.h)
 
     find_package(Qt6 REQUIRED COMPONENTS DBus)
-    set(PLATFORM_LIBRARIES ${PLATFORM_LIBRARIES} Qt::DBus m)
+    set(PLATFORM_LIBRARIES ${PLATFORM_LIBRARIES} Qt::DBus)
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Android")
@@ -74,7 +74,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Android")
         utils_os_android.h)
 
     find_package(Qt6 REQUIRED COMPONENTS CorePrivate)
-    set(PLATFORM_LIBRARIES ${PLATFORM_LIBRARIES} Qt::CorePrivate m)
+    set(PLATFORM_LIBRARIES ${PLATFORM_LIBRARIES} Qt::CorePrivate)
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
@@ -93,7 +93,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
             utils_os_macos_dock.mm
             utils_os_macos_dock.h)
         set(PLATFORM_LIBRARIES ${PLATFORM_LIBRARIES}
-            "-framework AppKit" m) # dock control
+            "-framework AppKit") # dock control
     endif()
 endif()
 
@@ -102,14 +102,14 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
         utils_os_ios.mm
         utils_os_ios.h)
     set(PLATFORM_LIBRARIES ${PLATFORM_LIBRARIES}
-        "-framework UIKit" m)
+        "-framework UIKit")
 
     if(UTILS_NOTIFICATIONS_ENABLED)
         set(PLATFORM_SOURCES ${PLATFORM_SOURCES}
             utils_os_ios_notif.mm
             utils_os_ios_notif.h)
         set(PLATFORM_LIBRARIES ${PLATFORM_LIBRARIES}
-            "-framework UserNotifications" m)                                   # show notifications
+            "-framework UserNotifications")                                     # show notifications
     endif()
 
     if(UTILS_WIFI_ENABLED)
@@ -117,7 +117,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
             utils_os_ios_wifi.mm
             utils_os_ios_wifi.h)
         set(PLATFORM_LIBRARIES ${PLATFORM_LIBRARIES}
-            "-framework SystemConfiguration" m)                                 # get WiFi SSID
+            "-framework SystemConfiguration")                                   # get WiFi SSID
     endif()
 endif()
 
