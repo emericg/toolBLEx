@@ -103,6 +103,7 @@ if [[ $create_package = true ]] ; then
     sudo rm $QT_ROOT_DIR/plugins/position/libqtposition_nmea.so
     sudo rm $QT_ROOT_DIR/plugins/sqldrivers/libqsqlmimer.so
     sudo rm $QT_ROOT_DIR/plugins/sqldrivers/libqsqlmysql.so
+    sudo rm $QT_ROOT_DIR/plugins/sqldrivers/libqsqloci.so
     sudo rm $QT_ROOT_DIR/plugins/sqldrivers/libqsqlodbc.so
     sudo rm $QT_ROOT_DIR/plugins/sqldrivers/libqsqlpsql.so
   fi
