@@ -246,11 +246,6 @@ class ChartDataHistory: public QObject
     float temperatureMax = -99.f;
     float luminosityLuxMax = -99.f;
 
-    bool isToday() const { return (datetime.date() == QDate::currentDate()); }
-    int getDay() const { return datetime.date().day(); }
-    int getHour() const { return datetime.time().hour(); }
-    QDateTime getDateTime() const { return datetime; }
-
     float getSoilMoisture() const { return soilMoisture; }
     float getSoilCondu() const { return soilConductivity; }
     float getSoilTemperature() const { return soilTemperature; }
@@ -300,6 +295,11 @@ public:
         temperatureMax = tm;
         luminosityLuxMax = lm;
     }
+
+    bool isToday() const { return (datetime.date() == QDate::currentDate()); }
+    int getDay() const { return datetime.date().day(); }
+    int getHour() const { return datetime.time().hour(); }
+    QDateTime getDateTime() const { return datetime; }
 };
 
 /* ************************************************************************** */
@@ -327,11 +327,6 @@ class ChartDataMinMax: public QObject
     int hygroMin;
     int hygroMax;
 
-    bool isToday() const { return (datetime.date() == QDate::currentDate()); }
-    int getDay() const { return datetime.date().day(); }
-    int getHour() const { return datetime.time().hour(); }
-    QDateTime getDateTime() const { return datetime; }
-
     float getTempMin() const { return tempMin; }
     float getTempMean() const { return tempMean; }
     float getTempMax() const { return tempMax; }
@@ -349,6 +344,11 @@ public:
         tempMin = tmin; tempMean = t; tempMax = tmax;
         hygroMin = hmin; hygroMax = hmax;
     }
+
+    bool isToday() const { return (datetime.date() == QDate::currentDate()); }
+    int getDay() const { return datetime.date().day(); }
+    int getHour() const { return datetime.time().hour(); }
+    QDateTime getDateTime() const { return datetime; }
 };
 
 /* ************************************************************************** */
@@ -404,11 +404,6 @@ class ChartDataEnv: public QObject
     float pm10Mean = -99.f;
     float pm10Max;
 
-    bool isToday() const { return (datetime.date() == QDate::currentDate()); }
-    int getDay() const { return datetime.date().day(); }
-    int getHour() const { return datetime.time().hour(); }
-    QDateTime getDateTime() const { return datetime; }
-
     float getVocMin() const { return vocMin; }
     float getVocMean() const { return vocMean; }
     float getVocMax() const { return vocMax; }
@@ -446,6 +441,11 @@ public:
         pm25Min = p2min; pm25Mean = p2; pm25Max = p2max;
         pm10Min = p10min; pm10Mean = p10; pm10Max = p10max;
     }
+
+    bool isToday() const { return (datetime.date() == QDate::currentDate()); }
+    int getDay() const { return datetime.date().day(); }
+    int getHour() const { return datetime.time().hour(); }
+    QDateTime getDateTime() const { return datetime; }
 };
 
 /* ************************************************************************** */
