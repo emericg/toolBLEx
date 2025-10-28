@@ -108,29 +108,34 @@ qt_add_qml_module(${CMAKE_PROJECT_NAME}
         qml/components/TextSelectable.qml
         qml/components/ButtonScanMenu.qml
 
-        qml/components/AdapterWidget.qml
-        qml/components/AdvertisementDataWidget.qml
-        qml/components/AdvertisementDataWidgetAdvanced.qml
-        qml/components/BleServiceWidget.qml
-        qml/components/BleCharacteristicWidget.qml
-        qml/components/DeviceLogWidget.qml
         qml/components/DeviceScannerListHeader.qml
         qml/components/DeviceScannerListWidget.qml
         qml/components/DeviceScannerTableHeader.qml
         qml/components/DeviceScannerTableWidget.qml
+        qml/components/FrequencyGraph.qml
+        qml/components/FrequencyGraphLegend.qml
         qml/components/ProximityRadar.qml
         qml/components/RssiBar.qml
         qml/components/RssiGraph.qml
-        qml/components/FrequencyGraph.qml
-        qml/components/FrequencyGraphLegend.qml
+        qml/components/WarningNoAdapter.qml
+        qml/components/WarningNoBluetooth.qml
+        qml/components/WarningNoPermission.qml
+        qml/components/WarningNotImplemented.qml
+
+        qml/components_js/UtilsBluetooth.js
+        qml/components_js/UtilsDeviceSensors.js
 
         qml/popups/PopupClearDeviceSeenCache.qml
         qml/popups/PopupClearDeviceStructureCache.qml
         qml/popups/PopupExportDeviceData.qml
         qml/popups/PopupWriteCharacteristic.qml
 
-        qml/components_js/UtilsBluetooth.js
-        qml/components_js/UtilsDeviceSensors.js
+        qml/widgets/AdapterWidget.qml
+        qml/widgets/AdvertisementDataWidget.qml
+        qml/widgets/AdvertisementDataWidgetAdvanced.qml
+        qml/widgets/BleServiceWidget.qml
+        qml/widgets/BleCharacteristicWidget.qml
+        qml/widgets/DeviceLogWidget.qml
 )
 
 qt_add_translations(${CMAKE_PROJECT_NAME}
