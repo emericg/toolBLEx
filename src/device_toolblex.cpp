@@ -1355,7 +1355,6 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &filename,
                         str += "Characteristic Name: " + cst->getName();
                         str += " - UUID: " + cst->getUuidFull();
                         str += " - Properties: " + cst->getProperty();
-                        //exp += " - Handle: " + cst->getHandle();
 
                         if (withValues)
                         {

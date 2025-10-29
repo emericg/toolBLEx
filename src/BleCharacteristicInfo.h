@@ -89,12 +89,11 @@ public:
     QString getName() const;
     QString getUuidFull() const;
     QString getUuidShort() const;
-    QString getHandle() const; // TODO // deprecated?
 
-    QString getProperty() const;
-    QStringList getPropertyList() const;
+    QString getProperty() const; // TODO
+    QStringList getPropertyList() const; // TODO
 
-    QString getPermission() const;
+    QString getPermission() const; // TODO
     QStringList getPermissionList() const; // TODO
 
     void setReadInProgress(bool value);

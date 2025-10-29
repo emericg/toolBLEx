@@ -564,12 +564,10 @@ QString ServiceInfo::getUuidShort() const
     bool success = false;
 
     quint16 result16 = uuid.toUInt16(&success);
-    if (success)
-        return QStringLiteral("0x") + QString::number(result16, 16).toUpper().rightJustified(4, '0');
+    if (success) return QStringLiteral("0x") + QString::number(result16, 16).toUpper().rightJustified(4, '0');
 
     quint32 result32 = uuid.toUInt32(&success);
-    if (success)
-        return QStringLiteral("0x") + QString::number(result32, 16).toUpper().rightJustified(8, '0');
+    if (success) return QStringLiteral("0x") + QString::number(result32, 16).toUpper().rightJustified(8, '0');
 
     return uuid.toString().toUpper().remove(QLatin1Char('{')).remove(QLatin1Char('}'));
 }

@@ -49,18 +49,7 @@ void CharacteristicInfo::setCharacteristic(const QLowEnergyCharacteristic &chara
         m_name = characteristic_ble.name();
         m_uuid = characteristic_ble.uuid();
 
-        // find descriptor with CharacteristicUserDescription
-        const QList <QLowEnergyDescriptor> descriptors = characteristic_ble.descriptors();
-        for (const QLowEnergyDescriptor &descriptor: descriptors)
-        {
-            if (descriptor.type() == QBluetoothUuid::DescriptorType::CharacteristicUserDescription)
-            {
-                m_name = descriptor.value();
-                qDebug() << "- name from descriptor " << m_name;
-                break;
-            }
-        }
-
+        // Check characteristic properties
         uint pflag = characteristic_ble.properties();
         if (pflag & QLowEnergyCharacteristic::Broadcasting)
         {
@@ -95,7 +84,37 @@ void CharacteristicInfo::setCharacteristic(const QLowEnergyCharacteristic &chara
             m_properties += QStringLiteral("ExtendedProperty");
         }
 
+        // Check characteristic descriptors
+        const QList <QLowEnergyDescriptor> descriptors = characteristic_ble.descriptors();
+        for (const QLowEnergyDescriptor &descriptor: descriptors)
+        {
+            //qDebug() << "- descriptor TYPE " << descriptor.type() << " NAME " << descriptor.name() << " UUID " << descriptor.uuid();
+            //qDebug() << "- descriptor VALUE" << descriptor.value();
+
+            if (descriptor.type() == QBluetoothUuid::DescriptorType::CharacteristicExtendedProperties)
+            {
+                uint eflag = descriptor.value().toUInt();
+                if (eflag & 0x01)
+                {
+                    m_properties += QStringLiteral("Reliable Write");
+                }
+                if (eflag & 0x02)
+                {
+                    m_properties += QStringLiteral("Writable Auxiliaries");
+                }
+            }
+            else if (descriptor.type() == QBluetoothUuid::DescriptorType::CharacteristicUserDescription)
+            {
+                m_name = descriptor.value();
+            }
+        }
+
+        // Get the characteristic data
         m_data = characteristic_ble.value();
+    }
+    else
+    {
+        qWarning() << "CharacteristicInfo::setCharacteristic() characteristic is invalid";
     }
 }
 
@@ -113,6 +132,10 @@ void CharacteristicInfo::setCharacteristic(const QJsonObject &characteristic_cac
         }
 
         // value is not saved in the cache
+    }
+    else
+    {
+        qWarning() << "CharacteristicInfo::setCharacteristic() cache is empty";
     }
 }
 
@@ -148,11 +171,6 @@ QString CharacteristicInfo::getUuidShort() const
     return m_uuid.toString().toUpper().remove(QLatin1Char('{')).remove(QLatin1Char('}'));
 }
 
-QString CharacteristicInfo::getHandle() const
-{
-    return QString();
-}
-
 /* ************************************************************************** */
 
 QString CharacteristicInfo::getProperty() const
@@ -186,36 +204,40 @@ QString CharacteristicInfo::getPermission() const
 /*
     Access Permissions
 
-       Similar to file permissions, access permissions determine whether the client can read or write (or both) an attribute value (introduced in Value). Each attribute can have one of the following access permissions:
+        Similar to file permissions, access permissions determine whether the client can read or write (or both) an attribute value (introduced in Value).
+        Each attribute can have one of the following access permissions:
 
-       None
-           The attribute can neither be read nor written by a client.
-       Readable
-           The attribute can be read by a client.
-       Writable
-           The attribute can be written by a client.
-       Readable and writable
-           The attribute can be both read and written by the client.
+        None
+            The attribute can neither be read nor written by a client.
+        Readable
+            The attribute can be read by a client.
+        Writable
+            The attribute can be written by a client.
+        Readable and writable
+            The attribute can be both read and written by the client.
 
-   Encryption
+    Encryption
 
-       Determines whether a certain level of encryption is required for this attribute to be accessed by the client. (See Authentication, Security Modes and Procedures, and Security Modes for more information on authentication and encryption.) These are the allowed encryption permissions, as defined by GATT:
+        Determines whether a certain level of encryption is required for this attribute to be accessed by the client.
+            (See Authentication, Security Modes and Procedures, and Security Modes for more information on authentication and encryption.)
+            These are the allowed encryption permissions, as defined by GATT:
 
-       No encryption required (Security Mode 1, Level 1)
-           The attribute is accessible on a plain-text, non-encrypted connection.
-       Unauthenticated encryption required (Security Mode 1, Level 2)
-           The connection must be encrypted to access this attribute, but the encryption keys do not need to be authenticated (although they can be).
-       Authenticated encryption required (Security Mode 1, Level 3)
-           The connection must be encrypted with an authenticated key to access this attribute.
+        No encryption required (Security Mode 1, Level 1)
+            The attribute is accessible on a plain-text, non-encrypted connection.
+        Unauthenticated encryption required (Security Mode 1, Level 2)
+            The connection must be encrypted to access this attribute, but the encryption keys do not need to be authenticated (although they can be).
+        Authenticated encryption required (Security Mode 1, Level 3)
+            The connection must be encrypted with an authenticated key to access this attribute.
 
-   Authorization
+    Authorization
 
-       Determines whether user permission (also known as authorization, as discussed in Security Modes and Procedures) is required to access this attribute. An attribute can choose only between requiring or not requiring authorization:
+        Determines whether user permission (also known as authorization, as discussed in Security Modes and Procedures) is required to access this attribute.
+            An attribute can choose only between requiring or not requiring authorization:
 
-       No authorization required
-           Access to this attribute does not require authorization.
-       Authorization required
-           Access to this attribute requires authorization.
+        No authorization required
+            Access to this attribute does not require authorization.
+        Authorization required
+            Access to this attribute requires authorization.
 */
     return QString();
 }
