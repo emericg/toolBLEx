@@ -11,13 +11,13 @@ A Bluetooth Low Energy device scanner and analyzer.
 
 #### Features
 
-- host adapters info
+- Bluetooth host adapters info
 - RSSI graph / proximity graph (BLE and classic)
-- device scanner (BLE and classic)
-- device advertisement and services explorer (BLE)
-- read/write device services data (BLE)
-- export device info: advertisement packets, services and characteristics (with or without values)
-- frequency analyzer (ONLY if you have an Ubertooth One)
+- Device scanner (BLE and classic)
+- Device advertisement and services explorer (BLE)
+- Read/write on device characteristics (BLE)
+- Export device info: advertisement packets, services and characteristics (with or without values)
+- Frequency analyzer (ONLY if you have an Ubertooth One)
 
 #### Download
 
@@ -61,14 +61,17 @@ $ cmake --build build/
 
 ##### Linux
 
-- Apple iBeacons are hidden by the OS and don't appear in scan results
+Bluetooth driver support might be a little shaky...
+
+- Apple iBeacons are hidden by the OS and don't appear in scan results?
 
 ##### macOS
 
 macOS has various limitations regarding Bluetooth handling:  
-- MAC addresses are hidden by the OS, and replaced by randomly generated UUIDs, making proper device identification hard
-- Apple iBeacons are hidden by the OS and don't appear in scan results
+
+- Apple iBeacons are hidden by the OS and don't appear in scan results?
 - Bluetooth Classic scanning doesn't seem to work at the moment
+- MAC addresses are hidden by the OS, and replaced by randomly generated UUIDs, making proper device identification hard
 
 Starting with macOS 11, the application will ask you for permission to use Bluetooth. You can learn more on Apple [developer website](https://developer.apple.com/documentation/bundleresources/information_property_list/nsbluetoothalwaysusagedescription).
 
@@ -76,7 +79,7 @@ Starting with macOS 11, the application will ask you for permission to use Bluet
 
 Bluetooth driver support might be a little shaky...
 
-Windows doesn't have good enough support for the Ubertooth One, and thus the frequency analyzer is disabled.
+- Windows doesn't have good enough support for the Ubertooth One, and thus the frequency analyzer is disabled.
 
 #### Third party projects used by toolBLEx
 
