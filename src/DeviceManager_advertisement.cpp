@@ -74,8 +74,10 @@ void DeviceManager::bleDevice_updated(const QBluetoothDeviceInfo &info, QBluetoo
             {
                 //qDebug() << info.name() << info.address() << Qt::hex
                 //         << "ID" << id
-                //         << "manufacturer data" << Qt::dec << info.manufacturerData(id).count() << Qt::hex
+                //         << "manufacturer data" << Qt::dec << info.manufacturerData(id).size() << Qt::hex
                 //         << "bytes:" << info.manufacturerData(id).toHex();
+
+                if (id == 0x004c) dd->setBeacon(true); // iBeacon
 
                 hasmfd |= dd->parseAdvertisementToolBLEx(DeviceUtils::BLE_ADV_MANUFACTURERDATA,
                                                          id, QBluetoothUuid(), info.manufacturerData(id));
@@ -86,8 +88,10 @@ void DeviceManager::bleDevice_updated(const QBluetoothDeviceInfo &info, QBluetoo
             {
                 //qDebug() << info.name() << info.address() << Qt::hex
                 //         << "ID" << id
-                //         << "service data" << Qt::dec << info.serviceData(id).count() << Qt::hex
+                //         << "service data" << Qt::dec << info.serviceData(id).size() << Qt::hex
                 //         << "bytes:" << info.serviceData(id).toHex();
+
+                if (id == QBluetoothUuid(quint32(0xFEAA))) dd->setBeacon(true); // Eddystone beacon
 
                 hassvd |= dd->parseAdvertisementToolBLEx(DeviceUtils::BLE_ADV_SERVICEDATA,
                                                          id.toUInt16(), id, info.serviceData(id));

@@ -972,13 +972,17 @@ void DeviceManager::addBleDevice(const QBluetoothDeviceInfo &info)
     if (d)
     {
         if (info.isCached() || info.rssi() == 0) d->setCached(true);
-        if (info.name().isEmpty()) d->setBeacon(true);
-        if (info.name().replace('-', ':') == d->getAddress()) d->setBeacon(true);
-        if (info.name() == "Bluetooth " + d->getAddress().toLower()) d->setBeacon(true);
+        //if (info.name().isEmpty()) d->setBeacon(true);
+        //if (info.name().replace('-', ':') == d->getAddress()) d->setBeacon(true);
+        //if (info.name() == "Bluetooth " + d->getAddress().toLower()) d->setBeacon(true);
         if (m_devices_blacklist.contains(d->getAddress())) d->setBlacklisted(true);
 
         // Get a random color
         d->setDeviceColor(getAvailableColor());
+
+        // Add it to the UI
+        m_devices_model->addDevice(d);
+        Q_EMIT devicesListUpdated();
 
         // Add it to the cache? But not if it's a beacon...
         SettingsManager *sm = SettingsManager::getInstance();
@@ -987,10 +991,6 @@ void DeviceManager::addBleDevice(const QBluetoothDeviceInfo &info)
             cacheDeviceSeen(d->getAddress());
             d->setCached(true);
         }
-
-        // Add it to the UI
-        m_devices_model->addDevice(d);
-        Q_EMIT devicesListUpdated();
 
         //qDebug() << "Device added (from BLE discovery): " << d->getName() << "/" << d->getAddress();
     }
@@ -1169,6 +1169,8 @@ bool DeviceManager::isBleDeviceBlacklisted(const QString &addr)
 
 void DeviceManager::cacheDeviceSeen(const QString &addr)
 {
+    //qDebug() << "cacheDeviceSeen(" << addr << ")";
+
     if (m_dbInternal || m_dbExternal)
     {
         for (auto d: std::as_const(m_devices_model->m_devices))
@@ -1214,6 +1216,10 @@ void DeviceManager::cacheDeviceSeen(const QString &addr)
                         qWarning() << "> cacheDevice.exec() ERROR"
                                    << cacheDevice.lastError().type() << ":" << cacheDevice.lastError().text();
                     }
+                }
+                else
+                {
+                    qWarning() << "> queryDevice.exec() CAN't";
                 }
             }
         }
