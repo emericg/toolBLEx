@@ -11,9 +11,7 @@ Rectangle {
 
     property var characteristic: modelData
 
-    property bool editable: (selectedDevice &&
-                             selectedDevice.connected &&
-                             selectedDevice.servicesScanned)
+    property bool editable: (selectedDevice && selectedDevice.connected) // && selectedDevice.servicesScanned)
 
     ////////////////
 

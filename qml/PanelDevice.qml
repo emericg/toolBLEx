@@ -154,6 +154,7 @@ Item {
 
     PanelDeviceInfos {
         id: panelDeviceInfos
+
         anchors.top: actionBar.bottom
         anchors.left: parent.left
         anchors.right: parent.right
@@ -167,6 +168,7 @@ Item {
 
     PanelDeviceAdvertisement {
         id: panelDeviceAdvertisement
+
         anchors.top: actionBar.bottom
         anchors.left: parent.left
         anchors.right: parent.right
@@ -180,11 +182,12 @@ Item {
 
     PanelDeviceServices {
         id: panelDeviceServices
+
         anchors.top: actionBar.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.margins: 16
+        anchors.margins: 0
 
         visible: (deviceMenu.currentSelection === 3)
     }
@@ -193,11 +196,12 @@ Item {
 
     PanelDeviceLog {
         id: panelDeviceLog
+
         anchors.top: actionBar.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.margins: 16
+        anchors.margins: 0
 
         visible: (deviceMenu.currentSelection === 4)
     }

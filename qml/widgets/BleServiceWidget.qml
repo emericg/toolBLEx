@@ -6,9 +6,11 @@ import ComponentLibrary
 Rectangle {
     id: bleServiceWidget
 
-    property bool extended: false
+    property bool serviceReady: (modelData.serviceStatus === 3)
 
-    height: extended ? (servicewiew.height + characteristicview.contentHeight) : servicewiew.height
+    property bool extendedView: false
+
+    height: extendedView ? (serviceView.height + characteristicview.contentHeight) : serviceView.height
     Behavior on height { NumberAnimation { duration: 233 } }
 
     clip: true
@@ -17,7 +19,7 @@ Rectangle {
     //////////
 
     Item {
-        id: servicewiew
+        id: serviceView
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
@@ -26,7 +28,7 @@ Rectangle {
 
         MouseArea {
             anchors.fill: parent
-            onClicked: bleServiceWidget.extended = !bleServiceWidget.extended
+            onClicked: bleServiceWidget.extendedView = !bleServiceWidget.extendedView
         }
 
         Column {
@@ -73,7 +75,7 @@ Rectangle {
                         anchors.verticalCenter: parent.verticalCenter
 
                         color: Theme.colorIcon
-                        source: bleServiceWidget.extended ?
+                        source: bleServiceWidget.extendedView ?
                                     "qrc:/IconLibrary/material-symbols/unfold_less.svg" :
                                     "qrc:/IconLibrary/material-symbols/unfold_more.svg"
                     }
@@ -103,7 +105,7 @@ Rectangle {
     ListView {
         id: characteristicview
         anchors.top: parent.top
-        anchors.topMargin: servicewiew.height
+        anchors.topMargin: serviceView.height
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
@@ -112,8 +114,8 @@ Rectangle {
 
         model: modelData.characteristicList
         delegate: BleCharacteristicWidget {
-            width: characteristicview.width
-            //editable: (modelData.serviceStatus === 3)
+            width: ListView.view.width
+            editable: bleServiceWidget.serviceReady
         }
     }
 

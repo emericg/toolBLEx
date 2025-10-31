@@ -13,8 +13,10 @@ Item {
     ////////
 
     Column {
+        anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
+        anchors.margins: 16
 
         z: 5
         spacing: 20
@@ -92,13 +94,15 @@ Item {
     ListView {
         id: servicesView
         anchors.fill: parent
-        anchors.margins: -16
 
         clip: false
         visible: (selectedDevice && selectedDevice.servicesCount > 0)
 
+        boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
+        ScrollBar.vertical: ScrollBar { visible: false }
+
         header: Rectangle {
-            width: servicesView.width
+            width: ListView.view.width
             height: visible ? 40 : 0
             color: Theme.colorForeground
 
@@ -140,13 +144,13 @@ Item {
 
         model: (selectedDevice && selectedDevice.servicesList)
         delegate: BleServiceWidget {
-            width: servicesView.width
+            width: ListView.view.width
         }
     }
 
     ////////
 
-    Row {
+    Row { // buttons row
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.margins: -4

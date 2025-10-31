@@ -9,41 +9,56 @@ import DeviceUtils
 Flickable {
     id: panelDeviceLog
 
-    ////////
+    ////////////////
 
-    property string logFormat: "adv"
-    property bool logLegend: false
+    property string logFormat: "adv" // "adv" or "txt"
+    property bool logVisible: (selectedDevice && selectedDevice.deviceLogCount > 0)
 
-    Rectangle {
-        width: detailView.ww
-        height: log_nodata.height + 32
-        radius: 4
+    property bool legendVisible: false
 
-        clip: false
-        color: Theme.colorBox
-        border.width: 2
-        border.color: Theme.colorBoxBorder
+    ////////////////
 
-        visible: (selectedDevice && selectedDevice.deviceLogCount <= 0)
+    Item {
+        width: parent.width
+        height: log_nodata.height + 64
 
-        Text {
-            id: log_nodata
+        Rectangle {
+            anchors.top: parent.top
             anchors.left: parent.left
-            anchors.leftMargin: 16
             anchors.right: parent.right
-            anchors.rightMargin: 16
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.margins: 16
 
-            text: qsTr("No event logged yet...")
-            textFormat: Text.PlainText
-            font.pixelSize: Theme.fontSizeContent
-            color: Theme.colorText
+            width: detailView.ww
+            height: log_nodata.height + 32
+            radius: 4
+
+            clip: false
+            color: Theme.colorBox
+            border.width: 2
+            border.color: Theme.colorBoxBorder
+
+            visible: !logVisible
+
+            Text {
+                id: log_nodata
+                anchors.left: parent.left
+                anchors.leftMargin: 16
+                anchors.right: parent.right
+                anchors.rightMargin: 16
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: qsTr("No event logged yet...")
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContent
+                color: Theme.colorText
+            }
         }
     }
 
+    ////////////////
+
     Loader {
         anchors.fill: parent
-        anchors.margins: -16
 
         active: (logFormat === "txt")
         asynchronous: true
@@ -52,25 +67,26 @@ Flickable {
 
     Loader {
         anchors.fill: parent
-        anchors.margins: -16
 
         active: (logFormat === "adv")
         asynchronous: true
         sourceComponent: logAdvView
     }
 
-    ////////
+    ////////////////
 
     Column {
+        id: columnLegendLeft
+
         anchors.left: parent.left
         anchors.bottom: parent.bottom
-        anchors.margins: -4
+        anchors.margins: 8
         spacing: 8
 
-        visible: (selectedDevice && selectedDevice.deviceLogCount > 0)
+        visible: logVisible
 
         Row {
-            visible: logLegend
+            visible: (logFormat === "adv" && legendVisible)
             spacing: 8
 
             Repeater {
@@ -82,49 +98,47 @@ Flickable {
                     "USER ACTION",
                     "ERROR",
                 ]
-                delegate:
-                    Row {
-                        spacing: 6
-                        Rectangle {
-                            anchors.verticalCenter: parent.verticalCenter
-                            width: 16
-                            height: 16
-                            radius: 4
-                            color: {
-                                if (index === 0) return Theme.colorMaterialGreen
-                                if (index === 1) return Theme.colorMaterialLime
-                                if (index === 2) return Theme.colorMaterialBlue
-                                if (index === 3) return Theme.colorMaterialLightBlue
-                                if (index === 4) return Theme.colorPrimary
-                                if (index === 5) return Theme.colorError
-                                return Theme.colorBox
-                            }
-                        }
-                        Text {
-                            anchors.verticalCenter: parent.verticalCenter
-                            text: modelData
-                            textFormat: Text.PlainText
-                            color: {
-                                if (index === 0) return Theme.colorMaterialGreen
-                                if (index === 1) return Theme.colorMaterialLime
-                                if (index === 2) return Theme.colorMaterialBlue
-                                if (index === 3) return Theme.colorMaterialLightBlue
-                                if (index === 4) return Theme.colorPrimary
-                                if (index === 5) return Theme.colorError
-                                return Theme.colorBox
-                            }
+                delegate: Row {
+                    spacing: 6
+
+                    Rectangle {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 16
+                        height: 16
+                        radius: 4
+                        color: {
+                            if (index === 0) return Theme.colorMaterialGreen
+                            if (index === 1) return Theme.colorMaterialLime
+                            if (index === 2) return Theme.colorMaterialBlue
+                            if (index === 3) return Theme.colorMaterialLightBlue
+                            if (index === 4) return Theme.colorPrimary
+                            if (index === 5) return Theme.colorError
+                            return Theme.colorBox
                         }
                     }
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: modelData
+                        textFormat: Text.PlainText
+                        color: {
+                            if (index === 0) return Theme.colorMaterialGreen
+                            if (index === 1) return Theme.colorMaterialLime
+                            if (index === 2) return Theme.colorMaterialBlue
+                            if (index === 3) return Theme.colorMaterialLightBlue
+                            if (index === 4) return Theme.colorPrimary
+                            if (index === 5) return Theme.colorError
+                            return Theme.colorBox
+                        }
+                    }
+                }
             }
         }
 
-        Row {
+        Row { // buttons row (left)
             spacing: 8
 
             ButtonSolid { // formatButton
                 color: Theme.colorGrey
-
-                visible: (selectedDevice && selectedDevice.deviceLog)
 
                 text: qsTr("format:") + " " + logFormat
 
@@ -135,31 +149,29 @@ Flickable {
             }
 
             ButtonSolid { // legendButton
-                color: logLegend ? Theme.colorGrey : Theme.colorGrey
-
-                visible: (selectedDevice && selectedDevice.deviceLog)
+                visible: (logFormat === "adv")
+                color: legendVisible ? Theme.colorGrey : Theme.colorGrey
 
                 text: qsTr("legend")
 
                 onClicked: {
-                    logLegend = !logLegend
+                    legendVisible = !legendVisible
                 }
             }
         }
     }
 
-    ////
+    ////////////////
 
-    Row {
+    Row { // buttons row (right)
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.margins: -4
+        anchors.margins: 8
         spacing: 8
 
-        visible: (selectedDevice && selectedDevice.deviceLogCount > 0)
+        visible: logVisible
 
         ButtonSolid { // clearButton
-            visible: (selectedDevice && selectedDevice.deviceLog)
             color: Theme.colorGrey
 
             text: qsTr("Clear")
@@ -171,7 +183,6 @@ Flickable {
         }
 
         ButtonSolid { // saveButton
-            visible: (selectedDevice && selectedDevice.deviceLog)
             color: Theme.colorGrey
 
             text: qsTr("Save")
@@ -211,13 +222,14 @@ Flickable {
         }
     }
 
-    ////////
+    ////////////////////////////////////////////////////////////////////////////
 
     Component {
         id: logTextView
 
         ScrollView {
             anchors.fill: parent
+            anchors.bottomMargin: columnLegendLeft.height + 16
 
             TextArea {
                 text: (selectedDevice && selectedDevice.deviceLogStr)
@@ -234,13 +246,17 @@ Flickable {
 
         ListView {
             anchors.fill: parent
+            bottomMargin: columnLegendLeft.height + 16
+
+            boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
+            ScrollBar.vertical: ScrollBar { visible: false }
 
             model: (selectedDevice && selectedDevice.deviceLog)
             delegate: DeviceLogWidget {
-                width: parent.width
+                width: ListView.view.width
             }
         }
     }
 
-    ////////
+    ////////////////////////////////////////////////////////////////////////////
 }
