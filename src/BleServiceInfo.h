@@ -86,7 +86,7 @@ public:
     ~ServiceInfo();
 
     bool getScanComplete() const { return m_scan_complete; }
-    int getServiceStatus() const;
+    int getServiceStatus() const; //!< see QLowEnergyService::ServiceState
     QString getServiceStatusStr() const;
 
     const QLowEnergyService *getService();

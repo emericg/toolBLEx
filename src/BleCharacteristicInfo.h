@@ -40,9 +40,10 @@ class CharacteristicInfo: public QObject
     Q_PROPERTY(QString uuid READ getUuidFull NOTIFY characteristicChanged)
     Q_PROPERTY(QString uuid_full READ getUuidFull NOTIFY characteristicChanged)
     Q_PROPERTY(QString uuid_short READ getUuidShort NOTIFY characteristicChanged)
-    Q_PROPERTY(QString properties READ getProperty NOTIFY characteristicChanged)
+
+    //Q_PROPERTY(QString properties READ getProperty NOTIFY characteristicChanged)
     Q_PROPERTY(QStringList propertiesList READ getPropertyList NOTIFY characteristicChanged)
-    Q_PROPERTY(QString permissions READ getPermission NOTIFY characteristicChanged)
+    //Q_PROPERTY(QString permissions READ getPermission NOTIFY characteristicChanged)
     Q_PROPERTY(QStringList permissionsList READ getPermissionList NOTIFY characteristicChanged)
 
     Q_PROPERTY(bool readInProgress READ getReadInProgress NOTIFY statusChanged)
@@ -62,7 +63,8 @@ class CharacteristicInfo: public QObject
 
     QString m_name;
     QBluetoothUuid m_uuid;
-    QStringList m_properties;
+    QStringList m_properties_str;
+    QList <int> m_properties_enum;
     QStringList m_permissions; // TODO
     QByteArray m_data;
 

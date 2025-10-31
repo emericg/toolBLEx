@@ -48,6 +48,7 @@
 #include <QDebug>
 
 /* ************************************************************************** */
+/* ************************************************************************** */
 
 DeviceToolBLEx::DeviceToolBLEx(const QString &deviceAddr, const QString &deviceName,
                                QObject *parent): Device(deviceAddr, deviceName, parent)
@@ -59,6 +60,8 @@ DeviceToolBLEx::DeviceToolBLEx(const QString &deviceAddr, const QString &deviceN
 
     getSqlDeviceInfos();
 }
+
+/* ************************************************************************** */
 
 DeviceToolBLEx::DeviceToolBLEx(const QBluetoothDeviceInfo &d, QObject *parent):
     Device(d, parent)
@@ -74,6 +77,8 @@ DeviceToolBLEx::DeviceToolBLEx(const QBluetoothDeviceInfo &d, QObject *parent):
 
     getSqlDeviceInfos();
 }
+
+/* ************************************************************************** */
 
 DeviceToolBLEx::~DeviceToolBLEx()
 {
@@ -95,8 +100,12 @@ DeviceToolBLEx::~DeviceToolBLEx()
     m_mfd.clear();
     qDeleteAll(m_mfd_uuid);
     m_mfd_uuid.clear();
+
+    qDeleteAll(m_deviceLog);
+    m_deviceLog.clear();
 }
 
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 bool DeviceToolBLEx::getSqlDeviceInfos()
@@ -369,6 +378,30 @@ bool DeviceToolBLEx::isLastSeenToday()
 
 /* ************************************************************************** */
 
+void DeviceToolBLEx::blacklist(bool b)
+{
+    if (m_isBlacklisted != b)
+    {
+        if (b) static_cast<DeviceManager *>(parent())->blacklistBleDevice(m_deviceAddress);
+        else static_cast<DeviceManager *>(parent())->whitelistBleDevice(m_deviceAddress);
+
+        setBlacklisted(b);
+    }
+}
+
+void DeviceToolBLEx::cache(bool c)
+{
+    if (m_isCached != c)
+    {
+        if (c) static_cast<DeviceManager *>(parent())->cacheDeviceSeen(m_deviceAddress);
+        else static_cast<DeviceManager *>(parent())->uncacheDeviceSeen(m_deviceAddress);
+
+        setCached(c);
+    }
+}
+
+/* ************************************************************************** */
+
 void DeviceToolBLEx::updateCache()
 {
     if (m_dbInternal || m_dbExternal)
@@ -407,30 +440,6 @@ void DeviceToolBLEx::updateCache()
 }
 
 /* ************************************************************************** */
-
-void DeviceToolBLEx::blacklist(bool b)
-{
-    if (m_isBlacklisted != b)
-    {
-        if (b) static_cast<DeviceManager *>(parent())->blacklistBleDevice(m_deviceAddress);
-        else static_cast<DeviceManager *>(parent())->whitelistBleDevice(m_deviceAddress);
-
-        setBlacklisted(b);
-    }
-}
-
-void DeviceToolBLEx::cache(bool c)
-{
-    if (m_isCached != c)
-    {
-        if (c) static_cast<DeviceManager *>(parent())->cacheDeviceSeen(m_deviceAddress);
-        else static_cast<DeviceManager *>(parent())->uncacheDeviceSeen(m_deviceAddress);
-
-        setCached(c);
-    }
-}
-
-/* ************************************************************************** */
 /* ************************************************************************** */
 
 void DeviceToolBLEx::actionScanWithValues()
@@ -446,6 +455,8 @@ void DeviceToolBLEx::actionScanWithValues()
     }
 }
 
+/* ************************************************************************** */
+
 void DeviceToolBLEx::actionScanWithoutValues()
 {
     qDebug() << "DeviceToolBLEx::actionScanWithoutValues()" << getAddress() << getName();
@@ -459,6 +470,7 @@ void DeviceToolBLEx::actionScanWithoutValues()
     }
 }
 
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 void DeviceToolBLEx::askForNotify(const QString &uuid)
@@ -482,6 +494,8 @@ void DeviceToolBLEx::askForNotify(const QString &uuid)
     }
 }
 
+/* ************************************************************************** */
+
 void DeviceToolBLEx::askForRead(const QString &uuid)
 {
     // Iterate through services, until we find the characteristic we want to read
@@ -502,6 +516,8 @@ void DeviceToolBLEx::askForRead(const QString &uuid)
         }
     }
 }
+
+/* ************************************************************************** */
 
 void DeviceToolBLEx::askForWrite(const QString &uuid, const QString &value, const QString &type)
 {
@@ -524,6 +540,7 @@ void DeviceToolBLEx::askForWrite(const QString &uuid, const QString &value, cons
     }
 }
 
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 QByteArray DeviceToolBLEx::askForData_qba(const QString &value, const QString &type)
@@ -611,6 +628,8 @@ QByteArray DeviceToolBLEx::askForData_qba(const QString &value, const QString &t
     return data;
 }
 
+/* ************************************************************************** */
+
 QStringList DeviceToolBLEx::askForData_strlst(const QString &value, const QString &type)
 {
     QByteArray in = askForData_qba(value, type);
@@ -646,12 +665,19 @@ void DeviceToolBLEx::deviceConnected()
     Device::deviceConnected();
 }
 
+/* ************************************************************************** */
+
 void DeviceToolBLEx::deviceDisconnected()
 {
     logEvent("Device disconnected", LogEvent::CONN);
 
+    m_areServiceReady = false;
+    Q_EMIT servicesChanged();
+
     Device::deviceDisconnected();
 }
+
+/* ************************************************************************** */
 
 void DeviceToolBLEx::deviceErrored(QLowEnergyController::Error error)
 {
@@ -672,6 +698,8 @@ void DeviceToolBLEx::deviceErrored(QLowEnergyController::Error error)
     Device::deviceErrored(error);
 }
 
+/* ************************************************************************** */
+
 void DeviceToolBLEx::deviceStateChanged(QLowEnergyController::ControllerState state)
 {
     QString statestr = "UnconnectedState";
@@ -686,6 +714,7 @@ void DeviceToolBLEx::deviceStateChanged(QLowEnergyController::ControllerState st
     Device::deviceStateChanged(state);
 }
 
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 void DeviceToolBLEx::addLowEnergyService(const QBluetoothUuid &uuid)
@@ -703,12 +732,12 @@ void DeviceToolBLEx::addLowEnergyService(const QBluetoothUuid &uuid)
     QLowEnergyService::DiscoveryMode scanmode = QLowEnergyService::FullDiscovery;
     if (m_ble_action == DeviceUtils::ACTION_SCAN_WITHOUT_VALUES)
     {
-        m_services_scanmode = 2; // incomplete scan
+        m_services_scanmode = srv_scanning; // start scanning
         scanmode = QLowEnergyService::SkipValueDiscovery;
     }
     else if (m_ble_action == DeviceUtils::ACTION_SCAN_WITH_VALUES)
     {
-        m_services_scanmode = 3; // incomplete scan (with values)
+        m_services_scanmode = srv_scanning_values; // start scanning (with values)
         scanmode = QLowEnergyService::FullDiscovery;
     }
 
@@ -718,10 +747,78 @@ void DeviceToolBLEx::addLowEnergyService(const QBluetoothUuid &uuid)
     Q_EMIT servicesChanged();
 }
 
-void DeviceToolBLEx::serviceDetailsDiscovered(QLowEnergyService::ServiceState)
+/* ************************************************************************** */
+
+void DeviceToolBLEx::serviceScanDone()
 {
-    //qDebug() << "Device::serviceDetailsDiscovered(" << getAddress() << state << ")";
+    qDebug() << "DeviceToolBLEx::serviceScanDone(" << m_deviceAddress << ")";
+    logEvent("Service scan is done", LogEvent::STATE);
+/*
+    // Update services status
+    // all service(s) are now known, characteristic(s) discovery has started
+
+    if (m_services_scanmode == 3) // "incomplete scan"
+    {
+        m_services_scanmode = 7; // now "scanned"
+    }
+    else if (m_services_scanmode == 4) // "incomplete scan (with values)"
+    {
+        m_services_scanmode = 8; // now "scanned (with values)"
+    }
+    Q_EMIT servicesChanged();
+
+    // Still working...
+    m_ble_status = DeviceUtils::DEVICE_WORKING;
+    Q_EMIT statusUpdated();
+*/
 }
+
+/* ************************************************************************** */
+
+void DeviceToolBLEx::serviceDiscoveryDone()
+{
+    qDebug() << "DeviceToolBLEx::serviceDiscoveryDone(" << getAddress() << ")";
+    logEvent("Service discovery is done", LogEvent::STATE);
+
+    // Update services status
+    // all service(s) are now known, characteristic(s) discovery have been discovered
+
+    if (m_services_scanmode == srv_scanning)
+    {
+        m_services_scanmode = srv_scanned;
+    }
+    else if (m_services_scanmode == srv_scanning_values)
+    {
+        m_services_scanmode = srv_scanned_values;
+    }
+
+    m_areServiceReady = true;
+    Q_EMIT servicesChanged();
+
+    // Device is ready
+    logEvent("Device is ready", LogEvent::CONN);
+
+    // No longer working, just connected
+    m_ble_status = DeviceUtils::DEVICE_CONNECTED;
+    Q_EMIT statusUpdated();
+}
+
+void DeviceToolBLEx::serviceDetailsDiscovered_fromservice()
+{
+    for (auto s: std::as_const(m_services))
+    {
+        ServiceInfo *ss = qobject_cast<ServiceInfo *>(s);
+        if (ss->getServiceStatus() == QLowEnergyService::RemoteService ||
+            ss->getServiceStatus() == QLowEnergyService::RemoteServiceDiscovering)
+        {
+            return; // we are not ready
+        }
+    }
+
+    serviceDiscoveryDone();
+}
+
+/* ************************************************************************** */
 
 int DeviceToolBLEx::getCharacteristicsCount() const
 {
@@ -737,42 +834,21 @@ int DeviceToolBLEx::getCharacteristicsCount() const
     return characteristicCount;
 }
 
-void DeviceToolBLEx::serviceScanDone() // aka discoveryFinished()
-{
-    qDebug() << "DeviceToolBLEx::serviceScanDone(" << m_deviceAddress << ")";
-    logEvent("Service scan is done", LogEvent::STATE);
-
-    // Update service status
-    if (m_services_scanmode == 2) // "incomplete scan"
-    {
-        m_services_scanmode = 4; // now "scanned"
-    }
-    else if (m_services_scanmode == 3) // "incomplete scan (with values)"
-    {
-        m_services_scanmode = 5; // now "scanned (with values)"
-    }
-    Q_EMIT servicesChanged();
-
-    // No longer working, just connected
-    m_ble_status = DeviceUtils::DEVICE_CONNECTED;
-    Q_EMIT statusUpdated();
-}
-
 /* ************************************************************************** */
 
 void DeviceToolBLEx::bleWriteDone(const QLowEnergyCharacteristic &, const QByteArray &)
 {
-    //qDebug() << "Device::bleWriteDone(" << m_deviceAddress << ")";
+    //qDebug() << "DeviceToolBLEx::bleWriteDone(" << m_deviceAddress << ")";
 }
 
 void DeviceToolBLEx::bleReadDone(const QLowEnergyCharacteristic &, const QByteArray &)
 {
-    //qDebug() << "Device::bleReadDone(" << m_deviceAddress << ")";
+    //qDebug() << "DeviceToolBLEx::bleReadDone(" << m_deviceAddress << ")";
 }
 
 void DeviceToolBLEx::bleReadNotify(const QLowEnergyCharacteristic &, const QByteArray &)
 {
-    //qDebug() << "Device::bleReadNotify(" << m_deviceAddress << ")";
+    //qDebug() << "DeviceToolBLEx::bleReadNotify(" << m_deviceAddress << ")";
 }
 
 /* ************************************************************************** */
@@ -1145,7 +1221,7 @@ void DeviceToolBLEx::restoreServiceCache()
 
         qDeleteAll(m_services);
         m_services.clear();
-        m_services_scanmode = 1; // cache is in use
+        m_services_scanmode = srv_cached; // cache is in use
 
         const QJsonArray servicesArray = root["services"].toArray();
         for (const auto &srv_json: servicesArray)
@@ -1162,6 +1238,7 @@ void DeviceToolBLEx::restoreServiceCache()
     }
 }
 
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 bool DeviceToolBLEx::getExportFile(QString &filename, bool log) const
@@ -1198,6 +1275,7 @@ bool DeviceToolBLEx::getExportFile(QString &filename, bool log) const
 }
 
 /* ************************************************************************** */
+/* ************************************************************************** */
 
 void DeviceToolBLEx::logEvent(const QString &logline, const int event)
 {
@@ -1216,7 +1294,21 @@ void DeviceToolBLEx::logEvent(const QString &logline, const int event)
     }
 }
 
-bool DeviceToolBLEx::saveLog(const QString &filename)
+/* ************************************************************************** */
+
+void DeviceToolBLEx::clearDeviceLog()
+{
+    qDeleteAll(m_deviceLog);
+    m_deviceLog.clear();
+
+    m_deviceLogString.clear();
+
+    Q_EMIT logUpdated();
+}
+
+/* ************************************************************************** */
+
+bool DeviceToolBLEx::exportDeviceLog(const QString &filename)
 {
     bool status = false;
 
@@ -1224,7 +1316,7 @@ bool DeviceToolBLEx::saveLog(const QString &filename)
 
     if (getExportFile(exportFilePath, true))
     {
-        qDebug() << "DeviceToolBLEx::saveLog(" << exportFilePath << ")";
+        qDebug() << "DeviceToolBLEx::exportDeviceLog(" << exportFilePath << ")";
 
         // Open file and save content
         QFile efile(exportFilePath);
@@ -1242,14 +1334,7 @@ bool DeviceToolBLEx::saveLog(const QString &filename)
     return status;
 }
 
-void DeviceToolBLEx::clearLog()
-{
-    qDeleteAll(m_deviceLog);
-    m_deviceLog.clear();
-
-    Q_EMIT logUpdated();
-}
-
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 bool DeviceToolBLEx::exportDeviceInfo(const QString &filename,
@@ -1397,4 +1482,5 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &filename,
     return status;
 }
 
+/* ************************************************************************** */
 /* ************************************************************************** */

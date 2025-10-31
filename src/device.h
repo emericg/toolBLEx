@@ -206,8 +206,8 @@ protected:
     virtual void deviceConnParamChanged(const QLowEnergyConnectionParameters &newParameters);
 
     virtual void addLowEnergyService(const QBluetoothUuid &uuid);
-    virtual void serviceDetailsDiscovered(QLowEnergyService::ServiceState newState);
     virtual void serviceScanDone();
+    virtual void serviceDiscoveryDone();
 
     virtual void bleWriteDone(const QLowEnergyCharacteristic &c, const QByteArray &value);
     virtual void bleReadDone(const QLowEnergyCharacteristic &c, const QByteArray &value);
@@ -319,17 +319,6 @@ public:
     Q_INVOKABLE virtual void actionDisconnect(const bool stayConnected = false);
     Q_INVOKABLE virtual void actionScan();
     Q_INVOKABLE virtual void actionScanWithValues();
-
-    // Other actions
-    Q_INVOKABLE void refreshStart();
-    Q_INVOKABLE void refreshStartHistory();
-    Q_INVOKABLE void refreshStartRealtime();
-
-    // Internal actions
-    void refreshQueued();
-    void refreshDequeued();
-    void refreshRetry();
-    void refreshStop();
 };
 
 /* ************************************************************************** */

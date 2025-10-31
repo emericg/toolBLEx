@@ -53,35 +53,35 @@ void CharacteristicInfo::setCharacteristic(const QLowEnergyCharacteristic &chara
         uint pflag = characteristic_ble.properties();
         if (pflag & QLowEnergyCharacteristic::Broadcasting)
         {
-            m_properties += QStringLiteral("Broadcast");
+            m_properties_str += QStringLiteral("Broadcast");
         }
         if (pflag & QLowEnergyCharacteristic::Read)
         {
-            m_properties += QStringLiteral("Read");
+            m_properties_str += QStringLiteral("Read");
         }
         if (pflag & QLowEnergyCharacteristic::WriteNoResponse)
         {
-            m_properties += QStringLiteral("WriteNoResp");
+            m_properties_str += QStringLiteral("WriteNoResp");
         }
         if (pflag & QLowEnergyCharacteristic::Write)
         {
-            m_properties += QStringLiteral("Write");
+            m_properties_str += QStringLiteral("Write");
         }
         if (pflag & QLowEnergyCharacteristic::Notify)
         {
-            m_properties += QStringLiteral("Notify");
+            m_properties_str += QStringLiteral("Notify");
         }
         if (pflag & QLowEnergyCharacteristic::Indicate)
         {
-            m_properties += QStringLiteral("Indicate");
+            m_properties_str += QStringLiteral("Indicate");
         }
         if (pflag & QLowEnergyCharacteristic::WriteSigned)
         {
-            m_properties += QStringLiteral("WriteSigned");
+            m_properties_str += QStringLiteral("WriteSigned");
         }
         if (pflag & QLowEnergyCharacteristic::ExtendedProperty)
         {
-            m_properties += QStringLiteral("ExtendedProperty");
+            m_properties_str += QStringLiteral("ExtendedProperty");
         }
 
         // Check characteristic descriptors
@@ -96,11 +96,11 @@ void CharacteristicInfo::setCharacteristic(const QLowEnergyCharacteristic &chara
                 uint eflag = descriptor.value().toUInt();
                 if (eflag & 0x01)
                 {
-                    m_properties += QStringLiteral("Reliable Write");
+                    m_properties_str += QStringLiteral("Reliable Write");
                 }
                 if (eflag & 0x02)
                 {
-                    m_properties += QStringLiteral("Writable Auxiliaries");
+                    m_properties_str += QStringLiteral("Writable Auxiliaries");
                 }
             }
             else if (descriptor.type() == QBluetoothUuid::DescriptorType::CharacteristicUserDescription)
@@ -128,7 +128,7 @@ void CharacteristicInfo::setCharacteristic(const QJsonObject &characteristic_cac
         const QJsonArray props = characteristic_cache["properties"].toArray();
         for (const auto &p: props)
         {
-            m_properties += p.toString();
+            m_properties_str += p.toString();
         }
 
         // value is not saved in the cache
@@ -177,7 +177,7 @@ QString CharacteristicInfo::getProperty() const
 {
     QString properties;
 
-    for (const auto &p: m_properties)
+    for (const auto &p: m_properties_str)
     {
         if (!properties.isEmpty()) properties += " / ";
         properties += p;
@@ -196,7 +196,7 @@ QStringList CharacteristicInfo::getPropertyList() const
     // Queued Write
     // Writable Auxiliaries
 
-    return m_properties;
+    return m_properties_str;
 }
 
 QString CharacteristicInfo::getPermission() const

@@ -97,6 +97,7 @@ class DeviceToolBLEx: public Device
     Q_PROPERTY(bool hasServiceCache READ hasServiceCache NOTIFY servicesChanged)
     Q_PROPERTY(bool servicesCached READ getServicesCached NOTIFY servicesChanged)
     Q_PROPERTY(bool servicesScanned READ getServicesScanned NOTIFY servicesChanged)
+    Q_PROPERTY(bool servicesReady READ areServicesReady NOTIFY servicesChanged)
 
     Q_PROPERTY(int servicesScanMode READ getServicesScanMode NOTIFY servicesChanged)
     Q_PROPERTY(int servicesCount READ getServicesCount NOTIFY servicesChanged)
@@ -149,17 +150,22 @@ class DeviceToolBLEx: public Device
 
     // srv
 
-    /*!
-     * \FIXME this is only for the services, not their characteristics
-     *
-     * - 0: not scanned
-     * - 1: cache
-     * - 2: incomplete scan
-     * - 3: incomplete scan (with values)
-     * - 4: scanned
-     * - 5: scanned (with values)
-     */
-    int m_services_scanmode = 0;
+    enum ServiceScanMode {
+        srv_unscanned           = 0, //!< not scanned
+        srv_cached              = 1, //!< cache
+        srv_cached_values       = 2, //!< cache (with values)
+        srv_scanning            = 3, //!< scanning
+        srv_scanning_values     = 4, //!< scanning (with values)
+        srv_incomplete          = 5, //!< incomplete scan
+        srv_incomplete_values   = 6, //!< incomplete scan (with values)
+        srv_scanned             = 7, //!< scanned
+        srv_scanned_values      = 8, //!< scanned (with values)
+    };
+    Q_ENUM(ServiceScanMode)
+
+    int m_services_scanmode = 0; // See ServiceScanMode
+
+    bool m_areServiceReady = false;
 
     bool m_hasServiceCache = false;
 
@@ -193,18 +199,18 @@ class DeviceToolBLEx: public Device
 
 private slots:
     // QLowEnergyController related
-    void deviceConnected();
-    void deviceDisconnected();
-    void deviceErrored(QLowEnergyController::Error error);
-    void deviceStateChanged(QLowEnergyController::ControllerState newState);
+    void deviceConnected() override;
+    void deviceDisconnected() override;
+    void deviceErrored(QLowEnergyController::Error error) override;
+    void deviceStateChanged(QLowEnergyController::ControllerState newState) override;
 
-    void addLowEnergyService(const QBluetoothUuid &uuid);
-    void serviceDetailsDiscovered(QLowEnergyService::ServiceState newState);
-    void serviceScanDone();
+    void addLowEnergyService(const QBluetoothUuid &uuid) override;
+    void serviceScanDone() override;
+    void serviceDiscoveryDone() override;
 
-    void bleWriteDone(const QLowEnergyCharacteristic &c, const QByteArray &v);
-    void bleReadDone(const QLowEnergyCharacteristic &c, const QByteArray &v);
-    void bleReadNotify(const QLowEnergyCharacteristic &c, const QByteArray &v);
+    void bleWriteDone(const QLowEnergyCharacteristic &c, const QByteArray &v) override;
+    void bleReadDone(const QLowEnergyCharacteristic &c, const QByteArray &v) override;
+    void bleReadNotify(const QLowEnergyCharacteristic &c, const QByteArray &v) override;
 
 Q_SIGNALS:
     void advertisementChanged();
@@ -222,14 +228,15 @@ Q_SIGNALS:
     void logUpdated();
 
 public:
-    DeviceToolBLEx(const QString &deviceAddr, const QString &deviceName,
-                   QObject *parent = nullptr);
+    DeviceToolBLEx(const QString &deviceAddr, const QString &deviceName, QObject *parent = nullptr);
     DeviceToolBLEx(const QBluetoothDeviceInfo &d, QObject *parent = nullptr);
     ~DeviceToolBLEx();
 
-    virtual bool getSqlDeviceInfos();
-    virtual void setDeviceClass(const int major, const int minor, const int service);
-    virtual void setCoreConfiguration(const int bleconf);
+    bool getSqlDeviceInfos() override;
+    void setDeviceClass(const int major, const int minor, const int service) override;
+    void setCoreConfiguration(const int bleconf) override;
+
+    void serviceDetailsDiscovered_fromservice();
 
     // toolBLEx
     QString getName_display() const;
@@ -240,8 +247,10 @@ public:
     QVariant getServices() const { return QVariant::fromValue(m_services); }
     int getServicesCount() const { return m_services.count(); }
     int getServicesScanMode() const { return m_services_scanmode; }
-    bool getServicesCached() const { return (m_services_scanmode == 1); }
-    bool getServicesScanned() const { return (m_services_scanmode > 1); }
+    bool getServicesCached() const { return (m_services_scanmode == 1 || m_services_scanmode == 2); }
+    bool getServicesScanning() const { return (m_services_scanmode == 4 || m_services_scanmode == 5); }
+    bool getServicesScanned() const { return (m_services_scanmode == 7 || m_services_scanmode == 8); }
+    bool areServicesReady() const { return m_areServiceReady; }
 
     int getCharacteristicsCount() const;
 
@@ -306,7 +315,7 @@ public:
     Q_INVOKABLE void svdFilterUpdate();
     Q_INVOKABLE void advertisementFilterUpdate();
 
-    Q_INVOKABLE void actionScanWithValues();
+    Q_INVOKABLE void actionScanWithValues() override;
     Q_INVOKABLE void actionScanWithoutValues();
 
     Q_INVOKABLE void askForNotify(const QString &uuid);
@@ -327,8 +336,9 @@ public:
     int getDeviceLogCount() const { return m_deviceLog.size(); }
     void logEvent(const QString &logline, const int event = 0);
 
-    Q_INVOKABLE bool saveLog(const QString &filename);
-    Q_INVOKABLE void clearLog();
+    Q_INVOKABLE void clearDeviceLog();
+
+    Q_INVOKABLE bool exportDeviceLog(const QString &filename);
 
     Q_INVOKABLE bool exportDeviceInfo(const QString &filename,
                                       bool withGenericInfo = true, bool withAdvertisements = true,

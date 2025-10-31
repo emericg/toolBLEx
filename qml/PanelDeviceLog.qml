@@ -166,7 +166,7 @@ Flickable {
             //source: "qrc:/IconLibrary/material-symbols/save.svg"
 
             onClicked: {
-                selectedDevice.clearLog()
+                selectedDevice.clearDeviceLog()
             }
         }
 
@@ -203,7 +203,7 @@ Flickable {
                     //console.log("fileDialog currentFolder: " + currentFolder)
                     //console.log("fileDialog selectedFile: " + selectedFile)
 
-                    selectedDevice.saveLog(UtilsPath.cleanUrl(selectedFile))
+                    selectedDevice.exportDeviceLog(UtilsPath.cleanUrl(selectedFile))
                 }
             }
 

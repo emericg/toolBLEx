@@ -441,65 +441,6 @@ void Device::actionKeepAlive()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void Device::refreshQueued()
-{
-    //
-}
-
-void Device::refreshDequeued()
-{
-    //
-}
-
-void Device::refreshStart()
-{
-    //qDebug() << "Device::refreshStart()" << getAddress() << getName() << "/ last update: " << getLastUpdateInt();
-
-    if (!isWorking())
-    {
-        actionStarted(DeviceUtils::ACTION_UPDATE);
-        deviceConnect();
-    }
-}
-
-void Device::refreshStartHistory()
-{
-    //qDebug() << "Device::refreshStartHistory()" << getAddress() << getName();
-
-    if (!isWorking())
-    {
-        actionStarted(DeviceUtils::ACTION_UPDATE_HISTORY);
-        deviceConnect();
-    }
-}
-
-void Device::refreshStartRealtime()
-{
-    //qDebug() << "Device::refreshStartRealtime()" << getAddress() << getName();
-
-    if (!isWorking())
-    {
-        m_ble_action = DeviceUtils::ACTION_UPDATE_REALTIME;
-        actionStarted();
-        deviceConnect();
-    }
-}
-
-void Device::refreshStop()
-{
-    //qDebug() << "Device::refreshStop()" << getAddress() << getName();
-
-    deviceDisconnect();
-}
-
-void Device::refreshRetry()
-{
-    //qDebug() << "Device::refreshRetry()" << getAddress() << getName();
-}
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-
 void Device::setTimeoutTimer(int)
 {
     // toolBLEx doesn't use a timeout timer
@@ -1024,7 +965,6 @@ void Device::deviceDisconnected()
     m_ble_status = DeviceUtils::DEVICE_OFFLINE;
     Q_EMIT statusUpdated();
 
-    // We are disconnected
     Q_EMIT disconnected();
 }
 
@@ -1049,12 +989,6 @@ void Device::deviceErrored(QLowEnergyController::Error error)
 
     m_lastError = QDateTime::currentDateTime();
     Q_EMIT lastUpdated();
-
-    if (m_ble_status < DeviceUtils::DEVICE_CONNECTED)
-    {
-        m_ble_status = DeviceUtils::DEVICE_OFFLINE;
-        Q_EMIT statusUpdated();
-    }
 }
 
 void Device::deviceStateChanged(QLowEnergyController::ControllerState)
@@ -1100,14 +1034,14 @@ void Device::addLowEnergyService(const QBluetoothUuid &)
     //qDebug() << "Device::addLowEnergyService(" << uuid.toString() << ")";
 }
 
-void Device::serviceDetailsDiscovered(QLowEnergyService::ServiceState)
-{
-    //qDebug() << "Device::serviceDetailsDiscovered(" << getAddress() << ")";
-}
-
 void Device::serviceScanDone()
 {
     //qDebug() << "Device::serviceScanDone(" << getAddress() << ")";
+}
+
+void Device::serviceDiscoveryDone()
+{
+    //qDebug() << "Device::serviceDiscoveryDone(" << getAddress() << ")";
 }
 
 /* ************************************************************************** */
