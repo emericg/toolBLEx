@@ -828,10 +828,10 @@ Loader {
 
                                     Rectangle {
                                         anchors.fill: parent
-                                        anchors.margins: -8
+                                        anchors.margins: -6
                                         z: -1
                                         radius: Theme.componentRadius
-                                        color: Theme.colorComponent
+                                        color: Theme.colorSeparator
                                     }
                                 }
                             }
@@ -884,10 +884,10 @@ Loader {
 
                                     Rectangle {
                                         anchors.fill: parent
-                                        anchors.margins: -8
+                                        anchors.margins: -6
                                         z: -1
                                         radius: Theme.componentRadius
-                                        color: Theme.colorComponent
+                                        color: Theme.colorSeparator
                                     }
                                 }
                             }
