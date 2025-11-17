@@ -94,6 +94,9 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
+    // Bluetooth permission?
+    dm->requestBluetoothPermission();
+
     // Start scanning?
     if (sm->getScanAuto())
     {

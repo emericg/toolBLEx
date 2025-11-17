@@ -43,6 +43,7 @@ set(SOURCES
     src/main.cpp
     src/SettingsManager.cpp src/SettingsManager.h
     src/DatabaseManager.cpp src/DatabaseManager.h
+    src/MenubarManager.cpp src/MenubarManager.h
 
     src/DeviceManager.cpp src/DeviceManager.h
     src/DeviceManager_advertisement.cpp src/DeviceManager_rssigraph.cpp
@@ -73,7 +74,6 @@ if(NOT IOS AND NOT ANDROID)
     endif()
 
     set(SOURCES_DESKTOP
-        src/MenubarManager.cpp src/MenubarManager.h
         ${app_icon_windows}
         ${app_icon_macos}
     )
@@ -81,7 +81,6 @@ endif()
 
 qt_add_executable(${CMAKE_PROJECT_NAME}
     ${SOURCES}
-    ${SOURCES_ANDROID}
     ${SOURCES_DESKTOP}
 )
 
@@ -172,11 +171,8 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
     Qt6::Quick
     Qt6::QuickControls2
     Qt6::Charts
+    Qt6::Widgets
 )
-
-if(NOT IOS AND NOT ANDROID)
-    target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Qt6::Widgets)
-endif()
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE src/)
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE thirdparty/)

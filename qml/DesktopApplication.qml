@@ -238,15 +238,15 @@ ApplicationWindow {
     property bool bluetooth: deviceManager.bluetooth
     property bool bluetoothAdapter: deviceManager.bluetoothAdapter
     property bool bluetoothEnabled: deviceManager.bluetoothEnabled
-    property bool bluetoothPermissions: deviceManager.bluetoothPermissions
+    property bool bluetoothPermission: deviceManager.bluetoothPermission
 
     onBluetoothChanged: checkBleStatus()
     onBluetoothAdapterChanged: checkBleStatus()
     onBluetoothEnabledChanged: checkBleStatus()
-    onBluetoothPermissionsChanged: checkBleStatus()
+    onBluetoothPermissionChanged: checkBleStatus()
 
     function checkBleStatus() {
-        if (!bluetooth || !bluetoothAdapter || !bluetoothEnabled || !bluetoothPermissions) {
+        if (!bluetooth || !bluetoothAdapter || !bluetoothEnabled || !bluetoothPermission) {
             screenBluetooth.loadScreen()
         } else {
             screenBluetooth.unloadScreen()

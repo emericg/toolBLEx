@@ -39,6 +39,7 @@
 
 class QBluetoothDeviceInfo;
 class QLowEnergyController;
+class QPermission;
 
 /* ************************************************************************** */
 
@@ -78,12 +79,7 @@ class DeviceManager: public QObject
     Q_PROPERTY(bool bluetooth READ hasBluetooth NOTIFY bluetoothChanged)
     Q_PROPERTY(bool bluetoothAdapter READ hasBluetoothAdapter NOTIFY bluetoothChanged)
     Q_PROPERTY(bool bluetoothEnabled READ hasBluetoothEnabled NOTIFY bluetoothChanged)
-    Q_PROPERTY(bool bluetoothPermissions READ hasBluetoothPermissions NOTIFY bluetoothChanged)
-
-    Q_PROPERTY(bool permissionOS READ hasPermissionOS NOTIFY permissionsChanged)
-    Q_PROPERTY(bool permissionLocationBLE READ hasPermissionLocationBLE NOTIFY permissionsChanged)
-    Q_PROPERTY(bool permissionLocationBackground READ hasPermissionLocationBackground NOTIFY permissionsChanged)
-    Q_PROPERTY(bool permissionLocationGPS READ hasPermissionGPS NOTIFY permissionsChanged)
+    Q_PROPERTY(bool bluetoothPermission READ hasBluetoothPermission NOTIFY permissionChanged)
 
     Q_PROPERTY(int bluetoothHostMode READ getBluetoothHostMode NOTIFY hostModeChanged)
 
@@ -103,22 +99,17 @@ class DeviceManager: public QObject
     bool m_dbInternal = false;  //!< do we have an internal SQLite database?
     bool m_dbExternal = false;  //!< do we have a remote MySQL database?
 
-    bool m_daemonMode = false;  //!< did we start without UI?
+    bool m_daemonMode = false;  //!< did we start without an UI?
 
     ////
 
     bool m_bleAdapter = false;      //!< do we have a BLE adapter?
     bool m_bleEnabled = false;      //!< is the BLE adapter enabled?
-    bool m_blePermissions = false;  //!< do we have necessary BLE permissions? (brings together all other permsissions)
-
-    bool m_permOS = false;          //!< do we have OS permissions for BLE? (macOS, iOS, Android)
-    bool m_permLocationBLE = false; //!< do we location permission? (Android)
-    bool m_permLocationBKG = false; //!< do we background location permission? (Android)
-    bool m_permGPS = false;         //!< is the GPS enabled? (Android)
+    bool m_blePermission = false;   //!< do we have necessary BLE permission?
 
     QBluetoothLocalDevice *m_bluetoothAdapter = nullptr;
-    QBluetoothDeviceDiscoveryAgent *m_discoveryAgent = nullptr;
-    QBluetoothLocalDevice::HostMode m_ble_hostmode = QBluetoothLocalDevice::HostPoweredOff;
+    QBluetoothDeviceDiscoveryAgent *m_bluetoothDiscoveryAgent = nullptr;
+    QBluetoothLocalDevice::HostMode m_bluetoothHostMode = QBluetoothLocalDevice::HostPoweredOff;
 
     QList <QObject *> m_bluetoothAdapters;
 
@@ -132,6 +123,8 @@ class DeviceManager: public QObject
     DeviceModel *m_devices_model = nullptr;
     DeviceFilter *m_devices_filter = nullptr;
     DeviceHeader *m_device_header = nullptr;
+
+    ////
 
     bool m_advertising = false;
     bool isAdvertising() const { return m_advertising; }
@@ -151,21 +144,17 @@ class DeviceManager: public QObject
     bool m_syncing = false;
     bool isSyncing() const { return m_syncing; }
 
-    bool hasBluetooth() const { return (m_bleAdapter && m_bleEnabled && m_blePermissions); }
     bool hasBluetoothAdapter() const { return m_bleAdapter; }
     bool hasBluetoothEnabled() const { return m_bleEnabled; }
-    bool hasBluetoothPermissions() const { return m_blePermissions; }
+    bool hasBluetoothPermission() const { return m_blePermission; }
+    bool hasBluetooth() const { return (m_bleAdapter && m_bleEnabled && m_blePermission); }
 
-    bool hasPermissionOS() const { return m_permOS; }
-    bool hasPermissionLocationBLE() const { return m_permLocationBLE; }
-    bool hasPermissionLocationBackground() const { return m_permLocationBKG; }
-    bool hasPermissionGPS() const { return m_permGPS; }
+    void setBluetoothPermission(bool perm);
 
-    int getBluetoothHostMode() const { return m_ble_hostmode; }
+    int getBluetoothHostMode() const { return m_bluetoothHostMode; }
 
     void startBleAgent();
 
-    void checkBluetoothIOS();
     bool m_checking_ios_ble = false;
     QTimer m_checking_ios_timer;
 
@@ -176,15 +165,15 @@ class DeviceManager: public QObject
     Qt::SortOrder m_orderBy_order;
 
     QStringList m_colorsAvailable = {
-            "HotPink", "White", "Tomato", "Yellow", "Red", "Orange", "Gold", "LimeGreen", "Green",
-            "MediumOrchid", "Purple", "YellowGreen", "LightYellow", "MediumVioletRed", "PeachPuff", "DodgerBlue",
-            "Indigo", "Ivory", "DeepSkyBlue", "MistyRose", "DarkBlue", "MintCream", "Black", "OrangeRed",
-            "PaleGreen", "Gainsboro", "PaleVioletRed", "Lavender", "Cyan", "MidnightBlue", "LightPink",
-            "FireBrick", "Crimson", "DarkMagenta", "SteelBlue", "GreenYellow", "Brown", "DarkOrange",
-            "Goldenrod", "DarkSeaGreen", "DarkRed", "LavenderBlush", "Violet", "Maroon", "Khaki",
-            "WhiteSmoke", "Salmon", "Olive", "Orchid", "Fuchsia", "Pink", "LawnGreen", "Peru",
-            "Grey", "Moccasin", "Beige", "Magenta", "DarkOrchid", "LightCyan", "RosyBrown", "GhostWhite",
-            "MediumSeaGreen", "LemonChiffon", "Chocolate", "BurlyWood"
+        "HotPink", "White", "Tomato", "Yellow", "Red", "Orange", "Gold", "LimeGreen", "Green",
+        "MediumOrchid", "Purple", "YellowGreen", "LightYellow", "MediumVioletRed", "PeachPuff", "DodgerBlue",
+        "Indigo", "Ivory", "DeepSkyBlue", "MistyRose", "DarkBlue", "MintCream", "Black", "OrangeRed",
+        "PaleGreen", "Gainsboro", "PaleVioletRed", "Lavender", "Cyan", "MidnightBlue", "LightPink",
+        "FireBrick", "Crimson", "DarkMagenta", "SteelBlue", "GreenYellow", "Brown", "DarkOrange",
+        "Goldenrod", "DarkSeaGreen", "DarkRed", "LavenderBlush", "Violet", "Maroon", "Khaki",
+        "WhiteSmoke", "Salmon", "Olive", "Orchid", "Fuchsia", "Pink", "LawnGreen", "Peru",
+        "Grey", "Moccasin", "Beige", "Magenta", "DarkOrchid", "LightCyan", "RosyBrown", "GhostWhite",
+        "MediumSeaGreen", "LemonChiffon", "Chocolate", "BurlyWood"
     };
     QStringList m_colorsLeft;
     QString getAvailableColor();
@@ -203,7 +192,7 @@ class DeviceManager: public QObject
 Q_SIGNALS:
     void bluetoothChanged();
     void hostModeChanged();
-    void permissionsChanged();
+    void permissionChanged();
 
     void adaptersListUpdated();
 
@@ -227,11 +216,10 @@ private slots:
     // QBluetoothLocalDevice related
     void bluetoothHostModeStateChanged(QBluetoothLocalDevice::HostMode);
     void bluetoothStatusChanged();
-    void bluetoothPermissionsChanged();
+    void bluetoothPermissionChanged();
 
     // QBluetoothDeviceDiscoveryAgent related
     void deviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error);
-    void deviceDiscoveryErrorIOS();
     void deviceDiscoveryFinished();
     void deviceDiscoveryStopped();
 
@@ -253,10 +241,11 @@ public:
 
     // Bluetooth management
     Q_INVOKABLE bool checkBluetooth();
-    Q_INVOKABLE bool checkBluetoothPermissions();
     Q_INVOKABLE bool enableBluetooth(bool enforceUserPermissionCheck = false);
-    Q_INVOKABLE bool requestBluetoothPermissions();
-    void requestBluetoothPermissions_results();
+
+    Q_INVOKABLE bool checkBluetoothPermission();
+    Q_INVOKABLE bool requestBluetoothPermission();
+    void requestBluetoothPermission_results(const QPermission &permission);
 
     // Scanning management
     static int getLastRun();

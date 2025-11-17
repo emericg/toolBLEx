@@ -83,7 +83,7 @@ void UtilsWiFi::requestLocationPermissions()
     //qDebug() << "UtilsWiFi::requestLocationPermissions()";
 
 #if QT_CONFIG(permissions)
-    qApp->requestPermission(QBluetoothPermission{},
+    qApp->requestPermission(QLocationPermission{},
                             this, &UtilsWiFi::requestLocationPermissions_results);
 #endif
 }

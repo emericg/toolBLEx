@@ -45,7 +45,7 @@ FrameBox {
                 anchors.left: parent.left
                 anchors.right: parent.right
 
-                text: qsTr("Bluetooth permissions missing")
+                text: qsTr("Bluetooth permission missing")
                 font.pixelSize: Theme.fontSizeContentVeryVeryBig
                 wrapMode: Text.WordWrap
                 color: Theme.colorText
@@ -55,7 +55,7 @@ FrameBox {
                 anchors.left: parent.left
                 anchors.right: parent.right
 
-                text: qsTr("Please check if the Bluetooth permissions have been granted to the application.")
+                text: qsTr("Please check if the Bluetooth permission has been granted to the application.")
                 font.pixelSize: Theme.fontSizeContentBig
                 wrapMode: Text.WordWrap
                 color: Theme.colorText
@@ -75,7 +75,10 @@ FrameBox {
 
             ButtonSolid {
                 text: qsTr("Retry")
-                onClicked: deviceManager.enableBluetooth()
+                onClicked: {
+                    deviceManager.requestBluetoothPermission()
+                    deviceManager.enableBluetooth()
+                }
             }
         }
 
