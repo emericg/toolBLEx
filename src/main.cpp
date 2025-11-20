@@ -53,13 +53,6 @@ int main(int argc, char *argv[])
 {
     // Hacks ///////////////////////////////////////////////////////////////////
 
-#if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
-    // NVIDIA suspend&resume hack
-    auto format = QSurfaceFormat::defaultFormat();
-    format.setOption(QSurfaceFormat::ResetNotification);
-    QSurfaceFormat::setDefaultFormat(format);
-#endif
-
 #if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
     // Qt 6.6+ mouse wheel hack
     qputenv("QT_QUICK_FLICKABLE_WHEEL_DECELERATION", "8000");
