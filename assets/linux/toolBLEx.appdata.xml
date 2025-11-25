@@ -11,18 +11,18 @@
     <p>A multiplatform Bluetooth Low Energy (and Classic) device scanner and analyzer.</p>
     <p>Features:</p>
     <ul>
-      <li>host adapters info</li>
+      <li>Bluetooth host adapters info</li>
       <li>RSSI graph / proximity graph (BLE and classic)</li>
-      <li>device scanner (BLE and classic)</li>
-      <li>device advertisement and services explorer (BLE)</li>
-      <li>read/write device services data (BLE)</li>
-      <li>export device info: advertisement packets, services and characteristics (with or without walues)</li>
-      <li>frequency analyzer (ONLY if you have an Ubertooth One)</li>
+      <li>Device scanner (BLE and classic)</li>
+      <li>Device advertisement and services explorer (BLE)</li>
+      <li>Read/write on device characteristics data (BLE)</li>
+      <li>Export device info: advertisement packets, services and characteristics (with or without values)</li>
+      <li>Frequency analyzer (ONLY if you have an Ubertooth One)</li>
     </ul>
   </description>
 
   <releases>
-    <release version="0.14" date="2025-10-22"> <url type="details">https://github.com/emericg/toolBLEx/releases/tag/v0.14</url> </release>
+    <release version="0.14" date="2025-11-25"> <url type="details">https://github.com/emericg/toolBLEx/releases/tag/v0.14</url> </release>
     <release version="0.13" date="2024-10-13"> <url type="details">https://github.com/emericg/toolBLEx/releases/tag/v0.13</url> </release>
     <release version="0.12" date="2024-06-19"> <url type="details">https://github.com/emericg/toolBLEx/releases/tag/v0.12</url> </release>
     <release version="0.11" date="2024-04-04"> <url type="details">https://github.com/emericg/toolBLEx/releases/tag/v0.11</url> </release>

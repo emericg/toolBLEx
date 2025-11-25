@@ -219,14 +219,14 @@ endif()
 
 ################################################################################
 
-# Output?
+# Output (build)
 set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
     #ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/lib"
     #LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/lib"
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin"
 )
 
-# Output?
+# Output (install)
 install(TARGETS ${CMAKE_PROJECT_NAME}
     BUNDLE DESTINATION "${CMAKE_SOURCE_DIR}/bin"
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
