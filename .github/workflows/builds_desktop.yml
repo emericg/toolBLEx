@@ -44,7 +44,7 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
-          version: ${{env.QT_VERSION}}
+          version: ${{ env.QT_VERSION }}
           modules: qtconnectivity qtcharts
 
       # Setup env
@@ -62,21 +62,21 @@ jobs:
 
       # Deploy application
       - name: Deploy application
-        run: ./deploy_linux.sh -c -i -p
+        run: ./deploy_linux.sh -p
 
       # Upload application ZIP
       - name: Upload application ZIP
         uses: actions/upload-artifact@v4
         with:
-          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.tar.gz
-          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.tar.gz
+          name: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-linux64.tar.gz
+          path: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-linux64.tar.gz
 
       # Upload AppImage
       - name: Upload AppImage
         uses: actions/upload-artifact@v4
         with:
-          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.AppImage
-          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.AppImage
+          name: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-linux64.AppImage
+          path: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-linux64.AppImage
 
   ## macOS build ###############################################################
   build-mac:
@@ -98,7 +98,7 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
-          version: ${{env.QT_VERSION}}
+          version: ${{ env.QT_VERSION }}
           modules: qtconnectivity qtcharts
 
       # Setup env
@@ -107,6 +107,25 @@ jobs:
              qmake --version
              cmake --version
              ninja --version
+
+      # Setup certificate(s)
+      - name: Setup certificate(s)
+        env:
+          MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_NAME: ${{ secrets.MACOS_CERTIFICATE_NAME }}
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+          MACOS_CI_KEYCHAIN_PASSWORD: ${{ secrets.MACOS_CI_KEYCHAIN_PASSWORD }}
+        run: |
+            # Turn our base64-encoded certificate(s) back to a regular file(s)
+            echo "$MACOS_CERTIFICATE" | base64 --decode > certificate.p12
+            # Create a temporary headless keychain, import certificate, ...
+            security create-keychain -p "$MACOS_CI_KEYCHAIN_PASSWORD" build.keychain
+            security set-keychain-settings -lut 21600 build.keychain
+            security unlock-keychain -p "$MACOS_CI_KEYCHAIN_PASSWORD" build.keychain
+            security import certificate.p12 -k build.keychain -P "$MACOS_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+            security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$MACOS_CI_KEYCHAIN_PASSWORD" build.keychain
+            security list-keychains -s build.keychain "$(security list-keychains | tr -d '\"')"
+            security default-keychain -s build.keychain
 
       # Build application
       - name: Build application
@@ -117,14 +136,42 @@ jobs:
 
       # Deploy application
       - name: Deploy application
-        run: ./deploy_macos.sh -c -p
+        env:
+          MACOS_CERTIFICATE_NAME: ${{ secrets.MACOS_CERTIFICATE_NAME }}
+        run: ./deploy_macos.sh -n
 
-      # Upload application ZIP
-      - name: Upload application ZIP
+      # Codesign application bundle
+      - name: Codesign application bundle
+        run: |
+          /usr/bin/codesign --deep --force --options runtime \
+            --entitlements "assets/macos/${{ env.APP_NAME }}.entitlements" \
+            --sign "${{ secrets.MACOS_CERTIFICATE_NAME }}" \
+            bin/${{ env.APP_NAME }}.app
+
+      # Notarize application bundle
+      - name: Notarize application bundle
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+        run: |
+          echo "Create keychain profile"
+          xcrun notarytool store-credentials "notarytool-profile" --apple-id "$APPLE_ID" --team-id "$APPLE_TEAM_ID" --password "$APPLE_APP_SPECIFIC_PASSWORD"
+          echo "Creating temp notarization archive"
+          ditto -c -k --keepParent "bin/${{ env.APP_NAME }}.app" "bin/notarization.zip"
+          echo "Notarize app"
+          xcrun notarytool submit "bin/notarization.zip" --keychain-profile "notarytool-profile" --wait
+          echo "Attach staple"
+          xcrun stapler staple "bin/${{ env.APP_NAME }}.app"
+          echo "Creating notarized archive"
+          ditto -c -k --keepParent "bin/${{ env.APP_NAME }}.app" "${{ env.APP_NAME }}-${{ env.APP_VERSION }}-macOS.zip"
+
+      # Upload application bundle
+      - name: Upload application bundle
         uses: actions/upload-artifact@v4
         with:
-          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-macOS.zip
-          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-macOS.zip
+          name: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-macOS.zip
+          path: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-macOS.zip
 
   ## Windows build #############################################################
   build-windows:
@@ -154,7 +201,7 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
-          version: ${{env.QT_VERSION}}
+          version: ${{ env.QT_VERSION }}
           modules: qtconnectivity qtcharts
           arch: 'win64_msvc2022_64'
 
@@ -173,18 +220,18 @@ jobs:
 
       # Deploy application
       - name: Deploy application
-        run: sh deploy_windows.sh -c -p
+        run: sh deploy_windows.sh -p
 
       # Upload application ZIP
       - name: Upload application ZIP
         uses: actions/upload-artifact@v4
         with:
-          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.zip
-          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.zip
+          name: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-win64.zip
+          path: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-win64.zip
 
       # Upload NSIS installer
       - name: Upload NSIS installer
         uses: actions/upload-artifact@v4
         with:
-          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.exe
-          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.exe
+          name: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-win64.exe
+          path: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-win64.exe

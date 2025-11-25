@@ -4,7 +4,7 @@ export APP_NAME="toolBLEx"
 export APP_VERSION=0.14
 export GIT_VERSION=$(git rev-parse --short HEAD)
 
-echo "> $APP_NAME packager (macOS x86_64) [v$APP_VERSION]"
+echo "> $APP_NAME packager (macOS) [v$APP_VERSION]"
 
 ## CHECKS ######################################################################
 
@@ -22,6 +22,7 @@ fi
 
 use_contribs=false
 make_install=false
+notarize_bundle=false
 create_package=false
 upload_package=false
 
@@ -33,6 +34,9 @@ case $1 in
   ;;
   -i|--install)
   make_install=true
+  ;;
+  -n|--notarize)
+  notarize_bundle=true
   ;;
   -p|--package)
   create_package=true
@@ -60,13 +64,17 @@ fi
 ## APP DEPLOY ##################################################################
 
 if [[ $use_contribs = true ]] ; then
-  export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/macOS_x86_64/usr/lib/
+  export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/macOS_x86_64/usr/lib/:$(pwd)/contribs/src/env/macOS_arm64/usr/lib/
 else
   export LD_LIBRARY_PATH=/usr/local/lib/
 fi
 
 echo '---- Running macdeployqt'
-macdeployqt bin/$APP_NAME.app -qmldir=qml/ -hardened-runtime -timestamp -appstore-compliant
+if [[ $notarize_bundle = true ]] ; then
+  macdeployqt bin/$APP_NAME.app -qmldir=qml/ -hardened-runtime -timestamp -appstore-compliant -codesign=$MACOS_CERTIFICATE_NAME
+else
+  macdeployqt bin/$APP_NAME.app -qmldir=qml/
+fi
 
 #echo '---- Installation directory content recap (after macdeployqt):'
 #find bin/
