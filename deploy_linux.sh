@@ -75,7 +75,7 @@ chmod a+x contribs/deploy/linuxdeploy-plugin-qt-x86_64.AppImage
 #export NO_STRIP=true  # workaround, strip not working on modern binutils
 
 # linuxdeploy Qt settings
-export EXTRA_QT_MODULES="svg;"
+export EXTRA_QT_MODULES="svg;wayland-decoration-client;wayland-graphics-integration-client;wayland-shell-integration;"
 export EXTRA_QT_PLUGINS="wayland-decoration-client;wayland-graphics-integration-client;wayland-shell-integration;"
 export EXTRA_PLATFORM_PLUGINS="libqwayland.so" # Qt 6.10+
 #export EXTRA_PLATFORM_PLUGINS="libqwayland-egl.so;libqwayland-generic.so" # Qt 6.5+
