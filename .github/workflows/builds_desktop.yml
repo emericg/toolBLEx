@@ -50,6 +50,7 @@ jobs:
       # Setup env
       - name: Setup env
         run: |
+             echo "CMAKE_BUILD_PARALLEL_LEVEL=$(nproc)" >> $GITHUB_ENV
              qmake --version
              cmake --version
              ninja --version
@@ -104,6 +105,7 @@ jobs:
       # Setup env
       - name: Setup env
         run: |
+             echo "CMAKE_BUILD_PARALLEL_LEVEL=`sysctl -n hw.ncpu`" >> $GITHUB_ENV
              qmake --version
              cmake --version
              ninja --version
@@ -130,7 +132,6 @@ jobs:
       # Build application
       - name: Build application
         run: |
-             export CMAKE_BUILD_PARALLEL_LEVEL=`sysctl -n hw.logicalcpu`
              cmake -B build/ -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"
              cmake --build build/ --config Release
 
