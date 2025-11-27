@@ -64,9 +64,7 @@ fi
 ## APP DEPLOY ##################################################################
 
 if [[ $use_contribs = true ]] ; then
-  export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/macOS_x86_64/usr/lib/:$(pwd)/contribs/src/env/macOS_arm64/usr/lib/
-else
-  export LD_LIBRARY_PATH=/usr/local/lib/
+  export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/macOS_x86_64/usr/lib/:$(pwd)/contribs/src/env/macOS_arm64/usr/lib/:$LD_LIBRARY_PATH
 fi
 
 echo '---- Running macdeployqt'

@@ -21,6 +21,6 @@ jobs:
     - uses: actions/checkout@v4
     - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v6
       with:
-        bundle: toolblex.flatpak
-        manifest-path: assets/linux/toolblex.flatpak.yml
+        bundle: toolBLEx.flatpak
+        manifest-path: assets/linux/toolBLEx.flatpak.yml
         cache-key: flatpak-builder-${{ github.sha }}

@@ -66,6 +66,10 @@ fi
 echo '---- Running windeployqt'
 windeployqt bin/ --qmldir qml/
 
+#echo '---- MapLibre deployment hack'
+#cp $QT_ROOT_DIR/bin/QMapLibre.dll bin/QMapLibre.dll
+#cp $QT_ROOT_DIR/bin/QMapLibreLocation.dll bin/QMapLibreLocation.dll
+
 #echo '---- Installation directory content recap (after windeployqt):'
 #find bin/
 
@@ -73,6 +77,15 @@ windeployqt bin/ --qmldir qml/
 #rm bin/.gitkeep
 #rm bin/qmltooling
 #rm bin/generic
+#rm bin/Qt6QuickControls2WindowsStyleImpl.dll
+#rm bin/Qt6QuickControls2UniversalStyleImpl.dll
+#rm bin/Qt6QuickControls2Universal.dll
+#rm bin/Qt6QuickControls2ImagineStyleImpl.dll
+#rm bin/Qt6QuickControls2Imagine.dll
+#rm bin/Qt6QuickControls2FusionStyleImpl.dll
+#rm bin/Qt6QuickControls2Fusion.dll
+#rm bin/Qt6QuickControls2BasicStyleImpl.dll
+#rm bin/Qt6QuickControls2Basic.dll
 
 mv bin $APP_NAME
 

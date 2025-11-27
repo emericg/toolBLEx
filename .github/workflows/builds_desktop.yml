@@ -105,7 +105,7 @@ jobs:
       # Setup env
       - name: Setup env
         run: |
-             echo "CMAKE_BUILD_PARALLEL_LEVEL=`sysctl -n hw.ncpu`" >> $GITHUB_ENV
+             echo "CMAKE_BUILD_PARALLEL_LEVEL=`sysctl -n hw.logicalcpu`" >> $GITHUB_ENV
              qmake --version
              cmake --version
              ninja --version
