@@ -103,7 +103,7 @@ Loader {
 
                     Image {
                         anchors.fill: parent
-                        source: "qrc:/assets/gfx/logos/pattern_ble.png"
+                        source: "qrc:/assets/gfx/pattern_ble.png"
                         fillMode: Image.Tile
                         opacity: 0.20
                     }
@@ -1187,8 +1187,8 @@ Loader {
                             model: ListModel {
                                 ListElement { txt: "Qt6"; license: "LGPL v3"; link: "https://qt.io" }
                                 ListElement { txt: "SingleApplication"; license: "MIT"; link: "https://github.com/itay-grudev/SingleApplication" }
-                                ListElement { txt: "Google Material Icons"; license: "MIT"; link: "https://fonts.google.com/icons" }
                                 ListElement { txt: "Bootstrap Icons"; license: "MIT"; link: "https://icons.getbootstrap.com/" }
+                                ListElement { txt: "Google Material Icons"; license: "Apache 2.0"; link: "https://fonts.google.com/icons" }
                             }
                             delegate: Row {
                                 anchors.left: parent.left
@@ -1257,7 +1257,7 @@ Loader {
                     ////
 
                     Loader { // DEBUG PANEL
-                        active: utilsApp.isDebugBuild()
+                        active: true // utilsApp.isDebugBuild()
                         asynchronous: true
 
                         sourceComponent: Column {

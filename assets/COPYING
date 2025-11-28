@@ -1,6 +1,11 @@
 
-# App logo:
-- assets/gfx/logos/logo.svg                     // Emeric Grange // CC0
+# App resources:
+- assets/gfx/logos/logo.svg                     // remix from Google Material Design icon // Apache 2.0
+- assets/gfx/logos/icon.svg                     // remix from Google Material Design icon // Apache 2.0
+- assets/gfx/logos/splash.svg                   // remix from Google Material Design icon // Apache 2.0
+- assets/gfx/logos/toolBLEx.svg                 // WIP logo // Emeric Grange // CC0
+- assets/gfx/banner.svg                         // logo + text // CC0
+- assets/gfx/pattern_ble.png                    // The Bootstrap Authors // MIT
 
 # Others:
 - assets/gfx/logos/github.svg                   // https://github.com/logos // proprietary

@@ -1,4 +1,4 @@
-# ![toolBLEx](assets/gfx/logos/banner.svg)
+# ![toolBLEx](assets/gfx/banner.svg)
 
 [![GitHub release](https://img.shields.io/badge/release-0.14-blue?style=flat-square)](https://github.com/emericg/toolBLEx/releases)
 [![GitHub action](https://img.shields.io/github/actions/workflow/status/emericg/toolBLEx/builds_desktop.yml?style=flat-square)](https://github.com/emericg/toolBLEx/actions/workflows/builds_desktop.yml)
@@ -84,7 +84,10 @@ Bluetooth driver support might be a little shaky...
 #### Third party projects used by toolBLEx
 
 * [Qt6](https://www.qt.io) ([LGPL v3](https://www.gnu.org/licenses/lgpl-3.0.txt))
-* [SingleApplication](https://github.com/itay-grudev/SingleApplication) ([MIT](https://opensource.org/licenses/MIT))
+* [AppUtils](thirdparty/AppUtils/README.md) ([MIT](https://opensource.org/licenses/MIT))
+* [SingleApplication](thirdparty/SingleApplication/README.md) ([MIT](https://opensource.org/licenses/MIT))
+* [ComponentLibrary](thirdparty/ComponentLibrary/) ([MIT](https://opensource.org/licenses/MIT))
+* [IconLibrary](thirdparty/IconLibrary/) uses a combinaison of licenses, see [COPYING](thirdparty/IconLibrary/COPYING)
 * Graphical resources: [assets/COPYING](assets/COPYING)
 
 

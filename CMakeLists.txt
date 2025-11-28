@@ -26,7 +26,7 @@ message(STATUS "[PROJECT] QT_HOST_PATH              = ${QT_HOST_PATH}")
 
 ################################################################################
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick QuickControls2 Svg)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Svg Qml Quick QuickControls2)
 find_package(Qt6 REQUIRED COMPONENTS Sql Bluetooth Charts Widgets)
 find_package(Qt6 REQUIRED COMPONENTS LinguistTools)
 
@@ -182,10 +182,10 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ComponentLibraryplugin)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
     Qt6::Core
     Qt6::Gui
+    Qt6::Svg
     Qt6::Qml
     Qt6::Quick
     Qt6::QuickControls2
-    Qt6::Svg
     Qt6::Sql
     Qt6::Bluetooth
     Qt6::Charts
