@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 export APP_NAME="toolBLEx"
-export APP_VERSION=0.14
+export APP_VERSION=0.15
 export GIT_VERSION=$(git rev-parse --short HEAD)
 
 #export APP_NAME_LOWERCASE=${APP_NAME,,}  # lowercase

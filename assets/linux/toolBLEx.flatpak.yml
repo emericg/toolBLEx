@@ -2,8 +2,8 @@ app-id: io.emeric.toolblex
 runtime: org.freedesktop.Platform
 runtime-version: '25.08'
 sdk: org.freedesktop.Sdk
-command: toolBLEx
 
+command: toolBLEx
 rename-desktop-file: toolBLEx.desktop
 rename-appdata-file: toolBLEx.appdata.xml
 rename-icon: toolBLEx
@@ -37,7 +37,7 @@ cleanup:
   - '*.la'
 
 modules:
-  - name: qt
+  - name: Qt6
     buildsystem: cmake-ninja
     builddir: true
     config-opts:
@@ -60,5 +60,5 @@ modules:
     buildsystem: cmake-ninja
     sources:
       - type: archive
-        url: https://github.com/emericg/toolBLEx/archive/refs/tags/v0.14.tar.gz
+        url: https://github.com/emericg/toolBLEx/archive/refs/tags/v0.15.tar.gz
         sha256: 
