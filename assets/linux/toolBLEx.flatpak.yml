@@ -22,11 +22,8 @@ finish-args:
   - --system-talk-name=org.bluez
 
 cleanup:
-  - /bin/__pypache__
-  - /bin/rst*
   - /include
   - /lib/cmake
-  - /lib/cups
   - /lib/pkgconfig
   - /lib/python*
   - /share/doc
@@ -42,6 +39,8 @@ modules:
     builddir: true
     config-opts:
       - -DBUILD_SHARED_LIBS=ON
+      - -DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF
+      - -DQT_BUILD_TESTS_BY_DEFAULT=OFF
       - -DQT_BUILD_SUBMODULES=qtbase;qtdeclarative;qttools;qtshadertools;qtwayland;qtsvg;qtconnectivity;qtcharts
       - -DQT_QPA_PLATFORMS=wayland;xcb
       - -DINPUT_openssl=linked
@@ -54,7 +53,19 @@ modules:
           project-id: 7927
           url-template: https://download.qt.io/archive/qt/$major.$minor/$version/single/qt-everywhere-src-$version.tar.xz
     cleanup:
-      - '*'
+      - /bin
+      - /doc
+      - /include
+      - /lib/objects-Release
+      - /libexec
+      - /metatypes
+      - /mkspecs
+      - /modules
+      - /plugins/assetimporters
+      - /plugins/designer
+      - /plugins/qmllint
+      - /plugins/qmltooling
+      - /sbom
 
   - name: toolBLEx
     buildsystem: cmake-ninja
