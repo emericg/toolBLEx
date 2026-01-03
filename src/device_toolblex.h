@@ -150,19 +150,6 @@ class DeviceToolBLEx: public Device
 
     // srv
 
-    enum ServiceScanMode {
-        srv_unscanned           = 0, //!< not scanned
-        srv_cached              = 1, //!< cache
-        srv_cached_values       = 2, //!< cache (with values)
-        srv_scanning            = 3, //!< scanning
-        srv_scanning_values     = 4, //!< scanning (with values)
-        srv_incomplete          = 5, //!< incomplete scan
-        srv_incomplete_values   = 6, //!< incomplete scan (with values)
-        srv_scanned             = 7, //!< scanned
-        srv_scanned_values      = 8, //!< scanned (with values)
-    };
-    Q_ENUM(ServiceScanMode)
-
     int m_services_scanmode = 0; // See ServiceScanMode
 
     bool m_areServiceReady = false;
@@ -243,6 +230,19 @@ public:
     QString getAddr_display() const;
     QString getName_export() const;
     QString getAddr_export() const;
+
+    enum ServiceScanMode {
+        srv_unscanned           = 0, //!< not scanned
+        srv_cached              = 1, //!< cache
+        srv_cached_values       = 2, //!< cache (with values)
+        srv_scanning            = 3, //!< scanning
+        srv_scanning_values     = 4, //!< scanning (with values)
+        srv_incomplete          = 5, //!< incomplete scan
+        srv_incomplete_values   = 6, //!< incomplete scan (with values)
+        srv_scanned             = 7, //!< scanned
+        srv_scanned_values      = 8, //!< scanned (with values)
+    };
+    Q_ENUM(ServiceScanMode)
 
     QVariant getServices() const { return QVariant::fromValue(m_services); }
     int getServicesCount() const { return m_services.count(); }

@@ -61,6 +61,7 @@ ItemLicenseBadge 1.0 ItemLicenseBadge.qml
 ItemBadge 1.0 ItemBadge.qml
 ProgressArc 1.0 ProgressArc.qml
 ProgressCircle 1.0 ProgressCircle.qml
+ProgressChip 1.0 ProgressChip.qml
 SelectorMenu 1.0 SelectorMenu.qml
 SelectorMenuSunken 1.0 SelectorMenuSunken.qml
 SelectorMenuItem 1.0 SelectorMenuItem.qml

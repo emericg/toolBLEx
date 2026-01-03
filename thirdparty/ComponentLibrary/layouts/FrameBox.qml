@@ -13,7 +13,7 @@ T.Frame {
                              contentHeight + topPadding + bottomPadding)
 
     padding: 12
-    leftPadding: padding + (highlighted ? 8 : 0)
+    leftPadding: highlighted ? (padding + 8) : 12
 
     property bool highlighted: false
 

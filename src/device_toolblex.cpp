@@ -732,12 +732,12 @@ void DeviceToolBLEx::addLowEnergyService(const QBluetoothUuid &uuid)
     QLowEnergyService::DiscoveryMode scanmode = QLowEnergyService::FullDiscovery;
     if (m_ble_action == DeviceUtils::ACTION_SCAN_WITHOUT_VALUES)
     {
-        m_services_scanmode = srv_scanning; // start scanning
+        m_services_scanmode = DeviceToolBLEx::srv_scanning; // start scanning
         scanmode = QLowEnergyService::SkipValueDiscovery;
     }
     else if (m_ble_action == DeviceUtils::ACTION_SCAN_WITH_VALUES)
     {
-        m_services_scanmode = srv_scanning_values; // start scanning (with values)
+        m_services_scanmode = DeviceToolBLEx::srv_scanning_values; // start scanning (with values)
         scanmode = QLowEnergyService::FullDiscovery;
     }
 

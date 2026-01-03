@@ -54,8 +54,13 @@ set(CORE_SOURCES
 if(UTILS_QT_RHI)
     add_definitions(-DUTILS_QT_RHI)
 
-    find_package(Qt6 REQUIRED COMPONENTS GuiPrivate)
-    set(CORE_LIBRARIES ${CORE_LIBRARIES} Qt::GuiPrivate)                        # to get RHI infos
+    if(Qt6Gui_VERSION VERSION_GREATER_EQUAL 6.10.0)
+        find_package(Qt6 REQUIRED COMPONENTS GuiPrivate)
+        set(CORE_LIBRARIES ${CORE_LIBRARIES} Qt::GuiPrivate)                    # to get RHI infos
+    else()
+        find_package(Qt6 REQUIRED COMPONENTS Gui)
+        set(CORE_LIBRARIES ${CORE_LIBRARIES} Qt::GuiPrivate)
+    endif()
 endif()
 
 # OS specific sources & dependencies

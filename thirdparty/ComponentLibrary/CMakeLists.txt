@@ -1,7 +1,7 @@
 qt_add_library(ComponentLibrary STATIC)
 
 # Use that find_package() call in the root project:
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Quick QuickControls2 LabsQmlModels)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Quick QuickControls2)
 
 ################################################################################
 
@@ -71,6 +71,7 @@ list(APPEND MODULE_QML_FILES
     generic/ItemBadge.qml
     generic/ProgressArc.qml
     generic/ProgressCircle.qml
+    generic/ProgressChip.qml
     generic/SelectorMenu.qml
     generic/SelectorMenuSunken.qml
     generic/SelectorMenuItem.qml
@@ -189,12 +190,12 @@ set_target_properties(ComponentLibrary PROPERTIES AUTOMOC ON)
 set_target_properties(ComponentLibrary PROPERTIES AUTORCC ON)
 
 target_include_directories(ComponentLibrary PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(ComponentLibrary PRIVATE Qt6::Core Qt6::Quick Qt6::QuickControls2 Qt6::LabsQmlModels)
+target_link_libraries(ComponentLibrary PRIVATE Qt6::Core Qt6::Quick Qt6::QuickControls2)
 
 qt_add_qml_module(ComponentLibrary
     URI ComponentLibrary
     VERSION 1.0
-    DEPENDENCIES QtCore QtQuick LabsQmlModels
+    DEPENDENCIES QtCore QtQuick
     QML_FILES ${MODULE_QML_FILES} ${MODULE_JS_FILES}
     RESOURCES ${MODULE_ASSETS}
     SOURCES ${MODULE_SOURCES}
