@@ -600,11 +600,8 @@ void DeviceManager::scanDevices_start()
 
         if (m_bluetoothDiscoveryAgent && !m_bluetoothDiscoveryAgent->isActive())
         {
-            disconnect(m_bluetoothDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::finished,
-                       this, &DeviceManager::deviceDiscoveryFinished);
-
             connect(m_bluetoothDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::finished,
-                    this, &DeviceManager::deviceDiscoveryStopped, Qt::UniqueConnection);
+                    this, &DeviceManager::deviceDiscoveryFinished, Qt::UniqueConnection);
             connect(m_bluetoothDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::canceled,
                     this, &DeviceManager::deviceDiscoveryStopped, Qt::UniqueConnection);
 
@@ -613,11 +610,9 @@ void DeviceManager::scanDevices_start()
             connect(m_bluetoothDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceUpdated,
                     this, &DeviceManager::bleDevice_updated, Qt::UniqueConnection);
 
-            int scanningDuration = SettingsManager::getInstance()->getScanTimeout() * 60 * 1000;
-            QFlags scanningMethod = QBluetoothDeviceDiscoveryAgent::ClassicMethod | QBluetoothDeviceDiscoveryAgent::LowEnergyMethod;
-
-            m_bluetoothDiscoveryAgent->setLowEnergyDiscoveryTimeout(scanningDuration);
-            m_bluetoothDiscoveryAgent->start(scanningMethod);
+            m_bluetoothDiscoveryAgent->setLowEnergyDiscoveryTimeout(0);
+            m_bluetoothDiscoveryAgent->start(QBluetoothDeviceDiscoveryAgent::ClassicMethod |
+                                             QBluetoothDeviceDiscoveryAgent::LowEnergyMethod);
 
             if (m_bluetoothDiscoveryAgent->isActive())
             {
@@ -678,11 +673,9 @@ void DeviceManager::scanDevices_resume()
 
         if (m_bluetoothDiscoveryAgent && !m_bluetoothDiscoveryAgent->isActive())
         {
-            int scanningDuration = SettingsManager::getInstance()->getScanTimeout() * 60 * 1000;
-            QFlags scanningMethod = QBluetoothDeviceDiscoveryAgent::ClassicMethod | QBluetoothDeviceDiscoveryAgent::LowEnergyMethod;
-
-            m_bluetoothDiscoveryAgent->setLowEnergyDiscoveryTimeout(scanningDuration);
-            m_bluetoothDiscoveryAgent->start(scanningMethod);
+            m_bluetoothDiscoveryAgent->setLowEnergyDiscoveryTimeout(0);
+            m_bluetoothDiscoveryAgent->start(QBluetoothDeviceDiscoveryAgent::ClassicMethod |
+                                             QBluetoothDeviceDiscoveryAgent::LowEnergyMethod);
 
             if (m_bluetoothDiscoveryAgent->isActive())
             {
