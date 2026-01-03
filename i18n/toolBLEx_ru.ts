@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="en_US">
+<TS version="2.1" language="ru_RU">
 <context>
     <name>AdapterWidget</name>
     <message>
         <location filename="../qml/widgets/AdapterWidget.qml" line="55"/>
         <source>Bluetooth adapter #%1</source>
-        <translation type="unfinished"></translation>
+        <translation>Адаптер Bluetooth #%1</translation>
     </message>
     <message>
         <location filename="../qml/widgets/AdapterWidget.qml" line="74"/>
         <source>Hostname</source>
-        <translation type="unfinished"></translation>
+        <translation>Имя хоста</translation>
     </message>
     <message>
         <location filename="../qml/widgets/AdapterWidget.qml" line="100"/>
         <source>MAC address</source>
-        <translation type="unfinished"></translation>
+        <translation>MAC-адрес</translation>
     </message>
     <message>
         <location filename="../qml/widgets/AdapterWidget.qml" line="128"/>
         <source>MAC vendor</source>
-        <translation type="unfinished"></translation>
+        <translation>MAC-вендор</translation>
     </message>
     <message>
         <location filename="../qml/widgets/AdapterWidget.qml" line="155"/>
@@ -106,12 +106,12 @@
     <message>
         <location filename="../qml/widgets/BleCharacteristicWidget.qml" line="87"/>
         <source>Properties:</source>
-        <translation type="unfinished"></translation>
+        <translation>Характеристики:</translation>
     </message>
     <message>
         <location filename="../qml/widgets/BleCharacteristicWidget.qml" line="137"/>
         <source>Data:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Сведения:</translation>
     </message>
     <message>
         <location filename="../qml/widgets/BleCharacteristicWidget.qml" line="146"/>
@@ -164,28 +164,28 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/components/ButtonScanMenu.qml" line="36"/>
-        <location filename="../qml/components/ButtonScanMenu.qml" line="218"/>
-        <source>scanning...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/components/ButtonScanMenu.qml" line="37"/>
-        <location filename="../qml/components/ButtonScanMenu.qml" line="221"/>
-        <source>connected</source>
-        <translation type="unfinished"></translation>
+        <location filename="../qml/components/ButtonScanMenu.qml" line="34"/>
+        <location filename="../qml/components/ButtonScanMenu.qml" line="219"/>
+        <source>disconnecting...</source>
+        <translation>разъединить...</translation>
     </message>
     <message>
         <location filename="../qml/components/ButtonScanMenu.qml" line="35"/>
         <location filename="../qml/components/ButtonScanMenu.qml" line="220"/>
         <source>connecting...</source>
-        <translation type="unfinished"></translation>
+        <translation>соединить...</translation>
     </message>
     <message>
-        <location filename="../qml/components/ButtonScanMenu.qml" line="34"/>
-        <location filename="../qml/components/ButtonScanMenu.qml" line="219"/>
-        <source>disconnecting...</source>
-        <translation type="unfinished"></translation>
+        <location filename="../qml/components/ButtonScanMenu.qml" line="36"/>
+        <location filename="../qml/components/ButtonScanMenu.qml" line="218"/>
+        <source>scanning...</source>
+        <translation>сканировать...</translation>
+    </message>
+    <message>
+        <location filename="../qml/components/ButtonScanMenu.qml" line="37"/>
+        <location filename="../qml/components/ButtonScanMenu.qml" line="221"/>
+        <source>connected</source>
+        <translation type="unfinished">подключен</translation>
     </message>
     <message>
         <location filename="../qml/components/ButtonScanMenu.qml" line="147"/>
@@ -210,7 +210,7 @@
     <message>
         <location filename="../qml/components/ButtonScanMenu.qml" line="252"/>
         <source>abort</source>
-        <translation type="unfinished"></translation>
+        <translation>прервать</translation>
     </message>
 </context>
 <context>
@@ -233,34 +233,35 @@
     <message>
         <location filename="../qml/DesktopHeader.qml" line="186"/>
         <source>Scanning paused</source>
-        <translation type="unfinished"></translation>
+        <translation>Сканирование приостановлено</translation>
     </message>
     <message>
         <location filename="../qml/DesktopHeader.qml" line="187"/>
         <source>Scanning for Bluetooth devices nearby</source>
-        <translation type="unfinished"></translation>
+        <translation>Поиск устройств Bluetooth поблизости</translation>
     </message>
     <message>
         <location filename="../qml/DesktopHeader.qml" line="188"/>
         <source>Not scanning</source>
-        <translation type="unfinished"></translation>
+        <translation>Не сканирует</translation>
     </message>
     <message>
         <location filename="../qml/DesktopHeader.qml" line="223"/>
         <source>Virtual device is running</source>
-        <translation type="unfinished"></translation>
+        <translation>Виртуальное устройство работает</translation>
     </message>
     <message>
         <location filename="../qml/DesktopHeader.qml" line="257"/>
         <source>Ubertooth is running</source>
-        <translation type="unfinished"></translation>
+        <translation>Ubertooth работает</translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/DesktopHeader.qml" line="276"/>
         <source>%n device(s) found</source>
-        <translation>
-            <numerusform>%n device found</numerusform>
-            <numerusform>%n devices found</numerusform>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
 </context>
@@ -272,12 +273,14 @@
         <translation type="unfinished">
             <numerusform></numerusform>
             <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../src/device.cpp" line="539"/>
         <source>%n hour(s)</source>
         <translation type="unfinished">
+            <numerusform></numerusform>
             <numerusform></numerusform>
             <numerusform></numerusform>
         </translation>
@@ -288,7 +291,7 @@
     <message>
         <location filename="../qml/components/DeviceScannerListHeader.qml" line="71"/>
         <source>Address</source>
-        <translation type="unfinished"></translation>
+        <translation>Адрес</translation>
     </message>
     <message>
         <location filename="../qml/components/DeviceScannerListHeader.qml" line="154"/>
@@ -298,7 +301,7 @@
     <message>
         <location filename="../qml/components/DeviceScannerListHeader.qml" line="238"/>
         <source>Manufacturer</source>
-        <translation type="unfinished"></translation>
+        <translation>Изготовитель</translation>
     </message>
     <message>
         <location filename="../qml/components/DeviceScannerListHeader.qml" line="339"/>
@@ -308,7 +311,7 @@
     <message>
         <location filename="../qml/components/DeviceScannerListHeader.qml" line="439"/>
         <source>Interval</source>
-        <translation type="unfinished"></translation>
+        <translation>Интервал</translation>
     </message>
     <message>
         <location filename="../qml/components/DeviceScannerListHeader.qml" line="522"/>
@@ -326,7 +329,7 @@
     <message>
         <location filename="../qml/components/DeviceScannerListWidget.qml" line="148"/>
         <source>Unavailable</source>
-        <translation type="unfinished"></translation>
+        <translation>Недоступно</translation>
     </message>
     <message>
         <location filename="../qml/components/DeviceScannerListWidget.qml" line="243"/>
@@ -344,7 +347,7 @@
     <message>
         <location filename="../qml/components/DeviceScannerTableHeader.qml" line="28"/>
         <source>Address</source>
-        <translation type="unfinished"></translation>
+        <translation>Адрес</translation>
     </message>
     <message>
         <location filename="../qml/components/DeviceScannerTableHeader.qml" line="29"/>
@@ -354,7 +357,7 @@
     <message>
         <location filename="../qml/components/DeviceScannerTableHeader.qml" line="30"/>
         <source>Manufacturer</source>
-        <translation type="unfinished"></translation>
+        <translation>Изготовитель</translation>
     </message>
     <message>
         <location filename="../qml/components/DeviceScannerTableHeader.qml" line="31"/>
@@ -364,7 +367,7 @@
     <message>
         <location filename="../qml/components/DeviceScannerTableHeader.qml" line="32"/>
         <source>Interval</source>
-        <translation type="unfinished"></translation>
+        <translation>Интервал</translation>
     </message>
     <message>
         <location filename="../qml/components/DeviceScannerTableHeader.qml" line="33"/>
@@ -395,7 +398,7 @@
     <message>
         <location filename="../thirdparty/ComponentLibrary/complex/FileInputArea.qml" line="46"/>
         <source>Please choose a file!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Пожалуйста, выберите файл!</translation>
     </message>
     <message>
         <location filename="../thirdparty/ComponentLibrary/complex/FileInputArea.qml" line="52"/>
@@ -439,37 +442,37 @@
     <message>
         <location filename="../src/MenubarManager.cpp" line="76"/>
         <source>Device list</source>
-        <translation type="unfinished"></translation>
+        <translation>Список устройств</translation>
     </message>
     <message>
         <location filename="../src/MenubarManager.cpp" line="80"/>
         <source>Devices</source>
-        <translation type="unfinished"></translation>
+        <translation>Устройства</translation>
     </message>
     <message>
         <location filename="../src/MenubarManager.cpp" line="84"/>
         <source>About toolBLEx</source>
-        <translation type="unfinished"></translation>
+        <translation>О toolBLEx</translation>
     </message>
     <message>
         <location filename="../src/MenubarManager.cpp" line="85"/>
         <source>Visit website</source>
-        <translation type="unfinished"></translation>
+        <translation>Посетить веб-сайт</translation>
     </message>
     <message>
         <location filename="../src/MenubarManager.cpp" line="86"/>
         <source>Visit issue tracker</source>
-        <translation type="unfinished"></translation>
+        <translation>Посетить трекер ошибок</translation>
     </message>
     <message>
         <location filename="../src/MenubarManager.cpp" line="87"/>
         <source>Consult release notes</source>
-        <translation type="unfinished"></translation>
+        <translation>Ознакомьтесь с примечаниями к выпуску</translation>
     </message>
     <message>
         <location filename="../src/MenubarManager.cpp" line="94"/>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Помощь</translation>
     </message>
 </context>
 <context>
@@ -477,7 +480,7 @@
     <message>
         <location filename="../qml/PanelDevice.qml" line="91"/>
         <source>device info</source>
-        <translation type="unfinished"></translation>
+        <translation>информация об устройстве</translation>
     </message>
     <message>
         <location filename="../qml/PanelDevice.qml" line="103"/>
@@ -492,7 +495,7 @@
     <message>
         <location filename="../qml/PanelDevice.qml" line="123"/>
         <source>log</source>
-        <translation type="unfinished"></translation>
+        <translation>отчёт</translation>
     </message>
 </context>
 <context>
@@ -510,7 +513,7 @@
     <message>
         <location filename="../qml/PanelDeviceAdvertisement.qml" line="102"/>
         <source>Manufacturer data</source>
-        <translation type="unfinished"></translation>
+        <translation>Сведения об изготовителе</translation>
     </message>
 </context>
 <context>
@@ -518,17 +521,17 @@
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="86"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Имя</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="99"/>
         <source>Unavailable</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Недоступно</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="116"/>
         <source>MAC address</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">MAC-адрес</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="143"/>
@@ -538,7 +541,7 @@
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="171"/>
         <source>Manufacturer</source>
-        <translation type="unfinished"></translation>
+        <translation>Изготовитель</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="184"/>
@@ -566,19 +569,20 @@
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="341"/>
         <source>Category</source>
-        <translation type="unfinished"></translation>
+        <translation>Категория</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="366"/>
         <source>Device type</source>
-        <translation type="unfinished"></translation>
+        <translation>Тип устройства</translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/PanelDeviceInfos.qml" line="391"/>
         <source>Service(s)</source>
-        <translation>
-            <numerusform>Service</numerusform>
-            <numerusform>Services</numerusform>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message>
@@ -609,22 +613,22 @@
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="523"/>
         <source>show</source>
-        <translation type="unfinished"></translation>
+        <translation>показать</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="523"/>
         <source>hide</source>
-        <translation type="unfinished"></translation>
+        <translation>скрыть</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="535"/>
         <source>color</source>
-        <translation type="unfinished"></translation>
+        <translation>цвет</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="574"/>
         <source>Comment</source>
-        <translation type="unfinished"></translation>
+        <translation>Комментарий</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="625"/>
@@ -654,9 +658,10 @@
     <message numerus="yes">
         <location filename="../qml/PanelDeviceInfos.qml" line="826"/>
         <source>Service(s) advertised</source>
-        <translation>
-            <numerusform>Service advertised</numerusform>
-            <numerusform>Services advertised</numerusform>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message>
@@ -672,7 +677,7 @@
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="973"/>
         <source>Latest manufacturer data</source>
-        <translation type="unfinished"></translation>
+        <translation>Последние сведения об изготовителе</translation>
     </message>
 </context>
 <context>
@@ -695,17 +700,17 @@
     <message>
         <location filename="../qml/PanelDeviceLog.qml" line="177"/>
         <source>Clear</source>
-        <translation type="unfinished"></translation>
+        <translation>Очистить</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceLog.qml" line="188"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Сохранить</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceLog.qml" line="206"/>
         <source>Please choose a file!</source>
-        <translation type="unfinished"></translation>
+        <translation>Пожалуйста, выберите файл!</translation>
     </message>
 </context>
 <context>
@@ -728,7 +733,7 @@
     <message>
         <location filename="../qml/PanelDeviceServices.qml" line="140"/>
         <source>Device is disconnected</source>
-        <translation type="unfinished"></translation>
+        <translation>Устройство отключено</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceServices.qml" line="168"/>
@@ -741,7 +746,7 @@
     <message>
         <location filename="../qml/PanelScanner.qml" line="37"/>
         <source>host info</source>
-        <translation type="unfinished"></translation>
+        <translation>информация о хосте</translation>
     </message>
     <message>
         <location filename="../qml/PanelScanner.qml" line="38"/>
@@ -764,35 +769,36 @@
     <message>
         <location filename="../qml/popups/PopupClearDeviceSeenCache.qml" line="117"/>
         <source>Are you sure you want to clear the device seen cache?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы уверены, что хотите очистить кэш видимых устройств?</translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/popups/PopupClearDeviceSeenCache.qml" line="145"/>
         <source>There are %n device(s) in the cache.</source>
-        <translation>
-            <numerusform>There are %n device in the cache.</numerusform>
-            <numerusform>There are %n devices in the cache.</numerusform>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupClearDeviceSeenCache.qml" line="161"/>
         <source>Devices in the cache persists between sessions, even if they are not detected nearby.</source>
-        <translation type="unfinished"></translation>
+        <translation>Устройства в кеше сохраняются между сеансами, даже если они не обнаружены поблизости.</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupClearDeviceSeenCache.qml" line="169"/>
         <source>Clear the cache if you have too many or too old devices.</source>
-        <translation type="unfinished"></translation>
+        <translation>Очистите кеш, если у вас устаревшие сведения об устройствах или их слишком много.</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupClearDeviceSeenCache.qml" line="190"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Отмена</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupClearDeviceSeenCache.qml" line="196"/>
         <source>Clear cache</source>
-        <translation type="unfinished"></translation>
+        <translation>Очистить кеш</translation>
     </message>
 </context>
 <context>
@@ -810,9 +816,10 @@
     <message numerus="yes">
         <location filename="../qml/popups/PopupClearDeviceStructureCache.qml" line="145"/>
         <source>There are %n device(s) in the cache.</source>
-        <translation>
-            <numerusform>There are %n device in the cache.</numerusform>
-            <numerusform>There are %n devices in the cache.</numerusform>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message>
@@ -823,22 +830,22 @@
     <message>
         <location filename="../qml/popups/PopupClearDeviceStructureCache.qml" line="169"/>
         <source>Clear the cache files if you have too many or too old devices.</source>
-        <translation type="unfinished"></translation>
+        <translation>Очистите кеш, если у вас устаревшие сведения об устройствах или их слишком много.</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupClearDeviceStructureCache.qml" line="190"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Отмена</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupClearDeviceStructureCache.qml" line="196"/>
         <source>Open folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Открыть папку</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupClearDeviceStructureCache.qml" line="205"/>
         <source>Clear cache</source>
-        <translation type="unfinished"></translation>
+        <translation>Очистить кеш</translation>
     </message>
 </context>
 <context>
@@ -846,7 +853,7 @@
     <message>
         <location filename="../qml/popups/PopupExportDeviceData.qml" line="125"/>
         <source>Export device data</source>
-        <translation type="unfinished"></translation>
+        <translation>Экспорт сведений об устройстве</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupExportDeviceData.qml" line="197"/>
@@ -856,25 +863,28 @@
     <message numerus="yes">
         <location filename="../qml/popups/PopupExportDeviceData.qml" line="209"/>
         <source>%n adv packet(s)</source>
-        <translation>
-            <numerusform>%n adv packet</numerusform>
-            <numerusform>%n adv packets</numerusform>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/popups/PopupExportDeviceData.qml" line="214"/>
         <source>%n service(s)</source>
-        <translation>
-            <numerusform>%n service</numerusform>
-            <numerusform>%n services</numerusform>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/popups/PopupExportDeviceData.qml" line="219"/>
         <source>%n characteristic(s)</source>
-        <translation>
-            <numerusform>%n characteristic</numerusform>
-            <numerusform>%n characteristics</numerusform>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message>
@@ -910,22 +920,22 @@
     <message>
         <location filename="../qml/popups/PopupExportDeviceData.qml" line="282"/>
         <source>Select export file</source>
-        <translation type="unfinished"></translation>
+        <translation>Выберите экспортируемый файл</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupExportDeviceData.qml" line="291"/>
         <source>Please select the export file</source>
-        <translation type="unfinished"></translation>
+        <translation>Пожалуйста, выберите экспортируемый файл</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupExportDeviceData.qml" line="315"/>
         <source>Export error :(</source>
-        <translation type="unfinished"></translation>
+        <translation>Ошибка экспортирования :(</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupExportDeviceData.qml" line="325"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Отмена</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupExportDeviceData.qml" line="332"/>
@@ -1095,7 +1105,7 @@
     <message>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="617"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Отмена</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="625"/>
@@ -1133,25 +1143,28 @@
     <message numerus="yes">
         <location filename="../qml/ScreenScanner.qml" line="493"/>
         <source>%n device(s) found</source>
-        <translation>
-            <numerusform>%n device found</numerusform>
-            <numerusform>%n devices found</numerusform>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/ScreenScanner.qml" line="495"/>
         <source>%n device(s) shown</source>
-        <translation>
-            <numerusform>%n device shown</numerusform>
-            <numerusform>%n devices shown</numerusform>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/ScreenScanner.qml" line="498"/>
         <source>%n device(s) cached</source>
-        <translation>
-            <numerusform>%n device cached</numerusform>
-            <numerusform>%n devices cached</numerusform>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message>
@@ -1165,7 +1178,7 @@
     <message>
         <location filename="../qml/ScreenSettings.qml" line="185"/>
         <source>version %1 %2</source>
-        <translation type="unfinished"></translation>
+        <translation>версии %1 %2</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="195"/>
@@ -1175,47 +1188,47 @@
     <message>
         <location filename="../qml/ScreenSettings.qml" line="203"/>
         <source>A Bluetooth Low Energy device scanner and analyzer</source>
-        <translation type="unfinished"></translation>
+        <translation>Сканер и анализатор устройств Bluetooth с низким энергопотреблением</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="219"/>
         <source>WEBSITE</source>
-        <translation type="unfinished"></translation>
+        <translation>ВЕБ-САЙТ</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="235"/>
         <source>SUPPORT</source>
-        <translation type="unfinished"></translation>
+        <translation>ПОДДЕРЖКА</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="246"/>
         <source>RELEASE NOTES</source>
-        <translation type="unfinished"></translation>
+        <translation>ПРИМЕЧАНИЯ К ВЫПУСКУ</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="290"/>
         <source>Application settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Настройки приложения</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="322"/>
         <source>Theme</source>
-        <translation type="unfinished"></translation>
+        <translation>Тема</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="352"/>
         <source>light</source>
-        <translation type="unfinished"></translation>
+        <translation>светлая</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="376"/>
         <source>dark</source>
-        <translation type="unfinished"></translation>
+        <translation>тёмная</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="401"/>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Язык</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="421"/>
@@ -1226,28 +1239,28 @@
     <message>
         <location filename="../qml/ScreenSettings.qml" line="452"/>
         <source>Unit system</source>
-        <translation type="unfinished"></translation>
+        <translation>Система единиц</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="468"/>
         <source>metric</source>
-        <translation type="unfinished"></translation>
+        <translation>метрическая</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="469"/>
         <source>imperial</source>
-        <translation type="unfinished"></translation>
+        <translation>имперская</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="493"/>
         <source>Preferred screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Начальный экран</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="511"/>
         <location filename="../qml/ScreenSettings.qml" line="517"/>
         <source>scanner</source>
-        <translation type="unfinished"></translation>
+        <translation>сканер</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="512"/>
@@ -1263,42 +1276,42 @@
     <message>
         <location filename="../qml/ScreenSettings.qml" line="540"/>
         <source>Show splashscreen on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Показать заставку при старте</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="572"/>
         <source>Default export directory:</source>
-        <translation type="unfinished"></translation>
+        <translation>Директория экспорта по умолчанию:</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="596"/>
         <source>Default export directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Директория экспорта по умолчанию</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="599"/>
         <source>Please specify the default export directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Пожалуйста, укажите директорию экспорта по умолчанию</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="630"/>
         <source>Scanner</source>
-        <translation type="unfinished"></translation>
+        <translation>Сканер</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="664"/>
         <source>Start scanning automatically</source>
-        <translation type="unfinished"></translation>
+        <translation>Начать сканирование автоматически</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="696"/>
         <source>Pause scanning while in the background</source>
-        <translation type="unfinished"></translation>
+        <translation>Приостановить сканирование в фоновом режиме</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="726"/>
         <source>Scanning timeout</source>
-        <translation type="unfinished"></translation>
+        <translation>Тайм-аут сканирования</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="761"/>
@@ -1308,7 +1321,7 @@
     <message>
         <location filename="../qml/ScreenSettings.qml" line="799"/>
         <source>Automatically save devices seen nearby</source>
-        <translation type="unfinished"></translation>
+        <translation>Автоматически сохранять устройства, замеченные поблизости</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="837"/>
@@ -1319,16 +1332,17 @@
         <location filename="../qml/ScreenSettings.qml" line="845"/>
         <location filename="../qml/ScreenSettings.qml" line="901"/>
         <source>%n device(s)</source>
-        <translation>
-            <numerusform>%n device</numerusform>
-            <numerusform>%n devices</numerusform>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="866"/>
         <location filename="../qml/ScreenSettings.qml" line="922"/>
         <source>Clear cache</source>
-        <translation type="unfinished"></translation>
+        <translation>Очистить кеш</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="893"/>
@@ -1338,42 +1352,42 @@
     <message>
         <location filename="../qml/ScreenSettings.qml" line="950"/>
         <source>Spectrum analyzer</source>
-        <translation type="unfinished"></translation>
+        <translation>Анализатор спектра</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="990"/>
         <source>This feature relies on specific hardware.</source>
-        <translation type="unfinished"></translation>
+        <translation>Эта функция зависит от конкретного оборудования.</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="1000"/>
         <source>Ubertooth One is an open source 2.4 GHz wireless development platform suitable for Bluetooth experimentation.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ubertooth One — это платформа разработки беспроводной сети 2,4 ГГц с открытым исходным кодом, подходящая для экспериментов с Bluetooth.</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="1049"/>
         <source>Please specify the path to the ubertooth-specan binary</source>
-        <translation type="unfinished"></translation>
+        <translation>Пожалуйста, укажите путь к бинарному файлу ubertooth-specan</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="1124"/>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation>По умолчанию</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="1176"/>
         <source>Third parties</source>
-        <translation type="unfinished"></translation>
+        <translation>Сторонние проекты</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="1199"/>
         <source>This application is made possible thanks to a couple of third party open source projects:</source>
-        <translation type="unfinished"></translation>
+        <translation>Это приложение стало возможным благодаря нескольким сторонним проектам с открытым исходным кодом:</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="1299"/>
         <source>System info</source>
-        <translation type="unfinished"></translation>
+        <translation>Информация о системе</translation>
     </message>
 </context>
 <context>
@@ -1421,22 +1435,22 @@
     <message>
         <location filename="../qml/ScreenUbertooth.qml" line="223"/>
         <source>2.3 GHz</source>
-        <translation type="unfinished"></translation>
+        <translation>2,3 ГГц</translation>
     </message>
     <message>
         <location filename="../qml/ScreenUbertooth.qml" line="229"/>
         <source>2.6 GHz</source>
-        <translation type="unfinished"></translation>
+        <translation>2,6 ГГц</translation>
     </message>
     <message>
         <location filename="../qml/ScreenUbertooth.qml" line="266"/>
         <source>hardware ready</source>
-        <translation type="unfinished"></translation>
+        <translation>аппаратура готова</translation>
     </message>
     <message>
         <location filename="../qml/ScreenUbertooth.qml" line="266"/>
         <source>hardware not ready</source>
-        <translation type="unfinished"></translation>
+        <translation>аппаратура не готова</translation>
     </message>
 </context>
 <context>
@@ -1500,17 +1514,17 @@
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="50"/>
         <source>Miscellaneous device</source>
-        <translation type="unfinished"></translation>
+        <translation>Любое устройство</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="51"/>
         <source>Computer</source>
-        <translation type="unfinished"></translation>
+        <translation>Компьютер</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="52"/>
         <source>Phone</source>
-        <translation type="unfinished"></translation>
+        <translation>Телефон</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="53"/>
@@ -1521,7 +1535,7 @@
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="54"/>
         <source>Audio Video device</source>
-        <translation type="unfinished"></translation>
+        <translation>Аудио-видео устройство</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="55"/>
@@ -1536,12 +1550,12 @@
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="57"/>
         <source>Wearable device</source>
-        <translation type="unfinished"></translation>
+        <translation>Переносное устройство</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="58"/>
         <source>Toy</source>
-        <translation type="unfinished"></translation>
+        <translation>Игрушка</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="59"/>
@@ -1552,7 +1566,7 @@
         <location filename="../qml/components_js/UtilsBluetooth.js" line="60"/>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="142"/>
         <source>Uncategorized</source>
-        <translation type="unfinished"></translation>
+        <translation>Вне категорий</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="146"/>
@@ -1562,12 +1576,12 @@
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="147"/>
         <source>Server</source>
-        <translation type="unfinished"></translation>
+        <translation>Сервер</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="148"/>
         <source>Laptop</source>
-        <translation type="unfinished"></translation>
+        <translation>Ноутбук</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="149"/>
@@ -1577,32 +1591,32 @@
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="150"/>
         <source>Handheld</source>
-        <translation type="unfinished"></translation>
+        <translation>Портативное</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="151"/>
         <source>Wearable</source>
-        <translation type="unfinished"></translation>
+        <translation>Переносное</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="155"/>
         <source>Cellular</source>
-        <translation type="unfinished"></translation>
+        <translation>Сотовый</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="156"/>
         <source>Cordless</source>
-        <translation type="unfinished"></translation>
+        <translation>Беспроводное</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="157"/>
         <source>SmartPhone</source>
-        <translation type="unfinished"></translation>
+        <translation>Смартфон</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="167"/>
         <source>Wearable headset</source>
-        <translation type="unfinished"></translation>
+        <translation>Гарнитура</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="168"/>
@@ -1612,22 +1626,22 @@
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="169"/>
         <source>Microphone</source>
-        <translation type="unfinished"></translation>
+        <translation>Микрофон</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="170"/>
         <source>Loudspeaker</source>
-        <translation type="unfinished"></translation>
+        <translation>Аудиоколонка</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="171"/>
         <source>Headphones</source>
-        <translation type="unfinished"></translation>
+        <translation>Наушники</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="172"/>
         <source>Portable audio device</source>
-        <translation type="unfinished"></translation>
+        <translation>Портативное аудиоустройство</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="173"/>
@@ -1642,27 +1656,27 @@
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="175"/>
         <source>HiFi audio</source>
-        <translation type="unfinished"></translation>
+        <translation>Hi-Fi аудио</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="176"/>
         <source>VCR</source>
-        <translation type="unfinished"></translation>
+        <translation>Видеомагнитофон</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="177"/>
         <source>Video camera</source>
-        <translation type="unfinished"></translation>
+        <translation>Видеокамера</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="178"/>
         <source>Camcorder</source>
-        <translation type="unfinished"></translation>
+        <translation>Камкордер</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="179"/>
         <source>Video monitor</source>
-        <translation type="unfinished"></translation>
+        <translation>Видеомонитор</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="180"/>
@@ -1677,37 +1691,37 @@
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="182"/>
         <source>Gaming device</source>
-        <translation type="unfinished"></translation>
+        <translation>Игровое устройство</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="186"/>
         <source>Keyboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Клавиатура</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="187"/>
         <source>Pointing device</source>
-        <translation type="unfinished"></translation>
+        <translation>Указывающее устройство</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="188"/>
         <source>Keyboard with Pointing device</source>
-        <translation type="unfinished"></translation>
+        <translation>Клавиатура с указывающим устройством</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="190"/>
         <source>Joystick</source>
-        <translation type="unfinished"></translation>
+        <translation>Джойстик</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="191"/>
         <source>Gamepad</source>
-        <translation type="unfinished"></translation>
+        <translation>Геймпад</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="192"/>
         <source>Remote control</source>
-        <translation type="unfinished"></translation>
+        <translation>Дистанционный пульт</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="193"/>
@@ -1717,42 +1731,42 @@
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="194"/>
         <source>Pen tablet</source>
-        <translation type="unfinished"></translation>
+        <translation>Перьевой планшет</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="195"/>
         <source>Card reader</source>
-        <translation type="unfinished"></translation>
+        <translation>Кардридер</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="201"/>
         <source>Display</source>
-        <translation type="unfinished"></translation>
+        <translation>Дисплей</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="205"/>
         <source>Camera</source>
-        <translation type="unfinished"></translation>
+        <translation>Камера</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="209"/>
         <source>Scanner</source>
-        <translation type="unfinished"></translation>
+        <translation>Сканер</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="213"/>
         <source>Printer</source>
-        <translation type="unfinished"></translation>
+        <translation>Принтер</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="218"/>
         <source>Wrist watch</source>
-        <translation type="unfinished"></translation>
+        <translation>Наручные часы</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="219"/>
         <source>Pager</source>
-        <translation type="unfinished"></translation>
+        <translation>Пейджер</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="220"/>
@@ -1762,17 +1776,17 @@
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="221"/>
         <source>Helmet</source>
-        <translation type="unfinished"></translation>
+        <translation>Шлем</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="222"/>
         <source>Glasses</source>
-        <translation type="unfinished"></translation>
+        <translation>Очки</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="226"/>
         <source>Robot</source>
-        <translation type="unfinished"></translation>
+        <translation>Робот</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="227"/>
@@ -1797,27 +1811,27 @@
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="234"/>
         <source>Blood pressure monitor</source>
-        <translation type="unfinished"></translation>
+        <translation>Монитор артериального давления</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="235"/>
         <source>Thermometer</source>
-        <translation type="unfinished"></translation>
+        <translation>Термометр</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="236"/>
         <source>Weight scale</source>
-        <translation type="unfinished"></translation>
+        <translation>Весы</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="237"/>
         <source>Glucose meter</source>
-        <translation type="unfinished"></translation>
+        <translation>Глюкометр</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="238"/>
         <source>Pulse oximeter</source>
-        <translation type="unfinished"></translation>
+        <translation>Пульсоксиметр</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="239"/>
@@ -1827,7 +1841,7 @@
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="240"/>
         <source>Step counter</source>
-        <translation type="unfinished"></translation>
+        <translation>Счетчик шагов</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="253"/>
@@ -2250,22 +2264,22 @@
     <message>
         <location filename="../qml/components/WarningNoAdapter.qml" line="49"/>
         <source>No Bluetooth adapter detected</source>
-        <translation type="unfinished"></translation>
+        <translation>Адаптер Bluetooth не обнаружен</translation>
     </message>
     <message>
         <location filename="../qml/components/WarningNoAdapter.qml" line="59"/>
         <source>Please check if a Bluetooth adapter is connected and configured on your machine.</source>
-        <translation type="unfinished"></translation>
+        <translation>Пожалуйста, проверьте, подключен и настроен ли адаптер Bluetooth на вашем компьютере.</translation>
     </message>
     <message>
         <location filename="../qml/components/WarningNoAdapter.qml" line="72"/>
         <source>Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation>Игнорировать</translation>
     </message>
     <message>
         <location filename="../qml/components/WarningNoAdapter.qml" line="78"/>
         <source>Retry</source>
-        <translation type="unfinished"></translation>
+        <translation>Повторить</translation>
     </message>
 </context>
 <context>
@@ -2273,22 +2287,22 @@
     <message>
         <location filename="../qml/components/WarningNoBluetooth.qml" line="48"/>
         <source>Bluetooth is disabled</source>
-        <translation type="unfinished"></translation>
+        <translation>Bluetooth отключен</translation>
     </message>
     <message>
         <location filename="../qml/components/WarningNoBluetooth.qml" line="58"/>
         <source>Please enable Bluetooth on your machine and retry.</source>
-        <translation type="unfinished"></translation>
+        <translation>Пожалуйста, включите Bluetooth на вашем компьютере и повторите попытку.</translation>
     </message>
     <message>
         <location filename="../qml/components/WarningNoBluetooth.qml" line="71"/>
         <source>Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation>Игнорировать</translation>
     </message>
     <message>
         <location filename="../qml/components/WarningNoBluetooth.qml" line="77"/>
         <source>Retry</source>
-        <translation type="unfinished"></translation>
+        <translation>Повторить</translation>
     </message>
 </context>
 <context>
@@ -2296,22 +2310,22 @@
     <message>
         <location filename="../qml/components/WarningNoPermission.qml" line="48"/>
         <source>Bluetooth permission missing</source>
-        <translation type="unfinished"></translation>
+        <translation>Разрешение для Bluetooth отсутствует</translation>
     </message>
     <message>
         <location filename="../qml/components/WarningNoPermission.qml" line="58"/>
         <source>Please check if the Bluetooth permission has been granted to the application.</source>
-        <translation type="unfinished"></translation>
+        <translation>Пожалуйста, проверьте, предоставлено ли приложению разрешение для Bluetooth.</translation>
     </message>
     <message>
         <location filename="../qml/components/WarningNoPermission.qml" line="71"/>
         <source>Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation>Игнорировать</translation>
     </message>
     <message>
         <location filename="../qml/components/WarningNoPermission.qml" line="77"/>
         <source>Retry</source>
-        <translation type="unfinished"></translation>
+        <translation>Повторить</translation>
     </message>
 </context>
 <context>
@@ -2319,7 +2333,7 @@
     <message>
         <location filename="../qml/components/WarningNotImplemented.qml" line="48"/>
         <source>This screen is not implemented (yet)</source>
-        <translation type="unfinished"></translation>
+        <translation>Этот экран не реализован (пока)</translation>
     </message>
     <message>
         <location filename="../qml/components/WarningNotImplemented.qml" line="58"/>

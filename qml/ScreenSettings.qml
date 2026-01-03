@@ -412,8 +412,29 @@ Loader {
                                 anchors.rightMargin: Theme.componentMargin
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                enabled: false
-                                model: ["auto"]
+                                z: 1
+                                wheelEnabled: false
+
+                                model: ListModel {
+                                    id: cbAppLanguage
+                                    ListElement {
+                                        text: qsTr("auto", "short for automatic");
+                                    }
+                                    ListElement { text: "English"; }
+                                    ListElement { text: "Français"; }
+                                    ListElement { text: "Pусский"; }
+                                }
+
+                                Component.onCompleted: {
+                                    for (var i = 0; i < cbAppLanguage.count; i++) {
+                                        if (cbAppLanguage.get(i).text === settingsManager.appLanguage)
+                                            currentIndex = i
+                                    }
+                                }
+                                onActivated: {
+                                    utilsLanguage.loadLanguage(cbAppLanguage.get(currentIndex).text)
+                                    settingsManager.appLanguage = cbAppLanguage.get(currentIndex).text
+                                }
                             }
                         }
 

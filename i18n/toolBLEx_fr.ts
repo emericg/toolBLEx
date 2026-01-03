@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="en_US">
+<TS version="2.1" language="fr_FR" sourcelanguage="en_US">
 <context>
     <name>AdapterWidget</name>
     <message>
         <location filename="../qml/widgets/AdapterWidget.qml" line="55"/>
         <source>Bluetooth adapter #%1</source>
-        <translation type="unfinished"></translation>
+        <translation>Adaptateur Bluetooth #%1</translation>
     </message>
     <message>
         <location filename="../qml/widgets/AdapterWidget.qml" line="74"/>
         <source>Hostname</source>
-        <translation type="unfinished"></translation>
+        <translation>Nom d&apos;hôte</translation>
     </message>
     <message>
         <location filename="../qml/widgets/AdapterWidget.qml" line="100"/>
         <source>MAC address</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresse MAC</translation>
     </message>
     <message>
         <location filename="../qml/widgets/AdapterWidget.qml" line="128"/>
         <source>MAC vendor</source>
-        <translation type="unfinished"></translation>
+        <translation>Fournisseur MAC</translation>
     </message>
     <message>
         <location filename="../qml/widgets/AdapterWidget.qml" line="155"/>
         <source>Bluetooth</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/widgets/AdapterWidget.qml" line="179"/>
         <source>Host mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Mode hôte</translation>
     </message>
 </context>
 <context>
@@ -39,17 +39,17 @@
     <message>
         <location filename="../qml/widgets/AdvertisementDataWidget.qml" line="42"/>
         <source>UUID</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/widgets/AdvertisementDataWidget.qml" line="105"/>
         <source>DATA</source>
-        <translation type="unfinished"></translation>
+        <translation>DONNÉES</translation>
     </message>
     <message>
         <location filename="../qml/widgets/AdvertisementDataWidget.qml" line="122"/>
         <source>bytes</source>
-        <translation type="unfinished"></translation>
+        <translation>octets</translation>
     </message>
     <message>
         <location filename="../qml/widgets/AdvertisementDataWidget.qml" line="143"/>
@@ -67,17 +67,17 @@
     <message>
         <location filename="../qml/widgets/AdvertisementDataWidgetAdvanced.qml" line="93"/>
         <source>UUID</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/widgets/AdvertisementDataWidgetAdvanced.qml" line="153"/>
         <source>DATA</source>
-        <translation type="unfinished"></translation>
+        <translation>DONNÉES</translation>
     </message>
     <message>
         <location filename="../qml/widgets/AdvertisementDataWidgetAdvanced.qml" line="171"/>
         <source>bytes</source>
-        <translation type="unfinished"></translation>
+        <translation>octets</translation>
     </message>
     <message>
         <location filename="../qml/widgets/AdvertisementDataWidgetAdvanced.qml" line="192"/>
@@ -88,7 +88,7 @@
         <location filename="../qml/widgets/AdvertisementDataWidgetAdvanced.qml" line="233"/>
         <location filename="../qml/widgets/AdvertisementDataWidgetAdvanced.qml" line="299"/>
         <source>copy</source>
-        <translation type="unfinished"></translation>
+        <translation>copier</translation>
     </message>
     <message>
         <location filename="../qml/widgets/AdvertisementDataWidgetAdvanced.qml" line="257"/>
@@ -101,32 +101,32 @@
     <message>
         <location filename="../qml/widgets/BleCharacteristicWidget.qml" line="69"/>
         <source>UUID:</source>
-        <translation type="unfinished"></translation>
+        <translation>UUID :</translation>
     </message>
     <message>
         <location filename="../qml/widgets/BleCharacteristicWidget.qml" line="87"/>
         <source>Properties:</source>
-        <translation type="unfinished"></translation>
+        <translation>Propriétés :</translation>
     </message>
     <message>
         <location filename="../qml/widgets/BleCharacteristicWidget.qml" line="137"/>
         <source>Data:</source>
-        <translation type="unfinished"></translation>
+        <translation>Données :</translation>
     </message>
     <message>
         <location filename="../qml/widgets/BleCharacteristicWidget.qml" line="146"/>
         <source>no data from cache</source>
-        <translation type="unfinished"></translation>
+        <translation>pas de données depuis le cache</translation>
     </message>
     <message>
         <location filename="../qml/widgets/BleCharacteristicWidget.qml" line="147"/>
         <source>no data</source>
-        <translation type="unfinished"></translation>
+        <translation>pas de données</translation>
     </message>
     <message>
         <location filename="../qml/widgets/BleCharacteristicWidget.qml" line="149"/>
         <source>bytes</source>
-        <translation type="unfinished"></translation>
+        <translation>octets</translation>
     </message>
     <message>
         <location filename="../qml/widgets/BleCharacteristicWidget.qml" line="176"/>
@@ -137,7 +137,7 @@
         <location filename="../qml/widgets/BleCharacteristicWidget.qml" line="218"/>
         <location filename="../qml/widgets/BleCharacteristicWidget.qml" line="290"/>
         <source>copy</source>
-        <translation type="unfinished"></translation>
+        <translation>copier</translation>
     </message>
     <message>
         <location filename="../qml/widgets/BleCharacteristicWidget.qml" line="248"/>
@@ -150,7 +150,7 @@
     <message>
         <location filename="../qml/widgets/BleServiceWidget.qml" line="88"/>
         <source>UUID:</source>
-        <translation type="unfinished"></translation>
+        <translation>UUID :</translation>
     </message>
 </context>
 <context>
@@ -161,31 +161,31 @@
         <location filename="../qml/components/ButtonScanMenu.qml" line="216"/>
         <location filename="../qml/components/ButtonScanMenu.qml" line="217"/>
         <source>scan device</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/components/ButtonScanMenu.qml" line="36"/>
-        <location filename="../qml/components/ButtonScanMenu.qml" line="218"/>
-        <source>scanning...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/components/ButtonScanMenu.qml" line="37"/>
-        <location filename="../qml/components/ButtonScanMenu.qml" line="221"/>
-        <source>connected</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/components/ButtonScanMenu.qml" line="35"/>
-        <location filename="../qml/components/ButtonScanMenu.qml" line="220"/>
-        <source>connecting...</source>
-        <translation type="unfinished"></translation>
+        <translation>scanner l&apos;appareil</translation>
     </message>
     <message>
         <location filename="../qml/components/ButtonScanMenu.qml" line="34"/>
         <location filename="../qml/components/ButtonScanMenu.qml" line="219"/>
         <source>disconnecting...</source>
-        <translation type="unfinished"></translation>
+        <translation>déconnexion...</translation>
+    </message>
+    <message>
+        <location filename="../qml/components/ButtonScanMenu.qml" line="35"/>
+        <location filename="../qml/components/ButtonScanMenu.qml" line="220"/>
+        <source>connecting...</source>
+        <translation>connexion...</translation>
+    </message>
+    <message>
+        <location filename="../qml/components/ButtonScanMenu.qml" line="36"/>
+        <location filename="../qml/components/ButtonScanMenu.qml" line="218"/>
+        <source>scanning...</source>
+        <translation>scan en cours...</translation>
+    </message>
+    <message>
+        <location filename="../qml/components/ButtonScanMenu.qml" line="37"/>
+        <location filename="../qml/components/ButtonScanMenu.qml" line="221"/>
+        <source>connected</source>
+        <translation>connecté</translation>
     </message>
     <message>
         <location filename="../qml/components/ButtonScanMenu.qml" line="147"/>
@@ -200,17 +200,17 @@
     <message>
         <location filename="../qml/components/ButtonScanMenu.qml" line="192"/>
         <source>load from cache</source>
-        <translation type="unfinished"></translation>
+        <translation>charger depuis le cache</translation>
     </message>
     <message>
         <location filename="../qml/components/ButtonScanMenu.qml" line="252"/>
         <source>disconnect</source>
-        <translation type="unfinished"></translation>
+        <translation>déconnecter</translation>
     </message>
     <message>
         <location filename="../qml/components/ButtonScanMenu.qml" line="252"/>
         <source>abort</source>
-        <translation type="unfinished"></translation>
+        <translation>annuler</translation>
     </message>
 </context>
 <context>
@@ -219,13 +219,13 @@
         <location filename="../thirdparty/ComponentLibrary/generic/DataBarSolid.qml" line="137"/>
         <source>min</source>
         <comment>short for minimum</comment>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../thirdparty/ComponentLibrary/generic/DataBarSolid.qml" line="193"/>
         <source>max</source>
         <comment>short for maximum</comment>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -258,9 +258,9 @@
     <message numerus="yes">
         <location filename="../qml/DesktopHeader.qml" line="276"/>
         <source>%n device(s) found</source>
-        <translation>
-            <numerusform>%n device found</numerusform>
-            <numerusform>%n devices found</numerusform>
+        <translation type="unfinished">
+            <numerusform>%n appareil(s) trouvé(s)</numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
 </context>
@@ -269,16 +269,16 @@
     <message numerus="yes">
         <location filename="../src/device.cpp" line="537"/>
         <source>%n minute(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n minute(s)</numerusform>
             <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../src/device.cpp" line="539"/>
         <source>%n hour(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n heure(s)</numerusform>
             <numerusform></numerusform>
         </translation>
     </message>
@@ -288,27 +288,27 @@
     <message>
         <location filename="../qml/components/DeviceScannerListHeader.qml" line="71"/>
         <source>Address</source>
-        <translation type="unfinished"></translation>
+        <translation>Addresse</translation>
     </message>
     <message>
         <location filename="../qml/components/DeviceScannerListHeader.qml" line="154"/>
         <source>Advertised name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nom annoncé</translation>
     </message>
     <message>
         <location filename="../qml/components/DeviceScannerListHeader.qml" line="238"/>
         <source>Manufacturer</source>
-        <translation type="unfinished"></translation>
+        <translation>Fabricant</translation>
     </message>
     <message>
         <location filename="../qml/components/DeviceScannerListHeader.qml" line="339"/>
         <source>RSSI</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/components/DeviceScannerListHeader.qml" line="439"/>
         <source>Interval</source>
-        <translation type="unfinished"></translation>
+        <translation>Intervalle</translation>
     </message>
     <message>
         <location filename="../qml/components/DeviceScannerListHeader.qml" line="522"/>
@@ -326,17 +326,17 @@
     <message>
         <location filename="../qml/components/DeviceScannerListWidget.qml" line="148"/>
         <source>Unavailable</source>
-        <translation type="unfinished"></translation>
+        <translation>Indisponible</translation>
     </message>
     <message>
         <location filename="../qml/components/DeviceScannerListWidget.qml" line="243"/>
         <source>dBm</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/components/DeviceScannerListWidget.qml" line="282"/>
         <source>ms</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -344,27 +344,27 @@
     <message>
         <location filename="../qml/components/DeviceScannerTableHeader.qml" line="28"/>
         <source>Address</source>
-        <translation type="unfinished"></translation>
+        <translation>Addresse</translation>
     </message>
     <message>
         <location filename="../qml/components/DeviceScannerTableHeader.qml" line="29"/>
         <source>Advertised name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nom annoncé</translation>
     </message>
     <message>
         <location filename="../qml/components/DeviceScannerTableHeader.qml" line="30"/>
         <source>Manufacturer</source>
-        <translation type="unfinished"></translation>
+        <translation>Fabricant</translation>
     </message>
     <message>
         <location filename="../qml/components/DeviceScannerTableHeader.qml" line="31"/>
         <source>RSSI</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/components/DeviceScannerTableHeader.qml" line="32"/>
         <source>Interval</source>
-        <translation type="unfinished"></translation>
+        <translation>Intervalle</translation>
     </message>
     <message>
         <location filename="../qml/components/DeviceScannerTableHeader.qml" line="33"/>
@@ -382,12 +382,12 @@
     <message>
         <location filename="../qml/components/DeviceScannerTableWidget.qml" line="173"/>
         <source>dBm</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/components/DeviceScannerTableWidget.qml" line="228"/>
         <source>ms</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -395,12 +395,12 @@
     <message>
         <location filename="../thirdparty/ComponentLibrary/complex/FileInputArea.qml" line="46"/>
         <source>Please choose a file!</source>
-        <translation type="unfinished"></translation>
+        <translation>Veuillez choisir un fichier !</translation>
     </message>
     <message>
         <location filename="../thirdparty/ComponentLibrary/complex/FileInputArea.qml" line="52"/>
         <source>change</source>
-        <translation type="unfinished"></translation>
+        <translation>changer</translation>
     </message>
 </context>
 <context>
@@ -408,12 +408,12 @@
     <message>
         <location filename="../thirdparty/ComponentLibrary/complex/FolderInputArea.qml" line="46"/>
         <source>Please choose a directory!</source>
-        <translation type="unfinished"></translation>
+        <translation>Veuillez choisir un dossier !</translation>
     </message>
     <message>
         <location filename="../thirdparty/ComponentLibrary/complex/FolderInputArea.qml" line="50"/>
         <source>change</source>
-        <translation type="unfinished"></translation>
+        <translation>changer</translation>
     </message>
 </context>
 <context>
@@ -421,17 +421,17 @@
     <message>
         <location filename="../qml/components/FrequencyGraph.qml" line="353"/>
         <source>current</source>
-        <translation type="unfinished"></translation>
+        <translation>actuelle</translation>
     </message>
     <message>
         <location filename="../qml/components/FrequencyGraph.qml" line="370"/>
         <source>max</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/components/FrequencyGraph.qml" line="387"/>
         <source>history</source>
-        <translation type="unfinished"></translation>
+        <translation>historique</translation>
     </message>
 </context>
 <context>
@@ -439,37 +439,37 @@
     <message>
         <location filename="../src/MenubarManager.cpp" line="76"/>
         <source>Device list</source>
-        <translation type="unfinished"></translation>
+        <translation>Liste des appareils</translation>
     </message>
     <message>
         <location filename="../src/MenubarManager.cpp" line="80"/>
         <source>Devices</source>
-        <translation type="unfinished"></translation>
+        <translation>Appareils</translation>
     </message>
     <message>
         <location filename="../src/MenubarManager.cpp" line="84"/>
         <source>About toolBLEx</source>
-        <translation type="unfinished"></translation>
+        <translation>À propos de toolBLEx</translation>
     </message>
     <message>
         <location filename="../src/MenubarManager.cpp" line="85"/>
         <source>Visit website</source>
-        <translation type="unfinished"></translation>
+        <translation>Visitez le site web</translation>
     </message>
     <message>
         <location filename="../src/MenubarManager.cpp" line="86"/>
         <source>Visit issue tracker</source>
-        <translation type="unfinished"></translation>
+        <translation>Visitez le système de suivi des problèmes</translation>
     </message>
     <message>
         <location filename="../src/MenubarManager.cpp" line="87"/>
         <source>Consult release notes</source>
-        <translation type="unfinished"></translation>
+        <translation>Consultez les notes de version</translation>
     </message>
     <message>
         <location filename="../src/MenubarManager.cpp" line="94"/>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Aide</translation>
     </message>
 </context>
 <context>
@@ -487,7 +487,7 @@
     <message>
         <location filename="../qml/PanelDevice.qml" line="113"/>
         <source>services</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/PanelDevice.qml" line="123"/>
@@ -518,27 +518,27 @@
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="86"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nom</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="99"/>
         <source>Unavailable</source>
-        <translation type="unfinished"></translation>
+        <translation>Indisponible</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="116"/>
         <source>MAC address</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresse MAC</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="143"/>
         <source>UUID</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="171"/>
         <source>Manufacturer</source>
-        <translation type="unfinished"></translation>
+        <translation>Fabricant</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="184"/>
@@ -546,12 +546,12 @@
         <location filename="../qml/PanelDeviceInfos.qml" line="695"/>
         <location filename="../qml/PanelDeviceInfos.qml" line="752"/>
         <source>Unknown</source>
-        <translation type="unfinished"></translation>
+        <translation>Inconnu</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="199"/>
         <source>Bluetooth</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="212"/>
@@ -566,25 +566,25 @@
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="341"/>
         <source>Category</source>
-        <translation type="unfinished"></translation>
+        <translation>Catégorie</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="366"/>
         <source>Device type</source>
-        <translation type="unfinished"></translation>
+        <translation>Type d&apos;appareil</translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/PanelDeviceInfos.qml" line="391"/>
         <source>Service(s)</source>
-        <translation>
-            <numerusform>Service</numerusform>
-            <numerusform>Services</numerusform>
+        <translation type="unfinished">
+            <numerusform>Service(s)</numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="448"/>
         <source>export available data</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">exporter les données disponibles</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="501"/>
@@ -599,7 +599,7 @@
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="513"/>
         <source>forget</source>
-        <translation type="unfinished"></translation>
+        <translation>oublier</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="513"/>
@@ -609,54 +609,54 @@
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="523"/>
         <source>show</source>
-        <translation type="unfinished"></translation>
+        <translation>montrer</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="523"/>
         <source>hide</source>
-        <translation type="unfinished"></translation>
+        <translation>cacher</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="535"/>
         <source>color</source>
-        <translation type="unfinished"></translation>
+        <translation>couleur</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="574"/>
         <source>Comment</source>
-        <translation type="unfinished"></translation>
+        <translation>Commentaire</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="625"/>
         <source>MTU</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="651"/>
         <source>RSSI</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="686"/>
         <source>dBm</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="713"/>
         <source>Advertising interval</source>
-        <translation type="unfinished"></translation>
+        <translation>Intervalle d&apos;annonce</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="742"/>
         <source>ms</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/PanelDeviceInfos.qml" line="826"/>
         <source>Service(s) advertised</source>
-        <translation>
-            <numerusform>Service advertised</numerusform>
-            <numerusform>Services advertised</numerusform>
+        <translation type="unfinished">
+            <numerusform>Service(s) annoncé</numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message>
@@ -685,27 +685,27 @@
     <message>
         <location filename="../qml/PanelDeviceLog.qml" line="143"/>
         <source>format:</source>
-        <translation type="unfinished"></translation>
+        <translation>format :</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceLog.qml" line="155"/>
         <source>legend</source>
-        <translation type="unfinished"></translation>
+        <translation>légende</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceLog.qml" line="177"/>
         <source>Clear</source>
-        <translation type="unfinished"></translation>
+        <translation>Effacer</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceLog.qml" line="188"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Sauvegarder</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceLog.qml" line="206"/>
         <source>Please choose a file!</source>
-        <translation type="unfinished"></translation>
+        <translation>Veuillez choisir un fichier !</translation>
     </message>
 </context>
 <context>
@@ -718,7 +718,7 @@
     <message>
         <location filename="../qml/PanelDeviceServices.qml" line="76"/>
         <source>load from cache</source>
-        <translation type="unfinished"></translation>
+        <translation>charger depuis le cache</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceServices.qml" line="129"/>
@@ -728,12 +728,12 @@
     <message>
         <location filename="../qml/PanelDeviceServices.qml" line="140"/>
         <source>Device is disconnected</source>
-        <translation type="unfinished"></translation>
+        <translation>L&apos;appareil est déconnecté</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceServices.qml" line="168"/>
         <source>Cache</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -769,9 +769,9 @@
     <message numerus="yes">
         <location filename="../qml/popups/PopupClearDeviceSeenCache.qml" line="145"/>
         <source>There are %n device(s) in the cache.</source>
-        <translation>
-            <numerusform>There are %n device in the cache.</numerusform>
-            <numerusform>There are %n devices in the cache.</numerusform>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message>
@@ -787,12 +787,12 @@
     <message>
         <location filename="../qml/popups/PopupClearDeviceSeenCache.qml" line="190"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Annuler</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupClearDeviceSeenCache.qml" line="196"/>
         <source>Clear cache</source>
-        <translation type="unfinished"></translation>
+        <translation>Vider le cache</translation>
     </message>
 </context>
 <context>
@@ -810,9 +810,9 @@
     <message numerus="yes">
         <location filename="../qml/popups/PopupClearDeviceStructureCache.qml" line="145"/>
         <source>There are %n device(s) in the cache.</source>
-        <translation>
-            <numerusform>There are %n device in the cache.</numerusform>
-            <numerusform>There are %n devices in the cache.</numerusform>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message>
@@ -828,17 +828,17 @@
     <message>
         <location filename="../qml/popups/PopupClearDeviceStructureCache.qml" line="190"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Annuler</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupClearDeviceStructureCache.qml" line="196"/>
         <source>Open folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Ouvrir le dossier</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupClearDeviceStructureCache.qml" line="205"/>
         <source>Clear cache</source>
-        <translation type="unfinished"></translation>
+        <translation>Vider le cache</translation>
     </message>
 </context>
 <context>
@@ -846,7 +846,7 @@
     <message>
         <location filename="../qml/popups/PopupExportDeviceData.qml" line="125"/>
         <source>Export device data</source>
-        <translation type="unfinished"></translation>
+        <translation>Exporter les données de l&apos;appareil</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupExportDeviceData.qml" line="197"/>
@@ -856,36 +856,36 @@
     <message numerus="yes">
         <location filename="../qml/popups/PopupExportDeviceData.qml" line="209"/>
         <source>%n adv packet(s)</source>
-        <translation>
-            <numerusform>%n adv packet</numerusform>
-            <numerusform>%n adv packets</numerusform>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/popups/PopupExportDeviceData.qml" line="214"/>
         <source>%n service(s)</source>
-        <translation>
-            <numerusform>%n service</numerusform>
-            <numerusform>%n services</numerusform>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/popups/PopupExportDeviceData.qml" line="219"/>
         <source>%n characteristic(s)</source>
-        <translation>
-            <numerusform>%n characteristic</numerusform>
-            <numerusform>%n characteristics</numerusform>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupExportDeviceData.qml" line="226"/>
         <source>load cache</source>
-        <translation type="unfinished"></translation>
+        <translation>charger le cache</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupExportDeviceData.qml" line="244"/>
         <source>Select data to export</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionnez les données à exporter</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupExportDeviceData.qml" line="252"/>
@@ -910,27 +910,27 @@
     <message>
         <location filename="../qml/popups/PopupExportDeviceData.qml" line="282"/>
         <source>Select export file</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionnez le fichier d&apos;export</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupExportDeviceData.qml" line="291"/>
         <source>Please select the export file</source>
-        <translation type="unfinished"></translation>
+        <translation>Veuillez sélectionner le fichier d&apos;export</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupExportDeviceData.qml" line="315"/>
         <source>Export error :(</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur d&apos;export :(</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupExportDeviceData.qml" line="325"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Annuler</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupExportDeviceData.qml" line="332"/>
         <source>Export data</source>
-        <translation type="unfinished"></translation>
+        <translation>Exporter les données</translation>
     </message>
 </context>
 <context>
@@ -938,12 +938,12 @@
     <message>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="116"/>
         <source>Write to characteristic</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Écrire dans la caractéristique</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="166"/>
         <source>Format</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="178"/>
@@ -952,7 +952,7 @@
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="477"/>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="630"/>
         <source>data</source>
-        <translation type="unfinished"></translation>
+        <translation>données</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="194"/>
@@ -961,7 +961,7 @@
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="459"/>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="635"/>
         <source>text</source>
-        <translation type="unfinished"></translation>
+        <translation>texte</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="201"/>
@@ -989,23 +989,23 @@
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="218"/>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="226"/>
         <source>bytes</source>
-        <translation type="unfinished"></translation>
+        <translation>octets</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="233"/>
         <source>byte</source>
-        <translation type="unfinished"></translation>
+        <translation>octet</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="244"/>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="253"/>
         <source>ascii</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="260"/>
         <source>UTF-8</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="271"/>
@@ -1043,23 +1043,23 @@
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="373"/>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="382"/>
         <source>32 bits</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="325"/>
         <source>8 bits</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="332"/>
         <source>16 bits</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="346"/>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="389"/>
         <source>64 bits</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="356"/>
@@ -1070,7 +1070,7 @@
     <message>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="407"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation>Valeur</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="460"/>
@@ -1090,17 +1090,17 @@
     <message>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="541"/>
         <source>Data to be written (hexadecimal)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Données à écrire (hexadécimal)</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="617"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Annuler</translation>
     </message>
     <message>
         <location filename="../qml/popups/PopupWriteCharacteristic.qml" line="625"/>
         <source>Write value</source>
-        <translation type="unfinished"></translation>
+        <translation>Écrire la valeur</translation>
     </message>
 </context>
 <context>
@@ -1108,56 +1108,56 @@
     <message>
         <location filename="../qml/ScreenScanner.qml" line="123"/>
         <source>BLE</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/ScreenScanner.qml" line="135"/>
         <source>Classic</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/ScreenScanner.qml" line="147"/>
         <source>cached</source>
-        <translation type="unfinished"></translation>
+        <translation>en cache</translation>
     </message>
     <message>
         <location filename="../qml/ScreenScanner.qml" line="159"/>
         <source>hidden</source>
-        <translation type="unfinished"></translation>
+        <translation>caché</translation>
     </message>
     <message>
         <location filename="../qml/ScreenScanner.qml" line="171"/>
         <source>beacons</source>
-        <translation type="unfinished"></translation>
+        <translation>balises</translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/ScreenScanner.qml" line="493"/>
         <source>%n device(s) found</source>
         <translation>
-            <numerusform>%n device found</numerusform>
-            <numerusform>%n devices found</numerusform>
+            <numerusform>%n appareil(s) trouvé(s)</numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/ScreenScanner.qml" line="495"/>
         <source>%n device(s) shown</source>
         <translation>
-            <numerusform>%n device shown</numerusform>
-            <numerusform>%n devices shown</numerusform>
+            <numerusform>%n appareil(s) visible(s)</numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/ScreenScanner.qml" line="498"/>
         <source>%n device(s) cached</source>
         <translation>
-            <numerusform>%n device cached</numerusform>
-            <numerusform>%n devices cached</numerusform>
+            <numerusform>%n appareil(s) en cache</numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message>
         <location filename="../qml/ScreenScanner.qml" line="518"/>
         <source>clear results</source>
-        <translation type="unfinished"></translation>
+        <translation>effacer les résultats</translation>
     </message>
 </context>
 <context>
@@ -1165,83 +1165,83 @@
     <message>
         <location filename="../qml/ScreenSettings.qml" line="185"/>
         <source>version %1 %2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="195"/>
         <source>built on %1</source>
-        <translation type="unfinished"></translation>
+        <translation>construit le %1</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="203"/>
         <source>A Bluetooth Low Energy device scanner and analyzer</source>
-        <translation type="unfinished"></translation>
+        <translation>Un scanner et analyseur d&apos;appareils Bluetooth Low Energy</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="219"/>
         <source>WEBSITE</source>
-        <translation type="unfinished"></translation>
+        <translation>SITE WEB</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="235"/>
         <source>SUPPORT</source>
-        <translation type="unfinished"></translation>
+        <translation>SUPPORT</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="246"/>
         <source>RELEASE NOTES</source>
-        <translation type="unfinished"></translation>
+        <translation>NOTES DE VERSION</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="290"/>
         <source>Application settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Paramètres de l&apos;application</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="322"/>
         <source>Theme</source>
-        <translation type="unfinished"></translation>
+        <translation>Thème</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="352"/>
         <source>light</source>
-        <translation type="unfinished"></translation>
+        <translation>clair</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="376"/>
         <source>dark</source>
-        <translation type="unfinished"></translation>
+        <translation>sombre</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="401"/>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Langue</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="421"/>
         <source>auto</source>
         <comment>short for automatic</comment>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="452"/>
         <source>Unit system</source>
-        <translation type="unfinished"></translation>
+        <translation>Système d&apos;unités</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="468"/>
         <source>metric</source>
-        <translation type="unfinished"></translation>
+        <translation>métrique</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="469"/>
         <source>imperial</source>
-        <translation type="unfinished"></translation>
+        <translation>impériale</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="493"/>
         <source>Preferred screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Écran préféré</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="511"/>
@@ -1263,22 +1263,22 @@
     <message>
         <location filename="../qml/ScreenSettings.qml" line="540"/>
         <source>Show splashscreen on startup</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Afficher le splashscreen au démarrage</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="572"/>
         <source>Default export directory:</source>
-        <translation type="unfinished"></translation>
+        <translation>Répertoire d&apos;export par défaut :</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="596"/>
         <source>Default export directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Répertoire d&apos;export par défaut</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="599"/>
         <source>Please specify the default export directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Veuillez spécifier le répertoire d&apos;export par défaut</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="630"/>
@@ -1320,15 +1320,15 @@
         <location filename="../qml/ScreenSettings.qml" line="901"/>
         <source>%n device(s)</source>
         <translation>
-            <numerusform>%n device</numerusform>
-            <numerusform>%n devices</numerusform>
+            <numerusform>%n appareil(s)</numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="866"/>
         <location filename="../qml/ScreenSettings.qml" line="922"/>
         <source>Clear cache</source>
-        <translation type="unfinished"></translation>
+        <translation>Vider le cache</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="893"/>
@@ -1338,27 +1338,27 @@
     <message>
         <location filename="../qml/ScreenSettings.qml" line="950"/>
         <source>Spectrum analyzer</source>
-        <translation type="unfinished"></translation>
+        <translation>Analyseur de spectre</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="990"/>
         <source>This feature relies on specific hardware.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cette fonctionnalité repose sur un appareil spécifique.</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="1000"/>
         <source>Ubertooth One is an open source 2.4 GHz wireless development platform suitable for Bluetooth experimentation.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ubertooth One est une plateforme de développement sans fil open source 2,4 GHz adaptée aux expérimentations Bluetooth.</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="1049"/>
         <source>Please specify the path to the ubertooth-specan binary</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Veuillez spécifier le chemin d&apos;accès au binaire ubertooth-specan</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="1124"/>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation>Défaut</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="1176"/>
@@ -1368,12 +1368,12 @@
     <message>
         <location filename="../qml/ScreenSettings.qml" line="1199"/>
         <source>This application is made possible thanks to a couple of third party open source projects:</source>
-        <translation type="unfinished"></translation>
+        <translation>Cette application est rendue possible grâce à un certain nombre de projets open source :</translation>
     </message>
     <message>
         <location filename="../qml/ScreenSettings.qml" line="1299"/>
         <source>System info</source>
-        <translation type="unfinished"></translation>
+        <translation>Informations système</translation>
     </message>
 </context>
 <context>
@@ -1381,32 +1381,32 @@
     <message>
         <location filename="../qml/ScreenUbertooth.qml" line="85"/>
         <source>wifi</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/ScreenUbertooth.qml" line="98"/>
         <source>bluetooth</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/ScreenUbertooth.qml" line="111"/>
         <source>zigbee</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/ScreenUbertooth.qml" line="143"/>
         <source>802.11 b</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/ScreenUbertooth.qml" line="157"/>
         <source>802.11 g/n</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/ScreenUbertooth.qml" line="171"/>
         <source>802.11 n</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/ScreenUbertooth.qml" line="186"/>
@@ -1421,12 +1421,12 @@
     <message>
         <location filename="../qml/ScreenUbertooth.qml" line="223"/>
         <source>2.3 GHz</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/ScreenUbertooth.qml" line="229"/>
         <source>2.6 GHz</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/ScreenUbertooth.qml" line="266"/>
@@ -1449,7 +1449,7 @@
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="10"/>
         <source>Classic</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Classique</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="11"/>
@@ -1480,7 +1480,7 @@
         <location filename="../qml/components_js/UtilsBluetooth.js" line="22"/>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="31"/>
         <source>Unknown</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Inconnu</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="28"/>
@@ -1875,47 +1875,47 @@
     <message>
         <location filename="../qml/components_js/UtilsDeviceSensors.js" line="15"/>
         <source>Offline</source>
-        <translation type="unfinished"></translation>
+        <translation>Hors ligne</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsDeviceSensors.js" line="17"/>
         <source>Available</source>
-        <translation type="unfinished"></translation>
+        <translation>Disponible</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsDeviceSensors.js" line="19"/>
         <source>Disconnecting...</source>
-        <translation type="unfinished"></translation>
+        <translation>Déconnexion...</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsDeviceSensors.js" line="21"/>
         <source>Connecting...</source>
-        <translation type="unfinished"></translation>
+        <translation>Connexion...</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsDeviceSensors.js" line="23"/>
         <source>Connected</source>
-        <translation type="unfinished"></translation>
+        <translation>Connecté</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsDeviceSensors.js" line="25"/>
         <source>Working...</source>
-        <translation type="unfinished"></translation>
+        <translation>Travail...</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsDeviceSensors.js" line="27"/>
         <source>Updating...</source>
-        <translation type="unfinished"></translation>
+        <translation>Mise à jour...</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsDeviceSensors.js" line="29"/>
         <source>Syncing...</source>
-        <translation type="unfinished"></translation>
+        <translation>Synchronisation...</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsDeviceSensors.js" line="31"/>
         <source>Realtime data</source>
-        <translation type="unfinished"></translation>
+        <translation>Données temps réel</translation>
     </message>
 </context>
 <context>
@@ -1975,7 +1975,7 @@
         <location filename="../thirdparty/ComponentLibrary/utils/UtilsMedia.js" line="193"/>
         <location filename="../thirdparty/ComponentLibrary/utils/UtilsMedia.js" line="226"/>
         <source>Unknown</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Inconnu</translation>
     </message>
     <message>
         <location filename="../thirdparty/ComponentLibrary/utils/UtilsMedia.js" line="241"/>
@@ -2102,7 +2102,7 @@
     <message>
         <location filename="../thirdparty/ComponentLibrary/utils/UtilsString.js" line="25"/>
         <source>Unknown duration</source>
-        <translation type="unfinished"></translation>
+        <translation>Durée inconnue</translation>
     </message>
     <message>
         <location filename="../thirdparty/ComponentLibrary/utils/UtilsString.js" line="36"/>
@@ -2168,7 +2168,7 @@
         <location filename="../thirdparty/ComponentLibrary/utils/UtilsString.js" line="93"/>
         <location filename="../thirdparty/ComponentLibrary/utils/UtilsString.js" line="127"/>
         <source>unknown</source>
-        <translation type="unfinished"></translation>
+        <translation>inconnu</translation>
     </message>
     <message>
         <location filename="../thirdparty/ComponentLibrary/utils/UtilsString.js" line="94"/>
@@ -2250,22 +2250,22 @@
     <message>
         <location filename="../qml/components/WarningNoAdapter.qml" line="49"/>
         <source>No Bluetooth adapter detected</source>
-        <translation type="unfinished"></translation>
+        <translation>Aucun adaptateur Bluetooth détecté</translation>
     </message>
     <message>
         <location filename="../qml/components/WarningNoAdapter.qml" line="59"/>
         <source>Please check if a Bluetooth adapter is connected and configured on your machine.</source>
-        <translation type="unfinished"></translation>
+        <translation>Veuillez vérifier si un adaptateur Bluetooth est connecté et configuré sur votre machine.</translation>
     </message>
     <message>
         <location filename="../qml/components/WarningNoAdapter.qml" line="72"/>
         <source>Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation>Ignorer</translation>
     </message>
     <message>
         <location filename="../qml/components/WarningNoAdapter.qml" line="78"/>
         <source>Retry</source>
-        <translation type="unfinished"></translation>
+        <translation>Réessayer</translation>
     </message>
 </context>
 <context>
@@ -2273,22 +2273,22 @@
     <message>
         <location filename="../qml/components/WarningNoBluetooth.qml" line="48"/>
         <source>Bluetooth is disabled</source>
-        <translation type="unfinished"></translation>
+        <translation>Le Bluetooth est désactivé</translation>
     </message>
     <message>
         <location filename="../qml/components/WarningNoBluetooth.qml" line="58"/>
         <source>Please enable Bluetooth on your machine and retry.</source>
-        <translation type="unfinished"></translation>
+        <translation>Veuillez activer le Bluetooth sur votre appareil et réessayer.</translation>
     </message>
     <message>
         <location filename="../qml/components/WarningNoBluetooth.qml" line="71"/>
         <source>Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation>Ignorer</translation>
     </message>
     <message>
         <location filename="../qml/components/WarningNoBluetooth.qml" line="77"/>
         <source>Retry</source>
-        <translation type="unfinished"></translation>
+        <translation>Réessayer</translation>
     </message>
 </context>
 <context>
@@ -2296,22 +2296,22 @@
     <message>
         <location filename="../qml/components/WarningNoPermission.qml" line="48"/>
         <source>Bluetooth permission missing</source>
-        <translation type="unfinished"></translation>
+        <translation>Autorisation Bluetooth manquante</translation>
     </message>
     <message>
         <location filename="../qml/components/WarningNoPermission.qml" line="58"/>
         <source>Please check if the Bluetooth permission has been granted to the application.</source>
-        <translation type="unfinished"></translation>
+        <translation>Veuillez vérifier si l&apos;autorisation Bluetooth a été accordée à l&apos;application.</translation>
     </message>
     <message>
         <location filename="../qml/components/WarningNoPermission.qml" line="71"/>
         <source>Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation>Ignorer</translation>
     </message>
     <message>
         <location filename="../qml/components/WarningNoPermission.qml" line="77"/>
         <source>Retry</source>
-        <translation type="unfinished"></translation>
+        <translation>Réessayer</translation>
     </message>
 </context>
 <context>
@@ -2319,12 +2319,12 @@
     <message>
         <location filename="../qml/components/WarningNotImplemented.qml" line="48"/>
         <source>This screen is not implemented (yet)</source>
-        <translation type="unfinished"></translation>
+        <translation>Cet écran n&apos;est pas (encore) implémenté</translation>
     </message>
     <message>
         <location filename="../qml/components/WarningNotImplemented.qml" line="58"/>
         <source>This is a BLE device emulator. You can broadcast Bluetooth Low Energy Advertisement virtual packets, and create virtual services and associated values.</source>
-        <translation type="unfinished"></translation>
+        <translation>Il s&apos;agit d&apos;un émulateur de périphérique BLE. Vous pouvez diffuser des paquets virtuels d&apos;advertisement Bluetooth Low Energy et créer des services virtuels ainsi que leurs valeurs associées.</translation>
     </message>
 </context>
 </TS>
