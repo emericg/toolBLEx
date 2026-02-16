@@ -556,7 +556,7 @@
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="212"/>
         <source>Classic</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Classique</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="218"/>

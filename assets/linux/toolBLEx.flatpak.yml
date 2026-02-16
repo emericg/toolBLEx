@@ -46,8 +46,8 @@ modules:
       - -DINPUT_openssl=linked
     sources:
       - type: archive
-        url: https://download.qt.io/archive/qt/6.10/6.10.1/single/qt-everywhere-src-6.10.1.tar.xz
-        sha256: 0ed08b079719394303cd2054b66b2dc0c5895ceeb88fb6131c18991c980bf00f
+        url: https://download.qt.io/archive/qt/6.10/6.10.2/single/qt-everywhere-src-6.10.2.tar.xz
+        sha256: c3df0f0e421130cc52ed81cb712358804471ce9bd2a41d97828f9f5b1bf7fed2
         x-checker-data:
           type: anitya
           project-id: 7927
