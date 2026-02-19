@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 export APP_NAME="toolBLEx"
-export APP_VERSION=0.15
+export APP_VERSION=0.16
 export GIT_VERSION=$(git rev-parse --short HEAD)
 
 #export APP_NAME_LOWERCASE=${APP_NAME,,}  # lowercase
@@ -50,13 +50,27 @@ esac
 shift # skip argument or value
 done
 
-## linuxdeploy INSTALL #########################################################
+## PREP WORK ###################################################################
 
 #unset LD_LIBRARY_PATH; #unset QT_PLUGIN_PATH;
 
 if [[ $use_contribs = true ]] ; then
   export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/linux_x86_64/usr/lib/:$LD_LIBRARY_PATH
 fi
+
+if [[ -v QT_ROOT_DIR ]] ; then
+  # cleanup undeployable Qt plugins (present, but missing their own dependencies)
+  # only if we are on a GitHub Action server, because this remove the plugins from the Qt directory
+  echo '---- Remove undeployable Qt plugins'
+  sudo rm $QT_ROOT_DIR/plugins/position/libqtposition_nmea.so
+  sudo rm $QT_ROOT_DIR/plugins/sqldrivers/libqsqlmimer.so
+  sudo rm $QT_ROOT_DIR/plugins/sqldrivers/libqsqlmysql.so
+  sudo rm $QT_ROOT_DIR/plugins/sqldrivers/libqsqloci.so
+  sudo rm $QT_ROOT_DIR/plugins/sqldrivers/libqsqlodbc.so
+  sudo rm $QT_ROOT_DIR/plugins/sqldrivers/libqsqlpsql.so
+fi
+
+## linuxdeploy INSTALL #########################################################
 
 echo '---- Prepare linuxdeploy + plugins'
 
@@ -90,22 +104,6 @@ if [[ $make_install = true ]] ; then
 
   #echo '---- Installation directory content recap (after make install):'
   #find bin/
-fi
-
-## PACKAGES ####################################################################
-
-if [[ $create_package = true ]] ; then
-  if [[ -v QT_ROOT_DIR ]]; then
-    # cleanup undeployable Qt plugins (present, but missing their own dependencies)
-    # only if we are on a GitHub Action server, because this remove the plugins from the Qt directory
-    echo '---- Remove undeployable Qt plugins'
-    sudo rm $QT_ROOT_DIR/plugins/position/libqtposition_nmea.so
-    sudo rm $QT_ROOT_DIR/plugins/sqldrivers/libqsqlmimer.so
-    sudo rm $QT_ROOT_DIR/plugins/sqldrivers/libqsqlmysql.so
-    sudo rm $QT_ROOT_DIR/plugins/sqldrivers/libqsqloci.so
-    sudo rm $QT_ROOT_DIR/plugins/sqldrivers/libqsqlodbc.so
-    sudo rm $QT_ROOT_DIR/plugins/sqldrivers/libqsqlpsql.so
-  fi
 fi
 
 ## PACKAGE (AppImage) ##########################################################

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright 2022 Emeric Grange <emeric.grange@gmail.com> -->
+<!-- Copyright 2022-2026 Emeric Grange <emeric.grange@gmail.com> -->
 
 <component type="desktop-application">
   <id>io.emeric.toolblex</id>
@@ -22,6 +22,7 @@
   </description>
 
   <releases>
+    <release version="0.16" date="2026-04-04"> <url type="details">https://github.com/emericg/toolBLEx/releases/tag/v0.16</url> </release>
     <release version="0.15" date="2026-02-16"> <url type="details">https://github.com/emericg/toolBLEx/releases/tag/v0.15</url> </release>
     <release version="0.14" date="2025-11-25"> <url type="details">https://github.com/emericg/toolBLEx/releases/tag/v0.14</url> </release>
     <release version="0.13" date="2024-10-13"> <url type="details">https://github.com/emericg/toolBLEx/releases/tag/v0.13</url> </release>

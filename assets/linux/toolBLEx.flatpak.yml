@@ -71,5 +71,5 @@ modules:
     buildsystem: cmake-ninja
     sources:
       - type: archive
-        url: https://github.com/emericg/toolBLEx/archive/refs/tags/v0.15.tar.gz
+        url: https://github.com/emericg/toolBLEx/archive/refs/tags/v0.16.tar.gz
         sha256: 

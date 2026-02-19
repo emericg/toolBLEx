@@ -1,6 +1,6 @@
 # ![toolBLEx](assets/gfx/banner.svg)
 
-[![GitHub release](https://img.shields.io/badge/release-0.14-blue?style=flat-square)](https://github.com/emericg/toolBLEx/releases)
+[![GitHub release](https://img.shields.io/badge/release-0.15-blue?style=flat-square)](https://github.com/emericg/toolBLEx/releases)
 [![GitHub action](https://img.shields.io/github/actions/workflow/status/emericg/toolBLEx/builds_desktop.yml?style=flat-square)](https://github.com/emericg/toolBLEx/actions/workflows/builds_desktop.yml)
 [![GitHub issues](https://img.shields.io/github/issues/emericg/toolBLEx.svg?style=flat-square)](https://github.com/emericg/toolBLEx/issues)
 [![License: GPL v3](https://img.shields.io/badge/license-GPL%20v3-brightgreen.svg?style=flat-square)](http://www.gnu.org/licenses/gpl-3.0)

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 export APP_NAME="toolBLEx"
-export APP_VERSION=0.15
+export APP_VERSION=0.16
 export GIT_VERSION=$(git rev-parse --short HEAD)
 
 echo "> $APP_NAME packager (macOS) [v$APP_VERSION]"
@@ -51,6 +51,22 @@ esac
 shift # skip argument or value
 done
 
+## PREP WORK ###################################################################
+
+if [[ $use_contribs = true ]] ; then
+  export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/macOS_x86_64/usr/lib/:$(pwd)/contribs/src/env/macOS_arm64/usr/lib/:$LD_LIBRARY_PATH
+fi
+
+if [[ -n "${QT_ROOT_DIR:-}" ]]; then
+  # cleanup undeployable Qt plugins (present, but missing their own dependencies)
+  # only if we are on a GitHub Action server, because this remove the plugins from the Qt directory
+  echo '---- Remove undeployable Qt plugins'
+  sudo rm $QT_ROOT_DIR/plugins/position/libqtposition_nmea.dylib
+  sudo rm $QT_ROOT_DIR/plugins/sqldrivers/libqsqlmimer.dylib
+  sudo rm $QT_ROOT_DIR/plugins/sqldrivers/libqsqlodbc.dylib
+  sudo rm $QT_ROOT_DIR/plugins/sqldrivers/libqsqlpsql.dylib
+fi
+
 ## APP INSTALL #################################################################
 
 if [[ $make_install = true ]] ; then
@@ -63,12 +79,8 @@ fi
 
 ## APP DEPLOY ##################################################################
 
-if [[ $use_contribs = true ]] ; then
-  export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/macOS_x86_64/usr/lib/:$(pwd)/contribs/src/env/macOS_arm64/usr/lib/:$LD_LIBRARY_PATH
-fi
-
 echo '---- Running macdeployqt'
-if [[ $notarize_bundle = true ]] ; then
+if [[ $notarize_bundle = true && -n "${MACOS_CERTIFICATE_NAME:-}" ]] ; then
   macdeployqt bin/$APP_NAME.app -qmldir=qml/ -hardened-runtime -timestamp -appstore-compliant -codesign=$MACOS_CERTIFICATE_NAME
 else
   macdeployqt bin/$APP_NAME.app -qmldir=qml/

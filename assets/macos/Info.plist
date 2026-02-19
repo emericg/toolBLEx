@@ -21,13 +21,13 @@
 	<string>toolBLEx.icns</string>
 
 	<key>CFBundleVersion</key>
-	<string>0.15.0</string>
+	<string>0.16.0</string>
 
 	<key>CFBundleShortVersionString</key>
-	<string>0.15</string>
+	<string>0.16</string>
 
 	<key>LSMinimumSystemVersion</key>
-	<string>11.0</string>
+	<string>12.0</string>
 
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
@@ -36,7 +36,7 @@
 	<string>NSApplication</string>
 
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright Emeric Grange 2025</string>
+	<string>Copyright Emeric Grange 2026</string>
 
 	<key>NSHighResolutionCapable</key>
 	<true/>

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 export APP_NAME="toolBLEx"
-export APP_VERSION=0.15
+export APP_VERSION=0.16
 export GIT_VERSION=$(git rev-parse --short HEAD)
 
 echo "> $APP_NAME packager (Windows x86_64) [v$APP_VERSION]"
@@ -42,6 +42,15 @@ esac
 shift # skip argument or value
 done
 
+## PREP WORK ###################################################################
+
+if [[ -v QT_ROOT_DIR ]]; then
+  # cleanup undeployable Qt plugins (present, but missing their own dependencies)
+  # only if we are on a GitHub Action server, because this remove the plugins from the Qt directory
+  echo '---- Remove undeployable Qt plugins'
+  sudo rm $QT_ROOT_DIR/plugins/position/qtposition_nmea.dll
+fi
+
 ## APP INSTALL #################################################################
 
 if [[ $make_install = true ]] ; then
@@ -53,15 +62,6 @@ if [[ $make_install = true ]] ; then
 fi
 
 ## APP DEPLOY ##################################################################
-
-if [[ $create_package = true ]] ; then
-  if [[ -v QT_ROOT_DIR ]]; then
-    # cleanup undeployable Qt plugins (present, but missing their own dependencies)
-    # only if we are on a GitHub Action server, because this remove the plugins from the Qt directory
-    echo '---- Remove undeployable Qt plugins'
-    sudo rm $QT_ROOT_DIR/plugins/position/qtposition_nmea.dll
-  fi
-fi
 
 echo '---- Running windeployqt'
 windeployqt bin/ --qmldir qml/
