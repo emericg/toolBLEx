@@ -27,6 +27,9 @@
 #include "device.h"
 #include "device_toolblex.h"
 
+#include <thread>
+#include <chrono>
+
 #include <QCoreApplication>
 #include <QStandardPaths>
 #include <QPermissions>
@@ -139,6 +142,54 @@ DeviceManager::~DeviceManager()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
+bool DeviceManager::areDevicesConnected() const
+{
+    for (auto d: std::as_const(m_devices_model->m_devices))
+    {
+        if (d && d->isConnected())
+        {
+            return true;
+        }
+    }
+
+    qDebug() << "DeviceManager::areDevicesConnected() FALSE";
+
+    return false;
+}
+
+void DeviceManager::disconnectDevices() const
+{
+    qDebug() << "DeviceManager::disconnectDevices()";
+
+    for (auto d: std::as_const(m_devices_model->m_devices))
+    {
+        Device *dd = qobject_cast<Device*>(d);
+        dd->actionDisconnect();
+    }
+}
+
+void DeviceManager::disconnectAndExit() const
+{
+    if (areDevicesConnected())
+    {
+        qDebug() << "DeviceManager::disconnectAndExit()";
+
+        disconnectDevices();
+
+        int timeout = 60;
+
+        while (areDevicesConnected() && timeout > 0)
+        {
+            qApp->processEvents();
+            std::this_thread::sleep_for(std::chrono::milliseconds(33));
+            timeout--;
+        }
+    }
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
 bool DeviceManager::checkBluetooth()
 {
     //qDebug() << "DeviceManager::checkBluetooth()";
@@ -210,6 +261,10 @@ bool DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
     if (m_bluetoothAdapter && !m_bluetoothAdapter->isValid())
     {
         qDebug() << "DeviceManager::enableBluetooth() deleting current adapter";
+
+        disconnect(m_bluetoothAdapter, &QBluetoothLocalDevice::hostModeStateChanged,
+                   this, &DeviceManager::bluetoothHostModeStateChanged);
+
         delete m_bluetoothAdapter;
         m_bluetoothAdapter = nullptr;
     }
@@ -217,6 +272,8 @@ bool DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
     // Select an adapter (if none currently selected)
     if (!m_bluetoothAdapter)
     {
+        qDebug() << "DeviceManager::enableBluetooth() creating new adapter";
+
         // Correspond to the "first available" or "default" Bluetooth adapter
         m_bluetoothAdapter = new QBluetoothLocalDevice();
         if (m_bluetoothAdapter)
@@ -756,31 +813,6 @@ void DeviceManager::addBleDevice(const QBluetoothDeviceInfo &info)
         }
 
         //qDebug() << "Device added (from BLE discovery): " << d->getName() << "/" << d->getAddress();
-    }
-}
-
-bool DeviceManager::areDevicesConnected() const
-{
-    for (auto d: std::as_const(m_devices_model->m_devices))
-    {
-        Device *dd = qobject_cast<Device*>(d);
-        if (dd && dd->isConnected())
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-void DeviceManager::disconnectDevices() const
-{
-    //qDebug() << "DeviceManager::disconnectDevices()";
-
-    for (auto d: std::as_const(m_devices_model->m_devices))
-    {
-        Device *dd = qobject_cast<Device *>(d);
-        dd->deviceDisconnect();
     }
 }
 

@@ -358,7 +358,7 @@ void Device::actionStarted(int action)
     }
 }
 
-void Device::actionFinished()
+void Device::actionFinished(int action)
 {
     qDebug() << "Device::actionFinished()" << getAddress() << getName() << "> action:" << m_ble_action;
 
@@ -390,6 +390,11 @@ void Device::actionErrored()
         m_ble_status = DeviceUtils::DEVICE_CONNECTED;
         Q_EMIT statusUpdated();
     }
+
+    if (!m_stayConnected)
+    {
+        deviceDisconnect();
+    }
 }
 
 void Device::actionCanceled()
@@ -408,7 +413,10 @@ void Device::actionCanceled()
         Q_EMIT statusUpdated();
     }
 
-    deviceDisconnect();
+    if (!m_stayConnected)
+    {
+        deviceDisconnect();
+    }
 }
 
 void Device::actionTimedOut()
@@ -430,6 +438,11 @@ void Device::actionTimedOut()
     {
         m_ble_status = DeviceUtils::DEVICE_OFFLINE;
         Q_EMIT statusUpdated();
+    }
+
+    if (!m_stayConnected)
+    {
+        deviceDisconnect();
     }
 }
 
@@ -965,6 +978,7 @@ void Device::deviceDisconnected()
     m_ble_status = DeviceUtils::DEVICE_OFFLINE;
     Q_EMIT statusUpdated();
 
+    // We are disconnected
     Q_EMIT disconnected();
 }
 
@@ -989,6 +1003,12 @@ void Device::deviceErrored(QLowEnergyController::Error error)
 
     m_lastError = QDateTime::currentDateTime();
     Q_EMIT lastUpdated();
+
+    if (m_ble_status < DeviceUtils::DEVICE_CONNECTED)
+    {
+        m_ble_status = DeviceUtils::DEVICE_OFFLINE;
+        Q_EMIT statusUpdated();
+    }
 }
 
 void Device::deviceStateChanged(QLowEnergyController::ControllerState)

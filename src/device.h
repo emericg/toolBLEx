@@ -213,8 +213,8 @@ protected:
     virtual void bleReadDone(const QLowEnergyCharacteristic &c, const QByteArray &value);
     virtual void bleReadNotify(const QLowEnergyCharacteristic &c, const QByteArray &value);
 
-    virtual void actionStarted(int action = 0);
-    virtual void actionFinished();
+    virtual void actionStarted(int action);
+    virtual void actionFinished(int action = 0);
     virtual void actionErrored();
     virtual void actionCanceled();
     virtual void actionTimedOut();

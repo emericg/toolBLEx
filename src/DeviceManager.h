@@ -105,7 +105,7 @@ class DeviceManager: public QObject
 
     bool m_bleAdapter = false;      //!< do we have a BLE adapter?
     bool m_bleEnabled = false;      //!< is the BLE adapter enabled?
-    bool m_blePermission = false;   //!< do we have necessary BLE permission?
+    bool m_blePermission = false;   //!< do we have necessary BLE permission(s)?
 
     QBluetoothLocalDevice *m_bluetoothAdapter = nullptr;
     QBluetoothDeviceDiscoveryAgent *m_bluetoothDiscoveryAgent = nullptr;
@@ -223,8 +223,8 @@ private slots:
     void deviceDiscoveryFinished();
     void deviceDiscoveryStopped();
 
+    //
     void addBleDevice(const QBluetoothDeviceInfo &info);
-
     void bleDevice_discovered(const QBluetoothDeviceInfo &info);
     void bleDevice_updated(const QBluetoothDeviceInfo &info, QBluetoothDeviceInfo::Fields updatedFields);
 
@@ -276,14 +276,15 @@ public:
     Q_INVOKABLE void clearDeviceStructureCache();
     Q_INVOKABLE int countDeviceStructureCached();
 
-    void blacklistBleDevice(const QString &addr);
-    void whitelistBleDevice(const QString &addr);
-    bool isBleDeviceBlacklisted(const QString &addr);
+    Q_INVOKABLE void blacklistBleDevice(const QString &addr);
+    Q_INVOKABLE void whitelistBleDevice(const QString &addr);
+    Q_INVOKABLE bool isBleDeviceBlacklisted(const QString &addr);
 
     // Devices list management
     Q_INVOKABLE bool areDevicesAvailable() const { return m_devices_model->hasDevices(); }
     Q_INVOKABLE bool areDevicesConnected() const;
     Q_INVOKABLE void disconnectDevices() const;
+    Q_INVOKABLE void disconnectAndExit() const;
 
     int getDeviceCount() const { return m_devices_model->getDeviceCount(); }
     DeviceFilter *getDevicesFiltered() const { return m_devices_filter; }

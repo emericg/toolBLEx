@@ -449,8 +449,7 @@ void DeviceToolBLEx::actionScanWithValues()
 
     if (!isWorking())
     {
-        m_ble_action = DeviceUtils::ACTION_SCAN_WITH_VALUES;
-        actionStarted();
+        actionStarted(DeviceUtils::ACTION_SCAN_WITH_VALUES);
         deviceConnect();
     }
 }
@@ -464,8 +463,7 @@ void DeviceToolBLEx::actionScanWithoutValues()
 
     if (!isWorking())
     {
-        m_ble_action = DeviceUtils::ACTION_SCAN_WITHOUT_VALUES;
-        actionStarted();
+        actionStarted(DeviceUtils::ACTION_SCAN_WITHOUT_VALUES);
         deviceConnect();
     }
 }
@@ -732,7 +730,7 @@ void DeviceToolBLEx::addLowEnergyService(const QBluetoothUuid &uuid)
     QLowEnergyService::DiscoveryMode scanmode = QLowEnergyService::FullDiscovery;
     if (m_ble_action == DeviceUtils::ACTION_SCAN_WITHOUT_VALUES)
     {
-        m_services_scanmode = DeviceToolBLEx::srv_scanning; // start scanning
+        m_services_scanmode = DeviceToolBLEx::srv_scanning; // start scanning (without values)
         scanmode = QLowEnergyService::SkipValueDiscovery;
     }
     else if (m_ble_action == DeviceUtils::ACTION_SCAN_WITH_VALUES)
@@ -1131,6 +1129,8 @@ bool DeviceToolBLEx::checkServiceCache()
 
 bool DeviceToolBLEx::saveServiceCache()
 {
+    qDebug() << "DeviceToolBLEx::saveServiceCache(" << m_deviceAddress << ")";
+
     bool status = false;
 
     // Services
@@ -1209,6 +1209,8 @@ bool DeviceToolBLEx::saveServiceCache()
 
 void DeviceToolBLEx::restoreServiceCache()
 {
+    qDebug() << "DeviceToolBLEx::restoreServiceCache(" << m_deviceAddress << ")";
+
     QString cacheDirectoryPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     cacheDirectoryPath += "/devices/" + m_deviceAddress + ".cache";
 

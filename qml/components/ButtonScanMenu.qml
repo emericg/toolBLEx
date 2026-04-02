@@ -184,8 +184,8 @@ Rectangle {
                 width: control.width - control.height
                 height: control.height
 
-                visible: (selectedDevice && selectedDevice.hasServiceCache &&
-                          selectedDevice.status <= DeviceUtils.DEVICE_AVAILABLE)
+                visible: selectedDevice && selectedDevice.hasServiceCache
+                //enabled: selectedDevice.status <= DeviceUtils.DEVICE_AVAILABLE
                 layoutAlignment: Qt.AlignLeft
 
                 color: control.color

@@ -77,8 +77,7 @@ Item {
                         source: "qrc:/IconLibrary/material-symbols/save.svg"
 
                         visible: (selectedDevice && selectedDevice.hasServiceCache)
-                        enabled: (selectedDevice && selectedDevice.hasServiceCache &&
-                                  selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
+                        //enabled: selectedDevice.status === DeviceUtils.DEVICE_OFFLINE
 
                         onClicked: selectedDevice.restoreServiceCache()
                     }
@@ -153,7 +152,7 @@ Item {
     Row { // buttons row
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.margins: -4
+        anchors.margins: 8
         spacing: 8
 
         ButtonSolid {
