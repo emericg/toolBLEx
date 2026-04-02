@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 
 #if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
     // Qt 6.6+ mouse wheel hack
-    qputenv("QT_QUICK_FLICKABLE_WHEEL_DECELERATION", "8000");
+    qputenv("QT_QUICK_FLICKABLE_WHEEL_DECELERATION", "7500");
 #endif
 
     // GUI application /////////////////////////////////////////////////////////

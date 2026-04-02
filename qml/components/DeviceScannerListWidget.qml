@@ -16,6 +16,8 @@ Item {
 
     property bool showAddress: (Qt.platform.os !== "osx")
 
+    signal clicked()
+
     ////////
 
     Rectangle { // background
@@ -74,6 +76,8 @@ Item {
                         selectedDevice.selected = true
                     }
                 }
+
+                deviceScannerListWidget.clicked()
             }
 
             if (mouse.button === Qt.MiddleButton) {

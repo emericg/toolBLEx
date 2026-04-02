@@ -373,10 +373,38 @@ Loader {
                     model: deviceManager.devicesList
                     delegate: DeviceScannerListWidget {
                         width: Math.max(deviceManager.deviceHeader.width, appContent.width)
+                        onClicked: {
+                            for (var i = 0; i < devicesView.count; i++) {
+                                if (deviceManager.getDeviceByProxyIndex(i).selected) {
+                                    devicesView.currentIndex = i // move the listview
+                                    return
+                                }
+                            }
+                        }
                     }
 
-                    //interactive: true
-                    //snapMode : ListView.SnapToItem
+                    //interactive: false
+                    //snapMode: ListView.SnapToItem
+                    //keyNavigationEnabled: false
+                    //keyNavigationWraps: false
+                    //highlightFollowsCurrentItem: true
+
+                    Component.onCompleted: {
+                        //console.log("> (default) flick maximum velocity: " + maximumFlickVelocity)
+                        //console.log("> (default) flick deceleration: " + flickDeceleration)
+
+                        if (isDesktop) {
+                            // mouse wheel or trackpad
+                            maximumFlickVelocity = 6500
+                            flickDeceleration = 5000
+                            boundsBehavior = Flickable.OvershootBounds
+                        } else {
+                            // touch
+                            maximumFlickVelocity = 7500
+                            flickDeceleration = 3000
+                            boundsBehavior = Flickable.DragAndOvershootBounds
+                        }
+                    }
 
                     Keys.onPressed: (event) => {
                         if (event.key === Qt.Key_Escape) {
@@ -395,6 +423,7 @@ Loader {
                                         deviceManager.getDeviceByProxyIndex(i).selected = false
                                         deviceManager.getDeviceByProxyIndex(i-1).selected = true
                                         selectedDevice = deviceManager.getDeviceByProxyIndex(i-1)
+                                        currentIndex = i-1 // move the listview
                                         return
                                     }
                                 }
@@ -409,6 +438,7 @@ Loader {
                                         deviceManager.getDeviceByProxyIndex(ii).selected = false
                                         deviceManager.getDeviceByProxyIndex(ii+1).selected = true
                                         selectedDevice = deviceManager.getDeviceByProxyIndex(ii+1)
+                                        currentIndex = ii+1 // move the listview
                                         return
                                     }
                                 }
