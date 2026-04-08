@@ -181,7 +181,7 @@ DelegateChooser {
                     width: 105
                     visible: (rssi !== 0)
                     value: -Math.abs(rssi)
-                    value2: -Math.abs(pointer.rssiMax)
+                    value_max: -Math.abs(pointer.rssiMax)
                 }
             }
         }

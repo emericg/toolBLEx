@@ -20,11 +20,13 @@ T.ProgressBar {
     from: -100
     to: 0
 
-    value: 0
-    property real value2: 0
+    value: 0 // current RSSI
+    property real value_max: 0 // max RSSI
 
     property color colorBackground: (Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT) ? "#ccffffff" : "#cc333333"
     property color colorForeground: Theme.colorPrimary
+
+    ////////////////
 
     background: Rectangle {
         implicitWidth: 200
@@ -36,20 +38,24 @@ T.ProgressBar {
         border.color: control.colorForeground
     }
 
+    ////////////////
+
     contentItem: Item {
         Rectangle { // max
-            width: ((100-Math.abs(value2)) / 100) * control.width
+            width: ((100 - Math.abs(value_max)) / 100) * control.width
             height: control.height
             radius: (Theme.componentRadius / 2)
             color: control.colorForeground
             opacity: 0.4
         }
         Rectangle { // mean
-            width: ((100-Math.abs(value)) / 100) * control.width
+            width: ((100 - Math.abs(value)) / 100) * control.width
             height: control.height
             radius: (Theme.componentRadius / 2)
             color: control.colorForeground
             opacity: 0.4
         }
     }
+
+    ////////////////
 }

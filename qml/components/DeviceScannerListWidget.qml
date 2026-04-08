@@ -257,7 +257,7 @@ Item {
 
                 visible: (boxDevice.rssi !== 0)
                 value: -Math.abs(boxDevice.rssi)
-                value2: -Math.abs(boxDevice.rssiMax)
+                value_max: -Math.abs(boxDevice.rssiMax)
             }
         }
 

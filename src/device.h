@@ -50,13 +50,13 @@ class Device: public QObject
     Q_PROPERTY(int deviceCapabilities READ getDeviceCapabilities NOTIFY capabilitiesUpdated)
     Q_PROPERTY(int deviceSensors READ getDeviceSensors NOTIFY sensorsUpdated)
 
-    Q_PROPERTY(QString deviceName READ getName NOTIFY sensorUpdated)
-    Q_PROPERTY(QString deviceModel READ getModel NOTIFY sensorUpdated)
-    Q_PROPERTY(QString deviceModelID READ getModelID NOTIFY sensorUpdated)
-    Q_PROPERTY(QString deviceManufacturer READ getManufacturer NOTIFY sensorUpdated)
-    Q_PROPERTY(QString deviceAddress READ getAddress NOTIFY sensorUpdated)
-    Q_PROPERTY(QString deviceAddressMAC READ getAddressMAC WRITE setAddressMAC NOTIFY sensorUpdated)
-    Q_PROPERTY(QString deviceFirmware READ getFirmware NOTIFY sensorUpdated)
+    Q_PROPERTY(QString deviceName READ getName NOTIFY deviceUpdated)
+    Q_PROPERTY(QString deviceModel READ getModel NOTIFY deviceUpdated)
+    Q_PROPERTY(QString deviceModelID READ getModelID NOTIFY deviceUpdated)
+    Q_PROPERTY(QString deviceManufacturer READ getManufacturer NOTIFY deviceUpdated)
+    Q_PROPERTY(QString deviceAddress READ getAddress NOTIFY deviceUpdated)
+    Q_PROPERTY(QString deviceAddressMAC READ getAddressMAC WRITE setAddressMAC NOTIFY deviceUpdated)
+    Q_PROPERTY(QString deviceFirmware READ getFirmware NOTIFY firmwareUpdated)
     Q_PROPERTY(int deviceBattery READ getBatteryLevel NOTIFY batteryUpdated)
 
     Q_PROPERTY(bool hasBluetoothConnection READ hasBluetoothConnection CONSTANT)
@@ -82,7 +82,6 @@ class Device: public QObject
     Q_PROPERTY(bool connecting READ isConnecting NOTIFY statusUpdated)
     Q_PROPERTY(bool connected READ isConnected NOTIFY statusUpdated)
     Q_PROPERTY(bool working READ isWorking NOTIFY statusUpdated)
-    Q_PROPERTY(bool updating READ isUpdating NOTIFY statusUpdated)
     Q_PROPERTY(bool errored READ isErrored NOTIFY statusUpdated)
 
     Q_PROPERTY(int lastUpdateMin READ getLastUpdateInt NOTIFY lastUpdated)
@@ -99,13 +98,13 @@ Q_SIGNALS:
     void connected();
     void disconnected();
 
-    void deviceUpdated(Device *d);
-    void deviceSynced(Device *d);
-
-    void sensorUpdated();
+    void deviceUpdated();
     void sensorsUpdated();
     void capabilitiesUpdated();
     void connectivityUpdated();
+    void firmwareUpdated();
+    void batteryUpdated();
+
     void settingsUpdated();
     void selectionUpdated();
 
@@ -113,7 +112,6 @@ Q_SIGNALS:
     void rssiUpdated();
     void rssiMeanUpdated();
 
-    void batteryUpdated();
     void statusUpdated();
     void actionUpdated();
     void uptimeUpdated();
@@ -154,12 +152,15 @@ protected:
     int m_ble_status = 0;           //!< See DeviceStatus enum
     int m_ble_action = 0;           //!< See DeviceActions enum
 
+    QDateTime m_lastSeen;
+    QDateTime m_lastConnection;
     QDateTime m_lastUpdate;
     QDateTime m_lastUpdateDatabase;
     QDateTime m_lastError;
 
     QTimer m_updateTimer;
-    void setUpdateTimer(int updateInterval_m = 0);
+    const static int s_updateInterval = 60;
+    void setUpdateTimer(int updateInterval_m = s_updateInterval);
 
     QTimer m_timeoutTimer;
     const static int s_timeoutInterval = 12;
@@ -287,7 +288,6 @@ public:
     bool isConnecting() const;          //!< Is connecting
     bool isConnected() const;           //!< Is currently connected
     bool isWorking() const;             //!< Is currently working? doing/trying something?
-    bool isUpdating() const;            //!< Is currently being updated?
     bool isErrored() const;             //!< Has emitted a BLE error
 
     QDateTime getLastUpdate() const;
@@ -307,9 +307,9 @@ public:
 
     // BLE lifecycle
     virtual void deviceConnect(const bool stayConnected = false); //!< Initiate a BLE connection with a device
-    virtual void deviceReconnect();
     virtual void deviceDisconnect(const bool stayConnected = false);
     virtual void deviceDisconnect_temporary();
+    virtual void deviceReconnect();
 
     // BLE advertisement
     virtual void parseAdvertisementData(const uint16_t adv_mode, const uint16_t adv_id, const QByteArray &data);

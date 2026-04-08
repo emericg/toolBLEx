@@ -44,10 +44,10 @@ class DeviceToolBLEx: public Device
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString deviceName_display READ getName_display NOTIFY sensorUpdated)
-    Q_PROPERTY(QString deviceAddr_display READ getAddr_display NOTIFY sensorUpdated)
-    Q_PROPERTY(QString deviceName_export READ getName_export NOTIFY sensorUpdated)
-    Q_PROPERTY(QString deviceAddr_export READ getAddr_export NOTIFY sensorUpdated)
+    Q_PROPERTY(QString deviceName_display READ getName_display NOTIFY deviceUpdated)
+    Q_PROPERTY(QString deviceAddr_display READ getAddr_display NOTIFY deviceUpdated)
+    Q_PROPERTY(QString deviceName_export READ getName_export NOTIFY deviceUpdated)
+    Q_PROPERTY(QString deviceAddr_export READ getAddr_export NOTIFY deviceUpdated)
 
     Q_PROPERTY(bool isBeacon READ isBeacon NOTIFY boolChanged)
     Q_PROPERTY(bool isBlacklisted READ isBlacklisted NOTIFY boolChanged)
