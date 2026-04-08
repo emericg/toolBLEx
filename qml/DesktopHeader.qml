@@ -335,6 +335,7 @@ Rectangle {
                 colorContent: Theme.colorHeaderContent
                 colorHighlight: Theme.colorHeaderHighlight
 
+                visible: utilsApp.isDebugBuild()
                 highlighted: (appContent.state === "Advertiser")
                 onClicked: advertiserButtonClicked()
 
