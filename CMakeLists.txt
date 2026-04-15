@@ -134,6 +134,7 @@ qt_add_qml_module(${CMAKE_PROJECT_NAME}
         qml/popups/PopupClearDeviceSeenCache.qml
         qml/popups/PopupClearDeviceStructureCache.qml
         qml/popups/PopupExportDeviceData.qml
+        qml/popups/PopupExportScannerData.qml
         qml/popups/PopupWriteCharacteristic.qml
 
         qml/widgets/AdapterWidget.qml

@@ -262,6 +262,8 @@ public:
     Q_INVOKABLE void checkPaired();
 
     Q_INVOKABLE void clearResults();
+    Q_INVOKABLE bool exportResults(const QString &filename, bool withManuf, bool withComment, bool withSeen);
+    bool getExportFile(QString &filename) const;
 
     // Device saved
     int getDeviceSeenCached() const { return m_devicesSeenCachedCount; }

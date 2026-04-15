@@ -9,7 +9,7 @@ import ComponentLibrary
 import DeviceUtils
 
 Popup {
-    id: popupExportDeviceData
+    id: popupExportScannerData
 
     x: ((appWindow.width / 2) - (width / 2))
     y: ((appWindow.height / 2) - (height / 2) - (appHeader.height))
@@ -25,18 +25,16 @@ Popup {
     onAboutToShow: {
         buttonError.visible = false
 
-        cbGenericInfo.checked = true
-        cbAdvPackets.checked = true
-        cbServices.checked = true
-        cbData.checked = true
+        cbManufacturer.checked = true
+        cbComment.checked = true
+        cbSeen.checked = true
 
         var foldersep = "/"
         if (settingsManager.exportDirectory_str.substr(-1) === "/") foldersep = ""
 
         tfExportPath.currentFolder = settingsManager.exportDirectory_url
         tfExportPath.text = settingsManager.exportDirectory_str + foldersep +
-                            selectedDevice.deviceName_export + "-" +
-                            selectedDevice.deviceAddr_export + ".txt"
+                            "devicelist_" + Qt.formatDateTime(new Date(), "yyyy-MM-dd_hh:mm") + ".csv"
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -122,7 +120,7 @@ Popup {
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    text: qsTr("Export device data")
+                    text: qsTr("Export scanner device list")
                     font.pixelSize: Theme.fontSizeTitle
                     font.bold: true
                     elide: Text.ElideRight
@@ -130,26 +128,30 @@ Popup {
                     opacity: 0.98
                 }
 
-                RowLayout {
+                Text {
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    Text {
-                        Layout.fillWidth: true
-
-                        text: selectedDevice.deviceName
-                        font.pixelSize: Theme.fontSizeTitle-4
-                        elide: Text.ElideRight
-                        color: "white"
-                        opacity: 0.92
+                    text: {
+                        var txt = qsTr("%n device(s) found", "", deviceManager.deviceCountFound)
+                        if (deviceManager.deviceCountShown !== deviceManager.deviceCountFound) {
+                            txt += "  |  " + qsTr("%n device(s) shown", "", deviceManager.deviceCountShown)
+                        }
+                        if (deviceManager.deviceCountTotal !== deviceManager.deviceCountCached) {
+                            txt += "  |  " + qsTr("%n device(s) cached", "", deviceManager.deviceCountCached)
+                        }
+                        //if (deviceManager.deviceCountBlacklisted > 0) {
+                        //    txt += "  |  " + qsTr("%n device(s) blacklisted", "", deviceManager.deviceCountBlacklisted)
+                        //}
+                        //if (deviceManager.deviceCountTotal !== deviceManager.deviceCountShown) {
+                        //    txt += "  |  " + qsTr("%n device(s) total", "", deviceManager.deviceCountTotal)
+                        //}
+                        return txt
                     }
-                    Text {
-                        text: selectedDevice.deviceAddress
-                        font.pixelSize: Theme.fontSizeTitle-4
-                        elide: Text.ElideRight
-                        color: "white"
-                        opacity: 0.88
-                    }
+                    font.pixelSize: Theme.fontSizeTitle-4
+                    elide: Text.ElideRight
+                    color: "white"
+                    opacity: 0.92
                 }
             }
         }
@@ -168,37 +170,6 @@ Popup {
                 anchors.right: parent.right
                 spacing: 12
 
-                Rectangle {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-
-                    height: 40
-                    radius: Theme.componentRadius
-                    color: Theme.colorForeground
-                    visible: (selectedDevice && selectedDevice.servicesCached)
-
-                    IconSvg {
-                        anchors.left: parent.left
-                        anchors.leftMargin: Theme.componentMargin
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: 24
-                        height: 24
-                        source: "qrc:/IconLibrary/material-symbols/warning-fill.svg"
-                        color: Theme.colorSubText
-                    }
-
-                    Text {
-                        anchors.left: parent.left
-                        anchors.leftMargin: 52
-                        anchors.right: parent.right
-                        anchors.rightMargin: Theme.componentMargin
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        text: qsTr("Services info loaded from cache")
-                        color: Theme.colorSubText
-                    }
-                }
-
                 Flow { // status row
                     anchors.left: parent.left
                     anchors.right: parent.right
@@ -206,31 +177,49 @@ Popup {
 
                     TagClear {
                         height: 36
-                        text: qsTr("%n adv packet(s)", "", selectedDevice.advCount)
+                        text: qsTr("%n Found", "", deviceManager.deviceCountFound)
                         //colorText: Theme.colorSubText
                     }
                     TagClear {
                         height: 36
-                        text: qsTr("%n service(s)", "", selectedDevice.servicesCount)
+                        text: qsTr("%n Shown", "", deviceManager.deviceCountShown)
                         //colorText: Theme.colorSubText
                     }
                     TagClear {
                         height: 36
-                        text: qsTr("%n characteristic(s)", "", selectedDevice.characteristicsCount)
+                        text: qsTr("%n Hidden", "", deviceManager.deviceCountHidden)
                         //colorText: Theme.colorSubText
                     }
+                }
+            }
 
-                    ButtonFlat {
-                        height: 36
+            Column {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                spacing: 12
 
-                        text: qsTr("load cache")
-                        //color: Theme.colorSubText
+                enabled: false
 
-                        visible: (selectedDevice && selectedDevice.hasServiceCache &&
-                                  !selectedDevice.servicesCached &&
-                                  selectedDevice.status === DeviceUtils.DEVICE_OFFLINE)
+                Text {
+                    text: qsTr("Select devices to export")
+                    color: Theme.colorText
+                }
 
-                        onClicked: selectedDevice.restoreServiceCache()
+                Row {
+                    CheckBoxThemed {
+                        id: cbGenericInfortys
+                        text: qsTr("BLE")
+                        checked: true
+                    }
+                    CheckBoxThemed {
+                        id: cbAdvPacketstry
+                        text: qsTr("Classic")
+                        checked: true
+                    }
+                    CheckBoxThemed {
+                        id: cbAdvPacketssrt
+                        text: qsTr("Seen")
+                        checked: true
                     }
                 }
             }
@@ -241,34 +230,28 @@ Popup {
                 spacing: 12
 
                 Text {
-                    text: qsTr("Select data to export")
+                    text: qsTr("Optional data to export")
                     color: Theme.colorText
                 }
 
-                Column {
-                    Row {
-                        CheckBoxThemed {
-                            id: cbGenericInfo
-                            text: qsTr("Generic info")
-                            checked: true
-                        }
-                        CheckBoxThemed {
-                            id: cbAdvPackets
-                            text: qsTr("Advertisement packets")
-                            checked: true
-                        }
+                Flow {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
+                    CheckBoxThemed {
+                        id: cbManufacturer
+                        text: qsTr("Manufacturer")
+                        checked: true
                     }
-                    Row {
-                        CheckBoxThemed {
-                            id: cbServices
-                            text: qsTr("Services & Characteristics scanned")
-                            checked: true
-                        }
-                        CheckBoxThemed {
-                            id: cbData
-                            text: qsTr("Characteristics data")
-                            checked: true
-                        }
+                    CheckBoxThemed {
+                        id: cbComment
+                        text: qsTr("User comment")
+                        checked: false
+                    }
+                    CheckBoxThemed {
+                        id: cbSeen
+                        text: qsTr("First/last seen")
+                        checked: false
                     }
                 }
             }
@@ -289,7 +272,7 @@ Popup {
                     anchors.right: parent.right
 
                     dialogTitle: qsTr("Please select the export file")
-                    dialogFilter: ["Text file (*.txt)"]
+                    dialogFilter: ["CSV file (*.csv)"]
                     dialogFileMode: FileDialog.SaveFile
 
                     currentFolder: settingsManager.exportDirectory_url
@@ -323,7 +306,7 @@ Popup {
                     color: Theme.colorMaterialGrey
 
                     text: qsTr("Cancel")
-                    onClicked: popupExportDeviceData.close()
+                    onClicked: popupExportScannerData.close()
                 }
 
                 ButtonSolid {
@@ -331,12 +314,13 @@ Popup {
 
                     text: qsTr("Export data")
                     onClicked: {
-                        var status = selectedDevice.exportDeviceInfo(tfExportPath.text,
-                                                                     cbGenericInfo.checked, cbAdvPackets.checked,
-                                                                     cbServices.checked, cbData.checked)
+                        var status = deviceManager.exportResults(tfExportPath.text,
+                                                                 cbManufacturer.checked,
+                                                                 cbComment.checked,
+                                                                 cbSeen.checked)
                         if (status) {
                             buttonError.visible = false
-                            popupExportDeviceData.close()
+                            popupExportScannerData.close()
                         } else {
                             buttonError.visible = true
                         }

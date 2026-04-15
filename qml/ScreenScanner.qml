@@ -510,6 +510,17 @@ Loader {
             // prevent clicks below this area
             MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
 
+            Loader {
+                id: popupLoader_export
+
+                active: false
+                asynchronous: false
+                sourceComponent: PopupExportScannerData {
+                    id: popupExportScannerData
+                    parent: appContent
+                }
+            }
+
             Row { // left
                 anchors.left: parent.left
                 anchors.leftMargin: 8
@@ -545,9 +556,28 @@ Loader {
                     colorBackground: Theme.colorActionbar
                     colorHighlight: Theme.colorActionbarHighlight
 
+                    visible: deviceManager.deviceCountShown
+
                     text: qsTr("clear results")
                     onClicked: {
                         deviceManager.clearResults()
+                    }
+                }
+
+                ButtonSunken {
+                    anchors.verticalCenter: parent.verticalCenter
+                    height: statusBar.height
+
+                    colorBackground: Theme.colorActionbar
+                    colorHighlight: Theme.colorActionbarHighlight
+
+                    visible: deviceManager.deviceCountShown
+
+                    text: qsTr("export results")
+                    onClicked: {
+                        popupLoader_export.active = true
+                        popupLoader_export.item.open()
+                        //deviceManager.exportResults()
                     }
                 }
             }

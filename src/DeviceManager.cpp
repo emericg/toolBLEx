@@ -882,14 +882,129 @@ void DeviceManager::countDevices()
     Q_EMIT statsChanged();
 }
 
+/* ************************************************************************** */
+
 void DeviceManager::clearResults()
 {
     qDebug() << "DeviceManager::clearResults()";
 
-    if (m_devices_model /*&& !m_scanning*/)
+    //if (!m_scanning)
     {
         m_devices_model->clearDevices();
     }
+}
+
+bool DeviceManager::exportResults(const QString &filename,
+                                  bool withManuf, bool withComment, bool withSeen)
+{
+    bool status = false;
+
+    // Create export string
+
+    QString str;
+    QString endl = QChar('\n');
+
+    // Legend
+
+    str += "Device MAC,Device Name";
+    if (withManuf) str += ",Device Manufacturer";
+    if (withComment) str += ",User Comment";
+    if (withSeen) str += ",First Seen,Last Seen";
+    str += endl;
+
+    // Devices
+
+    SettingsManager *sm = SettingsManager::getInstance();
+    bool filterShowBeacon = sm->getScanShowBeacon();
+    bool filterShowBlacklisted = sm->getScanShowBlacklisted();
+    bool filterShowCached = sm->getScanShowCached();
+    bool filterShowBluetoothClassic = sm->getScanShowClassic();
+    bool filterShowBluetoothLowEnergy = sm->getScanShowLowEnergy();
+
+    for (auto dd: std::as_const(m_devices_model->m_devices))
+    {
+        DeviceToolBLEx *d = qobject_cast<DeviceToolBLEx *>(dd);
+        if (d)
+        {
+            bool accepted = true;
+
+            if (!filterShowBluetoothClassic && !filterShowBluetoothLowEnergy) accepted = false;
+            else if (!filterShowBluetoothClassic && d->isBluetoothClassic() && !d->isBluetoothLowEnergy()) accepted = false;
+            else if (!filterShowBluetoothLowEnergy && d->isBluetoothLowEnergy() && !d->isBluetoothClassic()) accepted = false;
+            else if (!filterShowBeacon && d->isBeacon()) accepted = false;
+            else if (!filterShowBlacklisted && d->isBlacklisted()) accepted = false;
+            else if (!filterShowCached && d->isCached() && d->getRssi() == 0) accepted = false;
+
+            if (accepted)
+            {
+                // add device to the export string
+
+                str += d->getAddr_display() + "," + d->getName_display();
+
+                if (withManuf) str += "," + d->getManufacturer();
+                if (withComment) str += "," + d->getUserComment();
+                if (withSeen) str += "," + d->getFirstSeen().toString();
+                if (withSeen) str += "," + d->getLastSeen().toString();
+
+                str += endl;
+            }
+        }
+    }
+
+    // Save export string to file //////////////////////////////////////////////
+    QString exportFilePath = filename;
+
+    if (getExportFile(exportFilePath))
+    {
+        qDebug() << "DeviceManager::exportResults(" << exportFilePath << ")";
+
+        // Open file and save content
+        QFile efile(exportFilePath);
+        if (efile.open(QFile::WriteOnly | QIODevice::Text))
+        {
+            QTextStream eout(&efile);
+            eout.setEncoding(QStringConverter::Utf8);
+            eout << str;
+
+            status = true;
+            efile.close();
+        }
+    }
+
+    return status;
+}
+
+bool DeviceManager::getExportFile(QString &filename) const
+{
+    bool status = false;
+
+    // No path given by the UI? Generate a "default" path
+    if (filename.isEmpty())
+    {
+        filename = SettingsManager::getInstance()->getExportDirectory_str();
+        filename += "/devicelist_";
+        filename += QDateTime::currentDateTime().toString("yyyy-MM-dd_hh:mm");
+        filename += ".csv";
+    }
+
+    // Check if the directory exist, or try to create it
+    QDir exportDirectory = QFileInfo(filename).dir();
+    if (!exportDirectory.exists())
+    {
+        exportDirectory.mkpath(exportDirectory.path());
+    }
+
+    if (exportDirectory.exists())
+    {
+        status = true;
+    }
+    else
+    {
+        filename.clear();
+        status = false;
+    }
+
+    return status;
 }
 
 /* ************************************************************************** */
