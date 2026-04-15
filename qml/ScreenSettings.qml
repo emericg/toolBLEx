@@ -243,6 +243,17 @@ Loader {
                                     color: "#5483EF"
                                     font.bold: true
 
+                                    text: qsTr("DONATE")
+                                    source: "qrc:/IconLibrary/material-symbols/favorite.svg"
+                                    onClicked: Qt.openUrlExternally("https://www.paypal.com/paypalme/EmericGrange")
+                                }
+
+                                ButtonSolid {
+                                    height: 40
+                                    sourceSize: 22
+                                    color: "#5483EF"
+                                    font.bold: true
+
                                     text: qsTr("RELEASE NOTES")
                                     source: "qrc:/IconLibrary/material-symbols/new_releases.svg"
                                     onClicked: Qt.openUrlExternally("https://github.com/emericg/toolBLEx/releases")
