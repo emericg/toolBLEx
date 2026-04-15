@@ -177,9 +177,12 @@ list(APPEND MODULE_SOURCES
 
 ################################################################################
 
-set_source_files_properties(${MODULE_QML_FILES} ${MODULE_JS_FILES} PROPERTIES
-    QT_QML_SKIP_CACHEGEN TRUE
-)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    # Do not compile QML files to byte code for debug targets
+    set_source_files_properties(${MODULE_QML_FILES} ${MODULE_JS_FILES} PROPERTIES
+        QT_QML_SKIP_CACHEGEN TRUE
+    )
+endif()
 
 set_source_files_properties(ThemeEngine.qml PROPERTIES
     QT_QML_SINGLETON_TYPE TRUE

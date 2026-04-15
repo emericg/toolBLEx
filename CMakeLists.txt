@@ -13,19 +13,22 @@ set(APP_VERSION ${CMAKE_PROJECT_VERSION})
 
 ################################################################################
 
-message(STATUS "[CMAKE]   CMAKE_VERSION             = ${CMAKE_VERSION}")
-message(STATUS "[CMAKE]   CMAKE_PREFIX_PATH         = ${CMAKE_PREFIX_PATH}")
-message(STATUS "[SYSTEM]  (HOST) SYSTEM NAME        = ${CMAKE_HOST_SYSTEM_NAME}")
-message(STATUS "[SYSTEM]  (HOST) SYSTEM VERSION     = ${CMAKE_HOST_SYSTEM_VERSION}")
-message(STATUS "[SYSTEM]  (HOST) SYSTEM PROCESSOR   = ${CMAKE_HOST_SYSTEM_PROCESSOR}")
-message(STATUS "[SYSTEM]  (TARGET) SYSTEM NAME      = ${CMAKE_SYSTEM_NAME}")
-message(STATUS "[SYSTEM]  (TARGET) SYSTEM VERSION   = ${CMAKE_SYSTEM_VERSION}")
-message(STATUS "[SYSTEM]  (TARGET) SYSTEM PROCESSOR = ${CMAKE_SYSTEM_PROCESSOR}")
+message(STATUS ">>> BUILDING ${PROJECT_NAME} >>>")
+message(STATUS "[CMAKE] CMAKE_VERSION               = ${CMAKE_VERSION}")
+message(STATUS "[CMAKE] CMAKE_PREFIX_PATH           = ${CMAKE_PREFIX_PATH}")
+message(STATUS "[BUILD] QT_HOST_PATH                = ${QT_HOST_PATH}")
+message(STATUS "[BUILD] TOOLCHAIN_FILE              = ${CMAKE_TOOLCHAIN_FILE}")
+message(STATUS "[SYSTEM] (HOST) SYSTEM NAME         = ${CMAKE_HOST_SYSTEM_NAME}")
+message(STATUS "[SYSTEM] (HOST) SYSTEM VERSION      = ${CMAKE_HOST_SYSTEM_VERSION}")
+message(STATUS "[SYSTEM] (HOST) SYSTEM PROCESSOR    = ${CMAKE_HOST_SYSTEM_PROCESSOR}")
+message(STATUS "[SYSTEM] (TARGET) SYSTEM NAME       = ${CMAKE_SYSTEM_NAME}")
+message(STATUS "[SYSTEM] (TARGET) SYSTEM VERSION    = ${CMAKE_SYSTEM_VERSION}")
+message(STATUS "[SYSTEM] (TARGET) SYSTEM PROCESSOR  = ${CMAKE_SYSTEM_PROCESSOR}")
+message(STATUS "[PROJECT] CMAKE_PROJECT_NAME        = ${PROJECT_NAME}")
 message(STATUS "[PROJECT] CURRENT_SOURCE_DIR        = ${CMAKE_CURRENT_SOURCE_DIR}")
+message(STATUS "[PROJECT] PROJECT_NAME              = ${CMAKE_PROJECT_NAME}")
 message(STATUS "[PROJECT] SOURCE_DIR                = ${CMAKE_SOURCE_DIR}")
 message(STATUS "[PROJECT] BUILD_TYPE                = ${CMAKE_BUILD_TYPE}")
-message(STATUS "[PROJECT] TOOLCHAIN_FILE            = ${CMAKE_TOOLCHAIN_FILE}")
-message(STATUS "[PROJECT] QT_HOST_PATH              = ${QT_HOST_PATH}")
 
 ################################################################################
 
@@ -69,13 +72,14 @@ set(SOURCES
 )
 
 if(NOT IOS AND NOT ANDROID)
-    # Set app desktop icons
+    # Desktop app icons
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
         set(app_icon_windows "${CMAKE_SOURCE_DIR}/assets/windows/${CMAKE_PROJECT_NAME}.rc")
     elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         set(app_icon_macos "${CMAKE_SOURCE_DIR}/assets/macos/${CMAKE_PROJECT_NAME}.icns")
     endif()
 
+    # Desktop only source files
     set(SOURCES_DESKTOP
         ${app_icon_windows}
         ${app_icon_macos}
@@ -148,7 +152,7 @@ qt_add_translations(${CMAKE_PROJECT_NAME}
 
 ################################################################################
 
-# 'Other Files" macro
+# "Other Files" macro
 function(add_other_files target)
     foreach(file IN LISTS ARGN)
         target_sources(${target} PRIVATE ${file})
@@ -172,8 +176,8 @@ add_subdirectory(thirdparty/SingleApplication)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE SingleApplication)
 
 # AppUtils
-set(UTILS_QT_RHI ON)
-set(UTILS_DOCK_ENABLED ON)
+set(UTILS_QT_RHI ON CACHE BOOL "UTILS_QT_RHI" FORCE)
+set(UTILS_DOCK_ENABLED ON CACHE BOOL "UTILS_DOCK_ENABLED" FORCE)
 add_subdirectory(thirdparty/AppUtils)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE AppUtils)
 

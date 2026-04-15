@@ -1,6 +1,9 @@
+cmake_minimum_required(VERSION 3.20)
+
 project(SingleApplication LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 
 ################################################################################
@@ -17,7 +20,7 @@ endif()
 
 ################################################################################
 
-# Dependencies
+# Generic dependencies
 set(CORE_COMPONENTS Core Network)
 set(CORE_LIBRARIES Qt6::Core Qt6::Network)
 
@@ -31,6 +34,7 @@ endif()
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS ${CORE_COMPONENTS})
 
+# OS specific sources & dependencies
 if(WIN32)
     if(MSVC)
         set(PLATFORM_LIBRARIES Advapi32.lib)

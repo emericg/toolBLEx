@@ -2,11 +2,10 @@ cmake_minimum_required(VERSION 3.20)
 
 project(AppUtils LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(QT_NO_PRIVATE_MODULE_WARNING ON)
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
 
 ################################################################################
 
@@ -53,8 +52,7 @@ set(CORE_SOURCES
 # Qt optional tools
 if(UTILS_QT_RHI)
     add_definitions(-DUTILS_QT_RHI)
-
-    if(Qt6Gui_VERSION VERSION_GREATER_EQUAL 6.10.0)
+    if(Qt6_VERSION VERSION_GREATER_EQUAL 6.10.0)
         find_package(Qt6 REQUIRED COMPONENTS GuiPrivate)
         set(CORE_LIBRARIES ${CORE_LIBRARIES} Qt::GuiPrivate)                    # to get RHI infos
     else()
