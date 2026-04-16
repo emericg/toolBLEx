@@ -783,6 +783,7 @@ void DeviceManager::addBleDevice(const QBluetoothDeviceInfo &info)
         if (edd && (edd->getAddress() == info.address().toString() ||
                     edd->getAddress() == info.deviceUuid().toString()))
         {
+            countDevices();
             return;
         }
     }
@@ -838,6 +839,8 @@ void DeviceManager::checkPaired()
 
 void DeviceManager::countDevices()
 {
+    //qDebug() << "DeviceManager::countDevices()";
+
     SettingsManager *sm = SettingsManager::getInstance();
     bool filterShowBeacon = sm->getScanShowBeacon();
     bool filterShowBlacklisted = sm->getScanShowBlacklisted();
@@ -906,7 +909,7 @@ bool DeviceManager::exportResults(const QString &filename,
 
     // Legend
 
-    str += "Device MAC,Device Name";
+    str += "Device Address,Device Name";
     if (withManuf) str += ",Device Manufacturer";
     if (withComment) str += ",User Comment";
     if (withSeen) str += ",First Seen,Last Seen";
@@ -983,7 +986,7 @@ bool DeviceManager::getExportFile(QString &filename) const
     {
         filename = SettingsManager::getInstance()->getExportDirectory_str();
         filename += "/devicelist_";
-        filename += QDateTime::currentDateTime().toString("yyyy-MM-dd_hh:mm");
+        filename += QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm");
         filename += ".csv";
     }
 

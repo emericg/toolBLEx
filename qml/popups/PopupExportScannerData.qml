@@ -34,7 +34,7 @@ Popup {
 
         tfExportPath.currentFolder = settingsManager.exportDirectory_url
         tfExportPath.text = settingsManager.exportDirectory_str + foldersep +
-                            "devicelist_" + Qt.formatDateTime(new Date(), "yyyy-MM-dd_hh:mm") + ".csv"
+                            "devicelist_" + Qt.formatDateTime(new Date(), "yyyy-MM-dd_hh-mm") + ".csv"
     }
 
     ////////////////////////////////////////////////////////////////////////////

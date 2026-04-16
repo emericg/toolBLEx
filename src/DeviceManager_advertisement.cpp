@@ -99,6 +99,7 @@ void DeviceManager::bleDevice_updated(const QBluetoothDeviceInfo &info, QBluetoo
 
             dd->addAdvertisementEntry(info.rssi(), hasmfd, hassvd);
 
+            countDevices();
             return;
         }
     }

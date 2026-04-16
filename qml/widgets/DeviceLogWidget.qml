@@ -38,8 +38,9 @@ Rectangle {
 
         Text {
             text: modelData.timestamp.toLocaleTimeString(Qt.locale(), "hh:mm:ss.zzz")
-            color: Theme.colorSubText
+            textFormat: Text.PlainText
             font.pixelSize: Theme.fontSizeContentSmall
+            color: Theme.colorSubText
         }
 
         Text {
@@ -47,9 +48,10 @@ Rectangle {
             Layout.fillWidth: true
 
             text: modelData.log
-            color: Theme.colorText
+            textFormat: Text.PlainText
             font.pixelSize: Theme.fontSizeContentSmall
             wrapMode: Text.WrapAnywhere
+            color: Theme.colorText
         }
     }
 

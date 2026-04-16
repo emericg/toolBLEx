@@ -182,11 +182,14 @@ Rectangle {
             }
             Text {
                 anchors.verticalCenter: parent.verticalCenter
+
                 text: {
                     if (deviceManager.scanningPaused) return qsTr("Scanning paused")
                     if (deviceManager.scanning) return qsTr("Scanning for Bluetooth devices nearby")
                     return qsTr("Not scanning")
                 }
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorText
             }
 
@@ -195,7 +198,10 @@ Rectangle {
             Text {
                 anchors.verticalCenter: parent.verticalCenter
                 visible: deviceManager.advertising
+
                 text: "  |  "
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorText
             }
 
@@ -220,7 +226,10 @@ Rectangle {
             }
             Text {
                 anchors.verticalCenter: parent.verticalCenter
+
                 text: deviceManager.advertising ? qsTr("Virtual device is running") : ""
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorText
             }
 
@@ -229,7 +238,10 @@ Rectangle {
             Text {
                 anchors.verticalCenter: parent.verticalCenter
                 visible: ubertooth.running
+
                 text: "  |  "
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorText
             }
 
@@ -254,7 +266,11 @@ Rectangle {
             }
             Text {
                 anchors.verticalCenter: parent.verticalCenter
-                text: ubertooth.running ? qsTr("Ubertooth is running") : ""
+                visible: ubertooth.running
+
+                text: qsTr("Ubertooth is running")
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorText
             }
         }
@@ -271,9 +287,11 @@ Rectangle {
 
             Text {
                 anchors.verticalCenter: parent.verticalCenter
-
                 visible: deviceManager.scanning
+
                 text: qsTr("%n device(s) found", "", deviceManager.deviceCountFound)
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorText
             }
         }
