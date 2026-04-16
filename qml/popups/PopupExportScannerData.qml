@@ -121,6 +121,7 @@ Popup {
                     anchors.right: parent.right
 
                     text: qsTr("Export scanner device list")
+                    textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeTitle
                     font.bold: true
                     elide: Text.ElideRight
@@ -148,6 +149,7 @@ Popup {
                         //}
                         return txt
                     }
+                    textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeTitle-4
                     elide: Text.ElideRight
                     color: "white"
@@ -202,6 +204,8 @@ Popup {
 
                 Text {
                     text: qsTr("Select devices to export")
+                    textFormat: Text.PlainText
+                    font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorText
                 }
 
@@ -231,6 +235,8 @@ Popup {
 
                 Text {
                     text: qsTr("Optional data to export")
+                    textFormat: Text.PlainText
+                    font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorText
                 }
 
@@ -263,6 +269,8 @@ Popup {
 
                 Text {
                     text: qsTr("Select export file")
+                    textFormat: Text.PlainText
+                    font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorText
                 }
 

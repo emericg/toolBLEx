@@ -18,6 +18,9 @@ T.Button {
     focusPolicy: Qt.NoFocus
     hoverEnabled: enabled && !readOnly
 
+    font.pixelSize: Theme.componentFontSize
+    font.bold: false
+
     // settings
     property int index
     property bool readOnly: false

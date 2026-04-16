@@ -123,6 +123,7 @@ Popup {
                     anchors.right: parent.right
 
                     text: qsTr("Export device data")
+                    textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeTitle
                     font.bold: true
                     elide: Text.ElideRight
@@ -138,6 +139,7 @@ Popup {
                         Layout.fillWidth: true
 
                         text: selectedDevice.deviceName
+                        textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeTitle-4
                         elide: Text.ElideRight
                         color: "white"
@@ -145,6 +147,7 @@ Popup {
                     }
                     Text {
                         text: selectedDevice.deviceAddress
+                        textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeTitle-4
                         elide: Text.ElideRight
                         color: "white"
@@ -195,6 +198,8 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Services info loaded from cache")
+                        textFormat: Text.PlainText
+                        font.pixelSize: Theme.fontSizeContent
                         color: Theme.colorSubText
                     }
                 }
@@ -242,6 +247,8 @@ Popup {
 
                 Text {
                     text: qsTr("Select data to export")
+                    textFormat: Text.PlainText
+                    font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorText
                 }
 
@@ -280,6 +287,8 @@ Popup {
 
                 Text {
                     text: qsTr("Select export file")
+                    textFormat: Text.PlainText
+                    font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorText
                 }
 

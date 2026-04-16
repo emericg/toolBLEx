@@ -221,12 +221,14 @@ Loader {
                         Text {
                             anchors.left: parent.left
                             text: qsTr("2.3 GHz")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContentSmall
                             color: Theme.colorSubText
                         }
                         Text {
                             anchors.right: parent.right
                             text: qsTr("2.6 GHz")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContentSmall
                             color: Theme.colorSubText
                         }

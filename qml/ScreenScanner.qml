@@ -546,6 +546,8 @@ Loader {
                         //}
                         return txt
                     }
+                    textFormat: Text.PlainText
+                    font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorSubText
                 }
 
