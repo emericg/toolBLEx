@@ -231,12 +231,18 @@ Flickable {
             anchors.fill: parent
             anchors.bottomMargin: columnLegendLeft.height + 16
 
-            TextArea {
+            TextAreaThemed {
                 text: (selectedDevice && selectedDevice.deviceLogStr)
                 textFormat: Text.PlainText
-                color: Theme.colorText
-                wrapMode: Text.WrapAnywhere
+
                 readOnly: true
+                wrapMode: Text.WrapAnywhere
+
+                color: Theme.colorText
+                colorBorder: Theme.colorComponentBackground
+                colorBackground: Theme.colorComponentBackground
+                colorSelection: Theme.colorComponentBackground
+                selectionColor: Theme.colorPrimary
             }
         }
     }

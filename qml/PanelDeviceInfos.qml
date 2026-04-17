@@ -439,8 +439,8 @@ Flickable {
                         id: exportButton
                         width: parent.www
 
-                        color: Theme.colorComponent
-                        colorText: Theme.colorComponentContent
+                        color: Theme.colorGrey
+                        //colorText: Theme.colorComponentContent
 
                         enabled: (selectedDevice &&
                                   (selectedDevice.advCount > 0 || selectedDevice.servicesCount > 0 || selectedDevice.hasServiceCache))

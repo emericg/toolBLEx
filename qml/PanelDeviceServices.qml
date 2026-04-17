@@ -70,8 +70,8 @@ Item {
                     ButtonFlat {
                         width: parent.www
 
-                        color: Theme.colorComponent
-                        colorText: Theme.colorComponentContent
+                        color: Theme.colorGrey
+                        //colorText: Theme.colorComponentContent
 
                         text: qsTr("load from cache")
                         source: "qrc:/IconLibrary/material-symbols/save.svg"
