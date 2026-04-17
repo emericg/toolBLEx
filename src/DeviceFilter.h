@@ -58,8 +58,11 @@ public:
     DeviceFilter(QObject *parent = nullptr);
     ~DeviceFilter();
 
+    const QString &getFilterString() { return m_filterString; }
     void setFilterString(const QString &str) { m_filterString = str; }
+
     void updateBoolFilters();
+
     void invalidatefilter();
 };
 

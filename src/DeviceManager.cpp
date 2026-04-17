@@ -848,6 +848,8 @@ void DeviceManager::countDevices()
     bool filterShowBluetoothClassic = sm->getScanShowClassic();
     bool filterShowBluetoothLowEnergy = sm->getScanShowLowEnergy();
 
+    const QString filterString = m_devices_filter->getFilterString();
+
     m_countFound = 0;
     m_countShown = 0;
     m_countHidden = 0;
@@ -872,11 +874,23 @@ void DeviceManager::countDevices()
             else if (!filterShowBlacklisted && d->isBlacklisted()) accepted = false;
             else if (!filterShowCached && d->isCached() && d->getRssi() == 0) accepted = false;
 
+            if (accepted && !filterString.isEmpty())
+            {
+                if (!d->getAddress().contains(filterString, Qt::CaseInsensitive) &&
+                    !d->getName().contains(filterString, Qt::CaseInsensitive) &&
+                    !d->getManufacturer().contains(filterString, Qt::CaseInsensitive))
+                {
+                    accepted = false;
+                    //qDebug() << "> REJECTED > (" << filterString << ") >" << d->getAddress() << d->getName() << d->getManufacturer();
+                }
+            }
+
             if (d->isBluetoothClassic() != 0) m_countClassic++;
             if (d->isBluetoothLowEnergy() != 0) m_countBLE++;
             if (d->isBeacon() != 0) m_countBeacon++;
 
             if (d->getRssi() != 0) m_countFound++;
+
             if (accepted) m_countShown++;
             else m_countHidden++;
         }
@@ -904,16 +918,17 @@ bool DeviceManager::exportResults(const QString &filename,
 
     // Create export string
 
-    QString str;
+    QString exportString;
+    QString sep = QChar(',');
     QString endl = QChar('\n');
 
     // Legend
 
-    str += "Device Address,Device Name";
-    if (withManuf) str += ",Device Manufacturer";
-    if (withComment) str += ",User Comment";
-    if (withSeen) str += ",First Seen,Last Seen";
-    str += endl;
+    exportString += "Device Address" + sep + "Device Name";
+    if (withManuf) exportString += sep + "Device Manufacturer";
+    if (withComment) exportString += sep + "User Comment";
+    if (withSeen) exportString += sep + "First Seen" + sep + "Last Seen";
+    exportString += endl;
 
     // Devices
 
@@ -923,6 +938,8 @@ bool DeviceManager::exportResults(const QString &filename,
     bool filterShowCached = sm->getScanShowCached();
     bool filterShowBluetoothClassic = sm->getScanShowClassic();
     bool filterShowBluetoothLowEnergy = sm->getScanShowLowEnergy();
+
+    const QString filterString = m_devices_filter->getFilterString();
 
     for (auto dd: std::as_const(m_devices_model->m_devices))
     {
@@ -938,18 +955,28 @@ bool DeviceManager::exportResults(const QString &filename,
             else if (!filterShowBlacklisted && d->isBlacklisted()) accepted = false;
             else if (!filterShowCached && d->isCached() && d->getRssi() == 0) accepted = false;
 
+            if (accepted && !filterString.isEmpty())
+            {
+                if (!d->getAddress().contains(filterString, Qt::CaseInsensitive) &&
+                    !d->getName().contains(filterString, Qt::CaseInsensitive) &&
+                    !d->getManufacturer().contains(filterString, Qt::CaseInsensitive))
+                {
+                    accepted = false;
+                }
+            }
+
             if (accepted)
             {
                 // add device to the export string
 
-                str += d->getAddr_display() + "," + d->getName_display();
+                exportString += d->getAddr_display() + sep + d->getName_display();
 
-                if (withManuf) str += "," + d->getManufacturer();
-                if (withComment) str += "," + d->getUserComment();
-                if (withSeen) str += "," + d->getFirstSeen().toString();
-                if (withSeen) str += "," + d->getLastSeen().toString();
+                if (withManuf) exportString += sep + d->getManufacturer();
+                if (withComment) exportString += sep + d->getUserComment();
+                if (withSeen) exportString += sep + d->getFirstSeen().toString();
+                if (withSeen) exportString += sep + d->getLastSeen().toString();
 
-                str += endl;
+                exportString += endl;
             }
         }
     }
@@ -967,7 +994,7 @@ bool DeviceManager::exportResults(const QString &filename,
         {
             QTextStream eout(&efile);
             eout.setEncoding(QStringConverter::Utf8);
-            eout << str;
+            eout << exportString;
 
             status = true;
             efile.close();
@@ -1387,6 +1414,8 @@ void DeviceManager::setFilterString(const QString &str)
 {
     m_devices_filter->setFilterString(str);
     m_devices_filter->invalidate();
+
+    countDevices(); // stats
 }
 
 void DeviceManager::updateBoolFilters()

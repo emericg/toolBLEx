@@ -1347,78 +1347,79 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &filename,
 
     // Create export string ////////////////////////////////////////////////////
 
-    QString str;
+    QString exportString;
+    QString sep = QChar(',');
     QString endl = QChar('\n');
 
     // Name and address
-    str += "Device Name: " + m_deviceName + endl;
+    exportString += "Device Name: " + m_deviceName + endl;
     if (hasAddressMAC())
     {
-        str += "Device MAC: " + getAddressMAC() + endl;
-        if (m_deviceManufacturer.length() > 0) str += "Device MAC manufacturer: " + m_deviceManufacturer + endl;
+        exportString += "Device MAC: " + getAddressMAC() + endl;
+        if (m_deviceManufacturer.length() > 0) exportString += "Device MAC manufacturer: " + m_deviceManufacturer + endl;
     }
     else if (hasAddressUUID())
     {
-        str += "Device MAC: " + getAddressUUID() + endl;
+        exportString += "Device MAC: " + getAddressUUID() + endl;
     }
-    str += endl;
+    exportString += endl;
 
     // Generic info
     if (withGenericInfo)
     {
-        if (!m_userComment.isEmpty()) str += "User comment: " + m_userComment + endl;
-        str += "First seen: " + m_firstSeen.toString() + endl;
-        str += "Last seen: " + m_lastSeen.toString() + endl;
+        if (!m_userComment.isEmpty()) exportString += "User comment: " + m_userComment + endl;
+        exportString += "First seen: " + m_firstSeen.toString() + endl;
+        exportString += "Last seen: " + m_lastSeen.toString() + endl;
 
-        if (!m_advertised_services.isEmpty()) str += endl + "Service(s) advertised:" + endl;
+        if (!m_advertised_services.isEmpty()) exportString += endl + "Service(s) advertised:" + endl;
         for (const auto &srv: std::as_const(m_advertised_services))
         {
-            str += "- " + srv + endl;
+            exportString += "- " + srv + endl;
         }
 
-        str += endl;
+        exportString += endl;
     }
 
     // Advertisements
     if (withAdvertisements)
     {
-        str += "Advertising interval: " + QString::number(m_advertisementInterval) + " ms" + endl;
+        exportString += "Advertising interval: " + QString::number(m_advertisementInterval) + " ms" + endl;
 
         if (m_advertisementData.size() == 0)
         {
-            str += "> No advertisement packets." + endl;
-            str += endl;
+            exportString += "> No advertisement packets." + endl;
+            exportString += endl;
         }
         else
         {
-            str += "Advertisement packet(s):" + endl;
+            exportString += "Advertisement packet(s):" + endl;
 
             for (const auto &adv: std::as_const(m_advertisementData))
             {
                 if (adv->getMode() == DeviceUtils::BLE_ADV_MANUFACTURERDATA)
                 {
-                    str += "> MFD > ";
-                    str += adv->getTimestamp().toString("hh:mm:ss.zzz") + " > ";
-                    str += "0x" + adv->getUUID_str() + " (" + adv->getUUID_vendor() + ")" + " > (";
-                    if (adv->getDataSize() < 100) str += QString::number(adv->getDataSize()).rightJustified(2, ' ');
-                    else  str += QString::number(adv->getDataSize()).rightJustified(3, ' ');
-                    str += " bytes) 0x" + adv->getDataHex();
+                    exportString += "> MFD > ";
+                    exportString += adv->getTimestamp().toString("hh:mm:ss.zzz") + " > ";
+                    exportString += "0x" + adv->getUUID_str() + " (" + adv->getUUID_vendor() + ")" + " > (";
+                    if (adv->getDataSize() < 100) exportString += QString::number(adv->getDataSize()).rightJustified(2, ' ');
+                    else  exportString += QString::number(adv->getDataSize()).rightJustified(3, ' ');
+                    exportString += " bytes) 0x" + adv->getDataHex();
                 }
                 else if (adv->getMode() == DeviceUtils::BLE_ADV_SERVICEDATA)
                 {
-                    str += "> SVD > ";
-                    str += adv->getTimestamp().toString("hh:mm:ss.zzz") + " > ";
-                    str += "0x" + adv->getUUID_str() + " > (";
-                    if (adv->getDataSize() < 100) str += QString::number(adv->getDataSize()).rightJustified(2, ' ');
-                    else  str += QString::number(adv->getDataSize()).rightJustified(3, ' ');
-                    str += " bytes) 0x" + adv->getDataHex();
+                    exportString += "> SVD > ";
+                    exportString += adv->getTimestamp().toString("hh:mm:ss.zzz") + " > ";
+                    exportString += "0x" + adv->getUUID_str() + " > (";
+                    if (adv->getDataSize() < 100) exportString += QString::number(adv->getDataSize()).rightJustified(2, ' ');
+                    else  exportString += QString::number(adv->getDataSize()).rightJustified(3, ' ');
+                    exportString += " bytes) 0x" + adv->getDataHex();
                 }
                 else
                 {
-                    str += "> ??? > ";
+                    exportString += "> ??? > ";
                 }
 
-                str += endl;
+                exportString += endl;
             }
         }
     }
@@ -1431,31 +1432,31 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &filename,
             ServiceInfo *srv = qobject_cast<ServiceInfo *>(s);
             if (srv)
             {
-                str += "Service Name: \"" + srv->getName() + "\"" + endl;
-                str += "Service UUID: " + srv->getUuidFull() + endl;
+                exportString += "Service Name: \"" + srv->getName() + "\"" + endl;
+                exportString += "Service UUID: " + srv->getUuidFull() + endl;
 
                 for (const auto &c: srv->getCharacteristicsInfos())
                 {
                     CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
                     if (cst)
                     {
-                        str += "Characteristic Name: " + cst->getName();
-                        str += " - UUID: " + cst->getUuidFull();
-                        str += " - Properties: " + cst->getProperty();
+                        exportString += "Characteristic Name: " + cst->getName();
+                        exportString += " - UUID: " + cst->getUuidFull();
+                        exportString += " - Properties: " + cst->getProperty();
 
                         if (withValues)
                         {
                             if (cst->getValue() == "<none>")
-                                str += " - Value: <none>";
+                                exportString += " - Value: <none>";
                             else
-                                str += " - Value: 0x" + cst->getValueHex();
+                                exportString += " - Value: 0x" + cst->getValueHex();
                         }
 
-                        str += endl;
+                        exportString += endl;
                     }
                 }
 
-                str += endl;
+                exportString += endl;
             }
         }
     }
@@ -1474,7 +1475,7 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &filename,
         {
             QTextStream eout(&efile);
             eout.setEncoding(QStringConverter::Utf8);
-            eout << str;
+            eout << exportString;
 
             status = true;
             efile.close();
