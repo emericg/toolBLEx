@@ -579,7 +579,6 @@ Loader {
                     onClicked: {
                         popupLoader_export.active = true
                         popupLoader_export.item.open()
-                        //deviceManager.exportResults()
                     }
                 }
             }

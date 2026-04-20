@@ -148,11 +148,12 @@ bool DeviceManager::areDevicesConnected() const
     {
         if (d && d->isConnected())
         {
+            //qDebug() << "DeviceManager::areDevicesConnected() TRUE";
             return true;
         }
     }
 
-    qDebug() << "DeviceManager::areDevicesConnected() FALSE";
+    //qDebug() << "DeviceManager::areDevicesConnected() FALSE";
 
     return false;
 }
@@ -911,7 +912,7 @@ void DeviceManager::clearResults()
     }
 }
 
-bool DeviceManager::exportResults(const QString &filename,
+bool DeviceManager::exportResults(const QString &filename, int exportMode,
                                   bool withManuf, bool withComment, bool withSeen)
 {
     bool status = false;
@@ -930,7 +931,7 @@ bool DeviceManager::exportResults(const QString &filename,
     if (withSeen) exportString += sep + "First Seen" + sep + "Last Seen";
     exportString += endl;
 
-    // Devices
+    // Device list /////////////////////////////////////////////////////////////
 
     SettingsManager *sm = SettingsManager::getInstance();
     bool filterShowBeacon = sm->getScanShowBeacon();
@@ -948,21 +949,36 @@ bool DeviceManager::exportResults(const QString &filename,
         {
             bool accepted = true;
 
-            if (!filterShowBluetoothClassic && !filterShowBluetoothLowEnergy) accepted = false;
-            else if (!filterShowBluetoothClassic && d->isBluetoothClassic() && !d->isBluetoothLowEnergy()) accepted = false;
-            else if (!filterShowBluetoothLowEnergy && d->isBluetoothLowEnergy() && !d->isBluetoothClassic()) accepted = false;
-            else if (!filterShowBeacon && d->isBeacon()) accepted = false;
-            else if (!filterShowBlacklisted && d->isBlacklisted()) accepted = false;
-            else if (!filterShowCached && d->isCached() && d->getRssi() == 0) accepted = false;
-
-            if (accepted && !filterString.isEmpty())
+            if (exportMode == 2)
             {
-                if (!d->getAddress().contains(filterString, Qt::CaseInsensitive) &&
-                    !d->getName().contains(filterString, Qt::CaseInsensitive) &&
-                    !d->getManufacturer().contains(filterString, Qt::CaseInsensitive))
+                // Device currently shown on the list
+
+                if (!filterShowBluetoothClassic && !filterShowBluetoothLowEnergy) accepted = false;
+                else if (!filterShowBluetoothClassic && d->isBluetoothClassic() && !d->isBluetoothLowEnergy()) accepted = false;
+                else if (!filterShowBluetoothLowEnergy && d->isBluetoothLowEnergy() && !d->isBluetoothClassic()) accepted = false;
+                else if (!filterShowBeacon && d->isBeacon()) accepted = false;
+                else if (!filterShowBlacklisted && d->isBlacklisted()) accepted = false;
+                else if (!filterShowCached && d->isCached() && d->getRssi() == 0) accepted = false;
+
+                if (accepted && !filterString.isEmpty())
                 {
-                    accepted = false;
+                    if (!d->getAddress().contains(filterString, Qt::CaseInsensitive) &&
+                        !d->getName().contains(filterString, Qt::CaseInsensitive) &&
+                        !d->getManufacturer().contains(filterString, Qt::CaseInsensitive))
+                    {
+                        accepted = false;
+                    }
                 }
+            }
+            else if (exportMode == 1)
+            {
+                // All devices found today (with an RSSI)
+
+                if (d->getRssi() == 0) accepted = false;
+            }
+            else
+            {
+                // All devices
             }
 
             if (accepted)
@@ -982,6 +998,7 @@ bool DeviceManager::exportResults(const QString &filename,
     }
 
     // Save export string to file //////////////////////////////////////////////
+
     QString exportFilePath = filename;
 
     if (getExportFile(exportFilePath))

@@ -21,7 +21,7 @@ Flickable {
     boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
     ScrollBar.vertical: ScrollBar { visible: false }
 
-    ////////
+    ////////////////
 
     Flow {
         id: inflow
@@ -424,28 +424,39 @@ Flickable {
                 anchors.centerIn: parent
                 spacing: 12
 
-                Flow { // buttons row
+                RowLayout { // buttons row
                     anchors.left: parent.left
                     anchors.right: parent.right
                     spacing: 12
 
-                    property int www: (width > 400) ? ((width - spacing) / 2) : width
-
-                    ButtonScanMenu {
-                        width: parent.www
+                    ButtonScanMenu { // action button
+                        Layout.preferredWidth: 1
+                        Layout.fillWidth: true
                     }
 
                     ButtonFlat {
-                        id: exportButton
-                        width: parent.www
+                        visible: (selectedDevice && selectedDevice.status >= DeviceUtils.DEVICE_CONNECTED)
+
+                        source: "qrc:/IconLibrary/material-symbols/bluetooth_disabled.svg"
+                        onClicked: {
+                            if (selectedDevice.status >= DeviceUtils.DEVICE_CONNECTED) {
+                                selectedDevice.actionDisconnect()
+                            }
+                        }
+                    }
+
+                    ButtonFlat { // export button
+                        Layout.preferredWidth: 1
+                        Layout.fillWidth: true
 
                         color: Theme.colorGrey
                         //colorText: Theme.colorComponentContent
 
-                        enabled: (selectedDevice &&
-                                  (selectedDevice.advCount > 0 || selectedDevice.servicesCount > 0 || selectedDevice.hasServiceCache))
+                        enabled: (selectedDevice && (selectedDevice.advCount > 0 ||
+                                                     selectedDevice.servicesCount > 0 ||
+                                                     selectedDevice.hasServiceCache))
 
-                        text: qsTr("export available data")
+                        text: qsTr("Export available data")
                         source: "qrc:/IconLibrary/material-symbols/save-fill.svg"
 
                         onClicked: {
@@ -455,7 +466,7 @@ Flickable {
                     }
                 }
 /*
-                Flow { // status row
+                Flow { // status row?
                     anchors.left: parent.left
                     anchors.right: parent.right
                     spacing: 12
@@ -990,4 +1001,6 @@ Flickable {
 
         ////////
     }
+
+    ////////////////
 }

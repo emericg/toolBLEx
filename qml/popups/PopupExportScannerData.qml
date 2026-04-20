@@ -25,10 +25,6 @@ Popup {
     onAboutToShow: {
         buttonError.visible = false
 
-        cbManufacturer.checked = true
-        cbComment.checked = true
-        cbSeen.checked = true
-
         var foldersep = "/"
         if (settingsManager.exportDirectory_str.substr(-1) === "/") foldersep = ""
 
@@ -200,8 +196,6 @@ Popup {
                 anchors.right: parent.right
                 spacing: 12
 
-                enabled: false
-
                 Text {
                     text: qsTr("Select devices to export")
                     textFormat: Text.PlainText
@@ -209,22 +203,17 @@ Popup {
                     color: Theme.colorText
                 }
 
-                Row {
-                    CheckBoxThemed {
-                        id: cbGenericInfortys
-                        text: qsTr("BLE")
-                        checked: true
+                SelectorMenuColorful {
+                    id: selectorExportMode
+                    height: 32
+
+                    model: ListModel {
+                        ListElement { idx: 0; txt: qsTr("All"); src: ""; sz: 16; }
+                        ListElement { idx: 1; txt: qsTr("Found"); src: ""; sz: 16; }
+                        ListElement { idx: 2; txt: qsTr("Shown"); src: ""; sz: 16; }
                     }
-                    CheckBoxThemed {
-                        id: cbAdvPacketstry
-                        text: qsTr("Classic")
-                        checked: true
-                    }
-                    CheckBoxThemed {
-                        id: cbAdvPacketssrt
-                        text: qsTr("Seen")
-                        checked: true
-                    }
+
+                    currentSelection: 2 // "shown"
                 }
             }
 
@@ -323,6 +312,7 @@ Popup {
                     text: qsTr("Export data")
                     onClicked: {
                         var status = deviceManager.exportResults(tfExportPath.text,
+                                                                 selectorExportMode.currentSelection,
                                                                  cbManufacturer.checked,
                                                                  cbComment.checked,
                                                                  cbSeen.checked)

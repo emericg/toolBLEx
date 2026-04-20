@@ -21,29 +21,26 @@ Item {
         // prevent clicks below this area
         MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
 
-        Row {
+        SelectorMenu {
+            id: hostMenu
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             anchors.verticalCenterOffset: -1
-            spacing: 16
 
-            SelectorMenu {
-                id: hostMenu
-                height: 32
+            height: 32
 
-                currentSelection: 1
-                model: ListModel {
-                    id: lmSelectorMenuTxt1
-                    ListElement { idx: 1; txt: qsTr("host info"); src: ""; sz: 0; }
-                    ListElement { idx: 2; txt: qsTr("proximity radar"); src: ""; sz: 0; }
-                    ListElement { idx: 3; txt: qsTr("RSSI graph"); src: ""; sz: 0; }
-                }
+            currentSelection: 1
+            model: ListModel {
+                id: lmSelectorMenuTxt1
+                ListElement { idx: 1; txt: qsTr("host info"); src: ""; sz: 0; }
+                ListElement { idx: 2; txt: qsTr("proximity radar"); src: ""; sz: 0; }
+                ListElement { idx: 3; txt: qsTr("RSSI graph"); src: ""; sz: 0; }
+            }
 
-                onMenuSelected: (index) => {
-                    //console.log("SelectorMenu clicked #" + index)
-                    currentSelection = index
-                    if (currentSelection === 3) rssiGraph.updateGraph()
-                }
+            onMenuSelected: (index) => {
+                //console.log("SelectorMenu clicked #" + index)
+                currentSelection = index
+                if (currentSelection === 3) rssiGraph.updateGraph()
             }
         }
 

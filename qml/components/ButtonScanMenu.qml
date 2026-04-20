@@ -29,12 +29,12 @@ Rectangle {
 
         text: {
             if (!selectedDevice) return ""
-            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE) return qsTr("scan device")
-            if (selectedDevice.status === DeviceUtils.DEVICE_AVAILABLE) return qsTr("scan device")
-            if (selectedDevice.status === DeviceUtils.DEVICE_DISCONNECTING) return qsTr("disconnecting...")
-            if (selectedDevice.status === DeviceUtils.DEVICE_CONNECTING) return qsTr("connecting...")
-            if (selectedDevice.status === DeviceUtils.DEVICE_WORKING) return qsTr("scanning...")
-            if (selectedDevice.status >= DeviceUtils.DEVICE_CONNECTED) return qsTr("connected")
+            if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE) return qsTr("Scan device")
+            if (selectedDevice.status === DeviceUtils.DEVICE_AVAILABLE) return qsTr("Scan device")
+            if (selectedDevice.status === DeviceUtils.DEVICE_DISCONNECTING) return qsTr("Disconnecting...")
+            if (selectedDevice.status === DeviceUtils.DEVICE_CONNECTING) return qsTr("Connecting...")
+            if (selectedDevice.status === DeviceUtils.DEVICE_CONNECTED) return qsTr("Connected")
+            if (selectedDevice.status >= DeviceUtils.DEVICE_WORKING) return qsTr("Scanning...")
         }
 
         source: {
@@ -144,7 +144,7 @@ Rectangle {
                 layoutAlignment: Qt.AlignLeft
 
                 color: control.color
-                text: qsTr("scan services & data")
+                text: qsTr("Scan services & data")
                 source: "qrc:/IconLibrary/material-icons/duotone/bluetooth_searching.svg"
                 sourceSize: 20
 
@@ -166,7 +166,7 @@ Rectangle {
                 layoutAlignment: Qt.AlignLeft
 
                 color: control.color
-                text: qsTr("scan services only")
+                text: qsTr("Scan services only")
                 source: "qrc:/IconLibrary/material-icons/duotone/bluetooth_searching.svg"
                 sourceSize: 20
 
@@ -189,7 +189,7 @@ Rectangle {
                 layoutAlignment: Qt.AlignLeft
 
                 color: control.color
-                text: qsTr("load from cache")
+                text: qsTr("Load from cache")
                 source: "qrc:/IconLibrary/material-symbols/save.svg"
                 sourceSize: 20
 
@@ -213,12 +213,12 @@ Rectangle {
                 color: control.color
                 text: {
                     if (!selectedDevice) return ""
-                    if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE) return qsTr("scan device")
-                    if (selectedDevice.status === DeviceUtils.DEVICE_AVAILABLE) return qsTr("scan device")
-                    if (selectedDevice.status === DeviceUtils.DEVICE_WORKING) return qsTr("scanning...")
-                    if (selectedDevice.status === DeviceUtils.DEVICE_DISCONNECTING) return qsTr("disconnecting...")
-                    if (selectedDevice.status === DeviceUtils.DEVICE_CONNECTING) return qsTr("connecting...")
-                    if (selectedDevice.status >= DeviceUtils.DEVICE_CONNECTED) return qsTr("connected")
+                    if (selectedDevice.status === DeviceUtils.DEVICE_OFFLINE) return qsTr("Scan device")
+                    if (selectedDevice.status === DeviceUtils.DEVICE_AVAILABLE) return qsTr("Scan device")
+                    if (selectedDevice.status === DeviceUtils.DEVICE_DISCONNECTING) return qsTr("Disconnecting...")
+                    if (selectedDevice.status === DeviceUtils.DEVICE_CONNECTING) return qsTr("Connecting...")
+                    if (selectedDevice.status === DeviceUtils.DEVICE_CONNECTED) return qsTr("Connected")
+                    if (selectedDevice.status >= DeviceUtils.DEVICE_WORKING) return qsTr("Scanning...")
                 }
                 source: {
                     if (!selectedDevice) return ""
@@ -249,7 +249,7 @@ Rectangle {
                 layoutAlignment: Qt.AlignLeft
 
                 color: control.color
-                text: (selectedDevice && selectedDevice.connected) ? qsTr("disconnect") : qsTr("abort")
+                text: (selectedDevice && selectedDevice.connected) ? qsTr("Disconnect") : qsTr("Abort")
                 source: "qrc:/IconLibrary/material-icons/outlined/bluetooth_disabled.svg"
 
                 onClicked: {

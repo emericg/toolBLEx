@@ -178,6 +178,8 @@ class DeviceManager: public QObject
     QStringList m_colorsLeft;
     QString getAvailableColor();
 
+    bool getExportFile(QString &filename) const;
+
     // stats
     void countDevices();
     int m_countFound = 0;               //!< devices that have been detected
@@ -262,8 +264,8 @@ public:
     Q_INVOKABLE void checkPaired();
 
     Q_INVOKABLE void clearResults();
-    Q_INVOKABLE bool exportResults(const QString &filename, bool withManuf, bool withComment, bool withSeen);
-    bool getExportFile(QString &filename) const;
+    Q_INVOKABLE bool exportResults(const QString &filename, int exportMode,
+                                   bool withManuf, bool withComment, bool withSeen);
 
     // Device saved
     int getDeviceSeenCached() const { return m_devicesSeenCachedCount; }

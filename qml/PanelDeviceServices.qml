@@ -71,14 +71,12 @@ Item {
                         width: parent.www
 
                         color: Theme.colorGrey
-                        //colorText: Theme.colorComponentContent
 
-                        text: qsTr("load from cache")
+                        text: qsTr("Load from cache")
                         source: "qrc:/IconLibrary/material-symbols/save.svg"
 
                         visible: (selectedDevice && selectedDevice.hasServiceCache)
                         //enabled: selectedDevice.status === DeviceUtils.DEVICE_OFFLINE
-
                         onClicked: selectedDevice.restoreServiceCache()
                     }
                 }
