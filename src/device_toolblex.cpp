@@ -1348,7 +1348,6 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &filename,
     // Create export string ////////////////////////////////////////////////////
 
     QString exportString;
-    QString sep = QChar(',');
     QString endl = QChar('\n');
 
     // Name and address

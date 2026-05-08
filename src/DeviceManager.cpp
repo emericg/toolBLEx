@@ -921,6 +921,7 @@ bool DeviceManager::exportResults(const QString &filename, int exportMode,
 
     QString exportString;
     QString sep = QChar(',');
+    QString sep_replace = QChar(' ');
     QString endl = QChar('\n');
 
     // Legend
@@ -985,10 +986,10 @@ bool DeviceManager::exportResults(const QString &filename, int exportMode,
             {
                 // add device to the export string
 
-                exportString += d->getAddr_display() + sep + d->getName_display();
+                exportString += d->getAddr_display() + sep + d->getName_display().replace(sep, sep_replace, Qt::CaseSensitive);
 
-                if (withManuf) exportString += sep + d->getManufacturer();
-                if (withComment) exportString += sep + d->getUserComment();
+                if (withManuf) exportString += sep + d->getManufacturer().replace(sep, sep_replace, Qt::CaseSensitive);
+                if (withComment) exportString += sep + d->getUserComment().replace(sep, sep_replace, Qt::CaseSensitive);
                 if (withSeen) exportString += sep + d->getFirstSeen().toString();
                 if (withSeen) exportString += sep + d->getLastSeen().toString();
 
