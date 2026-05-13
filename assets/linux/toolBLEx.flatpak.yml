@@ -34,38 +34,141 @@ cleanup:
   - '*.la'
 
 modules:
-  - name: Qt6
+  - name: qt-base
     buildsystem: cmake-ninja
     builddir: true
     config-opts:
-      - -DBUILD_SHARED_LIBS=ON
-      - -DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF
-      - -DQT_BUILD_TESTS_BY_DEFAULT=OFF
-      - -DQT_BUILD_SUBMODULES=qtbase;qtdeclarative;qttools;qtshadertools;qtwayland;qtsvg;qtconnectivity;qtcharts
-      - -DQT_QPA_PLATFORMS=wayland;xcb
-      - -DINPUT_openssl=linked
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+      - -DQT_BUILD_EXAMPLES=OFF
+      - -DQT_BUILD_TESTS=OFF
     sources:
       - type: archive
-        url: https://download.qt.io/archive/qt/6.11/6.11.0/single/qt-everywhere-src-6.11.0.tar.xz
-        sha256: acf3b3db04c9e5d0820e8324b097320388954c297cee83d2bd698789234f68a4
+        url: https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtbase-everywhere-src-6.11.1.tar.xz
+        sha256: d9594a31228aa23ad6b531719a29b45f0f3989fe6c136d45767ea179f233c1ac
         x-checker-data:
           type: anitya
           project-id: 7927
-          url-template: https://download.qt.io/archive/qt/$major.$minor/$version/single/qt-everywhere-src-$version.tar.xz
+          stable-only: true
+          url-template: https://download.qt.io/archive/qt/$major.$minor/$version/submodules/qtbase-everywhere-src-$version.tar.xz
     cleanup:
       - /bin
-      - /doc
-      - /include
-      - /lib/objects-Release
-      - /libexec
-      - /metatypes
-      - /mkspecs
-      - /modules
-      - /plugins/assetimporters
-      - /plugins/designer
-      - /plugins/qmllint
-      - /plugins/qmltooling
-      - /sbom
+
+  - name: qt-tools
+    buildsystem: cmake-ninja
+    builddir: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+      - -DQT_BUILD_EXAMPLES=OFF
+      - -DQT_BUILD_TESTS=OFF
+    sources:
+      - type: archive
+        url: https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qttools-everywhere-src-6.11.1.tar.xz
+        sha256: 8e61835a679c93fa9c6065b142353c2071ba68e297898937c32a03777fcaf50d
+        x-checker-data:
+          type: anitya
+          project-id: 7927
+          stable-only: true
+          url-template: https://download.qt.io/archive/qt/$major.$minor/$version/submodules/qttools-everywhere-src-$version.tar.xz
+
+  - name: qt-shadertools
+    buildsystem: cmake-ninja
+    builddir: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+      - -DQT_BUILD_EXAMPLES=OFF
+      - -DQT_BUILD_TESTS=OFF
+    sources:
+      - type: archive
+        url: https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtshadertools-everywhere-src-6.11.1.tar.xz
+        sha256: 2075052f9b23bcf9de045bbd180037084942f82cce870aab14a1454902c982fc
+        x-checker-data:
+          type: anitya
+          project-id: 7927
+          stable-only: true
+          url-template: https://download.qt.io/archive/qt/$major.$minor/$version/submodules/qtshadertools-everywhere-src-$version.tar.xz
+
+  - name: qtdeclarative
+    buildsystem: cmake-ninja
+    builddir: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+      - -DQT_BUILD_EXAMPLES=OFF
+      - -DQT_BUILD_TESTS=OFF
+    sources:
+      - type: archive
+        url: https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtdeclarative-everywhere-src-6.11.1.tar.xz
+        sha256: 52e670f670b0304f534b24f98c47ceb8a41bb710464414ebc9527ec71cc86aa4
+        x-checker-data:
+          type: anitya
+          project-id: 7927
+          stable-only: true
+          url-template: https://download.qt.io/archive/qt/$major.$minor/$version/submodules/qtdeclarative-everywhere-src-$version.tar.xz
+
+  - name: qtsvg
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+      - -DQT_BUILD_EXAMPLES=OFF
+      - -DQT_BUILD_TESTS=OFF
+    sources:
+      - type: archive
+        url: https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtsvg-everywhere-src-6.11.1.tar.xz
+        sha256: 7f3cf02f4824bf03c2c5859ea6db173bf1482a1daf24e6cdf7bc78cfa26a8a94
+        x-checker-data:
+          type: anitya
+          project-id: 7927
+          stable-only: true
+          url-template: https://download.qt.io/archive/qt/$major.$minor/$version/submodules/qtsvg-everywhere-src-$version.tar.xz
+
+  - name: qtconnectivity
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+      - -DQT_BUILD_EXAMPLES=OFF
+      - -DQT_BUILD_TESTS=OFF
+    sources:
+      - type: archive
+        url: https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtconnectivity-everywhere-src-6.11.1.tar.xz
+        sha256: 2105289ea414b46ed5fa53ba8782230045b9e47cc8156b5940c9e31e3980e591
+        x-checker-data:
+          type: anitya
+          project-id: 7927
+          stable-only: true
+          url-template: https://download.qt.io/archive/qt/$major.$minor/$version/submodules/qtconnectivity-everywhere-src-$version.tar.xz
+
+  - name: qtcharts
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+      - -DQT_BUILD_EXAMPLES=OFF
+      - -DQT_BUILD_TESTS=OFF
+    sources:
+      - type: archive
+        url: https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtcharts-everywhere-src-6.11.1.tar.xz
+        sha256: 3fe3ed318c2a86d1417c5c29cf7494275e8fd4b537cd37453f5599c57365515c
+        x-checker-data:
+          type: anitya
+          project-id: 7927
+          stable-only: true
+          url-template: https://download.qt.io/archive/qt/$major.$minor/$version/submodules/qtcharts-everywhere-src-$version.tar.xz
+
+  - name: qtwayland
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+      - -DQT_BUILD_EXAMPLES=OFF
+      - -DQT_BUILD_TESTS=OFF
+    sources:
+      - type: archive
+        url: https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtwayland-everywhere-src-6.11.1.tar.xz
+        sha256: 95788aa502f75441d4edf65932b235f76523084e13dbbb7b9ee2d207b32bd9b3
+        x-checker-data:
+          type: anitya
+          project-id: 7927
+          stable-only: true
+          url-template: https://download.qt.io/archive/qt/$major.$minor/$version/submodules/qtwayland-everywhere-src-$version.tar.xz
+    cleanup:
+      - /bin
 
   - name: toolBLEx
     buildsystem: cmake-ninja
