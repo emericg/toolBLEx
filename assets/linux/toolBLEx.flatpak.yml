@@ -174,5 +174,5 @@ modules:
     buildsystem: cmake-ninja
     sources:
       - type: archive
-        url: https://github.com/emericg/toolBLEx/archive/refs/tags/v0.16.tar.gz
+        url: https://github.com/emericg/toolBLEx/archive/refs/tags/v0.17.tar.gz
         sha256: 

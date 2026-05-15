@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 export APP_NAME="toolBLEx"
-export APP_VERSION=0.16
+export APP_VERSION=0.17
 export GIT_VERSION=$(git rev-parse --short HEAD)
 
 echo "> $APP_NAME packager (macOS) [v$APP_VERSION]"
