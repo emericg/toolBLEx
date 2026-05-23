@@ -1,11 +1,15 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(AppUtils LANGUAGES CXX)
+#project(AppUtils LANGUAGES CXX)
+
+# To avoid CMake Warnings, you should add Qt6 'CorePrivate' or 'CoreGui', as needed,
+# to your root level find_package()
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(QT_NO_PRIVATE_MODULE_WARNING ON)
 set(CMAKE_AUTOMOC ON)
+
+set(QT_NO_PRIVATE_MODULE_WARNING ON)
 
 ################################################################################
 
@@ -23,7 +27,7 @@ option(UTILS_NOTIFICATIONS_ENABLED "iOS notification handling" OFF)
 
 # Generic dependencies
 find_package(Qt6 6.6 REQUIRED COMPONENTS Core Gui Qml Quick)
-set(CORE_LIBRARIES Qt::Core Qt::Gui Qt::Qml Qt::Quick)
+set(CORE_LIBRARIES Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick)
 
 # Generic sources
 set(CORE_SOURCES
@@ -52,12 +56,13 @@ set(CORE_SOURCES
 # Qt optional tools
 if(UTILS_QT_RHI)
     add_definitions(-DUTILS_QT_RHI)
-    if(Qt6_VERSION VERSION_GREATER_EQUAL 6.10.0)
+
+    if(Qt6Gui_VERSION VERSION_GREATER_EQUAL 6.10.0)
         find_package(Qt6 REQUIRED COMPONENTS GuiPrivate)
-        set(CORE_LIBRARIES ${CORE_LIBRARIES} Qt::GuiPrivate)                    # to get RHI infos
+        set(CORE_LIBRARIES ${CORE_LIBRARIES} Qt6::GuiPrivate)                   # to get RHI infos
     else()
         find_package(Qt6 REQUIRED COMPONENTS Gui)
-        set(CORE_LIBRARIES ${CORE_LIBRARIES} Qt::GuiPrivate)
+        set(CORE_LIBRARIES ${CORE_LIBRARIES} Qt6::GuiPrivate)
     endif()
 endif()
 
@@ -68,7 +73,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         utils_os_linux.h)
 
     find_package(Qt6 REQUIRED COMPONENTS DBus)
-    set(PLATFORM_LIBRARIES ${PLATFORM_LIBRARIES} Qt::DBus)
+    set(PLATFORM_LIBRARIES ${PLATFORM_LIBRARIES} Qt6::DBus)
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Android")
@@ -76,8 +81,13 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Android")
         utils_os_android.cpp
         utils_os_android.h)
 
-    find_package(Qt6 REQUIRED COMPONENTS CorePrivate)
-    set(PLATFORM_LIBRARIES ${PLATFORM_LIBRARIES} Qt::CorePrivate)
+    if(Qt6Core_VERSION VERSION_GREATER_EQUAL 6.10.0)
+        find_package(Qt6 REQUIRED COMPONENTS CorePrivate)
+        set(CORE_LIBRARIES ${CORE_LIBRARIES} Qt6::CorePrivate)
+    else()
+        find_package(Qt6 REQUIRED COMPONENTS Core)
+        set(CORE_LIBRARIES ${CORE_LIBRARIES} Qt6::CorePrivate)
+    endif()
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
@@ -126,9 +136,13 @@ endif()
 
 ################################################################################
 
-add_library(AppUtils OBJECT ${CORE_SOURCES} ${PLATFORM_SOURCES})
+add_library(AppUtils STATIC ${CORE_SOURCES} ${PLATFORM_SOURCES})
 add_library(AppUtils::AppUtils ALIAS AppUtils)
 
 target_compile_definitions(AppUtils PUBLIC APP_NAME=\"${APP_NAME}\" APP_VERSION=\"${APP_VERSION}\")
-target_link_libraries(AppUtils PRIVATE ${CORE_LIBRARIES} ${PLATFORM_LIBRARIES})
+
+target_link_libraries(AppUtils PUBLIC ${CORE_LIBRARIES} ${PLATFORM_LIBRARIES})
+
 target_include_directories(AppUtils PUBLIC ${CMAKE_CURRENT_LIST_DIR})
+
+################################################################################

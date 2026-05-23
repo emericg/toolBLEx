@@ -274,7 +274,7 @@ bool UtilsApp::isQColorLight(const QColor &color)
 
 bool UtilsApp::isOsThemeDark()
 {
-    const QStyleHints *styleHints = static_cast<QGuiApplication*>qApp->styleHints();
+    const QStyleHints *styleHints = static_cast<QGuiApplication *>qApp->styleHints();
     return (styleHints && styleHints->colorScheme() == Qt::ColorScheme::Dark);
 }
 
@@ -358,6 +358,13 @@ void UtilsApp::openAndroidLocationSettings()
 {
 #if defined(Q_OS_ANDROID)
     UtilsAndroid::openLocationSettings();
+#endif
+}
+
+void UtilsApp::openAndroidAlarms()
+{
+#if defined(Q_OS_ANDROID)
+    UtilsAndroid::openAlarmClock();
 #endif
 }
 

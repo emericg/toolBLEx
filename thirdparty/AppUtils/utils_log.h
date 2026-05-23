@@ -34,7 +34,7 @@ class UtilsLog : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString debugLog READ getDebugLog NOTIFY debuglogUpdated)
+    Q_PROPERTY(QString debugLog READ getDebugLog NOTIFY debugLogUpdated)
 
     bool m_logging = false;
     QString m_logPath;
@@ -50,7 +50,7 @@ class UtilsLog : public QObject
     ~UtilsLog();
 
 Q_SIGNALS:
-    void debuglogUpdated();
+    void debugLogUpdated();
 
 public:
     static UtilsLog *getInstance(const bool enabled = true);

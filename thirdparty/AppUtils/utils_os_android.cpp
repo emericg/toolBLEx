@@ -869,6 +869,41 @@ void UtilsAndroid::openApplicationInfo(const QString &packageName)
 
 /* ************************************************************************** */
 
+void UtilsAndroid::openAlarmClock()
+{
+    //qDebug() << "> openAlarmClock()";
+    QJniObject activity = QNativeInterface::QAndroidApplication::context();
+    if (!activity.isValid())
+        return;
+
+    // Build the Intent
+    QJniObject intentClass = QJniObject::fromString("android/provider/AlarmClock");
+    QJniObject action = QJniObject::getStaticObjectField<jstring>(
+        "android/provider/AlarmClock",
+        "ACTION_SHOW_ALARMS"
+        );
+
+    QJniObject intent("android/content/Intent",
+                      "(Ljava/lang/String;)V",
+                      action.object<jstring>());
+
+    // Add FLAG_ACTIVITY_NEW_TASK
+    jint flag = QJniObject::getStaticField<jint>(
+        "android/content/Intent",
+        "FLAG_ACTIVITY_NEW_TASK"
+        );
+    intent.callObjectMethod("addFlags",
+                            "(I)Landroid/content/Intent;",
+                            flag);
+
+    // Start the activity
+    activity.callMethod<void>("startActivity",
+                              "(Landroid/content/Intent;)V",
+                              intent.object());
+}
+
+/* ************************************************************************** */
+
 void UtilsAndroid::openStorageSettings(const QString &packageName)
 {
     //qDebug() << "> openStorageSettings(" << packageName << ")";

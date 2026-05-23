@@ -265,16 +265,21 @@ public:
     /* ********************************************************************** */
 
     /*!
-     * \brief Open the Android play store intent for the given package name.
-     * \param packageName: the application package, for instance 'com.application.identifier'.
+     * \brief Open the Android alarm list.
      */
-    static void openStorePage(const QString &packageName);
+    static void openAlarmClock();
 
     /*!
      * \brief Open the Android application info intent for the given package name.
      * \param packageName: the application package, for instance 'com.application.identifier'.
      */
     static void openApplicationInfo(const QString &packageName);
+
+    /*!
+     * \brief Open the Android play store intent for the given package name.
+     * \param packageName: the application package, for instance 'com.application.identifier'.
+     */
+    static void openStorePage(const QString &packageName);
 
     /*!
      * \brief Open the Android "manage all files" intent for the given package name.
