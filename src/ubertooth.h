@@ -93,6 +93,7 @@ public:
 
     Q_INVOKABLE void startWork();
     Q_INVOKABLE void stopWork();
+    Q_INVOKABLE void restartWork();
 
     Q_INVOKABLE void getFrequencyGraphAxis(QValueAxis *axis);
     Q_INVOKABLE void getFrequencyGraphMax(QLineSeries *serie);

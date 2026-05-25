@@ -21,6 +21,27 @@ Loader {
             screenSettings.item.backAction()
     }
 
+    Timer {
+        id: restartScannerTimer
+        interval: 1000 // 1s is probably good enough...
+        repeat: false // started when a settings is modified
+        onTriggered: {
+            if (deviceManager.scanning) {
+                deviceManager.scanDevices_restart()
+            }
+        }
+    }
+    Timer {
+        id: restartUbertoothTimer
+        interval: 1000 // 1s is probably good enough...
+        repeat: false // started when a settings is modified
+        onTriggered: {
+            if (deviceManager.running) {
+                ubertooth.restartWork()
+            }
+        }
+    }
+
     ////////////////
 
     active: false
@@ -802,7 +823,10 @@ Loader {
                                 to: 10
 
                                 value: settingsManager.scanTimeout
-                                onValueModified: settingsManager.scanTimeout = value
+                                onValueModified: {
+                                    settingsManager.scanTimeout = value
+                                    restartScannerTimer.restart()
+                                }
                             }
                         }
 
@@ -936,7 +960,7 @@ Loader {
                             height: 48
                             color: Theme.colorForeground
 
-                            visible: (deviceManager.deviceSeenCached > 0)
+                            visible: (deviceManager.deviceStructureCached > 0)
 
                             Row {
                                 anchors.left: parent.left
@@ -1147,9 +1171,19 @@ Loader {
                                 from: 2300
                                 to: 2600
                                 first.value: settingsManager.ubertooth_freqMin
-                                first.onMoved: settingsManager.ubertooth_freqMin = first.value
+                                first.onMoved: {
+                                    settingsManager.ubertooth_freqMin = first.value
+                                    if (ubertooth.running) {
+                                        restartUbertoothTimer.restart()
+                                    }
+                                }
                                 second.value: settingsManager.ubertooth_freqMax
-                                second.onMoved: settingsManager.ubertooth_freqMax = second.value
+                                second.onMoved: {
+                                    settingsManager.ubertooth_freqMax = second.value
+                                    if (ubertooth.running) {
+                                        restartUbertoothTimer.restart()
+                                    }
+                                }
                             }
                         }
                         Rectangle {
@@ -1173,7 +1207,12 @@ Loader {
                                 legend: "MHz"
 
                                 value: settingsManager.ubertooth_freqMin
-                                onValueModified: settingsManager.ubertooth_freqMin = value
+                                onValueModified: {
+                                    settingsManager.ubertooth_freqMin = value
+                                    if (ubertooth.running) {
+                                        restartUbertoothTimer.restart()
+                                    }
+                                }
                             }
 
                             ButtonDesktop {
@@ -1184,6 +1223,9 @@ Loader {
                                 onClicked: {
                                     settingsManager.ubertooth_freqMin = 2402
                                     settingsManager.ubertooth_freqMax = 2480
+                                    if (ubertooth.running) {
+                                        ubertooth.restartWork()
+                                    }
                                 }
                             }
 
@@ -1200,7 +1242,12 @@ Loader {
                                 legend: "MHz"
 
                                 value: settingsManager.ubertooth_freqMax
-                                onValueModified: settingsManager.ubertooth_freqMax = value
+                                onValueModified: {
+                                    settingsManager.ubertooth_freqMax = value
+                                    if (ubertooth.running) {
+                                        restartUbertoothTimer.restart()
+                                    }
+                                }
                             }
                         }
                     }

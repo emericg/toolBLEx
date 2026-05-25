@@ -208,6 +208,12 @@ void Ubertooth::stopWork()
     }
 }
 
+void Ubertooth::restartWork()
+{
+    stopWork();
+    startWork();
+}
+
 /* ************************************************************************** */
 
 void Ubertooth::processStarted()
