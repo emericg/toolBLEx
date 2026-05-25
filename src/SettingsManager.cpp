@@ -117,6 +117,8 @@ bool SettingsManager::readSettings()
         if (settings.contains("settings/scanCacheAuto"))
             m_scanCacheAuto = settings.value("settings/scanCacheAuto").toBool();
 
+        if (settings.contains("settings/scanMethods"))
+            m_scanMethods = settings.value("settings/scanMethods").toInt();
         if (settings.contains("settings/scanTimeout"))
             m_scanTimeout = settings.value("settings/scanTimeout").toInt();
         if (settings.contains("settings/scanRssiInterval"))
@@ -185,6 +187,7 @@ bool SettingsManager::writeSettings()
         settings.setValue("settings/scanAuto", m_scanAuto);
         settings.setValue("settings/scanPause", m_scanPause);
         settings.setValue("settings/scanCacheAuto", m_scanCacheAuto);
+        settings.setValue("settings/scanMethods", m_scanMethods);
         settings.setValue("settings/scanTimeout", m_scanTimeout);
         settings.setValue("settings/scanRssiInterval", m_scanRssiInterval);
         settings.setValue("settings/scanShowBeacon", m_scanShowBeacon);
@@ -239,6 +242,25 @@ void SettingsManager::resetSettings()
     Q_EMIT appUnitsChanged();
     m_appLanguage = "auto";
     Q_EMIT appLanguageChanged();
+
+    m_scanMethods = QBluetoothDeviceDiscoveryAgent::LowEnergyMethod;
+    Q_EMIT scanMethodsChanged();
+    m_scanTimeout = 0;
+    Q_EMIT scanTimeoutChanged();
+    m_scanRssiInterval = 1000;
+    Q_EMIT scanRssiIntervalChanged();
+    m_scanAuto = true;
+    Q_EMIT scanAutoChanged();
+    m_scanPause = false;
+    Q_EMIT scanPauseChanged();
+    m_scanCacheAuto = true;
+    Q_EMIT scanCacheAutoChanged();
+    m_scanShowBeacon = true;
+    m_scanShowBlacklisted = false;
+    m_scanShowCached = true;
+    m_scanShowClassic = true;
+    m_scanShowLowEnergy = true;
+    Q_EMIT scanShowChanged();
 }
 
 /* ************************************************************************** */
@@ -343,6 +365,23 @@ void SettingsManager::setScanTimeout(const int value)
         m_scanTimeout = value;
         writeSettings();
         Q_EMIT scanTimeoutChanged();
+    }
+}
+
+void SettingsManager::setScanMethods(const int value)
+{
+    if (value >= 1 && value <= 3)
+    {
+        if (m_scanMethods != value)
+        {
+            m_scanMethods = value;
+            writeSettings();
+            Q_EMIT scanMethodsChanged();
+        }
+    }
+    else
+    {
+        qWarning() << "SettingsManager::setScanMethods(" << value << ") INVALID VALUE";
     }
 }
 

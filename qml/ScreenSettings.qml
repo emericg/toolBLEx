@@ -668,6 +668,49 @@ Loader {
                             Text {
                                 anchors.left: parent.left
                                 anchors.leftMargin: Theme.componentMarginL
+                                anchors.right: selector_bluetoothmethods.left
+                                anchors.rightMargin: Theme.componentMarginL
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                text: qsTr("Bluetooth scanning method")
+                                textFormat: Text.PlainText
+                                font.pixelSize: Theme.fontSizeContent
+                                font.bold: false
+                                color: Theme.colorText
+                                wrapMode: Text.WordWrap
+                                verticalAlignment: Text.AlignVCenter
+                            }
+
+                            SelectorMenuColorful {
+                                id: selector_bluetoothmethods
+                                height: 32
+                                anchors.right: parent.right
+                                anchors.rightMargin: Theme.componentMargin
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                model: ListModel {
+                                    ListElement { idx: 1; txt: qsTr("Classic"); src: ""; sz: 16; }
+                                    ListElement { idx: 2; txt: qsTr("BLE"); src: ""; sz: 16; }
+                                    ListElement { idx: 3; txt: qsTr("Both"); src: ""; sz: 16; }
+                                }
+
+                                currentSelection: settingsManager.scanMethods
+                                onMenuSelected: (index) => {
+                                    settingsManager.scanMethods = index
+                                    deviceManager.scanDevices_restart()
+                                }
+                            }
+                        }
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 48
+                            color: Theme.colorForeground
+
+                            Text {
+                                anchors.left: parent.left
+                                anchors.leftMargin: Theme.componentMarginL
                                 anchors.right: parent.right
                                 anchors.rightMargin: 64
                                 anchors.verticalCenter: parent.verticalCenter
@@ -687,7 +730,12 @@ Loader {
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 checked: settingsManager.scanAuto
-                                onClicked: settingsManager.scanAuto = checked
+                                onClicked: {
+                                    settingsManager.scanAuto = checked
+                                    if (!deviceManager.scanning) {
+                                        deviceManager.scanDevices_start()
+                                    }
+                                }
                             }
                         }
 

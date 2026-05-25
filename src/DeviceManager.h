@@ -257,6 +257,7 @@ public:
 
     Q_INVOKABLE void scanDevices_start();
     Q_INVOKABLE void scanDevices_stop();
+    Q_INVOKABLE void scanDevices_restart();
 
     Q_INVOKABLE void scanDevices_pause();
     Q_INVOKABLE void scanDevices_resume();

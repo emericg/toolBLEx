@@ -495,6 +495,16 @@ void DeviceManager::startBleAgent()
         {
             //qDebug() << "Scanning method supported:" << m_bluetoothDiscoveryAgent->supportedDiscoveryMethods();
 
+            connect(m_bluetoothDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::finished,
+                    this, &DeviceManager::deviceDiscoveryFinished, Qt::UniqueConnection);
+            connect(m_bluetoothDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::canceled,
+                    this, &DeviceManager::deviceDiscoveryStopped, Qt::UniqueConnection);
+
+            connect(m_bluetoothDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
+                    this, &DeviceManager::bleDevice_discovered, Qt::UniqueConnection);
+            connect(m_bluetoothDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceUpdated,
+                    this, &DeviceManager::bleDevice_updated, Qt::UniqueConnection);
+
             connect(m_bluetoothDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::errorOccurred,
                     this, &DeviceManager::deviceDiscoveryError);
         }
@@ -658,19 +668,11 @@ void DeviceManager::scanDevices_start()
 
         if (m_bluetoothDiscoveryAgent && !m_bluetoothDiscoveryAgent->isActive())
         {
-            connect(m_bluetoothDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::finished,
-                    this, &DeviceManager::deviceDiscoveryFinished, Qt::UniqueConnection);
-            connect(m_bluetoothDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::canceled,
-                    this, &DeviceManager::deviceDiscoveryStopped, Qt::UniqueConnection);
+            int timeout = SettingsManager::getInstance()->getScanTimeout_ms();
+            int methods = SettingsManager::getInstance()->getScanMethods();
 
-            connect(m_bluetoothDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
-                    this, &DeviceManager::bleDevice_discovered, Qt::UniqueConnection);
-            connect(m_bluetoothDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceUpdated,
-                    this, &DeviceManager::bleDevice_updated, Qt::UniqueConnection);
-
-            m_bluetoothDiscoveryAgent->setLowEnergyDiscoveryTimeout(0);
-            m_bluetoothDiscoveryAgent->start(QBluetoothDeviceDiscoveryAgent::ClassicMethod |
-                                             QBluetoothDeviceDiscoveryAgent::LowEnergyMethod);
+            m_bluetoothDiscoveryAgent->setLowEnergyDiscoveryTimeout(timeout);
+            m_bluetoothDiscoveryAgent->start(static_cast<QBluetoothDeviceDiscoveryAgent::DiscoveryMethod>(methods));
 
             if (m_bluetoothDiscoveryAgent->isActive())
             {
@@ -731,9 +733,11 @@ void DeviceManager::scanDevices_resume()
 
         if (m_bluetoothDiscoveryAgent && !m_bluetoothDiscoveryAgent->isActive())
         {
-            m_bluetoothDiscoveryAgent->setLowEnergyDiscoveryTimeout(0);
-            m_bluetoothDiscoveryAgent->start(QBluetoothDeviceDiscoveryAgent::ClassicMethod |
-                                             QBluetoothDeviceDiscoveryAgent::LowEnergyMethod);
+            int timeout = SettingsManager::getInstance()->getScanTimeout_ms();
+            int methods = SettingsManager::getInstance()->getScanMethods();
+
+            m_bluetoothDiscoveryAgent->setLowEnergyDiscoveryTimeout(timeout);
+            m_bluetoothDiscoveryAgent->start(static_cast<QBluetoothDeviceDiscoveryAgent::DiscoveryMethod>(methods));
 
             if (m_bluetoothDiscoveryAgent->isActive())
             {
@@ -768,6 +772,15 @@ void DeviceManager::scanDevices_stop()
         Device *dd = qobject_cast<Device *>(d);
         if (dd) dd->cleanRssi();
     }
+}
+
+void DeviceManager::scanDevices_restart()
+{
+    //qDebug() << "DeviceManager::scanDevices_restart()";
+
+    scanDevices_stop();
+    clearResults();
+    scanDevices_start();
 }
 
 /* ************************************************************************** */
@@ -1177,7 +1190,7 @@ void DeviceManager::cacheDeviceSeen(const QString &addr)
                 }
                 else
                 {
-                    qWarning() << "> queryDevice.exec() CAN't";
+                    qDebug() << "> queryDevice.exec() CAN'T, already exists";
                 }
             }
         }

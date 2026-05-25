@@ -25,10 +25,12 @@
 
 #include <QObject>
 #include <QByteArray>
-#include <QLocale>
 #include <QString>
 #include <QSize>
 #include <QUrl>
+
+#include <QLocale>
+#include <QBluetoothDeviceDiscoveryAgent>
 
 /* ************************************************************************** */
 
@@ -55,6 +57,7 @@ class SettingsManager: public QObject
     Q_PROPERTY(bool scanAuto READ getScanAuto WRITE setScanAuto NOTIFY scanAutoChanged)
     Q_PROPERTY(bool scanPause READ getScanPause WRITE setScanPause NOTIFY scanPauseChanged)
     Q_PROPERTY(bool scanCacheAuto READ getScanCacheAuto WRITE setScanCacheAuto NOTIFY scanCacheAutoChanged)
+    Q_PROPERTY(int scanMethods READ getScanMethods WRITE setScanMethods NOTIFY scanMethodsChanged)
     Q_PROPERTY(int scanTimeout READ getScanTimeout WRITE setScanTimeout NOTIFY scanTimeoutChanged)
     Q_PROPERTY(int scanRssiInterval READ getScanRssiInterval WRITE setScanRssiInterval NOTIFY scanRssiIntervalChanged)
 
@@ -96,6 +99,7 @@ class SettingsManager: public QObject
     QString m_appLanguage = "auto";
 
     // Application specific
+    int m_scanMethods = QBluetoothDeviceDiscoveryAgent::LowEnergyMethod; //!< QBluetoothDeviceDiscoveryAgent::DiscoveryMethod
     int m_scanTimeout = 0;
     int m_scanRssiInterval = 1000;
     bool m_scanAuto = true;
@@ -142,6 +146,7 @@ Q_SIGNALS:
     void scanAutoChanged();
     void scanPauseChanged();
     void scanCacheAutoChanged();
+    void scanMethodsChanged();
     void scanTimeoutChanged();
     void scanRssiIntervalChanged();
     void scanShowChanged();
@@ -193,6 +198,10 @@ public:
     bool getScanCacheAuto() const { return m_scanCacheAuto; }
     void setScanCacheAuto(const bool value);
 
+    int getScanMethods() const { return m_scanMethods; }
+    void setScanMethods(const int value);
+
+    int getScanTimeout_ms() const { return m_scanTimeout*60*1000; }
     int getScanTimeout() const { return m_scanTimeout; }
     void setScanTimeout(const int value);
 
