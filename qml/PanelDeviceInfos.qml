@@ -268,7 +268,7 @@ Flickable {
 
                     visible: (selectedDevice && selectedDevice.pairingStatus > 0)
 
-                    text: UtilsBluetooth.getBluetoothPairingText(selectedDevice.pairingStatus)
+                    text: selectedDevice && UtilsBluetooth.getBluetoothPairingText(selectedDevice.pairingStatus)
                     colorBackground: Theme.colorComponent
                     colorBorder: Theme.colorComponent
                 }
@@ -348,7 +348,7 @@ Flickable {
                         Layout.fillWidth: true
                         Layout.minimumHeight: 32
 
-                        text: UtilsBluetooth.getBluetoothMajorClassText(selectedDevice.majorClass)
+                        text: selectedDevice && UtilsBluetooth.getBluetoothMajorClassText(selectedDevice.majorClass)
                         wrapMode: Text.WrapAnywhere
                     }
                 }
@@ -373,7 +373,7 @@ Flickable {
                         Layout.fillWidth: true
                         Layout.minimumHeight: 32
 
-                        text: UtilsBluetooth.getBluetoothMinorClassText(selectedDevice.majorClass, selectedDevice.minorClass)
+                        text: selectedDevice && UtilsBluetooth.getBluetoothMinorClassText(selectedDevice.majorClass, selectedDevice.minorClass)
                         wrapMode: Text.WrapAnywhere
                     }
                 }
@@ -388,7 +388,7 @@ Flickable {
                         Layout.preferredWidth: box2.legendWidth
                         Layout.alignment: Qt.AlignCenter
 
-                        text: qsTr("Service(s)", "", selectedDevice.servicesCount)
+                        text: selectedDevice && qsTr("Service(s)", "", selectedDevice.servicesCount)
                         textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContent
                         horizontalAlignment: Text.AlignRight
@@ -398,7 +398,7 @@ Flickable {
                         Layout.fillWidth: true
                         Layout.minimumHeight: 32
 
-                        text: UtilsBluetooth.getBluetoothServiceClassText(selectedDevice.serviceClass)
+                        text: selectedDevice &&  UtilsBluetooth.getBluetoothServiceClassText(selectedDevice.serviceClass)
                         wrapMode: Text.WrapAnywhere
                     }
                 }
@@ -688,7 +688,7 @@ Flickable {
                         }
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
-                            text: "-" + Math.abs(selectedDevice.rssi)
+                            text: selectedDevice && "-" + Math.abs(selectedDevice.rssi)
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorText
                         }
@@ -834,7 +834,7 @@ Flickable {
                 spacing: 8
 
                 Text {
-                    text: qsTr("Service(s) advertised", "", selectedDevice.servicesCount)
+                    text: selectedDevice && qsTr("Service(s) advertised", "", selectedDevice.servicesCount)
                     textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeContentBig
                     color: Theme.colorText

@@ -142,7 +142,7 @@ Popup {
                     anchors.leftMargin: Theme.componentMargin
                     anchors.rightMargin: Theme.componentMargin
 
-                    text: qsTr("There are %n device(s) in the cache.", "", deviceManager.deviceSeenCached)
+                    text: qsTr("There are %n device(s) in the <b>seen</b> cache.", "", deviceManager.deviceSeenCached)
                     textFormat: Text.StyledText
                     font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorText

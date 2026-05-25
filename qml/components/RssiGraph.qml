@@ -31,6 +31,7 @@ ChartView {
     }
 
     function updateGraph() {
+        if (!rssiGraph.visible) return
         if (!deviceManager.scanning || deviceManager.scanningPaused || hostMenu.currentSelection !== 3) return
         //console.log("rssiGraph // updateGraph()")
 

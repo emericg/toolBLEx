@@ -9,8 +9,10 @@ Popup {
 
     x: ((appWindow.width / 2) - (width / 2))
     y: ((appWindow.height / 2) - (height / 2) - (appHeader.height))
+
     width: 720
     padding: 0
+    margins: 0
 
     modal: true
     focus: true

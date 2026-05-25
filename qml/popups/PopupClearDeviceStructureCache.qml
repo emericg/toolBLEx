@@ -9,8 +9,10 @@ Popup {
 
     x: ((appWindow.width / 2) - (width / 2))
     y: ((appWindow.height / 2) - (height / 2) - (appHeader.height))
+
     width: 720
     padding: 0
+    margins: 0
 
     modal: true
     focus: true
@@ -142,7 +144,7 @@ Popup {
                     anchors.leftMargin: Theme.componentMargin
                     anchors.rightMargin: Theme.componentMargin
 
-                    text: qsTr("There are %n device(s) in the cache.", "", deviceManager.deviceStructureCached)
+                    text: qsTr("There are %n device(s) in the <b>structure</b> cache.", "", deviceManager.deviceStructureCached)
                     textFormat: Text.StyledText
                     font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorText
