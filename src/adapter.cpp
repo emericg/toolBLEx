@@ -56,19 +56,24 @@ Adapter::Adapter(const QBluetoothHostInfo &adapterInfo,
     {
         if (line.contains("addr ") && line.contains(m_address))
         {
-            if (line.contains("version 12")) m_bluetooth_version = "5.3";
-            else if (line.contains("version 11")) m_bluetooth_version = "5.2";
-            else if (line.contains("version 10")) m_bluetooth_version = "5.1";
-            else if (line.contains("version 9")) m_bluetooth_version = "5.0";
-            else if (line.contains("version 8")) m_bluetooth_version = "4.2";
-            else if (line.contains("version 7")) m_bluetooth_version = "4.1";
-            else if (line.contains("version 6")) m_bluetooth_version = "4.0";
-            else if (line.contains("version 5")) m_bluetooth_version = "3.0";
-            else if (line.contains("version 4")) m_bluetooth_version = "2.1";
-            else if (line.contains("version 3")) m_bluetooth_version = "2.0";
-            else if (line.contains("version 2")) m_bluetooth_version = "1.2";
-            else if (line.contains("version 1")) m_bluetooth_version = "1.1";
-            else if (line.contains("version 0")) m_bluetooth_version = "1.0";
+            if (line.contains("version 17 ")) m_bluetooth_version = "6.3";
+            else if (line.contains("version 16 ")) m_bluetooth_version = "6.2";
+            else if (line.contains("version 15 ")) m_bluetooth_version = "6.1";
+            else if (line.contains("version 14 ")) m_bluetooth_version = "6.0";
+            else if (line.contains("version 13 ")) m_bluetooth_version = "5.4";
+            else if (line.contains("version 12 ")) m_bluetooth_version = "5.3";
+            else if (line.contains("version 11 ")) m_bluetooth_version = "5.2";
+            else if (line.contains("version 10 ")) m_bluetooth_version = "5.1";
+            else if (line.contains("version 9 ")) m_bluetooth_version = "5.0";
+            else if (line.contains("version 8 ")) m_bluetooth_version = "4.2";
+            else if (line.contains("version 7 ")) m_bluetooth_version = "4.1";
+            else if (line.contains("version 6 ")) m_bluetooth_version = "4.0";
+            else if (line.contains("version 5 ")) m_bluetooth_version = "3.0";
+            else if (line.contains("version 4 ")) m_bluetooth_version = "2.1";
+            else if (line.contains("version 3 ")) m_bluetooth_version = "2.0";
+            else if (line.contains("version 2 ")) m_bluetooth_version = "1.2";
+            else if (line.contains("version 1 ")) m_bluetooth_version = "1.1";
+            else if (line.contains("version 0 ")) m_bluetooth_version = "1.0";
         }
 
         if (!m_bluetooth_version.isEmpty()) break;
