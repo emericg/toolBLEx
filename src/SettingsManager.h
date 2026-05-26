@@ -23,6 +23,8 @@
 #define SETTINGS_MANAGER_H
 /* ************************************************************************** */
 
+#include <QtQml/qqmlregistration.h>
+
 #include <QObject>
 #include <QByteArray>
 #include <QString>
@@ -32,6 +34,9 @@
 #include <QLocale>
 #include <QBluetoothDeviceDiscoveryAgent>
 
+class QJSEngine;
+class QQmlEngine;
+
 /* ************************************************************************** */
 
 /*!
@@ -40,6 +45,8 @@
 class SettingsManager: public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
 
     Q_PROPERTY(bool firstLaunch READ isFirstLaunch NOTIFY firstLaunchChanged)
 
@@ -160,6 +167,7 @@ Q_SIGNALS:
 
 public:
     static SettingsManager *getInstance();
+    static SettingsManager *create(QQmlEngine *, QJSEngine *);
 
     bool isFirstLaunch() const { return m_firstlaunch; }
 
@@ -169,7 +177,7 @@ public:
 
     ////
 
-    QString getAppTheme() const { return m_appTheme; }
+    const QString &getAppTheme() const { return m_appTheme; }
     void setAppTheme(const QString &value);
 
     bool getAppThemeAuto() const { return m_appThemeAuto; }
@@ -184,7 +192,7 @@ public:
     int getAppUnits() const { return m_appUnits; }
     void setAppUnits(int value);
 
-    QString getAppLanguage() const { return m_appLanguage; }
+    const QString &getAppLanguage() const { return m_appLanguage; }
     void setAppLanguage(const QString &value);
 
     ////
@@ -221,23 +229,23 @@ public:
 
     int getScanviewOrientation() const { return m_scanviewOrientation; }
     void setScanviewOrientation(const int value);
-    QByteArray getScanviewSize() const { return m_scanviewSize; }
+    const QByteArray &getScanviewSize() const { return m_scanviewSize; }
     void setScanviewSize(const QByteArray &value);
 
     int getPreferredScreen() const { return m_preferredScreen; }
     void setPreferredScreen(const int value);
 
-    QString getPreferredAdapter_scan() const { return m_preferredAdapter_scan; }
+    const QString &getPreferredAdapter_scan() const { return m_preferredAdapter_scan; }
     void setPreferredAdapter_scan(const QString &value);
-    QString getPreferredAdapter_adv() const { return m_preferredAdapter_adv; }
+    const QString &getPreferredAdapter_adv() const { return m_preferredAdapter_adv; }
     void setPreferredAdapter_adv(const QString &value);
 
-    QString getExportDirectory() const { return m_exportDirectory; }
+    const QString &getExportDirectory() const { return m_exportDirectory; }
     QString getExportDirectory_str() const;
     QUrl getExportDirectory_url() const;
     void setExportDirectory(const QString &value);
 
-    QString getUbertoothPath() const { return m_ubertooth_path; }
+    const QString &getUbertoothPath() const { return m_ubertooth_path; }
     void setUbertoothPath(const QString &value);
     int getUbertoothFreqMin() const { return m_ubertooth_freqMin; }
     void setUbertoothFreqMin(const int value);

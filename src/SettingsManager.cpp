@@ -22,6 +22,8 @@
 #include "SettingsManager.h"
 
 #include <QCoreApplication>
+#include <QQmlEngine>
+#include <QJSEngine>
 #include <QSettings>
 #include <QLocale>
 #include <QDebug>
@@ -42,6 +44,11 @@ SettingsManager *SettingsManager::getInstance()
     }
 
     return instance;
+}
+
+SettingsManager *SettingsManager::create(QQmlEngine *, QJSEngine *)
+{
+    return getInstance();
 }
 
 SettingsManager::SettingsManager()

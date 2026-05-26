@@ -23,11 +23,16 @@
 #define MENUBAR_MANAGER_H
 /* ************************************************************************** */
 
+#include <QtQml/qqmlregistration.h>
+
 #include <QObject>
 
 class QMenu;
 class QAction;
+class QJSEngine;
+class QQmlEngine;
 class QQuickWindow;
+
 class DeviceManager;
 
 /* ************************************************************************** */
@@ -38,6 +43,8 @@ class DeviceManager;
 class MenubarManager: public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
 
     QQuickWindow *m_saved_view = nullptr;
     DeviceManager *m_saved_devicemanager = nullptr;
@@ -63,6 +70,8 @@ signals:
 
 public:
     static MenubarManager *getInstance();
+    static MenubarManager *create(QQmlEngine *, QJSEngine *);
+
     void setupMenubar(QQuickWindow *view, DeviceManager *dm);
 
 private slots:

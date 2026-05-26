@@ -41,6 +41,11 @@ MenubarManager *MenubarManager::getInstance()
     return instance;
 }
 
+MenubarManager *MenubarManager::create(QQmlEngine *, QJSEngine *)
+{
+    return getInstance();
+}
+
 MenubarManager::MenubarManager()
 {
     //
