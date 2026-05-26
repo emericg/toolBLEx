@@ -119,6 +119,7 @@ jobs:
           MACOS_CERTIFICATE_NAME: ${{ secrets.MACOS_CERTIFICATE_NAME }}
           MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
           MACOS_CI_KEYCHAIN_PASSWORD: ${{ secrets.MACOS_CI_KEYCHAIN_PASSWORD }}
+        if: env.MACOS_CERTIFICATE
         run: |
             # Turn our base64-encoded certificate(s) back to a regular file(s)
             echo "$MACOS_CERTIFICATE" | base64 --decode > certificate.p12
