@@ -23,7 +23,7 @@ T.Button {
     // settings
     flat: true
     checkable: true
-    hoverEnabled: isDesktop
+    hoverEnabled: Theme.isDesktop
     focusPolicy: Qt.NoFocus
 
     // layout
@@ -77,10 +77,10 @@ T.Button {
                 maskSpreadAtMax: 0.0
                 maskSource: ShaderEffectSource {
                     sourceItem: Rectangle {
-                        x: background.x
-                        y: background.y
-                        width: background.width
-                        height: background.height
+                        x: control.background.x
+                        y: control.background.y
+                        width: control.background.width
+                        height: control.background.height
                         radius: Theme.componentRadius
                     }
                 }

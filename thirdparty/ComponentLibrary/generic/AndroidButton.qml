@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Effects
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import ComponentLibrary
@@ -44,10 +43,10 @@ T.Button {
                 maskSpreadAtMax: 0.0
                 maskSource: ShaderEffectSource {
                     sourceItem: Rectangle {
-                        x: background.x
-                        y: background.y
-                        width: background.width
-                        height: background.height
+                        x: control.background.x
+                        y: control.background.y
+                        width: control.background.width
+                        height: control.background.height
                         radius: 8
                     }
                 }

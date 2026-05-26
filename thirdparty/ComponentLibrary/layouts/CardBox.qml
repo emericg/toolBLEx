@@ -1,7 +1,5 @@
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Effects
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import ComponentLibrary
@@ -25,6 +23,8 @@ T.Frame {
     property string sourceBackground
     property string sourceIcon
 
+    ////////////////
+
     background: Rectangle {
         implicitWidth: 256
         implicitHeight: 400
@@ -34,9 +34,11 @@ T.Frame {
         border.width: 2
         border.color: Theme.colorComponentBorder
 
+        ////////
+
         Rectangle { // background shadow
             anchors.fill: parent
-            radius: background.radius
+            radius: control.background.radius
             color: control.colorBackground
             border.width: 2
             border.color: Theme.colorComponentBorder
@@ -51,6 +53,8 @@ T.Frame {
                 Behavior on opacity { OpacityAnimator { duration: 233 } }
             }
         }
+
+        ////////
 
         Item { // header container
             anchors.fill: parent
@@ -112,12 +116,16 @@ T.Frame {
                 maskSpreadAtMax: 0.0
                 maskSource: ShaderEffectSource {
                     sourceItem: Rectangle {
-                        width: background.width
-                        height: background.height
-                        radius: background.radius
+                        width: control.background.width
+                        height: control.background.height
+                        radius: control.background.radius
                     }
                 }
             }
         }
+
+        ////////
     }
+
+    ////////////////
 }

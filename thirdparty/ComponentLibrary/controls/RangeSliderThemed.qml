@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import ComponentLibrary
@@ -53,7 +52,7 @@ T.RangeSlider {
         radius: 9
 
         opacity: control.enabled ? 1 : 0.8
-        color: first.pressed ? Theme.colorSecondary : Theme.colorPrimary
+        color: control.first.pressed ? Theme.colorSecondary : Theme.colorPrimary
         border.width: 1
         border.color: Theme.colorPrimary
 
@@ -63,14 +62,14 @@ T.RangeSlider {
             z: -1
 
             acceptedButtons: Qt.NoButton
-            hoverEnabled: (isDesktop && control.enabled)
+            hoverEnabled: (Theme.isDesktop && control.enabled)
             propagateComposedEvents: false
 
             Rectangle {
                 anchors.fill: parent
                 radius: width
                 color: Theme.colorPrimary
-                opacity: (first.pressed || parent.containsMouse) ? 0.2 : 0
+                opacity: (control.first.pressed || parent.containsMouse) ? 0.2 : 0
                 Behavior on opacity { NumberAnimation { duration: 133 } }
             }
         }
@@ -87,7 +86,7 @@ T.RangeSlider {
         radius: 9
 
         opacity: control.enabled ? 1 : 0.8
-        color: second.pressed ? Theme.colorSecondary : Theme.colorPrimary
+        color: control.second.pressed ? Theme.colorSecondary : Theme.colorPrimary
         border.width: 1
         border.color: Theme.colorPrimary
 
@@ -97,14 +96,14 @@ T.RangeSlider {
             z: -1
 
             acceptedButtons: Qt.NoButton
-            hoverEnabled: (isDesktop && control.enabled)
+            hoverEnabled: (Theme.isDesktop && control.enabled)
             propagateComposedEvents: false
 
             Rectangle {
                 anchors.fill: parent
                 radius: width
                 color: Theme.colorPrimary
-                opacity: (second.pressed || parent.containsMouse) ? 0.2 : 0
+                opacity: (control.second.pressed || parent.containsMouse) ? 0.2 : 0
                 Behavior on opacity { NumberAnimation { duration: 133 } }
             }
         }

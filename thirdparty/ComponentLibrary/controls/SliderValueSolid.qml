@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Effects
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import ComponentLibrary
@@ -44,9 +43,9 @@ T.Slider {
         scale: control.horizontal && control.mirrored ? -1 : 1
 
         Rectangle {
-            y: control.horizontal ? 0 : handle.y
-            width: control.horizontal ? Math.max(control.position * parent.width, handle.x + handle.width*0.66) : control.hhh
-            height: control.horizontal ? control.hhh : parent.height - handle.y
+            y: control.horizontal ? 0 : control.handle.y
+            width: control.horizontal ? Math.max(control.position * parent.width, control.handle.x + control.handle.width*0.66) : control.hhh
+            height: control.horizontal ? control.hhh : parent.height - control.handle.y
 
             radius: control.hhh
             color: enabled ? control.colorForeground : control.colorForegroundDisabled
@@ -61,11 +60,11 @@ T.Slider {
             maskSpreadAtMax: 0.0
             maskSource: ShaderEffectSource {
                 sourceItem: Rectangle {
-                    x: background.x
-                    y: background.y
-                    width: background.width
-                    height: background.height
-                    radius: background.radius
+                    x: control.background.x
+                    y: control.background.y
+                    width: control.background.width
+                    height: control.background.height
+                    radius: control.background.radius
                 }
             }
         }
@@ -99,7 +98,7 @@ T.Slider {
             }
             textFormat: Text.PlainText
             font.bold: true
-            font.pixelSize: isDesktop ? 12 : 13
+            font.pixelSize: Theme.isDesktop ? 12 : 13
             fontSizeMode: Text.Fit
             minimumPixelSize: Theme.fontSizeContentVerySmall
             color: control.colorText
@@ -129,7 +128,7 @@ T.Slider {
             }
             textFormat: Text.PlainText
             font.bold: true
-            font.pixelSize: isDesktop ? 12 : 13
+            font.pixelSize: Theme.isDesktop ? 12 : 13
             fontSizeMode: Text.Fit
             minimumPixelSize: Theme.fontSizeContentVerySmall
             color: control.colorText

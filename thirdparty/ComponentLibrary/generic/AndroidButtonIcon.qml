@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Effects
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import ComponentLibrary
@@ -70,10 +69,10 @@ T.Button {
                 maskSpreadAtMax: 0.0
                 maskSource: ShaderEffectSource {
                     sourceItem: Rectangle {
-                        x: background.x
-                        y: background.y
-                        width: background.width
-                        height: background.height
+                        x: control.background.x
+                        y: control.background.y
+                        width: control.background.width
+                        height: control.background.height
                         radius: 8
                     }
                 }
@@ -91,13 +90,10 @@ T.Button {
             Layout.preferredWidth: control.sourceSize
             Layout.preferredHeight: control.sourceSize
 
-            width: control.sourceSize
-            height: control.sourceSize
-            rotation: control.sourceRotation
-
             source: control.source
             color: control.colorPrimary
             opacity: enabled ? (control.down ? 0.8 : 1.0) : 0.33
+            rotation: control.sourceRotation
         }
         Text { // contentText
             Layout.fillWidth: true

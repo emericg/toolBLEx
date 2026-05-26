@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import ComponentLibrary
@@ -56,10 +55,10 @@ T.Slider {
         }
 
         Rectangle {
-            x: control.horizontal ? ((handle.x < control.availableWidth / 2) ? handle.x : control.availableWidth / 2) : 0
-            y: control.horizontal ? 0 : ((handle.y < control.availableHeight / 2) ? handle.y : control.availableHeight / 2)
-            width: control.horizontal ? Math.abs((background.width / 2) - handle.x) : 4
-            height: control.horizontal ? 4 : Math.abs((background.height / 2) - handle.y)
+            x: control.horizontal ? ((control.handle.x < control.availableWidth / 2) ? control.handle.x : control.availableWidth / 2) : 0
+            y: control.horizontal ? 0 : ((control.handle.y < control.availableHeight / 2) ? control.handle.y : control.availableHeight / 2)
+            width: control.horizontal ? Math.abs((control.background.width / 2) - control.handle.x) : 4
+            height: control.horizontal ? 4 : Math.abs((control.background.height / 2) - control.handle.y)
 
             radius: 2
             color: control.colorForeground

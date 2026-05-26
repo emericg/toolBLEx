@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import ComponentLibrary
@@ -58,13 +57,13 @@ T.RangeSlider {
         x: control.leftPadding + (control.horizontal ? control.first.visualPosition * (control.availableWidth - width) : (control.availableWidth - width) / 2)
         y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.first.visualPosition * (control.availableHeight - height))
 
-        implicitWidth: 22
-        implicitHeight: 22
+        implicitWidth: control.hhh
+        implicitHeight: control.hhh
         width: t1.width + 16
         radius: 6
 
         opacity: control.enabled ? 1 : 0.8
-        color: first.pressed ? Theme.colorSecondary : control.colorForeground
+        color: control.first.pressed ? Theme.colorSecondary : control.colorForeground
         border.width: 1
         border.color: control.colorForeground
 
@@ -77,10 +76,10 @@ T.RangeSlider {
             //anchors.horizontalCenter: parent.horizontalCenter
 
             text: {
-                var vvalue = first.value
-                if (unit === "°" && settingsManager.tempUnit === "F") vvalue = UtilsNumber.tempCelsiusToFahrenheit(vvalue)
+                var vvalue = control.first.value
+                if (control.unit === "°" && settingsManager.tempUnit === "F") vvalue = UtilsNumber.tempCelsiusToFahrenheit(vvalue)
                 vvalue = vvalue.toFixed(control.floatprecision)
-                return ((first.value > 999) ? vvalue / 1000 : vvalue) + control.unit
+                return ((control.first.value > 999) ? vvalue / 1000 : vvalue) + control.unit
             }
             textFormat: Text.PlainText
             font.bold: false
@@ -98,14 +97,16 @@ T.RangeSlider {
     second.handle: Rectangle {
         x: control.leftPadding + (control.horizontal ? control.second.visualPosition * (control.availableWidth - width) : (control.availableWidth - width) / 2)
         y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.second.visualPosition * (control.availableHeight - height))
+
         implicitWidth: control.hhh
         implicitHeight: control.hhh
         width: t2.width + 16
-
         radius: 6
-        color: control.colorForeground
+
+        opacity: control.enabled ? 1 : 0.8
+        color: control.second.pressed ? Theme.colorSecondary : control.colorForeground
+        border.width: 1
         border.color: control.colorForeground
-        opacity: second.pressed ? 0.9 : 1
 
         Text {
             id: t2
@@ -116,10 +117,10 @@ T.RangeSlider {
             //anchors.horizontalCenter: parent.horizontalCenter
 
             text: {
-                var vvalue = second.value
-                if (unit === "°" && settingsManager.tempUnit === "F") vvalue = UtilsNumber.tempCelsiusToFahrenheit(vvalue)
+                var vvalue = control.second.value
+                if (control.unit === "°" && settingsManager.tempUnit === "F") vvalue = UtilsNumber.tempCelsiusToFahrenheit(vvalue)
                 vvalue = vvalue.toFixed(control.floatprecision)
-                return ((second.value > 999) ? vvalue / 1000 : vvalue) + control.unit
+                return ((control.second.value > 999) ? vvalue / 1000 : vvalue) + control.unit
             }
             textFormat: Text.PlainText
             font.bold: false

@@ -39,9 +39,10 @@ Item {
 
     ////////////////
 
-    property bool isHdpi: (utilsScreen.screenDpi >= 128 || utilsScreen.screenPar >= 2.0)
     property bool isDesktop: (Qt.platform.os !== "ios" && Qt.platform.os !== "android")
     property bool isMobile: (Qt.platform.os === "ios" || Qt.platform.os === "android")
+
+    property bool isHdpi: (utilsScreen.screenDpi >= 128 || utilsScreen.screenPar >= 2.0)
     property bool isPhone: ((Qt.platform.os === "ios" || Qt.platform.os === "android") && (utilsScreen.screenSize < 7.0))
     property bool isTablet: ((Qt.platform.os === "ios" || Qt.platform.os === "android") && (utilsScreen.screenSize >= 7.0))
 
@@ -156,7 +157,7 @@ Item {
     property color colorComponentBorder
     property color colorComponentDown
     property color colorComponentBackground
-    property color colorComponentShadow: isLight ? "#40000000" : "#88000000"
+    property color colorComponentShadow: isLight ? "#10000000" : "#88000000"
 
     property int componentRadius: 4
     property int componentBorderWidth: 2
@@ -879,7 +880,7 @@ Item {
             colorActionbarHighlight     = "#7ab800"
 
             colorTabletmenu             = "#f3f3f3"
-            colorTabletmenuContent      = "#9d9d9d"
+            colorTabletmenuContent      = "#909090"
             colorTabletmenuHighlight    = "#0079fe"
 
             colorBackground             = "white"

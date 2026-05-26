@@ -26,7 +26,7 @@ T.TextField {
     placeholderText: ""
     placeholderTextColor: colorPlaceholderText
 
-    selectByMouse: isDesktop
+    selectByMouse: Theme.isDesktop
     selectionColor: colorSelection
     selectedTextColor: colorSelectedText
 

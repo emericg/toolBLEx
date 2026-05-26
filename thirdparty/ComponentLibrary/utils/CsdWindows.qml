@@ -1,10 +1,14 @@
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Window
+import QtQuick.Controls
 
 import ComponentLibrary
 
+pragma ComponentBehavior: Bound
+
 Loader {
+    id: csdWindowsLoader
+
     anchors.top: parent.top
     anchors.topMargin: 0
     anchors.right: parent.right
@@ -13,9 +17,11 @@ Loader {
     width: active ? 138 : 0
     height: active ? 28 : 0
 
-    active: (settingsManager.appThemeCSD && Qt.platform.os === "windows")
-    asynchronous: true
+    property bool appThemeCSD: false
+    property ApplicationWindow windowInstance: null
 
+    active: (windowInstance && appThemeCSD && Qt.platform.os === "windows")
+    asynchronous: true
     sourceComponent: Row {
         id: csdWindows
         spacing: 0
@@ -37,7 +43,7 @@ Loader {
                 anchors.fill: parent
 
                 hoverEnabled: true
-                onClicked: appWindow.showMinimized()
+                onClicked: csdWindowsLoader.windowInstance.showMinimized()
             }
         }
 
@@ -61,10 +67,10 @@ Loader {
 
                 hoverEnabled: true
                 onClicked: {
-                    if (appWindow.visibility === ApplicationWindow.Maximized)
-                        appWindow.showNormal()
+                    if (csdWindowsLoader.windowInstance.visibility === ApplicationWindow.Maximized)
+                        csdWindowsLoader.windowInstance.showNormal()
                     else
-                        appWindow.showMaximized()
+                        csdWindowsLoader.windowInstance.showMaximized()
                 }
             }
         }
@@ -101,7 +107,7 @@ Loader {
                 anchors.fill: parent
 
                 hoverEnabled: true
-                onClicked: appWindow.close()
+                onClicked: csdWindowsLoader.windowInstance.close()
             }
         }
 

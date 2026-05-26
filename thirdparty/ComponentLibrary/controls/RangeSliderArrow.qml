@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import ComponentLibrary
@@ -72,13 +71,13 @@ T.RangeSlider {
     ////////////////
 
     first.handle: Rectangle {
-        x: (control.horizontal ? control.leftPadding + Math.round(first.visualPosition * control.availableWidth) - (width / 2) : -2)
-        y: (control.horizontal ? 0 : control.topPadding + Math.round(first.visualPosition * control.availableHeight) - (height / 2))
+        x: (control.horizontal ? control.leftPadding + Math.round(control.first.visualPosition * control.availableWidth) - (width / 2) : -2)
+        y: (control.horizontal ? 0 : control.topPadding + Math.round(control.first.visualPosition * control.availableHeight) - (height / 2))
         width: 16
         height: 12
         rotation: control.horizontal ? 0 : -90
         opacity: control.enabled ? 1 : 0.8
-        color: first.pressed ? Theme.colorSecondary : control.colorForeground
+        color: control.first.pressed ? Theme.colorSecondary : control.colorForeground
 
         Rectangle {
             width: 10
@@ -95,13 +94,13 @@ T.RangeSlider {
     ////////////////
 
     second.handle: Rectangle {
-        x: (control.horizontal ? control.leftPadding + Math.round(second.visualPosition * control.availableWidth) - (width / 2) : -2)
-        y: (control.horizontal ? 0 : control.topPadding + Math.round(second.visualPosition * control.availableHeight) - (height / 2))
+        x: (control.horizontal ? control.leftPadding + Math.round(control.second.visualPosition * control.availableWidth) - (width / 2) : -2)
+        y: (control.horizontal ? 0 : control.topPadding + Math.round(control.second.visualPosition * control.availableHeight) - (height / 2))
         width: 16
         height: 12
         rotation: control.horizontal ? 0 : -90
         opacity: control.enabled ? 1 : 0.8
-        color: second.pressed ? Theme.colorSecondary : control.colorForeground
+        color: control.second.pressed ? Theme.colorSecondary : control.colorForeground
 
         Rectangle {
             width: 10

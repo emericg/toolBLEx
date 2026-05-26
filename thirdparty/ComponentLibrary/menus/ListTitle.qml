@@ -27,6 +27,7 @@ Rectangle {
     property string text: "title"
     property color textColor: Theme.colorText
     property int textSize: source ? Theme.fontSizeContentBig : Theme.fontSizeContentVeryBig
+    property bool textBold: false
 
     property bool shadow: !singleColumn
 
@@ -57,7 +58,7 @@ Rectangle {
         text: control.text
         textFormat: Text.PlainText
         font.pixelSize: control.textSize
-        font.bold: false
+        font.bold: control.textBold
         color: control.textColor
         wrapMode: Text.WordWrap
         verticalAlignment: Text.AlignVCenter

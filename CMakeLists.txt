@@ -186,7 +186,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE AppUtils)
 
 # ComponentLibrary
 add_subdirectory(thirdparty/ComponentLibrary)
-target_link_libraries(${PROJECT_NAME} PRIVATE ComponentLibraryplugin)
+target_link_libraries(${PROJECT_NAME} PRIVATE ComponentLibrary_plugin)
 
 # Qt libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE

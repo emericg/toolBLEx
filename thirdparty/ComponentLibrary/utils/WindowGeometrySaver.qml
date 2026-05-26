@@ -4,6 +4,8 @@ import QtQuick.Window
 import QtQuick.Controls
 
 Item {
+    id: control
+
     // This code should only run for desktop/windowed applications.
     enabled: (Qt.platform.os !== "android" && Qt.platform.os !== "ios")
 
@@ -17,7 +19,7 @@ Item {
 
     Settings {
         id: windowSettings
-        category: windowName
+        category: control.windowName
 
         property int x
         property int y
@@ -34,6 +36,8 @@ Item {
 
     function restoreSettings() {
         if (Qt.platform.os === "android" || Qt.platform.os === "ios") return;
+
+        //console.log("WindowsGeometrySaver::restoreSettings()")
 
         // Startup verifications to ensure that app fits inside current screen
         if ((windowSettings.x <= 0 && windowSettings.y <= 0) &&
@@ -72,7 +76,7 @@ Item {
     // Save settings ///////////////////////////////////////////////////////////
 
     Connections {
-        target: windowInstance
+        target: control.windowInstance
         function onXChanged() { saveSettingsTimer.restart(); }
         function onYChanged() { saveSettingsTimer.restart(); }
         function onWidthChanged() { saveSettingsTimer.restart(); }
@@ -84,11 +88,13 @@ Item {
         id: saveSettingsTimer
         interval: 2000 // 2s is probably good enough...
         repeat: false // started when ApplicationWindow geometry changes
-        onTriggered: saveSettings()
+        onTriggered: control.saveSettings()
     }
 
     function saveSettings() {
         if (Qt.platform.os === "android" || Qt.platform.os === "ios") return;
+
+        //console.log("WindowsGeometrySaver::saveSettings()")
 
         switch (windowInstance.visibility) {
             case ApplicationWindow.Windowed:

@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import ComponentLibrary
@@ -43,10 +42,10 @@ T.Slider {
         scale: control.horizontal && control.mirrored ? -1 : 1
 
         Rectangle {
-            x: control.horizontal ? ((control.visualPosition <= 0.5) ? handle.x : control.availableWidth / 2) : 0
-            y: !control.horizontal ? ((control.visualPosition <= 0.5) ? handle.y : control.availableHeight / 2) : 0
-            width: control.horizontal ? Math.abs((control.width / 2) - handle.x - ((control.visualPosition > 0.5) ? handle.width : 0)) : control.hhh
-            height: !control.horizontal ? Math.abs((control.height / 2) - handle.y - ((control.visualPosition > 0.5) ? handle.height : 0)) : control.hhh
+            x: control.horizontal ? ((control.visualPosition <= 0.5) ? control.handle.x : control.availableWidth / 2) : 0
+            y: !control.horizontal ? ((control.visualPosition <= 0.5) ? control.handle.y : control.availableHeight / 2) : 0
+            width: control.horizontal ? Math.abs((control.width / 2) - control.handle.x - ((control.visualPosition > 0.5) ? control.handle.width : 0)) : control.hhh
+            height: !control.horizontal ? Math.abs((control.height / 2) - control.handle.y - ((control.visualPosition > 0.5) ? control.handle.height : 0)) : control.hhh
             visible: (control.horizontal && width >= control.hhh) || (control.vertical && height >= control.hhh)
 
             radius: control.hhh
@@ -82,7 +81,7 @@ T.Slider {
             }
             textFormat: Text.PlainText
             font.bold: true
-            font.pixelSize: isDesktop ? 12 : 13
+            font.pixelSize: Theme.isDesktop ? 12 : 13
             fontSizeMode: Text.Fit
             minimumPixelSize: Theme.fontSizeContentVerySmall
             color: control.colorText

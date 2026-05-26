@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Effects
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 import Qt.labs.qmlmodels
 
@@ -17,7 +16,7 @@ T.Popup {
 
     modal: true
     dim: false
-    focus: isMobile
+    focus: Theme.isMobile
     closePolicy: T.Popup.CloseOnEscape | T.Popup.CloseOnPressOutside
     //parent: T.Overlay.overlay // let it float
 

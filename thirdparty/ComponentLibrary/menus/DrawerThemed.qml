@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Window
 import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
@@ -15,10 +14,13 @@ T.Drawer {
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              contentHeight + topPadding + bottomPadding)
 
-    width: (appWindow.singleColumn || appWindow.width < 480 ||
-            appWindow.screenOrientation === Qt.PortraitOrientation)
-                ? 0.8 * appWindow.width : 0.5 * appWindow.width
-    height: appWindow.height
+    // We use Screen.width/height on this mobile component,
+    // it's (mostly) equivalent to the dimension of the app window
+
+    width: (singleColumn || Screen.width < 480 ||
+            Screen.primaryOrientation === Qt.PortraitOrientation)
+                ? 0.8 * Screen.width : 0.5 * Screen.width
+    height: Screen.height
 
     topPadding: 0
     leftPadding: 0
@@ -29,6 +31,8 @@ T.Drawer {
     leftInset: 0
     rightInset: 0
     bottomInset: 0
+
+    ////////////////
 
     enter: Transition { SmoothedAnimation { velocity: 5 } }
     exit: Transition { SmoothedAnimation { velocity: 5 } }

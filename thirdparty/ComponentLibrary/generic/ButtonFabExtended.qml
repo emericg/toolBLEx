@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Effects
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import ComponentLibrary
@@ -26,7 +25,7 @@ T.Button {
     spacing: 12
 
     flat: false
-    hoverEnabled: isDesktop
+    hoverEnabled: Theme.isDesktop
     focusPolicy: Qt.NoFocus
     font.pixelSize: Theme.componentFontSize
     font.bold: true
@@ -86,11 +85,11 @@ T.Button {
                 maskSpreadAtMax: 0.0
                 maskSource: ShaderEffectSource {
                     sourceItem: Rectangle {
-                        x: background.x
-                        y: background.y
-                        width: background.width
-                        height: background.height
-                        radius: (background.height / control.shapeRadius)
+                        x: control.background.x
+                        y: control.background.y
+                        width: control.background.width
+                        height: control.background.height
+                        radius: (control.background.height / control.shapeRadius)
                     }
                 }
             }

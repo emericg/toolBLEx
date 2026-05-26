@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Templates as T
-import QtQuick.Controls.impl
 
 import ComponentLibrary
 
@@ -18,7 +17,7 @@ T.ItemDelegate {
     verticalPadding: 0
 
     property string source
-    property string sourceColor: Theme.colorIcon
+    property color sourceColor: Theme.colorIcon
     property int sourceSize: 32
 
     //property string text

@@ -1,16 +1,22 @@
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Window
+import QtQuick.Controls
 
 import ComponentLibrary
 
+pragma ComponentBehavior: Bound
+
 Loader {
+    id: csdMacLoader
+
     width: active ? 48 : 0
     height: active ? 24 : 0
 
-    active: (settingsManager.appThemeCSD && Qt.platform.os === "osx")
-    asynchronous: true
+    property bool appThemeCSD: false
+    property ApplicationWindow windowInstance: null
 
+    active: (windowInstance && appThemeCSD && Qt.platform.os === "osx")
+    asynchronous: true
     sourceComponent: Item {
         id: csdMac
         implicitWidth: 48
@@ -46,7 +52,7 @@ Loader {
                 }
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: appWindow.close()
+                    onClicked: csdMacLoader.windowInstance.close()
                 }
             }
             Rectangle {
@@ -62,7 +68,7 @@ Loader {
                 }
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: appWindow.showMinimized()
+                    onClicked: csdMacLoader.windowInstance.showMinimized()
                 }
             }
             Rectangle {
@@ -72,10 +78,10 @@ Loader {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        if (appWindow.visibility === ApplicationWindow.Maximized)
-                            appWindow.showNormal()
+                        if (csdMacLoader.windowInstance.visibility === ApplicationWindow.Maximized)
+                            csdMacLoader.windowInstance.showNormal()
                         else
-                            appWindow.showMaximized()
+                            csdMacLoader.windowInstance.showMaximized()
                     }
                 }
             }

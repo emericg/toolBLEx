@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import ComponentLibrary
@@ -91,19 +90,19 @@ T.Popup {
             z: -1
 
             anchors.horizontalCenter: {
-                if (tooltipPosition === "left") return parent.right
-                if (tooltipPosition === "right") return parent.left
+                if (control.tooltipPosition === "left") return parent.right
+                if (control.tooltipPosition === "right") return parent.left
                 return parent.horizontalCenter
             }
             anchors.horizontalCenterOffset: {
-                if (tooltipPosition === "topLeft" || tooltipPosition === "bottomLeft") return (control.implicitWidth / 2) - (control.parent.width / 2)
-                if (tooltipPosition === "topRight" || tooltipPosition === "bottomRight") return -(control.implicitWidth / 2) + (control.parent.width / 2)
+                if (control.tooltipPosition === "topLeft" || control.tooltipPosition === "bottomLeft") return (control.implicitWidth / 2) - (control.parent.width / 2)
+                if (control.tooltipPosition === "topRight" || control.tooltipPosition === "bottomRight") return -(control.implicitWidth / 2) + (control.parent.width / 2)
                 return 0
             }
             anchors.verticalCenter: {
-                if (tooltipPosition === "bottom" || tooltipPosition === "bottomLeft" || tooltipPosition === "bottomRight") return parent.top
-                if (tooltipPosition === "top" || tooltipPosition === "topLeft" || tooltipPosition === "topRight") return parent.bottom
-                if (tooltipPosition === "left" || tooltipPosition === "right") return parent.verticalCenter
+                if (control.tooltipPosition === "bottom" || control.tooltipPosition === "bottomLeft" || control.tooltipPosition === "bottomRight") return parent.top
+                if (control.tooltipPosition === "top" || control.tooltipPosition === "topLeft" || control.tooltipPosition === "topRight") return parent.bottom
+                if (control.tooltipPosition === "left" || control.tooltipPosition === "right") return parent.verticalCenter
                 return parent.top
             }
 

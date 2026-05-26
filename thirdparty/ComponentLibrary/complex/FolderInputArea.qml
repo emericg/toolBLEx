@@ -128,7 +128,7 @@ T.TextField {
     }
 
     Rectangle {
-        anchors.fill: background
+        anchors.fill: control.background
         radius: Theme.componentRadius
         color: "transparent"
 

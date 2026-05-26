@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Effects
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import ComponentLibrary
@@ -42,7 +41,7 @@ T.Button {
     // animation
     property string animation // available: rotate, fade, both
     property bool animationRunning: false
-    property bool hoverAnimation: isDesktop
+    property bool hoverAnimation: Theme.isDesktop
 
     // tooltip
     property string tooltipText
@@ -90,7 +89,7 @@ T.Button {
         radius: control.compactInternal ? Theme.componentHeight : Theme.componentRadius
         color: control.backgroundColor
 
-        //opacity: ( mouseArea.containsMouse) ? 1 : 0
+        //opacity: (mouseArea.containsMouse) ? 1 : 0
         Behavior on opacity { NumberAnimation { duration: 233 } }
 
         Rectangle {
@@ -115,11 +114,11 @@ T.Button {
             maskSpreadAtMax: 0.0
             maskSource: ShaderEffectSource {
                 sourceItem: Rectangle {
-                    x: background.x
-                    y: background.y
-                    width: background.width
-                    height: background.height
-                    radius: background.radius
+                    x: control.background.x
+                    y: control.background.y
+                    width: control.background.width
+                    height: control.background.height
+                    radius: control.background.radius
                 }
             }
         }
@@ -134,8 +133,8 @@ T.Button {
         opacity: control.enabled ? 1 : 0.66
 
         IconSvg {
-            width: control.sourceSize
-            height: control.sourceSize
+            Layout.preferredWidth: control.sourceSize
+            Layout.preferredHeight: control.sourceSize
 
             visible: control.source.toString().length
             Layout.maximumWidth: control.sourceSize

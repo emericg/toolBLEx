@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import ComponentLibrary
@@ -33,13 +32,11 @@ T.Button {
     ////////////////
 
     contentItem: RowLayout {
-        spacing: isPhone ? 6 : 12
+        spacing: Theme.isPhone ? 6 : 12
 
         IconSvg { // contentImage
-            width: control.sourceSize
-            height: control.sourceSize
-            Layout.maximumWidth: control.sourceSize
-            Layout.maximumHeight: control.sourceSize
+            Layout.preferredWidth: control.sourceSize
+            Layout.preferredHeight: control.sourceSize
 
             visible: source.toString().length
 
@@ -50,7 +47,7 @@ T.Button {
         }
 
         Text { // contentText
-            height: control.height
+            Layout.maximumHeight: control.sourceSize
             Layout.alignment: Qt.AlignVCenter
 
             visible: text

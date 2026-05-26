@@ -7,7 +7,7 @@ TextEdit {
     opacity: enabled ? 1 : 0.66
     font.pixelSize: Theme.componentFontSize
 
-    selectByMouse: isDesktop
+    selectByMouse: Theme.isDesktop
     selectionColor: Theme.colorPrimary
     selectedTextColor: "white"
 

@@ -5,7 +5,7 @@ import ComponentLibrary
 
 Item {
     id: selectorMenu
-    implicitWidth: 256
+    implicitWidth: 128
     implicitHeight: 32
 
     width: contentRow.width
@@ -50,10 +50,7 @@ Item {
                 text: txt ?? ""
                 source: src ?? ""
                 sourceSize: sz ?? 32
-                onClicked: {
-                    selectorMenu.currentSelection = idx
-                    selectorMenu.menuSelected(idx)
-                }
+                onClicked: selectorMenu.menuSelected(idx)
             }
         }
     }

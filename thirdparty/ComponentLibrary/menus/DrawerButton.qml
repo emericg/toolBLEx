@@ -2,9 +2,6 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Layouts
 import QtQuick.Templates as T
-import QtQuick.Controls.impl
-import QtQuick.Controls.Material
-import QtQuick.Controls.Material.impl
 
 import ComponentLibrary
 
@@ -59,10 +56,10 @@ T.ItemDelegate {
                 maskSpreadAtMax: 0.0
                 maskSource: ShaderEffectSource {
                     sourceItem: Rectangle {
-                        x: background.x
-                        y: background.y
-                        width: background.width
-                        height: background.height
+                        x: control.background.x
+                        y: control.background.y
+                        width: control.background.width
+                        height: control.background.height
                         radius: Theme.componentRadius
                     }
                 }

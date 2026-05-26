@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import ComponentLibrary
@@ -76,8 +75,8 @@ T.Button {
         spacing: 8
 
         IconSvg {
-            width: control.sourceSize
-            height: control.sourceSize
+            Layout.preferredWidth: control.sourceSize
+            Layout.preferredHeight: control.sourceSize
 
             Layout.maximumWidth: control.sourceSize
             Layout.maximumHeight: control.sourceSize
@@ -90,7 +89,7 @@ T.Button {
         }
 
         Text {
-            height: parent.height
+            Layout.preferredHeight: parent.height
 
             visible: text
 

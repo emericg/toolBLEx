@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import ComponentLibrary
@@ -17,9 +16,6 @@ T.Button {
 
     focusPolicy: Qt.NoFocus
     hoverEnabled: enabled && !readOnly
-
-    font.pixelSize: Theme.componentFontSize
-    font.bold: false
 
     // settings
     property int index

@@ -1,6 +1,4 @@
 import QtQuick
-import QtQuick.Layouts
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 import Qt.labs.qmlmodels
 
@@ -12,14 +10,17 @@ T.Popup {
     implicitWidth: parent.width
     implicitHeight: actualHeight
 
-    y: appWindow.height
+    // We use Screen.width/height on this mobile component,
+    // it's (mostly) equivalent to the dimension of the app window
+
+    y: Screen.height
 
     padding: 0
     margins: 0
 
     modal: true
     dim: true
-    focus: appWindow.isMobile
+    focus: Theme.isMobile
     closePolicy: T.Popup.CloseOnEscape | T.Popup.CloseOnPressOutside
     parent: T.Overlay.overlay
 
@@ -36,7 +37,7 @@ T.Popup {
 
     property int actualHeight: {
         if (typeof mobileMenu !== "undefined" && mobileMenu.height)
-            return contentColumn.height + appWindow.screenPaddingNavbar + appWindow.screenPaddingBottom
+            return contentColumn.height + screenPaddingNavbar + screenPaddingBottom
         return contentColumn.height
     }
 

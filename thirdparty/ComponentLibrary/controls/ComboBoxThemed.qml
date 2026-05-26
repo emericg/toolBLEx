@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import ComponentLibrary
@@ -34,7 +33,7 @@ T.ComboBox {
     ////////////////
 
     contentItem: Text {
-        rightPadding: indicator.width
+        rightPadding: control.indicator.width
         verticalAlignment: Text.AlignVCenter
 
         text: control.displayText
@@ -59,7 +58,7 @@ T.ComboBox {
 
         Connections {
             target: Theme
-            function onCurrentThemeChanged() { indicator.requestPaint() }
+            function onCurrentThemeChanged() { control.indicator.requestPaint() }
         }
 
         onPaint: {

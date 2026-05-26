@@ -4,7 +4,11 @@ import QtQuick.Window
 
 import ComponentLibrary
 
+pragma ComponentBehavior: Bound
+
 Loader {
+    id: csdLinuxLoader
+
     anchors.top: parent.top
     anchors.topMargin: 6
     anchors.right: parent.right
@@ -13,9 +17,11 @@ Loader {
     width: active ? 94 : 0
     height: active ? 26 : 0
 
-    active: (settingsManager.appThemeCSD && Qt.platform.os !== "windows" && Qt.platform.os !== "osx")
-    asynchronous: true
+    property bool appThemeCSD: false
+    property ApplicationWindow windowInstance: null
 
+    active: (windowInstance && appThemeCSD && Qt.platform.os !== "windows" && Qt.platform.os !== "osx")
+    asynchronous: true
     sourceComponent: Row {
         id: csdLinux
         spacing: 8
@@ -40,7 +46,7 @@ Loader {
                 anchors.fill: parent
 
                 hoverEnabled: true
-                onClicked: appWindow.showMinimized()
+                onClicked: csdLinuxLoader.windowInstance.showMinimized()
             }
         }
 
@@ -65,10 +71,10 @@ Loader {
 
                 hoverEnabled: true
                 onClicked: {
-                    if (appWindow.visibility === ApplicationWindow.Maximized)
-                        appWindow.showNormal()
+                    if (csdLinuxLoader.windowInstance.visibility === ApplicationWindow.Maximized)
+                        csdLinuxLoader.windowInstance.showNormal()
                     else
-                        appWindow.showMaximized()
+                        csdLinuxLoader.windowInstance.showMaximized()
                 }
             }
         }
@@ -98,7 +104,7 @@ Loader {
                 anchors.fill: parent
 
                 hoverEnabled: true
-                onClicked: appWindow.close()
+                onClicked: csdLinuxLoader.windowInstance.close()
             }
         }
 

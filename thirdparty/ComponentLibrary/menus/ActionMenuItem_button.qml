@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Effects
 import QtQuick.Layouts
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import ComponentLibrary

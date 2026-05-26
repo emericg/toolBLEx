@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import ComponentLibrary
@@ -19,9 +18,9 @@ T.ScrollBar {
 
     minimumSize: (orientation === Qt.Horizontal) ? (height / width) : (width / height)
 
-    property int radius: isDesktop ? 0 : 0
+    property int radius: Theme.isDesktop ? 0 : 0
 
-    property int sz: isDesktop ? 12 : 20
+    property int sz: Theme.isDesktop ? 12 : 20
 
     property color colorBackground: Theme.colorBackground
     property color colorMoving: Theme.colorSecondary
@@ -48,8 +47,8 @@ T.ScrollBar {
     ////////////////
 
     background: Rectangle {
-        implicitWidth: orientation === Qt.Vertical ? control.sz : 100
-        implicitHeight: orientation === Qt.Vertical ? 100 : control.sz
+        implicitWidth: (control.orientation === Qt.Vertical) ? control.sz : 100
+        implicitHeight: (control.orientation === Qt.Vertical) ? 100 : control.sz
 
         x: control.leftPadding
         width: control.width - control.leftPadding - control.rightPadding

@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Effects
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import ComponentLibrary
@@ -20,6 +19,8 @@ T.Button {
     font.bold: true
     font.pixelSize: Theme.componentFontSize
 
+    property int radius: Theme.componentRadius
+
     // icon
     property url source: "qrc:/IconLibrary/material-symbols/add.svg"
     property int sourceSize: 16
@@ -35,7 +36,7 @@ T.Button {
         implicitWidth: 72
         implicitHeight: 28
 
-        radius: Theme.componentRadius
+        radius: control.radius
         color: control.colorBackground
         border.width: Theme.componentBorderWidth
         border.color: control.colorBorder
@@ -96,11 +97,11 @@ T.Button {
             maskSpreadAtMax: 0.0
             maskSource: ShaderEffectSource {
                 sourceItem: Rectangle {
-                    x: background.x
-                    y: background.y
-                    width: background.width
-                    height: background.height
-                    radius: Theme.componentRadius
+                    x: control.background.x
+                    y: control.background.y
+                    width: control.background.width
+                    height: control.background.height
+                    radius: control.radius
                 }
             }
         }

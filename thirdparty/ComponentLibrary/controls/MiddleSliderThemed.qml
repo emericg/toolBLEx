@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import ComponentLibrary
@@ -30,10 +29,10 @@ T.Slider {
         scale: control.horizontal && control.mirrored ? -1 : 1
 
         Rectangle {
-            x: control.horizontal ? ((handle.x < control.availableWidth / 2) ? handle.x : control.width / 2) : -1
-            y: control.horizontal ? -1 : ((handle.y < control.availableHeight / 2) ? handle.y : control.height / 2)
-            width: control.horizontal ? Math.abs((control.width / 2) - handle.x) : 6
-            height: control.horizontal ? 6 : Math.abs((control.height / 2) - handle.y)
+            x: control.horizontal ? ((control.handle.x < control.availableWidth / 2) ? control.handle.x : control.width / 2) : -1
+            y: control.horizontal ? -1 : ((control.handle.y < control.availableHeight / 2) ? control.handle.y : control.height / 2)
+            width: control.horizontal ? Math.abs((control.width / 2) - control.handle.x) : 6
+            height: control.horizontal ? 6 : Math.abs((control.height / 2) - control.handle.y)
 
             radius: 2
             color: Theme.colorPrimary
@@ -61,7 +60,7 @@ T.Slider {
             z: -1
 
             acceptedButtons: Qt.NoButton
-            hoverEnabled: (isDesktop && control.enabled)
+            hoverEnabled: (Theme.isDesktop && control.enabled)
             propagateComposedEvents: false
 
             Rectangle {

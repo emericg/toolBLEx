@@ -25,18 +25,11 @@ Either:
 - include the CMakeLists.txt project file (and use qml_add_modules())
 - include the ComponentLibrary.qrc resource file directly
 
-For both methods, you should add the **find_package()** mentionned above to your ROOT cmake project file.
+For both methods, you should add the **find_package()** mentionned above to your ROOT CMake project file.
 
 To ensure the application deployment process doesn't miss the necessary QML modules,
 you should also copy the **QmlImports.qml** file (or its content) in the path that 
 will be scanned by the linuxdeploy/macdeployqt/windowdeployqt and the qmlimportscanner.
-
-You should add the ComponentLibrary import path in your ```main.cpp```:
-
-```cpp
-QQmlApplicationEngine engine;
-engine.addImportPath(":/ComponentLibrary");
-```
 
 ##### Using the CMakeLists.txt
 
@@ -45,7 +38,18 @@ add_subdirectory(thirdparty/ComponentLibrary)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ComponentLibraryplugin)
 ```
 
-##### Using the ComponentLibrary.qrc
+And with a couple of hacks that nobody can tell you why they are necessary:
+
+```cmake
+set(QML_IMPORT_PATH
+    "${CMAKE_BINARY_DIR}/thirdparty/"
+    "${CMAKE_BINARY_DIR}/thirdparty/ComponentLibrary"
+    CACHE STRING "QML Modules import paths" FORCE)
+
+set(QT_QML_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+```
+
+##### Using the ComponentLibrary.qrc (oldschool)
 
 ```cmake
 qt_add_executable(${CMAKE_PROJECT_NAME}

@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Effects
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import ComponentLibrary
@@ -65,19 +64,19 @@ T.Button {
             width: {
                 var multiplier = 1.0
                 if (control.pressed) {
-                    if (clickMode === "pull") multiplier = 1.1
-                    else if (clickMode === "push") multiplier = 0.9
+                    if (control.clickMode === "pull") multiplier = 1.1
+                    else if (control.clickMode === "push") multiplier = 0.9
                 }
                 return Math.round(control.sourceSize * multiplier)
             }
             height: {
                 var multiplier = 1.0
                 if (control.pressed) {
-                    if (clickMode === "pull") multiplier = 1.1
-                    else if (clickMode === "push") multiplier = 0.9
+                    if (control.clickMode === "pull") multiplier = 1.1
+                    else if (control.clickMode === "push") multiplier = 0.9
                 } else if (control.hovered) {
-                    if (hoverMode === "pull") multiplier = 1.1
-                    else if (hoverMode === "push") multiplier = 0.9
+                    if (control.hoverMode === "pull") multiplier = 1.1
+                    else if (control.hoverMode === "push") multiplier = 0.9
                 }
                 return Math.round(control.sourceSize * multiplier)
             }

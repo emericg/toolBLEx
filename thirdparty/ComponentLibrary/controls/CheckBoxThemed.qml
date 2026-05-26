@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import ComponentLibrary
@@ -24,7 +23,7 @@ T.CheckBox {
         implicitWidth: Theme.componentHeight
         implicitHeight: Theme.componentHeight
 
-        x: (layoutDirection === Qt.LeftToRight) ?
+        x: (control.layoutDirection === Qt.LeftToRight) ?
                (control.leftPadding) :
                (control.width - control.padding - width)
         y: (parent.height / 2) - (height / 2)
@@ -54,8 +53,8 @@ T.CheckBox {
     ////////////////
 
     contentItem: Text {
-        leftPadding: (layoutDirection === Qt.LeftToRight) ? control.indicator.width + control.spacing : 0
-        rightPadding: (layoutDirection === Qt.RightToLeft) ? control.indicator.width + control.spacing : 0
+        leftPadding: (control.layoutDirection === Qt.LeftToRight) ? control.indicator.width + control.spacing : 0
+        rightPadding: (control.layoutDirection === Qt.RightToLeft) ? control.indicator.width + control.spacing : 0
         verticalAlignment: Text.AlignVCenter
 
         text: control.text
