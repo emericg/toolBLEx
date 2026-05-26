@@ -784,7 +784,7 @@
         <location filename="../qml/popups/PopupClearDeviceSeenCache.qml" line="145"/>
         <source>There are %n device(s) in the cache.</source>
         <translation>
-            <numerusform>There are %n device in the cache.</numerusform>
+            <numerusform>There is %n device in the cache.</numerusform>
             <numerusform>There are %n devices in the cache.</numerusform>
         </translation>
     </message>
@@ -825,7 +825,7 @@
         <location filename="../qml/popups/PopupClearDeviceStructureCache.qml" line="145"/>
         <source>There are %n device(s) in the cache.</source>
         <translation>
-            <numerusform>There are %n device in the cache.</numerusform>
+            <numerusform>There is %n device in the cache.</numerusform>
             <numerusform>There are %n devices in the cache.</numerusform>
         </translation>
     </message>

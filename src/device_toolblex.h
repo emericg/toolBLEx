@@ -111,8 +111,8 @@ class DeviceToolBLEx: public Device
     Q_PROPERTY(QVariant deviceLog READ getDeviceLog NOTIFY logUpdated)
     Q_PROPERTY(QString deviceLogStr READ getDeviceLogStr NOTIFY logUpdated)
 
-    static const int s_min_entries_advertisement = 60;
-    static const int s_max_entries_advertisement = 60;
+    static const int s_min_entries_advertisement = 16;
+    static const int s_max_entries_advertisement = 256;
     static const int s_max_entries_packets = 20;
 
     bool m_isBeacon = false;

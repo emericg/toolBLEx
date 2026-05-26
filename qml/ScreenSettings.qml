@@ -44,6 +44,9 @@ Loader {
 
     ////////////////
 
+    opacity: active ? 1 : 0
+    Behavior on opacity { OpacityAnimator { duration: 233 } }
+
     active: false
     asynchronous: true
 

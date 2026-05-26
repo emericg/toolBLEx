@@ -7,7 +7,7 @@ import ComponentLibrary
 T.TextField {
     id: control
 
-    implicitWidth: contentWidth + leftPadding + rightPadding
+    implicitWidth: textMetrics.tightBoundingRect.width + leftPadding + rightPadding
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              contentHeight + topPadding + bottomPadding,
                              topPadding + bottomPadding)
@@ -24,5 +24,11 @@ T.TextField {
     background: Item {
         implicitWidth: 256
         implicitHeight: 20
+    }
+
+    TextMetrics {
+        id: textMetrics
+        font: control.font
+        text: control.text
     }
 }

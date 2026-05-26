@@ -975,7 +975,7 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
 
 void DeviceToolBLEx::addAdvertisementEntry(const int rssi, const bool hasMFD, const bool hasSVD)
 {
-    int maxentries = s_min_entries_advertisement;
+    int maxentries = s_max_entries_advertisement;
     if (m_advertisementInterval > 0 && m_advertisementInterval < 1000) maxentries = s_max_entries_advertisement;
 
     m_advertisementEntries.push_back(new AdvertisementEntry(rssi, hasMFD, hasSVD, this));

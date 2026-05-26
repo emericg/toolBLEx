@@ -588,7 +588,7 @@
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="212"/>
         <source>Classic</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Classique</translation>
     </message>
     <message>
         <location filename="../qml/PanelDeviceInfos.qml" line="218"/>
@@ -1624,7 +1624,7 @@
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="10"/>
         <source>Classic</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Classique</translation>
     </message>
     <message>
         <location filename="../qml/components_js/UtilsBluetooth.js" line="11"/>
