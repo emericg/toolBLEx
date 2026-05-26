@@ -22,20 +22,20 @@ ApplicationWindow {
     minimumHeight: 640
 
     width: {
-        if (settingsManager.initialSize.width > 0)
-            return settingsManager.initialSize.width
+        if (SettingsManager.initialSize.width > 0)
+            return SettingsManager.initialSize.width
         else
             return isHdpi ? 960 : 1280
     }
     height: {
-        if (settingsManager.initialSize.height > 0)
-            return settingsManager.initialSize.height
+        if (SettingsManager.initialSize.height > 0)
+            return SettingsManager.initialSize.height
         else
             return isHdpi ? 640 : 720
     }
-    x: settingsManager.initialPosition.width
-    y: settingsManager.initialPosition.height
-    visibility: settingsManager.initialVisibility
+    x: SettingsManager.initialPosition.width
+    y: SettingsManager.initialPosition.height
+    visibility: SettingsManager.initialVisibility
     visible: true
 
     WindowGeometrySaver {
@@ -59,11 +59,11 @@ ApplicationWindow {
 
     Component.onCompleted: {
         // Load preferred screen
-        if (settingsManager.preferredScreen === 0) {
+        if (SettingsManager.preferredScreen === 0) {
             screenScanner.loadScreen()
-        } else if (settingsManager.preferredScreen === 1) {
+        } else if (SettingsManager.preferredScreen === 1) {
             screenAdvertiser.loadScreen()
-        } else if (settingsManager.preferredScreen === 2 && ubertooth.toolsAvailable) {
+        } else if (SettingsManager.preferredScreen === 2 && ubertooth.toolsAvailable) {
             screenUbertooth.loadScreen()
         } else {
             screenScanner.loadScreen() // default to scanner
@@ -79,7 +79,7 @@ ApplicationWindow {
     }
 
     Connections {
-        target: menubarManager
+        target: MenubarManager
         function onSensorsClicked() { screenScanner.loadScreen() }
         function onAboutClicked() { screenSettings.loadScreen() }
     }
@@ -355,7 +355,7 @@ ApplicationWindow {
 
         Component.onCompleted: {
             // Load splash screen?
-            appSplashLoader.active = settingsManager.appSplashScreen
+            appSplashLoader.active = SettingsManager.appSplashScreen
         }
 
         sourceComponent: Item {

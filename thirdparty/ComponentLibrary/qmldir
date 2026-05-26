@@ -75,6 +75,7 @@ SelectorMenuColorful 1.0 generic/SelectorMenuColorful.qml
 SelectorMenuColorfulItem 1.0 generic/SelectorMenuColorfulItem.qml
 SelectorGrid 1.0 generic/SelectorGrid.qml
 SelectorGridItem 1.0 generic/SelectorGridItem.qml
+TextSelectable 1.0 generic/TextSelectable.qml
 FrameBox 1.0 layouts/FrameBox.qml
 FrameThemed 1.0 layouts/FrameThemed.qml
 GroupBoxThemed 1.0 layouts/GroupBoxThemed.qml

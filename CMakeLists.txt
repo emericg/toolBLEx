@@ -49,9 +49,9 @@ qt_policy(SET QTP0004 NEW)
 
 set(SOURCES
     src/main.cpp
-    src/SettingsManager.cpp src/SettingsManager.h
     src/DatabaseManager.cpp src/DatabaseManager.h
     src/MenubarManager.cpp src/MenubarManager.h
+    src/SettingsManager.cpp src/SettingsManager.h
 
     src/DeviceManager.cpp src/DeviceManager.h
     src/DeviceManager_advertisement.cpp src/DeviceManager_rssigraph.cpp
@@ -145,6 +145,11 @@ qt_add_qml_module(${PROJECT_NAME}
         qml/widgets/BleServiceWidget.qml
         qml/widgets/BleCharacteristicWidget.qml
         qml/widgets/DeviceLogWidget.qml
+
+    SOURCES
+        src/DatabaseManager.cpp src/DatabaseManager.h
+        src/MenubarManager.cpp src/MenubarManager.h
+        src/SettingsManager.cpp src/SettingsManager.h
 )
 
 qt_add_translations(${PROJECT_NAME}

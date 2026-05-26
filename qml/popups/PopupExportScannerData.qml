@@ -28,10 +28,10 @@ Popup {
         buttonError.visible = false
 
         var foldersep = "/"
-        if (settingsManager.exportDirectory_str.substr(-1) === "/") foldersep = ""
+        if (SettingsManager.exportDirectory_str.substr(-1) === "/") foldersep = ""
 
-        tfExportPath.currentFolder = settingsManager.exportDirectory_url
-        tfExportPath.text = settingsManager.exportDirectory_str + foldersep +
+        tfExportPath.currentFolder = SettingsManager.exportDirectory_url
+        tfExportPath.text = SettingsManager.exportDirectory_str + foldersep +
                             "devicelist_" + Qt.formatDateTime(new Date(), "yyyy-MM-dd_hh-mm") + ".csv"
     }
 
@@ -274,7 +274,7 @@ Popup {
                     dialogFilter: ["CSV file (*.csv)"]
                     dialogFileMode: FileDialog.SaveFile
 
-                    currentFolder: settingsManager.exportDirectory_url
+                    currentFolder: SettingsManager.exportDirectory_url
                 }
             }
         }

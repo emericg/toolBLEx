@@ -79,6 +79,7 @@ list(APPEND MODULE_QML_FILES
     generic/SelectorMenuColorfulItem.qml
     generic/SelectorGrid.qml
     generic/SelectorGridItem.qml
+    generic/TextSelectable.qml
 
     layouts/FrameBox.qml
     layouts/FrameThemed.qml

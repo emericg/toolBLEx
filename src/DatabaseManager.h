@@ -23,8 +23,13 @@
 #define DATABASE_MANAGER_H
 /* ************************************************************************** */
 
+#include <QtQml/qqmlregistration.h>
+
 #include <QObject>
 #include <QString>
+
+class QJSEngine;
+class QQmlEngine;
 
 /* ************************************************************************** */
 
@@ -60,6 +65,7 @@ class DatabaseManager: public QObject
 
 public:
     static DatabaseManager *getInstance();
+    static DatabaseManager *create(QQmlEngine *, QJSEngine *);
 
     Q_INVOKABLE bool hasDatabaseInternal() const { return m_dbInternalOpen; }
     Q_INVOKABLE bool hasDatabaseExternal() const { return m_dbExternalOpen; }

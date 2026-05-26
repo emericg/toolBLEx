@@ -76,6 +76,7 @@
         <file alias="SelectorMenuColorfulItem.qml">generic/SelectorMenuColorfulItem.qml</file>
         <file alias="SelectorGrid.qml">generic/SelectorGrid.qml</file>
         <file alias="SelectorGridItem.qml">generic/SelectorGridItem.qml</file>
+        <file alias="TextSelectable.qml">generic/TextSelectable.qml</file>
 
         <file alias="FrameBox.qml">layouts/FrameBox.qml</file>
         <file alias="FrameThemed.qml">layouts/FrameThemed.qml</file>

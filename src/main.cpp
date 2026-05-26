@@ -117,8 +117,6 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     QQmlContext *engine_context = engine.rootContext();
 
-    engine_context->setContextProperty("settingsManager", sm);
-    engine_context->setContextProperty("menubarManager", mb);
     engine_context->setContextProperty("deviceManager", dm);
     engine_context->setContextProperty("ubertooth", uber);
 

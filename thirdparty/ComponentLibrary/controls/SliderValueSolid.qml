@@ -22,6 +22,10 @@ T.Slider {
     property bool kshort: false
     property bool showvalue: true
 
+    // display value convertion, if needed, if supported...
+    property string value_unit
+    property string display_unit
+
     // colors
     property color colorBackground: Theme.colorForeground
     property color colorForeground: Theme.colorPrimary
@@ -92,7 +96,11 @@ T.Slider {
 
             text: {
                 var vvalue = control.value
-                if (control.unit === "°" && settingsManager.tempUnit === "F") vvalue = UtilsNumber.tempCelsiusToFahrenheit(vvalue)
+                if (control.value_unit && control.display_unit) {
+                    // display value convertion
+                    if (control.value_unit === "°C" && control.display_unit === "°F") vvalue = UtilsNumber.tempCelsiusToFahrenheit(vvalue)
+                    else if (control.value_unit === "°F" && control.display_unit === "°C") vvalue = UtilsNumber.tempFahrenheitToCelsius(vvalue)
+                }
                 vvalue = vvalue.toFixed(control.floatprecision)
                 return ((control.kshort && control.value > 999) ? (vvalue / 1000) : vvalue) + control.unit
             }
@@ -122,7 +130,11 @@ T.Slider {
 
             text: {
                 var vvalue = control.value
-                if (control.unit === "°" && settingsManager.tempUnit === "F") vvalue = UtilsNumber.tempCelsiusToFahrenheit(vvalue)
+                if (control.value_unit && control.display_unit) {
+                    // display value convertion
+                    if (control.value_unit === "°C" && control.display_unit === "°F") vvalue = UtilsNumber.tempCelsiusToFahrenheit(vvalue)
+                    else if (control.value_unit === "°F" && control.display_unit === "°C") vvalue = UtilsNumber.tempFahrenheitToCelsius(vvalue)
+                }
                 vvalue = vvalue.toFixed(control.floatprecision)
                 return ((control.kshort && control.value > 999) ? (vvalue / 1000) : vvalue) + control.unit
             }

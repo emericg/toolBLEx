@@ -20,7 +20,6 @@
  */
 
 #include "DatabaseManager.h"
-#include "SettingsManager.h"
 
 #include <QDir>
 #include <QFile>
@@ -45,6 +44,11 @@ DatabaseManager *DatabaseManager::getInstance()
     }
 
     return instance;
+}
+
+DatabaseManager *DatabaseManager::create(QQmlEngine *, QJSEngine *)
+{
+    return getInstance();
 }
 
 DatabaseManager::DatabaseManager()

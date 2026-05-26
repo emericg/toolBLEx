@@ -58,7 +58,7 @@ Loader {
             anchors.right: parent.right
             anchors.bottom: statusBar.top
 
-            orientation: settingsManager.scanviewOrientation
+            orientation: SettingsManager.scanviewOrientation
 
             handle: Rectangle {
                 id: splithandle
@@ -81,8 +81,8 @@ Loader {
                 }
             }
 
-            Component.onCompleted: splitview.restoreState(settingsManager.scanviewSize)
-            Component.onDestruction: settingsManager.scanviewSize = splitview.saveState()
+            Component.onCompleted: splitview.restoreState(SettingsManager.scanviewSize)
+            Component.onDestruction: SettingsManager.scanviewSize = splitview.saveState()
 
             ////////////////
 
@@ -118,11 +118,11 @@ Loader {
                             height: 28
                             colorBackground: Theme.colorActionbar
                             colorHighlight: Theme.colorActionbarHighlight
-                            checked: settingsManager.scanShowLowEnergy
+                            checked: SettingsManager.scanShowLowEnergy
 
                             text: qsTr("BLE")
                             onClicked: {
-                                settingsManager.scanShowLowEnergy = !settingsManager.scanShowLowEnergy
+                                SettingsManager.scanShowLowEnergy = !SettingsManager.scanShowLowEnergy
                                 deviceManager.updateBoolFilters()
                             }
                         }
@@ -130,11 +130,11 @@ Loader {
                             height: 28
                             colorBackground: Theme.colorActionbar
                             colorHighlight: Theme.colorActionbarHighlight
-                            checked: settingsManager.scanShowClassic
+                            checked: SettingsManager.scanShowClassic
 
                             text: qsTr("Classic")
                             onClicked: {
-                                settingsManager.scanShowClassic = !settingsManager.scanShowClassic
+                                SettingsManager.scanShowClassic = !SettingsManager.scanShowClassic
                                 deviceManager.updateBoolFilters()
                             }
                         }
@@ -142,11 +142,11 @@ Loader {
                             height: 28
                             colorBackground: Theme.colorActionbar
                             colorHighlight: Theme.colorActionbarHighlight
-                            checked: settingsManager.scanShowCached
+                            checked: SettingsManager.scanShowCached
 
                             text: qsTr("cached")
                             onClicked: {
-                                settingsManager.scanShowCached = !settingsManager.scanShowCached
+                                SettingsManager.scanShowCached = !SettingsManager.scanShowCached
                                 deviceManager.updateBoolFilters()
                             }
                         }
@@ -154,11 +154,11 @@ Loader {
                             height: 28
                             colorBackground: Theme.colorActionbar
                             colorHighlight: Theme.colorActionbarHighlight
-                            checked: settingsManager.scanShowBlacklisted
+                            checked: SettingsManager.scanShowBlacklisted
 
                             text: qsTr("hidden")
                             onClicked: {
-                                settingsManager.scanShowBlacklisted = !settingsManager.scanShowBlacklisted
+                                SettingsManager.scanShowBlacklisted = !SettingsManager.scanShowBlacklisted
                                 deviceManager.updateBoolFilters()
                             }
                         }
@@ -166,11 +166,11 @@ Loader {
                             height: 28
                             colorBackground: Theme.colorActionbar
                             colorHighlight: Theme.colorActionbarHighlight
-                            checked: settingsManager.scanShowBeacon
+                            checked: SettingsManager.scanShowBeacon
 
                             text: qsTr("beacons")
                             onClicked: {
-                                settingsManager.scanShowBeacon = !settingsManager.scanShowBeacon
+                                SettingsManager.scanShowBeacon = !SettingsManager.scanShowBeacon
                                 deviceManager.updateBoolFilters()
                             }
                         }
@@ -474,7 +474,7 @@ Loader {
                 property int flowElementWidth: (width >= 1080) ? (width / 3) - 24
                                                                : (width / 2) - 28
 
-                property int ww: (settingsManager.scanviewOrientation === Qt.Horizontal) ? width - 32
+                property int ww: (SettingsManager.scanviewOrientation === Qt.Horizontal) ? width - 32
                                                                                          : flowElementWidth
 
                 ////
@@ -593,12 +593,12 @@ Loader {
                     width: 28; height: 28;
                     anchors.verticalCenter: parent.verticalCenter
                     highlightMode: "color"
-                    highlighted: (settingsManager.scanviewOrientation === Qt.Vertical)
+                    highlighted: (SettingsManager.scanviewOrientation === Qt.Vertical)
                     source: "qrc:/IconLibrary/material-symbols/bottom_panel_open-fill.svg"
                     iconColor: Theme.colorSubText
 
                     onClicked: {
-                        settingsManager.scanviewOrientation = Qt.Vertical
+                        SettingsManager.scanviewOrientation = Qt.Vertical
 
                         splitview.width = splitview.width+1
                         splitview.width = splitview.width-1
@@ -608,12 +608,12 @@ Loader {
                     width: 28; height: 28;
                     anchors.verticalCenter: parent.verticalCenter
                     highlightMode: "color"
-                    highlighted: (settingsManager.scanviewOrientation === Qt.Horizontal)
+                    highlighted: (SettingsManager.scanviewOrientation === Qt.Horizontal)
                     source: "qrc:/IconLibrary/material-symbols/right_panel_open-fill.svg"
                     iconColor: Theme.colorSubText
 
                     onClicked: {
-                        settingsManager.scanviewOrientation = Qt.Horizontal
+                        SettingsManager.scanviewOrientation = Qt.Horizontal
 
                         splitview.width = splitview.width+1
                         splitview.width = splitview.width-1

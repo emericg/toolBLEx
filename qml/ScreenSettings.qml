@@ -379,20 +379,20 @@ Loader {
 
                                     radius: 4
                                     color: "white"
-                                    border.color: (settingsManager.appTheme === "THEME_DESKTOP_LIGHT") ? Theme.colorSecondary : "#757575"
+                                    border.color: (SettingsManager.appTheme === "THEME_DESKTOP_LIGHT") ? Theme.colorSecondary : "#757575"
                                     border.width: 2
 
                                     Text {
                                         anchors.centerIn: parent
                                         text: qsTr("light")
                                         textFormat: Text.PlainText
-                                        color: (settingsManager.appTheme === "THEME_DESKTOP_LIGHT") ? Theme.colorPrimary : "#757575"
+                                        color: (SettingsManager.appTheme === "THEME_DESKTOP_LIGHT") ? Theme.colorPrimary : "#757575"
                                         font.bold: true
                                         font.pixelSize: Theme.fontSizeContentSmall
                                     }
                                     MouseArea {
                                         anchors.fill: parent
-                                        onClicked: settingsManager.appTheme = "THEME_DESKTOP_LIGHT"
+                                        onClicked: SettingsManager.appTheme = "THEME_DESKTOP_LIGHT"
                                     }
                                 }
                                 Rectangle {
@@ -404,19 +404,19 @@ Loader {
                                     radius: 4
                                     color: "#555151"
                                     border.color: Theme.colorSecondary
-                                    border.width: (settingsManager.appTheme === "THEME_DESKTOP_DARK") ? 2 : 0
+                                    border.width: (SettingsManager.appTheme === "THEME_DESKTOP_DARK") ? 2 : 0
 
                                     Text {
                                         anchors.centerIn: parent
                                         text: qsTr("dark")
                                         textFormat: Text.PlainText
-                                        color: (settingsManager.appTheme === "THEME_DESKTOP_DARK") ? Theme.colorPrimary : "#ececec"
+                                        color: (SettingsManager.appTheme === "THEME_DESKTOP_DARK") ? Theme.colorPrimary : "#ececec"
                                         font.bold: true
                                         font.pixelSize: Theme.fontSizeContentSmall
                                     }
                                     MouseArea {
                                         anchors.fill: parent
-                                        onClicked: settingsManager.appTheme = "THEME_DESKTOP_DARK"
+                                        onClicked: SettingsManager.appTheme = "THEME_DESKTOP_DARK"
                                     }
                                 }
                             }
@@ -462,13 +462,13 @@ Loader {
 
                                 Component.onCompleted: {
                                     for (var i = 0; i < cbAppLanguage.count; i++) {
-                                        if (cbAppLanguage.get(i).text === settingsManager.appLanguage)
+                                        if (cbAppLanguage.get(i).text === SettingsManager.appLanguage)
                                             currentIndex = i
                                     }
                                 }
                                 onActivated: {
                                     utilsLanguage.loadLanguage(cbAppLanguage.get(currentIndex).text)
-                                    settingsManager.appLanguage = cbAppLanguage.get(currentIndex).text
+                                    SettingsManager.appLanguage = cbAppLanguage.get(currentIndex).text
                                 }
                             }
                         }
@@ -504,10 +504,10 @@ Loader {
                                     ListElement { idx: 1; txt: qsTr("imperial"); src: ""; sz: 16; }
                                 }
 
-                                currentSelection: settingsManager.appUnits
+                                currentSelection: SettingsManager.appUnits
                                 onMenuSelected: (index) => {
                                     currentSelection = index
-                                    settingsManager.appUnits = index
+                                    SettingsManager.appUnits = index
                                 }
                             }
                         }
@@ -554,8 +554,8 @@ Loader {
                                 }
                                 model: ubertooth.toolsAvailable ? lmScreens1 : lmScreens2
 
-                                currentSelection: settingsManager.preferredScreen
-                                onMenuSelected: (index) => { settingsManager.preferredScreen = index }
+                                currentSelection: SettingsManager.preferredScreen
+                                onMenuSelected: (index) => { SettingsManager.preferredScreen = index }
                             }
                         }
 
@@ -586,8 +586,8 @@ Loader {
                                 anchors.rightMargin: 8
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                checked: settingsManager.appSplashScreen
-                                onClicked: settingsManager.appSplashScreen = checked
+                                checked: SettingsManager.appSplashScreen
+                                onClicked: SettingsManager.appSplashScreen = checked
                             }
                         }
 
@@ -633,14 +633,14 @@ Loader {
 
                                 dialogTitle: qsTr("Please specify the default export directory")
                                 currentFolder: {
-                                    if (settingsManager.exportDirectory.length) {
-                                        return settingsManager.exportDirectory
+                                    if (SettingsManager.exportDirectory.length) {
+                                        return SettingsManager.exportDirectory
                                     }
                                     return StandardPaths.writableLocation(StandardPaths.HomeLocation)
                                 }
 
-                                text: settingsManager.exportDirectory
-                                onTextChanged: settingsManager.exportDirectory = text
+                                text: SettingsManager.exportDirectory
+                                onTextChanged: SettingsManager.exportDirectory = text
                             }
                         }
                     }
@@ -718,9 +718,9 @@ Loader {
                                     ListElement { idx: 3; txt: qsTr("Both"); src: ""; sz: 16; }
                                 }
 
-                                currentSelection: settingsManager.scanMethods
+                                currentSelection: SettingsManager.scanMethods
                                 onMenuSelected: (index) => {
-                                    settingsManager.scanMethods = index
+                                    SettingsManager.scanMethods = index
                                     deviceManager.scanDevices_restart()
                                 }
                             }
@@ -753,9 +753,9 @@ Loader {
                                 anchors.rightMargin: 8
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                checked: settingsManager.scanAuto
+                                checked: SettingsManager.scanAuto
                                 onClicked: {
-                                    settingsManager.scanAuto = checked
+                                    SettingsManager.scanAuto = checked
                                     if (!deviceManager.scanning) {
                                         deviceManager.scanDevices_start()
                                     }
@@ -790,8 +790,8 @@ Loader {
                                 anchors.rightMargin: 8
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                checked: settingsManager.scanPause
-                                onClicked: settingsManager.scanPause = checked
+                                checked: SettingsManager.scanPause
+                                onClicked: SettingsManager.scanPause = checked
                             }
                         }
 
@@ -825,9 +825,9 @@ Loader {
                                 from: 0
                                 to: 10
 
-                                value: settingsManager.scanTimeout
+                                value: SettingsManager.scanTimeout
                                 onValueModified: {
-                                    settingsManager.scanTimeout = value
+                                    SettingsManager.scanTimeout = value
                                     restartScannerTimer.restart()
                                 }
                             }
@@ -864,8 +864,8 @@ Loader {
                                 to: 2500
                                 stepSize: 250
 
-                                value: settingsManager.scanRssiInterval
-                                onValueModified: settingsManager.scanRssiInterval = value
+                                value: SettingsManager.scanRssiInterval
+                                onValueModified: SettingsManager.scanRssiInterval = value
                             }
                         }
 
@@ -896,8 +896,8 @@ Loader {
                                 anchors.rightMargin: 8
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                checked: settingsManager.scanCacheAuto
-                                onClicked: settingsManager.scanCacheAuto = checked
+                                checked: SettingsManager.scanCacheAuto
+                                onClicked: SettingsManager.scanCacheAuto = checked
                             }
                         }
 
@@ -1129,7 +1129,7 @@ Loader {
 
                                 selectByMouse: true
 
-                                text: settingsManager.ubertooth_path
+                                text: SettingsManager.ubertooth_path
                                 placeholderText: "ubertooth-specan"
 
                                 dialogTitle: qsTr("Please specify the path to the ubertooth-specan binary")
@@ -1149,7 +1149,7 @@ Loader {
                                 }
 
                                 onTextChanged: {
-                                    settingsManager.ubertooth_path = text
+                                    SettingsManager.ubertooth_path = text
                                     ubertooth.checkPath()
                                 }
                             }
@@ -1173,16 +1173,16 @@ Loader {
 
                                 from: 2300
                                 to: 2600
-                                first.value: settingsManager.ubertooth_freqMin
+                                first.value: SettingsManager.ubertooth_freqMin
                                 first.onMoved: {
-                                    settingsManager.ubertooth_freqMin = first.value
+                                    SettingsManager.ubertooth_freqMin = first.value
                                     if (ubertooth.running) {
                                         restartUbertoothTimer.restart()
                                     }
                                 }
-                                second.value: settingsManager.ubertooth_freqMax
+                                second.value: SettingsManager.ubertooth_freqMax
                                 second.onMoved: {
-                                    settingsManager.ubertooth_freqMax = second.value
+                                    SettingsManager.ubertooth_freqMax = second.value
                                     if (ubertooth.running) {
                                         restartUbertoothTimer.restart()
                                     }
@@ -1209,9 +1209,9 @@ Loader {
                                 to: 2600
                                 legend: "MHz"
 
-                                value: settingsManager.ubertooth_freqMin
+                                value: SettingsManager.ubertooth_freqMin
                                 onValueModified: {
-                                    settingsManager.ubertooth_freqMin = value
+                                    SettingsManager.ubertooth_freqMin = value
                                     if (ubertooth.running) {
                                         restartUbertoothTimer.restart()
                                     }
@@ -1220,12 +1220,12 @@ Loader {
 
                             ButtonDesktop {
                                 anchors.centerIn: parent
-                                visible: (settingsManager.ubertooth_freqMin !== 2402 || settingsManager.ubertooth_freqMax !== 2480)
+                                visible: (SettingsManager.ubertooth_freqMin !== 2402 || SettingsManager.ubertooth_freqMax !== 2480)
 
                                 text: qsTr("Default")
                                 onClicked: {
-                                    settingsManager.ubertooth_freqMin = 2402
-                                    settingsManager.ubertooth_freqMax = 2480
+                                    SettingsManager.ubertooth_freqMin = 2402
+                                    SettingsManager.ubertooth_freqMax = 2480
                                     if (ubertooth.running) {
                                         ubertooth.restartWork()
                                     }
@@ -1244,9 +1244,9 @@ Loader {
                                 to: 2600
                                 legend: "MHz"
 
-                                value: settingsManager.ubertooth_freqMax
+                                value: SettingsManager.ubertooth_freqMax
                                 onValueModified: {
-                                    settingsManager.ubertooth_freqMax = value
+                                    SettingsManager.ubertooth_freqMax = value
                                     if (ubertooth.running) {
                                         restartUbertoothTimer.restart()
                                     }

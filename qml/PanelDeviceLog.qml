@@ -190,10 +190,10 @@ Flickable {
 
             onClicked: {
                 var foldersep = "/"
-                if (settingsManager.exportDirectory_str.substr(-1) === "/") foldersep = ""
+                if (SettingsManager.exportDirectory_str.substr(-1) === "/") foldersep = ""
 
-                pathDialog.currentFolder = settingsManager.exportDirectory_url
-                pathDialog.selectedFile = settingsManager.exportDirectory_str + foldersep +
+                pathDialog.currentFolder = SettingsManager.exportDirectory_url
+                pathDialog.selectedFile = SettingsManager.exportDirectory_str + foldersep +
                                           selectedDevice.deviceName_export + "-" +
                                           selectedDevice.deviceAddr_export + "-log.txt"
                 pathDialog.open()
@@ -207,7 +207,7 @@ Flickable {
                 nameFilters: ["All files (*)"]
 
                 fileMode: FileDialog.SaveFile
-                currentFolder: settingsManager.exportDirectory_url
+                currentFolder: SettingsManager.exportDirectory_url
                 selectedFile: UtilsPath.makeUrl("log.txt")
 
                 onAccepted: {

@@ -22,8 +22,6 @@
 #include "SettingsManager.h"
 
 #include <QCoreApplication>
-#include <QQmlEngine>
-#include <QJSEngine>
 #include <QSettings>
 #include <QLocale>
 #include <QDebug>

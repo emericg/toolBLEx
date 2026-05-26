@@ -9,7 +9,7 @@ Item {
 
     Rectangle {
         anchors.centerIn: cc
-        width: (settingsManager.scanviewOrientation === Qt.Vertical) ? (parent.width * 1.0) : (parent.height * 1.8)
+        width: (SettingsManager.scanviewOrientation === Qt.Vertical) ? (parent.width * 1.0) : (parent.height * 1.8)
         height: width
         radius: width
         color: Theme.colorActionbar
@@ -19,7 +19,7 @@ Item {
     }
     Rectangle {
         anchors.centerIn: cc
-        width: (settingsManager.scanviewOrientation === Qt.Vertical) ? (parent.width * 0.75) : (parent.height * 1.33)
+        width: (SettingsManager.scanviewOrientation === Qt.Vertical) ? (parent.width * 0.75) : (parent.height * 1.33)
         height: width
         radius: width
         color: Theme.colorActionbar
@@ -29,7 +29,7 @@ Item {
     }
     Rectangle {
         anchors.centerIn: cc
-        width: (settingsManager.scanviewOrientation === Qt.Vertical) ? (parent.width * 0.45) : (parent.height *0.75)
+        width: (SettingsManager.scanviewOrientation === Qt.Vertical) ? (parent.width * 0.45) : (parent.height *0.75)
         height: width
         radius: width
         color: Theme.colorActionbar
@@ -39,7 +39,7 @@ Item {
     }
     Rectangle {
         anchors.centerIn: cc
-        width: (settingsManager.scanviewOrientation === Qt.Vertical) ? (parent.width * 0.2) : (parent.height * 0.4)
+        width: (SettingsManager.scanviewOrientation === Qt.Vertical) ? (parent.width * 0.2) : (parent.height * 0.4)
         height: width
         radius: width
         color: Theme.colorActionbar

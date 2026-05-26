@@ -20,6 +20,10 @@ T.RangeSlider {
     property string unit
     property int floatprecision: 0
 
+    // display value convertion, if needed, if supported...
+    property string value_unit
+    property string display_unit
+
     // colors
     property color colorBackground: Theme.colorComponentBackground
     property color colorForeground: Theme.colorPrimary
@@ -77,7 +81,11 @@ T.RangeSlider {
 
             text: {
                 var vvalue = control.first.value
-                if (control.unit === "°" && settingsManager.tempUnit === "F") vvalue = UtilsNumber.tempCelsiusToFahrenheit(vvalue)
+                if (control.value_unit && control.display_unit) {
+                    // display value convertion
+                    if (control.value_unit === "°C" && control.display_unit === "°F") vvalue = UtilsNumber.tempCelsiusToFahrenheit(vvalue)
+                    else if (control.value_unit === "°F" && control.display_unit === "°C") vvalue = UtilsNumber.tempFahrenheitToCelsius(vvalue)
+                }
                 vvalue = vvalue.toFixed(control.floatprecision)
                 return ((control.first.value > 999) ? vvalue / 1000 : vvalue) + control.unit
             }
@@ -118,7 +126,11 @@ T.RangeSlider {
 
             text: {
                 var vvalue = control.second.value
-                if (control.unit === "°" && settingsManager.tempUnit === "F") vvalue = UtilsNumber.tempCelsiusToFahrenheit(vvalue)
+                if (control.value_unit && control.display_unit) {
+                    // display value convertion
+                    if (control.value_unit === "°C" && control.display_unit === "°F") vvalue = UtilsNumber.tempCelsiusToFahrenheit(vvalue)
+                    else if (control.value_unit === "°F" && control.display_unit === "°C") vvalue = UtilsNumber.tempFahrenheitToCelsius(vvalue)
+                }
                 vvalue = vvalue.toFixed(control.floatprecision)
                 return ((control.second.value > 999) ? vvalue / 1000 : vvalue) + control.unit
             }

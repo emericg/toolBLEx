@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Controls.Material
 
 import ComponentLibrary
+import toolBLEx
 
 Item {
     enum ThemeNames {
@@ -261,10 +262,10 @@ Item {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    Component.onCompleted: loadTheme(settingsManager.appTheme)
+    Component.onCompleted: loadTheme(SettingsManager.appTheme)
     Connections {
-        target: settingsManager
-        function onAppThemeChanged() { loadTheme(settingsManager.appTheme) }
+        target: SettingsManager
+        function onAppThemeChanged() { loadTheme(SettingsManager.appTheme) }
     }
 
     function loadTheme(newIndex) {
@@ -285,7 +286,7 @@ Item {
         }
 
         // Handle day/night themes
-        if (settingsManager.appThemeAuto) {
+        if (SettingsManager.appThemeAuto) {
             var rightnow = new Date()
             var hour = Qt.formatDateTime(rightnow, "hh")
             if (hour >= 21 || hour <= 8) {

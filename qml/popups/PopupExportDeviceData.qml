@@ -33,10 +33,10 @@ Popup {
         cbData.checked = true
 
         var foldersep = "/"
-        if (settingsManager.exportDirectory_str.substr(-1) === "/") foldersep = ""
+        if (SettingsManager.exportDirectory_str.substr(-1) === "/") foldersep = ""
 
-        tfExportPath.currentFolder = settingsManager.exportDirectory_url
-        tfExportPath.text = settingsManager.exportDirectory_str + foldersep +
+        tfExportPath.currentFolder = SettingsManager.exportDirectory_url
+        tfExportPath.text = SettingsManager.exportDirectory_str + foldersep +
                             selectedDevice.deviceName_export + "-" +
                             selectedDevice.deviceAddr_export + ".txt"
     }
@@ -303,7 +303,7 @@ Popup {
                     dialogFilter: ["Text file (*.txt)"]
                     dialogFileMode: FileDialog.SaveFile
 
-                    currentFolder: settingsManager.exportDirectory_url
+                    currentFolder: SettingsManager.exportDirectory_url
                 }
             }
         }

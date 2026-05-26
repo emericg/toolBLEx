@@ -53,7 +53,7 @@ ChartView {
     }
 
     Timer {
-        interval: settingsManager.scanRssiInterval
+        interval: SettingsManager.scanRssiInterval
         running: (deviceManager.scanning && !deviceManager.scanningPaused && hostMenu.currentSelection === 3)
         repeat: true
         onTriggered: updateGraph()
