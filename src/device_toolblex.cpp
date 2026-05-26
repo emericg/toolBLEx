@@ -68,12 +68,14 @@ DeviceToolBLEx::DeviceToolBLEx(const QBluetoothDeviceInfo &d, QObject *parent):
 {
     // Creation from BLE scanning
 
-    addAdvertisementEntry(d.rssi(), !d.manufacturerIds().empty(), !d.serviceIds().empty());
+    QDateTime timestamp = QDateTime::currentDateTime();
 
     m_isCached = (d.rssi() == 0);
     m_hasServiceCache = checkServiceCache();
-    m_firstSeen = QDateTime::currentDateTime();
     m_bluetoothCoreConfiguration = d.coreConfigurations();
+    m_firstSeen = timestamp;
+
+    addAdvertisementEntry(timestamp, d.rssi(), !d.manufacturerIds().empty(), !d.serviceIds().empty());
 
     getSqlDeviceInfos();
 }
@@ -82,9 +84,6 @@ DeviceToolBLEx::DeviceToolBLEx(const QBluetoothDeviceInfo &d, QObject *parent):
 
 DeviceToolBLEx::~DeviceToolBLEx()
 {
-    // will update 'last seen'
-    updateCache();
-
     qDeleteAll(m_services);
     m_services.clear();
 
@@ -360,7 +359,7 @@ void DeviceToolBLEx::setUserStar(bool star)
 
 void DeviceToolBLEx::setLastSeen(const QDateTime &dt)
 {
-    if (m_lastSeen != dt)
+    if (m_lastSeen.toSecsSinceEpoch() / 60 != dt.toSecsSinceEpoch() / 60)
     {
         m_lastSeen = dt;
         Q_EMIT seenChanged();
@@ -973,12 +972,13 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
 
 /* ************************************************************************** */
 
-void DeviceToolBLEx::addAdvertisementEntry(const int rssi, const bool hasMFD, const bool hasSVD)
+void DeviceToolBLEx::addAdvertisementEntry(const QDateTime &timestamp, const int rssi,
+                                           const bool hasMFD, const bool hasSVD)
 {
     int maxentries = s_max_entries_advertisement;
     if (m_advertisementInterval > 0 && m_advertisementInterval < 1000) maxentries = s_max_entries_advertisement;
 
-    m_advertisementEntries.push_back(new AdvertisementEntry(rssi, hasMFD, hasSVD, this));
+    m_advertisementEntries.push_back(new AdvertisementEntry(timestamp, rssi, hasMFD, hasSVD, this));
     if (m_advertisementEntries.length() > maxentries)
     {
         delete m_advertisementEntries.at(0);

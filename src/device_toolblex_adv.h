@@ -46,18 +46,19 @@ class AdvertisementEntry: public QObject
     bool m_hasSVD = false;
 
 public:
-    AdvertisementEntry(int r, bool m, bool s, QObject *parent) : QObject(parent) {
-        m_timestamp = QDateTime::currentDateTime();
+    AdvertisementEntry(const QDateTime &ts, int r, bool m, bool s,
+                       QObject *parent) : QObject(parent) {
+        m_timestamp = ts;
         m_rssi = r;
         m_hasMFD = m;
         m_hasSVD = s;
     }
     ~AdvertisementEntry() = default;
 
-    QDateTime getTimestamp() const { return m_timestamp; }
-    int getRssi() const { return m_rssi; }
-    bool hasMFD() const { return m_hasMFD; }
-    bool hasSVD() const { return m_hasSVD; }
+    const QDateTime &getTimestamp() const { return m_timestamp; }
+    const int getRssi() const { return m_rssi; }
+    const bool hasMFD() const { return m_hasMFD; }
+    const bool hasSVD() const { return m_hasSVD; }
 };
 
 /* ************************************************************************** */
@@ -76,7 +77,7 @@ Q_SIGNALS:
 
 public:
     AdvertisementUUID(const uint16_t uuid, const bool selected,
-              QObject *parent = nullptr): QObject(parent) {
+                      QObject *parent = nullptr): QObject(parent) {
         m_uuid = uuid;
         m_selected = selected;
     }
@@ -122,22 +123,22 @@ public:
 
     bool compare(const QByteArray &data) { return (advData.compare(data) != 0); }
 
-    QDateTime getTimestamp() const { return m_timestamp; }
+    const QDateTime &getTimestamp() const { return m_timestamp; }
 
     int getMode() const { return advMode; }
 
-    QString getUUID_str() const { return advUUIDstr; }
-    QString getUUID_vendor() const { return advUUIDvendor; }
+    const QString &getUUID_str() const { return advUUIDstr; }
+    const QString &getUUID_vendor() const { return advUUIDvendor; }
     int getUUID_int() const { return advUUID; }
     uint16_t getUUID_uint() const { return advUUID; }
 
-    QVariant getData() const { return QVariant::fromValue(advData); }
+    const QVariant getData() const { return QVariant::fromValue(advData); }
     int getDataSize() const { return advData.size(); }
 
-    QString getDataHex() const { return QString::fromStdString(advData.toHex().toStdString()); }
-    QString getDataAscii() const { return QString::fromStdString(advData.toStdString()); }
+    const QString getDataHex() const { return QString::fromStdString(advData.toHex().toStdString()); }
+    const QString getDataAscii() const { return QString::fromStdString(advData.toStdString()); }
 
-    QStringList getDataHex_list() const {
+    const QStringList getDataHex_list() const {
         QStringList out;
         for (int i = 0; i < advData.size(); i++) {
             QByteArray duo; duo += advData.at(i);
@@ -145,7 +146,7 @@ public:
         }
         return out;
     }
-    QStringList getDataAscii_list() const {
+    const QStringList getDataAscii_list() const {
         QStringList out;
         for (int i = 0; i < advData.size(); i++) {
             QByteArray duo; duo += advData.at(i);

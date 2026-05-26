@@ -266,7 +266,8 @@ public:
     QVariant getRssiHistory() const { return QVariant::fromValue(m_advertisementEntries); }
     const QList <AdvertisementEntry *> &getRssiHistory2() const { return m_advertisementEntries; }
 
-    void addAdvertisementEntry(const int rssi, const bool hasMFD = false, const bool hasSVD = false);
+    void addAdvertisementEntry(const QDateTime &timestamp, const int rssi,
+                               const bool hasMFD = false, const bool hasSVD = false);
     void cleanAdvertisementEntries();
 
     int getAdvertisementInterval() const { return m_advertisementInterval; }

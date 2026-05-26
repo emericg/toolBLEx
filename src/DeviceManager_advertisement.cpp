@@ -59,10 +59,12 @@ void DeviceManager::bleDevice_updated(const QBluetoothDeviceInfo &info, QBluetoo
         {
             dd->setName(info.name());
             dd->setRssi(info.rssi());
-            dd->setLastSeen(QDateTime::currentDateTime());
             dd->setCoreConfiguration(info.coreConfigurations());
             dd->setDeviceClass(info.majorDeviceClass(), info.minorDeviceClass(), info.serviceClasses());
             dd->setAdvertisedServices(info.serviceUuids());
+
+            QDateTime timestamp = QDateTime::currentDateTime();
+            dd->setLastSeen(timestamp);
 
             bool hasmfd = false;
             bool hassvd = false;
@@ -97,7 +99,7 @@ void DeviceManager::bleDevice_updated(const QBluetoothDeviceInfo &info, QBluetoo
                                                          id.toUInt16(), id, info.serviceData(id));
             }
 
-            dd->addAdvertisementEntry(info.rssi(), hasmfd, hassvd);
+            dd->addAdvertisementEntry(timestamp, info.rssi(), hasmfd, hassvd);
 
             countDevices();
             return;
