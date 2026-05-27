@@ -5,18 +5,13 @@ import QtQuick.Controls
 import ComponentLibrary
 import DeviceUtils
 
-Rectangle {
+Item {
     id: advDataWidget
 
     height: columnContent.height + 32
-    radius: 4
 
-    clip: false
-    color: Theme.colorBox
-    border.width: 2
-    border.color: Theme.colorBoxBorder
+    ////////////////
 
-    property var packet: null
     property int legendWidth: 48
 
     Component.onCompleted: {
@@ -30,279 +25,293 @@ Rectangle {
     ////////////////
 
     Rectangle {
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.bottom: parent.bottom
+        anchors.fill: parent
+        anchors.leftMargin: 16
+        anchors.rightMargin: 16
 
-        width: 8
-        radius: 2
-        color: (packet.advMode === 0) ? Theme.colorGreen : Theme.colorBlue
-    }
+        clip: false
+        radius: 4
+        color: Theme.colorBox
+        border.width: 2
+        border.color: Theme.colorBoxBorder
 
-    ////////////////
-
-    Text {
-        id: timebox
-        anchors.top: parent.top
-        anchors.right: parent.right
-        anchors.topMargin: 4
-        anchors.rightMargin: 8
-
-        z: 4
-        text: packet.timestamp.toLocaleTimeString(Qt.locale(), "hh:mm:ss")
-        textFormat: Text.PlainText
-        font.pixelSize: Theme.fontSizeContent
-        color: Theme.colorText
+        ////////
 
         Rectangle {
-            anchors.fill: parent
-            anchors.topMargin: -4
-            anchors.leftMargin: -8
-            anchors.rightMargin: -8
-            anchors.bottomMargin: -4
-            radius: 2
-            z: -1
-            color: Theme.colorBoxBorder
-        }
-    }
-
-    ////////////////
-
-    Column {
-        id: columnContent
-        anchors.left: parent.left
-        anchors.leftMargin: 16
-        anchors.right: parent.right
-        anchors.rightMargin: 16
-        anchors.verticalCenter: parent.verticalCenter
-        spacing: 4
-
-        ////////
-
-        RowLayout {
+            anchors.top: parent.top
             anchors.left: parent.left
+            anchors.bottom: parent.bottom
+
+            width: 8
+            radius: 2
+            color: (advMode === 0) ? Theme.colorGreen : Theme.colorBlue
+        }
+
+        ////////
+
+        Text {
+            id: timebox
+            anchors.top: parent.top
             anchors.right: parent.right
-            anchors.rightMargin: timebox.width
-            spacing: 12
+            anchors.topMargin: 4
+            anchors.rightMargin: 8
 
-            Text {
-                id: legendUUID
+            z: 4
+            text: timestamp.toLocaleTimeString(Qt.locale(), "hh:mm:ss")
+            textFormat: Text.PlainText
+            font.pixelSize: Theme.fontSizeContent
+            color: Theme.colorText
 
-                Layout.alignment: Qt.AlignTop | Qt.AlignRight
-                Layout.preferredWidth: legendWidth
-
-                text: qsTr("UUID")
-                textFormat: Text.PlainText
-                font.pixelSize: Theme.fontSizeContent
-                horizontalAlignment: Text.AlignRight
-                color: Theme.colorSubText
-            }
-
-            Flow {
-                Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
-                Layout.fillWidth: true
-                spacing: 4
-
-                Row {
-                    spacing: 2
-
-                    Text {
-                        text: "0x"
-                        textFormat: Text.PlainText
-                        font.pixelSize: Theme.fontSizeContent
-                        color: Theme.colorSubText
-                    }
-                    TextSelectable {
-                        text: packet.advUUIDstr
-                        font.pixelSize: Theme.fontSizeContent
-                        color: Theme.colorText
-                    }
-                }
-
-                Row {
-                    visible: (packet.advUUIDmanuf.length > 1)
-
-                    Text {
-                        text: "("
-                        textFormat: Text.PlainText
-                        font.pixelSize: Theme.fontSizeContent
-                        color: Theme.colorSubText
-                    }
-                    TextSelectable {
-                        text: packet.advUUIDmanuf
-                        color: Theme.colorText
-                    }
-                    Text {
-                        text: ")"
-                        textFormat: Text.PlainText
-                        font.pixelSize: Theme.fontSizeContent
-                        color: Theme.colorSubText
-                    }
-                }
+            Rectangle {
+                anchors.fill: parent
+                anchors.topMargin: -4
+                anchors.leftMargin: -8
+                anchors.rightMargin: -8
+                anchors.bottomMargin: -4
+                radius: 2
+                z: -1
+                color: Theme.colorBoxBorder
             }
         }
 
         ////////
 
-        Row {
-            spacing: 12
+        Column {
+            id: columnContent
+            anchors.left: parent.left
+            anchors.leftMargin: 16
+            anchors.right: parent.right
+            anchors.rightMargin: 16
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: 4
 
-            Text {
-                id: legendSize
-                width: legendWidth
+            ////////
 
-                text: qsTr("DATA")
-                textFormat: Text.PlainText
-                font.pixelSize: Theme.fontSizeContent
-                horizontalAlignment: Text.AlignRight
-                color: Theme.colorSubText
-            }
-
-            Row {
-                spacing: 4
+            RowLayout {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.rightMargin: timebox.width
+                spacing: 12
 
                 Text {
-                    text: packet.advDataSize
-                    textFormat: Text.PlainText
-                    //font.family: fontMonospace
-                    font.pixelSize: Theme.fontSizeContent
-                    color: Theme.colorText
-                }
-                Text {
-                    text: qsTr("bytes")
+                    id: legendUUID
+
+                    Layout.alignment: Qt.AlignTop | Qt.AlignRight
+                    Layout.preferredWidth: legendWidth
+
+                    text: qsTr("UUID")
                     textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeContent
+                    horizontalAlignment: Text.AlignRight
                     color: Theme.colorSubText
                 }
-            }
-        }
 
-        ////////
+                Flow {
+                    Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                    Layout.fillWidth: true
+                    spacing: 4
 
-        RowLayout {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            spacing: 12
-
-            Text {
-                id: legendData_hex
-
-                Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
-                Layout.preferredWidth: legendWidth
-
-                text: qsTr("(hex)")
-                textFormat: Text.PlainText
-                font.pixelSize: Theme.fontSizeContentVerySmall
-                horizontalAlignment: Text.AlignRight
-                color: Theme.colorSubText
-            }
-
-            Flow {
-                Layout.alignment: Qt.AlignVCenter
-                Layout.fillWidth: true
-                spacing: 0
-
-                Repeater {
-                    model: packet.advDataHex_list
-
-                    Rectangle {
-                        width: 26
-                        height: 26
-                        color: (index % 2 === 0) ? Theme.colorForeground : Theme.colorBox
-                        border.width: 0
-                        border.color: Theme.colorForeground
+                    Row {
+                        spacing: 2
 
                         Text {
-                            height: 26
-                            anchors.horizontalCenter: parent.horizontalCenter
-
-                            text: modelData
+                            text: "0x"
                             textFormat: Text.PlainText
-                            font.pixelSize: Theme.fontSizeContent-1
-                            verticalAlignment: Text.AlignVCenter
+                            font.pixelSize: Theme.fontSizeContent
+                            color: Theme.colorSubText
+                        }
+                        TextSelectable {
+                            text: advUUIDstr
+                            font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorText
-                            font.family: fontMonospace
+                        }
+                    }
+
+                    Row {
+                        visible: (advUUIDvendor.length > 1)
+
+                        Text {
+                            text: "("
+                            textFormat: Text.PlainText
+                            font.pixelSize: Theme.fontSizeContent
+                            color: Theme.colorSubText
+                        }
+                        TextSelectable {
+                            text: advUUIDvendor
+                            color: Theme.colorText
+                        }
+                        Text {
+                            text: ")"
+                            textFormat: Text.PlainText
+                            font.pixelSize: Theme.fontSizeContent
+                            color: Theme.colorSubText
                         }
                     }
                 }
+            }
 
-                Item { width: 4; height: 4; } // spacer
+            ////////
 
-                SquareButtonSunken {
-                    width: 26; height: 26;
+            Row {
+                spacing: 12
 
-                    tooltipText: qsTr("copy")
-                    tooltipPosition: "right"
-                    source: "qrc:/IconLibrary/material-symbols/content_copy.svg"
+                Text {
+                    id: legendSize
+                    width: legendWidth
 
-                    onClicked: {
-                        utilsClipboard.setText(packet.advDataHex)
+                    text: qsTr("DATA")
+                    textFormat: Text.PlainText
+                    font.pixelSize: Theme.fontSizeContent
+                    horizontalAlignment: Text.AlignRight
+                    color: Theme.colorSubText
+                }
+
+                Row {
+                    spacing: 4
+
+                    Text {
+                        text: advDataSize
+                        textFormat: Text.PlainText
+                        //font.family: fontMonospace
+                        font.pixelSize: Theme.fontSizeContent
+                        color: Theme.colorText
+                    }
+                    Text {
+                        text: qsTr("bytes")
+                        textFormat: Text.PlainText
+                        font.pixelSize: Theme.fontSizeContent
+                        color: Theme.colorSubText
                     }
                 }
             }
-        }
 
-        ////////
+            ////////
 
-        RowLayout {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            spacing: 12
+            RowLayout {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                spacing: 12
 
-            Text {
-                id: legendData_str
+                Text {
+                    id: legendData_hex
 
-                Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
-                Layout.preferredWidth: legendWidth
+                    Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                    Layout.preferredWidth: legendWidth
 
-                text: qsTr("(str)")
-                textFormat: Text.PlainText
-                font.pixelSize: Theme.fontSizeContentVerySmall
-                horizontalAlignment: Text.AlignRight
-                color: Theme.colorSubText
-            }
+                    text: qsTr("(hex)")
+                    textFormat: Text.PlainText
+                    font.pixelSize: Theme.fontSizeContentVerySmall
+                    horizontalAlignment: Text.AlignRight
+                    color: Theme.colorSubText
+                }
 
-            Flow {
-                Layout.alignment: Qt.AlignVCenter
-                Layout.fillWidth: true
-                spacing: 0
+                Flow {
+                    Layout.alignment: Qt.AlignVCenter
+                    Layout.fillWidth: true
+                    spacing: 0
 
-                Repeater {
-                    model: packet.advDataAscii_list
+                    Repeater {
+                        model: advDataHex_list
 
-                    Rectangle {
-                        width: 26
-                        height: 26
-                        color: (index % 2 === 0) ? Theme.colorForeground : Theme.colorBox
-                        border.width: 0
-                        border.color: Theme.colorForeground
-
-                        Text {
+                        Rectangle {
+                            width: 26
                             height: 26
-                            anchors.horizontalCenter: parent.horizontalCenter
+                            color: (index % 2 === 0) ? Theme.colorForeground : Theme.colorBox
+                            border.width: 0
+                            border.color: Theme.colorForeground
 
-                            //text: (modelData === "\0") ? "⧄": modelData // empty byte: ∅ ? ⧄ ?
-                            text: modelData
-                            textFormat: Text.PlainText
-                            font.pixelSize: Theme.fontSizeContent-1
-                            verticalAlignment: Text.AlignVCenter
-                            color: Theme.colorText
-                            font.family: fontMonospace
+                            Text {
+                                height: 26
+                                anchors.horizontalCenter: parent.horizontalCenter
+
+                                text: modelData
+                                textFormat: Text.PlainText
+                                font.pixelSize: Theme.fontSizeContent-1
+                                verticalAlignment: Text.AlignVCenter
+                                color: Theme.colorText
+                                font.family: fontMonospace
+                            }
+                        }
+                    }
+
+                    Item { width: 4; height: 4; } // spacer
+
+                    SquareButtonSunken {
+                        width: 26; height: 26;
+
+                        tooltipText: qsTr("copy")
+                        tooltipPosition: "right"
+                        source: "qrc:/IconLibrary/material-symbols/content_copy.svg"
+
+                        onClicked: {
+                            utilsClipboard.setText(advDataHex)
                         }
                     }
                 }
+            }
 
-                Item { width: 4; height: 4; } // spacer
+            ////////
 
-                SquareButtonSunken {
-                    width: 26; height: 26;
+            RowLayout {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                spacing: 12
 
-                    tooltipText: qsTr("copy")
-                    tooltipPosition: "right"
-                    source: "qrc:/IconLibrary/material-symbols/content_copy.svg"
+                Text {
+                    id: legendData_str
 
-                    onClicked: {
-                        utilsClipboard.setText(packet.advDataAscii)
+                    Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                    Layout.preferredWidth: legendWidth
+
+                    text: qsTr("(str)")
+                    textFormat: Text.PlainText
+                    font.pixelSize: Theme.fontSizeContentVerySmall
+                    horizontalAlignment: Text.AlignRight
+                    color: Theme.colorSubText
+                }
+
+                Flow {
+                    Layout.alignment: Qt.AlignVCenter
+                    Layout.fillWidth: true
+                    spacing: 0
+
+                    Repeater {
+                        model: advDataAscii_list
+
+                        Rectangle {
+                            width: 26
+                            height: 26
+                            color: (index % 2 === 0) ? Theme.colorForeground : Theme.colorBox
+                            border.width: 0
+                            border.color: Theme.colorForeground
+
+                            Text {
+                                height: 26
+                                anchors.horizontalCenter: parent.horizontalCenter
+
+                                //text: (modelData === "\0") ? "⧄": modelData // empty byte: ∅ ? ⧄ ?
+                                text: modelData
+                                textFormat: Text.PlainText
+                                font.pixelSize: Theme.fontSizeContent-1
+                                verticalAlignment: Text.AlignVCenter
+                                color: Theme.colorText
+                                font.family: fontMonospace
+                            }
+                        }
+                    }
+
+                    Item { width: 4; height: 4; } // spacer
+
+                    SquareButtonSunken {
+                        width: 26; height: 26;
+
+                        tooltipText: qsTr("copy")
+                        tooltipPosition: "right"
+                        source: "qrc:/IconLibrary/material-symbols/content_copy.svg"
+
+                        onClicked: {
+                            utilsClipboard.setText(advDataAscii)
+                        }
                     }
                 }
             }
@@ -310,7 +319,7 @@ Rectangle {
 
         ////////
 /*
-        RowLayout { // DEPRECATED // old way to present advertisement data
+        RowLayout { // DEPRECATED // the "old" way to present advertisement data
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.rightMargin: 8
@@ -397,4 +406,6 @@ Rectangle {
 */
         ////////
     }
+
+    ////////////////
 }

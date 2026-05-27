@@ -60,6 +60,11 @@ DeviceToolBLEx::DeviceToolBLEx(const QString &deviceAddr, const QString &deviceN
 
     m_deviceLog_obj = new DeviceLogModel(s_max_entries_logs, this);
 
+    m_advertisementDataModel = new AdvertisementDataModel(this);
+    m_advertisementFilterModel = new AdvertisementFilterModel(this);
+    m_advertisementFilterModel->setSourceModel(m_advertisementDataModel);
+    m_advertisementFilterModel->setDynamicSortFilter(true);
+
     getSqlDeviceInfos();
 }
 
@@ -77,9 +82,14 @@ DeviceToolBLEx::DeviceToolBLEx(const QBluetoothDeviceInfo &d, QObject *parent):
     m_bluetoothCoreConfiguration = d.coreConfigurations();
     m_firstSeen = timestamp;
 
-    addAdvertisementEntry(timestamp, d.rssi(), !d.manufacturerIds().empty(), !d.serviceIds().empty());
-
     m_deviceLog_obj = new DeviceLogModel(s_max_entries_logs, this);
+
+    m_advertisementDataModel = new AdvertisementDataModel(this);
+    m_advertisementFilterModel = new AdvertisementFilterModel(this);
+    m_advertisementFilterModel->setSourceModel(m_advertisementDataModel);
+    m_advertisementFilterModel->setDynamicSortFilter(true);
+
+    addAdvertisementEntry(timestamp, d.rssi(), !d.manufacturerIds().empty(), !d.serviceIds().empty());
 
     getSqlDeviceInfos();
 }
@@ -94,18 +104,18 @@ DeviceToolBLEx::~DeviceToolBLEx()
     qDeleteAll(m_advertisementEntries);
     m_advertisementEntries.clear();
 
-    qDeleteAll(m_svd);
-    m_svd.clear();
     qDeleteAll(m_svd_uuid);
     m_svd_uuid.clear();
 
-    qDeleteAll(m_mfd);
-    m_mfd.clear();
     qDeleteAll(m_mfd_uuid);
     m_mfd_uuid.clear();
 
     m_deviceLog_obj->clear();
     delete m_deviceLog_obj;
+
+    m_advertisementDataModel->clear();
+    delete m_advertisementDataModel;
+    delete m_advertisementFilterModel;
 }
 
 /* ************************************************************************** */
@@ -863,119 +873,97 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
                                                 const QByteArray &data,
                                                 const QDateTime &timestamp)
 {
-    bool hasNewData = false;
     Q_UNUSED(uuid)
+
+    // Add to the model
+    bool hasNewData = m_advertisementDataModel->addEntry(mode, id, data, timestamp);
+    if (!hasNewData) return false;
 
     if (mode == DeviceUtils::BLE_ADV_MANUFACTURERDATA)
     {
+/*
         if (!m_mfd.isEmpty())
         {
             hasNewData = m_mfd.first()->compare(data);
             if (!hasNewData) return false;
         }
-
+*/
         logEvent2(timestamp, LogEvent::ADV, "New manufacturer data: ID 0x" + QString::number(id, 16).rightJustified(4, '0') +
-                  " / " + QString::number(data.size()) + " bytes / 0x" + data.toHex());
-
-        AdvertisementData *a = new AdvertisementData(mode, id, data, timestamp, this);
-        m_advertisementData.push_front(a); // always add it to the unfiltered list
+                                            " / " + QString::number(data.size()) + " bytes / 0x" + data.toHex());
 
         bool uuidFound = false;
         for (const auto &uuu: std::as_const(m_mfd_uuid))
         {
             if (uuu->getUuid() == id)
             {
-                if (uuu->getSelected())
-                {
-                    m_advertisementData_filtered.push_front(a);
-                }
-
                 uuidFound = true;
                 break;
             }
         }
         if (!uuidFound)
         {
-            AdvertisementUUID *uu = new AdvertisementUUID(id, true);
+            AdvertisementUUID *uu = new AdvertisementUUID(mode, id, true);
             m_mfd_uuid.push_back(uu);
-            m_advertisementData_filtered.push_front(a);
+            Q_EMIT advertisementUuidChanged();
+
+            m_advertisementFilterModel->syncUuid(uu);
         }
-
-        m_mfd.push_front(a);
-        if (m_mfd.length() >= s_max_entries_packets)
-        {
-            AdvertisementData *d = m_mfd.back();
-            m_mfd.pop_back();
-            m_advertisementData.removeOne(d);
-            m_advertisementData_filtered.removeOne(d);
-            delete d;
-        }
-
-        Q_EMIT advertisementChanged();
-
-        mfdFilterUpdate();
-        advertisementFilterUpdate();
     }
     else if (mode == DeviceUtils::BLE_ADV_SERVICEDATA)
     {
+/*
         if (!m_svd.isEmpty())
         {
             hasNewData = m_svd.first()->compare(data);
             if (!hasNewData) return false;
         }
-
-        logEvent2(timestamp, LogEvent::ADV, "New service data: " + uuid.toString() + " / " + QString::number(data.size()) + " bytes / 0x" + data.toHex());
-
-        AdvertisementData *a = new AdvertisementData(mode, id, data, timestamp, this);
-        m_advertisementData.push_front(a); // always add it to the unfiltered list
+*/
+        logEvent2(timestamp, LogEvent::ADV, "New service data: " + uuid.toString() +
+                                            " / " + QString::number(data.size()) + " bytes / 0x" + data.toHex());
 
         bool uuidFound = false;
         for (auto uuu: std::as_const(m_svd_uuid))
         {
             if (uuu->getUuid() == id)
             {
-                if (uuu->getSelected())
-                {
-                    m_advertisementData_filtered.push_front(a);
-                }
-
                 uuidFound = true;
                 break;
             }
         }
         if (!uuidFound)
         {
-            AdvertisementUUID *uu = new AdvertisementUUID(id, true);
+            AdvertisementUUID *uu = new AdvertisementUUID(mode, id, true);
             m_svd_uuid.push_back(uu);
-            m_advertisementData_filtered.push_front(a);
+            Q_EMIT advertisementUuidChanged();
+
+            m_advertisementFilterModel->syncUuid(uu);
         }
-
-        m_svd.push_front(a);
-        if (m_svd.length() >= s_max_entries_packets)
-        {
-            AdvertisementData *d = m_svd.back();
-            m_svd.pop_back();
-            m_advertisementData.removeOne(d);
-            m_advertisementData_filtered.removeOne(d);
-            delete d;
-        }
-
-        Q_EMIT advertisementChanged();
-
-        svdFilterUpdate();
-        advertisementFilterUpdate();
     }
 
-    if (m_mfd.length() || m_svd.length())
+    // Stat
+    if (!m_hasAdvertisement)
     {
-        if (!m_hasAdvertisement)
+        if (m_advertisementDataModel->getAdvertisementMfdCount() ||
+            m_advertisementDataModel->getAdvertisementSvdCount())
         {
             m_hasAdvertisement = true;
-            Q_EMIT advertisementChanged();
         }
     }
 
+    Q_EMIT advertisementChanged();
+
     return hasNewData;
+}
+
+/* ************************************************************************** */
+
+void DeviceToolBLEx::clearAdvertisement()
+{
+    //m_advertisementFilterModel->clearFilter();
+    m_advertisementDataModel->clear();
+    m_hasAdvertisement = false;
+
+    Q_EMIT advertisementChanged();
 }
 
 /* ************************************************************************** */
@@ -1026,96 +1014,6 @@ void DeviceToolBLEx::setAdvertisedServices(const QList <QBluetoothUuid> &service
         }
         Q_EMIT servicesAdvertisedChanged();
     }
-}
-
-/* ************************************************************************** */
-
-void DeviceToolBLEx::mfdFilterUpdate()
-{
-    QList <uint16_t> accepted_uuids;
-    for (const auto &u: std::as_const(m_mfd_uuid))
-    {
-        if (u->getSelected())
-        {
-            accepted_uuids.push_back(u->getUuid());
-        }
-    }
-
-    for (const auto &adv: std::as_const(m_advertisementData_filtered))
-    {
-        if (!accepted_uuids.contains(adv->getUUID_int()))
-        {
-            m_advertisementData_filtered.removeOne(adv);
-        }
-    }
-
-    Q_EMIT advertisementFilteredChanged();
-}
-
-void DeviceToolBLEx::svdFilterUpdate()
-{
-    QList <uint16_t> accepted_uuids;
-    for (const auto &u: std::as_const(m_svd_uuid))
-    {
-        if (u->getSelected())
-        {
-            accepted_uuids.push_back(u->getUuid());
-        }
-    }
-
-    for (const auto &adv: std::as_const(m_advertisementData_filtered))
-    {
-        if (!accepted_uuids.contains(adv->getUUID_int()))
-        {
-            m_advertisementData_filtered.removeOne(adv);
-        }
-    }
-
-    Q_EMIT advertisementFilteredChanged();
-}
-
-bool comparefunc(AdvertisementData *c1, AdvertisementData *c2)
-{
-    return c1->getTimestamp() > c2->getTimestamp();
-}
-
-void DeviceToolBLEx::advertisementFilterUpdate()
-{
-    QList <uint16_t> accepted_uuids;
-    for (auto u: std::as_const(m_svd_uuid))
-    {
-        if (u->getSelected())
-        {
-            accepted_uuids.push_back(u->getUuid());
-        }
-    }
-    for (auto u: std::as_const(m_mfd_uuid))
-    {
-        if (u->getSelected())
-        {
-            accepted_uuids.push_back(u->getUuid());
-        }
-    }
-
-    m_advertisementData_filtered.clear();
-    for (const auto &adv: std::as_const(m_svd))
-    {
-        if (accepted_uuids.contains(adv->getUUID_int()))
-        {
-            m_advertisementData_filtered.push_front(adv);
-        }
-    }
-    for (const auto &adv: std::as_const(m_mfd))
-    {
-        if (accepted_uuids.contains(adv->getUUID_int()))
-        {
-            m_advertisementData_filtered.push_front(adv);
-        }
-    }
-
-    std::sort(m_advertisementData_filtered.begin(), m_advertisementData_filtered.end(), comparefunc);
-
-    Q_EMIT advertisementFilteredChanged();
 }
 
 /* ************************************************************************** */
@@ -1407,7 +1305,7 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &filename,
     {
         exportString += "Advertising interval: " + QString::number(m_advertisementInterval) + " ms" + endl;
 
-        if (m_advertisementData.size() == 0)
+        if (m_advertisementDataModel->getAdvertisementCount() == 0)
         {
             exportString += "> No advertisement packets." + endl;
             exportString += endl;
@@ -1416,7 +1314,7 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &filename,
         {
             exportString += "Advertisement packet(s):" + endl;
 
-            for (const auto &adv: std::as_const(m_advertisementData))
+            for (const auto &adv: std::as_const(m_advertisementDataModel->m_advertisements))
             {
                 if (adv->getMode() == DeviceUtils::BLE_ADV_MANUFACTURERDATA)
                 {
@@ -1424,7 +1322,7 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &filename,
                     exportString += adv->getTimestamp().toString("hh:mm:ss.zzz") + " > ";
                     exportString += "0x" + adv->getUUID_str() + " (" + adv->getUUID_vendor() + ")" + " > (";
                     if (adv->getDataSize() < 100) exportString += QString::number(adv->getDataSize()).rightJustified(2, ' ');
-                    else  exportString += QString::number(adv->getDataSize()).rightJustified(3, ' ');
+                    else exportString += QString::number(adv->getDataSize()).rightJustified(3, ' ');
                     exportString += " bytes) 0x" + adv->getDataHex();
                 }
                 else if (adv->getMode() == DeviceUtils::BLE_ADV_SERVICEDATA)
@@ -1433,7 +1331,7 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &filename,
                     exportString += adv->getTimestamp().toString("hh:mm:ss.zzz") + " > ";
                     exportString += "0x" + adv->getUUID_str() + " > (";
                     if (adv->getDataSize() < 100) exportString += QString::number(adv->getDataSize()).rightJustified(2, ' ');
-                    else  exportString += QString::number(adv->getDataSize()).rightJustified(3, ' ');
+                    else exportString += QString::number(adv->getDataSize()).rightJustified(3, ' ');
                     exportString += " bytes) 0x" + adv->getDataHex();
                 }
                 else

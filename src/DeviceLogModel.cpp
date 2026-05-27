@@ -34,25 +34,29 @@ DeviceLogModel::DeviceLogModel(int max_log_entries, QObject *parent) : QAbstract
 
 QVariant DeviceLogModel::data(const QModelIndex &index, int role) const
 {
-    auto *e = m_log[index.row()];
+    LogEvent *e = m_log[index.row()];
     switch (role)
     {
+        case Default: return index.row();
+
         case TimestampRole: return e->getTimestamp();
-        case EventRole:     return e->getEvent();
-        case LogRole:       return e->getLog();
+        case EventRole: return e->getEvent();
+        case LogRole: return e->getLog();
     }
-    return {};
+
+    return QVariant();
 }
 
 int DeviceLogModel::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
-    return m_log.count();
+    if (parent.isValid()) return 0;
+    return static_cast<int>(m_log.count());
 }
 
 QHash <int, QByteArray> DeviceLogModel::roleNames() const
 {
     return {
+        { Default, "default" },
         { TimestampRole, "timestamp" },
         { EventRole, "event" },
         { LogRole, "log" }
@@ -69,8 +73,8 @@ void DeviceLogModel::append(LogEvent *event)
     {
         beginRemoveRows({}, 0, 0);
         delete m_log.takeFirst();
-        rows -= 1;
         endRemoveRows();
+        rows -= 1;
     }
 
     beginInsertRows({}, rows, rows);
@@ -80,12 +84,12 @@ void DeviceLogModel::append(LogEvent *event)
 
 void DeviceLogModel::clear()
 {
-    beginRemoveRows({}, 0, 0);
+    if (m_log.isEmpty()) return;
 
+    beginResetModel();
     qDeleteAll(m_log);
     m_log.clear();
-
-    endRemoveRows();
+    endResetModel();
 }
 
 /* ************************************************************************** */

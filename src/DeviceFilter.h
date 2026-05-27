@@ -30,7 +30,6 @@
 #include <QAbstractTableModel>
 #include <QSortFilterProxyModel>
 
-class SettingsManager;
 class Device;
 
 /* ************************************************************************** */
@@ -38,8 +37,6 @@ class Device;
 class DeviceFilter : public QSortFilterProxyModel
 {
     Q_OBJECT
-
-    SettingsManager *sm = nullptr;
 
     QString m_filterString;
 
@@ -68,21 +65,20 @@ public:
 /* ************************************************************************** */
 
 // Can works as a QAbstractListModel or a QAbstractTableModel
-class DeviceModel : public QAbstractTableModel
+class DeviceModel : public QAbstractListModel
 {
     Q_OBJECT
-
-protected:
-    QHash <int, QByteArray> roleNames() const override;
 
 public:
     DeviceModel(QObject *parent = nullptr);
     DeviceModel(const DeviceModel &other, QObject *parent = nullptr);
-    ~DeviceModel();
+    ~DeviceModel() override;
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+
+    QHash <int, QByteArray> roleNames() const override;
 
     Device *device(const QModelIndex &index) const;
 

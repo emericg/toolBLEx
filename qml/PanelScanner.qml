@@ -76,7 +76,7 @@ Item {
                 model: deviceManager.adaptersList
 
                 AdapterWidget {
-                    width: detailView.ww
+                    width: hostInfos.width
                 }
             }
         }

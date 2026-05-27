@@ -30,7 +30,6 @@ Item {
             anchors.right: parent.right
             anchors.margins: 16
 
-            width: detailView.ww
             height: log_nodata.height + 32
             radius: 4
 

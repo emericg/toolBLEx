@@ -16,6 +16,8 @@ Column {
     clip: false
     spacing: 4
 
+    ////////////////
+
     property var packet: null
     property int legendWidth: 48
 

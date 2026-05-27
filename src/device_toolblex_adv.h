@@ -66,9 +66,12 @@ public:
 class AdvertisementUUID: public QObject
 {
     Q_OBJECT
+
+    Q_PROPERTY(uint16_t mode READ getAdvMode CONSTANT)
     Q_PROPERTY(QString uuid READ getUuidStr CONSTANT)
     Q_PROPERTY(bool selected READ getSelected WRITE setSelected NOTIFY selectedChanged)
 
+    uint16_t m_mode;
     uint16_t m_uuid;
     bool m_selected = true;
 
@@ -76,15 +79,18 @@ Q_SIGNALS:
     void selectedChanged();
 
 public:
-    AdvertisementUUID(const uint16_t uuid, const bool selected,
+    AdvertisementUUID(const uint16_t mode, const uint16_t uuid, const bool selected,
                       QObject *parent = nullptr): QObject(parent) {
+        m_mode = mode;
         m_uuid = uuid;
         m_selected = selected;
     }
     ~AdvertisementUUID() = default;
 
+    uint16_t getAdvMode() const { return m_mode; }
     uint16_t getUuid() const { return m_uuid; }
     QString getUuidStr() const { return QString::number(m_uuid, 16).rightJustified(4, '0'); }
+
     bool getSelected() const { return m_selected; }
     void setSelected(bool s) { if (m_selected != s) { m_selected = s; Q_EMIT selectedChanged(); } }
 };
@@ -122,7 +128,7 @@ public:
                       QObject *parent);
     ~AdvertisementData() = default;
 
-    bool compare(const QByteArray &data) { return (advData.compare(data) != 0); }
+    bool compare(const QByteArray &data) { return (advData.compare(data) == 0); }
 
     const QDateTime &getTimestamp() const { return m_timestamp; }
 
@@ -135,6 +141,8 @@ public:
 
     const QVariant getData() const { return QVariant::fromValue(advData); }
     int getDataSize() const { return advData.size(); }
+
+    const QByteArray &getDataBA() const { return advData; }
 
     const QString getDataHex() const { return QString::fromStdString(advData.toHex().toStdString()); }
     const QString getDataAscii() const { return QString::fromStdString(advData.toStdString()); }

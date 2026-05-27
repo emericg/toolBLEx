@@ -25,6 +25,7 @@
 
 #include "device.h"
 #include "device_toolblex_adv.h"
+#include "DeviceAdvModel.h"
 #include "DeviceLogModel.h"
 
 #include <QObject>
@@ -75,23 +76,21 @@ class DeviceToolBLEx: public Device
     Q_PROPERTY(int rssiMin READ getRssiMin NOTIFY rssiUpdated)
     Q_PROPERTY(int rssiMax READ getRssiMax NOTIFY rssiUpdated)
     Q_PROPERTY(QVariant rssiHistory READ getRssiHistory NOTIFY rssiUpdated)
-    Q_PROPERTY(int advInterval READ getAdvertisementInterval NOTIFY rssiUpdated)
 
     // Advertisement
+    Q_PROPERTY(bool hasAdvertisement READ hasAdvertisement NOTIFY advertisementChanged)
+
+    Q_PROPERTY(int advInterval READ getAdvertisementInterval NOTIFY rssiUpdated)
+
     Q_PROPERTY(QStringList servicesAdvertised READ getAdvertisedServices NOTIFY servicesAdvertisedChanged)
     Q_PROPERTY(int servicesAdvertisedCount READ getAdvertisedServicesCount NOTIFY servicesAdvertisedChanged)
 
-    Q_PROPERTY(bool hasAdvertisement READ hasAdvertisement NOTIFY advertisementChanged)
-    Q_PROPERTY(QVariant adv READ getAdvertisementData NOTIFY advertisementFilteredChanged)
-    Q_PROPERTY(int advCount READ getAdvertisementDataCount NOTIFY advertisementFilteredChanged)
+    Q_PROPERTY(int advCount READ getAdvertisementDataCount NOTIFY advertisementChanged)
+    Q_PROPERTY(AdvertisementFilterModel *advModel READ getAdvertisementFilterModel CONSTANT)
+    Q_PROPERTY(AdvertisementDataModel *advDataModel READ getAdvertisementDataModel CONSTANT)
 
-    Q_PROPERTY(QVariant svd READ getServiceData NOTIFY advertisementChanged)
-    Q_PROPERTY(QVariant svd_uuid READ getServiceUuid NOTIFY advertisementChanged)
-    Q_PROPERTY(QVariant mfd READ getManufacturerData NOTIFY advertisementChanged)
-    Q_PROPERTY(QVariant mfd_uuid READ getManufacturerUuid NOTIFY advertisementChanged)
-
-    Q_PROPERTY(QVariant last_svd READ getLastServiceData NOTIFY advertisementChanged)
-    Q_PROPERTY(QVariant last_mfd READ getLastManufacturerData NOTIFY advertisementChanged)
+    Q_PROPERTY(QVariant svd_uuid READ getServiceUuid NOTIFY advertisementUuidChanged)
+    Q_PROPERTY(QVariant mfd_uuid READ getManufacturerUuid NOTIFY advertisementUuidChanged)
 
     // Services
     Q_PROPERTY(bool hasServices READ hasServices NOTIFY servicesChanged)
@@ -112,9 +111,9 @@ class DeviceToolBLEx: public Device
     Q_PROPERTY(DeviceLogModel *deviceLogModel READ getDeviceLog_model CONSTANT)
     Q_PROPERTY(QString deviceLogString READ getDeviceLog_string CONSTANT)
 
-    static const int s_min_entries_advertisement = 16;
-    static const int s_max_entries_advertisement = 256;
-    static const int s_max_entries_packets = 20;
+    static const int s_min_entries_advertisement = 32;
+    static const int s_max_entries_advertisement = 64;
+    static const int s_max_entries_packets = 60;
     static const int s_max_entries_logs = 1024;
 
     bool m_isBeacon = false;
@@ -136,18 +135,17 @@ class DeviceToolBLEx: public Device
     // adv
 
     bool m_hasAdvertisement = false;
+
     int m_advertisementInterval = 0;
 
     QStringList m_advertised_services;
 
     QList <AdvertisementEntry *> m_advertisementEntries;
 
-    QList <AdvertisementData *> m_advertisementData;
-    QList <AdvertisementData *> m_advertisementData_filtered;
+    AdvertisementDataModel *m_advertisementDataModel = nullptr;
+    AdvertisementFilterModel *m_advertisementFilterModel = nullptr;
 
-    QList <AdvertisementData *> m_svd;
     QList <AdvertisementUUID *> m_svd_uuid;
-    QList <AdvertisementData *> m_mfd;
     QList <AdvertisementUUID *> m_mfd_uuid;
 
     // srv
@@ -162,20 +160,13 @@ class DeviceToolBLEx: public Device
 
     // func
 
-    QVariant getLastServiceData() const { if (m_svd.empty()) return QVariant(); return QVariant::fromValue(m_svd.first()); }
-    QVariant getLastManufacturerData() const { if (m_mfd.empty()) return QVariant(); return QVariant::fromValue(m_mfd.first()); }
+    int getAdvertisementDataCount() const { return m_advertisementDataModel->getAdvertisementCount(); }
 
-    QVariant getAdvertisementData() const { return QVariant::fromValue(m_advertisementData_filtered); }
-    int getAdvertisementDataCount() const { return m_advertisementData_filtered.count(); }
-
-    QVariant getServiceData() const { return QVariant::fromValue(m_svd); }
-    int getServiceDataCount() const { return m_svd.count(); }
+    AdvertisementFilterModel *getAdvertisementFilterModel() const { return m_advertisementFilterModel; }
+    AdvertisementDataModel *getAdvertisementDataModel() const { return m_advertisementDataModel; }
 
     QVariant getServiceUuid() const { return QVariant::fromValue(m_svd_uuid); }
     int getServiceUuidCount() const { return m_svd_uuid.count(); }
-
-    QVariant getManufacturerData() const { return QVariant::fromValue(m_mfd); }
-    int getManufacturerDataCount() const { return m_mfd.count(); }
 
     QVariant getManufacturerUuid() const { return QVariant::fromValue(m_mfd_uuid); }
     int getManufacturerUuidCount() const { return m_mfd_uuid.count(); }
@@ -203,8 +194,9 @@ private slots:
 
 Q_SIGNALS:
     void advertisementChanged();
-    void advertisementFilteredChanged();
+    void advertisementUuidChanged();
     void servicesAdvertisedChanged();
+
     void servicesChanged();
     void characteristicsChanged();
 
@@ -214,6 +206,7 @@ Q_SIGNALS:
     void commentChanged();
     void colorChanged();
     void seenChanged();
+
     void logUpdated();
     void logLineAppended(const QString &line);
 
@@ -316,10 +309,6 @@ public:
     Q_INVOKABLE void blacklist(bool blacklist);
     Q_INVOKABLE void cache(bool cache);
 
-    Q_INVOKABLE void mfdFilterUpdate();
-    Q_INVOKABLE void svdFilterUpdate();
-    Q_INVOKABLE void advertisementFilterUpdate();
-
     Q_INVOKABLE void actionScanWithValues() override;
     Q_INVOKABLE void actionScanWithoutValues();
 
@@ -343,6 +332,8 @@ public:
     void logEvent(const QString &logline, const int event = 0,
                   const QDateTime timestamp = QDateTime::currentDateTime());
     void logEvent2(const QDateTime &timestamp, const int event, const QString &logline);
+
+    Q_INVOKABLE void clearAdvertisement();
 
     Q_INVOKABLE void clearDeviceLog();
 

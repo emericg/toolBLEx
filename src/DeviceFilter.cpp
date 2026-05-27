@@ -44,7 +44,7 @@ DeviceFilter::~DeviceFilter()
 
 void DeviceFilter::updateBoolFilters()
 {
-    sm = SettingsManager::getInstance();
+    SettingsManager *sm = SettingsManager::getInstance();
     if (sm)
     {
         m_filterShowBeacon = sm->getScanShowBeacon();
@@ -69,12 +69,9 @@ void DeviceFilter::invalidatefilter()
 
 bool DeviceFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    Q_UNUSED(sourceRow)
-    Q_UNUSED(sourceParent)
-
     bool accepted = false;
 
-    QModelIndex index = sourceModel()->index(sourceRow, 0, sourceParent);
+    const QModelIndex index = sourceModel()->index(sourceRow, 0, sourceParent);
 
     if (m_filterString.isEmpty())
     {
@@ -140,13 +137,13 @@ bool DeviceFilter::lessThan(const QModelIndex &left, const QModelIndex &right) c
 /* ************************************************************************** */
 
 DeviceModel::DeviceModel(QObject *parent)
-    : QAbstractTableModel(parent)
+    : QAbstractListModel(parent)
 {
     //
 }
 
 DeviceModel::DeviceModel(const DeviceModel &other, QObject *parent)
-    : QAbstractTableModel(parent)
+    : QAbstractListModel(parent)
 {
     m_devices = other.m_devices;
 }
@@ -183,14 +180,14 @@ QHash <int, QByteArray> DeviceModel::roleNames() const
 
 int DeviceModel::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
-    return m_devices.count();
+    if (parent.isValid()) return 0;
+    return static_cast<int>(m_devices.count());
 }
 
 int DeviceModel::columnCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
-    return 8; // ???
+    if (parent.isValid()) return 0;
+    return 1;
 }
 
 Device *DeviceModel::device(const QModelIndex &index) const

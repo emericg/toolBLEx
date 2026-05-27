@@ -185,7 +185,7 @@ T.Button {
 
     Loader {
         anchors.fill: control
-        active: control.tooltipText && control.compactInternal
+        active: control.tooltipText && control.hovered && control.compactInternal
 
         sourceComponent: ToolTipFlat {
             visible: mouseArea.containsMouse

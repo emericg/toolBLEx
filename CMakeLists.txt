@@ -65,6 +65,7 @@ set(SOURCES
     src/device.cpp src/device.h src/device_utils.h
     src/device_toolblex.cpp src/device_toolblex.h
     src/device_toolblex_adv.cpp src/device_toolblex_adv.h
+    src/DeviceAdvModel.cpp src/DeviceAdvModel.h
     src/DeviceLogModel.cpp src/DeviceLogModel.h
 
     assets/assets.qrc

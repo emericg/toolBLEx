@@ -173,7 +173,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.margins: 16
+        anchors.margins: 0
 
         visible: (deviceMenu.currentSelection === 2)
     }

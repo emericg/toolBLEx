@@ -902,19 +902,19 @@ Flickable {
             border.width: 2
             border.color: Theme.colorBoxBorder
 
-            visible: (selectedDevice && selectedDevice.rssi !== 0 && selectedDevice.svd.length)
+            visible: (selectedDevice && selectedDevice.rssi !== 0 && selectedDevice.advDataModel.latestEntriesSvd.length)
 
             Column {
                 id: box_adv_servicedata
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 12
+                spacing: 16
 
                 Row {
                     anchors.left: parent.left
                     anchors.leftMargin: 16
-                    spacing: 12
+                    spacing: 16
 
                     Rectangle {
                         width: 18; height: 18; radius: 4;
@@ -933,10 +933,14 @@ Flickable {
                     }
                 }
 
-                AdvertisementDataWidget {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    packet: selectedDevice.last_svd
+                Repeater {
+                    model: selectedDevice && selectedDevice.advDataModel.latestEntriesSvd
+
+                    AdvertisementDataWidget {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        packet: modelData
+                    }
                 }
             }
         }
@@ -953,21 +957,21 @@ Flickable {
             border.width: 2
             border.color: Theme.colorBoxBorder
 
-            visible: (selectedDevice && selectedDevice.rssi !== 0 && selectedDevice.mfd.length)
+            visible: (selectedDevice && selectedDevice.rssi !== 0 && selectedDevice.advDataModel.latestEntriesMfd.length)
 
             Column {
                 id: box_adv_manufdata
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 12
+                spacing: 16
 
                 ////
 
                 Row {
                     anchors.left: parent.left
                     anchors.leftMargin: 16
-                    spacing: 12
+                    spacing: 16
 
                     Rectangle {
                         width: 18; height: 18; radius: 4;
@@ -986,10 +990,14 @@ Flickable {
                     }
                 }
 
-                AdvertisementDataWidget {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    packet: selectedDevice.last_mfd
+                Repeater {
+                    model: selectedDevice && selectedDevice.advDataModel.latestEntriesMfd
+
+                    AdvertisementDataWidget {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        packet: modelData
+                    }
                 }
             }
         }

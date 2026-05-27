@@ -116,7 +116,7 @@ T.Button {
 
     Loader {
         anchors.fill: control
-        active: control.tooltipText
+        active: control.tooltipText && control.hovered
 
         sourceComponent: ToolTipFlat {
             visible: control.hovered

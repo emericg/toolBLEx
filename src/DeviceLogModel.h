@@ -36,20 +36,24 @@ class DeviceLogModel : public QAbstractListModel
     int m_max_log_entries = 1024;
 
 public:
-    enum Roles {
-        TimestampRole = Qt::UserRole+1,
-        EventRole,
-        LogRole
-    };
-
     explicit DeviceLogModel(int max_log_entries = 1024, QObject *parent = nullptr);
 
     int rowCount(const QModelIndex &parent = {}) const override;
     QVariant data(const QModelIndex &index, int role) const override;
-    QHash<int, QByteArray> roleNames() const override;
+    QHash <int, QByteArray> roleNames() const override;
+
+    enum Roles {
+        Default = Qt::UserRole+1,
+
+        TimestampRole,
+        EventRole,
+        LogRole
+    };
 
     void append(LogEvent *event);
     void clear();
+
+    int countLog() const { return m_log.count(); }
 };
 
 /* ************************************************************************** */

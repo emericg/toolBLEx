@@ -10,7 +10,7 @@ import DeviceUtils
 Item {
     id: panelDeviceService
 
-    ////////
+    ////////////////
 
     Column {
         anchors.top: parent.top
@@ -19,11 +19,12 @@ Item {
         anchors.margins: 16
 
         z: 5
-        spacing: 20
+        spacing: 16
         visible: (selectedDevice && selectedDevice.servicesCount === 0)
 
         Rectangle {
-            width: detailView.ww
+            anchors.left: parent.left
+            anchors.right: parent.right
             height: columnServiceScan.height + 32
             radius: 4
 
@@ -86,17 +87,16 @@ Item {
         }
     }
 
-    ////////
+    ////////////////
 
-    ListView {
-        id: servicesView
+    ListView { // servicesView
         anchors.fill: parent
 
         clip: false
         visible: (selectedDevice && selectedDevice.servicesCount > 0)
 
         boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
-        ScrollBar.vertical: ScrollBar { visible: false }
+        ScrollBar.vertical: ScrollBarThemed { z: 10; visible: true; }
 
         header: Rectangle {
             width: ListView.view.width
@@ -145,7 +145,7 @@ Item {
         }
     }
 
-    ////////
+    ////////////////
 
     Row { // buttons row
         anchors.right: parent.right
@@ -156,13 +156,10 @@ Item {
         ButtonSolid {
             id: cacheButton
 
-            color: Theme.colorGrey
-
-            visible: (selectedDevice &&
-                      selectedDevice.hasServices &&
-                      selectedDevice.servicesScanned)
+            visible: (selectedDevice && selectedDevice.hasServices && selectedDevice.servicesScanned)
 
             text: qsTr("Cache")
+            color: Theme.colorGrey
             source: "qrc:/IconLibrary/material-symbols/save.svg"
 
             onClicked: {
@@ -171,5 +168,5 @@ Item {
         }
     }
 
-    ////////
+    ////////////////
 }

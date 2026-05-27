@@ -201,7 +201,7 @@ Rectangle {
         width: 96; height: 96; radius: 96;
         color: Theme.colorBackground
 
-        visible: (detailView.ww > 400)
+        visible: (adapterWidget.width > 400)
 /*
         Rectangle { // scanning indicator
             id: circlePulseAnimation
