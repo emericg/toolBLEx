@@ -263,6 +263,8 @@ void AdvertisementFilterModel::selectAll()
 {
     if (!sourceModel()) return;
 
+    bool changed = false;
+
     // TODO
 
     if (changed)
