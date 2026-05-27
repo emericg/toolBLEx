@@ -79,10 +79,11 @@ void DeviceManager::bleDevice_updated(const QBluetoothDeviceInfo &info, QBluetoo
                 //         << "manufacturer data" << Qt::dec << info.manufacturerData(id).size() << Qt::hex
                 //         << "bytes:" << info.manufacturerData(id).toHex();
 
-                if (id == 0x004c) dd->setBeacon(true); // iBeacon
+                if (id == 0x004C) dd->setBeacon(true); // iBeacon
 
                 hasmfd |= dd->parseAdvertisementToolBLEx(DeviceUtils::BLE_ADV_MANUFACTURERDATA,
-                                                         id, QBluetoothUuid(), info.manufacturerData(id));
+                                                         id, QBluetoothUuid(), info.manufacturerData(id),
+                                                         timestamp);
             }
 
             const QList <QBluetoothUuid> &serviceIds = info.serviceIds();
@@ -94,9 +95,12 @@ void DeviceManager::bleDevice_updated(const QBluetoothDeviceInfo &info, QBluetoo
                 //         << "bytes:" << info.serviceData(id).toHex();
 
                 if (id == QBluetoothUuid(quint32(0xFEAA))) dd->setBeacon(true); // Eddystone beacon
+                else if (id == QBluetoothUuid(quint32(0xFEF3))) dd->setBeacon(true); // Eddystone beacon
+                else if (id == QBluetoothUuid(quint32(0xFCF1))) dd->setBeacon(true); // Google Beacons ??? Google FastPair ???
 
                 hassvd |= dd->parseAdvertisementToolBLEx(DeviceUtils::BLE_ADV_SERVICEDATA,
-                                                         id.toUInt16(), id, info.serviceData(id));
+                                                         id.toUInt16(), id, info.serviceData(id),
+                                                         timestamp);
             }
 
             dd->addAdvertisementEntry(timestamp, info.rssi(), hasmfd, hassvd);

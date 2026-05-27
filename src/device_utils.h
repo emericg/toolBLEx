@@ -193,7 +193,7 @@ public:
     Q_ENUM(EventType)
 
     QDateTime timestamp;
-    QDateTime getTimestamp() const { return timestamp; }
+    const QDateTime &getTimestamp() const { return timestamp; }
 
     int event = 0;
     int getEvent() const { return event; }

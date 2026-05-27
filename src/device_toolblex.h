@@ -25,6 +25,7 @@
 
 #include "device.h"
 #include "device_toolblex_adv.h"
+#include "DeviceLogModel.h"
 
 #include <QObject>
 #include <QList>
@@ -108,12 +109,13 @@ class DeviceToolBLEx: public Device
 
     // Logs
     Q_PROPERTY(int deviceLogCount READ getDeviceLogCount NOTIFY logUpdated)
-    Q_PROPERTY(QVariant deviceLog READ getDeviceLog NOTIFY logUpdated)
-    Q_PROPERTY(QString deviceLogStr READ getDeviceLogStr NOTIFY logUpdated)
+    Q_PROPERTY(DeviceLogModel *deviceLogModel READ getDeviceLog_model CONSTANT)
+    Q_PROPERTY(QString deviceLogString READ getDeviceLog_string CONSTANT)
 
     static const int s_min_entries_advertisement = 16;
     static const int s_max_entries_advertisement = 256;
     static const int s_max_entries_packets = 20;
+    static const int s_max_entries_logs = 1024;
 
     bool m_isBeacon = false;
     bool m_isCached = false;
@@ -136,9 +138,9 @@ class DeviceToolBLEx: public Device
     bool m_hasAdvertisement = false;
     int m_advertisementInterval = 0;
 
-    QList <AdvertisementEntry *> m_advertisementEntries;
-
     QStringList m_advertised_services;
+
+    QList <AdvertisementEntry *> m_advertisementEntries;
 
     QList <AdvertisementData *> m_advertisementData;
     QList <AdvertisementData *> m_advertisementData_filtered;
@@ -181,8 +183,8 @@ class DeviceToolBLEx: public Device
     void updateCache();
 
     // log
-    QList <QObject *> m_deviceLog;
-    QString m_deviceLogString;
+    DeviceLogModel *m_deviceLog_obj;
+    QString m_deviceLog_str;
 
 private slots:
     // QLowEnergyController related
@@ -213,6 +215,7 @@ Q_SIGNALS:
     void colorChanged();
     void seenChanged();
     void logUpdated();
+    void logLineAppended(const QString &line);
 
 public:
     DeviceToolBLEx(const QString &deviceAddr, const QString &deviceName, QObject *parent = nullptr);
@@ -260,7 +263,8 @@ public:
 
     bool parseAdvertisementToolBLEx(uint16_t mode,
                                     uint16_t id, const QBluetoothUuid &uuid,
-                                    const QByteArray &data);
+                                    const QByteArray &data,
+                                    const QDateTime &timestamp);
 
     bool isAvailable() const { return (m_rssi < 0); }
     QVariant getRssiHistory() const { return QVariant::fromValue(m_advertisementEntries); }
@@ -332,10 +336,13 @@ public:
 
     bool getExportFile(QString &filename, bool log) const;
 
-    const QVariant getDeviceLog() const { return QVariant::fromValue(m_deviceLog); }
-    const QString &getDeviceLogStr() const { return m_deviceLogString; }
-    int getDeviceLogCount() const { return m_deviceLog.size(); }
-    void logEvent(const QString &logline, const int event = 0);
+    int getDeviceLogCount() const { return m_deviceLog_obj->rowCount(); }
+    DeviceLogModel *getDeviceLog_model() const { return m_deviceLog_obj; }
+    const QString &getDeviceLog_string() const { return m_deviceLog_str; }
+
+    void logEvent(const QString &logline, const int event = 0,
+                  const QDateTime timestamp = QDateTime::currentDateTime());
+    void logEvent2(const QDateTime &timestamp, const int event, const QString &logline);
 
     Q_INVOKABLE void clearDeviceLog();
 

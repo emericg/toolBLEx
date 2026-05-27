@@ -23,8 +23,6 @@
 #define DEVICE_FILTER_H
 /* ************************************************************************** */
 
-#include "device.h"
-
 #include <QObject>
 #include <QByteArray>
 #include <QMetaType>
@@ -33,6 +31,7 @@
 #include <QSortFilterProxyModel>
 
 class SettingsManager;
+class Device;
 
 /* ************************************************************************** */
 

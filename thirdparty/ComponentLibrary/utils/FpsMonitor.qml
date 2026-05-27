@@ -5,7 +5,9 @@ import ComponentLibrary
 
 Item {
     id: control
-    height: 24
+
+    width: contentRow.width
+    height: 20
     z: 100
 
     property int frameCounter: 0
@@ -14,20 +16,22 @@ Item {
     property int fps: 0
     property int fpsAvg: 0
 
+    ////////
+
     Rectangle {
-        anchors.fill: rowrow
+        anchors.fill: contentRow
         color: "black"
-        opacity: 0.8
+        opacity: 0.33
     }
 
     Row {
-        id: rowrow
+        id: contentRow
         anchors.verticalCenter: parent.verticalCenter
 
         IconSvg {
             anchors.verticalCenter: parent.verticalCenter
-            width: 24
-            height: 24
+            width: 20
+            height: 20
             color: "white"
             source: "qrc:/IconLibrary/material-symbols/autorenew.svg"
 
@@ -38,44 +42,46 @@ Item {
                 loops: Animation.Infinite
             }
             onRotationChanged: frameCounter++
+
+            Timer {
+                interval: 2000
+                repeat: true
+                running: true
+                onTriggered: {
+                    frameCounterAvg += frameCounter
+                    control.fps = frameCounter / 2
+                    counter++
+                    frameCounter = 0
+                    if (counter >= 3) {
+                        control.fpsAvg = frameCounterAvg / (2*counter)
+                        frameCounterAvg = 0
+                        counter = 0
+                    }
+                }
+            }
         }
 
         Text {
             anchors.verticalCenter: parent.verticalCenter
+
             color: "#c0c0c0"
-            font.pixelSize: 18
-            text: "Ø " + control.fpsAvg + " | " + control.fps + " fps"
+            font.pixelSize: 16
             textFormat: Text.PlainText
-        }
-
-        Loader {
-            anchors.verticalCenter: parent.verticalCenter
-            asynchronous: true
-            active: (typeof utilsFps !== "undefined" && utilsFps)
-
-            sourceComponent: Text {
-                color: "#c0c0c0"
-                font.pixelSize: 18
-                text: " | " + utilsFps.fps + " fps"
-                textFormat: Text.PlainText
+            text: {
+                var txt = ""
+                if (utilsFpsMonitor) {
+                    // FPS from utilsFpsMonitor
+                    txt += utilsFpsMonitor.fps + " fps"
+                } else {
+                    // FPS from the UI animation
+                    txt += "Ø " + control.fpsAvg
+                    if (txt.length) txt += " | "
+                    txt += control.fps + " fps"
+                }
+                return txt
             }
         }
     }
 
-    Timer {
-        interval: 2000
-        repeat: true
-        running: true
-        onTriggered: {
-            frameCounterAvg += frameCounter
-            control.fps = frameCounter / 2
-            counter++
-            frameCounter = 0
-            if (counter >= 3) {
-                control.fpsAvg = frameCounterAvg / (2*counter)
-                frameCounterAvg = 0
-                counter = 0
-            }
-        }
-    }
+    ////////
 }

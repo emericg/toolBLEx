@@ -5,9 +5,10 @@ import ComponentLibrary
 
 Rectangle {
     id: logWidget
+
     height: Math.max(24, logTxt.contentHeight) + 12
-    clip: false
     color: Theme.colorBox
+    clip: false
 
     ////////
 
@@ -18,12 +19,12 @@ Rectangle {
         width: 12
 
         color: {
-            if (modelData.event === 1) return Theme.colorError
-            if (modelData.event === 2) return Theme.colorMaterialGreen
-            if (modelData.event === 3) return Theme.colorMaterialLime
-            if (modelData.event === 4) return Theme.colorMaterialBlue
-            if (modelData.event === 5) return Theme.colorMaterialLightBlue
-            if (modelData.event === 6) return Theme.colorPrimary
+            if (model.event === 1) return Theme.colorError
+            if (model.event === 2) return Theme.colorMaterialGreen
+            if (model.event === 3) return Theme.colorMaterialLime
+            if (model.event === 4) return Theme.colorMaterialBlue
+            if (model.event === 5) return Theme.colorMaterialLightBlue
+            if (model.event === 6) return Theme.colorPrimary
             return Theme.colorBox
         }
     }
@@ -37,18 +38,17 @@ Rectangle {
         spacing: 12
 
         Text {
-            text: modelData.timestamp.toLocaleTimeString(Qt.locale(), "hh:mm:ss.zzz")
+            text: model.timestamp.toLocaleTimeString(Qt.locale(), "hh:mm:ss.zzz")
             textFormat: Text.PlainText
             font.pixelSize: Theme.fontSizeContentSmall
             color: Theme.colorSubText
         }
 
-        Text {
+        TextSelectable {
             id: logTxt
             Layout.fillWidth: true
 
-            text: modelData.log
-            textFormat: Text.PlainText
+            text: log
             font.pixelSize: Theme.fontSizeContentSmall
             wrapMode: Text.WrapAnywhere
             color: Theme.colorText

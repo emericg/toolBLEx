@@ -118,7 +118,8 @@ class AdvertisementData: public QObject
 
 public:
     AdvertisementData(const uint16_t adv_mode, const uint16_t adv_id,
-                      const QByteArray &data, QObject *parent);
+                      const QByteArray &data, const QDateTime &timestamp,
+                      QObject *parent);
     ~AdvertisementData() = default;
 
     bool compare(const QByteArray &data) { return (advData.compare(data) != 0); }

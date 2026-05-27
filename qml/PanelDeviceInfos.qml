@@ -9,6 +9,7 @@ import DeviceUtils
 
 Flickable {
     id: panelDeviceInfos
+
     anchors.top: (selectedDevice && selectedDevice.isLowEnergy) ? actionBar.bottom : parent.top
     anchors.left: parent.left
     anchors.right: parent.right
@@ -800,9 +801,9 @@ Flickable {
                             radius: 2
 
                             color: {
+                                if (modelData.hasMFD && modelData.hasSVD) Theme.colorOrange
                                 if (modelData.hasMFD) return Theme.colorBlue
                                 if (modelData.hasSVD) return Theme.colorGreen
-                                if (modelData.hasMFD && modelData.hasSVD) Theme.colorOrange
                                 return Theme.colorPrimary
                             }
                         }
@@ -932,13 +933,10 @@ Flickable {
                     }
                 }
 
-                Repeater {
-                    model: (selectedDevice && selectedDevice.last_svd)
-                    AdvertisementDataWidget {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        packet: modelData
-                    }
+                AdvertisementDataWidget {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    packet: selectedDevice.last_svd
                 }
             }
         }
@@ -988,13 +986,10 @@ Flickable {
                     }
                 }
 
-                Repeater {
-                    model: (selectedDevice && selectedDevice.last_mfd)
-                    AdvertisementDataWidget {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        packet: modelData
-                    }
+                AdvertisementDataWidget {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    packet: selectedDevice.last_mfd
                 }
             }
         }

@@ -7,6 +7,7 @@ import DeviceUtils
 
 Rectangle {
     id: advDataWidget
+
     height: columnContent.height + 32
     radius: 4
 
@@ -35,7 +36,7 @@ Rectangle {
 
         width: 8
         radius: 2
-        color: (packet.advMode == 0) ? Theme.colorGreen : Theme.colorBlue
+        color: (packet.advMode === 0) ? Theme.colorGreen : Theme.colorBlue
     }
 
     ////////////////

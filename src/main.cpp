@@ -25,6 +25,7 @@
 #include "SettingsManager.h"
 #include "MenubarManager.h"
 #include "DeviceManager.h"
+#include "device_utils.h"
 #include "ubertooth.h"
 
 #include "utils_app.h"
@@ -57,6 +58,9 @@ int main(int argc, char *argv[])
     // Qt 6.6+ mouse wheel hack
     qputenv("QT_QUICK_FLICKABLE_WHEEL_DECELERATION", "7500");
 #endif
+
+    // Allow macOS (and patched Qt for bluez) to report ALL advertising packets
+    //qputenv("QT_BLUETOOTH_SCAN_ENABLE_DUPLICATES", "TRUE");
 
     // GUI application /////////////////////////////////////////////////////////
 

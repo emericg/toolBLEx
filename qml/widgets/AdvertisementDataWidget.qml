@@ -7,6 +7,7 @@ import DeviceUtils
 
 Column {
     id: advDataWidget
+
     anchors.left: parent.left
     anchors.leftMargin: 16
     anchors.right: parent.right
@@ -26,12 +27,14 @@ Column {
         legendWidth = Math.max(legendWidth, legendData_str.contentWidth)
     }
 
-    ////////
+    ////////////////
 
     RowLayout {
         anchors.left: parent.left
         anchors.right: parent.right
         spacing: 12
+
+        ////////
 
         Text {
             id: legendUUID
@@ -46,9 +49,12 @@ Column {
             color: Theme.colorSubText
         }
 
+        ////////
+
         Flow {
             Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
+            spacing: 12
 
             Row {
                 spacing: 2
@@ -61,11 +67,8 @@ Column {
                 }
                 TextSelectable {
                     text: packet.advUUIDstr
-                    color: Theme.colorText
                 }
             }
-
-            Item { width: 12; height: 12; } // spacer
 
             Row {
                 visible: (packet.advUUIDmanuf.length > 1)
@@ -78,8 +81,6 @@ Column {
                 }
                 TextSelectable {
                     text: packet.advUUIDmanuf
-                    font.pixelSize: Theme.fontSizeContent
-                    color: Theme.colorText
                 }
                 Text {
                     text: ")"
@@ -89,14 +90,18 @@ Column {
                 }
             }
         }
+
+        ////////
     }
 
-    ////////
+    ////////////////
 
     Row {
         anchors.left: parent.left
         anchors.right: parent.right
         spacing: 12
+
+        ////////
 
         Text {
             id: legendSize
@@ -108,6 +113,8 @@ Column {
             horizontalAlignment: Text.AlignRight
             color: Theme.colorSubText
         }
+
+        ////////
 
         Row {
             spacing: 4
@@ -125,14 +132,18 @@ Column {
                 color: Theme.colorSubText
             }
         }
+
+        ////////
     }
 
-    ////////
+    ////////////////
 
     RowLayout {
         anchors.left: parent.left
         anchors.right: parent.right
         spacing: 12
+
+        ////////
 
         Text {
             id: legendData_hex
@@ -147,6 +158,8 @@ Column {
             color: Theme.colorSubText
         }
 
+        ////////
+
         Flow {
             Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
@@ -158,31 +171,37 @@ Column {
                     width: 26
                     height: 26
                     color: (index % 2 === 0) ? Theme.colorForeground : Theme.colorBox
-                    border.width: 0
-                    border.color: Theme.colorForeground
+                    //border.width: 0
+                    //border.color: Theme.colorForeground
 
                     Text {
+                        width: 26
                         height: 26
-                        anchors.horizontalCenter: parent.horizontalCenter
+
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
 
                         text: modelData
                         textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContent-1
-                        verticalAlignment: Text.AlignVCenter
-                        color: Theme.colorText
                         font.family: fontMonospace
+                        color: Theme.colorText
                     }
                 }
             }
         }
+
+        ////////
     }
 
-    ////////
+    ////////////////
 
     RowLayout {
         anchors.left: parent.left
         anchors.right: parent.right
         spacing: 12
+
+        ////////
 
         Text {
             id: legendData_str
@@ -197,6 +216,8 @@ Column {
             color: Theme.colorSubText
         }
 
+        ////////
+
         Flow {
             Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
@@ -208,24 +229,28 @@ Column {
                     width: 26
                     height: 26
                     color: (index % 2 === 0) ? Theme.colorForeground : Theme.colorBox
-                    border.width: 0
-                    border.color: Theme.colorForeground
+                    //border.width: 0
+                    //border.color: Theme.colorForeground
 
                     Text {
+                        width: 26
                         height: 26
-                        anchors.horizontalCenter: parent.horizontalCenter
+
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
 
                         text: modelData
                         textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContent-1
-                        verticalAlignment: Text.AlignVCenter
-                        color: Theme.colorText
                         font.family: fontMonospace
+                        color: Theme.colorText
                     }
                 }
             }
         }
+
+        ////////
     }
 
-    ////////
+    ////////////////
 }

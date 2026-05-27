@@ -23,9 +23,6 @@
 #include "device_utils.h"
 #include "VendorsDatabase.h"
 
-#include <cstdlib>
-#include <cmath>
-
 #include <QBluetoothUuid>
 #include <QBluetoothAddress>
 #include <QBluetoothServiceInfo>
@@ -37,13 +34,12 @@
 /* ************************************************************************** */
 
 AdvertisementData::AdvertisementData(const uint16_t adv_mode, const uint16_t adv_id,
-                                     const QByteArray &data,
+                                     const QByteArray &data, const QDateTime &timestamp,
                                      QObject *parent): QObject(parent)
 {
-    m_timestamp = QDateTime::currentDateTime();
+    m_timestamp = timestamp;
     advMode = adv_mode;
     advUUID = adv_id;
-
     advUUIDstr = QString::number(advUUID, 16).toUpper().rightJustified(4, '0');
 
     VendorsDatabase *v = VendorsDatabase::getInstance();

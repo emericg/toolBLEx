@@ -32,8 +32,7 @@
 
 /* ************************************************************************** */
 
-DeviceFilter::DeviceFilter(QObject *parent)
-    : QSortFilterProxyModel(parent)
+DeviceFilter::DeviceFilter(QObject *parent) : QSortFilterProxyModel(parent)
 {
     updateBoolFilters();
 }

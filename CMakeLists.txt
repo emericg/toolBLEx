@@ -65,6 +65,7 @@ set(SOURCES
     src/device.cpp src/device.h src/device_utils.h
     src/device_toolblex.cpp src/device_toolblex.h
     src/device_toolblex_adv.cpp src/device_toolblex_adv.h
+    src/DeviceLogModel.cpp src/DeviceLogModel.h
 
     assets/assets.qrc
     assets/vendors.qrc
@@ -113,7 +114,6 @@ qt_add_qml_module(${PROJECT_NAME}
 
         qml/components/ItemActionTag.qml
         qml/components/SelectorMenuThemedItemBadge.qml
-        qml/components/TextSelectable.qml
         qml/components/ButtonScanMenu.qml
 
         qml/components/DeviceScannerListHeader.qml

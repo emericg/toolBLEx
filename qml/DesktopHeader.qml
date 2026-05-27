@@ -149,6 +149,8 @@ Rectangle {
         border.width: 2
         border.color: Qt.darker(Theme.colorHeaderHighlight, 1.01)
 
+        ////////
+
         Row {
             anchors.top: parent.top
             anchors.topMargin: 0
@@ -284,6 +286,7 @@ Rectangle {
             anchors.rightMargin: 12
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 0
+            spacing: 8
 
             Text {
                 anchors.verticalCenter: parent.verticalCenter
@@ -295,6 +298,8 @@ Rectangle {
                 color: Theme.colorText
             }
         }
+
+        ////////
     }
 
     ////////////

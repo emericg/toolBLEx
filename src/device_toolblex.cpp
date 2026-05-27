@@ -58,6 +58,8 @@ DeviceToolBLEx::DeviceToolBLEx(const QString &deviceAddr, const QString &deviceN
     m_isCached = true;
     m_hasServiceCache = checkServiceCache();
 
+    m_deviceLog_obj = new DeviceLogModel(s_max_entries_logs, this);
+
     getSqlDeviceInfos();
 }
 
@@ -76,6 +78,8 @@ DeviceToolBLEx::DeviceToolBLEx(const QBluetoothDeviceInfo &d, QObject *parent):
     m_firstSeen = timestamp;
 
     addAdvertisementEntry(timestamp, d.rssi(), !d.manufacturerIds().empty(), !d.serviceIds().empty());
+
+    m_deviceLog_obj = new DeviceLogModel(s_max_entries_logs, this);
 
     getSqlDeviceInfos();
 }
@@ -100,8 +104,8 @@ DeviceToolBLEx::~DeviceToolBLEx()
     qDeleteAll(m_mfd_uuid);
     m_mfd_uuid.clear();
 
-    qDeleteAll(m_deviceLog);
-    m_deviceLog.clear();
+    m_deviceLog_obj->clear();
+    delete m_deviceLog_obj;
 }
 
 /* ************************************************************************** */
@@ -403,6 +407,8 @@ void DeviceToolBLEx::cache(bool c)
 
 void DeviceToolBLEx::updateCache()
 {
+    //qDebug() << "DeviceToolBLEx::updateCache()" << getAddress() << getName();
+
     if (m_dbInternal || m_dbExternal)
     {
         QString deviceClass;
@@ -854,7 +860,8 @@ void DeviceToolBLEx::bleReadNotify(const QLowEnergyCharacteristic &, const QByte
 bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
                                                 const uint16_t id,
                                                 const QBluetoothUuid &uuid,
-                                                const QByteArray &data)
+                                                const QByteArray &data,
+                                                const QDateTime &timestamp)
 {
     bool hasNewData = false;
     Q_UNUSED(uuid)
@@ -867,10 +874,10 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
             if (!hasNewData) return false;
         }
 
-        logEvent("New manufacturer data: ID 0x" + QString::number(id, 16).rightJustified(4, '0') +
-                 " / " + QString::number(data.size()) + " bytes / 0x" + data.toHex(), LogEvent::ADV);
+        logEvent2(timestamp, LogEvent::ADV, "New manufacturer data: ID 0x" + QString::number(id, 16).rightJustified(4, '0') +
+                  " / " + QString::number(data.size()) + " bytes / 0x" + data.toHex());
 
-        AdvertisementData *a = new AdvertisementData(mode, id, data, this);
+        AdvertisementData *a = new AdvertisementData(mode, id, data, timestamp, this);
         m_advertisementData.push_front(a); // always add it to the unfiltered list
 
         bool uuidFound = false;
@@ -878,12 +885,13 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
         {
             if (uuu->getUuid() == id)
             {
-                uuidFound = true;
-
                 if (uuu->getSelected())
                 {
                     m_advertisementData_filtered.push_front(a);
                 }
+
+                uuidFound = true;
+                break;
             }
         }
         if (!uuidFound)
@@ -916,10 +924,9 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
             if (!hasNewData) return false;
         }
 
-        logEvent("New service data: " + uuid.toString() + " / " + QString::number(data.size()) +
-                 " bytes / 0x" + data.toHex(), LogEvent::ADV);
+        logEvent2(timestamp, LogEvent::ADV, "New service data: " + uuid.toString() + " / " + QString::number(data.size()) + " bytes / 0x" + data.toHex());
 
-        AdvertisementData *a = new AdvertisementData(mode, id, data, this);
+        AdvertisementData *a = new AdvertisementData(mode, id, data, timestamp, this);
         m_advertisementData.push_front(a); // always add it to the unfiltered list
 
         bool uuidFound = false;
@@ -927,12 +934,13 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
         {
             if (uuu->getUuid() == id)
             {
-                uuidFound = true;
-
                 if (uuu->getSelected())
                 {
                     m_advertisementData_filtered.push_front(a);
                 }
+
+                uuidFound = true;
+                break;
             }
         }
         if (!uuidFound)
@@ -975,7 +983,7 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
 void DeviceToolBLEx::addAdvertisementEntry(const QDateTime &timestamp, const int rssi,
                                            const bool hasMFD, const bool hasSVD)
 {
-    int maxentries = s_max_entries_advertisement;
+    int maxentries = s_min_entries_advertisement;
     if (m_advertisementInterval > 0 && m_advertisementInterval < 1000) maxentries = s_max_entries_advertisement;
 
     m_advertisementEntries.push_back(new AdvertisementEntry(timestamp, rssi, hasMFD, hasSVD, this));
@@ -1279,31 +1287,46 @@ bool DeviceToolBLEx::getExportFile(QString &filename, bool log) const
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void DeviceToolBLEx::logEvent(const QString &logline, const int event)
+void DeviceToolBLEx::logEvent(const QString &txt, const int event, QDateTime timestamp)
 {
-    if (!logline.isEmpty())
+    if (!txt.isEmpty())
     {
         // log format
-        LogEvent *log = new LogEvent(QDateTime::currentDateTime(), event, logline, this);
-        if (log)
-        {
-            m_deviceLog.push_back(log);
-            Q_EMIT logUpdated();
-        }
+        LogEvent *log = new LogEvent(timestamp, event, txt, this);
+        if (log) m_deviceLog_obj->append(log);
 
         // text format
-        m_deviceLogString += QDateTime::currentDateTime().toString("[hh:mm:ss.zzz] ") + logline + QChar('\n');
+        QString logline = timestamp.toString("[hh:mm:ss.zzz] ") + txt + QChar('\n');
+        m_deviceLog_str += logline;
+        Q_EMIT logLineAppended(logline);
+
+        Q_EMIT logUpdated();
+    }
+}
+
+void DeviceToolBLEx::logEvent2(const QDateTime &timestamp, const int event, const QString &txt)
+{
+    if (!txt.isEmpty())
+    {
+        // log format
+        LogEvent *log = new LogEvent(timestamp, event, txt, this);
+        if (log) m_deviceLog_obj->append(log);
+
+        // text format
+        QString logline = timestamp.toString("[hh:mm:ss.zzz] ") + txt + QChar('\n');
+        m_deviceLog_str += logline;
+        Q_EMIT logLineAppended(logline);
+
+        Q_EMIT logUpdated();
     }
 }
 
 /* ************************************************************************** */
 
 void DeviceToolBLEx::clearDeviceLog()
-{
-    qDeleteAll(m_deviceLog);
-    m_deviceLog.clear();
-
-    m_deviceLogString.clear();
+{   
+    m_deviceLog_obj->clear();
+    m_deviceLog_str.clear();
 
     Q_EMIT logUpdated();
 }
@@ -1326,7 +1349,7 @@ bool DeviceToolBLEx::exportDeviceLog(const QString &filename)
         {
             QTextStream eout(&efile);
             eout.setEncoding(QStringConverter::Utf8);
-            eout << m_deviceLogString;
+            eout << m_deviceLog_str;
 
             status = true;
             efile.close();

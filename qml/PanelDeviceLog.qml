@@ -6,7 +6,7 @@ import QtQuick.Dialogs
 import ComponentLibrary
 import DeviceUtils
 
-Flickable {
+Item {
     id: panelDeviceLog
 
     ////////////////
@@ -15,6 +15,8 @@ Flickable {
     property bool logVisible: (selectedDevice && selectedDevice.deviceLogCount > 0)
 
     property bool legendVisible: false
+
+    property bool bottomLock: false
 
     ////////////////
 
@@ -231,9 +233,17 @@ Flickable {
             anchors.fill: parent
             anchors.bottomMargin: columnLegendLeft.height + 16
 
+            //boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
+            ScrollBar.vertical: ScrollBarThemed {
+                anchors.top: parent.top
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                visible: true
+                z: 10;
+            }
+
             TextAreaThemed {
-                text: (selectedDevice && selectedDevice.deviceLogStr)
-                textFormat: Text.PlainText
+                id: logArea
 
                 readOnly: true
                 wrapMode: Text.WrapAnywhere
@@ -243,6 +253,26 @@ Flickable {
                 colorBackground: Theme.colorComponentBackground
                 colorSelection: Theme.colorComponentBackground
                 selectionColor: Theme.colorPrimary
+
+                // the old way
+                //text: (selectedDevice && selectedDevice.deviceLogString)
+                //textFormat: Text.PlainText
+
+                // the new way
+                Component.onCompleted: {
+                    logArea.text = selectedDevice.deviceLogString
+                }
+                Connections {
+                    target: selectedDevice
+                    function onLogLineAppended(line) {
+                        // add our new line
+                        logArea.text += line
+                        //logArea.append(line)
+
+                        // moves cursor to the last line
+                        if (panelDeviceLog.bottomLock) logArea.cursorPosition = logArea.length
+                    }
+                }
             }
         }
     }
@@ -255,11 +285,16 @@ Flickable {
             bottomMargin: columnLegendLeft.height + 16
 
             boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
-            ScrollBar.vertical: ScrollBar { visible: false }
+            ScrollBar.vertical: ScrollBarThemed { z: 10; visible: true; }
 
-            model: (selectedDevice && selectedDevice.deviceLog)
+            model: (selectedDevice && selectedDevice.deviceLogModel)
             delegate: DeviceLogWidget {
                 width: ListView.view.width
+            }
+
+            onCountChanged: {
+                // moves cursor to the last line
+                if (panelDeviceLog.bottomLock) positionViewAtEnd()
             }
         }
     }
