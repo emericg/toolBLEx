@@ -170,7 +170,7 @@ function(add_other_files target)
 endfunction()
 
 add_other_files(${PROJECT_NAME}
-    README.md LICENSE.md
+    README.md TODO.md LICENSE.md
     deploy_linux.sh deploy_macos.sh deploy_windows.sh
     .github/workflows/builds_desktop.yml
     .github/workflows/flatpak.yml
