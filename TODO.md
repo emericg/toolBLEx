@@ -43,8 +43,8 @@
 [-] r/w/n: red badges on errors?
 [ ] write data: explicit max size
 
-[ ] select preferred adapter
-[ ] sanitize old adapters
+[-] select preferred adapter
+[-] sanitize old adapters
 
 ## TODO # v1+
 

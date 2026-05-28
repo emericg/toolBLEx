@@ -62,10 +62,11 @@ DeviceManager::DeviceManager(bool daemon)
     m_devices_filter->setSourceModel(m_devices_model);
     m_devices_filter->setDynamicSortFilter(true);
 
-    // BLE init
-    checkBluetoothPermission();
-    enableBluetooth(true); // Enables adapter // ONLY if off and permission given
-    connect(this, &DeviceManager::bluetoothChanged, this, &DeviceManager::bluetoothStatusChanged);
+    // BLE permission initial check // will call enableBluetooth();
+    requestBluetoothPermission();
+
+    connect(this, &DeviceManager::bluetoothChanged,
+            this, &DeviceManager::bluetoothStatusChanged);
 
     // Database
     DatabaseManager *db = DatabaseManager::getInstance();
@@ -195,10 +196,11 @@ bool DeviceManager::checkBluetooth()
 {
     //qDebug() << "DeviceManager::checkBluetooth()";
 
-    bool btA_was = m_bleAdapter && m_bluetoothAdapter->isValid();
+    bool btA_was = m_bleAdapter;
     bool btE_was = m_bleEnabled;
     bool btP_was = m_blePermission;
 
+    // Check permissions
     checkBluetoothPermission();
 
     // Check adapter availability
@@ -223,6 +225,20 @@ bool DeviceManager::checkBluetooth()
         qWarning() << "Bluetooth adapter INVALID";
     }
 
+    // Check adapters settings
+    for (auto obj: std::as_const(m_bluetoothAdapters))
+    {
+        if (auto *adp = qobject_cast<Adapter *>(obj))
+        {
+            bool isDefault = (adp->getAddress() == SettingsManager::getInstance()->getPreferredAdapter_scan());
+            bool isInUse = (m_bluetoothAdapter && m_bluetoothAdapter->isValid() &&
+                            adp->getAddress() == m_bluetoothAdapter->address().toString());
+
+            adp->checkAdapter();
+            adp->update(isDefault, isInUse);
+        }
+    }
+
     if (btA_was != m_bleAdapter || btE_was != m_bleEnabled || btP_was != m_blePermission)
     {
         // this function did changed the Bluetooth adapter status
@@ -232,51 +248,103 @@ bool DeviceManager::checkBluetooth()
         enableBluetooth(true);
     }
 
-    if (m_bluetoothAdapter)
-    {
-        for (auto a: std::as_const(m_bluetoothAdapters))
-        {
-            Adapter *adp = qobject_cast<Adapter *>(a);
-            if (adp)
-            {
-                bool inuse = (adp->getAddress() == m_bluetoothAdapter->address().toString());
-                int hostmode = (inuse && m_bluetoothAdapter->hostMode());
-
-                adp->update(inuse, hostmode);
-            }
-        }
-    }
-
     return (m_bleAdapter && m_bleEnabled && m_blePermission);
 }
+
+/* ************************************************************************** */
 
 bool DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
 {
     //qDebug() << "DeviceManager::enableBluetooth() enforce:" << enforceUserPermissionCheck;
 
-    bool btA_was = m_bleAdapter && m_bluetoothAdapter->isValid();
+    bool btA_was = m_bleAdapter;
     bool btE_was = m_bleEnabled;
     bool btP_was = m_blePermission;
 
-    // Invalid adapter? (ex: plugged off)
+    // Invalid adapter? (plugged off, errored, ...)
     if (m_bluetoothAdapter && !m_bluetoothAdapter->isValid())
     {
-        qDebug() << "DeviceManager::enableBluetooth() deleting current adapter";
+        qDebug() << "DeviceManager::enableBluetooth() deleting current adapter...";
+
+        disconnectDevices(); // that's not actually needed
+
+        scanDevices_stop();
 
         disconnect(m_bluetoothAdapter, &QBluetoothLocalDevice::hostModeStateChanged,
                    this, &DeviceManager::bluetoothHostModeStateChanged);
 
+        m_bluetoothAdapter_selected.clear();
+
         delete m_bluetoothAdapter;
         m_bluetoothAdapter = nullptr;
+
+        delete m_bluetoothDiscoveryAgent;
+        m_bluetoothDiscoveryAgent = nullptr;
     }
 
-    // Select an adapter (if none currently selected)
+    // List all Bluetooth adapters
+    const QList <QBluetoothHostInfo> adaptersList = QBluetoothLocalDevice::allDevices();
+    if (adaptersList.size() == 0)
+    {
+        qWarning() << "> No Bluetooth adapter found...";
+    }
+    else
+    {
+        for (const QBluetoothHostInfo &hi: std::as_const(adaptersList))
+        {
+            Adapter *adapter = nullptr;
+
+            for (auto *obj : std::as_const(m_bluetoothAdapters)) {
+                if (auto *adp = qobject_cast<Adapter *>(obj)) {
+                    if (adp->getAddress() == hi.address().toString()) {
+                        adapter = adp;
+                        break;
+                    }
+                }
+            }
+
+            bool isDefault = (hi.address().toString() == SettingsManager::getInstance()->getPreferredAdapter_scan());
+            bool isInUse = (m_bluetoothAdapter && m_bluetoothAdapter->isValid() &&
+                            hi.address() == m_bluetoothAdapter->address());
+
+            if (adapter)
+            {
+                // check & update
+                adapter->checkAdapter();
+                adapter->update(isDefault, isInUse);
+            }
+            else
+            {
+                // create
+                //QBluetoothLocalDevice *d =  new QBluetoothLocalDevice(hi.address());
+                adapter = new Adapter(hi, this);
+                adapter->update(isDefault, isInUse);
+
+                m_bluetoothAdapters.push_back(adapter);
+                Q_EMIT adaptersListUpdated();
+            }
+
+            if (isDefault)
+            {
+                //qDebug() << "Prefered adapter FOUND!";
+                m_bluetoothAdapter_selected = hi.address();
+            }
+        }
+
+        if (m_bluetoothAdapter_selected.toString().isEmpty())
+        {
+            m_bluetoothAdapter_selected = adaptersList.first().address();
+        }
+    }
+
+    // Create an adapter (if needed)
     if (!m_bluetoothAdapter)
     {
         qDebug() << "DeviceManager::enableBluetooth() creating new adapter";
 
-        // Correspond to the "first available" or "default" Bluetooth adapter
-        m_bluetoothAdapter = new QBluetoothLocalDevice();
+        // If m_bluetoothAdapter_selected is a QBluetoothAddress, the corresponding adapter will be used
+        // Otherwise, the "first available" or "default" Bluetooth adapter will be used
+        m_bluetoothAdapter = new QBluetoothLocalDevice(m_bluetoothAdapter_selected);
         if (m_bluetoothAdapter)
         {
             // Keep us informed of Bluetooth adapter state change
@@ -286,31 +354,6 @@ bool DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
         }
     }
 
-    // List all Bluetooth adapters
-    {
-        qDeleteAll(m_bluetoothAdapters);
-        m_bluetoothAdapters.clear();
-
-        const QList <QBluetoothHostInfo> adaptersList = QBluetoothLocalDevice::allDevices();
-        if (adaptersList.size() > 0)
-        {
-            for (const QBluetoothHostInfo &hi: adaptersList)
-            {
-                bool inuse = (m_bluetoothAdapter && hi.address() == m_bluetoothAdapter->address());
-                int hostmode = (inuse && m_bluetoothAdapter->hostMode());
-
-                Adapter *a = new Adapter(hi, inuse, hostmode, this);
-                m_bluetoothAdapters.push_back(a);
-            }
-        }
-        else
-        {
-            qWarning() << "> No Bluetooth adapter found...";
-        }
-
-        Q_EMIT adaptersListUpdated();
-    }
-
     // Check adapter availability
     if (m_bluetoothAdapter && m_bluetoothAdapter->isValid())
     {
@@ -318,15 +361,15 @@ bool DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
 
         if (m_bluetoothAdapter->hostMode() > QBluetoothLocalDevice::HostMode::HostPoweredOff)
         {
-            // Was already activated
+            // Is already activated
             m_bleEnabled = true;
         }
         else
         {
-            // Try to activate the adapter
-
             Q_UNUSED(enforceUserPermissionCheck)
-            m_bluetoothAdapter->powerOn(); // Doesn't work on all platforms...
+
+            // Try to activate the adapter // Doesn't work on all platforms...
+            m_bluetoothAdapter->powerOn();
         }
 
         checkPaired();
@@ -351,6 +394,33 @@ bool DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
     //qDebug() << " - blePermission" << m_blePermission;
 
     return (m_bleAdapter && m_bleEnabled && m_blePermission);
+}
+
+/* ************************************************************************** */
+
+void DeviceManager::disableBluetooth()
+{
+    if (m_bluetoothAdapter)
+    {
+        qDebug() << "DeviceManager::disableBluetooth() deleting current adapter...";
+
+        disconnectDevices(); // that's not actually needed
+
+        scanDevices_stop();
+
+        disconnect(m_bluetoothAdapter, &QBluetoothLocalDevice::hostModeStateChanged,
+                   this, &DeviceManager::bluetoothHostModeStateChanged);
+
+        m_bluetoothAdapter_selected.clear();
+
+        delete m_bluetoothAdapter;
+        m_bluetoothAdapter = nullptr;
+
+        delete m_bluetoothDiscoveryAgent;
+        m_bluetoothDiscoveryAgent = nullptr;
+
+        //QTimer::singleShot(333, this, [=] () { enableBluetooth(); });
+    }
 }
 
 /* ************************************************************************** */
@@ -403,7 +473,6 @@ bool DeviceManager::checkBluetoothPermission()
     {
     case Qt::PermissionStatus::Granted:
         setBluetoothPermission(true);
-        enableBluetooth(true);
         break;
     case Qt::PermissionStatus::Denied:
         setBluetoothPermission(false);
@@ -444,6 +513,7 @@ void DeviceManager::bluetoothHostModeStateChanged(QBluetoothLocalDevice::HostMod
     }
     else
     {
+        m_bleAdapter = false;
         m_bleEnabled = false;
     }
 
@@ -487,10 +557,23 @@ void DeviceManager::startBleAgent()
 {
     //qDebug() << "DeviceManager::startBleAgent()";
 
-    // BLE discovery agent
+    // Do we need to change the current agent?
+    if (m_bluetoothDiscoveryAgent)
+    {
+        QString preferredAdapter = SettingsManager::getInstance()->getPreferredAdapter_scan();
+        if (!preferredAdapter.isEmpty() && !m_bluetoothAdapter_selected.toString().isEmpty() &&
+            preferredAdapter != m_bluetoothAdapter_selected.toString())
+        {
+            disableBluetooth();
+
+            enableBluetooth();
+        }
+    }
+
+    // No agent, create one
     if (!m_bluetoothDiscoveryAgent)
     {
-        m_bluetoothDiscoveryAgent = new QBluetoothDeviceDiscoveryAgent();
+        m_bluetoothDiscoveryAgent = new QBluetoothDeviceDiscoveryAgent(m_bluetoothAdapter_selected);
         if (m_bluetoothDiscoveryAgent)
         {
             //qDebug() << "Scanning method supported:" << m_bluetoothDiscoveryAgent->supportedDiscoveryMethods();
@@ -507,6 +590,17 @@ void DeviceManager::startBleAgent()
 
             connect(m_bluetoothDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::errorOccurred,
                     this, &DeviceManager::deviceDiscoveryError);
+
+            // Set adapter in use
+            for (auto obj: std::as_const(m_bluetoothAdapters))
+            {
+                if (auto *adp = qobject_cast<Adapter *>(obj))
+                {
+                    bool isInUse = (m_bluetoothAdapter && m_bluetoothAdapter->isValid() &&
+                                    adp->getAddress() == m_bluetoothAdapter->address().toString());
+                    adp->setInUse(isInUse);
+                }
+            }
         }
         else
         {
@@ -514,6 +608,8 @@ void DeviceManager::startBleAgent()
         }
     }
 }
+
+/* ************************************************************************** */
 
 void DeviceManager::deviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error error)
 {
@@ -661,10 +757,7 @@ void DeviceManager::scanDevices_start()
 
     if (hasBluetooth() && hasBluetoothPermission())
     {
-        if (!m_bluetoothDiscoveryAgent)
-        {
-            startBleAgent();
-        }
+        startBleAgent();
 
         if (m_bluetoothDiscoveryAgent && !m_bluetoothDiscoveryAgent->isActive())
         {
@@ -726,10 +819,7 @@ void DeviceManager::scanDevices_resume()
 
     if (hasBluetooth() && hasBluetoothPermission())
     {
-        if (!m_bluetoothDiscoveryAgent)
-        {
-            startBleAgent();
-        }
+        startBleAgent();
 
         if (m_bluetoothDiscoveryAgent && !m_bluetoothDiscoveryAgent->isActive())
         {
@@ -762,7 +852,9 @@ void DeviceManager::scanDevices_stop()
         if (m_bluetoothDiscoveryAgent->isActive() && m_scanning)
         {
             m_bluetoothDiscoveryAgent->stop();
+
             m_scanning = false;
+            m_scanning_paused = false;
             Q_EMIT scanningChanged();
         }
     }
@@ -774,12 +866,12 @@ void DeviceManager::scanDevices_stop()
     }
 }
 
-void DeviceManager::scanDevices_restart()
+void DeviceManager::scanDevices_restart(bool clear)
 {
     //qDebug() << "DeviceManager::scanDevices_restart()";
 
     scanDevices_stop();
-    clearResults();
+    if (clear) clearResults();
     scanDevices_start();
 }
 

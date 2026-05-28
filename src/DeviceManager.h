@@ -112,6 +112,7 @@ class DeviceManager: public QObject
     QBluetoothLocalDevice::HostMode m_bluetoothHostMode = QBluetoothLocalDevice::HostPoweredOff;
 
     QList <QObject *> m_bluetoothAdapters;
+    QBluetoothAddress m_bluetoothAdapter_selected;
 
     ////
 
@@ -244,6 +245,7 @@ public:
     // Bluetooth management
     Q_INVOKABLE bool checkBluetooth();
     Q_INVOKABLE bool enableBluetooth(bool enforceUserPermissionCheck = false);
+    Q_INVOKABLE void disableBluetooth();
 
     Q_INVOKABLE bool checkBluetoothPermission();
     Q_INVOKABLE bool requestBluetoothPermission();
@@ -257,7 +259,7 @@ public:
 
     Q_INVOKABLE void scanDevices_start();
     Q_INVOKABLE void scanDevices_stop();
-    Q_INVOKABLE void scanDevices_restart();
+    Q_INVOKABLE void scanDevices_restart(bool clear = false);
 
     Q_INVOKABLE void scanDevices_pause();
     Q_INVOKABLE void scanDevices_resume();

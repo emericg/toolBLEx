@@ -745,7 +745,7 @@ Loader {
                                 currentSelection: SettingsManager.scanMethods
                                 onMenuSelected: (index) => {
                                     SettingsManager.scanMethods = index
-                                    deviceManager.scanDevices_restart()
+                                    deviceManager.scanDevices_restart(true)
                                 }
                             }
                         }

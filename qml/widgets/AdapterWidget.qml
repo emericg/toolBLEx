@@ -23,7 +23,7 @@ Rectangle {
         width: 8
         radius: 2
         color: Theme.colorPrimary
-        visible: modelData.isDefault
+        visible: modelData.isInUse
     }
 
     ////////////////
@@ -43,9 +43,11 @@ Rectangle {
         Component.onCompleted: {
             legendWidth = 64
             legendWidth = Math.max(legendWidth, legendHostname.contentWidth)
+            legendWidth = Math.max(legendWidth, legendVendor.contentWidth)
             legendWidth = Math.max(legendWidth, legendAddress.contentWidth)
-            legendWidth = Math.max(legendWidth, legendMAC.contentWidth)
+            legendWidth = Math.max(legendWidth, legendAddressVendor.contentWidth)
             legendWidth = Math.max(legendWidth, legendBluetooth.contentWidth)
+            legendWidth = Math.max(legendWidth, legendFeatures.contentWidth)
             legendWidth = Math.max(legendWidth, legendHostMode.contentWidth)
         }
 
@@ -100,6 +102,36 @@ Rectangle {
             anchors.right: parent.right
             spacing: 12
 
+            visible: modelData.manufacturer.length
+
+            Text {
+                id: legendVendor
+                Layout.preferredWidth: box.legendWidth
+                Layout.alignment: Qt.AlignCenter
+
+                text: qsTr("Manufacturer")
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContent
+                horizontalAlignment: Text.AlignRight
+                color: Theme.colorSubText
+            }
+
+            TextSelectable {
+                Layout.fillWidth: true
+                Layout.minimumHeight: 32
+
+                text: modelData.manufacturer
+                wrapMode: Text.WrapAnywhere
+            }
+        }
+
+        ////////
+
+        RowLayout {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            spacing: 12
+
             Text {
                 id: legendAddress
                 Layout.preferredWidth: box.legendWidth
@@ -128,10 +160,10 @@ Rectangle {
             anchors.right: parent.right
             spacing: 12
 
-            visible: modelData.manufacturer.length
+            visible: modelData.manufacturerMac.length
 
             Text {
-                id: legendMAC
+                id: legendAddressVendor
                 Layout.preferredWidth: box.legendWidth
                 Layout.alignment: Qt.AlignCenter
 
@@ -146,7 +178,7 @@ Rectangle {
                 Layout.fillWidth: true
                 Layout.minimumHeight: 32
 
-                text: modelData.manufacturer
+                text: modelData.manufacturerMac
                 wrapMode: Text.WrapAnywhere
             }
         }
@@ -181,6 +213,43 @@ Rectangle {
 
         ////////
 
+        RowLayout {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            spacing: 12
+
+            visible: modelData.features.length
+
+            Text {
+                id: legendFeatures
+                Layout.preferredWidth: box.legendWidth
+                Layout.preferredHeight: 32
+
+                text: qsTr("Features")
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContent
+                horizontalAlignment: Text.AlignRight
+                verticalAlignment: Text.AlignVCenter
+                color: Theme.colorSubText
+            }
+
+            Flow {
+                Layout.fillWidth: true
+                spacing: 4
+
+                Repeater {
+                    model: modelData.features
+                    TagDesktop {
+                        text: modelData
+                        colorBackground: Theme.colorComponent
+                        colorBorder: Theme.colorComponent
+                    }
+                }
+            }
+        }
+
+        ////////
+
         Row {
             height: 32
             spacing: 12
@@ -199,7 +268,7 @@ Rectangle {
 
             TagDesktop {
                 anchors.verticalCenter: parent.verticalCenter
-                text: UtilsBluetooth.getBluetoothAdapterModeText(modelData.mode)
+                text: UtilsBluetooth.getBluetoothAdapterModeText(modelData.hostMode)
                 colorBackground: Theme.colorComponent
                 colorBorder: Theme.colorComponent
             }
@@ -232,7 +301,7 @@ Rectangle {
             z: -1
 
             color: Theme.colorPrimary
-            visible: (modelData.isDefault &&
+            visible: (modelData.isInUse &&
                       deviceManager.scanning && !deviceManager.scanningPaused &&
                       appContent.state === "Scanner" && hostMenu.currentSelection === 1)
 

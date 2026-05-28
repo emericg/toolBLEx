@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
 #endif
 
     // Allow macOS (and patched Qt for bluez) to report ALL advertising packets
-    //qputenv("QT_BLUETOOTH_SCAN_ENABLE_DUPLICATES", "TRUE");
+    //qputenv("QT_BLUETOOTH_SCAN_ENABLE_DUPLICATES", "1");
 
     // GUI application /////////////////////////////////////////////////////////
 
@@ -90,9 +90,6 @@ int main(int argc, char *argv[])
         qWarning() << "Cannot init toolBLEx components!";
         return EXIT_FAILURE;
     }
-
-    // Bluetooth permission?
-    dm->requestBluetoothPermission();
 
     // Start scanning?
     if (sm->getScanAuto())

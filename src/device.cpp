@@ -290,7 +290,7 @@ void Device::actionConnect(const bool stayConnected)
     }
     else
     {
-        qWarning() << "Device::actionConnect() status: " << m_ble_status;
+        //qDebug() << "Device::actionConnect() status: " << m_ble_status;
     }
 }
 
@@ -305,7 +305,7 @@ void Device::actionDisconnect(const bool stayConnected)
     }
     else
     {
-        qWarning() << "Device::actionDisconnect() status: " << m_ble_status;
+        //qDebug() << "Device::actionDisconnect() status: " << m_ble_status;
     }
 }
 
