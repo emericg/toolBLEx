@@ -288,6 +288,8 @@ Rectangle {
             anchors.bottomMargin: 0
             spacing: 8
 
+            //FpsMonitor { anchors.verticalCenter: parent.verticalCenter }
+
             Text {
                 anchors.verticalCenter: parent.verticalCenter
                 visible: deviceManager.scanning

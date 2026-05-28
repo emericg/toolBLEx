@@ -58,7 +58,7 @@ Item {
         visible: true
 
         boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
-        ScrollBar.vertical: ScrollBarThemed { z: 10; visible: true; }
+        ScrollBar.vertical: ScrollBarThemed { policy: ScrollBar.AsNeeded; }
 
         spacing: 12
 

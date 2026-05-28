@@ -237,8 +237,7 @@ Item {
                 anchors.top: parent.top
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
-                visible: true
-                z: 10;
+                policy: ScrollBar.AsNeeded
             }
 
             TextAreaThemed {
@@ -284,7 +283,7 @@ Item {
             bottomMargin: columnLegendLeft.height + 16
 
             boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
-            ScrollBar.vertical: ScrollBarThemed { z: 10; visible: true; }
+            ScrollBar.vertical: ScrollBarThemed { policy: ScrollBar.AsNeeded; }
 
             model: (selectedDevice && selectedDevice.deviceLogModel)
             delegate: DeviceLogWidget {

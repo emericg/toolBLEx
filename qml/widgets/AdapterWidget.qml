@@ -13,7 +13,7 @@ Rectangle {
     border.width: 2
     border.color: Theme.colorBoxBorder
 
-    ////////
+    ////////////////
 
     Rectangle { // yellow bar
         anchors.top: parent.top
@@ -26,7 +26,7 @@ Rectangle {
         visible: modelData.isDefault
     }
 
-    ////////
+    ////////////////
 
     Column {
         id: box
@@ -35,6 +35,8 @@ Rectangle {
         anchors.right: parent.right
         anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
+
+        ////////
 
         property int legendWidth: 64
 
@@ -46,6 +48,8 @@ Rectangle {
             legendWidth = Math.max(legendWidth, legendBluetooth.contentWidth)
             legendWidth = Math.max(legendWidth, legendHostMode.contentWidth)
         }
+
+        ////////
 
         Text {
             anchors.left: parent.left
@@ -60,6 +64,8 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
             color: Theme.colorText
         }
+
+        ////////
 
         RowLayout {
             anchors.left: parent.left
@@ -87,6 +93,8 @@ Rectangle {
             }
         }
 
+        ////////
+
         RowLayout {
             anchors.left: parent.left
             anchors.right: parent.right
@@ -112,6 +120,8 @@ Rectangle {
                 wrapMode: Text.WrapAnywhere
             }
         }
+
+        ////////
 
         RowLayout {
             anchors.left: parent.left
@@ -141,6 +151,8 @@ Rectangle {
             }
         }
 
+        ////////
+
         Row {
             height: 32
             spacing: 12
@@ -167,6 +179,8 @@ Rectangle {
             }
         }
 
+        ////////
+
         Row {
             height: 32
             spacing: 12
@@ -190,36 +204,46 @@ Rectangle {
                 colorBorder: Theme.colorComponent
             }
         }
+
+        ////////
     }
 
-    ////////
+    ////////////////
 
     Rectangle { // bluetooth icon
         anchors.right: parent.right
         anchors.rightMargin: 20
         anchors.verticalCenter: parent.verticalCenter
-        width: 96; height: 96; radius: 96;
-        color: Theme.colorBackground
 
+        width: 96
+        height: 96
+        radius: 96
+
+        color: Theme.colorBackground
         visible: (adapterWidget.width > 400)
 /*
         Rectangle { // scanning indicator
             id: circlePulseAnimation
             anchors.centerIn: parent
-            width: 64
-            height: 64
-            radius: 64
-            color: Theme.colorBox
+
+            width: 96
+            height: 96
+            radius: 96
+            z: -1
+
+            color: Theme.colorPrimary
+            visible: (modelData.isDefault &&
+                      deviceManager.scanning && !deviceManager.scanningPaused &&
+                      appContent.state === "Scanner" && hostMenu.currentSelection === 1)
 
             ParallelAnimation {
-                running: (deviceManager.scanning && !deviceManager.scanningPaused &&
-                          appContent.state === "Scanner" && hostMenu.currentSelection === 1)
+                running: visible
                 alwaysRunToEnd: true
                 loops: Animation.Infinite
 
-                NumberAnimation { target: circlePulseAnimation; property: "width"; from: 40; to: 96; duration: 1500; }
-                NumberAnimation { target: circlePulseAnimation; property: "height"; from: 40; to: 96; duration: 1500; }
-                OpacityAnimator { target: circlePulseAnimation; from: 1; to: 0; duration: 1500; }
+                NumberAnimation { target: circlePulseAnimation; property: "width"; from: 96; to: 128; duration: 1500; }
+                NumberAnimation { target: circlePulseAnimation; property: "height"; from: 96; to: 128; duration: 1500; }
+                OpacityAnimator { target: circlePulseAnimation; from: 0.33; to: 0; duration: 1000; }
             }
         }
 */
@@ -233,5 +257,5 @@ Rectangle {
         }
     }
 
-    ////////
+    ////////////////
 }

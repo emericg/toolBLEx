@@ -20,7 +20,7 @@ Flickable {
     contentHeight: inflow.height
 
     boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
-    ScrollBar.vertical: ScrollBar { visible: false }
+    ScrollBar.vertical: ScrollBar { policy: ScrollBar.AlwaysOff; }
 
     ////////////////
 

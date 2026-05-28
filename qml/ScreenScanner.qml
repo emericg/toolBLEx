@@ -289,14 +289,14 @@ Loader {
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
 
-                    ScrollBar.vertical: ScrollBar {
+                    ScrollBar.vertical: ScrollBarThemed {
                         id: devicesViewScrollbar
                         anchors.right: parent.right
                         anchors.rightMargin: 0
                         topPadding: 36
                         policy: ScrollBar.AsNeeded
                     }
-                    ScrollBar.horizontal: ScrollBar {
+                    ScrollBar.horizontal: ScrollBarThemed {
                         anchors.bottom: parent.bottom
                         policy: ScrollBar.AsNeeded
                     }

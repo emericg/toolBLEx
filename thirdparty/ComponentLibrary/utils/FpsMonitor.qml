@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Window
 
 import ComponentLibrary
 
@@ -10,9 +9,6 @@ Item {
     height: 20
     z: 100
 
-    property int frameCounter: 0
-    property int frameCounterAvg: 0
-    property int counter: 0
     property int fps: 0
     property int fpsAvg: 0
 
@@ -24,16 +20,27 @@ Item {
         opacity: 0.33
     }
 
+    ////////
+
     Row {
         id: contentRow
         anchors.verticalCenter: parent.verticalCenter
+        leftPadding: 4
+        rightPadding: 4
+
+        ////
 
         IconSvg {
+            id: fpsAnimation
             anchors.verticalCenter: parent.verticalCenter
             width: 20
             height: 20
             color: "white"
             source: "qrc:/IconLibrary/material-symbols/autorenew.svg"
+
+            property int frameCounter: 0
+            property int frameCounterAvg: 0
+            property int counter: 0
 
             NumberAnimation on rotation {
                 from: 0
@@ -41,25 +48,28 @@ Item {
                 duration: 1000
                 loops: Animation.Infinite
             }
-            onRotationChanged: frameCounter++
+            onRotationChanged: fpsAnimation.frameCounter++
 
             Timer {
                 interval: 2000
                 repeat: true
-                running: true
+                running: (typeof utilsFpsMonitor === "undefined" || !utilsFpsMonitor)
+
                 onTriggered: {
-                    frameCounterAvg += frameCounter
-                    control.fps = frameCounter / 2
-                    counter++
-                    frameCounter = 0
-                    if (counter >= 3) {
-                        control.fpsAvg = frameCounterAvg / (2*counter)
-                        frameCounterAvg = 0
-                        counter = 0
+                    fpsAnimation.frameCounterAvg += fpsAnimation.frameCounter
+                    control.fps = fpsAnimation.frameCounter / 2
+                    fpsAnimation.counter++
+                    fpsAnimation.frameCounter = 0
+                    if (fpsAnimation.counter >= 3) {
+                        control.fpsAvg = fpsAnimation.frameCounterAvg / (2*fpsAnimation.counter)
+                        fpsAnimation.frameCounterAvg = 0
+                        fpsAnimation.counter = 0
                     }
                 }
             }
         }
+
+        ////
 
         Text {
             anchors.verticalCenter: parent.verticalCenter
@@ -69,18 +79,20 @@ Item {
             textFormat: Text.PlainText
             text: {
                 var txt = ""
-                if (utilsFpsMonitor) {
+                if (typeof utilsFpsMonitor !== "undefined" && utilsFpsMonitor) {
                     // FPS from utilsFpsMonitor
-                    txt += utilsFpsMonitor.fps + " fps"
+                    txt += utilsFpsMonitor.fps + " FPS"
                 } else {
                     // FPS from the UI animation
-                    txt += "Ø " + control.fpsAvg
+                    //txt += "Ø " + control.fpsAvg
                     if (txt.length) txt += " | "
-                    txt += control.fps + " fps"
+                    txt += control.fps + " FPS"
                 }
                 return txt
             }
         }
+
+        ////
     }
 
     ////////

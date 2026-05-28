@@ -96,7 +96,7 @@ Item {
         visible: (selectedDevice && selectedDevice.servicesCount > 0)
 
         boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
-        ScrollBar.vertical: ScrollBarThemed { z: 10; visible: true; }
+        ScrollBar.vertical: ScrollBarThemed { policy: ScrollBar.AsNeeded; }
 
         header: Rectangle {
             width: ListView.view.width

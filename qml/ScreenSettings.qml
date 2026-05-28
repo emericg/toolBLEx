@@ -9,7 +9,7 @@ Loader {
     id: screenSettings
     anchors.fill: parent
 
-    ////////////////
+    ////////////////////////////////////////////////////////////////////////////
 
     function loadScreen() {
         screenSettings.active = true
@@ -42,7 +42,7 @@ Loader {
         }
     }
 
-    ////////////////
+    ////////////////////////////////////////////////////////////////////////////
 
     opacity: active ? 1 : 0
     Behavior on opacity { OpacityAnimator { duration: 233 } }
@@ -99,7 +99,7 @@ Loader {
             contentHeight: settingsColumn.height
 
             boundsBehavior: Flickable.StopAtBounds
-            ScrollBar.vertical: ScrollBar { policy: ScrollBar.AsNeeded }
+            ScrollBar.vertical: ScrollBarThemed { policy: ScrollBar.AsNeeded; }
 
             Column {
                 id: settingsColumn
@@ -307,9 +307,13 @@ Loader {
                     flow: Flow.LeftToRight // Flow.TopToBottom
                     spacing: Theme.componentMarginL
 
+                    ////////////////
+
                     Column {
                         width: settingsColumn.flowElementWidth
                         spacing: 2
+
+                        ////
 
                         Rectangle {
                             anchors.left: parent.left
@@ -342,6 +346,8 @@ Loader {
                                 color: Theme.colorIcon
                             }
                         }
+
+                        ////
 
                         Rectangle {
                             anchors.left: parent.left
@@ -422,6 +428,8 @@ Loader {
                             }
                         }
 
+                        ////
+
                         Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
@@ -473,6 +481,8 @@ Loader {
                             }
                         }
 
+                        ////
+
                         Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
@@ -511,6 +521,8 @@ Loader {
                                 }
                             }
                         }
+
+                        ////
 
                         Rectangle {
                             anchors.left: parent.left
@@ -559,6 +571,8 @@ Loader {
                             }
                         }
 
+                        ////
+
                         Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
@@ -591,6 +605,8 @@ Loader {
                             }
                         }
 
+                        ////
+
                         Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
@@ -613,6 +629,8 @@ Loader {
                                 verticalAlignment: Text.AlignVCenter
                             }
                         }
+
+                        ////
 
                         Rectangle {
                             anchors.left: parent.left
@@ -643,13 +661,17 @@ Loader {
                                 onTextChanged: SettingsManager.exportDirectory = text
                             }
                         }
+
+                        ////
                     }
 
-                    ////
+                    ////////
 
                     Column {
                         width: settingsColumn.flowElementWidth
                         spacing: 2
+
+                        ////
 
                         Rectangle {
                             anchors.left: parent.left
@@ -682,6 +704,8 @@ Loader {
                                 color: Theme.colorIcon
                             }
                         }
+
+                        ////
 
                         Rectangle {
                             anchors.left: parent.left
@@ -726,6 +750,32 @@ Loader {
                             }
                         }
 
+                        ////
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: txtScanLegend.height + 16
+                            color: Theme.colorForeground
+
+                            Text {
+                                id: txtScanLegend
+                                anchors.left: parent.left
+                                anchors.leftMargin: Theme.componentMarginL
+                                anchors.right: parent.right
+                                anchors.rightMargin: Theme.componentMargin
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                text: qsTr("Scanning for both Classic and Low Energy at the same time usually means that your adapter will switch between scanning modes every couple of seconds instead of scanning for both simultaneously.")
+                                textFormat: Text.PlainText
+                                font.pixelSize: Theme.fontSizeContent
+                                color: Theme.colorSubText
+                                wrapMode: Text.WordWrap
+                            }
+                        }
+
+                        ////
+
                         Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
@@ -763,6 +813,8 @@ Loader {
                             }
                         }
 
+                        ////
+
                         Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
@@ -794,6 +846,8 @@ Loader {
                                 onClicked: SettingsManager.scanPause = checked
                             }
                         }
+
+                        ////
 
                         Rectangle {
                             anchors.left: parent.left
@@ -833,6 +887,8 @@ Loader {
                             }
                         }
 
+                        ////
+
                         Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
@@ -869,6 +925,8 @@ Loader {
                             }
                         }
 
+                        ////
+
                         Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
@@ -900,6 +958,8 @@ Loader {
                                 onClicked: SettingsManager.scanCacheAuto = checked
                             }
                         }
+
+                        ////
 
                         Rectangle {
                             anchors.left: parent.left
@@ -957,6 +1017,8 @@ Loader {
                             }
                         }
 
+                        ////
+
                         Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
@@ -1012,15 +1074,17 @@ Loader {
                                 }
                             }
                         }
+
+                        ////
                     }
 
-                    ////
+                    ////////
 
                     Column {
                         width: settingsColumn.flowElementWidth
                         spacing: 2
 
-                        visible: (Qt.platform.os === "linux" || Qt.platform.os === "osx")
+                        ////
 
                         Rectangle {
                             anchors.left: parent.left
@@ -1054,70 +1118,130 @@ Loader {
                             }
                         }
 
+                        ////
+
                         Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
-                            height: colUber.height + 16
+                            height: txtUber1.height + 16
                             color: Theme.colorForeground
-
-                            Column {
-                                id: colUber
-                                anchors.left: parent.left
-                                anchors.leftMargin: Theme.componentMarginL
-                                anchors.right: parent.right
-                                anchors.rightMargin: 52
-                                anchors.verticalCenter: parent.verticalCenter
-                                spacing: 4
-
-                                Text {
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
-
-                                    text: qsTr("This feature relies on specific hardware.")
-                                    textFormat: Text.PlainText
-                                    font.pixelSize: Theme.fontSizeContent
-                                    color: Theme.colorText
-                                    wrapMode: Text.WordWrap
-                                }
-                                Text {
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
-
-                                    text: qsTr("Ubertooth One is an open source 2.4 GHz wireless development platform suitable for Bluetooth experimentation.")
-                                    textFormat: Text.PlainText
-                                    font.pixelSize: Theme.fontSizeContent
-                                    color: Theme.colorText
-                                    wrapMode: Text.WordWrap
-                                }/*
-                                Text {
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
-
-                                    text: "https://greatscottgadgets.com/ubertoothone/"
-                                    textFormat: Text.PlainText
-                                    font.pixelSize: Theme.fontSizeContent
-                                    color: Theme.colorText
-                                    wrapMode: Text.WordWrap
-                                }*/
-                            }
 
                             IconSvg {
                                 width: 28
                                 height: 28
+                                anchors.left: parent.left
+                                anchors.leftMargin: Theme.componentMarginL
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                source: "qrc:/IconLibrary/material-symbols/info-fill.svg"
+                                color: Theme.colorSubText
+                                opacity: 0.5
+                            }
+
+                            Text {
+                                id: txtUber1
+                                anchors.left: parent.left
+                                anchors.leftMargin: 64
                                 anchors.right: parent.right
                                 anchors.rightMargin: Theme.componentMarginL
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                source: "qrc:/IconLibrary/material-symbols/help-fill.svg"
-                                color: Theme.colorSubText
+                                text: qsTr("This feature relies on specific hardware.")
+                                textFormat: Text.PlainText
+                                font.pixelSize: Theme.fontSizeContent
+                                color: Theme.colorText
+                                wrapMode: Text.WordWrap
                             }
                         }
+
+                        ////
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: txtUber2.height + 16
+                            color: Theme.colorForeground
+
+                            IconSvg {
+                                width: 28
+                                height: 28
+                                anchors.left: parent.left
+                                anchors.leftMargin: Theme.componentMarginL
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                source: "qrc:/IconLibrary/material-symbols/help-fill.svg"
+                                color: Theme.colorSubText
+                                opacity: 0.5
+                            }
+
+                            Text {
+                                id: txtUber2
+                                anchors.left: parent.left
+                                anchors.leftMargin: 64
+                                anchors.right: parent.right
+                                anchors.rightMargin: Theme.componentMarginL
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                text: qsTr("<a href=\"https://greatscottgadgets.com/ubertoothone/\">Ubertooth One</a> is an open source 2.4 GHz wireless development platform suitable for Bluetooth experimentation.")
+                                textFormat: Text.StyledText
+                                font.pixelSize: Theme.fontSizeContent
+                                color: Theme.colorText
+                                linkColor:Theme.colorText
+                                wrapMode: Text.WordWrap
+
+                                onLinkActivated: (link) => {
+                                    Qt.openUrlExternally(link)
+                                }
+                            }
+                        }
+
+                        ////
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: txtUber3.height + 16
+                            color: Theme.colorForeground
+
+                            visible: (Qt.platform.os === "windows")
+
+                            IconSvg {
+                                width: 28
+                                height: 28
+                                anchors.left: parent.left
+                                anchors.leftMargin: Theme.componentMarginL
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                source: "qrc:/IconLibrary/material-symbols/warning-fill.svg"
+                                color: Theme.colorWarning
+                                opacity: 1
+                            }
+
+                            Text {
+                                id: txtUber3
+                                anchors.left: parent.left
+                                anchors.leftMargin: 64
+                                anchors.right: parent.right
+                                anchors.rightMargin: Theme.componentMarginL
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                text: qsTr("Ubertooth is not available for Windows.")
+                                textFormat: Text.PlainText
+                                font.pixelSize: Theme.fontSizeContent
+                                color: Theme.colorText
+                                wrapMode: Text.WordWrap
+                            }
+                        }
+
+                        ////
 
                         Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
                             height: 48
                             color: Theme.colorForeground
+
+                            visible: (Qt.platform.os === "linux" || Qt.platform.os === "osx")
 
                             FileInputArea {
                                 id: ubertoothPath
@@ -1155,13 +1279,15 @@ Loader {
                             }
                         }
 
+                        ////
+
                         Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
                             height: 48
                             color: Theme.colorForeground
 
-                            visible: ubertooth.toolsAvailable
+                            visible: (Qt.platform.os === "linux" || Qt.platform.os === "osx") && ubertooth.toolsAvailable
 
                             RangeSliderThemed {
                                 anchors.left: parent.left
@@ -1189,13 +1315,16 @@ Loader {
                                 }
                             }
                         }
+
+                        ////
+
                         Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
                             height: 48
                             color: Theme.colorForeground
 
-                            visible: ubertooth.toolsAvailable
+                            visible: (Qt.platform.os === "linux" || Qt.platform.os === "osx") && ubertooth.toolsAvailable
 
                             SpinBoxThemedDesktop {
                                 anchors.left: parent.left
@@ -1253,9 +1382,11 @@ Loader {
                                 }
                             }
                         }
+
+                        ////
                     }
 
-                    ////
+                    ////////
                 }
 
                 ////////////////////////
@@ -1267,9 +1398,13 @@ Loader {
                     flow: Flow.LeftToRight // Flow.TopToBottom
                     spacing: Theme.componentMarginL
 
+                    ////////
+
                     Column {
                         width: settingsColumn.flowElementWidth
                         spacing: 2
+
+                        ////
 
                         Rectangle {
                             anchors.left: parent.left
@@ -1292,6 +1427,8 @@ Loader {
                             }
                         }
 
+                        ////
+
                         Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
@@ -1312,6 +1449,8 @@ Loader {
                                 wrapMode: Text.WordWrap
                             }
                         }
+
+                        ////
 
                         Repeater {
                             model: ListModel {
@@ -1382,9 +1521,11 @@ Loader {
                                 }
                             }
                         }
+
+                        ////
                     }
 
-                    ////
+                    ////////
 
                     Loader { // DEBUG PANEL
                         active: true // utilsApp.isDebugBuild()
@@ -1393,6 +1534,8 @@ Loader {
                         sourceComponent: Column {
                             width: settingsColumn.flowElementWidth
                             spacing: 2
+
+                            ////
 
                             Rectangle {
                                 anchors.left: parent.left
@@ -1414,6 +1557,8 @@ Loader {
                                     verticalAlignment: Text.AlignVCenter
                                 }
                             }
+
+                            ////
 
                             Row {
                                 anchors.left: parent.left
@@ -1469,6 +1614,8 @@ Loader {
                                 }
                             }
 
+                            ////
+
                             Row {
                                 anchors.left: parent.left
                                 anchors.right: parent.right
@@ -1509,6 +1656,8 @@ Loader {
                                 }
                             }
 
+                            ////
+
                             Row {
                                 anchors.left: parent.left
                                 anchors.right: parent.right
@@ -1548,18 +1697,20 @@ Loader {
                                     }
                                 }
                             }
+
+                            ////
                         }
                     }
 
-                    ////
+                    ////////
                 }
 
-                ////////
+                ////////////////////////
             }
         }
 
         ////////////////////////////////////////////////////////////////////////
     }
 
-    ////////////////
+    ////////////////////////////////////////////////////////////////////////////
 }

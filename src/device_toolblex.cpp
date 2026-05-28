@@ -888,7 +888,7 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
             if (!hasNewData) return false;
         }
 */
-        logEvent2(timestamp, LogEvent::ADV, "New manufacturer data: ID 0x" + QString::number(id, 16).rightJustified(4, '0') +
+        logEvent2(timestamp, LogEvent::ADV, "New manufacturer data: ID 0x" + QString::number(id, 16).toUpper().rightJustified(4, '0') +
                                             " / " + QString::number(data.size()) + " bytes / 0x" + data.toHex());
 
         bool uuidFound = false;
@@ -918,7 +918,7 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
             if (!hasNewData) return false;
         }
 */
-        logEvent2(timestamp, LogEvent::ADV, "New service data: " + uuid.toString() +
+        logEvent2(timestamp, LogEvent::ADV, "New service data: ID 0x" + QString::number(id, 16).toUpper().rightJustified(4, '0') +
                                             " / " + QString::number(data.size()) + " bytes / 0x" + data.toHex());
 
         bool uuidFound = false;
