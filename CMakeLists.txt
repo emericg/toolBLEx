@@ -35,7 +35,7 @@ message(STATUS "[PROJECT] CMAKE_CURRENT_SOURCE_DIR  = ${CMAKE_CURRENT_SOURCE_DIR
 ################################################################################
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Svg Qml Quick QuickControls2)
-find_package(Qt6 REQUIRED COMPONENTS Sql Bluetooth Charts Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Sql Bluetooth Graphs Widgets)
 find_package(Qt6 REQUIRED COMPONENTS LinguistTools)
 
 qt_standard_project_setup(REQUIRES 6.8
@@ -123,6 +123,8 @@ qt_add_qml_module(${PROJECT_NAME}
         qml/components/DeviceScannerTableWidget.qml
         qml/components/FrequencyGraph.qml
         qml/components/FrequencyGraphLegend.qml
+        qml/components/FrequencyGraphOverlayBands.qml
+        qml/components/FrequencyGraphOverlayClickable.qml
         qml/components/ProximityRadar.qml
         qml/components/RssiBar.qml
         qml/components/RssiGraph.qml
@@ -204,7 +206,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt6::QuickControls2
     Qt6::Sql
     Qt6::Bluetooth
-    Qt6::Charts
+    Qt6::Graphs
     Qt6::Widgets
 )
 

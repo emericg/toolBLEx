@@ -31,8 +31,9 @@
 #include <QList>
 #include <QTimer>
 
-#include <QtCharts/QLineSeries>
-#include <QtCharts/QDateTimeAxis>
+#include <QtGraphs/QLineSeries>
+#include <QtGraphs/QValueAxis>
+#include <QtGraphs/QDateTimeAxis>
 
 #include <QBluetoothLocalDevice>
 #include <QBluetoothDeviceDiscoveryAgent>

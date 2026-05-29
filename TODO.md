@@ -35,7 +35,7 @@
 [x] CMake build system
 [x] macOS BLE permission
 [x] new permission system+
-[ ] switch from Qt Charts to Qt Graphs
+[x] switch from Qt Charts to Qt Graphs
 
 [x] textfields: double click to select
 [x] keyboard navigation, move elevators

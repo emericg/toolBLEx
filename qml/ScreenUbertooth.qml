@@ -40,8 +40,8 @@ Loader {
         }
 
         function backAction() {
-            if (frequencyGraph.hasIndicators()) {
-                frequencyGraph.resetIndicators()
+            if (overlayClickable.hasIndicators()) {
+                overlayClickable.resetIndicators()
                 return
             }
 
@@ -289,12 +289,66 @@ Loader {
 
         ////////////////////////////////////////////////////////////////////////
 
+        Item {
+            id: legend_area_under
+            clip: true
+
+            //RectangleDebug {}
+
+            FrequencyGraphOverlayBands {
+                id: frequencyBands
+                anchors.fill: parent
+            }
+        }
+
+        ////////
+
         FrequencyGraph {
             id: frequencyGraph
+
             anchors.top: actionBar.bottom
+            anchors.topMargin: -20
             anchors.left: parent.left
+            anchors.leftMargin: -28
             anchors.right: parent.right
+            anchors.rightMargin: -20
             anchors.bottom: parent.bottom
+            anchors.bottomMargin: -28
+
+            onPlotAreaUpdated: (x, y, width, height) => {
+                //console.log("onPlotAreaUpdated")
+                //console.log("- plotArea x      " + frequencyGraph.plotArea.x)
+                //console.log("- plotArea y      " + frequencyGraph.plotArea.y)
+                //console.log("- plotArea width  " + frequencyGraph.plotArea.width)
+                //console.log("- plotArea height " + frequencyGraph.plotArea.height)
+
+                legend_area_under.x = x
+                legend_area_under.y = y
+                legend_area_under.width = width
+                legend_area_under.height = height
+
+                legend_area_over.x = x
+                legend_area_over.y = y
+                legend_area_over.width = width
+                legend_area_over.height = height
+            }
+        }
+
+        ////////
+
+        Item {
+            id: legend_area_over
+            clip: true
+
+            FrequencyGraphLegend {
+                id: overlayLegend
+                anchors.fill: parent
+            }
+
+            FrequencyGraphOverlayClickable {
+                id: overlayClickable
+                anchors.fill: parent
+            }
         }
 
         ////////////////////////////////////////////////////////////////////////

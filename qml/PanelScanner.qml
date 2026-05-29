@@ -100,13 +100,13 @@ Item {
     RssiGraph {
         id: rssiGraph
         anchors.top: actionBar.bottom
-        anchors.topMargin: -16
+        anchors.topMargin: -20
         anchors.left: parent.left
-        anchors.leftMargin: -16
+        anchors.leftMargin: -24
         anchors.right: parent.right
-        anchors.rightMargin: -16
+        anchors.rightMargin: -20
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: -16
+        anchors.bottomMargin: -24
 
         visible: (hostMenu.currentSelection === 3)
         enabled: (hostMenu.currentSelection === 3)

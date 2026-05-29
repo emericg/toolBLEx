@@ -29,8 +29,8 @@
 #include <QList>
 #include <QMap>
 
-#include <QtCharts/QLineSeries>
-#include <QtCharts/QValueAxis>
+#include <QtGraphs/QLineSeries>
+#include <QtGraphs/QValueAxis>
 
 /* ************************************************************************** */
 

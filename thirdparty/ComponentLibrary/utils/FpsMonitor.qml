@@ -27,6 +27,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         leftPadding: 4
         rightPadding: 4
+        spacing: 4
 
         ////
 
@@ -74,7 +75,7 @@ Item {
         Text {
             anchors.verticalCenter: parent.verticalCenter
 
-            color: "#c0c0c0"
+            color: "#ddd"
             font.pixelSize: 16
             textFormat: Text.PlainText
             text: {

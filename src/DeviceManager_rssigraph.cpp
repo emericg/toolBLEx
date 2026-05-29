@@ -76,7 +76,6 @@ void DeviceManager::getRssiGraphAxis(QDateTimeAxis *axis)
     if (!axis) return;
     //qDebug() << "DeviceManager::getRssiGraphAxis()";
 
-    axis->setFormat("mm ss");
     axis->setMin(QDateTime::currentDateTime().addSecs(-60));
     axis->setMax(QDateTime::currentDateTime());
 }

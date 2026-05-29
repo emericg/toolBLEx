@@ -23,6 +23,7 @@
 #include "SettingsManager.h"
 
 #include <QProcess>
+#include <QTimer>
 #include <QStringList>
 #include <QFileInfo>
 #include <QFile>
@@ -185,7 +186,7 @@ void Ubertooth::startWork()
         args << "-l" + QString::number(m_freq_min);
         args << "-u" + QString::number(m_freq_max);
 
-        //qDebug() << "Ubertooth::startWork()" << m_path_specan << args;
+        qDebug() << "Ubertooth::startWork()" << m_path_specan << args;
         m_childProcess->start(m_path_specan, args);
     }
 }
@@ -211,7 +212,7 @@ void Ubertooth::stopWork()
 void Ubertooth::restartWork()
 {
     stopWork();
-    startWork();
+    QTimer::singleShot(333, this, &Ubertooth::startWork);
 }
 
 /* ************************************************************************** */
@@ -288,7 +289,7 @@ void Ubertooth::processOutput()
 
                 if (freq < m_freq_min || freq > m_freq_max)
                 {
-                    qDebug() << "> warning: freq " << freq << " > rssi " << rssi << "(" << m_freq_min << "/" << m_freq_max << ")";
+                    qDebug() << "> warning: frequency" << freq << "not in range > [" << m_freq_min << "/" << m_freq_max << "]    ( rssi " << rssi << ")";
                     continue;
                 }
 

@@ -1,33 +1,75 @@
 import QtQuick
-import QtCharts
+import QtGraphs
 
 import ComponentLibrary
 
-ChartView {
+GraphsView {
     id: rssiGraph
 
-    legend.visible: false
-
-    backgroundColor: Theme.colorBackground
-    backgroundRoundness: 0
-
     clip: false
-    antialiasing: true
-    dropShadowEnabled: false
-    animationOptions: ChartView.NoAnimation
+    antialiasing: false
+    shadowVisible: false
+
+    theme: GraphsTheme {
+        backgroundColor: Theme.colorBackground
+        backgroundVisible: true
+        plotAreaBackgroundColor: Theme.colorBackground
+        plotAreaBackgroundVisible: true
+        labelBackgroundVisible: false
+        labelBorderVisible: false
+
+        gridVisible: true
+        grid.mainColor: Theme.colorGrid
+        grid.subColor: Theme.colorGrid
+
+        axisX.mainColor: Theme.colorAxis
+        axisX.labelTextColor: Theme.colorSubText
+        axisY.mainColor: Theme.colorAxis
+        axisY.labelTextColor: Theme.colorSubText
+
+        axisXLabelFont.pixelSize: Theme.fontSizeContentVerySmall
+        axisYLabelFont.pixelSize: Theme.fontSizeContentVerySmall
+    }
+
+    axisY: ValueAxis {
+        id: axisRSSI
+        visible: true
+
+        min: -100
+        max: -20
+        tickInterval: 20
+
+        labelsVisible: true
+        labelDecimals: 0
+
+        gridVisible: true
+        subGridVisible: false
+    }
+
+    axisX: DateTimeAxis {
+        id: axisTime
+        visible: true
+
+        labelsVisible: true
+        labelFormat: "mm:ss"
+
+        gridVisible: true
+        subGridVisible: false
+    }
 
     ////////////////////////////////////////////////////////////////////////////
 
-    property bool useOpenGL: false
-    property color legendColor: Theme.colorSubText
-
     property var graphs: []
+
+    function createLineSeries() {
+        var s = Qt.createQmlObject('import QtGraphs; LineSeries {}', rssiGraph)
+        rssiGraph.addSeries(s)
+        return s
+    }
 
     Component.onCompleted: {
         deviceManager.getRssiGraphAxis(axisTime)
-
-        graphs[0] = rssiGraph.createSeries(ChartView.SeriesTypeLine, "", axisTime, axisRSSI)
-        graphs[0].useOpenGL = useOpenGL
+        graphs[0] = createLineSeries()
     }
 
     function updateGraph() {
@@ -42,8 +84,7 @@ ChartView {
         for (var i = 0; i < deviceManager.deviceCount; i++) {
             if (!graphs[i]) {
                 //console.log("graph " + i + " is being created")
-                graphs[i] = rssiGraph.createSeries(ChartView.SeriesTypeLine, "", axisTime, axisRSSI)
-                graphs[i].useOpenGL = useOpenGL
+                graphs[i] = createLineSeries()
             }
             if (graphs[i]) {
                 //console.log("graph " + i + " is being updated")
@@ -57,38 +98,6 @@ ChartView {
         running: (deviceManager.scanning && !deviceManager.scanningPaused && hostMenu.currentSelection === 3)
         repeat: true
         onTriggered: updateGraph()
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    ValueAxis {
-        id: axisRSSI
-        visible: true
-
-        min: -100
-        max: -20
-
-        color: legendColor
-        gridVisible: true
-        gridLineColor: Theme.colorGrid
-        minorGridLineColor: Theme.colorGrid
-        labelsVisible: true
-        labelsFont.pixelSize: Theme.fontSizeContentVerySmall
-        labelsColor: legendColor
-        labelFormat: "%i"
-    }
-
-    DateTimeAxis {
-        id: axisTime
-        visible: true
-
-        color: legendColor
-        gridVisible: true
-        gridLineColor: Theme.colorGrid
-        minorGridLineColor: Theme.colorGrid
-        labelsVisible: false
-        labelsFont.pixelSize: Theme.fontSizeContentVerySmall
-        labelsColor: legendColor
     }
 
     ////////////////////////////////////////////////////////////////////////////

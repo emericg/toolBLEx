@@ -36,7 +36,7 @@ Loader {
         interval: 1000 // 1s is probably good enough...
         repeat: false // started when a settings is modified
         onTriggered: {
-            if (deviceManager.running) {
+            if (ubertooth.running) {
                 ubertooth.restartWork()
             }
         }
