@@ -43,7 +43,7 @@ A multiplatform Bluetooth Low Energy (and Classic) device scanner and analyzer.
 
 You will need a C++17 compiler and Qt 6.8+ with the following 'additional librairies':  
 - Qt Connectivity
-- Qt Charts
+- Qt Graphs
 
 For macOS builds, you'll need Xcode (15+) installed.  
 For Windows builds, you'll need the MSVC (2022) installed. Bluetooth won't work with MinGW.  
