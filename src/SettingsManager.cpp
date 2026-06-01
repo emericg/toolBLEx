@@ -162,6 +162,10 @@ bool SettingsManager::readSettings()
             m_ubertooth_freqMin = settings.value("settings/ubertooth_freqMin").toInt();
         if (settings.contains("settings/ubertooth_freqMax"))
             m_ubertooth_freqMax = settings.value("settings/ubertooth_freqMax").toInt();
+        if (settings.contains("settings/ubertooth_samplingFrequency"))
+            m_ubertooth_samplingFrequency = settings.value("settings/ubertooth_samplingFrequency").toInt();
+        if (settings.contains("settings/ubertooth_historyCurves"))
+            m_ubertooth_historyCurves = settings.value("settings/ubertooth_historyCurves").toInt();
 
         status = true;
     }
@@ -213,6 +217,8 @@ bool SettingsManager::writeSettings()
         settings.setValue("settings/ubertooth_path", m_ubertooth_path);
         settings.setValue("settings/ubertooth_freqMin", m_ubertooth_freqMin);
         settings.setValue("settings/ubertooth_freqMax", m_ubertooth_freqMax);
+        settings.setValue("settings/ubertooth_samplingFrequency", m_ubertooth_samplingFrequency);
+        settings.setValue("settings/ubertooth_historyCurves", m_ubertooth_historyCurves);
 
         if (settings.status() == QSettings::NoError)
         {
@@ -574,21 +580,53 @@ void SettingsManager::setUbertoothPath(const QString &value)
 
 void SettingsManager::setUbertoothFreqMin(const int value)
 {
-    if (m_ubertooth_freqMin != value)
+    if (value >= 2300 && value < 2600)
     {
-        m_ubertooth_freqMin = value;
-        writeSettings();
-        Q_EMIT ubertoothFreqChanged();
+        if (m_ubertooth_freqMin != value)
+        {
+            m_ubertooth_freqMin = value;
+            writeSettings();
+            Q_EMIT ubertoothFreqChanged();
+        }
     }
 }
 
 void SettingsManager::setUbertoothFreqMax(const int value)
 {
-    if (m_ubertooth_freqMax != value)
+    if (value > 2300 && value <= 2600)
     {
-        m_ubertooth_freqMax = value;
-        writeSettings();
-        Q_EMIT ubertoothFreqChanged();
+        if (m_ubertooth_freqMax != value)
+        {
+            m_ubertooth_freqMax = value;
+            writeSettings();
+            Q_EMIT ubertoothFreqChanged();
+        }
+    }
+}
+
+void SettingsManager::setUbertoothSamplingFreq(const int value)
+{
+    if (value >= 5 && value <= 20)
+    {
+        if (m_ubertooth_samplingFrequency != value)
+        {
+            m_ubertooth_samplingFrequency = value;
+            writeSettings();
+            Q_EMIT ubertoothSamplingChanged();
+        }
+    }
+}
+
+void SettingsManager::setUbertoothHistoryCurves(const int value)
+{
+    if (value >= 8 && value <= 128)
+    {
+        if (m_ubertooth_historyCurves != value)
+        {
+            m_ubertooth_historyCurves = value;
+            writeSettings();
+            Q_EMIT ubertoothHistoryChanged();
+        }
     }
 }
 

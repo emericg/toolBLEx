@@ -1235,152 +1235,284 @@ Loader {
 
                         ////
 
-                        Rectangle {
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            height: 48
-                            color: Theme.colorForeground
+                        Column {
+                            width: settingsColumn.flowElementWidth
+                            spacing: 2
 
                             visible: (Qt.platform.os === "linux" || Qt.platform.os === "osx")
 
-                            FileInputArea {
-                                id: ubertoothPath
+                            ////
+
+                            Rectangle {
                                 anchors.left: parent.left
-                                anchors.leftMargin: Theme.componentMargin
                                 anchors.right: parent.right
-                                anchors.rightMargin: Theme.componentMargin
-                                anchors.verticalCenter: parent.verticalCenter
+                                height: 48
+                                color: Theme.colorForeground
 
-                                selectByMouse: true
-
-                                text: SettingsManager.ubertooth_path
-                                placeholderText: "ubertooth-specan"
-
-                                dialogTitle: qsTr("Please specify the path to the ubertooth-specan binary")
-                                dialogFilter: ["specan binary (ubertooth-specan)"]
-                                dialogFileMode: FileDialog.OpenFile
-
-                                IconSvg {
+                                FileInputArea {
+                                    id: ubertoothPath
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: Theme.componentMargin
                                     anchors.right: parent.right
-                                    anchors.rightMargin: parent.buttonWidth+4
+                                    anchors.rightMargin: Theme.componentMargin
                                     anchors.verticalCenter: parent.verticalCenter
-                                    width: 24
-                                    height: 24
 
-                                    visible: ubertooth.toolsAvailable
-                                    source: "qrc:/IconLibrary/material-symbols/check_circle.svg"
-                                    color: Theme.colorSuccess
-                                }
+                                    selectByMouse: true
 
-                                onTextChanged: {
-                                    SettingsManager.ubertooth_path = text
-                                    ubertooth.checkPath()
+                                    text: SettingsManager.ubertooth_path
+                                    placeholderText: "ubertooth-specan"
+
+                                    dialogTitle: qsTr("Please specify the path to the ubertooth-specan binary")
+                                    dialogFilter: ["specan binary (ubertooth-specan)"]
+                                    dialogFileMode: FileDialog.OpenFile
+
+                                    IconSvg {
+                                        anchors.right: parent.right
+                                        anchors.rightMargin: parent.buttonWidth+4
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        width: 24
+                                        height: 24
+
+                                        visible: ubertooth.toolsAvailable
+                                        source: "qrc:/IconLibrary/material-symbols/check_circle.svg"
+                                        color: Theme.colorSuccess
+                                    }
+
+                                    onTextChanged: {
+                                        SettingsManager.ubertooth_path = text
+                                        ubertooth.checkPath()
+                                    }
                                 }
                             }
-                        }
 
-                        ////
+                            ////
 
-                        Rectangle {
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            height: 48
-                            color: Theme.colorForeground
-
-                            visible: (Qt.platform.os === "linux" || Qt.platform.os === "osx") && ubertooth.toolsAvailable
-
-                            RangeSliderThemed {
+                            Rectangle {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 12
                                 anchors.right: parent.right
-                                anchors.rightMargin: 12
-                                anchors.verticalCenter: parent.verticalCenter
-                                anchors.margins: 2
+                                height: 48
+                                color: Theme.colorForeground
 
-                                from: 2300
-                                to: 2600
-                                first.value: SettingsManager.ubertooth_freqMin
-                                first.onMoved: {
-                                    SettingsManager.ubertooth_freqMin = first.value
-                                    if (ubertooth.running) {
-                                        restartUbertoothTimer.restart()
+                                RangeSliderThemed {
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 12
+                                    anchors.right: parent.right
+                                    anchors.rightMargin: 12
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    anchors.margins: 2
+
+                                    from: 2300
+                                    to: 2600
+                                    first.value: SettingsManager.ubertooth_freqMin
+                                    first.onMoved: {
+                                        SettingsManager.ubertooth_freqMin = first.value
+                                        if (ubertooth.running) {
+                                            restartUbertoothTimer.restart()
+                                        }
                                     }
-                                }
-                                second.value: SettingsManager.ubertooth_freqMax
-                                second.onMoved: {
-                                    SettingsManager.ubertooth_freqMax = second.value
-                                    if (ubertooth.running) {
-                                        restartUbertoothTimer.restart()
+                                    second.value: SettingsManager.ubertooth_freqMax
+                                    second.onMoved: {
+                                        SettingsManager.ubertooth_freqMax = second.value
+                                        if (ubertooth.running) {
+                                            restartUbertoothTimer.restart()
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        ////
+                            ////
 
-                        Rectangle {
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            height: 48
-                            color: Theme.colorForeground
-
-                            visible: (Qt.platform.os === "linux" || Qt.platform.os === "osx") && ubertooth.toolsAvailable
-
-                            SpinBoxThemedDesktop {
+                            Rectangle {
                                 anchors.left: parent.left
-                                anchors.leftMargin: Theme.componentMargin
-                                anchors.verticalCenter: parent.verticalCenter
-                                z: 2
-
-                                hoverEnabled: false
-                                editable: false
-                                from: 2300
-                                to: 2600
-                                legend: "MHz"
-
-                                value: SettingsManager.ubertooth_freqMin
-                                onValueModified: {
-                                    SettingsManager.ubertooth_freqMin = value
-                                    if (ubertooth.running) {
-                                        restartUbertoothTimer.restart()
-                                    }
-                                }
-                            }
-
-                            ButtonDesktop {
-                                anchors.centerIn: parent
-                                visible: (SettingsManager.ubertooth_freqMin !== 2402 || SettingsManager.ubertooth_freqMax !== 2480)
-
-                                text: qsTr("Default")
-                                onClicked: {
-                                    SettingsManager.ubertooth_freqMin = 2402
-                                    SettingsManager.ubertooth_freqMax = 2480
-                                    if (ubertooth.running) {
-                                        ubertooth.restartWork()
-                                    }
-                                }
-                            }
-
-                            SpinBoxThemedDesktop {
                                 anchors.right: parent.right
-                                anchors.rightMargin: Theme.componentMargin
-                                anchors.verticalCenter: parent.verticalCenter
-                                z: 2
+                                height: 48
+                                color: Theme.colorForeground
 
-                                hoverEnabled: false
-                                editable: false
-                                from: 2300
-                                to: 2600
-                                legend: "MHz"
+                                SpinBoxThemedDesktop {
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: Theme.componentMargin
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    z: 2
 
-                                value: SettingsManager.ubertooth_freqMax
-                                onValueModified: {
-                                    SettingsManager.ubertooth_freqMax = value
-                                    if (ubertooth.running) {
-                                        restartUbertoothTimer.restart()
+                                    hoverEnabled: false
+                                    editable: false
+                                    from: 2300
+                                    to: 2600
+                                    legend: "MHz"
+
+                                    value: SettingsManager.ubertooth_freqMin
+                                    onValueModified: {
+                                        SettingsManager.ubertooth_freqMin = value
+                                        if (ubertooth.running) {
+                                            restartUbertoothTimer.restart()
+                                        }
+                                    }
+                                }
+
+                                ButtonDesktop {
+                                    anchors.centerIn: parent
+                                    visible: (SettingsManager.ubertooth_freqMin !== 2402 || SettingsManager.ubertooth_freqMax !== 2480)
+
+                                    text: qsTr("Default")
+                                    onClicked: {
+                                        SettingsManager.ubertooth_freqMin = 2402
+                                        SettingsManager.ubertooth_freqMax = 2480
+                                        if (ubertooth.running) {
+                                            ubertooth.restartWork()
+                                        }
+                                    }
+                                }
+
+                                SpinBoxThemedDesktop {
+                                    anchors.right: parent.right
+                                    anchors.rightMargin: Theme.componentMargin
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    z: 2
+
+                                    hoverEnabled: false
+                                    editable: false
+                                    from: 2300
+                                    to: 2600
+                                    legend: "MHz"
+
+                                    value: SettingsManager.ubertooth_freqMax
+                                    onValueModified: {
+                                        SettingsManager.ubertooth_freqMax = value
+                                        if (ubertooth.running) {
+                                            restartUbertoothTimer.restart()
+                                        }
                                     }
                                 }
                             }
+
+                            ////
+
+                            Rectangle {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                height: 48
+                                color: Theme.colorForeground
+
+                                Text {
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: Theme.componentMarginL
+                                    anchors.verticalCenter: parent.verticalCenter
+
+                                    text: qsTr("Sampling frequency")
+                                    textFormat: Text.PlainText
+                                    font.pixelSize: Theme.fontSizeContent
+                                    font.bold: false
+                                    color: Theme.colorText
+                                    wrapMode: Text.WordWrap
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+
+                                SpinBoxThemedDesktop {
+                                    anchors.right: parent.right
+                                    anchors.rightMargin: Theme.componentMargin
+                                    anchors.verticalCenter: parent.verticalCenter
+
+                                    editable: false
+                                    legend: "Hz"
+                                    from: 5
+                                    to: 20
+                                    stepSize: 1
+
+                                    value: SettingsManager.ubertooth_samplingFreq
+                                    onValueModified: {
+                                        SettingsManager.ubertooth_samplingFreq = value
+                                        if (ubertooth.running) {
+                                            //restartUbertoothTimer.restart()
+                                        }
+                                    }
+                                }
+                            }
+
+                            ////
+
+                            Rectangle {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                height: 48
+                                color: Theme.colorForeground
+
+                                Text {
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: Theme.componentMarginL
+                                    anchors.verticalCenter: parent.verticalCenter
+
+                                    text: qsTr("History curves")
+                                    textFormat: Text.PlainText
+                                    font.pixelSize: Theme.fontSizeContent
+                                    font.bold: false
+                                    color: Theme.colorText
+                                    wrapMode: Text.WordWrap
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+
+                                SpinBoxThemedDesktop {
+                                    anchors.right: parent.right
+                                    anchors.rightMargin: Theme.componentMargin
+                                    anchors.verticalCenter: parent.verticalCenter
+
+                                    editable: false
+                                    from: 8
+                                    to: 128
+                                    stepSize: 1
+
+                                    value: SettingsManager.ubertooth_historyCurves
+                                    onValueModified: {
+                                        SettingsManager.ubertooth_historyCurves = value
+                                        if (ubertooth.running) {
+                                            //restartUbertoothTimer.restart()
+                                        }
+                                    }
+                                }
+                            }
+
+                            ////
+
+                            Rectangle {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                height: 48
+                                color: Theme.colorForeground
+
+                                Text {
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: Theme.componentMarginL
+                                    anchors.verticalCenter: parent.verticalCenter
+
+                                    text: qsTr("Graph load")
+                                    textFormat: Text.PlainText
+                                    font.pixelSize: Theme.fontSizeContent
+                                    font.bold: false
+                                    color: Theme.colorText
+                                    wrapMode: Text.WordWrap
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+
+                                ButtonFlat {
+                                    anchors.right: parent.right
+                                    anchors.rightMargin: Theme.componentMargin
+                                    anchors.verticalCenter: parent.verticalCenter
+
+                                    property int pointCount: (SettingsManager.ubertooth_freqMax - SettingsManager.ubertooth_freqMin) *
+                                                                SettingsManager.ubertooth_samplingFreq * SettingsManager.ubertooth_historyCurves
+
+                                    text: (pointCount / 1000) + "k points"
+
+                                    color: {
+                                        if (pointCount > 256000) return Theme.colorMaterialRed
+                                        if (pointCount > 192000) return Theme.colorMaterialOrange
+                                        if (pointCount > 128000) return Theme.colorMaterialAmber
+                                        if (pointCount > 64000) return Theme.colorMaterialLightGreen
+                                        return Theme.colorMaterialLime
+                                    }
+                                }
+                            }
+
+                            ////
                         }
 
                         ////

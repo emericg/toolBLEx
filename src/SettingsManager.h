@@ -89,6 +89,8 @@ class SettingsManager: public QObject
     Q_PROPERTY(QString ubertooth_path READ getUbertoothPath WRITE setUbertoothPath NOTIFY ubertoothPathChanged)
     Q_PROPERTY(int ubertooth_freqMin READ getUbertoothFreqMin WRITE setUbertoothFreqMin NOTIFY ubertoothFreqChanged)
     Q_PROPERTY(int ubertooth_freqMax READ getUbertoothFreqMax WRITE setUbertoothFreqMax NOTIFY ubertoothFreqChanged)
+    Q_PROPERTY(int ubertooth_samplingFreq READ getUbertoothSamplingFreq WRITE setUbertoothSamplingFreq NOTIFY ubertoothSamplingChanged)
+    Q_PROPERTY(int ubertooth_historyCurves READ getUbertoothHistoryCurves WRITE setUbertoothHistoryCurves NOTIFY ubertoothHistoryChanged)
 
     bool m_firstlaunch = true;
 
@@ -131,6 +133,8 @@ class SettingsManager: public QObject
     QString m_ubertooth_path = "ubertooth-specan";
     int m_ubertooth_freqMin = 2400;
     int m_ubertooth_freqMax = 2483;
+    int m_ubertooth_samplingFrequency = 10;
+    int m_ubertooth_historyCurves = 32;
 
     // Singleton
     static SettingsManager *instance;
@@ -164,6 +168,8 @@ Q_SIGNALS:
     void exportDirectoryChanged();
     void ubertoothPathChanged();
     void ubertoothFreqChanged();
+    void ubertoothSamplingChanged();
+    void ubertoothHistoryChanged();
 
 public:
     static SettingsManager *getInstance();
@@ -251,6 +257,10 @@ public:
     void setUbertoothFreqMin(const int value);
     int getUbertoothFreqMax() const { return m_ubertooth_freqMax; }
     void setUbertoothFreqMax(const int value);
+    int getUbertoothSamplingFreq() const { return m_ubertooth_samplingFrequency; }
+    void setUbertoothSamplingFreq(const int value);
+    int getUbertoothHistoryCurves() const { return m_ubertooth_historyCurves; }
+    void setUbertoothHistoryCurves(const int value);
 
     ////
 

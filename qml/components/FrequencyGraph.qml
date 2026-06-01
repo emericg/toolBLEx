@@ -62,8 +62,8 @@ GraphsView {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    property int graphCount: 64
-    property int graphInterval: 100
+    property int graphCount: SettingsManager.ubertooth_historyCurves
+    property int graphInterval: (1000 / SettingsManager.ubertooth_samplingFreq)
 
     property var graphMax
     property var graphCurrent
@@ -123,6 +123,7 @@ GraphsView {
 
         //// DATA
         if (needforspeed) {
+
             // method 1 // yolo
             if (!graphs[graphs_idx]) {
                 graphs[graphs_idx] = createLineSeries()
@@ -134,8 +135,10 @@ GraphsView {
                 ubertooth.getFrequencyGraphData(graphs[graphs_idx], 1)
             }
             graphs_idx++
-            if (graphs_idx > graphCount) graphs_idx = 0
+            if (graphs_idx > frequencyGraph.graphCount) graphs_idx = 0
+
         } else {
+
             // method 2 // with color gradient
             for (var idx = 0; idx < frequencyGraph.graphCount; idx++) {
                 if (!graphs[idx]) {
@@ -148,6 +151,7 @@ GraphsView {
                     ubertooth.getFrequencyGraphData(graphs[idx], idx)
                 }
             }
+
         }
 
         //// DATA
