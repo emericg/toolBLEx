@@ -159,20 +159,20 @@ protected:
     QDateTime m_lastError;
 
     QTimer m_updateTimer;
-    const static int s_updateInterval = 60;
+    static const int s_updateInterval = 60;
     void setUpdateTimer(int updateInterval_m = s_updateInterval);
 
     QTimer m_timeoutTimer;
-    const static int s_timeoutInterval = 12;
+    static const int s_timeoutInterval = 12;
     void setTimeoutTimer(int time_s = s_timeoutInterval);
 
     QTimer m_keepaliveTimer;
-    const static int s_keepaliveInterval = 1;
+    static const int s_keepaliveInterval = 1;
     void setKeepaliveTimer(int time_s = s_keepaliveInterval);
 
     bool m_stayConnected = false;
     int m_retry = 0;
-    const static int s_retryCount = 999;
+    static const int s_retryCount = 999;
 
     // Device time
     int64_t m_device_time = -1;
@@ -193,10 +193,10 @@ protected:
     int m_rssiMax = -100;
 
     QList <int> m_rssis;
-    const static int s_rssis_window = 16;
+    static const int s_rssis_window = 16;
 
     QTimer m_rssiTimer;
-    const static int s_rssiTimeoutInterval = 16;
+    static const int s_rssiTimeoutInterval = 16;
 
     virtual void deviceConnected();
     virtual void deviceDisconnected();

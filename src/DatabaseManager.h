@@ -40,7 +40,7 @@ class DatabaseManager: public QObject
 {
     Q_OBJECT
 
-    const static int s_dbCurrentVersion = 1;
+    static const int s_dbCurrentVersion = 1;
 
     bool m_dbInternalAvailable = false;
     bool m_dbInternalOpen = false;
