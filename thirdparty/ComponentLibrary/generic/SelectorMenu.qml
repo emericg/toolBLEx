@@ -42,7 +42,7 @@ Item {
             model: selectorMenu.model
             delegate: SelectorMenuItem {
                 Layout.preferredHeight: selectorMenu.height
-                Layout.preferredWidth: selectorMenu.fullWidth ? (selectorMenu.width / selectorMenu.model.count) : width
+                Layout.preferredWidth: selectorMenu.fullWidth ? (selectorMenu.width / selectorMenu.model.count) : implicitWidth
 
                 readOnly: selectorMenu.readOnly
                 highlighted: (selectorMenu.currentSelection === idx)
