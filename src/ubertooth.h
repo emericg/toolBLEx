@@ -45,9 +45,10 @@ class Ubertooth: public QObject
     Q_PROPERTY(int freqMin READ getFreqMin NOTIFY freqChanged)
     Q_PROPERTY(int freqMax READ getFreqMax NOTIFY freqChanged)
 
-    static const int s_default_raw_rssi = -128;
-    static const int s_rssi_offset = -52;
-    static const int s_max_stack = 240;
+    static constexpr int s_default_raw_rssi = -128;
+    static constexpr int s_rssi_hole_threshold = -125;
+    static constexpr int s_rssi_offset = -52;
+    static constexpr int s_max_stack = 240;
 
     bool m_toolsAvailable = false;
     bool m_hardwareAvailable = false;
@@ -71,8 +72,6 @@ class Ubertooth: public QObject
     bool isRunning() const { return m_childProcess; }
     bool isToolsAvailable() const { return m_toolsAvailable; }
     bool isHardwareAvailable() const { return m_hardwareAvailable; }
-    int getFreqMin() const { return m_freq_min; }
-    int getFreqMax() const { return m_freq_max; }
 
 Q_SIGNALS:
     void availableChanged();
@@ -88,6 +87,11 @@ public:
     Ubertooth(QObject *parent = nullptr);
     ~Ubertooth();
 
+    int getFreqMin() const { return m_freq_min; }
+    int getFreqMax() const { return m_freq_max; }
+    int getFreqBinCount() const { return m_freq_max - m_freq_min + 1; }
+    const QList <int *> &getValues() const { return m_values; } // Used by the 3D graph
+
     Q_INVOKABLE bool checkPath();
     Q_INVOKABLE bool checkUbertooth();
 
@@ -97,6 +101,7 @@ public:
 
     Q_INVOKABLE void getFrequencyGraphAxis(QValueAxis *axis);
     Q_INVOKABLE void getFrequencyGraphMax(QLineSeries *serie);
+    Q_INVOKABLE void getFrequencyGraphAverage(QLineSeries *serie);
     Q_INVOKABLE void getFrequencyGraphCurrent(QLineSeries *serie);
     Q_INVOKABLE void getFrequencyGraphData(QLineSeries *serie, int index);
 };

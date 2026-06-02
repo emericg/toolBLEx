@@ -30,6 +30,9 @@
 #include <QDir>
 #include <QDebug>
 
+#include <algorithm>
+#include <vector>
+
 /* ************************************************************************** */
 
 Ubertooth::Ubertooth(QObject *parent) : QObject(parent)
@@ -271,7 +274,7 @@ void Ubertooth::processOutput()
         if (!current_values)
         {
             current_values = new int[m_freq_max-m_freq_min+1];
-            std::memset(current_values, s_default_raw_rssi, (m_freq_max-m_freq_min+1)*4);
+            std::fill_n(current_values, m_freq_max-m_freq_min+1, s_default_raw_rssi);
             m_values.push_back(current_values);
         }
 
@@ -301,7 +304,7 @@ void Ubertooth::processOutput()
                     //qDebug() << "allocating " << m_freq_max-m_freq_min << "e table";
 
                     current_values = new int[m_freq_max-m_freq_min+1];
-                    std::memset(current_values, s_default_raw_rssi, (m_freq_max-m_freq_min+1)*4);
+                    std::fill_n(current_values, m_freq_max-m_freq_min+1, s_default_raw_rssi);
                     m_values.push_back(current_values);
 
                     if (m_values.size() > s_max_stack)
@@ -353,25 +356,61 @@ void Ubertooth::getFrequencyGraphMax(QLineSeries *serie)
     if (!serie) return;
     serie->clear();
 
-    int *max = new int[m_freq_max-m_freq_min+1];
-    std::memset(max, s_default_raw_rssi, (m_freq_max-m_freq_min+1)*4);
+    const int freqBinCount = getFreqBinCount();
+    if (freqBinCount <= 0) return;
+
+    int *max = new int[freqBinCount];
+    std::fill_n(max, freqBinCount, s_default_raw_rssi);
     m_max_max = s_default_raw_rssi;
 
     for (const auto &table: std::as_const(m_values))
     {
-        for (int i = 0, j = m_freq_min; j <= m_freq_max; i++, j++)
+        for (int i = 0; i < freqBinCount; i++)
         {
             if (table[i] > max[i]) max[i] = table[i];
             if (table[i] > m_max_max) m_max_max = table[i];
         }
     }
 
-    for (int i = 0, j = m_freq_min; j <= m_freq_max; i++, j++)
+    for (int i = 0; i < freqBinCount; i++)
     {
-        serie->append(j, max[i]);
+        serie->append(m_freq_min + i, max[i]);
     }
 
     delete [] max;
+}
+
+void Ubertooth::getFrequencyGraphAverage(QLineSeries *serie)
+{
+    //qDebug() << "Ubertooth::getFrequencyGraphAverage()" << serie;
+
+    if (!serie) return;
+    serie->clear();
+
+    const int freqBinCount = getFreqBinCount();
+    if (freqBinCount <= 0) return;
+
+    std::vector <qint64> sum(freqBinCount, 0);
+    std::vector <int> cnt(freqBinCount, 0);
+
+    for (const auto &table: std::as_const(m_values))
+    {
+        for (int i = 0; i < freqBinCount; i++)
+        {
+            // Some cells values are never reported by a sweep, their values will be below the s_rssi_hole_threshold
+            if (table[i] > s_rssi_hole_threshold)
+            {
+                sum[i] += table[i];
+                cnt[i]++;
+            }
+        }
+    }
+
+    for (int i = 0; i < freqBinCount; i++)
+    {
+        const int avg = cnt[i] ? static_cast<int>(sum[i] / cnt[i]) : s_default_raw_rssi;
+        serie->append(m_freq_min + i, avg);
+    }
 }
 
 void Ubertooth::getFrequencyGraphCurrent(QLineSeries *serie)
@@ -394,14 +433,17 @@ void Ubertooth::getFrequencyGraphData(QLineSeries *serie, int index)
     if (!serie) return;
     serie->clear();
 
-    if (index > m_values.size() - 1) return;
+    if (index < 0 || index > m_values.size() - 1) return;
+
+    const int freqBinCount = getFreqBinCount();
+    if (freqBinCount <= 0) return;
 
     int idx = m_values.size() - index - 1;
     int *current = m_values.at(idx);
 
-    for (int i = 0, j = m_freq_min; j <= m_freq_max; i++, j++)
+    for (int i = 0; i < freqBinCount; i++)
     {
-        serie->append(j, current[i]);
+        serie->append(m_freq_min + i, current[i]);
     }
 }
 

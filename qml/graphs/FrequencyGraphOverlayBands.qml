@@ -4,6 +4,7 @@ import ComponentLibrary
 
 Item {
     id: overlayFrequencyBands
+    anchors.fill: parent
 
     // parent.width/height should be the same as frequencyGraph.plotArea.width/height
 
@@ -153,6 +154,7 @@ Item {
                 Rectangle {
                     anchors.fill: parent
                     opacity: 0.2
+                    // color advertising channels
                     color: {
                         if (index === 0 || index === 12 || index === 39) return Theme.colorYellow
                         return Theme.colorBlue
@@ -232,7 +234,7 @@ Item {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    Row { // zigbee
+    Row { // zigbee // 802.15.4
         anchors.left: parent.left
         anchors.leftMargin: ((overlayFrequencyBands.width / 100) * 4)
         anchors.bottom: parent.bottom

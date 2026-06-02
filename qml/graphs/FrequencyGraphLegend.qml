@@ -3,8 +3,9 @@ import QtQuick
 import ComponentLibrary
 
 Item {
-    id: legend_area_over
-    anchors.fill: legend_area_under
+    anchors.fill: parent
+
+    // Graph legends
 
     Row {
         anchors.top: parent.top
@@ -44,6 +45,23 @@ Item {
                 text: qsTr("max")
                 textFormat: Text.PlainText
                 color: frequencyGraph.graphMax ? frequencyGraph.graphMax.color : "transparent"
+            }
+        }
+
+        Row {
+            spacing: 6
+            Rectangle {
+                anchors.verticalCenter: parent.verticalCenter
+                width: 16
+                height: 16
+                radius: 4
+                color: frequencyGraph.graphAverage ? frequencyGraph.graphAverage.color : "transparent"
+            }
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                text: qsTr("average")
+                textFormat: Text.PlainText
+                color: frequencyGraph.graphAverage ? frequencyGraph.graphAverage.color : "transparent"
             }
         }
 

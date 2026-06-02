@@ -59,9 +59,10 @@ set(SOURCES
     src/BleServiceInfo.cpp src/BleServiceInfo.h
     src/BleCharacteristicInfo.cpp src/BleCharacteristicInfo.h
     src/VendorsDatabase.cpp src/VendorsDatabase.h
-    src/ubertooth.cpp src/ubertooth.h
-    src/adapter.cpp src/adapter.h
 
+    src/ubertooth.cpp src/ubertooth.h
+
+    src/adapter.cpp src/adapter.h
     src/device.cpp src/device.h src/device_utils.h
     src/device_toolblex.cpp src/device_toolblex.h
     src/device_toolblex_adv.cpp src/device_toolblex_adv.h
@@ -113,21 +114,21 @@ qt_add_qml_module(${PROJECT_NAME}
         qml/PanelDeviceLog.qml
         qml/PanelScanner.qml
 
+        qml/graphs/RssiBar.qml
+        qml/graphs/RssiGraph.qml
+        qml/graphs/ProximityRadar.qml
+        qml/graphs/FrequencyGraph.qml
+        qml/graphs/FrequencyGraphLegend.qml
+        qml/graphs/FrequencyGraphOverlayBands.qml
+        qml/graphs/FrequencyGraphOverlayClickable.qml
+
+        qml/components/ButtonScanMenu.qml
         qml/components/ItemActionTag.qml
         qml/components/SelectorMenuThemedItemBadge.qml
-        qml/components/ButtonScanMenu.qml
-
         qml/components/DeviceScannerListHeader.qml
         qml/components/DeviceScannerListWidget.qml
         qml/components/DeviceScannerTableHeader.qml
         qml/components/DeviceScannerTableWidget.qml
-        qml/components/FrequencyGraph.qml
-        qml/components/FrequencyGraphLegend.qml
-        qml/components/FrequencyGraphOverlayBands.qml
-        qml/components/FrequencyGraphOverlayClickable.qml
-        qml/components/ProximityRadar.qml
-        qml/components/RssiBar.qml
-        qml/components/RssiGraph.qml
         qml/components/WarningNoAdapter.qml
         qml/components/WarningNoBluetooth.qml
         qml/components/WarningNoPermission.qml

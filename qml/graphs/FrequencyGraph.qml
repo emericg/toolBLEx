@@ -5,78 +5,37 @@ import ComponentLibrary
 
 GraphsView {
     id: frequencyGraph
+    anchors.fill: parent
 
     clip: false
     antialiasing: false
     shadowVisible: false
 
-    signal plotAreaUpdated(var x, var y, var width, var height)
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    theme: GraphsTheme {
-        backgroundVisible: false
-        plotAreaBackgroundVisible: false
-        labelBackgroundVisible: false
-        labelBorderVisible: false
-
-        gridVisible: true
-        grid.mainColor: Theme.colorGrid
-        grid.subColor: Theme.colorGrid
-
-        axisX.mainColor: Theme.colorAxis
-        axisX.labelTextColor: Theme.colorSubText
-        axisY.mainColor: Theme.colorAxis
-        axisY.labelTextColor: Theme.colorSubText
-
-        axisXLabelFont.pixelSize: Theme.fontSizeContentVerySmall
-        axisYLabelFont.pixelSize: Theme.fontSizeContentVerySmall
-    }
-
-    axisY: ValueAxis {
-        id: axisRSSI
-        visible: true
-
-        min: -100
-        max: -20
-        tickInterval: 20
-
-        labelsVisible: true
-        labelDecimals: 0
-
-        gridVisible: true
-        subGridVisible: false
-    }
-
-    axisX: ValueAxis {
-        id: axisFrequency
-        visible: true
-
-        labelsVisible: true
-        labelDecimals: 0
-
-        gridVisible: true
-        subGridVisible: true
-        subTickCount: 9
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-
     property int graphCount: SettingsManager.ubertooth_historyCurves
     property int graphInterval: (1000 / SettingsManager.ubertooth_samplingFreq)
 
+    Timer {
+        repeat: true
+        running: ubertooth.running && frequencyGraph.visible
+        interval: frequencyGraph.graphInterval
+        onTriggered: frequencyGraph.updateGraph()
+    }
+
     property var graphMax
+    property var graphAverage
     property var graphCurrent
     property var graphs: []
     property int graphs_idx: 0
 
     property bool needforspeed: false // (ubertooth.freqMax - ubertooth.freqMin > 100)
 
-    function createLineSeries() {
-        var s = Qt.createQmlObject('import QtGraphs; LineSeries {}', frequencyGraph)
-        frequencyGraph.addSeries(s)
-        return s
-    }
+    ////////////////////////////////////////////////////////////////////////////
+
+    signal plotAreaUpdated(var x, var y, var width, var height)
+
+    //onPlotAreaChanged: frequencyGraph.updatePlotArea() // Not compatible with Qt 6.8 :/
+    onWidthChanged:  Qt.callLater(updatePlotArea) // Qt 6.8 hack
+    onHeightChanged: Qt.callLater(updatePlotArea) // Qt 6.8 hack
 
     Component.onCompleted: {
         //// AXIS
@@ -86,6 +45,10 @@ GraphsView {
         graphMax.color = Theme.colorMaterialLightGreen
         graphMax.opacity = 0.66
 
+        graphAverage = createLineSeries()
+        graphAverage.color = Theme.colorMaterialOrange
+        graphAverage.opacity = 0.66
+
         graphCurrent = createLineSeries()
         graphCurrent.color = Theme.colorMaterialLightBlue
 
@@ -94,9 +57,11 @@ GraphsView {
         Qt.callLater(frequencyGraph.updatePlotArea)
     }
 
-    //onPlotAreaChanged: frequencyGraph.updatePlotArea() // Not compatible with Qt 6.8 :/
-    onWidthChanged:  Qt.callLater(updatePlotArea)
-    onHeightChanged: Qt.callLater(updatePlotArea)
+    function createLineSeries() {
+        var s = Qt.createQmlObject('import QtGraphs; LineSeries {}', frequencyGraph)
+        frequencyGraph.addSeries(s)
+        return s
+    }
 
     function updatePlotArea() {
         if (typeof frequencyGraph.plotArea === 'undefined') {
@@ -156,14 +121,56 @@ GraphsView {
 
         //// DATA
         ubertooth.getFrequencyGraphMax(graphMax)
+        ubertooth.getFrequencyGraphAverage(graphAverage)
         ubertooth.getFrequencyGraphCurrent(graphCurrent)
     }
 
-    Timer {
-        repeat: true
-        running: ubertooth.running
-        interval: frequencyGraph.graphInterval
-        onTriggered: frequencyGraph.updateGraph()
+    ////////////////////////////////////////////////////////////////////////////
+
+    theme: GraphsTheme {
+        backgroundVisible: false
+        plotAreaBackgroundVisible: false
+        labelBackgroundVisible: false
+        labelBorderVisible: false
+
+        gridVisible: true
+        grid.mainColor: Theme.colorGrid
+        grid.subColor: Theme.colorGrid
+
+        axisX.mainColor: Theme.colorAxis
+        axisX.labelTextColor: Theme.colorSubText
+        axisY.mainColor: Theme.colorAxis
+        axisY.labelTextColor: Theme.colorSubText
+
+        axisXLabelFont.pixelSize: Theme.fontSizeContentVerySmall
+        axisYLabelFont.pixelSize: Theme.fontSizeContentVerySmall
+    }
+
+    axisY: ValueAxis {
+        id: axisRSSI
+        visible: true
+
+        min: -100
+        max: -20
+        tickInterval: 20
+
+        labelsVisible: true
+        labelDecimals: 0
+
+        gridVisible: true
+        subGridVisible: false
+    }
+
+    axisX: ValueAxis {
+        id: axisFrequency
+        visible: true
+
+        labelsVisible: true
+        labelDecimals: 0
+
+        gridVisible: true
+        subGridVisible: true
+        subTickCount: 9
     }
 
     ////////////////////////////////////////////////////////////////////////////
