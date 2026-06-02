@@ -71,6 +71,9 @@ Loader {
             property bool wifi_n: false
             property bool zigbee: false
 
+            // view mode: 0 = spectrum (2D line graph), 1 = waterfall (2D heatmap), 3 = spectrum (3D surface graph)
+            property int viewMode: 0
+
             ////////
 
             Row { // left
@@ -78,6 +81,33 @@ Loader {
                 anchors.leftMargin: 12
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 8
+
+                SelectorMenuColorful {
+                    height: 28
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    model: ListModel {
+                        id: viewModeModel
+                        ListElement { idx: 0; txt: qsTr("spectrum"); src: ""; sz: 16; }
+                        ListElement { idx: 1; txt: qsTr("waterfall"); src: ""; sz: 16; }
+                    }
+                    currentSelection: actionBar.viewMode
+                    onMenuSelected: (index) => {
+                        actionBar.viewMode = index
+                    }
+                }
+
+                Item { // separator
+                    width: 16
+                    height: 28
+
+                    Rectangle {
+                        anchors.centerIn: parent
+                        width: 2
+                        height: 20
+                        color: Theme.colorActionbarHighlight
+                    }
+                }
 
                 ButtonToggle {
                     height: 28
@@ -298,7 +328,7 @@ Loader {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
 
-            //visible: (actionBar.viewMode === 0)
+            visible: (actionBar.viewMode === 0)
 
             Item {
                 id: frequencyGraphUnderlay
@@ -362,6 +392,19 @@ Loader {
             }
 
             ////////
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+
+        WaterfallGraph {
+            id: waterfallGraph
+
+            anchors.top: actionBar.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+
+            visible: (actionBar.viewMode === 1)
         }
 
         ////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,153 @@
+/*!
+ * This file is part of toolBLEx.
+ * Copyright (c) 2022 Emeric Grange - All Rights Reserved
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * \date      2026
+ * \author    Emeric Grange <emeric.grange@gmail.com>
+ */
+
+#include "WaterfallGraph_QuickItem.h"
+#include "ubertooth.h"
+
+#include <QPainter>
+#include <algorithm>
+
+/* ************************************************************************** */
+
+WaterfallGraph_QuickItem::WaterfallGraph_QuickItem(QQuickItem *parent) : QQuickPaintedItem(parent)
+{
+    buildLut();
+}
+
+/* ************************************************************************** */
+
+void WaterfallGraph_QuickItem::buildLut()
+{
+    // Viridis colormap, 6th-order polynomial approximation.
+    // (coefficients from the well-known shader fit by Matt Zucker)
+
+    static const double c0[3] = { 0.2777273272234177,  0.005407344544966578, 0.3340998053353061 };
+    static const double c1[3] = { 0.1050930431085774,  1.404613529898575,    1.384590162594685 };
+    static const double c2[3] = {-0.3308618287255563,  0.214847559468213,    0.09509516302823659 };
+    static const double c3[3] = {-4.634230498983486,  -5.799100973351585,  -19.33244095627987 };
+    static const double c4[3] = { 6.228269936347081,  14.17993336680509,    56.69055260068105 };
+    static const double c5[3] = { 4.776384997670288, -13.74514537774601,   -65.35303263337234 };
+    static const double c6[3] = {-5.435455855934631,   4.645852612178535,    26.3124352495832 };
+
+    for (int i = 0; i < 256; i++)
+    {
+        const double t = i / 255.0;
+        double rgb[3];
+        for (int k = 0; k < 3; k++)
+        {
+            double v = c0[k] + t*(c1[k] + t*(c2[k] + t*(c3[k] + t*(c4[k] + t*(c5[k] + t*c6[k])))));
+            rgb[k] = std::clamp(v, 0.0, 1.0);
+        }
+        m_lut[i] = qRgb(int(rgb[0]*255.0 + 0.5), int(rgb[1]*255.0 + 0.5), int(rgb[2]*255.0 + 0.5));
+    }
+}
+
+void WaterfallGraph_QuickItem::refresh()
+{
+    if (!m_ubertooth) return;
+
+    const int rows = m_ubertooth->getFreqBinCount();
+    const QList <int *> &cols = m_ubertooth->getValues(); // one entry per sweep (time)
+    const int ncols = cols.size();
+
+    if (rows <= 0 || ncols <= 0) return;
+
+    if (m_image.width() != ncols || m_image.height() != rows)
+    {
+        m_image = QImage(ncols, rows, QImage::Format_RGB32);
+    }
+
+    const double range = (m_ceilDb - m_floorDb);
+    const double invRange = (range != 0.0) ? (1.0 / range) : 0.0;
+
+    // Y is flipped so the lowest frequency sits at the bottom of the image
+    for (int i = 0; i < rows; i++)
+    {
+        QRgb *line = reinterpret_cast<QRgb *>(m_image.scanLine(rows - 1 - i));
+        for (int x = 0; x < ncols; x++)
+        {
+            const int *col = cols.at(x);
+            const double t = (col[i] - m_floorDb) * invRange; // normalize to 0..1
+            int idx = int(t * 255.0 + 0.5);
+            idx = std::clamp(idx, 0, 255);
+            line[x] = m_lut[idx];
+        }
+    }
+
+    update();
+}
+
+void WaterfallGraph_QuickItem::paint(QPainter *painter)
+{
+    if (m_image.isNull()) return;
+
+    painter->setRenderHint(QPainter::SmoothPixmapTransform, m_smooth);
+    painter->drawImage(boundingRect(), m_image);
+}
+
+/* ************************************************************************** */
+
+void WaterfallGraph_QuickItem::setSource(QObject *source)
+{
+    if (m_source != source)
+    {
+        m_source = source;
+        m_ubertooth = qobject_cast<Ubertooth *>(source);
+        Q_EMIT sourceChanged();
+
+        refresh();
+    }
+}
+
+void WaterfallGraph_QuickItem::setFloorDb(qreal v)
+{
+    if (!qFuzzyCompare(m_floorDb, v))
+    {
+        m_floorDb = v;
+        Q_EMIT rangeChanged();
+
+        refresh();
+    }
+}
+
+void WaterfallGraph_QuickItem::setCeilDb(qreal v)
+{
+    if (!qFuzzyCompare(m_ceilDb, v))
+    {
+        m_ceilDb = v;
+        Q_EMIT rangeChanged();
+
+        refresh();
+    }
+}
+
+void WaterfallGraph_QuickItem::setSmooth(bool v)
+{
+    if (m_smooth != v)
+    {
+        m_smooth = v;
+        Q_EMIT smoothChanged();
+
+        update();
+    }
+}
+
+/* ************************************************************************** */

@@ -61,6 +61,7 @@ set(SOURCES
     src/VendorsDatabase.cpp src/VendorsDatabase.h
 
     src/ubertooth.cpp src/ubertooth.h
+    src/WaterfallGraph_QuickItem.cpp src/WaterfallGraph_QuickItem.h
 
     src/adapter.cpp src/adapter.h
     src/device.cpp src/device.h src/device_utils.h
@@ -121,6 +122,9 @@ qt_add_qml_module(${PROJECT_NAME}
         qml/graphs/FrequencyGraphLegend.qml
         qml/graphs/FrequencyGraphOverlayBands.qml
         qml/graphs/FrequencyGraphOverlayClickable.qml
+        qml/graphs/WaterfallGraph.qml
+        qml/graphs/WaterfallGraphLabels.qml
+        qml/graphs/WaterfallGraphOverlayBands.qml
 
         qml/components/ButtonScanMenu.qml
         qml/components/ItemActionTag.qml
