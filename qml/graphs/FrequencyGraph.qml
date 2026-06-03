@@ -24,10 +24,7 @@ GraphsView {
     property var graphMax
     property var graphAverage
     property var graphCurrent
-    property var graphs: []
-    property int graphs_idx: 0
-
-    property bool needforspeed: false // (ubertooth.freqMax - ubertooth.freqMin > 100)
+    property var graphsHistory: []
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -86,38 +83,21 @@ GraphsView {
         //// AXIS
         ubertooth.getFrequencyGraphAxis(axisFrequency)
 
-        //// DATA
-        if (needforspeed) {
-
-            // method 1 // yolo
-            if (!graphs[graphs_idx]) {
-                graphs[graphs_idx] = createLineSeries()
-                graphs[graphs_idx].color = Theme.colorText
-                graphs[graphs_idx].opacity = 0.2
-                graphs[graphs_idx].width = 1
-            }
-            if (graphs[graphs_idx]) {
-                ubertooth.getFrequencyGraphData(graphs[graphs_idx], 1)
-            }
-            graphs_idx++
-            if (graphs_idx > frequencyGraph.graphCount) graphs_idx = 0
-
-        } else {
+        //// DATA HISTORY
 
             // method 2 // with color gradient
             for (var idx = 0; idx < frequencyGraph.graphCount; idx++) {
-                if (!graphs[idx]) {
-                    graphs[idx] = createLineSeries()
-                    graphs[idx].width = 1
+                if (!graphsHistory[idx]) {
+                    graphsHistory[idx] = createLineSeries()
+                    graphsHistory[idx].width = 1
                 }
-                if (graphs[idx]) {
-                    graphs[idx].color = Theme.colorSubText
-                    graphs[idx].opacity = UtilsNumber.mapNumber(idx, 0, frequencyGraph.graphCount, 333, 10) / 1000
-                    ubertooth.getFrequencyGraphData(graphs[idx], idx)
+                if (graphsHistory[idx]) {
+                    graphsHistory[idx].visible = true
+                    graphsHistory[idx].color = Theme.colorSubText
+                    graphsHistory[idx].opacity = UtilsNumber.mapNumber(idx, 0, frequencyGraph.graphCount, 500, 10) / 1000
+                    ubertooth.getFrequencyGraphData(graphsHistory[idx], idx)
                 }
             }
-
-        }
 
         //// DATA
         ubertooth.getFrequencyGraphMax(graphMax)

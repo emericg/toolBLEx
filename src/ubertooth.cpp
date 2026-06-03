@@ -34,6 +34,7 @@
 #include <vector>
 
 /* ************************************************************************** */
+/* ************************************************************************** */
 
 Ubertooth::Ubertooth(QObject *parent) : QObject(parent)
 {
@@ -52,6 +53,7 @@ Ubertooth::~Ubertooth()
     m_max_max = s_rssi_offset;
 }
 
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 bool Ubertooth::checkPath()
@@ -113,6 +115,8 @@ bool Ubertooth::checkPath()
     return status;
 }
 
+/* ************************************************************************** */
+
 bool Ubertooth::checkUbertooth()
 {
     if (m_childProcess) return true;
@@ -157,6 +161,7 @@ bool Ubertooth::checkUbertooth()
 }
 
 /* ************************************************************************** */
+/* ************************************************************************** */
 
 void Ubertooth::startWork()
 {
@@ -194,6 +199,8 @@ void Ubertooth::startWork()
     }
 }
 
+/* ************************************************************************** */
+
 void Ubertooth::stopWork()
 {
     if (m_childProcess)
@@ -212,12 +219,15 @@ void Ubertooth::stopWork()
     }
 }
 
+/* ************************************************************************** */
+
 void Ubertooth::restartWork()
 {
     stopWork();
     QTimer::singleShot(333, this, &Ubertooth::startWork);
 }
 
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 void Ubertooth::processStarted()
@@ -228,6 +238,8 @@ void Ubertooth::processStarted()
         Q_EMIT runningChanged();
     }
 }
+
+/* ************************************************************************** */
 
 void Ubertooth::processFinished()
 {
@@ -274,7 +286,7 @@ void Ubertooth::processOutput()
         if (!current_values)
         {
             current_values = new int[m_freq_max-m_freq_min+1];
-            std::fill_n(current_values, m_freq_max-m_freq_min+1, s_default_raw_rssi);
+            std::fill_n(current_values, m_freq_max-m_freq_min+1, s_rssi_raw_default);
             m_values.push_back(current_values);
         }
 
@@ -304,7 +316,7 @@ void Ubertooth::processOutput()
                     //qDebug() << "allocating " << m_freq_max-m_freq_min << "e table";
 
                     current_values = new int[m_freq_max-m_freq_min+1];
-                    std::fill_n(current_values, m_freq_max-m_freq_min+1, s_default_raw_rssi);
+                    std::fill_n(current_values, m_freq_max-m_freq_min+1, s_rssi_raw_default);
                     m_values.push_back(current_values);
 
                     if (m_values.size() > s_max_stack)
@@ -360,8 +372,8 @@ void Ubertooth::getFrequencyGraphMax(QLineSeries *serie)
     if (freqBinCount <= 0) return;
 
     int *max = new int[freqBinCount];
-    std::fill_n(max, freqBinCount, s_default_raw_rssi);
-    m_max_max = s_default_raw_rssi;
+    std::fill_n(max, freqBinCount, s_rssi_raw_default);
+    m_max_max = s_rssi_raw_default;
 
     for (const auto &table: std::as_const(m_values))
     {
@@ -408,7 +420,7 @@ void Ubertooth::getFrequencyGraphAverage(QLineSeries *serie)
 
     for (int i = 0; i < freqBinCount; i++)
     {
-        const int avg = cnt[i] ? static_cast<int>(sum[i] / cnt[i]) : s_default_raw_rssi;
+        const int avg = cnt[i] ? static_cast<int>(sum[i] / cnt[i]) : s_rssi_raw_default;
         serie->append(m_freq_min + i, avg);
     }
 }

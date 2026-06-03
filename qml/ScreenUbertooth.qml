@@ -62,6 +62,10 @@ Loader {
             // prevent clicks below this area
             MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
 
+            // view mode: 0 = spectrum (2D line graph), 1 = waterfall (2D heatmap), 3 = spectrum (3D surface graph)
+            property int viewMode: 0
+
+            // visualize known spectrum bands
             property bool bluetooth: false
             property bool bluetooth_classic: false
             property bool bluetooth_lowenergy: true
@@ -71,8 +75,13 @@ Loader {
             property bool wifi_n: false
             property bool zigbee: false
 
-            // view mode: 0 = spectrum (2D line graph), 1 = waterfall (2D heatmap), 3 = spectrum (3D surface graph)
-            property int viewMode: 0
+            // supports our 3D spectrum graph (needs Qt 6.8+)
+            property bool support3d: {
+                let p = utilsApp.qtVersion().split('.')
+                let maj = parseInt(p[0]) || 0
+                let min = parseInt(p[1]) || 0
+                return (maj > 6) || (maj === 6 && min >= 8)
+            }
 
             ////////
 
@@ -94,6 +103,32 @@ Loader {
                     currentSelection: actionBar.viewMode
                     onMenuSelected: (index) => {
                         actionBar.viewMode = index
+                    }
+                }
+
+                Item { // separator
+                    width: 16
+                    height: 28
+                    visible: (actionBar.viewMode === 0)
+
+                    Rectangle {
+                        anchors.centerIn: parent
+                        width: 2
+                        height: 20
+                        color: Theme.colorActionbarHighlight
+                    }
+                }
+
+                ButtonToggle {
+                    height: 28
+                    colorBackground: Theme.colorActionbar
+                    colorHighlight: Theme.colorActionbarHighlight
+                    checked: frequencyGraph.showPeak
+                    visible: (actionBar.viewMode === 0)
+
+                    text: qsTr("peak")
+                    onClicked: {
+                        frequencyGraph.showPeak = !frequencyGraph.showPeak
                     }
                 }
 
@@ -151,16 +186,16 @@ Loader {
 
                 ////
 
-                Item {
+                Item { // separator
                     width: 16
                     height: 28
+                    visible: (actionBar.wifi || actionBar.bluetooth)
 
                     Rectangle {
                         anchors.centerIn: parent
                         width: 2
                         height: 20
                         color: Theme.colorActionbarHighlight
-                        visible: (actionBar.wifi || actionBar.bluetooth)
                     }
                 }
 
@@ -233,6 +268,18 @@ Loader {
                     onClicked: {
                         actionBar.bluetooth_classic = false
                         actionBar.bluetooth_lowenergy = true
+                    }
+                }
+
+                Item { // separator
+                    width: 16
+                    height: 28
+
+                    Rectangle {
+                        anchors.centerIn: parent
+                        width: 2
+                        height: 20
+                        color: Theme.colorActionbarHighlight
                     }
                 }
             }
@@ -330,9 +377,11 @@ Loader {
 
             visible: (actionBar.viewMode === 0)
 
+            // spectrum trace style: 0 = phosphor accumulation buffer, 1 = history lines (only one at a time, to reduce clutter)
+            property int traceStyle: 0
+
             Item {
                 id: frequencyGraphUnderlay
-                anchors.fill: parent
 
                 clip: true
 
@@ -376,7 +425,6 @@ Loader {
 
             Item {
                 id: frequencyGraphOverlay
-                anchors.fill: parent
 
                 clip: true
 

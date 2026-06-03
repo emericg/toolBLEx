@@ -38,6 +38,23 @@ Item {
                 width: 16
                 height: 16
                 radius: 4
+                color: frequencyGraph.graphAverage ? frequencyGraph.graphAverage.color : "transparent"
+            }
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                text: qsTr("average")
+                textFormat: Text.PlainText
+                color: frequencyGraph.graphAverage ? frequencyGraph.graphAverage.color : "transparent"
+            }
+        }
+
+        Row {
+            spacing: 6
+            Rectangle {
+                anchors.verticalCenter: parent.verticalCenter
+                width: 16
+                height: 16
+                radius: 4
                 color: frequencyGraph.graphMax ? frequencyGraph.graphMax.color : "transparent"
             }
             Text {
@@ -55,13 +72,21 @@ Item {
                 width: 16
                 height: 16
                 radius: 4
-                color: frequencyGraph.graphAverage ? frequencyGraph.graphAverage.color : "transparent"
+                color: Theme.colorRed
+
+                Rectangle {
+                    anchors.fill: parent
+                    anchors.margins: 2
+                    radius: 2
+                    color: Theme.colorBackground
+                    visible: !frequencyGraph.showPeak
+                }
             }
             Text {
                 anchors.verticalCenter: parent.verticalCenter
-                text: qsTr("average")
+                text: qsTr("peak")
                 textFormat: Text.PlainText
-                color: frequencyGraph.graphAverage ? frequencyGraph.graphAverage.color : "transparent"
+                color: Theme.colorRed
             }
         }
 

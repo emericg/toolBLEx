@@ -45,7 +45,11 @@ class Ubertooth: public QObject
     Q_PROPERTY(int freqMin READ getFreqMin NOTIFY freqChanged)
     Q_PROPERTY(int freqMax READ getFreqMax NOTIFY freqChanged)
 
-    static constexpr int s_default_raw_rssi = -128;
+    Q_PROPERTY(int peakFreq READ getPeakFreq NOTIFY peakChanged)
+    Q_PROPERTY(int peakDbm READ getPeakDbm NOTIFY peakChanged)
+    Q_PROPERTY(double captureRate READ getCaptureRate NOTIFY captureRateChanged)
+
+    static constexpr int s_rssi_raw_default = -128;
     static constexpr int s_rssi_hole_threshold = -125;
     static constexpr int s_rssi_offset = -52;
     static constexpr int s_max_stack = 240;
@@ -56,8 +60,8 @@ class Ubertooth: public QObject
     QString m_path_specan;
     QString m_path_util;
 
-    int m_freq_min = 2402;
-    int m_freq_max = 2480;
+    int m_freq_min = 2400;
+    int m_freq_max = 2500;
 
     QProcess *m_childProcess = nullptr;
 
@@ -68,6 +72,9 @@ class Ubertooth: public QObject
     QList <int *> m_values;
     QMap <int, int> m_values_latest;
     int m_max_max = -128;
+    int m_peak_freq = 0;
+    int m_peak_dbm = s_rssi_raw_default;
+    double m_capture_rate = 0.0;
 
     bool isRunning() const { return m_childProcess; }
     bool isToolsAvailable() const { return m_toolsAvailable; }
@@ -77,6 +84,9 @@ Q_SIGNALS:
     void availableChanged();
     void runningChanged();
     void freqChanged();
+    void peakChanged();
+    void captureRateChanged();
+    void newDataAvailable();
 
 private slots:
     void processStarted();
@@ -91,6 +101,10 @@ public:
     int getFreqMax() const { return m_freq_max; }
     int getFreqBinCount() const { return m_freq_max - m_freq_min + 1; }
     const QList <int *> &getValues() const { return m_values; } // Used by the 3D graph
+
+    int getPeakFreq() const { return m_peak_freq; }
+    int getPeakDbm() const { return m_peak_dbm; }
+    double getCaptureRate() const { return m_capture_rate; }
 
     Q_INVOKABLE bool checkPath();
     Q_INVOKABLE bool checkUbertooth();

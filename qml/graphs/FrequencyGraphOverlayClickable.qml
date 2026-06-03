@@ -11,10 +11,10 @@ Item {
         id: clickableGraphArea
         anchors.fill: parent
 
-        acceptedButtons: (Qt.LeftButton | Qt.RightButton)
-
         property var lastMouse1: null
         property var lastMouse2: null
+
+        acceptedButtons: (Qt.LeftButton | Qt.RightButton)
 
         onPressed: (mouse) => {
             if (mouse.button === Qt.LeftButton) {
@@ -45,97 +45,40 @@ Item {
             }
         }
 
-        ////
+        ////////
 
-        Item {
+        ClickableLine {
             id: group1
-            anchors.fill: parent
-            visible: false
-
-            Rectangle {
-                id: h1
-                anchors.left: parent.left
-                anchors.right: parent.right
-                height: 2
-                color: Theme.colorYellow
-            }
-            Rectangle {
-                id: v1
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                width: 2
-                color: Theme.colorYellow
-            }
-
-            Column {
-                anchors.left: v1.right
-                anchors.leftMargin: 8
-                anchors.bottom: h1.top
-                anchors.bottomMargin: 8
-
-                Text {
-                    id: lfreq1
-                    text: "freq: "
-                    textFormat: Text.PlainText
-                    font.pixelSize: Theme.componentFontSize
-                    color: Theme.colorYellow
-                }
-                Text {
-                    id: lrssi1
-                    text: "rssi: "
-                    textFormat: Text.PlainText
-                    font.pixelSize: Theme.componentFontSize
-                    color: Theme.colorYellow
-                }
-            }
+            color: Theme.colorYellow
         }
 
-        ////
-
-        Item {
+        ClickableLine {
             id: group2
-            anchors.fill: parent
-            visible: false
-
-            Rectangle {
-                id: h2
-                anchors.left: parent.left
-                anchors.right: parent.right
-                height: 2
-                color: Theme.colorOrange
-            }
-            Rectangle {
-                id: v2
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                width: 2
-                color: Theme.colorOrange
-            }
-
-            Column {
-                anchors.left: v2.right
-                anchors.leftMargin: 8
-                anchors.bottom: h2.top
-                anchors.bottomMargin: 8
-
-                Text {
-                    id: lfreq2
-                    text: "freq: "
-                    textFormat: Text.PlainText
-                    font.pixelSize: Theme.componentFontSize
-                    color: Theme.colorOrange
-                }
-                Text {
-                    id: lrssi2
-                    text: "rssi: "
-                    textFormat: Text.PlainText
-                    font.pixelSize: Theme.componentFontSize
-                    color: Theme.colorOrange
-                }
-            }
+            color: Theme.colorOrange
         }
 
-        ////
+        ClickableLine {
+            id: barPeak
+            color: Theme.colorRed
+
+            visible: frequencyGraph.showPeak && (ubertooth.peakDbm > barPeak.floorDb)
+
+            // keep in sync with FrequencyGraph axisRSSI
+            property real floorDb: -100
+            property real ceilDb: -20
+
+            textFreq: qsTr("[peak: %1 MHz · %2 dBm]").arg(ubertooth.peakFreq).arg(ubertooth.peakDbm)
+
+            posV: UtilsNumber.mapNumber_nocheck(ubertooth.peakFreq,
+                                                ubertooth.freqMin, ubertooth.freqMax,
+                                                0, overlayClickable.width).toFixed(0) - 1
+
+            posH: UtilsNumber.mapNumber_nocheck(ubertooth.peakDbm,
+                                                barPeak.ceilDb, barPeak.floorDb,
+                                                0, overlayClickable.height).toFixed(0) - 1
+        }
+
+        ////////
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -150,16 +93,16 @@ Item {
 
         if (idx === 1) {
             group1.visible = true
-            h1.y = mouse.y
-            v1.x = mouse.x
-            lfreq1.text = "freq: " + freqtxt + " MHz"
-            lrssi1.text = "rssi: " + rssitxt + " dB"
+            group1.posH = mouse.y
+            group1.posV = mouse.x
+            group1.textFreq = qsTr("freq: ") + freqtxt + " MHz"
+            group1.textRSSI = "RSSI: " + rssitxt + " dB"
         } else if (idx === 2) {
             group2.visible = true
-            h2.y = mouse.y
-            v2.x = mouse.x
-            lfreq2.text = "freq: " + freqtxt + " MHz"
-            lrssi2.text = "rssi: " + rssitxt + " dB"
+            group2.posH = mouse.y
+            group2.posV = mouse.x
+            group2.textFreq = qsTr("freq: ") + freqtxt + " MHz"
+            group2.textRSSI = "RSSI: " + rssitxt + " dB"
         }
     }
 
@@ -168,6 +111,87 @@ Item {
         group2.visible = false
         clickableGraphArea.lastMouse1 = null
         clickableGraphArea.lastMouse2 = null
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    component ClickableLine: Item {
+        id: control
+
+        anchors.fill: parent
+
+        visible: false
+
+        property int thickness: 2
+        property color color: Theme.colorPrimary
+
+        property alias posH: h.y
+        property alias posV: v.x
+
+        property alias textFreq: lfreq.text
+        property alias textRSSI: lrssi.text
+
+        ////
+
+        Rectangle {
+            id: h
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: control.thickness
+            color: control.color
+        }
+        Rectangle {
+            id: v
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            width: control.thickness
+            color: control.color
+        }
+/*
+        Rectangle { // dot marker
+            anchors.horizontalCenter: v.horizontalCenter
+            anchors.verticalCenter: h.verticalCenter
+            width: 6
+            height: 6
+            radius: 6
+            color: control.color
+        }
+*/
+        ////
+
+        Rectangle { // background
+            anchors.fill: col
+            anchors.margins: -4
+
+            visible: true
+            opacity: 0.08
+            color: control.color
+        }
+
+        ////
+
+        Column {
+            id: col
+            anchors.left: v.right
+            anchors.leftMargin: 8
+            anchors.bottom: h.top
+            anchors.bottomMargin: 8
+
+            Text {
+                id: lfreq
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.componentFontSize
+                color: control.color
+            }
+            Text {
+                id: lrssi
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.componentFontSize
+                color: control.color
+            }
+        }
+
+        ////
     }
 
     ////////////////////////////////////////////////////////////////////////////

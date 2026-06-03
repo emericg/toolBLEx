@@ -1355,8 +1355,10 @@ Loader {
 
                                     text: qsTr("Default")
                                     onClicked: {
-                                        SettingsManager.ubertooth_freqMin = 2402
-                                        SettingsManager.ubertooth_freqMax = 2480
+                                        SettingsManager.ubertooth_freqMin = 2400
+                                        SettingsManager.ubertooth_freqMax = 2500
+                                        //SettingsManager.ubertooth_samplingFreq = 60
+                                        //SettingsManager.ubertooth_historyCurves = 32
                                         if (ubertooth.running) {
                                             ubertooth.restartWork()
                                         }
@@ -1398,7 +1400,7 @@ Loader {
                                     anchors.leftMargin: Theme.componentMarginL
                                     anchors.verticalCenter: parent.verticalCenter
 
-                                    text: qsTr("Sampling frequency")
+                                    text: qsTr("Maximum sampling frequency")
                                     textFormat: Text.PlainText
                                     font.pixelSize: Theme.fontSizeContent
                                     font.bold: false
@@ -1414,8 +1416,8 @@ Loader {
 
                                     editable: false
                                     legend: "Hz"
-                                    from: 5
-                                    to: 20
+                                    from: 10
+                                    to: 120
                                     stepSize: 1
 
                                     value: SettingsManager.ubertooth_samplingFreq
@@ -1456,8 +1458,8 @@ Loader {
                                     anchors.verticalCenter: parent.verticalCenter
 
                                     editable: false
-                                    from: 8
-                                    to: 128
+                                    from: 16
+                                    to: 64
                                     stepSize: 1
 
                                     value: SettingsManager.ubertooth_historyCurves
@@ -1471,8 +1473,8 @@ Loader {
                             }
 
                             ////
-
-                            Rectangle {
+/*
+                            Rectangle { // DEBUG
                                 anchors.left: parent.left
                                 anchors.right: parent.right
                                 height: 48
@@ -1511,7 +1513,7 @@ Loader {
                                     }
                                 }
                             }
-
+*/
                             ////
                         }
 

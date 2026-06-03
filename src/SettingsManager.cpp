@@ -260,6 +260,7 @@ void SettingsManager::resetSettings()
     Q_EMIT scanTimeoutChanged();
     m_scanRssiInterval = 1000;
     Q_EMIT scanRssiIntervalChanged();
+
     m_scanAuto = true;
     Q_EMIT scanAutoChanged();
     m_scanPause = false;
@@ -272,6 +273,31 @@ void SettingsManager::resetSettings()
     m_scanShowClassic = true;
     m_scanShowLowEnergy = true;
     Q_EMIT scanShowChanged();
+
+    m_scanviewOrientation = Qt::Horizontal;
+    m_scanviewSize.clear();
+    Q_EMIT scanviewChanged();
+
+    m_preferredScreen = 0;
+    Q_EMIT preferredScreenChanged();
+
+    m_preferredAdapter_scan.clear();
+    Q_EMIT preferredAdapterScanChanged();
+    m_preferredAdapter_adv.clear();
+    Q_EMIT preferredAdapterAdvChanged();
+
+    m_exportDirectory.clear();
+    Q_EMIT exportDirectoryChanged();
+
+    m_ubertooth_path = "ubertooth-specan";
+    Q_EMIT ubertoothPathChanged();
+    m_ubertooth_freqMin = 2400;
+    m_ubertooth_freqMax = 2500;
+    Q_EMIT ubertoothFreqChanged();
+    m_ubertooth_samplingFrequency = 60;
+    Q_EMIT ubertoothSamplingChanged();
+    m_ubertooth_historyCurves = 32;
+    Q_EMIT ubertoothHistoryChanged();
 }
 
 /* ************************************************************************** */
@@ -606,7 +632,7 @@ void SettingsManager::setUbertoothFreqMax(const int value)
 
 void SettingsManager::setUbertoothSamplingFreq(const int value)
 {
-    if (value >= 5 && value <= 20)
+    if (value >= 10 && value <= 120)
     {
         if (m_ubertooth_samplingFrequency != value)
         {
@@ -619,7 +645,7 @@ void SettingsManager::setUbertoothSamplingFreq(const int value)
 
 void SettingsManager::setUbertoothHistoryCurves(const int value)
 {
-    if (value >= 8 && value <= 128)
+    if (value >= 16 && value <= 64)
     {
         if (m_ubertooth_historyCurves != value)
         {

@@ -132,8 +132,8 @@ class SettingsManager: public QObject
 
     QString m_ubertooth_path = "ubertooth-specan";
     int m_ubertooth_freqMin = 2400;
-    int m_ubertooth_freqMax = 2483;
-    int m_ubertooth_samplingFrequency = 10;
+    int m_ubertooth_freqMax = 2500;
+    int m_ubertooth_samplingFrequency = 60;
     int m_ubertooth_historyCurves = 32;
 
     // Singleton
