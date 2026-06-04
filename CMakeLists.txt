@@ -60,15 +60,18 @@ set(SOURCES
     src/BleCharacteristicInfo.cpp src/BleCharacteristicInfo.h
     src/VendorsDatabase.cpp src/VendorsDatabase.h
 
-    src/ubertooth.cpp src/ubertooth.h
-    src/WaterfallGraph_QuickItem.cpp src/WaterfallGraph_QuickItem.h
-
     src/adapter.cpp src/adapter.h
     src/device.cpp src/device.h src/device_utils.h
     src/device_toolblex.cpp src/device_toolblex.h
     src/device_toolblex_adv.cpp src/device_toolblex_adv.h
     src/DeviceAdvModel.cpp src/DeviceAdvModel.h
     src/DeviceLogModel.cpp src/DeviceLogModel.h
+
+    src/ubertooth.cpp src/ubertooth.h
+    src/ColormapFactory.cpp src/ColormapFactory.h
+    src/WaterfallGraph_QuickItem.cpp src/WaterfallGraph_QuickItem.h
+    src/SpectrumGraph3D_SurfaceHandler.cpp src/SpectrumGraph3D_SurfaceHandler.h
+    src/PhosphorPersistenceGraph_QuickItem.cpp src/PhosphorPersistenceGraph_QuickItem.h
 
     assets/assets.qrc
     assets/vendors.qrc
@@ -118,10 +121,13 @@ qt_add_qml_module(${PROJECT_NAME}
         qml/graphs/RssiBar.qml
         qml/graphs/RssiGraph.qml
         qml/graphs/ProximityRadar.qml
+        qml/graphs/SpectrumGraph3D.qml
+        qml/graphs/SpectrumGraph2D.qml
         qml/graphs/FrequencyGraph.qml
         qml/graphs/FrequencyGraphLegend.qml
         qml/graphs/FrequencyGraphOverlayBands.qml
         qml/graphs/FrequencyGraphOverlayClickable.qml
+        qml/graphs/PhosphorPersistenceGraph.qml
         qml/graphs/WaterfallGraph.qml
         qml/graphs/WaterfallGraphLabels.qml
         qml/graphs/WaterfallGraphOverlayBands.qml
@@ -159,6 +165,9 @@ qt_add_qml_module(${PROJECT_NAME}
         src/MenubarManager.cpp src/MenubarManager.h
         src/SettingsManager.cpp src/SettingsManager.h
         src/ColormapFactory.cpp src/ColormapFactory.h
+        src/WaterfallGraph_QuickItem.cpp src/WaterfallGraph_QuickItem.h
+        src/SpectrumGraph3D_SurfaceHandler.cpp src/SpectrumGraph3D_SurfaceHandler.h
+        src/PhosphorPersistenceGraph_QuickItem.cpp src/PhosphorPersistenceGraph_QuickItem.h
 )
 
 qt_add_translations(${PROJECT_NAME}

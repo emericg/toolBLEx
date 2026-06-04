@@ -11,14 +11,10 @@ GraphsView {
     antialiasing: false
     shadowVisible: false
 
-    property int graphCount: SettingsManager.ubertooth_historyCurves
-    property int graphInterval: (1000 / SettingsManager.ubertooth_samplingFreq)
-
-    Timer {
-        repeat: true
-        running: ubertooth.running && frequencyGraph.visible
-        interval: frequencyGraph.graphInterval
-        onTriggered: frequencyGraph.updateGraph()
+    Connections {
+        target: ubertooth
+        enabled: frequencyGraph.visible
+        function onNewDataAvailable() { frequencyGraph.updateGraph() }
     }
 
     property var graphMax
@@ -78,6 +74,12 @@ GraphsView {
         }
     }
 
+    function hideHistory() {
+        for (var idx = 0; idx < graphsHistory.length; idx++) {
+            if (graphsHistory[idx]) graphsHistory[idx].visible = false
+        }
+    }
+
     function updateGraph() {
         if (!ubertooth.running || appContent.state !== "Ubertooth") return
         //console.log("frequencyGraph // updateGraph()")
@@ -86,9 +88,10 @@ GraphsView {
         ubertooth.getFrequencyGraphAxis(axisFrequency)
 
         //// DATA HISTORY
+        if (spectrumGraph2D_container.graphHistoryMethod === 1) {
 
-            // method 2 // with color gradient
-            for (var idx = 0; idx < frequencyGraph.graphCount; idx++) {
+            // method 2 // (history curves with opacity gradient)
+            for (var idx = 0; idx < frequencyGraph.historyCurvesCount; idx++) {
                 if (!graphsHistory[idx]) {
                     graphsHistory[idx] = createLineSeries()
                     graphsHistory[idx].width = 1
@@ -96,10 +99,17 @@ GraphsView {
                 if (graphsHistory[idx]) {
                     graphsHistory[idx].visible = true
                     graphsHistory[idx].color = Theme.colorSubText
-                    graphsHistory[idx].opacity = UtilsNumber.mapNumber(idx, 0, frequencyGraph.graphCount, 500, 10) / 1000
+                    graphsHistory[idx].opacity = UtilsNumber.mapNumber(idx, 0, frequencyGraph.historyCurvesCount, 500, 10) / 1000
                     ubertooth.getFrequencyGraphData(graphsHistory[idx], idx)
                 }
             }
+
+        } else {
+
+            // method 3 // (hide history curves, the phospor persistence graph will be used)
+            hideHistory()
+
+        }
 
         //// DATA
         ubertooth.getFrequencyGraphMax(graphMax)

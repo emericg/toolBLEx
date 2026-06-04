@@ -47,8 +47,11 @@ Ubertooth::Ubertooth(QObject *parent) : QObject(parent)
 
 Ubertooth::~Ubertooth()
 {
-    qDeleteAll(m_values);
-    m_values.clear();
+    m_ring_buffer.clear();
+    m_blank_column.clear();
+    m_ring_head = 0;
+    m_ring_count = 0;
+    m_ring_bins = 0;
     m_values_latest.clear();
     m_max_max = s_rssi_offset;
 }
@@ -165,13 +168,20 @@ bool Ubertooth::checkUbertooth()
 
 void Ubertooth::startWork()
 {
+    //qDebug() << "Ubertooth::startWork(?)";
+
     if (m_path_specan.isEmpty()) return;
     if (m_childProcess) return;
 
-    qDeleteAll(m_values);
-    m_values.clear();
+    m_ring_head = 0;
+    m_ring_count = 0;
     m_values_latest.clear();
     m_max_max = s_rssi_offset;
+
+    m_last_sweep_time = -1.0f;
+    m_capture_rate = 0.0;
+    m_capture_rate_emit = -1;
+    m_emit_timer.invalidate(); // first sweep after start redraws immediately
 
     if (m_childProcess == nullptr)
     {
@@ -189,6 +199,20 @@ void Ubertooth::startWork()
         m_freq_min = sm->getUbertoothFreqMin();
         m_freq_max = sm->getUbertoothFreqMax();
         Q_EMIT freqChanged();
+
+        // (Re)allocate the ring buffer now that the frequency range is known
+        // Fill everything with the our default RSSI value
+        m_ring_bins = getFreqBinCount();
+        if (m_ring_bins > 0)
+        {
+            m_ring_buffer.assign(static_cast<size_t>(s_max_stack) * m_ring_bins, s_rssi_raw_default);
+            m_blank_column.assign(m_ring_bins, s_rssi_raw_default);
+        }
+        else
+        {
+            m_ring_buffer.clear();
+            m_blank_column.clear();
+        }
 
         QStringList args;
         args << "-l" + QString::number(m_freq_min);
@@ -213,7 +237,7 @@ void Ubertooth::stopWork()
         }
         else
         {
-            //qDebug() << "Ubertooth::stopWork() current process won't die...";
+            //qWarning() << "Ubertooth::stopWork() current process won't die...";
             m_childProcess->kill();
         }
     }
@@ -223,6 +247,8 @@ void Ubertooth::stopWork()
 
 void Ubertooth::restartWork()
 {
+    //qDebug() << "Ubertooth::restartWork()";
+
     stopWork();
     QTimer::singleShot(333, this, &Ubertooth::startWork);
 }
@@ -270,32 +296,24 @@ void Ubertooth::processOutput()
 {
     if (m_childProcess)
     {
-        m_childProcess->waitForBytesWritten(40);
+        m_childProcess->waitForBytesWritten(33);
 
-        QString output(m_lastLineSplit);
-        m_lastLineSplit.clear();
+        QString output(m_childProcess_lastLineSplit);
+        m_childProcess_lastLineSplit.clear();
         output += m_childProcess->readAllStandardOutput();
 
         //qDebug() << "Ubertooth::processOutput(" << output.size() << "bytes)" << output;
-        // usually capture frequency is ~83 Hz
 
-        // STATS
-        //int idx = 0;
-        //int count = 0;
-        //int lastMsec = 0;
+        bool sweepCompleted = false; // becomes true once this batch finishes at least one sweep
 
-        // alloc
-        int *current_values = nullptr;
-        if (m_values.size())
+        // Make sure we have an in-progress slot to write the incoming sweep into
+        if (m_ring_bins <= 0 || m_ring_buffer.empty()) return;
+        if (m_ring_count == 0)
         {
-            current_values = m_values.last();
+            m_ring_count = 1;
+            std::fill_n(ringSlot(m_ring_head), m_ring_bins, s_rssi_raw_default);
         }
-        if (!current_values)
-        {
-            current_values = new int[m_freq_max-m_freq_min+1];
-            std::fill_n(current_values, m_freq_max-m_freq_min+1, s_rssi_raw_default);
-            m_values.push_back(current_values);
-        }
+        int *current_values = ringSlot(m_ring_head);
 
         // Parsing
         const QStringList lines = output.split('\n', Qt::SkipEmptyParts);
@@ -311,7 +329,7 @@ void Ubertooth::processOutput()
 
                 if (freq < m_freq_min || freq > m_freq_max)
                 {
-                    qDebug() << "> warning: frequency" << freq << "not in range > [" << m_freq_min << "/" << m_freq_max << "]    ( rssi " << rssi << ")";
+                    qDebug() << "> warning > frequency" << freq << "not in range > [" << m_freq_min << "/" << m_freq_max << "]    ( rssi " << rssi << ")";
                     continue;
                 }
 
@@ -320,42 +338,107 @@ void Ubertooth::processOutput()
 
                 if (freq == m_freq_max)
                 {
-                    //qDebug() << "allocating " << m_freq_max-m_freq_min << "e table";
+                    // Sweep complete: advance to the next ring slot (overwriting the
+                    // oldest once full) and clear it to the sentinel for the next sweep.
+                    m_ring_head = (m_ring_head + 1) % s_max_stack;
+                    if (m_ring_count < s_max_stack) m_ring_count++;
+                    current_values = ringSlot(m_ring_head);
+                    std::fill_n(current_values, m_ring_bins, s_rssi_raw_default);
 
-                    current_values = new int[m_freq_max-m_freq_min+1];
-                    std::fill_n(current_values, m_freq_max-m_freq_min+1, s_rssi_raw_default);
-                    m_values.push_back(current_values);
+                    sweepCompleted = true;
 
-                    if (m_values.size() > s_max_stack)
+                    // Capture rate: the first CSV field is the device timestamp in
+                    // seconds. Turn the interval between consecutive completed sweeps
+                    // into a Hz figure and smooth it (EMA) to tame the per-sweep jitter.
+                    const float t = linesplit.at(0).toFloat();
+                    if (m_last_sweep_time >= 0.0f)
                     {
-                        int *t = m_values.first();
-                        delete [] t;
-                        m_values.pop_front();
+                        const float dt = t - m_last_sweep_time;
+                        if (dt > 0.001f && dt < 0.2f) // sane band: 1 Hz .. 200 Hz
+                        {
+                            const double inst = 1.0 / dt;
+                            m_capture_rate = (m_capture_rate > 0.0) ? (m_capture_rate * 0.9 + inst * 0.1)
+                                                                    : inst;
+                        }
                     }
-
-                    // STATS
-                    //int msec = linesplit.at(0).toFloat() * 10000.f;
-                    //if (lastMsec > 0) {
-                    //    float ms = (msec - lastMsec) / 10.f;
-                    //    float freq = 1000.f / ms;
-                    //    qDebug() << "interval is" << QString::number(ms) << "ms  / " << QString::number(freq) << "Hz";
-                    //}
-                    //lastMsec = msec;
-                    //count++;
+                    m_last_sweep_time = t;
                 }
             }
             else
             {
-                //qDebug() << "> warning:data break at << " << line;
-                m_lastLineSplit = line;
+                m_childProcess_lastLineSplit = line; // store unfinished line for next round
+                //qDebug() << "> beware > data break at << " << line;
             }
         }
 
-        // STATS
-        //qDebug() << "we got" << count << "rounds";
+        // Drive the graphs once per data batch (event-driven, replaces the QML
+        // polling timers) and refresh the capture-rate readout when it shifts.
+        if (sweepCompleted)
+        {
+            // Capture-rate readout: not throttled, only emitted when it changes.
+            const int r = qRound(m_capture_rate);
+            if (r != m_capture_rate_emit)
+            {
+                m_capture_rate_emit = r;
+                Q_EMIT captureRateChanged();
+            }
+
+            // Frame-rate cap: redraw at most ubertooth_samplingFreq times/second so
+            // a fast capture can't overdraw the GUI. 0 (or less) means uncapped.
+            const int fps = SettingsManager::getInstance()->getUbertoothSamplingFreq();
+            const qint64 minIntervalMs = (fps > 0) ? (1000 / fps) : 0;
+
+            if (!m_emit_timer.isValid())
+            {
+                m_emit_timer.start();
+                Q_EMIT newDataAvailable();
+            }
+            else if (m_emit_timer.elapsed() >= minIntervalMs)
+            {
+                m_emit_timer.restart();
+                Q_EMIT newDataAvailable();
+            }
+        }
     }
 }
 
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+QList <int *> Ubertooth::getChronologicalValues(const int maxColumns, const bool padHistory)
+{
+    QList <int *> out;
+
+    if (m_ring_count <= 0 || m_ring_bins <= 0) return out;
+
+    int dataColumnRequested = maxColumns;
+    if (dataColumnRequested <= 0 || dataColumnRequested > s_max_stack) dataColumnRequested = s_max_stack;
+
+    const int dataColumnsAvailable = std::min(m_ring_count, dataColumnRequested);
+
+    const int dataColumsToPad = (padHistory && !m_blank_column.empty()) ? (dataColumnRequested - dataColumnsAvailable) : 0;
+
+    out.reserve(dataColumsToPad + dataColumnsAvailable);
+
+    // Optional left-padding
+    for (int k = 0; k < dataColumsToPad; k++)
+    {
+        out.push_back(m_blank_column.data());
+    }
+
+    // Get the data
+    int oldest = (m_ring_head - (dataColumnsAvailable - 1)) % s_max_stack;
+    oldest = (oldest + s_max_stack) % s_max_stack;
+
+    for (int k = 0; k < dataColumnsAvailable; k++)
+    {
+        out.push_back(ringSlot((oldest + k) % s_max_stack));
+    }
+
+    return out;
+}
+
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 void Ubertooth::getFrequencyGraphAxis(QValueAxis *axis)
@@ -368,6 +451,8 @@ void Ubertooth::getFrequencyGraphAxis(QValueAxis *axis)
     axis->setMax(m_freq_max);
 }
 
+/* ************************************************************************** */
+
 void Ubertooth::getFrequencyGraphMax(QLineSeries *serie)
 {
     //qDebug() << "Ubertooth::getFrequencyGraphMax()" << serie;
@@ -378,26 +463,46 @@ void Ubertooth::getFrequencyGraphMax(QLineSeries *serie)
     const int freqBinCount = getFreqBinCount();
     if (freqBinCount <= 0) return;
 
-    int *max = new int[freqBinCount];
-    std::fill_n(max, freqBinCount, s_rssi_raw_default);
+    // Hard max-hold: the per-bin maximum over the most-recent s_max_average_window
+    // sweeps (NOT the whole ring), walked chronologically backward from the head
+    // so it picks the right slots even after the ring has wrapped
+    const int bins = std::min(freqBinCount, m_ring_bins);
+    const int window = std::min(m_ring_count, s_max_average_window);
+
+    std::vector <int> max(freqBinCount, s_rssi_raw_default);
     m_max_max = s_rssi_raw_default;
 
-    for (const auto &table: std::as_const(m_values))
+    for (int j = 0; j < window; j++)
     {
-        for (int i = 0; i < freqBinCount; i++)
+        const int idx = ((m_ring_head - j) % s_max_stack + s_max_stack) % s_max_stack;
+        const int *table = ringSlot(idx);
+        for (int i = 0; i < bins; i++)
         {
             if (table[i] > max[i]) max[i] = table[i];
             if (table[i] > m_max_max) m_max_max = table[i];
         }
     }
 
+    // Locate the strongest bin (the "peak marker") of the s_max_average_window
+    int peak_idx = -1;
+    int peak_val = s_rssi_raw_default;
+
     for (int i = 0; i < freqBinCount; i++)
     {
+        if (max[i] > peak_val) { peak_val = max[i]; peak_idx = i; }
         serie->append(m_freq_min + i, max[i]);
     }
 
-    delete [] max;
+    const int peak_freq = (peak_idx >= 0) ? (m_freq_min + peak_idx) : 0;
+    if (peak_freq != m_peak_freq || peak_val != m_peak_dbm)
+    {
+        m_peak_freq = peak_freq;
+        m_peak_dbm = peak_val;
+        Q_EMIT peakChanged();
+    }
 }
+
+/* ************************************************************************** */
 
 void Ubertooth::getFrequencyGraphAverage(QLineSeries *serie)
 {
@@ -412,11 +517,19 @@ void Ubertooth::getFrequencyGraphAverage(QLineSeries *serie)
     std::vector <qint64> sum(freqBinCount, 0);
     std::vector <int> cnt(freqBinCount, 0);
 
-    for (const auto &table: std::as_const(m_values))
+    // Average over the most-recent s_max_average_window sweeps
+    // (same window as the max-hold line), walked chronologically backward from the head
+    const int bins = std::min(freqBinCount, m_ring_bins);
+    const int window = std::min(m_ring_count, s_max_average_window);
+
+    for (int j = 0; j < window; j++)
     {
-        for (int i = 0; i < freqBinCount; i++)
+        const int idx = ((m_ring_head - j) % s_max_stack + s_max_stack) % s_max_stack;
+        const int *table = ringSlot(idx);
+        for (int i = 0; i < bins; i++)
         {
-            // Some cells values are never reported by a sweep, their values will be below the s_rssi_hole_threshold
+            // Some cells values are never reported by a sweep,
+            // their values will be below the s_rssi_hole_threshold
             if (table[i] > s_rssi_hole_threshold)
             {
                 sum[i] += table[i];
@@ -432,6 +545,8 @@ void Ubertooth::getFrequencyGraphAverage(QLineSeries *serie)
     }
 }
 
+/* ************************************************************************** */
+
 void Ubertooth::getFrequencyGraphCurrent(QLineSeries *serie)
 {
     //qDebug() << "Ubertooth::getFrequencyGraphCurrent()" << serie;
@@ -445,6 +560,8 @@ void Ubertooth::getFrequencyGraphCurrent(QLineSeries *serie)
     }
 }
 
+/* ************************************************************************** */
+
 void Ubertooth::getFrequencyGraphData(QLineSeries *serie, int index)
 {
     //qDebug() << "Ubertooth::getFrequencyGraphData()" << serie << index;
@@ -452,18 +569,22 @@ void Ubertooth::getFrequencyGraphData(QLineSeries *serie, int index)
     if (!serie) return;
     serie->clear();
 
-    if (index < 0 || index > m_values.size() - 1) return;
+    if (index < 0 || index >= m_ring_count) return;
 
     const int freqBinCount = getFreqBinCount();
     if (freqBinCount <= 0) return;
 
-    int idx = m_values.size() - index - 1;
-    int *current = m_values.at(idx);
+    // index 0 = newest (the in-progress head), counting back through the ring
+    int idx = (m_ring_head - index) % s_max_stack;
+    idx = (idx + s_max_stack) % s_max_stack;
+    const int *current = ringSlot(idx);
 
-    for (int i = 0; i < freqBinCount; i++)
+    const int bins = std::min(freqBinCount, m_ring_bins);
+    for (int i = 0; i < bins; i++)
     {
         serie->append(m_freq_min + i, current[i]);
     }
 }
 
+/* ************************************************************************** */
 /* ************************************************************************** */

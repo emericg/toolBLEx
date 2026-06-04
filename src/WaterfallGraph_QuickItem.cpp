@@ -20,6 +20,8 @@
  */
 
 #include "WaterfallGraph_QuickItem.h"
+#include "ColormapFactory.h"
+#include "SettingsManager.h"
 #include "ubertooth.h"
 
 #include <QPainter>
@@ -30,43 +32,18 @@
 
 WaterfallGraph_QuickItem::WaterfallGraph_QuickItem(QQuickItem *parent) : QQuickPaintedItem(parent)
 {
-    buildLut();
+    m_colorScheme = SettingsManager::getInstance()->getUbertoothGraphColors();
+    ColormapFactory::fillLut(static_cast<ColormapFactory::Scheme>(m_colorScheme), m_lut);
 }
 
 /* ************************************************************************** */
-
-void WaterfallGraph_QuickItem::buildLut()
-{
-    // Viridis colormap, 6th-order polynomial approximation.
-    // (coefficients from the well-known shader fit by Matt Zucker)
-
-    static const double c0[3] = { 0.2777273272234177,  0.005407344544966578, 0.3340998053353061 };
-    static const double c1[3] = { 0.1050930431085774,  1.404613529898575,    1.384590162594685 };
-    static const double c2[3] = {-0.3308618287255563,  0.214847559468213,    0.09509516302823659 };
-    static const double c3[3] = {-4.634230498983486,  -5.799100973351585,  -19.33244095627987 };
-    static const double c4[3] = { 6.228269936347081,  14.17993336680509,    56.69055260068105 };
-    static const double c5[3] = { 4.776384997670288, -13.74514537774601,   -65.35303263337234 };
-    static const double c6[3] = {-5.435455855934631,   4.645852612178535,    26.3124352495832 };
-
-    for (int i = 0; i < 256; i++)
-    {
-        const double t = i / 255.0;
-        double rgb[3];
-        for (int k = 0; k < 3; k++)
-        {
-            double v = c0[k] + t*(c1[k] + t*(c2[k] + t*(c3[k] + t*(c4[k] + t*(c5[k] + t*c6[k])))));
-            rgb[k] = std::clamp(v, 0.0, 1.0);
-        }
-        m_lut[i] = qRgb(int(rgb[0]*255.0 + 0.5), int(rgb[1]*255.0 + 0.5), int(rgb[2]*255.0 + 0.5));
-    }
-}
 
 void WaterfallGraph_QuickItem::refresh()
 {
     if (!m_ubertooth) return;
 
     const int rows = m_ubertooth->getFreqBinCount();
-    const QList <int *> &cols = m_ubertooth->getValues(); // one entry per sweep (time)
+    const QList <int *> &cols = m_ubertooth->getChronologicalValues(m_maxDepth, true);
     const int ncols = cols.size();
 
     if (rows <= 0 || ncols <= 0) return;
@@ -118,6 +95,19 @@ void WaterfallGraph_QuickItem::setSource(QObject *source)
     }
 }
 
+void WaterfallGraph_QuickItem::setMaxDepth(int v)
+{
+    if (v < 0) v = 0;
+
+    if (m_maxDepth != v)
+    {
+        m_maxDepth = v;
+        Q_EMIT maxDepthChanged();
+
+        refresh();
+    }
+}
+
 void WaterfallGraph_QuickItem::setFloorDb(qreal value)
 {
     if (!qFuzzyCompare(m_floorDb, value))
@@ -153,7 +143,6 @@ void WaterfallGraph_QuickItem::setSmooth(bool value)
 
 void WaterfallGraph_QuickItem::setColorScheme(int value)
 {
-    qWarning() << "setColorScheme" << value;
     if (m_colorScheme != value)
     {
         m_colorScheme = static_cast<ColormapFactory::Scheme>(value);
@@ -164,4 +153,5 @@ void WaterfallGraph_QuickItem::setColorScheme(int value)
         refresh();
     }
 }
+
 /* ************************************************************************** */

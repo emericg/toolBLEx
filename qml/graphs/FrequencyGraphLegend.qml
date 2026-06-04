@@ -79,7 +79,7 @@ Item {
                     anchors.margins: 2
                     radius: 2
                     color: Theme.colorBackground
-                    visible: !frequencyGraph.showPeak
+                    visible: !spectrumGraph2D_container.showPeak
                 }
             }
             Text {

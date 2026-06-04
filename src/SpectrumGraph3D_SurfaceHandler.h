@@ -19,28 +19,26 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#ifndef WATERFALL_GRAPH_QUICKITEM_H
-#define WATERFALL_GRAPH_QUICKITEM_H
+#ifndef SPECTRUM_GRAPH_3D_SURFACEHANDLER_H
+#define SPECTRUM_GRAPH_3D_SURFACEHANDLER_H
 /* ************************************************************************** */
 
+#include <QObject>
 #include <QtQml/qqmlregistration.h>
-
-#include <QQuickPaintedItem>
 #include <QPointer>
-#include <QImage>
-#include <QRgb>
+#include <QSurface3DSeries>
 
 class Ubertooth;
 
 /* ************************************************************************** */
 
 /*!
- * \brief Live scrolling spectrogram waterfall renderer.
+ * \brief Fills a Qt Graphs Surface3D series from the Ubertooth data.
  *
- * Reads the rolling magnitude matrix exposed by the Ubertooth class and paints
- * it as a viridis-colored heatmap (X = time, Y = frequency, color = magnitude).
+ * Bridges the rolling sweep stack exposed by the Ubertooth class to a
+ * QSurface3DSeries data proxy (X = frequency MHz, Y = magnitude, Z = time).
  */
-class WaterfallGraph_QuickItem: public QQuickPaintedItem
+class SpectrumGraph3D_SurfaceHandler: public QObject
 {
     Q_OBJECT
     QML_ELEMENT
@@ -48,35 +46,26 @@ class WaterfallGraph_QuickItem: public QQuickPaintedItem
     Q_PROPERTY(QObject *dataSource READ source WRITE setSource NOTIFY sourceChanged)
 
     Q_PROPERTY(int maxDepth READ maxDepth WRITE setMaxDepth NOTIFY maxDepthChanged)
-    Q_PROPERTY(qreal floorDb READ floorDb WRITE setFloorDb NOTIFY rangeChanged)
-    Q_PROPERTY(qreal ceilDb READ ceilDb WRITE setCeilDb NOTIFY rangeChanged)
-    Q_PROPERTY(bool smooth READ smooth WRITE setSmooth NOTIFY smoothChanged)
-    Q_PROPERTY(int colorScheme READ colorScheme WRITE setColorScheme NOTIFY colorsChanged)
+    Q_PROPERTY(qreal floorDb READ floorDb WRITE setFloorDb NOTIFY floorDbChanged)
+    Q_PROPERTY(int timeSmoothing READ timeSmoothing WRITE setTimeSmoothing NOTIFY smoothingChanged)
+    Q_PROPERTY(int freqSmoothing READ freqSmoothing WRITE setFreqSmoothing NOTIFY smoothingChanged)
 
     QPointer <QObject> m_source;
     Ubertooth *m_ubertooth = nullptr;
 
-    int m_maxDepth = 512;       //!< only plot the most-recent N sweeps along Z (0 = all)
-    qreal m_floorDb = -100.0;   //!< magnitude mapped to the low end of the colormap
-    qreal m_ceilDb = -20.0;     //!< magnitude mapped to the high end of the colormap
-    bool m_smooth = false;      //!< bilinear scaling vs crisp pixel blocks
-
-    int m_colorScheme = 0;
-    QRgb m_lut[256];
-
-    QImage m_image;
+    qreal m_floorDb = -100.0;   //!< value used for holes / hard floor (match axisY.min)
+    int m_maxDepth = 256;       //!< only plot the most-recent N sweeps along Z (0 = all)
+    int m_timeSmoothing = 0;    //!< box-blur radius along time (sweeps), 0 = off
+    int m_freqSmoothing = 0;    //!< box-blur radius along frequency (bins), 0 = off
 
 Q_SIGNALS:
     void sourceChanged();
     void maxDepthChanged();
-    void rangeChanged();
-    void smoothChanged();
-    void colorsChanged();
+    void floorDbChanged();
+    void smoothingChanged();
 
 public:
-    explicit WaterfallGraph_QuickItem(QQuickItem *parent = nullptr);
-
-    void paint(QPainter *painter) override;
+    explicit SpectrumGraph3D_SurfaceHandler(QObject *parent = nullptr);
 
     QObject *source() const { return m_source; }
     void setSource(QObject *source);
@@ -87,18 +76,15 @@ public:
     qreal floorDb() const { return m_floorDb; }
     void setFloorDb(qreal v);
 
-    qreal ceilDb() const { return m_ceilDb; }
-    void setCeilDb(qreal v);
+    int timeSmoothing() const { return m_timeSmoothing; }
+    void setTimeSmoothing(int v);
 
-    bool smooth() const { return m_smooth; }
-    void setSmooth(bool v);
+    int freqSmoothing() const { return m_freqSmoothing; }
+    void setFreqSmoothing(int v);
 
-    int colorScheme() const { return m_colorScheme; }
-    void setColorScheme(int scheme);
-
-    //! Rebuild the image from the source's latest data and request a repaint.
-    Q_INVOKABLE void refresh();
+    //! Rebuild the given QSurface3DSeries surface mesh from the source's latest data.
+    Q_INVOKABLE void refresh(QSurface3DSeries *series);
 };
 
 /* ************************************************************************** */
-#endif // WATERFALL_GRAPH_QUICKITEM_H
+#endif // SPECTRUM_GRAPH_3D_SURFACEHANDLER_H

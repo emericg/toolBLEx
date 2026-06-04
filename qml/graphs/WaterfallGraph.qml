@@ -4,20 +4,18 @@ import ComponentLibrary
 
 WaterfallGraph_QuickItem {
     id: waterfallGraph
-    //anchors.fill: parent
 
     dataSource: ubertooth
+    maxDepth: 512
+
     floorDb: -100
     ceilDb: -20
     smooth: false
 
-    property int graphInterval: (1000 / SettingsManager.ubertooth_samplingFreq)
-
-    Timer {
-        repeat: true
-        running: ubertooth.running && waterfallGraph.visible
-        interval: waterfallGraph.graphInterval
-        onTriggered: waterfallGraph.refresh()
+    Connections {
+        target: ubertooth
+        enabled: waterfallGraph.visible
+        function onNewDataAvailable() { waterfallGraph.refresh() }
     }
 
     ////////////////

@@ -28,6 +28,9 @@
 
 #include <QList>
 #include <QMap>
+#include <QElapsedTimer>
+
+#include <vector>
 
 #include <QtGraphs/QLineSeries>
 #include <QtGraphs/QValueAxis>
@@ -66,17 +69,31 @@ class Ubertooth: public QObject
     int m_freq_max = 2500;
 
     QProcess *m_childProcess = nullptr;
+    QString m_childProcess_lastLineSplit;
 
-    int m_idx_values_row = -1;
-    int m_idx_values_col = -1;
-    QString m_lastLineSplit;
+    std::vector <int> m_ring_buffer;
+    int m_ring_head = 0;    // raw index of the in-progress (newest) slot
+    int m_ring_count = 0;   // number of valid slots (1..s_max_stack)
+    int m_ring_bins = 0;    // ints per slot (== getFreqBinCount() captured at startWork)
 
-    QList <int *> m_values;
+    //! Shared "no data" column (m_ring_bins ints of s_rssi_raw_default) used to left-pad getChronologicalValues()
+    std::vector <int> m_blank_column;
+
     QMap <int, int> m_values_latest;
     int m_max_max = -128;
+
+    // Strongest bin of the s_max_average_window (updated by getFrequencyGraphMax())
     int m_peak_freq = 0;
     int m_peak_dbm = s_rssi_raw_default;
-    double m_capture_rate = 0.0;
+
+    // Capture-rate measurement (Hz) & frame-rate cap control
+    float m_last_sweep_time = -1.0f;    // device timestamp (s) of the previous completed sweep
+    double m_capture_rate = 0.0;        // exponentially-smoothed sweeps/second
+    int m_capture_rate_emit = -1;       // last rounded Hz pushed to QML (rate-limits the signal)
+    QElapsedTimer m_emit_timer;
+
+    // Pointer to ring slot at raw index i (no bounds check; caller guarantees 0..s_max_stack-1)
+    int *ringSlot(int i) { return m_ring_buffer.data() + static_cast<size_t>(i) * m_ring_bins; }
 
     bool isRunning() const { return m_childProcess; }
     bool isToolsAvailable() const { return m_toolsAvailable; }
@@ -111,12 +128,36 @@ public:
     int getFreqMin() const { return m_freq_min; }
     int getFreqMax() const { return m_freq_max; }
     int getFreqBinCount() const { return m_freq_max - m_freq_min + 1; }
-    const QList <int *> &getValues() const { return m_values; } // Used by the 3D graph
 
     int getPeakFreq() const { return m_peak_freq; }
     int getPeakDbm() const { return m_peak_dbm; }
 
     double getCaptureRate() const { return m_capture_rate; }
+
+    /*!
+     * \brief getChronologicalValues()
+     * \param maxColumns: Maximum number of columns to return, if less than s_max_stack desired.
+     * \param padHistory: If true, pad the results with blank columns, otherwise, return only the captured columns.
+     * \return maxColumns of data.
+     *
+     * Expose the ring as a chronological list (oldest first, newest last).
+     * The pointers alias into m_ring and stay valid until the next processOutput()/startWork() on the GUI thread.
+     *
+     * getChronologicalValues() can left-pads its result with blank (no-data)
+     * columns so the list always has the full s_max_stack entry count.
+     * This makes the waterfall / 3D surface render at their full sample width
+     * and scroll immediately, instead of starting narrow and stretching until
+     * the ring fills, which I believe is more biutiful.
+     * All padding entries alias m_blank_column (read-only for consumers),
+     * so this stays allocation-free.
+     */
+    QList <int *> getChronologicalValues(const int maxColumns = s_max_stack, const bool padHistory = true);
+
+    /*!
+     * \brief getLatestValues()
+     * \return Latest row of data.
+     */
+    const QMap <int, int> &getLatestValues() const { return m_values_latest; }
 
     Q_INVOKABLE bool checkPath();
     Q_INVOKABLE bool checkUbertooth();

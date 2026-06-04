@@ -62,7 +62,7 @@ Loader {
             // prevent clicks below this area
             MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
 
-            // view mode: 0 = spectrum (2D line graph), 1 = waterfall (2D heatmap), 3 = spectrum (3D surface graph)
+            // view mode: 0 = spectrum (2D line graph), 2 = spectrum (3D surface graph), 3 = waterfall (2D heatmap)
             property int viewMode: 0
 
             // visualize known spectrum bands
@@ -91,8 +91,9 @@ Loader {
 
                     model: ListModel {
                         id: viewModeModel
-                        ListElement { idx: 0; txt: qsTr("spectrum"); src: ""; sz: 16; }
-                        ListElement { idx: 1; txt: qsTr("waterfall"); src: ""; sz: 16; }
+                        ListElement { idx: 0; txt: qsTr("spectrum 2D"); src: ""; sz: 16; }
+                        ListElement { idx: 1; txt: qsTr("spectrum 3D"); src: ""; sz: 16; }
+                        ListElement { idx: 2; txt: qsTr("waterfall"); src: ""; sz: 16; }
                     }
 
                     currentSelection: actionBar.viewMode
@@ -101,6 +102,37 @@ Loader {
                     }
                 }
 
+                ////
+
+                Item { // separator
+                    width: 16
+                    height: 28
+                    visible: (actionBar.viewMode === 0)
+
+                    Rectangle {
+                        anchors.centerIn: parent
+                        width: 2
+                        height: 20
+                        color: Theme.colorActionbarHighlight
+                    }
+                }
+
+                SelectorMenuColorful { // spectrum history graph style
+                    height: 28
+                    anchors.verticalCenter: parent.verticalCenter
+                    visible: (actionBar.viewMode === 0)
+
+                    model: ListModel {
+                        ListElement { idx: 0; txt: qsTr("persistence"); src: ""; sz: 16; }
+                        ListElement { idx: 1; txt: qsTr("history curves"); src: ""; sz: 16; }
+                    }
+
+                    currentSelection: spectrumGraph2D_container.graphHistoryMethod
+                    onMenuSelected: (index) => {
+                        spectrumGraph2D_container.graphHistoryMethod = index
+                    }
+                }
+
                 Item { // separator
                     width: 16
                     height: 28
@@ -118,64 +150,12 @@ Loader {
                     height: 28
                     colorBackground: Theme.colorActionbar
                     colorHighlight: Theme.colorActionbarHighlight
-                    checked: frequencyGraph.showPeak
+                    checked: spectrumGraph2D_container.showPeak
                     visible: (actionBar.viewMode === 0)
 
                     text: qsTr("peak")
                     onClicked: {
-                        frequencyGraph.showPeak = !frequencyGraph.showPeak
-                    }
-                }
-
-                Item { // separator
-                    width: 16
-                    height: 28
-
-                    Rectangle {
-                        anchors.centerIn: parent
-                        width: 2
-                        height: 20
-                        color: Theme.colorActionbarHighlight
-                    }
-                }
-
-                ButtonToggle {
-                    height: 28
-                    colorBackground: Theme.colorActionbar
-                    colorHighlight: Theme.colorActionbarHighlight
-                    checked: actionBar.wifi
-
-                    text: qsTr("wifi")
-                    onClicked: {
-                        actionBar.wifi = !actionBar.wifi
-                        actionBar.bluetooth = false
-                        actionBar.zigbee = false
-                    }
-                }
-                ButtonToggle {
-                    height: 28
-                    colorBackground: Theme.colorActionbar
-                    colorHighlight: Theme.colorActionbarHighlight
-                    checked: actionBar.bluetooth
-
-                    text: qsTr("bluetooth")
-                    onClicked: {
-                        actionBar.wifi = false
-                        actionBar.bluetooth = !actionBar.bluetooth
-                        actionBar.zigbee = false
-                    }
-                }
-                ButtonToggle {
-                    height: 28
-                    colorBackground: Theme.colorActionbar
-                    colorHighlight: Theme.colorActionbarHighlight
-                    checked: actionBar.zigbee
-
-                    text: qsTr("zigbee")
-                    onClicked: {
-                        actionBar.wifi = false
-                        actionBar.bluetooth = false
-                        actionBar.zigbee = !actionBar.zigbee
+                        spectrumGraph2D_container.showPeak = !spectrumGraph2D_container.showPeak
                     }
                 }
 
@@ -184,99 +164,206 @@ Loader {
                 Item { // separator
                     width: 16
                     height: 28
-                    visible: (actionBar.wifi || actionBar.bluetooth)
+                    visible: (actionBar.viewMode === 2)
 
                     Rectangle {
                         anchors.centerIn: parent
                         width: 2
                         height: 20
                         color: Theme.colorActionbarHighlight
+                    }
+                }
+
+                ComboBoxThemed {
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: 128
+                    height: 28
+
+                    visible: (actionBar.viewMode === 2)
+                    wheelEnabled: false
+                    //background.color: "white"
+
+                    model: ListModel {
+                        id: cbGraphColors
+                        ListElement { text: "Viridis"; }
+                        ListElement { text: "Turbo"; }
+                        ListElement { text: "Inferno"; }
+                        ListElement { text: "gqrx"; }
+                    }
+
+                    Component.onCompleted: {
+                        currentIndex = SettingsManager.ubertooth_graphColors
+                        if (currentIndex < 0 || currentIndex > cbGraphColors.count) currentIndex = 0
+                    }
+
+                    onActivated: {
+                        SettingsManager.ubertooth_graphColors = currentIndex
+                        waterfallGraph.colorScheme = currentIndex
+                        //spectrumGraph3D_container.colorScheme = currentIndex
                     }
                 }
 
                 ////
 
-                ButtonToggle {
-                    height: 28
-                    colorBackground: Theme.colorActionbar
-                    colorHighlight: Theme.colorActionbarHighlight
-                    checked: actionBar.wifi_b
+                Row {
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 8
 
-                    visible: actionBar.wifi
-                    text: qsTr("802.11 b")
-                    onClicked: {
-                        actionBar.wifi_b = true
-                        actionBar.wifi_gn = false
-                        actionBar.wifi_n = false
+                    visible: (actionBar.viewMode === 0 || actionBar.viewMode === 2)
+
+                    Item { // separator
+                        width: 16
+                        height: 28
+
+                        Rectangle {
+                            anchors.centerIn: parent
+                            width: 2
+                            height: 20
+                            color: Theme.colorActionbarHighlight
+                        }
+                    }
+
+                    ButtonToggle {
+                        height: 28
+                        colorBackground: Theme.colorActionbar
+                        colorHighlight: Theme.colorActionbarHighlight
+                        checked: actionBar.wifi
+
+                        text: qsTr("wifi")
+                        onClicked: {
+                            actionBar.wifi = !actionBar.wifi
+                            actionBar.bluetooth = false
+                            actionBar.zigbee = false
+                        }
+                    }
+                    ButtonToggle {
+                        height: 28
+                        colorBackground: Theme.colorActionbar
+                        colorHighlight: Theme.colorActionbarHighlight
+                        checked: actionBar.bluetooth
+
+                        text: qsTr("bluetooth")
+                        onClicked: {
+                            actionBar.wifi = false
+                            actionBar.bluetooth = !actionBar.bluetooth
+                            actionBar.zigbee = false
+                        }
+                    }
+                    ButtonToggle {
+                        height: 28
+                        colorBackground: Theme.colorActionbar
+                        colorHighlight: Theme.colorActionbarHighlight
+                        checked: actionBar.zigbee
+
+                        text: qsTr("zigbee")
+                        onClicked: {
+                            actionBar.wifi = false
+                            actionBar.bluetooth = false
+                            actionBar.zigbee = !actionBar.zigbee
+                        }
+                    }
+
+                    ////
+
+                    Item { // separator
+                        width: 16
+                        height: 28
+                        visible: (actionBar.wifi || actionBar.bluetooth)
+
+                        Rectangle {
+                            anchors.centerIn: parent
+                            width: 2
+                            height: 20
+                            color: Theme.colorActionbarHighlight
+                        }
+                    }
+
+                    ////
+
+                    ButtonToggle {
+                        height: 28
+                        colorBackground: Theme.colorActionbar
+                        colorHighlight: Theme.colorActionbarHighlight
+                        checked: actionBar.wifi_b
+
+                        visible: actionBar.wifi
+                        text: qsTr("802.11 b")
+                        onClicked: {
+                            actionBar.wifi_b = true
+                            actionBar.wifi_gn = false
+                            actionBar.wifi_n = false
+                        }
+                    }
+                    ButtonToggle {
+                        height: 28
+                        colorBackground: Theme.colorActionbar
+                        colorHighlight: Theme.colorActionbarHighlight
+                        checked: actionBar.wifi_gn
+
+                        visible: actionBar.wifi
+                        text: qsTr("802.11 g/n")
+                        onClicked: {
+                            actionBar.wifi_b = false
+                            actionBar.wifi_gn = true
+                            actionBar.wifi_n = false
+                        }
+                    }
+                    ButtonToggle {
+                        height: 28
+                        colorBackground: Theme.colorActionbar
+                        colorHighlight: Theme.colorActionbarHighlight
+                        checked: actionBar.wifi_n
+
+                        visible: false // actionBar.wifi
+                        text: qsTr("802.11 n")
+                        onClicked: {
+                            actionBar.wifi_b = false
+                            actionBar.wifi_gn = false
+                            actionBar.wifi_n = true
+                        }
+                    }
+
+                    ButtonToggle {
+                        height: 28
+                        colorBackground: Theme.colorActionbar
+                        colorHighlight: Theme.colorActionbarHighlight
+                        checked: actionBar.bluetooth_classic
+
+                        visible: actionBar.bluetooth
+                        text: qsTr("classic")
+                        onClicked: {
+                            actionBar.bluetooth_classic = true
+                            actionBar.bluetooth_lowenergy = false
+                        }
+                    }
+                    ButtonToggle {
+                        height: 28
+                        colorBackground: Theme.colorActionbar
+                        colorHighlight: Theme.colorActionbarHighlight
+                        checked: actionBar.bluetooth_lowenergy
+
+                        visible: actionBar.bluetooth
+                        text: qsTr("low energy")
+                        onClicked: {
+                            actionBar.bluetooth_classic = false
+                            actionBar.bluetooth_lowenergy = true
+                        }
+                    }
+
+                    Item { // separator
+                        width: 16
+                        height: 28
+
+                        Rectangle {
+                            anchors.centerIn: parent
+                            width: 2
+                            height: 20
+                            color: Theme.colorActionbarHighlight
+                        }
                     }
                 }
-                ButtonToggle {
-                    height: 28
-                    colorBackground: Theme.colorActionbar
-                    colorHighlight: Theme.colorActionbarHighlight
-                    checked: actionBar.wifi_gn
 
-                    visible: actionBar.wifi
-                    text: qsTr("802.11 g/n")
-                    onClicked: {
-                        actionBar.wifi_b = false
-                        actionBar.wifi_gn = true
-                        actionBar.wifi_n = false
-                    }
-                }
-                ButtonToggle {
-                    height: 28
-                    colorBackground: Theme.colorActionbar
-                    colorHighlight: Theme.colorActionbarHighlight
-                    checked: actionBar.wifi_n
-
-                    visible: false // actionBar.wifi
-                    text: qsTr("802.11 n")
-                    onClicked: {
-                        actionBar.wifi_b = false
-                        actionBar.wifi_gn = false
-                        actionBar.wifi_n = true
-                    }
-                }
-
-                ButtonToggle {
-                    height: 28
-                    colorBackground: Theme.colorActionbar
-                    colorHighlight: Theme.colorActionbarHighlight
-                    checked: actionBar.bluetooth_classic
-
-                    visible: actionBar.bluetooth
-                    text: qsTr("classic")
-                    onClicked: {
-                        actionBar.bluetooth_classic = true
-                        actionBar.bluetooth_lowenergy = false
-                    }
-                }
-                ButtonToggle {
-                    height: 28
-                    colorBackground: Theme.colorActionbar
-                    colorHighlight: Theme.colorActionbarHighlight
-                    checked: actionBar.bluetooth_lowenergy
-
-                    visible: actionBar.bluetooth
-                    text: qsTr("low energy")
-                    onClicked: {
-                        actionBar.bluetooth_classic = false
-                        actionBar.bluetooth_lowenergy = true
-                    }
-                }
-
-                Item { // separator
-                    width: 16
-                    height: 28
-
-                    Rectangle {
-                        anchors.centerIn: parent
-                        width: 2
-                        height: 20
-                        color: Theme.colorActionbarHighlight
-                    }
-                }
+                ////
             }
 
             ////////
@@ -339,6 +426,19 @@ Loader {
 
                 ButtonFlat {
                     height: 30
+                    visible: ubertooth.running
+                    text: ubertooth.captureRate.toFixed(0) + qsTr(" Hz")
+                    source: "qrc:/IconLibrary/material-symbols/stacks.svg"
+                    color: {
+                        var hz = ubertooth.captureRate.toFixed(0)
+                        if (hz > 59) return Theme.colorGreen
+                        if (hz > 29) return Theme.colorOrange
+                        return Theme.colorRed
+                    }
+                }
+
+                ButtonFlat {
+                    height: 30
                     color: ubertooth.hardwareAvailable ? Theme.colorSuccess: Theme.colorWarning
                     text: ubertooth.hardwareAvailable ? qsTr("hardware ready") : qsTr("hardware busy?")
                     source: ubertooth.hardwareAvailable ? "qrc:/IconLibrary/material-symbols/check_circle.svg"
@@ -364,78 +464,28 @@ Loader {
 
         ////////////////////////////////////////////////////////////////////////
 
-        Item {
-            id: frequencyGraphContainer
+        SpectrumGraph2D {
+            id: spectrumGraph2D_container
+
             anchors.top: actionBar.bottom
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
 
             visible: (actionBar.viewMode === 0)
+        }
 
-            // spectrum trace style: 0 = phosphor accumulation buffer, 1 = history lines (only one at a time, to reduce clutter)
-            property int traceStyle: 0
+        ////////////////////////////////////////////////////////////////////////
 
-            Item {
-                id: frequencyGraphUnderlay
+        SpectrumGraph3D {
+            id: spectrumGraph3D_container
 
-                clip: true
+            anchors.top: actionBar.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
 
-                FrequencyGraphOverlayBands {
-                    id: frequencyBands
-                    anchors.fill: parent
-                }
-            }
-
-            ////////
-
-            FrequencyGraph {
-                id: frequencyGraph
-                anchors.fill: parent
-
-                anchors.topMargin: -20
-                anchors.leftMargin: -28
-                anchors.rightMargin: -20
-                anchors.bottomMargin: -28
-
-                onPlotAreaUpdated: (x, y, width, height) => {
-                    //console.log("onPlotAreaUpdated")
-                    //console.log("- plotArea x      " + frequencyGraph.plotArea.x)
-                    //console.log("- plotArea y      " + frequencyGraph.plotArea.y)
-                    //console.log("- plotArea width  " + frequencyGraph.plotArea.width)
-                    //console.log("- plotArea height " + frequencyGraph.plotArea.height)
-
-                    frequencyGraphUnderlay.x = x
-                    frequencyGraphUnderlay.y = y
-                    frequencyGraphUnderlay.width = width
-                    frequencyGraphUnderlay.height = height
-
-                    frequencyGraphOverlay.x = x
-                    frequencyGraphOverlay.y = y
-                    frequencyGraphOverlay.width = width
-                    frequencyGraphOverlay.height = height
-                }
-            }
-
-            ////////
-
-            Item {
-                id: frequencyGraphOverlay
-
-                clip: true
-
-                FrequencyGraphLegend {
-                    id: overlayLegend
-                    anchors.fill: parent
-                }
-
-                FrequencyGraphOverlayClickable {
-                    id: overlayClickable
-                    anchors.fill: parent
-                }
-            }
-
-            ////////
+            visible: (actionBar.viewMode === 1)
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -448,7 +498,7 @@ Loader {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
 
-            visible: (actionBar.viewMode === 1)
+            visible: (actionBar.viewMode === 2)
         }
 
         ////////////////////////////////////////////////////////////////////////

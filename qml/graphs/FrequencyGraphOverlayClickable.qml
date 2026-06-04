@@ -61,9 +61,8 @@ Item {
             id: barPeak
             color: Theme.colorRed
 
-            visible: frequencyGraph.showPeak && (ubertooth.peakDbm > barPeak.floorDb)
+            visible: spectrumGraph2D_container.showPeak && (ubertooth.peakDbm > barPeak.floorDb)
 
-            // keep in sync with FrequencyGraph axisRSSI
             property real floorDb: -100
             property real ceilDb: -20
 
