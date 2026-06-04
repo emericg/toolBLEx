@@ -34,7 +34,7 @@ message(STATUS "[PROJECT] CMAKE_CURRENT_SOURCE_DIR  = ${CMAKE_CURRENT_SOURCE_DIR
 
 ################################################################################
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Svg Qml Quick QuickControls2)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Svg Qml Quick QuickControls2 QuickPrivate)
 find_package(Qt6 REQUIRED COMPONENTS Sql Bluetooth Graphs Widgets)
 find_package(Qt6 REQUIRED COMPONENTS LinguistTools)
 
@@ -158,6 +158,7 @@ qt_add_qml_module(${PROJECT_NAME}
         src/DatabaseManager.cpp src/DatabaseManager.h
         src/MenubarManager.cpp src/MenubarManager.h
         src/SettingsManager.cpp src/SettingsManager.h
+        src/ColormapFactory.cpp src/ColormapFactory.h
 )
 
 qt_add_translations(${PROJECT_NAME}
@@ -209,6 +210,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt6::Qml
     Qt6::Quick
     Qt6::QuickControls2
+    Qt6::QuickPrivate
     Qt6::Sql
     Qt6::Bluetooth
     Qt6::Graphs

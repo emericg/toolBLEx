@@ -52,7 +52,9 @@ class Ubertooth: public QObject
     static constexpr int s_rssi_raw_default = -128;
     static constexpr int s_rssi_hole_threshold = -125;
     static constexpr int s_rssi_offset = -52;
-    static constexpr int s_max_stack = 240;
+
+    static constexpr int s_max_stack = 512;
+    static constexpr int s_max_average_window = 256;
 
     bool m_toolsAvailable = false;
     bool m_hardwareAvailable = false;
@@ -91,6 +93,15 @@ Q_SIGNALS:
 private slots:
     void processStarted();
     void processFinished();
+
+    /*!
+     * \brief Process output from the 'ubertooth-specan' utils.
+     *
+     * Usually capture frequency is around:
+     * - ~83 Hz for the default 2402..2480 Mhz WiFi range.
+     * - ~66 Hz for our default 2400..2500 Mhz range.
+     * - ~22 Hz for the full 2300..2600 Mhz range.
+     */
     void processOutput();
 
 public:
@@ -104,6 +115,7 @@ public:
 
     int getPeakFreq() const { return m_peak_freq; }
     int getPeakDbm() const { return m_peak_dbm; }
+
     double getCaptureRate() const { return m_capture_rate; }
 
     Q_INVOKABLE bool checkPath();

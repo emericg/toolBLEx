@@ -26,6 +26,7 @@
 #include <algorithm>
 
 /* ************************************************************************** */
+/* ************************************************************************** */
 
 WaterfallGraph_QuickItem::WaterfallGraph_QuickItem(QQuickItem *parent) : QQuickPaintedItem(parent)
 {
@@ -117,37 +118,50 @@ void WaterfallGraph_QuickItem::setSource(QObject *source)
     }
 }
 
-void WaterfallGraph_QuickItem::setFloorDb(qreal v)
+void WaterfallGraph_QuickItem::setFloorDb(qreal value)
 {
-    if (!qFuzzyCompare(m_floorDb, v))
+    if (!qFuzzyCompare(m_floorDb, value))
     {
-        m_floorDb = v;
+        m_floorDb = value;
         Q_EMIT rangeChanged();
 
         refresh();
     }
 }
 
-void WaterfallGraph_QuickItem::setCeilDb(qreal v)
+void WaterfallGraph_QuickItem::setCeilDb(qreal value)
 {
-    if (!qFuzzyCompare(m_ceilDb, v))
+    if (!qFuzzyCompare(m_ceilDb, value))
     {
-        m_ceilDb = v;
+        m_ceilDb = value;
         Q_EMIT rangeChanged();
 
         refresh();
     }
 }
 
-void WaterfallGraph_QuickItem::setSmooth(bool v)
+void WaterfallGraph_QuickItem::setSmooth(bool value)
 {
-    if (m_smooth != v)
+    if (m_smooth != value)
     {
-        m_smooth = v;
+        m_smooth = value;
         Q_EMIT smoothChanged();
 
         update();
     }
 }
 
+void WaterfallGraph_QuickItem::setColorScheme(int value)
+{
+    qWarning() << "setColorScheme" << value;
+    if (m_colorScheme != value)
+    {
+        m_colorScheme = static_cast<ColormapFactory::Scheme>(value);
+        Q_EMIT colorsChanged();
+
+        ColormapFactory::fillLut(static_cast<ColormapFactory::Scheme>(value), m_lut);
+
+        refresh();
+    }
+}
 /* ************************************************************************** */

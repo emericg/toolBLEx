@@ -236,6 +236,13 @@ void Ubertooth::processStarted()
     {
         qDebug() << "Ubertooth::processStarted()";
         Q_EMIT runningChanged();
+
+        // Update ready?
+        if (!m_hardwareAvailable)
+        {
+            m_hardwareAvailable = true;
+            Q_EMIT availableChanged();
+        }
     }
 }
 
@@ -290,7 +297,7 @@ void Ubertooth::processOutput()
             m_values.push_back(current_values);
         }
 
-        // parsing
+        // Parsing
         const QStringList lines = output.split('\n', Qt::SkipEmptyParts);
         for (const auto &line: lines)
         {

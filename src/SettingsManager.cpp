@@ -166,6 +166,10 @@ bool SettingsManager::readSettings()
             m_ubertooth_samplingFrequency = settings.value("settings/ubertooth_samplingFrequency").toInt();
         if (settings.contains("settings/ubertooth_historyCurves"))
             m_ubertooth_historyCurves = settings.value("settings/ubertooth_historyCurves").toInt();
+        if (settings.contains("settings/ubertooth_graphSelected"))
+            m_ubertooth_graphSelected = settings.value("settings/ubertooth_graphSelected").toInt();
+        if (settings.contains("settings/ubertooth_graphColors"))
+            m_ubertooth_graphColors = settings.value("settings/ubertooth_graphColors").toInt();
 
         status = true;
     }
@@ -219,6 +223,8 @@ bool SettingsManager::writeSettings()
         settings.setValue("settings/ubertooth_freqMax", m_ubertooth_freqMax);
         settings.setValue("settings/ubertooth_samplingFrequency", m_ubertooth_samplingFrequency);
         settings.setValue("settings/ubertooth_historyCurves", m_ubertooth_historyCurves);
+        settings.setValue("settings/ubertooth_graphSelected", m_ubertooth_graphSelected);
+        settings.setValue("settings/ubertooth_graphColors", m_ubertooth_graphColors);
 
         if (settings.status() == QSettings::NoError)
         {
@@ -298,6 +304,10 @@ void SettingsManager::resetSettings()
     Q_EMIT ubertoothSamplingChanged();
     m_ubertooth_historyCurves = 32;
     Q_EMIT ubertoothHistoryChanged();
+    m_ubertooth_graphSelected = 0;
+    Q_EMIT ubertoothGraphChanged();
+    m_ubertooth_graphColors = 0;
+    Q_EMIT ubertoothColorsChanged();
 }
 
 /* ************************************************************************** */
@@ -653,6 +663,26 @@ void SettingsManager::setUbertoothHistoryCurves(const int value)
             writeSettings();
             Q_EMIT ubertoothHistoryChanged();
         }
+    }
+}
+
+void SettingsManager::setUbertoothGraphSelected(const int value)
+{
+    if (m_ubertooth_graphSelected != value)
+    {
+        m_ubertooth_graphSelected = value;
+        writeSettings();
+        Q_EMIT ubertoothGraphChanged();
+    }
+}
+
+void SettingsManager::setUbertoothGraphColors(const int value)
+{
+    if (m_ubertooth_graphColors != value)
+    {
+        m_ubertooth_graphColors = value;
+        writeSettings();
+        Q_EMIT ubertoothColorsChanged();
     }
 }
 

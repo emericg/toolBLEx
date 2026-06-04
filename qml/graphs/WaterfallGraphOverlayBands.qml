@@ -4,51 +4,6 @@ import ComponentLibrary
 
 Item {
     id: overlayFrequencyBands
-    anchors.fill: parent
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    // Frequency axis is vertical: freqMax at the top, freqMin at the bottom
-    // (matches WaterfallGraph_QuickItem, which flips Y so the lowest freq bin is at the bottom)
-    function freqToY(f) {
-        return UtilsNumber.mapNumber_nocheck(f, ubertooth.freqMin, ubertooth.freqMax,
-                                             overlayFrequencyBands.height, 0)
-    }
-
-    // Horizontal guide line at a given frequency, with an upright label
-    component BandLine: Item {
-        id: line
-
-        property real freq: 0
-        property string label: ""
-        property color lineColor: Theme.colorBlue
-        property bool active: true
-
-        x: 0
-        y: overlayFrequencyBands.freqToY(freq) - height / 2
-
-        width: overlayFrequencyBands.width
-        height: 2
-
-        visible: active && (freq >= ubertooth.freqMin) && (freq <= ubertooth.freqMax)
-
-        Rectangle {
-            anchors.fill: parent
-            color: line.lineColor
-            opacity: 0.7
-        }
-        Text {
-            anchors.right: parent.right
-            anchors.rightMargin: 6
-            anchors.verticalCenter: parent.verticalCenter
-
-            visible: (line.label.length > 0)
-            text: line.label
-            textFormat: Text.PlainText
-            font.pixelSize: Theme.fontSizeContentVerySmall
-            color: "white"
-        }
-    }
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -57,7 +12,7 @@ Item {
         BandLine {
             required property int index
             active: actionBar.wifi
-            lineColor: Theme.colorGreen
+            color: Theme.colorGreen
             freq: (index === 13) ? 2484 : 2412 + index * 5
             label: "ch " + (index + 1)
         }
@@ -70,8 +25,7 @@ Item {
             active: (actionBar.bluetooth && actionBar.bluetooth_lowenergy)
             freq: 2402 + index * 2
             // color advertising channels
-            lineColor: (index === 0 || index === 12 || index === 39) ? Theme.colorYellow
-                                                                     : Theme.colorBlue
+            color: (index === 0 || index === 12 || index === 39) ? Theme.colorYellow : Theme.colorBlue
             label: {
                 if (index === 0) return "adv 37"
                 if (index === 12) return "adv 38"
@@ -86,7 +40,7 @@ Item {
         BandLine {
             required property int index
             active: (actionBar.bluetooth && actionBar.bluetooth_classic)
-            lineColor: Theme.colorBlue
+            color: Theme.colorBlue
             freq: 2402 + index
             label: (index % 10 === 0) ? ("ch " + index) : ""
         }
@@ -97,9 +51,53 @@ Item {
         BandLine {
             required property int index
             active: actionBar.zigbee
-            lineColor: Theme.colorYellow
+            color: Theme.colorYellow
             freq: 2405 + index * 5
             label: "ch " + (11 + index)
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    component BandLine: Item {
+        id: control
+
+        property bool active: true
+
+        property real freq: 0
+        property string label
+        property int thickness: 2
+        property color color: Theme.colorBlue
+
+        function freqToY(f) {
+            return UtilsNumber.mapNumber_nocheck(f, ubertooth.freqMin, ubertooth.freqMax,
+                                                 overlayFrequencyBands.height, 0)
+        }
+
+        x: 0
+        y: freqToY(freq) - (height / thickness)
+
+        width: overlayFrequencyBands.width
+        height: thickness
+
+        visible: active && (freq >= ubertooth.freqMin) && (freq <= ubertooth.freqMax)
+
+        Rectangle { // Horizontal guide line at a given frequency
+            anchors.fill: parent
+            color: control.color
+            opacity: 0.5
+        }
+
+        Text { // Label
+            anchors.right: parent.right
+            anchors.rightMargin: 6
+            anchors.verticalCenter: parent.verticalCenter
+
+            visible: (control.label.length > 0)
+            text: control.label
+            textFormat: Text.PlainText
+            font.pixelSize: Theme.fontSizeContentVerySmall
+            color: "white"
         }
     }
 

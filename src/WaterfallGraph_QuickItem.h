@@ -51,6 +51,7 @@ class WaterfallGraph_QuickItem: public QQuickPaintedItem
     Q_PROPERTY(qreal floorDb READ floorDb WRITE setFloorDb NOTIFY rangeChanged)
     Q_PROPERTY(qreal ceilDb READ ceilDb WRITE setCeilDb NOTIFY rangeChanged)
     Q_PROPERTY(bool smooth READ smooth WRITE setSmooth NOTIFY smoothChanged)
+    Q_PROPERTY(int colorScheme READ colorScheme WRITE setColorScheme NOTIFY colorsChanged)
 
     QPointer <QObject> m_source;
     Ubertooth *m_ubertooth = nullptr;
@@ -60,6 +61,7 @@ class WaterfallGraph_QuickItem: public QQuickPaintedItem
     bool m_smooth = false;      //!< bilinear scaling vs crisp pixel blocks
 
     QImage m_image;
+    int m_colorScheme = 0;
     QRgb m_lut[256];
 
     void buildLut();
@@ -68,6 +70,7 @@ Q_SIGNALS:
     void sourceChanged();
     void rangeChanged();
     void smoothChanged();
+    void colorsChanged();
 
 public:
     explicit WaterfallGraph_QuickItem(QQuickItem *parent = nullptr);
@@ -85,6 +88,9 @@ public:
 
     bool smooth() const { return m_smooth; }
     void setSmooth(bool v);
+
+    int colorScheme() const { return m_colorScheme; }
+    void setColorScheme(int scheme);
 
     //! Rebuild the image from the source's latest data and request a repaint.
     Q_INVOKABLE void refresh();

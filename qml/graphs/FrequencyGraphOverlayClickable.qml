@@ -139,6 +139,7 @@ Item {
             anchors.right: parent.right
             height: control.thickness
             color: control.color
+            opacity: 0.66
         }
         Rectangle {
             id: v
@@ -146,6 +147,7 @@ Item {
             anchors.bottom: parent.bottom
             width: control.thickness
             color: control.color
+            opacity: 0.66
         }
 /*
         Rectangle { // dot marker

@@ -26,6 +26,8 @@ GraphsView {
     property var graphCurrent
     property var graphsHistory: []
 
+    property int historyCurvesCount: SettingsManager.ubertooth_historyCurves
+
     ////////////////////////////////////////////////////////////////////////////
 
     signal plotAreaUpdated(var x, var y, var width, var height)

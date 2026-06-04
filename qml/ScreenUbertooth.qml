@@ -75,14 +75,6 @@ Loader {
             property bool wifi_n: false
             property bool zigbee: false
 
-            // supports our 3D spectrum graph (needs Qt 6.8+)
-            property bool support3d: {
-                let p = utilsApp.qtVersion().split('.')
-                let maj = parseInt(p[0]) || 0
-                let min = parseInt(p[1]) || 0
-                return (maj > 6) || (maj === 6 && min >= 8)
-            }
-
             ////////
 
             Row { // left
@@ -90,6 +82,8 @@ Loader {
                 anchors.leftMargin: 12
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 8
+
+                ////
 
                 SelectorMenuColorful {
                     height: 28
@@ -100,6 +94,7 @@ Loader {
                         ListElement { idx: 0; txt: qsTr("spectrum"); src: ""; sz: 16; }
                         ListElement { idx: 1; txt: qsTr("waterfall"); src: ""; sz: 16; }
                     }
+
                     currentSelection: actionBar.viewMode
                     onMenuSelected: (index) => {
                         actionBar.viewMode = index
@@ -345,8 +340,9 @@ Loader {
                 ButtonFlat {
                     height: 30
                     color: ubertooth.hardwareAvailable ? Theme.colorSuccess: Theme.colorWarning
-                    text: ubertooth.hardwareAvailable ? qsTr("hardware ready") : qsTr("hardware not ready")
-                    source: ubertooth.hardwareAvailable ? "qrc:/IconLibrary/material-symbols/check_circle.svg" : ""
+                    text: ubertooth.hardwareAvailable ? qsTr("hardware ready") : qsTr("hardware busy?")
+                    source: ubertooth.hardwareAvailable ? "qrc:/IconLibrary/material-symbols/check_circle.svg"
+                                                        : "qrc:/IconLibrary/material-icons/outlined/hourglass_empty.svg"
                     onClicked: ubertooth.checkUbertooth()
                 }
             }

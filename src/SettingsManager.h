@@ -91,6 +91,8 @@ class SettingsManager: public QObject
     Q_PROPERTY(int ubertooth_freqMax READ getUbertoothFreqMax WRITE setUbertoothFreqMax NOTIFY ubertoothFreqChanged)
     Q_PROPERTY(int ubertooth_samplingFreq READ getUbertoothSamplingFreq WRITE setUbertoothSamplingFreq NOTIFY ubertoothSamplingChanged)
     Q_PROPERTY(int ubertooth_historyCurves READ getUbertoothHistoryCurves WRITE setUbertoothHistoryCurves NOTIFY ubertoothHistoryChanged)
+    Q_PROPERTY(int ubertooth_graphSelected READ getUbertoothGraphSelected WRITE setUbertoothGraphSelected NOTIFY ubertoothGraphChanged)
+    Q_PROPERTY(int ubertooth_graphColors READ getUbertoothGraphColors WRITE setUbertoothGraphColors NOTIFY ubertoothColorsChanged)
 
     bool m_firstlaunch = true;
 
@@ -135,6 +137,8 @@ class SettingsManager: public QObject
     int m_ubertooth_freqMax = 2500;
     int m_ubertooth_samplingFrequency = 60;
     int m_ubertooth_historyCurves = 32;
+    int m_ubertooth_graphSelected = 0;
+    int m_ubertooth_graphColors = 0;
 
     // Singleton
     static SettingsManager *instance;
@@ -166,10 +170,13 @@ Q_SIGNALS:
     void preferredAdapterScanChanged();
     void preferredAdapterAdvChanged();
     void exportDirectoryChanged();
+
     void ubertoothPathChanged();
     void ubertoothFreqChanged();
     void ubertoothSamplingChanged();
     void ubertoothHistoryChanged();
+    void ubertoothGraphChanged();
+    void ubertoothColorsChanged();
 
 public:
     static SettingsManager *getInstance();
@@ -261,6 +268,13 @@ public:
     void setUbertoothSamplingFreq(const int value);
     int getUbertoothHistoryCurves() const { return m_ubertooth_historyCurves; }
     void setUbertoothHistoryCurves(const int value);
+    int getUbertoothGraphSelected() const { return m_ubertooth_graphSelected; }
+    void setUbertoothGraphSelected(const int value);
+    int getUbertoothGraphColors() const { return m_ubertooth_graphColors; }
+    void setUbertoothGraphColors(const int value);
+
+    Q_PROPERTY(int ubertooth_graphSelected READ getUbertoothGraphSelected WRITE setUbertoothGraphSelected NOTIFY ubertoothGraphChanged)
+    Q_PROPERTY(int ubertooth_graphColors READ getUbertoothGraphColors WRITE setUbertoothGraphColors NOTIFY ubertoothColorsChanged)
 
     ////
 
