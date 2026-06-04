@@ -327,4 +327,51 @@ Rectangle {
     }
 
     ////////////////
+
+    Row {
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.margins: 12
+        spacing: 12
+
+        visible: (deviceManager.adaptersCount > 1)
+
+        SquareButtonClear { // scanning
+            property bool selected: (SettingsManager.preferredAdapter_scan === modelData.address)
+
+            tooltipText: qsTr("Default for scanning")
+            color: selected ? Theme.colorPrimary : Theme.colorGrey
+            source: selected ? "qrc:/IconLibrary/material-symbols/check_circle-fill.svg"
+                             : "qrc:/IconLibrary/material-symbols/check_circle.svg"
+
+            onClicked: {
+                if (selected) {
+                    SettingsManager.preferredAdapter_scan = ""
+                } else {
+                    SettingsManager.preferredAdapter_scan = modelData.address
+                    //deviceManager.disableBluetooth()
+                }
+            }
+        }
+
+        SquareButtonClear { // advertising
+            property bool selected: (SettingsManager.preferredAdapter_adv === modelData.address)
+
+            tooltipText: qsTr("Default for advertising")
+            color: selected ? Theme.colorPrimary : Theme.colorGrey
+            source: selected ? "qrc:/IconLibrary/material-symbols/check_circle-fill.svg"
+                             : "qrc:/IconLibrary/material-symbols/check_circle.svg"
+
+            onClicked: {
+                if (selected) {
+                    SettingsManager.preferredAdapter_adv = ""
+                } else {
+                    SettingsManager.preferredAdapter_adv = modelData.address
+                    //deviceManager.disableBluetooth()
+                }
+            }
+        }
+    }
+
+    ////////////////
 }

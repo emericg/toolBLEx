@@ -43,7 +43,7 @@
 [-] r/w/n: red badges on errors?
 [ ] write data: explicit max size
 
-[-] select preferred adapter
+[x] select preferred adapter (only works on linux?)
 [-] sanitize old adapters
 [ ] graphs: unify min/max RSSI values (floorDb, ceilDb)
 [ ] graphs: change clickable marker text position depending on its position onscreen

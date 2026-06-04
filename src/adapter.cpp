@@ -124,6 +124,20 @@ Adapter::Adapter(const QBluetoothHostInfo &adapterInfo, QObject *parent) : QObje
 
         if (!m_bluetooth_version.isEmpty()) break;
     }
+
+    // other interesting commands:
+    // bluetoothctl show
+    // busctl introspect org.bluez /org/bluez/hci0
+
+#elif defined(Q_OS_MACOS)
+
+    // other interesting commands:
+    // system_profiler -detailLevel full SPBluetoothDataType
+
+#elif defined(Q_OS_WINDOWS)
+
+    // ?
+
 #endif // defined(Q_OS_LINUX)
 }
 
