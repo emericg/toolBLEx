@@ -80,7 +80,6 @@ Rectangle {
                 height: 48
                 sourceSize: 32
 
-                enabled: deviceManager.bluetooth
                 highlightMode: (opacity !== 1) ? "color" : "off"
                 iconColor: Theme.colorHeaderContent
                 source: (deviceManager.scanningPaused) ?
@@ -102,6 +101,12 @@ Rectangle {
                     return 0.4
                 }
 
+                enabled: {
+                    if (appContent.state === "Scanner" || appContent.state === "Advertiser")
+                        return deviceManager.bluetooth
+                    return true
+                }
+
                 onClicked: {
                     if (appContent.state === "Scanner") deviceManager.scanDevices_start()
                     if (appContent.state === "Advertiser") deviceManager.advertise_start()
@@ -115,7 +120,6 @@ Rectangle {
                 height: 48
                 sourceSize: 32
 
-                enabled: deviceManager.bluetooth
                 highlightMode: (opacity !== 1) ? "color" : "off"
                 iconColor: Theme.colorHeaderContent
                 source: "qrc:/IconLibrary/material-symbols/media/stop-fill.svg"
@@ -125,6 +129,12 @@ Rectangle {
                     if (appContent.state === "Advertiser" && !deviceManager.advertising) return 1
                     if (appContent.state === "Ubertooth" && !ubertooth.running) return 1
                     return 0.4
+                }
+
+                enabled: {
+                    if (appContent.state === "Scanner" || appContent.state === "Advertiser")
+                        return deviceManager.bluetooth
+                    return true
                 }
 
                 onClicked: {

@@ -63,6 +63,10 @@ bool Ubertooth::checkPath()
 {
     bool status = false;
 
+#if defined(Q_OS_WINDOWS)
+    return status;
+#endif
+
     SettingsManager *sm = SettingsManager::getInstance();
     QString path_specscan = sm->getUbertoothPath();
 
@@ -126,6 +130,10 @@ bool Ubertooth::checkUbertooth()
 
     bool status = false;
 
+#if defined(Q_OS_WINDOWS)
+    return status;
+#endif
+
     QProcess process;
     process.start(m_path_util, QStringList("-v"), QIODevice::ReadOnly);
     process.waitForFinished(8000);
@@ -172,6 +180,10 @@ void Ubertooth::startWork()
 
     if (m_path_specan.isEmpty()) return;
     if (m_childProcess) return;
+
+#if defined(Q_OS_WINDOWS)
+    return;
+#endif
 
     m_ring_head = 0;
     m_ring_count = 0;

@@ -36,6 +36,7 @@
 [x] macOS BLE permission
 [x] new permission system+
 [x] switch from Qt Charts to Qt Graphs
+[ ] auto theme switch
 
 [x] textfields: double click to select
 [x] keyboard navigation, move elevators
@@ -43,7 +44,7 @@
 [-] r/w/n: red badges on errors?
 [ ] write data: explicit max size
 
-[x] select preferred adapter (only works on linux?)
+[x] select preferred adapter (only works on linux, OS limitations...)
 [-] sanitize old adapters
 [ ] graphs: unify min/max RSSI values (floorDb, ceilDb)
 [ ] graphs: change clickable marker text position depending on its position onscreen
