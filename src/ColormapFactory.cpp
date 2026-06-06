@@ -94,7 +94,7 @@ Ramp rampFor(ColormapFactory::Scheme scheme)
 
 /* ************************************************************************** */
 
-void ColormapFactory::fillLut(const Scheme scheme, QRgb lut[256])
+void ColormapFactory::fillLut(const Scheme scheme, QRgb lut[256], double floorDb, double ceilDb)
 {
     const Ramp ramp = rampFor(scheme);
 
@@ -123,7 +123,7 @@ void ColormapFactory::fillLut(const Scheme scheme, QRgb lut[256])
 
 /* ************************************************************************** */
 
-QQuickGradient *ColormapFactory::getGradient(const Scheme scheme)
+QQuickGradient *ColormapFactory::getGradient(const Scheme scheme, double floorDb, double ceilDb)
 {
     QQuickGradient *g = new QQuickGradient();
     QQmlListProperty<QQuickGradientStop> stops = g->stops();

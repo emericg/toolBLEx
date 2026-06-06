@@ -142,8 +142,8 @@ GraphsView {
         id: axisRSSI
         visible: true
 
-        min: -100
-        max: -20
+        min: actionBar.minRSSI
+        max: actionBar.maxRSSI
         tickInterval: 20
 
         labelsVisible: true

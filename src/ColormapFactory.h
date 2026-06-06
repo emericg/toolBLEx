@@ -41,7 +41,7 @@ class QQuickGradient;
  * Stop positions assume the magnitude axis of our graphs spans -100..-20 dB, i.e. position = (value + 100) / 80.
  * Every color scheme keeps a thin dark base at the bottom so the ~-90 dB noise floor stays muted and signals climb into vivid color.
  *
- * Exposed to QML as a singleton: ColormapFactory.getGradient(ColormapFactory.Inferno)
+ * Exposed to QML as a singleton: ColormapFactory.getGradient(ColormapFactory.Inferno, -100, -20)
  */
 class ColormapFactory: public QObject
 {
@@ -67,7 +67,7 @@ public:
      * \param[in] scheme: The choosen ColormapFactory::Scheme.
      * \param[out] lut: A 256-entry LUT generated from the choosen scheme.
      */
-    static void fillLut(const Scheme scheme, QRgb lut[256]);
+    static void fillLut(const Scheme scheme, QRgb lut[256], double floorDb = -100.0, double ceilDb = -20.0);
 
     /*!
      * \brief Build a QML Gradient for GraphsTheme.baseGradients (used by the 3D surface graph).
@@ -83,7 +83,7 @@ public:
      *   return type without every consumer of this header having to see the private definition.
      * - The returned object is handed to the QML engine (JavaScriptOwnership).
      */
-    Q_INVOKABLE QQuickGradient *getGradient(const Scheme scheme);
+    Q_INVOKABLE QQuickGradient *getGradient(const Scheme scheme, double floorDb = -100.0, double ceilDb = -20.0);
 };
 
 /* ************************************************************************** */

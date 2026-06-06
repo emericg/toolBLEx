@@ -65,6 +65,10 @@ Loader {
             // view mode: 0 = spectrum (2D line graph), 2 = spectrum (3D surface graph), 3 = waterfall (2D heatmap)
             property int viewMode: 0
 
+            // axis control: floorDb/ceilDb
+            property int minRSSI: -100
+            property int maxRSSI: -20
+
             // visualize known spectrum bands
             property bool bluetooth: false
             property bool bluetooth_classic: false

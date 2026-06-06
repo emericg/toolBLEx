@@ -8,8 +8,8 @@ WaterfallGraph_QuickItem {
     dataSource: ubertooth
     maxDepth: 512
 
-    floorDb: -100
-    ceilDb: -20
+    floorDb: actionBar.minRSSI
+    ceilDb: actionBar.maxRSSI
     smooth: false
 
     Connections {

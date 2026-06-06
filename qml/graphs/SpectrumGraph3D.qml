@@ -24,7 +24,7 @@ Item {
         dataSource: ubertooth
         maxDepth: 320
 
-        floorDb: -100
+        floorDb: actionBar.minRSSI
 
         timeSmoothing: 0    // box-blur radius along time (sweeps); 0 = raw
         freqSmoothing: 0    // box-blur radius along frequency (bins); 0 = raw
@@ -67,7 +67,8 @@ Item {
             colorScheme: GraphsTheme.ColorScheme.Light
             colorStyle: GraphsTheme.ColorStyle.RangeGradient
 
-            baseGradients: [ ColormapFactory.getGradient(spectrumGraph3D_container.colorScheme) ]
+            baseGradients: [ ColormapFactory.getGradient(spectrumGraph3D_container.colorScheme,
+                                                         actionBar.minRSSI, actionBar.maxRSSI) ]
 
             gridVisible: true
             grid.mainColor: Theme.colorSubText
@@ -98,8 +99,8 @@ Item {
 
             Component.onCompleted: {
                 // set min before max to avoid a transient "max <= min" warning at init
-                min = -100
-                max = -20
+                min = actionBar.minRSSI
+                max = actionBar.maxRSSI
             }
         }
         axisZ: Value3DAxis {

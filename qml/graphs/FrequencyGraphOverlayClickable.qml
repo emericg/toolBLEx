@@ -20,7 +20,7 @@ Item {
             if (mouse.button === Qt.LeftButton) {
                 if (lastMouse1 && lastMouse1 === Qt.point(mouse.x, mouse.y)) {
                     lastMouse1 = null
-                    group1.visible = false
+                    leftMarker.visible = false
                 } else {
                     lastMouse1 = Qt.point(mouse.x, mouse.y)
                     lastMouse2 = null
@@ -29,7 +29,7 @@ Item {
             } else if (mouse.button === Qt.RightButton) {
                 if (lastMouse2 && lastMouse2 === Qt.point(mouse.x, mouse.y)) {
                     lastMouse2 = null
-                    group2.visible = false
+                    rightMarker.visible = false
                 } else {
                     lastMouse1 = null
                     lastMouse2 = Qt.point(mouse.x, mouse.y)
@@ -47,33 +47,30 @@ Item {
 
         ////////
 
-        ClickableLine {
-            id: group1
+        ClickableMarker {
+            id: leftMarker
             color: Theme.colorYellow
         }
 
-        ClickableLine {
-            id: group2
+        ClickableMarker {
+            id: rightMarker
             color: Theme.colorOrange
         }
 
-        ClickableLine {
+        ClickableMarker {
             id: barPeak
             color: Theme.colorRed
 
-            visible: spectrumGraph2D_container.showPeak && (ubertooth.peakDbm > barPeak.floorDb)
-
-            property real floorDb: -100
-            property real ceilDb: -20
+            visible: spectrumGraph2D_container.showPeak && (ubertooth.peakDbm > actionBar.minRSSI)
 
             textFreq: qsTr("[peak: %1 MHz · %2 dBm]").arg(ubertooth.peakFreq).arg(ubertooth.peakDbm)
 
-            posV: UtilsNumber.mapNumber_nocheck(ubertooth.peakFreq,
+            posX: UtilsNumber.mapNumber_nocheck(ubertooth.peakFreq,
                                                 ubertooth.freqMin, ubertooth.freqMax,
                                                 0, overlayClickable.width).toFixed(0) - 1
 
-            posH: UtilsNumber.mapNumber_nocheck(ubertooth.peakDbm,
-                                                barPeak.ceilDb, barPeak.floorDb,
+            posY: UtilsNumber.mapNumber_nocheck(ubertooth.peakDbm,
+                                                actionBar.maxRSSI, actionBar.minRSSI,
                                                 0, overlayClickable.height).toFixed(0) - 1
         }
 
@@ -83,7 +80,7 @@ Item {
     ////////////////////////////////////////////////////////////////////////////
 
     function hasIndicators() {
-        return (group1.visible || group2.visible)
+        return (leftMarker.visible || rightMarker.visible)
     }
 
     function moveIndicator(mouse, idx) {
@@ -91,30 +88,30 @@ Item {
         var rssitxt = UtilsNumber.mapNumber(mouse.y, 0, overlayClickable.height, -20, -100).toFixed(0)
 
         if (idx === 1) {
-            group1.visible = true
-            group1.posH = mouse.y
-            group1.posV = mouse.x
-            group1.textFreq = qsTr("freq: ") + freqtxt + " MHz"
-            group1.textRSSI = "RSSI: " + rssitxt + " dB"
+            leftMarker.visible = true
+            leftMarker.posY = mouse.y
+            leftMarker.posX = mouse.x
+            leftMarker.textFreq = qsTr("freq: ") + freqtxt + " MHz"
+            leftMarker.textRSSI = "RSSI: " + rssitxt + " dB"
         } else if (idx === 2) {
-            group2.visible = true
-            group2.posH = mouse.y
-            group2.posV = mouse.x
-            group2.textFreq = qsTr("freq: ") + freqtxt + " MHz"
-            group2.textRSSI = "RSSI: " + rssitxt + " dB"
+            rightMarker.visible = true
+            rightMarker.posY = mouse.y
+            rightMarker.posX = mouse.x
+            rightMarker.textFreq = qsTr("freq: ") + freqtxt + " MHz"
+            rightMarker.textRSSI = "RSSI: " + rssitxt + " dB"
         }
     }
 
     function resetIndicators() {
-        group1.visible = false
-        group2.visible = false
+        leftMarker.visible = false
+        rightMarker.visible = false
         clickableGraphArea.lastMouse1 = null
         clickableGraphArea.lastMouse2 = null
     }
 
     ////////////////////////////////////////////////////////////////////////////
 
-    component ClickableLine: Item {
+    component ClickableMarker: Item {
         id: control
 
         anchors.fill: parent
@@ -124,8 +121,8 @@ Item {
         property int thickness: 2
         property color color: Theme.colorPrimary
 
-        property alias posH: h.y
-        property alias posV: v.x
+        property alias posX: v.x
+        property alias posY: h.y
 
         property alias textFreq: lfreq.text
         property alias textRSSI: lrssi.text
@@ -161,22 +158,23 @@ Item {
         ////
 
         Rectangle { // background
-            anchors.fill: col
+            anchors.fill: columnContent
             anchors.margins: -4
 
             visible: true
-            opacity: 0.08
+            opacity: 0.1
             color: control.color
         }
 
         ////
 
         Column {
-            id: col
+            id: columnContent
+
             anchors.left: v.right
-            anchors.leftMargin: 8
-            anchors.bottom: h.top
-            anchors.bottomMargin: 8
+            anchors.leftMargin: (posX > (control.width / 2)) ? - width - 8 - 2 : 8
+            anchors.bottom: h.bottom
+            anchors.bottomMargin: (posY < (control.height / 2)) ? - height - 8 - 2 : 8
 
             Text {
                 id: lfreq

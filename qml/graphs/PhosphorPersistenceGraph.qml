@@ -7,9 +7,9 @@ PhosphorPersistenceGraph_QuickItem {
 
     dataSource: ubertooth
 
-    floorDb: -100
-    ceilDb: -20
-    decay: 24       // 1..255, higher = shorter persistence trails
+    floorDb: actionBar.minRSSI
+    ceilDb: actionBar.maxRSSI
+    decay: 24 // 1..255, higher = shorter persistence trails
 
     Connections {
         target: ubertooth

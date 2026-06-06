@@ -46,8 +46,8 @@
 
 [x] select preferred adapter (only works on linux, OS limitations...)
 [-] sanitize old adapters
-[ ] graphs: unify min/max RSSI values (floorDb, ceilDb)
-[ ] graphs: change clickable marker text position depending on its position onscreen
+[x] graphs: unify min/max RSSI values (floorDb, ceilDb)
+[x] graphs: change clickable marker text position depending on its position onscreen
 
 ## TODO # v1+
 
