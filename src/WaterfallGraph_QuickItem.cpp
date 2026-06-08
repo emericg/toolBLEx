@@ -33,7 +33,8 @@
 WaterfallGraph_QuickItem::WaterfallGraph_QuickItem(QQuickItem *parent) : QQuickPaintedItem(parent)
 {
     m_colorScheme = SettingsManager::getInstance()->getUbertoothGraphColors();
-    ColormapFactory::fillLut(static_cast<ColormapFactory::Scheme>(m_colorScheme), m_lut);
+
+    ColormapFactory::fillLut(static_cast<ColormapFactory::Scheme>(m_colorScheme), m_lut, m_floorDb, m_ceilDb);
 }
 
 /* ************************************************************************** */
@@ -115,6 +116,9 @@ void WaterfallGraph_QuickItem::setFloorDb(qreal value)
         m_floorDb = value;
         Q_EMIT rangeChanged();
 
+        ColormapFactory::fillLut(static_cast<ColormapFactory::Scheme>(m_colorScheme),
+                                 m_lut, m_floorDb, m_ceilDb);
+
         refresh();
     }
 }
@@ -125,6 +129,9 @@ void WaterfallGraph_QuickItem::setCeilDb(qreal value)
     {
         m_ceilDb = value;
         Q_EMIT rangeChanged();
+
+        ColormapFactory::fillLut(static_cast<ColormapFactory::Scheme>(m_colorScheme),
+                                 m_lut, m_floorDb, m_ceilDb);
 
         refresh();
     }
@@ -148,7 +155,8 @@ void WaterfallGraph_QuickItem::setColorScheme(int value)
         m_colorScheme = static_cast<ColormapFactory::Scheme>(value);
         Q_EMIT colorsChanged();
 
-        ColormapFactory::fillLut(static_cast<ColormapFactory::Scheme>(value), m_lut);
+        ColormapFactory::fillLut(static_cast<ColormapFactory::Scheme>(m_colorScheme),
+                                 m_lut, m_floorDb, m_ceilDb);
 
         refresh();
     }

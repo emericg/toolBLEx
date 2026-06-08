@@ -38,8 +38,9 @@ class QQuickGradient;
  * The 3D surface graph (SpectrumGraph3D.qml) needs a QML Gradient for its GraphsTheme.baseGradients.
  * Both are generated here from the same stop tables, so a color scheme is defined in exactly one place.
  *
- * Stop positions assume the magnitude axis of our graphs spans -100..-20 dB, i.e. position = (value + 100) / 80.
- * Every color scheme keeps a thin dark base at the bottom so the ~-90 dB noise floor stays muted and signals climb into vivid color.
+ * Each scheme is split into two parts:
+ * - a muted "floor" sub-ramp over [floorDb .. noiseFloorDb] to keeps the noise floor darker
+ * - a vivid "signal" sub-ramp over [noiseFloorDb .. ceilDb] with punchy colors.
  *
  * Exposed to QML as a singleton: ColormapFactory.getGradient(ColormapFactory.Inferno, -100, -20)
  */
@@ -66,12 +67,16 @@ public:
      * \brief Fill a 256-entry LUT by interpolating the color scheme (used by the 'waterfall' graph).
      * \param[in] scheme: The choosen ColormapFactory::Scheme.
      * \param[out] lut: A 256-entry LUT generated from the choosen scheme.
+     * \param[in] floorDb: magnitude mapped to the low end of the colormap (LUT index 0).
+     * \param[in] ceilDb: magnitude mapped to the high end of the colormap (LUT index 255).
      */
     static void fillLut(const Scheme scheme, QRgb lut[256], double floorDb = -100.0, double ceilDb = -20.0);
 
     /*!
      * \brief Build a QML Gradient for GraphsTheme.baseGradients (used by the 3D surface graph).
      * \param scheme: The choosen ColormapFactory::Scheme.
+     * \param floorDb: magnitude mapped to gradient position 0.0 (the axis min).
+     * \param ceilDb: magnitude mapped to gradient position 1.0 (the axis max).
      * \return QQuickGradient with stops from the choosen scheme.
      *
      * Notes about QQuickGradient:

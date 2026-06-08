@@ -22,7 +22,7 @@
 #include "ColormapFactory.h"
 
 #include <QColor>
-#include <QVarLengthArray>
+#include <QList>
 #include <QQmlEngine>
 
 #include <QtQuick/private/qquickrectangle_p.h>
@@ -34,46 +34,58 @@
 
 namespace {
 
-// A colormap stop: normalized position (0..1) -> color (hex string).
+// Absolute noise-floor level (dBm) the color schemes are anchored to.
+// Magnitudes below this stay in the muted "floor" sub-ramp;
+// above it they climb into the vivid "signal" sub-ramp.
+constexpr double s_noiseFloorDb = -90.0;
+
+// A colormap stop.
+// - position -1 = floorDb (bottom of the muted dark base)
+// - position  0 = noiseFloorDb
+// - position +1 = ceilDb (top of the vivid signal ramp),
 struct Stop { double pos; const char *hex; };
 
-const Stop kViridis[] = { // VIRIDIS (perceptually uniform, colorblind-safe, calm)
-    { 0.00, "#1e0a2e" },  // -100, darkened floor
-    { 0.14, "#440154" },  // ~-89, noise floor (purple)
-    { 0.36, "#3b528b" },  // ~-71, blue
-    { 0.58, "#21918c" },  // ~-54, teal
-    { 0.80, "#5ec962" },  // ~-36, green
-    { 1.00, "#fde725" },  //  -20, yellow
+// VIRIDIS (perceptually uniform, colorblind-safe -- nudged a touch more vivid)
+const Stop kViridis[] = {
+    { -1.000, "#1e0a2e" },  // floor, deep base (dark)
+    {  0.000, "#440154" },  // noise floor (purple)
+    {  0.256, "#375ea3" },  // blue (slightly more saturated)
+    {  0.512, "#16a097" },  // teal (brighter)
+    {  0.767, "#5fd552" },  // green (more vivid)
+    {  1.000, "#fdee18" },  // yellow (a touch punchier)
 };
 
-const Stop kTurbo[] = {   // TURBO (Google's improved jet; punchy, perceptually smooth)
-    { 0.00, "#1a0e2e" },  // -100, darkened floor
-    { 0.14, "#30123b" },  // ~-89, noise floor (dark purple)
-    { 0.30, "#4467f4" },  // ~-76, blue
-    { 0.45, "#1bc7d4" },  // ~-64, cyan
-    { 0.58, "#28ec8b" },  // ~-54, green
-    { 0.72, "#9bfb4d" },  // ~-42, yellow-green
-    { 0.85, "#fdab32" },  // ~-32, orange
-    { 1.00, "#d23105" },  //  -20, red
+// TURBO (Google's improved jet; punchy, perceptually smooth)
+const Stop kTurbo[] = {
+    { -1.000, "#1a0e2e" },  // floor, deep base (dark)
+    {  0.000, "#30123b" },  // noise floor (dark purple)
+    {  0.186, "#4467f4" },  // blue
+    {  0.360, "#1bc7d4" },  // cyan
+    {  0.512, "#28ec8b" },  // green
+    {  0.674, "#9bfb4d" },  // yellow-green
+    {  0.826, "#fdab32" },  // orange
+    {  1.000, "#d23105" },  // red
 };
 
-const Stop kInferno[] = { // INFERNO (hand-tuned, punchy thermal)
-    { 0.00, "#23263a" },  // -100, empty/deep noise (dark)
-    { 0.12, "#3a2f6e" },  // ~-89, noise floor (dark violet)
-    { 0.32, "#7d2bc4" },  // ~-74, vivid violet
-    { 0.52, "#e01d74" },  // ~-58, vivid magenta
-    { 0.74, "#ff7a14" },  // ~-41, vivid orange
-    { 1.00, "#ffe61f" },  //  -20, brightest yellow
+// INFERNO (hand-tuned, punchy thermal)
+const Stop kInferno[] = {
+    { -1.000, "#23263a" },  // floor, deep base (dark)
+    {  0.000, "#3a2f6e" },  // noise floor (dark violet)
+    {  0.227, "#7d2bc4" },  // vivid violet
+    {  0.455, "#e01d74" },  // vivid magenta
+    {  0.705, "#ff7a14" },  // vivid orange
+    {  1.000, "#ffe61f" },  // brightest yellow
 };
 
-const Stop kGqrx[] = {    // GQRX (black floor > blue > cyan > yellow > red > white hot)
-    { 0.00, "#111111" },  // -100, dark floor
-    { 0.14, "#00004a" },  // ~-89, noise floor (dark blue)
-    { 0.32, "#0000ff" },  // ~-74, blue
-    { 0.50, "#00ffff" },  // ~-60, cyan
-    { 0.68, "#ffff00" },  // ~-45, yellow
-    { 0.85, "#ff0000" },  // ~-32, red
-    { 1.00, "#ffffff" },  //  -20, white hot
+// GQRX (black floor > blue > cyan > yellow > red > white hot)
+const Stop kGqrx[] = {
+    { -1.000, "#111111" },  // floor, deep base (dark)
+    {  0.000, "#00004a" },  // noise floor (dark blue)
+    {  0.209, "#0000ff" },  // blue
+    {  0.419, "#00ffff" },  // cyan
+    {  0.628, "#ffff00" },  // yellow
+    {  0.826, "#ff0000" },  // red
+    {  1.000, "#ffffff" },  // white hot
 };
 
 struct Ramp { const Stop *stops; int count; };
@@ -86,8 +98,34 @@ Ramp rampFor(ColormapFactory::Scheme scheme)
         case ColormapFactory::Inferno: return { kInferno, int(std::size(kInferno)) };
         case ColormapFactory::Gqrx:    return { kGqrx,    int(std::size(kGqrx)) };
         case ColormapFactory::Viridis: return { kViridis, int(std::size(kViridis)) };
-        default: return { kViridis, int(std::size(kViridis)) };
+
+        default:                       return { kViridis, int(std::size(kViridis)) };
     }
+}
+
+// A resolved stop in real axis-normalized space: position (0..1 over [floorDb..ceilDb]) -> color.
+struct BuiltStop { double pos; QColor color; };
+
+// Composite a scheme onto the live axis range.
+QList<BuiltStop> buildStops(ColormapFactory::Scheme scheme, double floorDb, double ceilDb)
+{
+    const Ramp ramp = rampFor(scheme);
+
+    const double span = ceilDb - floorDb;
+    double knee = (span != 0.0) ? (s_noiseFloorDb - floorDb) / span : 0.0;
+    knee = std::clamp(knee, 0.0, 1.0);
+
+    QList<BuiltStop> out;
+    out.reserve(ramp.count);
+
+    for (int i = 0; i < ramp.count; i++)
+    {
+        const double p = ramp.stops[i].pos;
+        const double norm = knee + p * (p >= 0.0 ? (1.0 - knee) : knee);
+        out.push_back({ std::clamp(norm, 0.0, 1.0), QColor(QLatin1String(ramp.stops[i].hex)) });
+    }
+
+    return out;
 }
 
 } // namespace
@@ -96,22 +134,21 @@ Ramp rampFor(ColormapFactory::Scheme scheme)
 
 void ColormapFactory::fillLut(const Scheme scheme, QRgb lut[256], double floorDb, double ceilDb)
 {
-    const Ramp ramp = rampFor(scheme);
-
-    QVarLengthArray<QColor, 8> cols(ramp.count);
-    for (int i = 0; i < ramp.count; i++) cols[i] = QColor(QLatin1String(ramp.stops[i].hex));
+    const QList<BuiltStop> stops = buildStops(scheme, floorDb, ceilDb);
+    const int count = stops.size();
+    if (count <= 0) return;
 
     for (int i = 0; i < 256; i++)
     {
         const double t = i / 255.0;
 
         int hi = 1;
-        while (hi < ramp.count - 1 && ramp.stops[hi].pos < t) hi++;
-        const QColor &aa = cols[hi - 1];
-        const QColor &bb = cols[hi];
+        while (hi < count - 1 && stops[hi].pos < t) hi++;
+        const QColor &aa = stops[hi - 1].color;
+        const QColor &bb = stops[hi].color;
 
-        const double span = (ramp.stops[hi].pos - ramp.stops[hi - 1].pos);
-        const double f = (span > 0.0) ? std::clamp((t - ramp.stops[hi - 1].pos) / span, 0.0, 1.0) : 0.0;
+        const double span = (stops[hi].pos - stops[hi - 1].pos);
+        const double f = (span > 0.0) ? std::clamp((t - stops[hi - 1].pos) / span, 0.0, 1.0) : 0.0;
 
         const int r = int(aa.red()   + (bb.red()   - aa.red())   * f + 0.5);
         const int g = int(aa.green() + (bb.green() - aa.green()) * f + 0.5);
@@ -128,14 +165,14 @@ QQuickGradient *ColormapFactory::getGradient(const Scheme scheme, double floorDb
     QQuickGradient *g = new QQuickGradient();
     QQmlListProperty<QQuickGradientStop> stops = g->stops();
 
-    const Ramp ramp = rampFor(scheme);
-    for (int i = 0; i < ramp.count; i++)
+    const QList<BuiltStop> built = buildStops(scheme, floorDb, ceilDb);
+    for (int i = 0; i < built.size(); i++)
     {
         QQuickGradientStop *s = new QQuickGradientStop(g);
         if (s)
         {
-            s->setPosition(ramp.stops[i].pos);
-            s->setColor(QColor(QLatin1String(ramp.stops[i].hex)));
+            s->setPosition(built[i].pos);
+            s->setColor(built[i].color);
             stops.append(&stops, s);
         }
     }
