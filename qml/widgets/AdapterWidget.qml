@@ -43,6 +43,8 @@ Rectangle {
         Component.onCompleted: {
             legendWidth = 64
             legendWidth = Math.max(legendWidth, legendHostname.contentWidth)
+            legendWidth = Math.max(legendWidth, legendChipset.contentWidth)
+            legendWidth = Math.max(legendWidth, legendChipsetFirmware.contentWidth)
             legendWidth = Math.max(legendWidth, legendVendor.contentWidth)
             legendWidth = Math.max(legendWidth, legendAddress.contentWidth)
             legendWidth = Math.max(legendWidth, legendAddressVendor.contentWidth)
@@ -91,6 +93,64 @@ Rectangle {
                 Layout.minimumHeight: 32
 
                 text: modelData.hostname
+                wrapMode: Text.WrapAnywhere
+            }
+        }
+
+        ////////
+
+        RowLayout {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            spacing: 12
+
+            visible: modelData.chipset.length
+
+            Text {
+                id: legendChipset
+                Layout.preferredWidth: box.legendWidth
+                Layout.alignment: Qt.AlignCenter
+
+                text: qsTr("Chipset")
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContent
+                horizontalAlignment: Text.AlignRight
+                color: Theme.colorSubText
+            }
+
+            TextSelectable {
+                Layout.fillWidth: true
+                Layout.minimumHeight: 32
+
+                text: modelData.chipset
+                wrapMode: Text.WrapAnywhere
+            }
+        }
+
+        RowLayout {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            spacing: 12
+
+            visible: modelData.chipsetFirmware.length
+
+            Text {
+                id: legendChipsetFirmware
+                Layout.preferredWidth: box.legendWidth
+                Layout.alignment: Qt.AlignCenter
+
+                text: qsTr("Firmware")
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContent
+                horizontalAlignment: Text.AlignRight
+                color: Theme.colorSubText
+            }
+
+            TextSelectable {
+                Layout.fillWidth: true
+                Layout.minimumHeight: 32
+
+                text: modelData.chipsetFirmware
                 wrapMode: Text.WrapAnywhere
             }
         }
@@ -189,7 +249,7 @@ Rectangle {
             height: 32
             spacing: 12
 
-            visible: modelData.version.length
+            visible: modelData.bluetoothVersion.length
 
             Text {
                 id: legendBluetooth
@@ -205,7 +265,7 @@ Rectangle {
 
             TagDesktop {
                 anchors.verticalCenter: parent.verticalCenter
-                text: modelData.version
+                text: modelData.bluetoothVersion
                 colorBackground: Theme.colorComponent
                 colorBorder: Theme.colorComponent
             }
@@ -218,7 +278,7 @@ Rectangle {
             anchors.right: parent.right
             spacing: 12
 
-            visible: modelData.features.length
+            visible: modelData.bluetoothFeatures.length
 
             Text {
                 id: legendFeatures
@@ -238,7 +298,7 @@ Rectangle {
                 spacing: 4
 
                 Repeater {
-                    model: modelData.features
+                    model: modelData.bluetoothFeatures
                     TagDesktop {
                         text: modelData
                         colorBackground: Theme.colorComponent

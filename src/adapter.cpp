@@ -43,9 +43,8 @@ Adapter::Adapter(const QBluetoothHostInfo &adapterInfo, QObject *parent) : QObje
     process.waitForFinished(8000); // 8 ms
 
     QString output(process.readAllStandardOutput());
-    //qDebug() << output;
-    //QString err(process.readAllStandardError());
-    //qDebug() << err;
+    QString err(process.readAllStandardError());
+    //qDebug() << output << err;
 
     // Output example:
     // hci1: Primary controller
@@ -58,13 +57,15 @@ Adapter::Adapter(const QBluetoothHostInfo &adapterInfo, QObject *parent) : QObje
     const QStringList output_split = output.split('\n');
     for (int i = 0; i < output_split.size(); i++)
     {
-        auto line = output_split.at(i);
+        const auto &line = output_split.at(i);
         if (line.contains("addr ") && line.contains(m_address))
         {
             const QStringList line_split = line.split(' ');
+            //qDebug() << "line_split:" << line_split;
+
             for (int j = 0; j < line_split.size(); j++)
             {
-                auto &section = line_split.at(j);
+                const auto &section = line_split.at(j);
                 if (section == "version")
                 {
                     QString version = line_split.at(++j);
@@ -131,8 +132,79 @@ Adapter::Adapter(const QBluetoothHostInfo &adapterInfo, QObject *parent) : QObje
 
 #elif defined(Q_OS_MACOS)
 
-    // other interesting commands:
-    // system_profiler -detailLevel full SPBluetoothDataType
+    QProcess process;
+    process.start("system_profiler", QStringList() << "-detailLevel" << "full" << "SPBluetoothDataType");
+    process.waitForFinished(8000); // 8 ms
+
+    QString output(process.readAllStandardOutput());
+    QString err(process.readAllStandardError());
+    //qDebug() << output << err;
+
+    // Output example:
+    // Bluetooth:
+    //
+    // Bluetooth Controller:
+    //     Address: 00:11:22:33:44:55
+    //     State: On
+    //     Chipset: BCM_4388C2
+    //     Discoverable: Off
+    //     Firmware Version: 23.5.224.1475
+    //     Product ID: 0x4A3F
+    //     Supported services: 0x392039 < HFP AVRCP A2DP HID Braille LEA AACP GATT SerialPort >
+    //     Transport: PCIe
+    //     Vendor ID: 0x004C (Apple)
+    // Not Connected:
+    //     DeviceName:
+    //     Address: 11:22:33:44:55:66
+
+    bool controllersection = false;
+
+    const QStringList output_split = output.split('\n');
+    for (int i = 0; i < output_split.size(); i++)
+    {
+        const auto &line = output_split.at(i);
+
+        if (controllersection)
+        {
+            const QStringList line_split = line.trimmed().split(' ', Qt::SkipEmptyParts);
+            //qDebug() << "line_split:" << line_split;
+            if (line_split.size() < 2) break;
+
+            if (line.contains("BT Spec:")) m_bluetooth_version = line_split.at(1); // legacy key?
+            //else if (line.contains("Address:")) m_address = line_split.at(1).trimmed();
+            else if (line.contains("Chipset:")) m_chipset = line_split.at(1).trimmed();
+            else if (line.contains("Firmware Version:"))
+            {
+                if (line_split.size() >= 3)
+                {
+                    m_chipset_firmware = line_split.at(2).trimmed();
+                }
+            }
+            else if (line.contains("Vendor ID:"))
+            {
+                if (line_split.size() >= 3)
+                {
+                    QString manufacturer = QString(line_split.at(2)).remove("0x");
+
+                    VendorsDatabase *v = VendorsDatabase::getInstance();
+                    v->getVendor_manufacturerID(manufacturer, m_manufacturer);
+                }
+            }
+            else if (line.contains("Supported services:"))
+            {
+                // TODO
+            }
+        }
+
+        if (line.contains("Bluetooth Controller"))
+        {
+            controllersection = true;
+        }
+        else if (line.contains("Connected") || line.contains("Not Connected"))
+        {
+            break; // went to far
+        }
+    }
 
 #elif defined(Q_OS_WINDOWS)
 

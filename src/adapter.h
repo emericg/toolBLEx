@@ -40,10 +40,12 @@ class Adapter: public QObject
 
     Q_PROPERTY(QString address READ getAddress CONSTANT)
     Q_PROPERTY(QString hostname READ getHostname CONSTANT)
+    Q_PROPERTY(QString chipset READ getChipset CONSTANT)
+    Q_PROPERTY(QString chipsetFirmware READ getChipsetFirmware CONSTANT)
     Q_PROPERTY(QString manufacturer READ getManufacturer CONSTANT)
     Q_PROPERTY(QString manufacturerMac READ getManufacturerMac CONSTANT)
-    Q_PROPERTY(QString version READ getBluetoothVersion CONSTANT)
-    Q_PROPERTY(QStringList features READ getBluetoothFeatures CONSTANT)
+    Q_PROPERTY(QString bluetoothVersion READ getBluetoothVersion CONSTANT)
+    Q_PROPERTY(QStringList bluetoothFeatures READ getBluetoothFeatures CONSTANT)
 
     QBluetoothLocalDevice *m_adapter_device = nullptr;
     int m_bluetooth_host_mode = 0;
@@ -53,6 +55,8 @@ class Adapter: public QObject
 
     QString m_address;
     QString m_hostname;
+    QString m_chipset;
+    QString m_chipset_firmware;
     QString m_manufacturer;
     QString m_mac_manufacturer;
     QString m_bluetooth_version;
@@ -85,6 +89,8 @@ public:
 
     const QString &getAddress() const { return m_address; }
     const QString &getHostname() const { return m_hostname; }
+    const QString &getChipset() const { return m_chipset; }
+    const QString &getChipsetFirmware() const { return m_chipset_firmware; }
     const QString &getManufacturer() const { return m_manufacturer; }
     const QString &getManufacturerMac() const { return m_mac_manufacturer; }
     const QString &getBluetoothVersion() const { return m_bluetooth_version; }
