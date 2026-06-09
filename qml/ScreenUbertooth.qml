@@ -94,7 +94,6 @@ Loader {
                     anchors.verticalCenter: parent.verticalCenter
 
                     model: ListModel {
-                        id: viewModeModel
                         ListElement { idx: 0; txt: qsTr("spectrum 2D"); src: ""; sz: 16; }
                         ListElement { idx: 1; txt: qsTr("spectrum 3D"); src: ""; sz: 16; }
                         ListElement { idx: 2; txt: qsTr("waterfall"); src: ""; sz: 16; }
@@ -185,7 +184,8 @@ Loader {
 
                     visible: (actionBar.viewMode === 2)
                     wheelEnabled: false
-                    //background.color: "white"
+
+                    colorBackground: Theme.colorLowContrast
 
                     model: ListModel {
                         id: cbGraphColors

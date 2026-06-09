@@ -195,7 +195,7 @@ ApplicationWindow {
         onActivated: deviceManager.scanDevices_start()
     }
     Shortcut {
-        sequence: StandardKey.Preferences
+        sequences: [StandardKey.Preferences]
         onActivated: screenSettings.loadScreen()
     }
     Shortcut {

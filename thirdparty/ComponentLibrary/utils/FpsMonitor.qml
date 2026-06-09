@@ -12,6 +12,8 @@ Item {
     property int fps: 0
     property int fpsAvg: 0
 
+    property int digits: 3
+
     ////////
 
     Rectangle {
@@ -77,17 +79,19 @@ Item {
 
             color: "#ddd"
             font.pixelSize: 16
-            textFormat: Text.PlainText
+            //font.family: "Monospace"
+            textFormat: Text.MarkdownText
+
             text: {
                 var txt = ""
                 if (typeof utilsFpsMonitor !== "undefined" && utilsFpsMonitor) {
                     // FPS from utilsFpsMonitor
-                    txt += utilsFpsMonitor.fps + " FPS"
+                    txt += utilsFpsMonitor.fps.toString().padStart(control.digits, "0") + " FPS"
                 } else {
                     // FPS from the UI animation
-                    //txt += "Ø " + control.fpsAvg
+                    //txt += "Ø " + control.fpsAvg.toString().padStart(control.digits, "0")
                     if (txt.length) txt += " | "
-                    txt += control.fps + " FPS"
+                    txt += control.fps.toString().padStart(control.digits, "0") + " FPS"
                 }
                 return txt
             }

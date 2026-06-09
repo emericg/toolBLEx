@@ -39,6 +39,7 @@ T.HorizontalHeaderView {
             color: Theme.colorText
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
         }
 
         property bool ccc: {

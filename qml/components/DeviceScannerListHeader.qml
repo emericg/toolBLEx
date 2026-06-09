@@ -68,9 +68,12 @@ Rectangle {
 
             clip: true
             visible: showAddress
+
             text: qsTr("Address")
+            textFormat: Text.PlainText
             color: Theme.colorText
             font.bold: (deviceManager.orderBy_role === "address")
+            elide: Text.ElideRight
 
             MouseArea {
                 anchors.fill: parent
@@ -151,9 +154,12 @@ Rectangle {
             width: deviceManager.deviceHeader.colName
 
             clip: true
+
             text: qsTr("Advertised name")
+            textFormat: Text.PlainText
             color: Theme.colorText
             font.bold: (deviceManager.orderBy_role === "name")
+            elide: Text.ElideRight
 
             MouseArea {
                 anchors.fill: parent
@@ -235,9 +241,12 @@ Rectangle {
 
             clip: true
             visible: showAddress
+
             text: qsTr("Manufacturer")
+            textFormat: Text.PlainText
             font.bold: (deviceManager.orderBy_role === "manufacturer")
             color: Theme.colorText
+            elide: Text.ElideRight
 
             MouseArea {
                 anchors.fill: parent
@@ -337,8 +346,10 @@ Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("RSSI")
+                    textFormat: Text.PlainText
                     font.bold: (deviceManager.orderBy_role === "rssi")
                     color: Theme.colorText
+                    elide: Text.ElideRight
                 }
             }
 
@@ -437,8 +448,10 @@ Rectangle {
 
                 Text {
                     text: qsTr("Interval")
+                    textFormat: Text.PlainText
                     font.bold: (deviceManager.orderBy_role === "interval")
                     color: Theme.colorText
+                    elide: Text.ElideRight
                 }
             }
 
@@ -520,8 +533,10 @@ Rectangle {
             width: deviceManager.deviceHeader.colLastSeen
 
             text: qsTr("Last seen")
+            textFormat: Text.PlainText
             font.bold: (deviceManager.orderBy_role === "lastseen")
             color: Theme.colorText
+            elide: Text.ElideRight
 
             MouseArea {
                 anchors.fill: parent
@@ -579,8 +594,10 @@ Rectangle {
             width: deviceManager.deviceHeader.colFirstSeen
 
             text: qsTr("First seen")
+            textFormat: Text.PlainText
             font.bold: (deviceManager.orderBy_role === "firstseen")
             color: Theme.colorText
+            elide: Text.ElideRight
 
             MouseArea {
                 anchors.fill: parent

@@ -263,7 +263,7 @@ endif()
 
 ## macOS
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    set(CMAKE_OSX_DEPLOYMENT_TARGET "12.0")
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "13.0")
     set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64")
 
     set(app_icon_macos "${PROJECT_SOURCE_DIR}/assets/macos/${PROJECT_NAME}.icns")
