@@ -397,7 +397,7 @@ void Ubertooth::processOutput()
 
             // Frame-rate cap: redraw at most ubertooth_samplingFreq times/second so
             // a fast capture can't overdraw the GUI. 0 (or less) means uncapped.
-            const int fps = SettingsManager::getInstance()->getUbertoothSamplingFreq();
+            const int fps = SettingsManager::getInstance()->getSpectrogramSamplingFreq();
             const qint64 minIntervalMs = (fps > 0) ? (1000 / fps) : 0;
 
             if (!m_emit_timer.isValid())

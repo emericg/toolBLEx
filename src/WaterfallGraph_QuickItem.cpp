@@ -32,7 +32,7 @@
 
 WaterfallGraph_QuickItem::WaterfallGraph_QuickItem(QQuickItem *parent) : QQuickPaintedItem(parent)
 {
-    m_colorScheme = SettingsManager::getInstance()->getUbertoothGraphColors();
+    m_colorScheme = SettingsManager::getInstance()->getSpectrogramGraphColors();
 
     ColormapFactory::fillLut(static_cast<ColormapFactory::Scheme>(m_colorScheme), m_lut, m_floorDb, m_ceilDb);
 }

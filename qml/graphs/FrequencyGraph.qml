@@ -12,17 +12,19 @@ GraphsView {
     shadowVisible: false
 
     Connections {
-        target: ubertooth
+        target: dataSource
         enabled: frequencyGraph.visible
         function onNewDataAvailable() { frequencyGraph.updateGraph() }
     }
+
+    property var dataSource
 
     property var graphMax
     property var graphAverage
     property var graphCurrent
     property var graphsHistory: []
 
-    property int historyCurvesCount: SettingsManager.ubertooth_historyCurves
+    property int historyCurvesCount: SettingsManager.spectrogram_historyCurves
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -34,7 +36,7 @@ GraphsView {
 
     Component.onCompleted: {
         //// AXIS
-        ubertooth.getFrequencyGraphAxis(axisFrequency)
+        dataSource.getFrequencyGraphAxis(axisFrequency)
 
         graphMax = createLineSeries()
         graphMax.color = Theme.colorMaterialLightGreen
@@ -81,11 +83,12 @@ GraphsView {
     }
 
     function updateGraph() {
-        if (!ubertooth.running || appContent.state !== "Ubertooth") return
+        //if (!dataSource.running || appContent.state !== "Ubertooth") return
+        //if (!dataSource.running || appContent.state !== "Ubertooth") return
         //console.log("frequencyGraph // updateGraph()")
 
         //// AXIS
-        ubertooth.getFrequencyGraphAxis(axisFrequency)
+        dataSource.getFrequencyGraphAxis(axisFrequency)
 
         //// DATA HISTORY
         if (spectrumGraph2D_container.graphHistoryMethod === 1) {
@@ -99,8 +102,10 @@ GraphsView {
                 if (graphsHistory[idx]) {
                     graphsHistory[idx].visible = true
                     graphsHistory[idx].color = Theme.colorSubText
-                    graphsHistory[idx].opacity = UtilsNumber.mapNumber(idx, 0, frequencyGraph.historyCurvesCount, 500, 10) / 1000
-                    ubertooth.getFrequencyGraphData(graphsHistory[idx], idx)
+                    graphsHistory[idx].opacity = UtilsNumber.mapNumber(idx,
+                                                                       0, frequencyGraph.historyCurvesCount,
+                                                                       500, 10) / 1000
+                    dataSource.getFrequencyGraphData(graphsHistory[idx], idx)
                 }
             }
 
@@ -112,9 +117,9 @@ GraphsView {
         }
 
         //// DATA
-        ubertooth.getFrequencyGraphMax(graphMax)
-        ubertooth.getFrequencyGraphAverage(graphAverage)
-        ubertooth.getFrequencyGraphCurrent(graphCurrent)
+        dataSource.getFrequencyGraphMax(graphMax)
+        dataSource.getFrequencyGraphAverage(graphAverage)
+        dataSource.getFrequencyGraphCurrent(graphCurrent)
     }
 
     ////////////////////////////////////////////////////////////////////////////

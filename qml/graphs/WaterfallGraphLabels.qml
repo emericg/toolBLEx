@@ -28,8 +28,8 @@ Item {
                     anchors.left: parent.left
 
                     text: Math.round(UtilsNumber.mapNumber(index, 0, labelCount,
-                                                           ubertooth.freqMax,
-                                                           ubertooth.freqMin)) + " MHz"
+                                                           dataSource.freqMax,
+                                                           dataSource.freqMin)) + " MHz"
                     textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeContentVerySmall
                     color: "white"

@@ -102,6 +102,9 @@ bool SettingsManager::readSettings()
         if (settings.contains("settings/appThemeAuto"))
             m_appThemeAuto = settings.value("settings/appThemeAuto").toBool();
 
+        if (settings.contains("settings/appThemeAutoMethod"))
+            m_appThemeAutoMethod = settings.value("settings/appThemeAutoMethod").toInt();
+
         if (settings.contains("settings/appSplashScreen"))
             m_appSplashScreen = settings.value("settings/appSplashScreen").toBool();
 
@@ -113,12 +116,17 @@ bool SettingsManager::readSettings()
 
         ////
 
+        if (settings.contains("settings/preferredScreen"))
+            m_preferredScreen = settings.value("settings/preferredScreen").toInt();
+        if (settings.contains("settings/preferredAdapter_scan"))
+            m_preferredAdapter_scan = settings.value("settings/preferredAdapter_scan").toString();
+        if (settings.contains("settings/preferredAdapter_adv"))
+            m_preferredAdapter_adv = settings.value("settings/preferredAdapter_adv").toString();
+
         if (settings.contains("settings/scanAuto"))
             m_scanAuto = settings.value("settings/scanAuto").toBool();
-
         if (settings.contains("settings/scanPause"))
             m_scanPause = settings.value("settings/scanPause").toBool();
-
         if (settings.contains("settings/scanCacheAuto"))
             m_scanCacheAuto = settings.value("settings/scanCacheAuto").toBool();
 
@@ -145,16 +153,17 @@ bool SettingsManager::readSettings()
         if (settings.contains("settings/scanSplitviewSize"))
             m_scanviewSize = settings.value("settings/scanSplitviewSize").toByteArray();
 
-        if (settings.contains("settings/preferredScreen"))
-            m_preferredScreen = settings.value("settings/preferredScreen").toInt();
-
-        if (settings.contains("settings/preferredAdapter_scan"))
-            m_preferredAdapter_scan = settings.value("settings/preferredAdapter_scan").toString();
-        if (settings.contains("settings/preferredAdapter_adv"))
-            m_preferredAdapter_adv = settings.value("settings/preferredAdapter_adv").toString();
-
         if (settings.contains("settings/exportDirectory"))
             m_exportDirectory = settings.value("settings/exportDirectory").toString();
+
+        if (settings.contains("settings/spectrogram_samplingFrequency"))
+            m_spectrogram_samplingFrequency = settings.value("settings/spectrogram_samplingFrequency").toInt();
+        if (settings.contains("settings/spectrogram_historyCurves"))
+            m_spectrogram_historyCurves = settings.value("settings/spectrogram_historyCurves").toInt();
+        if (settings.contains("settings/spectrogram_graphSelected"))
+            m_spectrogram_graphSelected = settings.value("settings/spectrogram_graphSelected").toInt();
+        if (settings.contains("settings/spectrogram_graphColors"))
+            m_spectrogram_graphColors = settings.value("settings/spectrogram_graphColors").toInt();
 
         if (settings.contains("settings/ubertooth_path"))
             m_ubertooth_path = settings.value("settings/ubertooth_path").toString();
@@ -162,14 +171,13 @@ bool SettingsManager::readSettings()
             m_ubertooth_freqMin = settings.value("settings/ubertooth_freqMin").toInt();
         if (settings.contains("settings/ubertooth_freqMax"))
             m_ubertooth_freqMax = settings.value("settings/ubertooth_freqMax").toInt();
-        if (settings.contains("settings/ubertooth_samplingFrequency"))
-            m_ubertooth_samplingFrequency = settings.value("settings/ubertooth_samplingFrequency").toInt();
-        if (settings.contains("settings/ubertooth_historyCurves"))
-            m_ubertooth_historyCurves = settings.value("settings/ubertooth_historyCurves").toInt();
-        if (settings.contains("settings/ubertooth_graphSelected"))
-            m_ubertooth_graphSelected = settings.value("settings/ubertooth_graphSelected").toInt();
-        if (settings.contains("settings/ubertooth_graphColors"))
-            m_ubertooth_graphColors = settings.value("settings/ubertooth_graphColors").toInt();
+
+        if (settings.contains("settings/rtlsdr_path"))
+            m_rtlsdr_path = settings.value("settings/rtlsdr_path").toString();
+        if (settings.contains("settings/rtlsdr_freqTarget"))
+            m_rtlsdr_freqTarget = settings.value("settings/rtlsdr_freqTarget").toInt();
+        if (settings.contains("settings/rtlsdr_freqBandwidth"))
+            m_rtlsdr_freqBandwidth = settings.value("settings/rtlsdr_freqBandwidth").toInt();
 
         status = true;
     }
@@ -193,9 +201,14 @@ bool SettingsManager::writeSettings()
     {
         settings.setValue("settings/appTheme", m_appTheme);
         settings.setValue("settings/appThemeAuto", m_appThemeAuto);
+        settings.setValue("settings/appThemeAutoMethod", m_appThemeAutoMethod);
         settings.setValue("settings/appSplashScreen", m_appSplashScreen);
         settings.setValue("settings/appLanguage", m_appLanguage);
         settings.setValue("settings/appUnits", m_appUnits);
+
+        settings.setValue("settings/preferredScreen", m_preferredScreen);
+        settings.setValue("settings/preferredAdapter_scan", m_preferredAdapter_scan);
+        settings.setValue("settings/preferredAdapter_adv", m_preferredAdapter_adv);
 
         settings.setValue("settings/scanAuto", m_scanAuto);
         settings.setValue("settings/scanPause", m_scanPause);
@@ -211,20 +224,20 @@ bool SettingsManager::writeSettings()
         settings.setValue("settings/scanSplitviewOrientation", m_scanviewOrientation);
         settings.setValue("settings/scanSplitviewSize", m_scanviewSize);
 
-        settings.setValue("settings/preferredScreen", m_preferredScreen);
-
-        settings.setValue("settings/preferredAdapter_scan", m_preferredAdapter_scan);
-        settings.setValue("settings/preferredAdapter_adv", m_preferredAdapter_adv);
-
         settings.setValue("settings/exportDirectory", m_exportDirectory);
+
+        settings.setValue("settings/spectrogram_samplingFrequency", m_spectrogram_samplingFrequency);
+        settings.setValue("settings/spectrogram_historyCurves", m_spectrogram_historyCurves);
+        settings.setValue("settings/spectrogram_graphSelected", m_spectrogram_graphSelected);
+        settings.setValue("settings/spectrogram_graphColors", m_spectrogram_graphColors);
 
         settings.setValue("settings/ubertooth_path", m_ubertooth_path);
         settings.setValue("settings/ubertooth_freqMin", m_ubertooth_freqMin);
         settings.setValue("settings/ubertooth_freqMax", m_ubertooth_freqMax);
-        settings.setValue("settings/ubertooth_samplingFrequency", m_ubertooth_samplingFrequency);
-        settings.setValue("settings/ubertooth_historyCurves", m_ubertooth_historyCurves);
-        settings.setValue("settings/ubertooth_graphSelected", m_ubertooth_graphSelected);
-        settings.setValue("settings/ubertooth_graphColors", m_ubertooth_graphColors);
+
+        settings.setValue("settings/rtlsdr_path", m_rtlsdr_path);
+        settings.setValue("settings/rtlsdr_freqTarget", m_rtlsdr_freqTarget);
+        settings.setValue("settings/rtlsdr_freqBandwidth", m_rtlsdr_freqBandwidth);
 
         if (settings.status() == QSettings::NoError)
         {
@@ -251,6 +264,8 @@ void SettingsManager::resetSettings()
     Q_EMIT appThemeChanged();
     m_appThemeAuto = false;
     Q_EMIT appThemeAutoChanged();
+    m_appThemeAutoMethod = 0;
+    Q_EMIT appThemeAutoMethodChanged();
     m_appThemeCSD = false;
     Q_EMIT appThemeCSDChanged();
     m_appSplashScreen = true;
@@ -259,6 +274,13 @@ void SettingsManager::resetSettings()
     Q_EMIT appUnitsChanged();
     m_appLanguage = "auto";
     Q_EMIT appLanguageChanged();
+
+    m_preferredScreen = 0;
+    Q_EMIT preferredScreenChanged();
+    m_preferredAdapter_scan.clear();
+    Q_EMIT preferredAdapterScanChanged();
+    m_preferredAdapter_adv.clear();
+    Q_EMIT preferredAdapterAdvChanged();
 
     m_scanMethods = QBluetoothDeviceDiscoveryAgent::LowEnergyMethod;
     Q_EMIT scanMethodsChanged();
@@ -284,30 +306,29 @@ void SettingsManager::resetSettings()
     m_scanviewSize.clear();
     Q_EMIT scanviewChanged();
 
-    m_preferredScreen = 0;
-    Q_EMIT preferredScreenChanged();
-
-    m_preferredAdapter_scan.clear();
-    Q_EMIT preferredAdapterScanChanged();
-    m_preferredAdapter_adv.clear();
-    Q_EMIT preferredAdapterAdvChanged();
-
     m_exportDirectory.clear();
     Q_EMIT exportDirectoryChanged();
+
+    m_spectrogram_samplingFrequency = 60;
+    Q_EMIT spectrogramSamplingChanged();
+    m_spectrogram_historyCurves = 32;
+    Q_EMIT spectrogramHistoryChanged();
+    m_spectrogram_graphSelected = 0;
+    Q_EMIT spectrogramGraphChanged();
+    m_spectrogram_graphColors = 0;
+    Q_EMIT spectrogramColorsChanged();
 
     m_ubertooth_path = "ubertooth-specan";
     Q_EMIT ubertoothPathChanged();
     m_ubertooth_freqMin = 2400;
     m_ubertooth_freqMax = 2500;
     Q_EMIT ubertoothFreqChanged();
-    m_ubertooth_samplingFrequency = 60;
-    Q_EMIT ubertoothSamplingChanged();
-    m_ubertooth_historyCurves = 32;
-    Q_EMIT ubertoothHistoryChanged();
-    m_ubertooth_graphSelected = 0;
-    Q_EMIT ubertoothGraphChanged();
-    m_ubertooth_graphColors = 0;
-    Q_EMIT ubertoothColorsChanged();
+
+    m_rtlsdr_path = "soapy_power";
+    Q_EMIT rtlsdrPathChanged();
+    m_rtlsdr_freqTarget = 433;
+    m_rtlsdr_freqBandwidth = 2400;
+    Q_EMIT rtlsdrFreqChanged();
 }
 
 /* ************************************************************************** */
@@ -330,6 +351,16 @@ void SettingsManager::setAppThemeAuto(const bool value)
         m_appThemeAuto = value;
         writeSettings();
         Q_EMIT appThemeAutoChanged();
+    }
+}
+
+void SettingsManager::setAppThemeAutoMethod(const int value)
+{
+    if (m_appThemeAutoMethod != value)
+    {
+        m_appThemeAutoMethod = value;
+        writeSettings();
+        Q_EMIT appThemeAutoMethodChanged();
     }
 }
 
@@ -370,6 +401,40 @@ void SettingsManager::setAppLanguage(const QString &value)
         m_appLanguage = value;
         writeSettings();
         Q_EMIT appLanguageChanged();
+    }
+}
+
+/* ************************************************************************** */
+
+void SettingsManager::setPreferredScreen(const int value)
+{
+    if (m_preferredScreen != value)
+    {
+        m_preferredScreen = value;
+        writeSettings();
+        Q_EMIT preferredScreenChanged();
+    }
+}
+
+/* ************************************************************************** */
+
+void SettingsManager::setPreferredAdapter_scan(const QString &value)
+{
+    if (m_preferredAdapter_scan != value)
+    {
+        m_preferredAdapter_scan = value;
+        writeSettings();
+        Q_EMIT preferredAdapterScanChanged();
+    }
+}
+
+void SettingsManager::setPreferredAdapter_adv(const QString &value)
+{
+    if (m_preferredAdapter_adv != value)
+    {
+        m_preferredAdapter_adv = value;
+        writeSettings();
+        Q_EMIT preferredAdapterAdvChanged();
     }
 }
 
@@ -512,40 +577,6 @@ void SettingsManager::setScanviewSize(const QByteArray &value)
 
 /* ************************************************************************** */
 
-void SettingsManager::setPreferredScreen(const int value)
-{
-    if (m_preferredScreen != value)
-    {
-        m_preferredScreen = value;
-        writeSettings();
-        Q_EMIT preferredScreenChanged();
-    }
-}
-
-/* ************************************************************************** */
-
-void SettingsManager::setPreferredAdapter_scan(const QString &value)
-{
-    if (m_preferredAdapter_scan != value)
-    {
-        m_preferredAdapter_scan = value;
-        writeSettings();
-        Q_EMIT preferredAdapterScanChanged();
-    }
-}
-
-void SettingsManager::setPreferredAdapter_adv(const QString &value)
-{
-    if (m_preferredAdapter_adv != value)
-    {
-        m_preferredAdapter_adv = value;
-        writeSettings();
-        Q_EMIT preferredAdapterAdvChanged();
-    }
-}
-
-/* ************************************************************************** */
-
 QString SettingsManager::getExportDirectory_str() const
 {
     QString exportDirectoryString;
@@ -604,6 +635,54 @@ void SettingsManager::setExportDirectory(const QString &value)
 
 /* ************************************************************************** */
 
+void SettingsManager::setSpectrogramSamplingFreq(const int value)
+{
+    if (value >= 10 && value <= 120)
+    {
+        if (m_spectrogram_samplingFrequency != value)
+        {
+            m_spectrogram_samplingFrequency = value;
+            writeSettings();
+            Q_EMIT spectrogramSamplingChanged();
+        }
+    }
+}
+
+void SettingsManager::setSpectrogramHistoryCurves(const int value)
+{
+    if (value >= 16 && value <= 64)
+    {
+        if (m_spectrogram_historyCurves != value)
+        {
+            m_spectrogram_historyCurves = value;
+            writeSettings();
+            Q_EMIT spectrogramHistoryChanged();
+        }
+    }
+}
+
+void SettingsManager::setSpectrogramGraphSelected(const int value)
+{
+    if (m_spectrogram_graphSelected != value)
+    {
+        m_spectrogram_graphSelected = value;
+        writeSettings();
+        Q_EMIT spectrogramGraphChanged();
+    }
+}
+
+void SettingsManager::setSpectrogramGraphColors(const int value)
+{
+    if (m_spectrogram_graphColors != value)
+    {
+        m_spectrogram_graphColors = value;
+        writeSettings();
+        Q_EMIT spectrogramColorsChanged();
+    }
+}
+
+/* ************************************************************************** */
+
 void SettingsManager::setUbertoothPath(const QString &value)
 {
     if (m_ubertooth_path != value)
@@ -640,49 +719,41 @@ void SettingsManager::setUbertoothFreqMax(const int value)
     }
 }
 
-void SettingsManager::setUbertoothSamplingFreq(const int value)
+/* ************************************************************************** */
+
+void SettingsManager::setRtlSdrPath(const QString &value)
 {
-    if (value >= 10 && value <= 120)
+    if (m_rtlsdr_path != value)
     {
-        if (m_ubertooth_samplingFrequency != value)
+        m_rtlsdr_path = value;
+        writeSettings();
+        Q_EMIT rtlsdrPathChanged();
+    }
+}
+
+void SettingsManager::setRtlSdrFreqTarget(const int value)
+{
+    if (value >= 54 && value <= 2200)
+    {
+        if (m_rtlsdr_freqTarget != value)
         {
-            m_ubertooth_samplingFrequency = value;
+            m_rtlsdr_freqTarget = value;
             writeSettings();
-            Q_EMIT ubertoothSamplingChanged();
+            Q_EMIT rtlsdrFreqChanged();
         }
     }
 }
 
-void SettingsManager::setUbertoothHistoryCurves(const int value)
+void SettingsManager::setRtlSdrFreqBandwidth(const int value)
 {
-    if (value >= 16 && value <= 64)
+    if (value >= 2400 && value <= 4800)
     {
-        if (m_ubertooth_historyCurves != value)
+        if (m_rtlsdr_freqBandwidth != value)
         {
-            m_ubertooth_historyCurves = value;
+            m_rtlsdr_freqBandwidth = value;
             writeSettings();
-            Q_EMIT ubertoothHistoryChanged();
+            Q_EMIT rtlsdrFreqChanged();
         }
-    }
-}
-
-void SettingsManager::setUbertoothGraphSelected(const int value)
-{
-    if (m_ubertooth_graphSelected != value)
-    {
-        m_ubertooth_graphSelected = value;
-        writeSettings();
-        Q_EMIT ubertoothGraphChanged();
-    }
-}
-
-void SettingsManager::setUbertoothGraphColors(const int value)
-{
-    if (m_ubertooth_graphColors != value)
-    {
-        m_ubertooth_graphColors = value;
-        writeSettings();
-        Q_EMIT ubertoothColorsChanged();
     }
 }
 

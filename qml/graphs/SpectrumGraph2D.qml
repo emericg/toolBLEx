@@ -6,19 +6,14 @@ import ComponentLibrary
 Item {
     id: spectrumGraph2D_container
 
-    clip: false
-
-    anchors.top: actionBar.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    anchors.bottom: parent.bottom
-
-    visible: (actionBar.viewMode === 0)
+    ////////////////////////////////////////////////////////////////////////////
 
     // Spectrum history style: 0 = phosphor accumulation buffer, 1 = history lines (only one at a time, to reduce clutter)
     property int graphHistoryMethod: 0
 
     property bool showPeak: false
+
+    property var dataSource
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -32,6 +27,8 @@ Item {
         PhosphorPersistenceGraph {
             id: phosphorPersistenceGraph
             anchors.fill: parent
+
+            dataSource: spectrumGraph2D_container.dataSource
 
             traceColor: Theme.colorSubText
             visible: (spectrumGraph2D_container.graphHistoryMethod === 0)
@@ -57,6 +54,8 @@ Item {
         anchors.leftMargin: -28
         anchors.rightMargin: -20
         anchors.bottomMargin: -28
+
+        dataSource: spectrumGraph2D_container.dataSource
 
         onPlotAreaUpdated: (x, y, width, height) => {
             //console.log("onPlotAreaUpdated")

@@ -113,7 +113,7 @@ Loader {
                 property int flowElementWidth: (width >= 1080) ? (width / 3) - (spacing*1) - (spacing / 3)
                                                                : (width / 2) - (spacing*1) - (spacing / 2)
 
-                ////////////////////////
+                // HEADER //////////////////////////////////////////////////////
 
                 Rectangle {
                     id: settingsHeader
@@ -297,7 +297,7 @@ Loader {
                     }
                 }
 
-                ////////////////////////
+                // APPLICATION /////////////////////////////////////////////////
 
                 Flow {
                     anchors.left: parent.left
@@ -1353,12 +1353,10 @@ Loader {
                                     anchors.centerIn: parent
                                     visible: (SettingsManager.ubertooth_freqMin !== 2402 || SettingsManager.ubertooth_freqMax !== 2480)
 
-                                    text: qsTr("Default")
+                                    text: qsTr("2.4 GHz Default")
                                     onClicked: {
                                         SettingsManager.ubertooth_freqMin = 2400
                                         SettingsManager.ubertooth_freqMax = 2500
-                                        //SettingsManager.ubertooth_samplingFreq = 60
-                                        //SettingsManager.ubertooth_historyCurves = 32
                                         if (ubertooth.running) {
                                             ubertooth.restartWork()
                                         }
@@ -1420,9 +1418,9 @@ Loader {
                                     to: 120
                                     stepSize: 1
 
-                                    value: SettingsManager.ubertooth_samplingFreq
+                                    value: SettingsManager.spectrogram_samplingFreq
                                     onValueModified: {
-                                        SettingsManager.ubertooth_samplingFreq = value
+                                        SettingsManager.spectrogram_samplingFreq = value
                                         if (ubertooth.running) {
                                             //restartUbertoothTimer.restart()
                                         }
@@ -1462,9 +1460,9 @@ Loader {
                                     to: 64
                                     stepSize: 1
 
-                                    value: SettingsManager.ubertooth_historyCurves
+                                    value: SettingsManager.spectrogram_historyCurves
                                     onValueModified: {
-                                        SettingsManager.ubertooth_historyCurves = value
+                                        SettingsManager.spectrogram_historyCurves = value
                                         if (ubertooth.running) {
                                             //restartUbertoothTimer.restart()
                                         }
@@ -1500,7 +1498,7 @@ Loader {
                                     anchors.verticalCenter: parent.verticalCenter
 
                                     property int pointCount: (SettingsManager.ubertooth_freqMax - SettingsManager.ubertooth_freqMin) *
-                                                                SettingsManager.ubertooth_samplingFreq * SettingsManager.ubertooth_historyCurves
+                                                              SettingsManager.spectrogram_samplingFreq * SettingsManager.spectrogram_historyCurves
 
                                     text: (pointCount / 1000) + "k points"
 
@@ -1523,7 +1521,7 @@ Loader {
                     ////////
                 }
 
-                ////////////////////////
+                /// APP INFO ///////////////////////////////////////////////////
 
                 Flow {
                     anchors.left: parent.left
@@ -1839,7 +1837,7 @@ Loader {
                     ////////
                 }
 
-                ////////////////////////
+                ////////////////////////////////////////////////////////////////
             }
         }
 

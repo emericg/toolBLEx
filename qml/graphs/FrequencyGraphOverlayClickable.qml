@@ -61,15 +61,15 @@ Item {
             id: barPeak
             color: Theme.colorRed
 
-            visible: spectrumGraph2D_container.showPeak && (ubertooth.peakDbm > actionBar.minRSSI)
+            visible: spectrumGraph2D_container.showPeak && (dataSource.peakDbm > actionBar.minRSSI)
 
-            textFreq: qsTr("[peak: %1 MHz · %2 dBm]").arg(ubertooth.peakFreq).arg(ubertooth.peakDbm)
+            textFreq: qsTr("[peak: %1 MHz · %2 dBm]").arg(dataSource.peakFreq).arg(dataSource.peakDbm)
 
-            posX: UtilsNumber.mapNumber_nocheck(ubertooth.peakFreq,
-                                                ubertooth.freqMin, ubertooth.freqMax,
+            posX: UtilsNumber.mapNumber_nocheck(dataSource.peakFreq,
+                                                dataSource.freqMin, dataSource.freqMax,
                                                 0, overlayClickable.width).toFixed(0) - 1
 
-            posY: UtilsNumber.mapNumber_nocheck(ubertooth.peakDbm,
+            posY: UtilsNumber.mapNumber_nocheck(dataSource.peakDbm,
                                                 actionBar.maxRSSI, actionBar.minRSSI,
                                                 0, overlayClickable.height).toFixed(0) - 1
         }
@@ -84,7 +84,7 @@ Item {
     }
 
     function moveIndicator(mouse, idx) {
-        var freqtxt = UtilsNumber.mapNumber(mouse.x, 0, overlayClickable.width, ubertooth.freqMin, ubertooth.freqMax).toFixed(0)
+        var freqtxt = UtilsNumber.mapNumber(mouse.x, 0, overlayClickable.width, dataSource.freqMin, dataSource.freqMax).toFixed(0)
         var rssitxt = UtilsNumber.mapNumber(mouse.y, 0, overlayClickable.height, -20, -100).toFixed(0)
 
         if (idx === 1) {
@@ -118,8 +118,9 @@ Item {
 
         visible: false
 
-        property int thickness: 2
         property color color: Theme.colorPrimary
+        property int thickness: 2
+        property int freqUnit: 0
 
         property alias posX: v.x
         property alias posY: h.y

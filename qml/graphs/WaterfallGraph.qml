@@ -5,7 +5,7 @@ import ComponentLibrary
 WaterfallGraph_QuickItem {
     id: waterfallGraph
 
-    dataSource: ubertooth
+    dataSource: null
     maxDepth: 512
 
     floorDb: actionBar.minRSSI
@@ -13,7 +13,7 @@ WaterfallGraph_QuickItem {
     smooth: false
 
     Connections {
-        target: ubertooth
+        target: waterfallGraph.dataSource
         enabled: waterfallGraph.visible
         function onNewDataAvailable() { waterfallGraph.refresh() }
     }

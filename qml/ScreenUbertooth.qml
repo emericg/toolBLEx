@@ -196,12 +196,12 @@ Loader {
                     }
 
                     Component.onCompleted: {
-                        currentIndex = SettingsManager.ubertooth_graphColors
+                        currentIndex = SettingsManager.spectrogram_graphColors
                         if (currentIndex < 0 || currentIndex > cbGraphColors.count) currentIndex = 0
                     }
 
                     onActivated: {
-                        SettingsManager.ubertooth_graphColors = currentIndex
+                        SettingsManager.spectrogram_graphColors = currentIndex
                         waterfallGraph.colorScheme = currentIndex
                         //spectrumGraph3D_container.colorScheme = currentIndex
                     }
@@ -417,12 +417,18 @@ Loader {
                         }
                         Rectangle {
                             anchors.left: parent.left
-                            anchors.leftMargin: UtilsNumber.mapNumber(ubertooth.freqMin, 2300, 2600, 0, parent.width)
+                            anchors.leftMargin: UtilsNumber.mapNumber(ubertooth.freqMin,
+                                                                      2300, 2600,
+                                                                      0, parent.width)
                             anchors.right: parent.right
-                            anchors.rightMargin: parent.width - UtilsNumber.mapNumber(ubertooth.freqMax, 2300, 2600, 0, parent.width)
+                            anchors.rightMargin: parent.width - UtilsNumber.mapNumber(ubertooth.freqMax,
+                                                                                      2300, 2600,
+                                                                                      0, parent.width)
 
                             height: 8
                             radius: 2
+
+                            visible: ubertooth.running
                             color: Theme.colorSuccess
                         }
                     }
@@ -477,6 +483,8 @@ Loader {
             anchors.bottom: parent.bottom
 
             visible: (actionBar.viewMode === 0)
+
+            dataSource: ubertooth
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -490,6 +498,8 @@ Loader {
             anchors.bottom: parent.bottom
 
             visible: (actionBar.viewMode === 1)
+
+            dataSource: ubertooth
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -503,6 +513,8 @@ Loader {
             anchors.bottom: parent.bottom
 
             visible: (actionBar.viewMode === 2)
+
+            dataSource: ubertooth
         }
 
         ////////////////////////////////////////////////////////////////////////

@@ -70,7 +70,7 @@ Item {
         property color color: Theme.colorBlue
 
         function freqToY(f) {
-            return UtilsNumber.mapNumber_nocheck(f, ubertooth.freqMin, ubertooth.freqMax,
+            return UtilsNumber.mapNumber_nocheck(f, dataSource.freqMin, dataSource.freqMax,
                                                  overlayFrequencyBands.height, 0)
         }
 
@@ -80,7 +80,7 @@ Item {
         width: overlayFrequencyBands.width
         height: thickness
 
-        visible: active && (freq >= ubertooth.freqMin) && (freq <= ubertooth.freqMax)
+        visible: active && (freq >= dataSource.freqMin) && (freq <= dataSource.freqMax)
 
         Rectangle { // Horizontal guide line at a given frequency
             anchors.fill: parent

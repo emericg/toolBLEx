@@ -9,11 +9,12 @@ Item {
     clip: false
 
     property int colorScheme: ColormapFactory.Inferno
+    property alias dataSource: surfaceHandler.dataSource
 
     ////////////////////////////////////////////////////////////////////////
 
     Connections {
-        target: ubertooth
+        target: dataSource
         enabled: spectrumGraph3D_container.visible
         function onNewDataAvailable() { surfaceHandler.refresh(surfaceSeries) }
     }
