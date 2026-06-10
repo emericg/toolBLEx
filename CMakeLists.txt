@@ -189,6 +189,9 @@ endfunction()
 
 add_other_files(${PROJECT_NAME}
     README.md TODO.md LICENSE.md
+    docs/BluetoothAdapters.md docs/UbertoothOne.md docs/RtlSdr.md
+    docs/InterestingFrequencyBands_2300_to_2600MHz.md
+    docs/InterestingFrequencyBands_below_2200MHz.md
     deploy_linux.sh deploy_macos.sh deploy_windows.sh
     .github/workflows/builds_desktop.yml
     .github/workflows/flatpak.yml

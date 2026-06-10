@@ -71,13 +71,13 @@ Bluetooth driver support might be a little shaky...
 
 ##### macOS
 
-macOS has various limitations regarding Bluetooth handling:  
+macOS has various limitations regarding Bluetooth handling:
 
 - Apple iBeacons are hidden by the OS and don't appear in scan results?
-- Bluetooth Classic scanning doesn't seem to work at the moment
-- MAC addresses are hidden by the OS, and replaced by randomly generated UUIDs, making proper device identification hard
+- MAC addresses are hidden by the OS, and replaced by randomly generated UUIDs, making proper device identification challenging.
 
-Starting with macOS 11, the application will ask you for permission to use Bluetooth. You can learn more on Apple [developer website](https://developer.apple.com/documentation/bundleresources/information_property_list/nsbluetoothalwaysusagedescription).
+> [!IMPORTANT]
+> Starting with macOS 11, the application will ask you for permission to use Bluetooth. You can learn more on Apple [developer website](https://developer.apple.com/documentation/bundleresources/information_property_list/nsbluetoothalwaysusagedescription).
 
 ##### Windows
 

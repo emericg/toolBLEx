@@ -36,16 +36,15 @@
 [x] macOS BLE permission
 [x] new permission system+
 [x] switch from Qt Charts to Qt Graphs
-[ ] auto theme switch
-
 [x] textfields: double click to select
 [x] keyboard navigation, move elevators
 [-] better beacon detection
 [-] r/w/n: red badges on errors?
 [ ] write data: explicit max size
-
-[x] select preferred adapter (only works on linux, OS limitations...)
+[ ] write data: check max size
 [-] sanitize old adapters
+[ ] auto theme switch
+[ ] macOS exit to dock is broken
 [x] graphs: unify min/max RSSI values (floorDb, ceilDb)
 [x] graphs: change clickable marker text position depending on its position onscreen
 [ ] graphs: auto/dynamic bands on sub 2 GHz view
@@ -55,9 +54,9 @@
 [ ] device list multiselection?
 [ ] show "new" device badge?
 
-[ ] adapter status (v2) (BT version, supported features, ...)
+[x] select preferred adapter (only works on linux, OS limitations...)
+[x] adapter status (macOS)
 [ ] adapter status (windows)
-[ ] adapter status (macOS)
 
 ## TODO # v2+
 
