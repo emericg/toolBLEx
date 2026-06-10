@@ -6,15 +6,14 @@ import ComponentLibrary
 Item {
     id: spectrumGraph3D_container
 
-    clip: false
-
-    property int colorScheme: ColormapFactory.Inferno
-    property alias dataSource: surfaceHandler.dataSource
-
     ////////////////////////////////////////////////////////////////////////
 
+    property int colorScheme: ColormapFactory.Inferno
+
+    property var dataSource
+
     Connections {
-        target: dataSource
+        target: spectrumGraph3D_container.dataSource
         enabled: spectrumGraph3D_container.visible
         function onNewDataAvailable() { surfaceHandler.refresh(surfaceSeries) }
     }
@@ -22,7 +21,7 @@ Item {
     SpectrumGraph3D_SurfaceHandler {
         id: surfaceHandler
 
-        dataSource: ubertooth
+        dataSource: spectrumGraph3D_container.dataSource
         maxDepth: 320
 
         floorDb: actionBar.minRSSI

@@ -22,7 +22,7 @@
 #include "WaterfallGraph_QuickItem.h"
 #include "ColormapFactory.h"
 #include "SettingsManager.h"
-#include "ubertooth.h"
+#include "SpectrumSource.h"
 
 #include <QPainter>
 #include <algorithm>
@@ -43,11 +43,17 @@ void WaterfallGraph_QuickItem::refresh()
 {
     if (!m_ubertooth) return;
 
-    const int rows = m_ubertooth->getFreqBinCount();
+    const int rawRows = m_ubertooth->getFreqBinCount();
     const QList <int *> &cols = m_ubertooth->getChronologicalValues(m_maxDepth, true);
     const int ncols = cols.size();
 
-    if (rows <= 0 || ncols <= 0) return;
+    if (rawRows <= 0 || ncols <= 0) return;
+
+    // Frequency decimation: max-pool rawRows input bins into at most m_maxFreqBins
+    // image rows, so a fine (e.g. 2001-bin kHz) source doesn't build a huge image.
+    const int maxF = (m_maxFreqBins > 0) ? m_maxFreqBins : rawRows;
+    const int group = std::max(1, (rawRows + maxF - 1) / maxF);
+    const int rows = (rawRows + group - 1) / group;
 
     if (m_image.width() != ncols || m_image.height() != rows)
     {
@@ -58,13 +64,17 @@ void WaterfallGraph_QuickItem::refresh()
     const double invRange = (range != 0.0) ? (1.0 / range) : 0.0;
 
     // Y is flipped so the lowest frequency sits at the bottom of the image
-    for (int i = 0; i < rows; i++)
+    for (int o = 0; o < rows; o++)
     {
-        QRgb *line = reinterpret_cast<QRgb *>(m_image.scanLine(rows - 1 - i));
+        QRgb *line = reinterpret_cast<QRgb *>(m_image.scanLine(rows - 1 - o));
+        const int i0 = o * group;
+        const int i1 = std::min(i0 + group, rawRows);
         for (int x = 0; x < ncols; x++)
         {
             const int *col = cols.at(x);
-            const double t = (col[i] - m_floorDb) * invRange; // normalize to 0..1
+            int v = col[i0];                                  // max-pool the group
+            for (int i = i0 + 1; i < i1; i++) if (col[i] > v) v = col[i];
+            const double t = (v - m_floorDb) * invRange;      // normalize to 0..1
             int idx = int(t * 255.0 + 0.5);
             idx = std::clamp(idx, 0, 255);
             line[x] = m_lut[idx];
@@ -89,7 +99,7 @@ void WaterfallGraph_QuickItem::setSource(QObject *source)
     if (m_source != source)
     {
         m_source = source;
-        m_ubertooth = qobject_cast<Ubertooth *>(source);
+        m_ubertooth = qobject_cast<SpectrumSource *>(source);
         Q_EMIT sourceChanged();
 
         refresh();
@@ -104,6 +114,19 @@ void WaterfallGraph_QuickItem::setMaxDepth(int v)
     {
         m_maxDepth = v;
         Q_EMIT maxDepthChanged();
+
+        refresh();
+    }
+}
+
+void WaterfallGraph_QuickItem::setMaxFreqBins(int v)
+{
+    if (v < 0) v = 0;
+
+    if (m_maxFreqBins != v)
+    {
+        m_maxFreqBins = v;
+        Q_EMIT maxFreqBinsChanged();
 
         refresh();
     }

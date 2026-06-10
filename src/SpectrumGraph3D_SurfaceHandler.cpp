@@ -20,7 +20,7 @@
  */
 
 #include "SpectrumGraph3D_SurfaceHandler.h"
-#include "ubertooth.h"
+#include "SpectrumSource.h"
 
 #include <QSurfaceDataProxy>
 #include <QSurface3DSeries>
@@ -47,11 +47,18 @@ void SpectrumGraph3D_SurfaceHandler::refresh(QSurface3DSeries *series)
     QSurfaceDataProxy *proxy = series->dataProxy();
     if (!proxy) return;
 
-    const int rows = m_ubertooth->getFreqBinCount();
+    const int rawRows = m_ubertooth->getFreqBinCount();
     const QList <int *> &cols = m_ubertooth->getChronologicalValues(m_maxDepth, true);
     const int available = cols.size();
 
-    if (rows <= 0 || available <= 0) return;
+    if (rawRows <= 0 || available <= 0) return;
+
+    // Frequency decimation: max-pool rawRows input bins into at most m_maxFreqBins
+    // output points, so a fine (e.g. 2001-bin kHz) source doesn't build an absurd
+    // mesh. Max-pooling keeps peaks; `group` input bins collapse to one output bin.
+    const int maxF = (m_maxFreqBins > 0) ? m_maxFreqBins : rawRows;
+    const int group = std::max(1, (rawRows + maxF - 1) / maxF);
+    const int rows = (rawRows + group - 1) / group;
 
     const int ncols = (m_maxDepth > 0) ? std::min(available, m_maxDepth) : available;
     const int startCol = available - ncols;
@@ -60,30 +67,44 @@ void SpectrumGraph3D_SurfaceHandler::refresh(QSurface3DSeries *series)
     const float floor = static_cast<float>(m_floorDb);
     const float holeThreshold = -125.0f; // any value below this threshold is a hole in the data
 
-    // Copy the matrix to floats, gap-filling holes with the nearest valid value
-    // along the frequency axis (sample-and-hold), so missing bins don't punch
-    // spikes through the floor like they do with the raw sentinel.
+    // Max-pool into floats, then gap-fill holes with the nearest valid value along
+    // the frequency axis (sample-and-hold), so missing bins don't punch spikes
+    // through the floor like they do with the raw sentinel.
     std::vector<float> m(static_cast<size_t>(ncols) * rows);
     for (int t = 0; t < ncols; t++)
     {
         const int *col = cols.at(startCol + t);
         float *dst = m.data() + static_cast<size_t>(t) * rows;
 
+        // max-pool: each output bin o takes the strongest valid input bin in its group
+        for (int o = 0; o < rows; o++)
+        {
+            const int i0 = o * group;
+            const int i1 = std::min(i0 + group, rawRows);
+            float best = floor; bool any = false;
+            for (int i = i0; i < i1; i++)
+            {
+                const float v = static_cast<float>(col[i]);
+                if (v < holeThreshold) continue; // skip holes
+                if (!any || v > best) { best = v; any = true; }
+            }
+            dst[o] = any ? best : static_cast<float>(-128); // hole sentinel for gap-fill below
+        }
+
         float last = floor;
         bool seen = false;
-        for (int i = 0; i < rows; i++) // forward fill
+        for (int o = 0; o < rows; o++) // forward fill
         {
-            const float v = static_cast<float>(col[i]);
-            if (v < holeThreshold) { dst[i] = last; }
-            else { dst[i] = v; last = v; seen = true; }
+            if (dst[o] < holeThreshold) { dst[o] = last; }
+            else { last = dst[o]; seen = true; }
         }
         if (seen) // backward fill leading holes
         {
             float next = floor;
-            for (int i = rows - 1; i >= 0; i--)
+            for (int o = rows - 1; o >= 0; o--)
             {
-                if (static_cast<float>(col[i]) < holeThreshold && dst[i] <= floor) dst[i] = next;
-                else next = dst[i];
+                if (dst[o] <= floor) dst[o] = next;
+                else next = dst[o];
             }
         }
     }
@@ -155,7 +176,9 @@ void SpectrumGraph3D_SurfaceHandler::refresh(QSurface3DSeries *series)
         {
             float y = src[i];
             if (y < floor) y = floor;
-            row.append(QSurfaceDataItem(QVector3D(fmin + i, y, static_cast<float>(age))));
+            // output bin i back to a real frequency (group input bins per output bin)
+            const float freq = fmin + (i + 0.5f) * static_cast<float>(group);
+            row.append(QSurfaceDataItem(QVector3D(freq, y, static_cast<float>(age))));
         }
         array.append(std::move(row));
     }
@@ -171,7 +194,7 @@ void SpectrumGraph3D_SurfaceHandler::setSource(QObject *source)
     if (m_source != source)
     {
         m_source = source;
-        m_ubertooth = qobject_cast<Ubertooth *>(source);
+        m_ubertooth = qobject_cast<SpectrumSource *>(source);
         Q_EMIT sourceChanged();
     }
 }
@@ -184,6 +207,17 @@ void SpectrumGraph3D_SurfaceHandler::setMaxDepth(int v)
     {
         m_maxDepth = v;
         Q_EMIT maxDepthChanged();
+    }
+}
+
+void SpectrumGraph3D_SurfaceHandler::setMaxFreqBins(int v)
+{
+    if (v < 0) v = 0;
+
+    if (m_maxFreqBins != v)
+    {
+        m_maxFreqBins = v;
+        Q_EMIT maxFreqBinsChanged();
     }
 }
 

@@ -32,7 +32,11 @@ A multiplatform Bluetooth Low Energy (and Classic) device scanner and analyzer.
 ![GUI dark mode](https://raw.githubusercontent.com/emericg/screenshots_flathub/master/toolBLEx/theme2.png)
 
 
-## Frequency analyzer (with an Ubertooth One)
+## Frequency analyzers
+
+> [!NOTE]
+> 2.4 GHz frequency analyzer rely on the [Ubertooth One](https://greatscottgadgets.com/ubertoothone/).
+> Sub 2 GHz frequency analyzer rely on [RTL-SDL](https://www.rtl-sdr.com/about-rtl-sdr/) compatible hardware.
 
 ![frequency analyzer](https://raw.githubusercontent.com/emericg/screenshots_flathub/master/toolBLEx/freqanalyzer1.webp)
 
@@ -79,7 +83,7 @@ Starting with macOS 11, the application will ask you for permission to use Bluet
 
 Bluetooth driver support might be a little shaky...
 
-- Windows doesn't have good enough support for the Ubertooth One, and thus the frequency analyzer is disabled.
+- Windows doesn't have good enough support for the Ubertooth One and RTL-SDL tools, and thus the frequency analyzers are disabled.
 
 #### Third party projects used by toolBLEx
 

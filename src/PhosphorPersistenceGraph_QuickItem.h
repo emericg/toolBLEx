@@ -30,7 +30,7 @@
 #include <QImage>
 #include <QColor>
 
-class Ubertooth;
+class SpectrumSource;
 
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ class PhosphorPersistenceGraph_QuickItem: public QQuickPaintedItem
     Q_PROPERTY(int decay READ decay WRITE setDecay NOTIFY decayChanged)
 
     QPointer <QObject> m_source;
-    Ubertooth *m_ubertooth = nullptr;
+    SpectrumSource *m_ubertooth = nullptr;
 
     qreal m_floorDb = -100.0;       //!< magnitude mapped to the bottom edge
     qreal m_ceilDb = -20.0;         //!< magnitude mapped to the top edge

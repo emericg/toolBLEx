@@ -48,6 +48,7 @@
 [-] sanitize old adapters
 [x] graphs: unify min/max RSSI values (floorDb, ceilDb)
 [x] graphs: change clickable marker text position depending on its position onscreen
+[ ] graphs: auto/dynamic bands on sub 2 GHz view
 
 ## TODO # v1+
 

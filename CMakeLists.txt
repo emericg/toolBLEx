@@ -67,6 +67,7 @@ set(SOURCES
     src/DeviceAdvModel.cpp src/DeviceAdvModel.h
     src/DeviceLogModel.cpp src/DeviceLogModel.h
 
+    src/SpectrumSource.cpp src/SpectrumSource.h
     src/ubertooth.cpp src/ubertooth.h
     src/ColormapFactory.cpp src/ColormapFactory.h
     src/WaterfallGraph_QuickItem.cpp src/WaterfallGraph_QuickItem.h
@@ -106,10 +107,10 @@ qt_add_qml_module(${PROJECT_NAME}
     QML_FILES
         qml/DesktopApplication.qml
         qml/DesktopHeader.qml
-        qml/ScreenBluetooth.qml
-        qml/ScreenUbertooth.qml
         qml/ScreenScanner.qml
         qml/ScreenAdvertiser.qml
+        qml/ScreenBluetooth.qml
+        qml/ScreenUbertooth.qml
         qml/ScreenSettings.qml
         qml/PanelDevice.qml
         qml/PanelDeviceInfos.qml

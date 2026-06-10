@@ -50,20 +50,27 @@ Item {
         ClickableMarker {
             id: leftMarker
             color: Theme.colorYellow
+            freqUnit: dataSource.freqUnit
         }
 
         ClickableMarker {
             id: rightMarker
             color: Theme.colorOrange
+            freqUnit: dataSource.freqUnit
         }
 
         ClickableMarker {
             id: barPeak
             color: Theme.colorRed
+            freqUnit: dataSource.freqUnit
 
             visible: spectrumGraph2D_container.showPeak && (dataSource.peakDbm > actionBar.minRSSI)
 
-            textFreq: qsTr("[peak: %1 MHz · %2 dBm]").arg(dataSource.peakFreq).arg(dataSource.peakDbm)
+            textFreq: {
+                var freq = dataSource.peakFreq
+                if (freqUnit === 1) freq = (freq / 1000).toFixed(1)
+                qsTr("[peak: %1 MHz · %2 dBm]").arg(freq).arg(dataSource.peakDbm)
+            }
 
             posX: UtilsNumber.mapNumber_nocheck(dataSource.peakFreq,
                                                 dataSource.freqMin, dataSource.freqMax,
@@ -91,13 +98,15 @@ Item {
             leftMarker.visible = true
             leftMarker.posY = mouse.y
             leftMarker.posX = mouse.x
-            leftMarker.textFreq = qsTr("freq: ") + freqtxt + " MHz"
+            if (leftMarker.freqUnit === 0) leftMarker.textFreq = qsTr("freq: ") + freqtxt + " MHz"
+            else leftMarker.textFreq = qsTr("freq: ") + (freqtxt / 1000).toFixed(1) + " MHz"
             leftMarker.textRSSI = "RSSI: " + rssitxt + " dB"
         } else if (idx === 2) {
             rightMarker.visible = true
             rightMarker.posY = mouse.y
             rightMarker.posX = mouse.x
-            rightMarker.textFreq = qsTr("freq: ") + freqtxt + " MHz"
+            if (leftMarker.freqUnit === 0) rightMarker.textFreq = qsTr("freq: ") + freqtxt + " MHz"
+            else rightMarker.textFreq = qsTr("freq: ") + (freqtxt / 1000).toFixed(1) + " MHz"
             rightMarker.textRSSI = "RSSI: " + rssitxt + " dB"
         }
     }

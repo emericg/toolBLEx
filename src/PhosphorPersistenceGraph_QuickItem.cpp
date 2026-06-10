@@ -20,7 +20,7 @@
  */
 
 #include "PhosphorPersistenceGraph_QuickItem.h"
-#include "ubertooth.h"
+#include "SpectrumSource.h"
 
 #include <QPainter>
 #include <QPainterPath>
@@ -137,7 +137,7 @@ void PhosphorPersistenceGraph_QuickItem::setSource(QObject *source)
     if (m_source != source)
     {
         m_source = source;
-        m_ubertooth = qobject_cast<Ubertooth *>(source);
+        m_ubertooth = qobject_cast<SpectrumSource *>(source);
         Q_EMIT sourceChanged();
     }
 }

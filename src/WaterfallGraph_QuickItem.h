@@ -30,7 +30,7 @@
 #include <QImage>
 #include <QRgb>
 
-class Ubertooth;
+class SpectrumSource;
 
 /* ************************************************************************** */
 
@@ -48,15 +48,17 @@ class WaterfallGraph_QuickItem: public QQuickPaintedItem
     Q_PROPERTY(QObject *dataSource READ source WRITE setSource NOTIFY sourceChanged)
 
     Q_PROPERTY(int maxDepth READ maxDepth WRITE setMaxDepth NOTIFY maxDepthChanged)
+    Q_PROPERTY(int maxFreqBins READ maxFreqBins WRITE setMaxFreqBins NOTIFY maxFreqBinsChanged)
     Q_PROPERTY(qreal floorDb READ floorDb WRITE setFloorDb NOTIFY rangeChanged)
     Q_PROPERTY(qreal ceilDb READ ceilDb WRITE setCeilDb NOTIFY rangeChanged)
     Q_PROPERTY(bool smooth READ smooth WRITE setSmooth NOTIFY smoothChanged)
     Q_PROPERTY(int colorScheme READ colorScheme WRITE setColorScheme NOTIFY colorsChanged)
 
     QPointer <QObject> m_source;
-    Ubertooth *m_ubertooth = nullptr;
+    SpectrumSource *m_ubertooth = nullptr;
 
     int m_maxDepth = 512;       //!< only plot the most-recent N sweeps along Z (0 = all)
+    int m_maxFreqBins = 512;    //!< cap image height along frequency; >this is max-pooled down (0 = all)
     qreal m_floorDb = -100.0;   //!< magnitude mapped to the low end of the colormap
     qreal m_ceilDb = -20.0;     //!< magnitude mapped to the high end of the colormap
     bool m_smooth = false;      //!< bilinear scaling vs crisp pixel blocks
@@ -69,6 +71,7 @@ class WaterfallGraph_QuickItem: public QQuickPaintedItem
 Q_SIGNALS:
     void sourceChanged();
     void maxDepthChanged();
+    void maxFreqBinsChanged();
     void rangeChanged();
     void smoothChanged();
     void colorsChanged();
@@ -83,6 +86,9 @@ public:
 
     int maxDepth() const { return m_maxDepth; }
     void setMaxDepth(int v);
+
+    int maxFreqBins() const { return m_maxFreqBins; }
+    void setMaxFreqBins(int v);
 
     qreal floorDb() const { return m_floorDb; }
     void setFloorDb(qreal v);

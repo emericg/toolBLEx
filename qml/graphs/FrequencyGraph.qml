@@ -162,8 +162,11 @@ GraphsView {
         id: axisFrequency
         visible: true
 
+        min: dataSource.freqMin / (dataSource.freqUnit ? 1000 : 1)
+        max: dataSource.freqMax / (dataSource.freqUnit ? 1000 : 1)
+
         labelsVisible: true
-        labelDecimals: 0
+        labelDecimals: (dataSource.freqUnit ? 1 : 0)
 
         gridVisible: true
         subGridVisible: true

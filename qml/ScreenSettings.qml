@@ -1280,7 +1280,7 @@ Loader {
 
                                     onTextChanged: {
                                         SettingsManager.ubertooth_path = text
-                                        ubertooth.checkPath()
+                                        ubertooth.checkPaths()
                                     }
                                 }
                             }
