@@ -35,8 +35,15 @@ A multiplatform Bluetooth Low Energy (and Classic) device scanner and analyzer.
 ## Frequency analyzers
 
 > [!NOTE]
-> 2.4 GHz frequency analyzer rely on the [Ubertooth One](https://greatscottgadgets.com/ubertoothone/).
-> Sub 2 GHz frequency analyzer rely on [RTL-SDL](https://www.rtl-sdr.com/about-rtl-sdr/) compatible hardware.
+> 2.4 GHz frequency analyzer rely on the [Ubertooth One](https://greatscottgadgets.com/ubertoothone/).  
+> Sub 2 GHz frequency analyzer rely on [RTL-SDL](https://www.rtl-sdr.com/about-rtl-sdr/) compatible hardware.  
+
+> [!TIP]
+> These spectrum analyzers are made to be fun to watch, not professional tools.  
+
+> [Interesting Frequency Bands: 2300 to 2600 MHz](docs/InterestingFrequencyBands_2300_to_2600MHz.md)
+
+> [Interesting Frequency Bands: below 2200 MHz](docs/InterestingFrequencyBands_below_2200MHz.md)
 
 ![frequency analyzer](https://raw.githubusercontent.com/emericg/screenshots_flathub/master/toolBLEx/freqanalyzer1.webp)
 

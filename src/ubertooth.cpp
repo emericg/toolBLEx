@@ -187,7 +187,7 @@ void Ubertooth::requestStop(QProcess *process)
 
 void Ubertooth::parseLine(const QString &line, int *&current_values, bool &sweepCompleted)
 {
-    // ubertooth-specan CSV: "timestamp, freq_MHz, rssi"
+    // ubertooth-specan CSV: "timestamp (seconds), freq (MHz), rssi (dB)"
 
     const QStringList f = line.split(',');
     if (f.size() != 3) return;

@@ -1,7 +1,7 @@
-# Interesting Frequency Bands: 2300–2600 MHz
+# Interesting Frequency Bands: 2300 to 2600 MHz
 
 
-## 📱 Cellular & Mobile Broadband
+#### 📱 Cellular & Mobile Broadband
 
 | Band              | Frequency         | Notes                                 |
 |-------------------|-------------------|---------------------------------------|
@@ -18,7 +18,7 @@
 > These are some of the busiest frequencies on the spectrum — a spectrogram here will look very active in urban areas.
 
 
-## 📡 WiFi & Unlicensed ISM (industrial, scientific and medical)
+#### 📡 WiFi & Unlicensed ISM (industrial, scientific and medical)
 
 | Band              | Frequency         | Notes                                 |
 |-------------------|-------------------|---------------------------------------|
@@ -31,7 +31,7 @@
 > The 2.4 GHz band is one of the most chaotic parts of the spectrum — WiFi, Bluetooth, microwaves, baby monitors, and wireless cameras all compete here.
 
 
-## 🔭 Satellite & Navigation
+#### 🔭 Satellite & Navigation
 
 | Band              | Frequency         | Notes                                 |
 |-------------------|-------------------|---------------------------------------|
@@ -43,7 +43,7 @@
 | Globalstar S-Band | 2483.5–2500 MHz   | Globalstar mobile satellite service downlink  |
 
 
-## 🛰️ Earth Observation & Science
+#### 🛰️ Earth Observation & Science
 
 | Band              | Frequency         | Notes                                 |
 |-------------------|-------------------|---------------------------------------|
@@ -52,7 +52,7 @@
 | Amateur satellite | ~2304 MHz         | 13 cm amateur band satellite segment  |
 
 
-## 🎙️ Amateur Radio — 13 cm Band
+#### 🎙️ Amateur Radio — 13 cm Band
 
 | Band              | Frequency         | Notes                                 |
 |-------------------|-------------------|---------------------------------------|
@@ -62,7 +62,7 @@
 | ATV (Analog TV)   | ~2420 MHz         | Amateur television, still used at club events |
 
 
-## 📻 Microwave Point-to-Point Links
+#### 📻 Microwave Point-to-Point Links
 
 | Band              | Frequency         | Notes                                 |
 |-------------------|-------------------|---------------------------------------|
@@ -72,7 +72,7 @@
 > These look like narrow, stable carrier peaks on a spectrum analyzer — very different from the wideband LTE signals.
 
 
-## 🍳 Interesting Interference Sources
+#### 🍳 Interesting Interference Sources
 
 | Band              | Frequency         | Notes                                 |
 |-------------------|-------------------|---------------------------------------|
@@ -83,7 +83,7 @@
 | Wireless CCTV cam | 2400–2483 MHz     | Often narrowband or FHSS              |
 
 
-## ⭐ Top Picks in This Range
+#### ⭐ Top Picks in This Range
 
 - **2400–2483 MHz (2.4 GHz ISM)** — the most chaotic 83 MHz in the spectrum; WiFi, Bluetooth, IoT, and interference all at once
 - **5G NR n41 (2496–2690 MHz)** — watch for wide 100 MHz 5G carriers in urban areas

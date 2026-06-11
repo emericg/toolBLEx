@@ -42,17 +42,15 @@ The only dongle tested with toolBLEx is a *TerraTec (RTL2838UHIDIR) with an Elon
 
 The instantaneous bandwidth is set by the **RTL2832U + USB 2.0**, *not* the tuner, so it is **identical across all RTL-SDR dongles**:
 
-- Sample rate: up to **3.2 MS/s** in theory, but **~2.4–2.56 MS/s** is the
-  reliable maximum before USB 2.0 drops samples.
-- Because sampling is **complex (I/Q)**, usable spectrum width ≈ sample rate →
-  **~2.4 MHz visible at one tuning.**
+- Sample rate: up to **3.2 MS/s** in theory, but **~2.4–2.56 MS/s** is the reliable maximum before USB 2.0 drops samples.
+- Because sampling is **complex (I/Q)**, usable spectrum width ≈ sample rate → **~2.4 MHz visible at one tuning.**
 
 The tuner's IF filter may be wider than 2.4 MHz, but it doesn't help — you can
 only *digitize* what the ADC + USB carry.
 
-> **Anything wider than ~2.4 MHz requires sweeping** (retuning across the band and stitching).
-> Wide spans are therefore slow (too slow to be usefull, especially on the E4000's sluggish PLL).
-> Narrow windows (≤ 2.4 MHz, one tune) are the RTL-SDR's sweet spot.
+> **Anything wider than ~2.4 MHz requires sweeping** (retuning across the band and stitching).  
+> Wide spans are therefore slow (too slow to be usefull, especially on the E4000's sluggish PLL).  
+> Narrow windows (≤ 2.4 MHz, one tune) are the RTL-SDR's sweet spot.  
 
 ### How the common dongles compares to other SDRs platforms
 
@@ -63,7 +61,9 @@ only *digitize* what the ADC + USB carry.
 | HackRF One        | ~20 MHz           | faster ADC, USB 2.0 (8-bit)           |
 | LimeSDR / USRP    | 30–60+ MHz        | USB 3.0 / GbE                         |
 
-These are all drivable via **SoapySDR**, so the `soapy_power` backend already makes their support possible in toolBLEx. Completely untested though...
+These are all drivable via **SoapySDR**, so the `soapy_power` backend already makes their support **technically** possible in toolBLEx.
+
+Completely untested though... Feedbacks welcomed!
 
 
 ## Capture backends
@@ -79,12 +79,41 @@ All are spawned as child processes and outputs parsed line-by-line.
 
 ### Commands issued by the `RtlSdr` class
 
-> TODO
+> soapy_power -f lowFreq:highFreq -r bandwidth -B step -t interval -d driver=rtlsdr,rtl=deviceIndex -F rtl_power -c [-g dB]  
+> soapy_power -f 866650000:869350000 -r 2400000 -B 500 -t 0.05 -d driver=rtlsdr,rtl=0 -F rtl_power -c  
+
+> rtl_power_fftw -f lowFreq:highFreq -b fftBins -d deviceIndex -c [-g dB*10]  
+> rtl_power_fftw -f 866650000:869350000 -b 512 -d 0 -c  
+
+> rtl_power -f lowFreq:highFreq:step -i interval -d deviceIndex [-g dB] -  
+> rtl_power -f 866650000:869350000:500 -i interval -d 0 -  
 
 ### Output format details
 
-> TODO
+* rtl_power / soapy_power
 
+> some header info...
+
+> then CSV data: "date, time, Hz_low, Hz_high, Hz_step, n_samples, (then n dB samples, ...)"
+
+```
+2026-06-06, 12:00:00, 866650000.0, 869050000.0, 500.0, 131072, (-109.370026, -109.62297, ...)
+```
+
+* rtl_power_fftw
+
+> some header info...
+
+> whitespace separated data, frequency in scientific notation, one sample per line:  
+> "frequency_Hz power_spectral_density_dB/Hz"
+
+```
+1.41940575e+09 -67.4533
+1.41940966e+09 -67.372
+1.41941356e+09 -67.4229
+1.41941747e+09 -67.4326
+1.41942138e+09 -67.4048
+```
 
 ## Known limitations
 

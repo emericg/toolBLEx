@@ -35,11 +35,28 @@ And the default UI is a rip-off `ubertooth-specan-ui` :) It has been expanded wi
 
 ### Commands issued by the `Ubertooth` class
 
-> TODO
+> ubertooth-util -v
+
+> ubertooth-specan -l lowerFreq -u higherFreq [-U deviceIndex]  
+> ubertooth-specan -l 2300 -u 2600 -U 0  
 
 ### Output format details
 
-> TODO
+* ubertooth-util -v
+
+```
+Firmware version: 2020-12-R1 (API:1.07)
+```
+
+* ubertooth-specan
+
+> CSV format: "timestamp (seconds), freq (MHz), rssi (dB)"
+
+```
+128.975251, 2402, -44
+128.975251, 2403, -43
+128.975251, 2404, -41
+```
 
 
 ## Known limitations

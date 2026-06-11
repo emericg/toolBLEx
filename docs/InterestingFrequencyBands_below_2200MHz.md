@@ -1,7 +1,7 @@
 # Interesting Frequency Bands: below 2200 MHz
 
 
-## 🔴 Emergency & Safety Services
+#### 🔴 Emergency & Safety Services
 
 | Band              | Frequency         | Notes                                 |
 |-------------------|-------------------|---------------------------------------|
@@ -13,7 +13,7 @@
 | TETRA (emergency) | 380–400 MHz       | Police/fire in many EU countries      |
 
 
-## 📡 Broadcast
+#### 📡 Broadcast
 
 | Band              | Frequency         | Notes                                 |
 |-------------------|-------------------|---------------------------------------|
@@ -22,7 +22,7 @@
 | Longwave AM       | 148.5–283.5 kHz   | Low frequency broadcast               |
 
 
-## 🛰️ Navigation & Positioning
+#### 🛰️ Navigation & Positioning
 
 | Band              | Frequency         | Notes                                 |
 |-------------------|-------------------|---------------------------------------|
@@ -32,7 +32,7 @@
 | Galileo E1        | 1575.42 MHz       | European GNSS (same as GPS L1)        |
 
 
-## ✈️ Aviation
+#### ✈️ Aviation
 
 | Band              | Frequency         | Notes                                 |
 |-------------------|-------------------|---------------------------------------|
@@ -43,7 +43,7 @@
 | DME/TACAN         | 960–1215 MHz      | Distance measuring equipment          |
 
 
-## 📱 Cellular & Wireless
+#### 📱 Cellular & Wireless
 
 | Band              | Frequency         | Notes                                 |
 |-------------------|-------------------|---------------------------------------|
@@ -53,7 +53,7 @@
 | LTE Band 20       | 791–821 MHz       | 4G rural coverage band (EU)           |
 
 
-## 🔬 ISM & IoT
+#### 🔬 ISM & IoT
 
 | Band              | Frequency         | Notes                                 |
 |-------------------|-------------------|---------------------------------------|
@@ -63,7 +63,7 @@
 | L-Band ISM        | 1.61–1.63 GHz     | Iridium satellite phones!             |
 
 
-## 🌤️ Weather & Science
+#### 🌤️ Weather & Science
 
 | Band              | Frequency         | Notes                                 |
 |-------------------|-------------------|---------------------------------------|
@@ -73,7 +73,7 @@
 | Hydrogen line     | 1420.405 MHz      | Galactic HI emission — radio astronomy |
 
 
-## 🎙️ Amateur Radio (highlights)
+#### 🎙️ Amateur Radio (highlights)
 
 | Band              | Frequency         | Notes                                 |
 |-------------------|-------------------|---------------------------------------|
@@ -83,7 +83,7 @@
 | 23cm              | 1240–1300 MHz     | Microwave amateur band                |
 
 
-## ⭐ Top Picks for a First Session
+#### ⭐ Top Picks for a First Session
 
 - **FM Broadcast @ 87.5–108 MHz** — strong signals, known frequencies, great for calibration
 - **AM Broadcast @ 530–1700 kHz** — strong signals, great for calibration
