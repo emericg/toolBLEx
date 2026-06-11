@@ -142,11 +142,11 @@ class SettingsManager: public QObject
     int m_spectrogram_graphSelected = 0;
     int m_spectrogram_graphColors = 0;
 
-    QString m_ubertooth_path = "ubertooth-specan";
+    QString m_ubertooth_path;
     int m_ubertooth_freqMin = 2400;
     int m_ubertooth_freqMax = 2500;
 
-    QString m_rtlsdr_path = "soapy_power";
+    QString m_rtlsdr_path;
     int m_rtlsdr_freqTarget = 433;
     int m_rtlsdr_freqBandwidth = 2400;
 

@@ -318,13 +318,13 @@ void SettingsManager::resetSettings()
     m_spectrogram_graphColors = 0;
     Q_EMIT spectrogramColorsChanged();
 
-    m_ubertooth_path = "ubertooth-specan";
+    m_ubertooth_path.clear();
     Q_EMIT ubertoothPathChanged();
     m_ubertooth_freqMin = 2400;
     m_ubertooth_freqMax = 2500;
     Q_EMIT ubertoothFreqChanged();
 
-    m_rtlsdr_path = "soapy_power";
+    m_rtlsdr_path.clear();
     Q_EMIT rtlsdrPathChanged();
     m_rtlsdr_freqTarget = 433;
     m_rtlsdr_freqBandwidth = 2400;

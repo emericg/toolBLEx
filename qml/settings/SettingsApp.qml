@@ -1,3 +1,4 @@
+import QtCore
 import QtQuick
 
 import ComponentLibrary
@@ -407,8 +408,9 @@ Column { // APP SETTINGS
             anchors.rightMargin: Theme.componentMargin
             anchors.verticalCenter: parent.verticalCenter
 
-            placeholderText: qsTr("Default export directory")
             selectByMouse: true
+
+            placeholderText: qsTr("Default export directory")
 
             dialogTitle: qsTr("Please specify the default export directory")
             currentFolder: {

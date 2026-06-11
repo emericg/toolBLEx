@@ -183,7 +183,6 @@ Column { // SPECTRUM ANALYZERS
 
                 selectByMouse: true
 
-                text: SettingsManager.ubertooth_path
                 placeholderText: "ubertooth-specan"
 
                 dialogTitle: qsTr("Please specify the path to the ubertooth-specan binary")
@@ -202,6 +201,7 @@ Column { // SPECTRUM ANALYZERS
                     color: Theme.colorSuccess
                 }
 
+                text: SettingsManager.ubertooth_path
                 onTextChanged: {
                     SettingsManager.ubertooth_path = text
                     ubertooth.checkPaths()
@@ -368,11 +368,10 @@ Column { // SPECTRUM ANALYZERS
 
                     selectByMouse: true
 
-                    text: SettingsManager.rtlsdr_path
-                    placeholderText: "soapy_power, rtl_power_fftw, rtl_power"
+                    placeholderText: "soapy_power, rtl_power_fftw"
 
                     dialogTitle: qsTr("Please specify the path to the choosen RtlSdr binary")
-                    dialogFilter: ["specan binary (soapy_power, rtl_power_fftw, rtl_power)"]
+                    dialogFilter: ["specan binary (soapy_power, rtl_power_fftw)"]
                     dialogFileMode: FileDialog.OpenFile
 
                     IconSvg {
@@ -387,6 +386,7 @@ Column { // SPECTRUM ANALYZERS
                         color: Theme.colorSuccess
                     }
 
+                    text: SettingsManager.rtlsdr_path
                     onTextChanged: {
                         SettingsManager.rtlsdr_path = text
                         rtlsdr.checkPaths()
