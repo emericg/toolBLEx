@@ -77,6 +77,9 @@ private:
                                     //!< 2 MHz span yields only 2 values for 3 integer-MHz buckets and
                                     //!< the lowest bucket is never filled. 250 kHz -> ~4 bins/MHz.
     int m_fftw_bins = 512;          //!< FFT bins per hop (rtl_power_fftw)
+
+    static constexpr int s_fftw_rssi_offset = -30; //!< raw RSSI -> dBm offset (from my experience) (rtl_power_fftw)
+
     double m_gain = -1.0;           //!< tuner gain in dB; < 0 = automatic
     double m_interval = 0.05;       //!< integration time, seconds (rtl_power -i / soapy_power -t).
                                     //!< Lower = faster but noisier. soapy_power plateaus ~10 Hz at

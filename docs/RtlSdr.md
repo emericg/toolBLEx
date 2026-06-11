@@ -77,13 +77,44 @@ All are spawned as child processes and outputs parsed line-by-line.
 | `RtlPowerFftw`  | `rtl_power_fftw`          | `freq_hz power_db` columns  | Fastest continuous FFT; PSD units (dB/Hz) |
 | `RtlPower`      | `rtl_power` (rtl-sdr)     | rtl_power CSV               | Simplest, but **~1 Hz** regardless of settings; Should NOT be used |
 
+### Setup
+
+Please note that installing `rtl-sdr` is required for our dongle detection process.  
+`soapysdr` and its rtlsdr module is what you really need.  
+`rtl-power-fftw` is an optional backend.  
+
+#### Linux
+
+First of all, you may (or may not) need to stop the kernel DVB driver from grabbing the dongle:
+
+```sh
+echo 'blacklist dvb_usb_rtl28xxu' | sudo tee /etc/modprobe.d/blacklist-rtl.conf
+sudo modprobe -r dvb_usb_rtl28xxu # or replug / reboot
+```
+
+* ArchLinux
+
+> pikaur -S soapy_power soapysdr soapyrtlsdr-git  
+> pikaur -S rtl_power_fftw-git  
+> pikaur -S rtl-sdr  
+
+* Debian
+
+> apt install soapysdr-module-rtlsdr  
+> apt install rtl-power-fftw  
+> apt install rtl-sdr  
+
+#### macOS
+
+> brew install soapysdr soapyrtlsdr  
+
 ### Commands issued by the `RtlSdr` class
 
 > soapy_power -f lowFreq:highFreq -r bandwidth -B step -t interval -d driver=rtlsdr,rtl=deviceIndex -F rtl_power -c [-g dB]  
 > soapy_power -f 866650000:869350000 -r 2400000 -B 500 -t 0.05 -d driver=rtlsdr,rtl=0 -F rtl_power -c  
 
-> rtl_power_fftw -f lowFreq:highFreq -b fftBins -d deviceIndex -c [-g dB*10]  
-> rtl_power_fftw -f 866650000:869350000 -b 512 -d 0 -c  
+> rtl_power_fftw -f lowFreq:highFreq -r bandwidth -b fftBins -t interval -d deviceIndex -c [-g dB*10]  
+> rtl_power_fftw -f 866650000:869350000 -r 2400000 -b 512 -t 0.05 -d 0 -c  
 
 > rtl_power -f lowFreq:highFreq:step -i interval -d deviceIndex [-g dB] -  
 > rtl_power -f 866650000:869350000:500 -i interval -d 0 -  

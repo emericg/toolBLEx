@@ -63,7 +63,7 @@ Loader {
             MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
 
             // view mode: 0 = spectrum (2D line graph), 2 = spectrum (3D surface graph), 3 = waterfall (2D heatmap)
-            property int viewMode: 0
+            property int viewMode: SettingsManager.spectrogram_graphSelected
 
             // axis control: floorDb/ceilDb
             property int minRSSI: -100
@@ -103,6 +103,7 @@ Loader {
                     currentSelection: actionBar.viewMode
                     onMenuSelected: (index) => {
                         actionBar.viewMode = index
+                        SettingsManager.spectrogram_graphSelected = index
                     }
                 }
 

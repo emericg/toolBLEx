@@ -72,12 +72,13 @@ void RtlSdr::applyBackendDbRange()
     // Rough, hardware-measured defaults:
     // - rtl_power      peak ~-3,  noise ~-20   -> -30 .. 0
     // - soapy_power    peak ~-85, noise ~-100  -> -100 .. -55
-    // - rtl_power_fftw peak ~-45, noise ~-55   -> -60 .. -30   (dB/Hz)
+    // - rtl_power_fftw raw noise ~-62, shifted by s_fftw_rssi_offset (-38) to ~-100 dBm,
+    //                  so the raw -60..-30 window becomes -98..-68 (same 30 dB span).
 
     switch (m_backend)
     {
         case RtlPower:     setFloorDb(-30.0);  setCeilDb(0.0);    break;
-        case RtlPowerFftw: setFloorDb(-60.0);  setCeilDb(-30.0);  break;
+        case RtlPowerFftw: setFloorDb(-60.0 + s_fftw_rssi_offset); setCeilDb(-30.0 + s_fftw_rssi_offset); break;
         case SoapyPower:   setFloorDb(-100.0); setCeilDb(-55.0);  break;
     }
 }
@@ -325,9 +326,11 @@ QStringList RtlSdr::buildArguments() const
         case RtlPowerFftw:
             // rtl_power_fftw: single window via -f low:high with -r = bandwidth (one hop),
             //   -b FFT bins, -c continuous. Output to stdout. Gain is in tenths of a dB.
+            //   -t sets the integration time per spectrum.
             args << "-f" << QString("%1:%2").arg(lowHz).arg(highHz);
             args << "-r" << QString::number(rateHz);
             args << "-b" << QString::number(m_fftw_bins);
+            args << "-t" << QString::number(m_interval);
             args << "-d" << QString::number(m_deviceIndex);
             args << "-c";
             if (m_gain >= 0.0) args << "-g" << QString::number(static_cast<int>(m_gain * 10));
@@ -416,7 +419,7 @@ void RtlSdr::parseFftwLine(const QString &line, int *&current_values, bool &swee
     const double db = f.at(1).toDouble(&ok_db);
     if (!ok_hz || !ok_db) return;
 
-    recordBin(hzToUnit(hz), static_cast<int>(std::lround(db)), current_values, sweepCompleted);
+    recordBin(hzToUnit(hz), static_cast<int>(std::lround(db)) + s_fftw_rssi_offset, current_values, sweepCompleted);
 }
 
 /* ************************************************************************** */

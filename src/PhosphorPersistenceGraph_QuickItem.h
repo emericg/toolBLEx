@@ -103,7 +103,7 @@ public:
     //! Draw the latest sweep into the persistence buffer and request a repaint.
     Q_INVOKABLE void refresh();
 
-    //! Wipe the persistence buffer (e.g. on retune or manual clear).
+    //! Wipe the persistence buffer (on retune or manual clear).
     Q_INVOKABLE void clear();
 };
 

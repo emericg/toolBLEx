@@ -47,7 +47,7 @@ class Ubertooth: public SpectrumSource
 {
     Q_OBJECT
 
-    static constexpr int s_rssi_offset = -52; //!< raw RSSI -> dBm offset
+    static constexpr int s_rssi_offset = -52; //!< raw RSSI -> dBm offset (from ubertooth-specan-ui)
 
     QString m_path_specan;  //!< 'ubertooth-specan' binary
     QString m_path_util;    //!< 'ubertooth-util' binary (version / device probe)

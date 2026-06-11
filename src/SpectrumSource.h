@@ -110,6 +110,7 @@ protected:
     QProcess *m_childProcess = nullptr;
     QString m_buffer;                       //!< accumulates partial stdout between reads
     int m_last_bin = -1;                    //!< last bin frequency seen (sweep-wrap detection)
+    int m_fill_prev_idx = -1;               //!< last bucket index written this sweep (sample-and-hold gap fill)
 
     std::vector <int> m_ring_buffer;
     int m_ring_head = 0;                    //!< raw index of the in-progress (newest) slot
@@ -128,6 +129,10 @@ protected:
     double m_capture_rate = 0.0;            //!< exponentially-smoothed sweeps/second
     int m_capture_rate_emit = -1;           //!< last rounded Hz emitted (rate-limits the signal)
 
+    int m_notify_min_interval_ms = 16;      //!< min ms between refreshes; derived from spectrogram_maxSamplingFreq at startWork()
+    QElapsedTimer m_notify_timer;           //!< time since the last newDataAvailable emit
+    bool m_notify_pending = false;          //!< a coalesced emit is already scheduled
+
     int *ringSlot(int i) { return m_ring_buffer.data() + static_cast<size_t>(i) * m_ring_bins; }
 
     bool areToolsAvailable() const { return m_toolsAvailable; }
@@ -140,6 +145,10 @@ protected:
     void allocateRing();
     void recordBin(int unitFreq, int dB, int *&current_values, bool &sweepCompleted);
     void advanceSweep(int *&current_values, bool &sweepCompleted);
+
+    // Coalesced graph notification
+    void scheduleDataNotification();
+    void emitDataNotification();
 
     // Device-specific hooks
     virtual QString binaryPath() const = 0;                 //!< binary to spawn (empty if unavailable)

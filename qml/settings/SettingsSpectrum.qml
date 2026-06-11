@@ -230,16 +230,12 @@ Column { // SPECTRUM ANALYZERS
                 first.value: SettingsManager.ubertooth_freqMin
                 first.onMoved: {
                     SettingsManager.ubertooth_freqMin = first.value
-                    if (ubertooth.running) {
-                        restartUbertoothTimer.restart()
-                    }
+                    restartUbertoothTimer.restart()
                 }
                 second.value: SettingsManager.ubertooth_freqMax
                 second.onMoved: {
                     SettingsManager.ubertooth_freqMax = second.value
-                    if (ubertooth.running) {
-                        restartUbertoothTimer.restart()
-                    }
+                    restartUbertoothTimer.restart()
                 }
             }
         }
@@ -267,9 +263,7 @@ Column { // SPECTRUM ANALYZERS
                 value: SettingsManager.ubertooth_freqMin
                 onValueModified: {
                     SettingsManager.ubertooth_freqMin = value
-                    if (ubertooth.running) {
-                        restartUbertoothTimer.restart()
-                    }
+                    restartUbertoothTimer.restart()
                 }
             }
 
@@ -302,9 +296,7 @@ Column { // SPECTRUM ANALYZERS
                 value: SettingsManager.ubertooth_freqMax
                 onValueModified: {
                     SettingsManager.ubertooth_freqMax = value
-                    if (ubertooth.running) {
-                        restartUbertoothTimer.restart()
-                    }
+                    restartUbertoothTimer.restart()
                 }
             }
         }
@@ -423,9 +415,7 @@ Column { // SPECTRUM ANALYZERS
                     value: SettingsManager.rtlsdr_freqTarget
                     onMoved: {
                         SettingsManager.rtlsdr_freqTarget = value
-                        if (rtlsdr.running) {
-                            restartRtlSdrTimer.restart()
-                        }
+                        restartRtlSdrTimer.restart()
                     }
                 }
             }
@@ -458,9 +448,7 @@ Column { // SPECTRUM ANALYZERS
                         value: SettingsManager.rtlsdr_freqTarget
                         onValueModified: {
                             SettingsManager.rtlsdr_freqTarget = value
-                            if (rtlsdr.running) {
-                                restartRtlSdrTimer.restart()
-                            }
+                            restartRtlSdrTimer.restart()
                         }
                     }
 
@@ -470,9 +458,7 @@ Column { // SPECTRUM ANALYZERS
                         text: qsTr("100 MHz")
                         onClicked: {
                             SettingsManager.rtlsdr_freqTarget = 100
-                            if (rtlsdr.running) {
-                                restartRtlSdrTimer.restart()
-                            }
+                            restartRtlSdrTimer.restart()
                         }
                     }
                     ButtonDesktop {
@@ -481,9 +467,7 @@ Column { // SPECTRUM ANALYZERS
                         text: qsTr("433 MHz")
                         onClicked: {
                             SettingsManager.rtlsdr_freqTarget = 433
-                            if (rtlsdr.running) {
-                                restartRtlSdrTimer.restart()
-                            }
+                            restartRtlSdrTimer.restart()
                         }
                     }
                     ButtonDesktop {
@@ -492,9 +476,7 @@ Column { // SPECTRUM ANALYZERS
                         text: qsTr("868 MHz")
                         onClicked: {
                             SettingsManager.rtlsdr_freqTarget = 868
-                            if (rtlsdr.running) {
-                                restartRtlSdrTimer.restart()
-                            }
+                            restartRtlSdrTimer.restart()
                         }
                     }
                 }
@@ -541,9 +523,7 @@ Column { // SPECTRUM ANALYZERS
                 value: SettingsManager.rtlsdr_freqBandwidth
                 onValueModified: {
                     SettingsManager.rtlsdr_freqBandwidth = value
-                    if (rtlsdr.running) {
-                        restartRtlSdrTimer.restart()
-                    }
+                    restartRtlSdrTimer.restart()
                 }
             }
         }
@@ -581,12 +561,11 @@ Column { // SPECTRUM ANALYZERS
                 to: 120
                 stepSize: 1
 
-                value: SettingsManager.spectrogram_samplingFreq
+                value: SettingsManager.spectrogram_maxSamplingFreq
                 onValueModified: {
-                    SettingsManager.spectrogram_samplingFreq = value
-                    if (ubertooth.running) {
-                        //restartUbertoothTimer.restart()
-                    }
+                    SettingsManager.spectrogram_maxSamplingFreq = value
+                    restartUbertoothTimer.restart()
+                    restartRtlSdrTimer.restart()
                 }
             }
         }
@@ -626,9 +605,7 @@ Column { // SPECTRUM ANALYZERS
                 value: SettingsManager.spectrogram_historyCurves
                 onValueModified: {
                     SettingsManager.spectrogram_historyCurves = value
-                    if (ubertooth.running) {
-                        //restartUbertoothTimer.restart()
-                    }
+                    restartUbertoothTimer.restart()
                 }
             }
         }
@@ -661,7 +638,7 @@ Column { // SPECTRUM ANALYZERS
                 anchors.verticalCenter: parent.verticalCenter
 
                 property int pointCount: (SettingsManager.ubertooth_freqMax - SettingsManager.ubertooth_freqMin) *
-                                          SettingsManager.spectrogram_samplingFreq * SettingsManager.spectrogram_historyCurves
+                                          SettingsManager.spectrogram_maxSamplingFreq * SettingsManager.spectrogram_historyCurves
 
                 text: (pointCount / 1000) + "k points"
 

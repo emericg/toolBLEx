@@ -33,12 +33,28 @@ It is spawned as a child process and its oupput parsed line-by-line.
 
 And the default UI is a rip-off `ubertooth-specan-ui` :) It has been expanded with 3D and waterfall graph since then though.
 
+### Setup
+
+* Generic info
+
+> https://ubertooth.readthedocs.io/en/latest/build_guide.html
+
+#### Linux
+
+* ArchLinux
+
+> pikaur -S ubertooth
+
+#### macOS
+
+> brew install ubertooth
+
 ### Commands issued by the `Ubertooth` class
 
 > ubertooth-util -v
 
-> ubertooth-specan -l lowerFreq -u higherFreq [-U deviceIndex]  
-> ubertooth-specan -l 2300 -u 2600 -U 0  
+> ubertooth-specan -l(lowerFreq) -u(higherFreq) [-U deviceIndex]  
+> ubertooth-specan -l2300 -u2600 -U 0  
 
 ### Output format details
 

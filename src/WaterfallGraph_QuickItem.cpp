@@ -49,8 +49,9 @@ void WaterfallGraph_QuickItem::refresh()
 
     if (rawRows <= 0 || ncols <= 0) return;
 
-    // Frequency decimation: max-pool rawRows input bins into at most m_maxFreqBins
-    // image rows, so a fine (e.g. 2001-bin kHz) source doesn't build a huge image.
+    // Frequency decimation:
+    // max-pool rawRows input bins into at most m_maxFreqBins image rows,
+    // so a fine (e.g. 2001-bin kHz) source doesn't build a huge image.
     const int maxF = (m_maxFreqBins > 0) ? m_maxFreqBins : rawRows;
     const int group = std::max(1, (rawRows + maxF - 1) / maxF);
     const int rows = (rawRows + group - 1) / group;

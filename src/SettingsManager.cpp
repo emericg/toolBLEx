@@ -156,8 +156,8 @@ bool SettingsManager::readSettings()
         if (settings.contains("settings/exportDirectory"))
             m_exportDirectory = settings.value("settings/exportDirectory").toString();
 
-        if (settings.contains("settings/spectrogram_samplingFrequency"))
-            m_spectrogram_samplingFrequency = settings.value("settings/spectrogram_samplingFrequency").toInt();
+        if (settings.contains("settings/spectrogram_maxSamplingFreq"))
+            m_spectrogram_maxSamplingFreq = settings.value("settings/spectrogram_maxSamplingFreq").toInt();
         if (settings.contains("settings/spectrogram_historyCurves"))
             m_spectrogram_historyCurves = settings.value("settings/spectrogram_historyCurves").toInt();
         if (settings.contains("settings/spectrogram_graphSelected"))
@@ -226,7 +226,7 @@ bool SettingsManager::writeSettings()
 
         settings.setValue("settings/exportDirectory", m_exportDirectory);
 
-        settings.setValue("settings/spectrogram_samplingFrequency", m_spectrogram_samplingFrequency);
+        settings.setValue("settings/spectrogram_maxSamplingFreq", m_spectrogram_maxSamplingFreq);
         settings.setValue("settings/spectrogram_historyCurves", m_spectrogram_historyCurves);
         settings.setValue("settings/spectrogram_graphSelected", m_spectrogram_graphSelected);
         settings.setValue("settings/spectrogram_graphColors", m_spectrogram_graphColors);
@@ -309,8 +309,8 @@ void SettingsManager::resetSettings()
     m_exportDirectory.clear();
     Q_EMIT exportDirectoryChanged();
 
-    m_spectrogram_samplingFrequency = 60;
-    Q_EMIT spectrogramSamplingChanged();
+    m_spectrogram_maxSamplingFreq = 60;
+    Q_EMIT spectrogramMaxSamplingFreqChanged();
     m_spectrogram_historyCurves = 32;
     Q_EMIT spectrogramHistoryChanged();
     m_spectrogram_graphSelected = 0;
@@ -635,15 +635,15 @@ void SettingsManager::setExportDirectory(const QString &value)
 
 /* ************************************************************************** */
 
-void SettingsManager::setSpectrogramSamplingFreq(const int value)
+void SettingsManager::setSpectrogramMaxSamplingFreq(const int value)
 {
     if (value >= 10 && value <= 120)
     {
-        if (m_spectrogram_samplingFrequency != value)
+        if (m_spectrogram_maxSamplingFreq != value)
         {
-            m_spectrogram_samplingFrequency = value;
+            m_spectrogram_maxSamplingFreq = value;
             writeSettings();
-            Q_EMIT spectrogramSamplingChanged();
+            Q_EMIT spectrogramMaxSamplingFreqChanged();
         }
     }
 }

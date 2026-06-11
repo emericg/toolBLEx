@@ -20,6 +20,7 @@
  */
 
 #include "SpectrumSource.h"
+#include "SettingsManager.h"
 
 #include <QTimer>
 #include <QDebug>
@@ -137,17 +138,24 @@ void SpectrumSource::startWork()
 
     const QStringList args = buildArguments();
 
-    // Reset the rolling state.
+    // Reset the rolling state
     m_ring_head = 0;
     m_ring_count = 0;
     m_buffer.clear();
     m_last_bin = -1;
+    m_fill_prev_idx = -1;
     m_values_latest.clear();
     m_max_max = s_rssi_raw_default;
     m_capture_rate = 0.0;
     m_capture_rate_emit = -1;
     m_sweeps_in_window = 0;
     m_sweep_timer.invalidate(); // first completed sweep just primes the timer
+    m_notify_pending = false;
+    m_notify_timer.invalidate();
+
+    // Cap graph refreshes at the max sampling frequency (Hz -> ms period)
+    const int notifyHz = SettingsManager::getInstance()->getSpectrogramMaxSamplingFreq();
+    m_notify_min_interval_ms = (notifyHz > 0) ? std::max(1, 1000 / notifyHz) : 0;
 
     allocateRing();
 
@@ -264,19 +272,35 @@ void SpectrumSource::recordBin(int unitFreq, int dB, int *&current_values, bool 
 {
     if (unitFreq < m_freq_min || unitFreq > m_freq_max) return;
 
-    // Sweep-wrap detection: within a sweep the frequency only ever increases,
-    // so a strictly lower bin means a new sweep has begun. Close the previous one
-    // (advance the ring) *before* writing this bin into the fresh slot.
-    // This is backend-agnostic, working for any output format.
+    // Sweep-wrap detection:
+    // within a sweep the frequency only ever increases, so a strictly lower bin
+    // means a new sweep has begun. Close the previous one (advance the ring) *before*
+    // writing this bin into the fresh slot. This is backend-agnostic, working for any output format.
     if (m_last_bin >= 0 && unitFreq < m_last_bin)
     {
         advanceSweep(current_values, sweepCompleted);
+        m_fill_prev_idx = -1; // fresh slot: restart the gap-fill cursor
     }
     m_last_bin = unitFreq;
 
-    int &cell = current_values[unitFreq - m_freq_min];
-    if (dB > cell) cell = dB;           // within-sweep max for this bucket
-    m_values_latest[unitFreq] = cell;
+    const int idx = unitFreq - m_freq_min;
+
+    // Sample-and-hold gap fill:
+    // a source whose native step is coarser than the 1-unit bucket grid
+    // (e.g. rtl_power_fftw's FFT bins land ~every few kHz on a 1 kHz grid) only
+    // touches some buckets, leaving holes that render as a comb.
+    // Carry this sample across every bucket since the previous one (and across the
+    // leading edge on the first sample), so each row stays continuous for the
+    // trace / waterfall / 3D surface. Backends already finer than the grid keep
+    // their existing per-bucket max behaviour (the gap is zero-width).
+    const int begin = (m_fill_prev_idx >= 0) ? (m_fill_prev_idx + 1) : 0;
+    for (int b = begin; b <= idx; b++)
+    {
+        int &cell = current_values[b];
+        if (dB > cell) cell = dB;       // within-sweep max for this bucket
+        m_values_latest[m_freq_min + b] = cell; // keep the latest-row map dense too (phosphor reads it)
+    }
+    m_fill_prev_idx = idx;
 }
 
 /* ************************************************************************** */
@@ -312,10 +336,11 @@ void SpectrumSource::processOutput()
 
     if (sweepCompleted)
     {
-        // Capture rate: count completed sweeps over a wall-clock window, then
-        // rate = sweeps / elapsed. Counting across the whole batch (rather than
-        // timing consecutive sweeps) is robust to a fast source that delivers
-        // several sweeps per read -- which otherwise makes the rate read low.
+        // Capture rate:
+        // Count completed sweeps over a wall-clock window, then rate = sweeps / elapsed.
+        // Counting across the whole batch (rather than timing consecutive sweeps)
+        // is robust to a fast source that delivers several sweeps per read --
+        // which otherwise makes the rate read low.
         if (!m_sweep_timer.isValid())
         {
             m_sweep_timer.start();
@@ -337,8 +362,38 @@ void SpectrumSource::processOutput()
             }
         }
 
-        Q_EMIT newDataAvailable();
+        scheduleDataNotification();
     }
+}
+
+/* ************************************************************************** */
+
+void SpectrumSource::scheduleDataNotification()
+{
+    // Coalesce bursts: emit immediately if we are past the refresh interval,
+    // otherwise schedule a single trailing emit so the graphs refresh at most
+    // once per m_notify_min_interval_ms no matter how fast sweeps arrive.
+    if (m_notify_min_interval_ms <= 0) { emitDataNotification(); return; } // throttle disabled
+    if (m_notify_pending) return;
+
+    const qint64 since = m_notify_timer.isValid() ? m_notify_timer.elapsed() : m_notify_min_interval_ms;
+    if (since >= m_notify_min_interval_ms)
+    {
+        emitDataNotification();
+    }
+    else
+    {
+        m_notify_pending = true;
+        QTimer::singleShot(static_cast<int>(m_notify_min_interval_ms - since),
+                           this, &SpectrumSource::emitDataNotification);
+    }
+}
+
+void SpectrumSource::emitDataNotification()
+{
+    m_notify_pending = false;
+    m_notify_timer.restart();
+    Q_EMIT newDataAvailable();
 }
 
 /* ************************************************************************** */
@@ -499,12 +554,27 @@ void SpectrumSource::getFrequencyGraphCurrent(QLineSeries *serie)
     if (!serie) return;
     serie->clear();
 
-    for (int i = m_freq_min; i <= m_freq_max; i++)
+    const int freqBinCount = getFreqBinCount();
+    if (freqBinCount <= 0 || m_ring_count <= 0) return;
+
+    // Use the most recent *completed* sweep (the head is the in-progress slot and
+    // may be only partially filled mid-sweep, which would make the trace flicker).
+    // The row is sample-and-hold filled by recordBin(), so it is continuous; we
+    // still skip any leftover hole values (e.g. the trailing edge) rather than
+    // drawing them at the floor.
+    int idx = m_ring_head;
+    if (m_ring_count > 1) idx = (m_ring_head - 1 + s_max_stack) % s_max_stack;
+    const int *current = ringSlot(idx);
+
+    const int bins = std::min(freqBinCount, m_ring_bins);
+    for (int i = 0; i < bins; i++)
     {
+        if (current[i] <= s_rssi_hole_threshold) continue; // skip not-yet-filled buckets
+
         if (m_unit == FrequencyUnit::kHz) {
-            serie->append(i / 1000.0, m_values_latest[i]);
+            serie->append((m_freq_min + i) / 1000.0, current[i]);
         } else {
-            serie->append(i, m_values_latest[i]);
+            serie->append(m_freq_min + i, current[i]);
         }
     }
 }

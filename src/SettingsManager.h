@@ -86,7 +86,7 @@ class SettingsManager: public QObject
     Q_PROPERTY(QString exportDirectory_str READ getExportDirectory_str NOTIFY exportDirectoryChanged)
     Q_PROPERTY(QUrl exportDirectory_url READ getExportDirectory_url NOTIFY exportDirectoryChanged)
 
-    Q_PROPERTY(int spectrogram_samplingFreq READ getSpectrogramSamplingFreq WRITE setSpectrogramSamplingFreq NOTIFY spectrogramSamplingChanged)
+    Q_PROPERTY(int spectrogram_maxSamplingFreq READ getSpectrogramMaxSamplingFreq WRITE setSpectrogramMaxSamplingFreq NOTIFY spectrogramMaxSamplingFreqChanged)
     Q_PROPERTY(int spectrogram_historyCurves READ getSpectrogramHistoryCurves WRITE setSpectrogramHistoryCurves NOTIFY spectrogramHistoryChanged)
     Q_PROPERTY(int spectrogram_graphSelected READ getSpectrogramGraphSelected WRITE setSpectrogramGraphSelected NOTIFY spectrogramGraphChanged)
     Q_PROPERTY(int spectrogram_graphColors READ getSpectrogramGraphColors WRITE setSpectrogramGraphColors NOTIFY spectrogramColorsChanged)
@@ -137,7 +137,7 @@ class SettingsManager: public QObject
 
     QString m_exportDirectory;
 
-    int m_spectrogram_samplingFrequency = 60;
+    int m_spectrogram_maxSamplingFreq = 60;
     int m_spectrogram_historyCurves = 32;
     int m_spectrogram_graphSelected = 0;
     int m_spectrogram_graphColors = 0;
@@ -184,7 +184,7 @@ Q_SIGNALS:
 
     void exportDirectoryChanged();
 
-    void spectrogramSamplingChanged();
+    void spectrogramMaxSamplingFreqChanged();
     void spectrogramHistoryChanged();
     void spectrogramGraphChanged();
     void spectrogramColorsChanged();
@@ -292,8 +292,8 @@ public:
     int getRtlSdrFreqBandwidth() const { return m_rtlsdr_freqBandwidth; }
     void setRtlSdrFreqBandwidth(const int value);
 
-    int getSpectrogramSamplingFreq() const { return m_spectrogram_samplingFrequency; }
-    void setSpectrogramSamplingFreq(const int value);
+    int getSpectrogramMaxSamplingFreq() const { return m_spectrogram_maxSamplingFreq; }
+    void setSpectrogramMaxSamplingFreq(const int value);
     int getSpectrogramHistoryCurves() const { return m_spectrogram_historyCurves; }
     void setSpectrogramHistoryCurves(const int value);
     int getSpectrogramGraphSelected() const { return m_spectrogram_graphSelected; }
