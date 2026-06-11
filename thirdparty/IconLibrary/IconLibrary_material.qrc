@@ -22,6 +22,7 @@
         <file>material-icons/duotone/camera.svg</file>
         <file>material-icons/duotone/camera_alt.svg</file>
         <file>material-icons/duotone/cameraswitch.svg</file>
+        <file>material-icons/duotone/cell_tower.svg</file>
         <file>material-icons/duotone/child_friendly.svg</file>
         <file>material-icons/duotone/clean_hands.svg</file>
         <file>material-icons/duotone/connected_tv.svg</file>
@@ -30,6 +31,7 @@
         <file>material-icons/duotone/date_clear.svg</file>
         <file>material-icons/duotone/date_range.svg</file>
         <file>material-icons/duotone/devices.svg</file>
+        <file>material-icons/duotone/devices_other.svg</file>
         <file>material-icons/duotone/edit.svg</file>
         <file>material-icons/duotone/emoji_objects.svg</file>
         <file>material-icons/duotone/exit_to_app.svg</file>
@@ -55,6 +57,7 @@
         <file>material-icons/duotone/microwave.svg</file>
         <file>material-icons/duotone/minimize.svg</file>
         <file>material-icons/duotone/model_training.svg</file>
+        <file>material-icons/duotone/network_check.svg</file>
         <file>material-icons/duotone/outside.svg</file>
         <file>material-icons/duotone/photo_library.svg</file>
         <file>material-icons/duotone/pin_drop.svg</file>
@@ -95,12 +98,17 @@
         <file>material-icons/duotone/wb_sunny.svg</file>
         <file>material-icons/duotone/wc.svg</file>
         <file>material-icons/duotone/wifi_tethering.svg</file>
+        <file>material-icons/duotone/wifi_tethering_error.svg</file>
+        <file>material-icons/duotone/wifi_tethering_off.svg</file>
 
         <file>material-icons/outlined/bluetooth.svg</file>
         <file>material-icons/outlined/bluetooth_connected.svg</file>
         <file>material-icons/outlined/bluetooth_disabled.svg</file>
         <file>material-icons/outlined/bluetooth_searching.svg</file>
+        <file>material-icons/outlined/hourglass_bottom.svg</file>
         <file>material-icons/outlined/hourglass_empty.svg</file>
+        <file>material-icons/outlined/hourglass_full.svg</file>
+        <file>material-icons/outlined/hourglass_top.svg</file>
         <file>material-icons/outlined/more_horiz.svg</file>
         <file>material-icons/outlined/more_vert.svg</file>
         <file>material-icons/outlined/settings_bluetooth.svg</file>
