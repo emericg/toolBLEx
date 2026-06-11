@@ -121,11 +121,6 @@ ApplicationWindow {
     onVisibilityChanged: (visibility) => {
         //console.log("onVisibilityChanged(" + visibility + ")")
 
-        if (visibility === Window.Hidden) {
-            if (Qt.platform.os === "osx") {
-                utilsDock.toggleDockIconVisibility(false)
-            }
-        }
         if (visibility === Window.AutomaticVisibility ||
             visibility === Window.Minimized || visibility === Window.Maximized ||
             visibility === Window.Windowed || visibility === Window.FullScreen) {

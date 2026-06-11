@@ -244,8 +244,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE thirdparty/)
 
 # Qt official hacks...
 set(QML_IMPORT_PATH
+    "${CMAKE_BINARY_DIR}/"
     "${CMAKE_BINARY_DIR}/thirdparty/"
-    "${CMAKE_BINARY_DIR}/thirdparty/MobileUI"
     "${CMAKE_BINARY_DIR}/thirdparty/ComponentLibrary"
     CACHE STRING "QML Modules import paths" FORCE)
 

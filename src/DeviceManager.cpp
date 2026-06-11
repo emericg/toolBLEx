@@ -1340,6 +1340,13 @@ bool DeviceManager::isDeviceSeenCached(const QString &addr)
 
 void DeviceManager::clearDeviceSeenCache()
 {
+    bool wasScanning = false;
+    if (m_scanning || m_scanning_paused)
+    {
+        wasScanning = true;
+        scanDevices_stop();
+    }
+
     // Remove every device in the list but not currently scanned
     for (auto d: std::as_const(m_devices_model->m_devices))
     {
@@ -1366,6 +1373,11 @@ void DeviceManager::clearDeviceSeenCache()
             qWarning() << "> clearDeviceSeenCache.exec() ERROR"
                        << clearDeviceSeenCache.lastError().type() << ":" << clearDeviceSeenCache.lastError().text();
         }
+    }
+
+    if (wasScanning)
+    {
+        scanDevices_start();
     }
 }
 

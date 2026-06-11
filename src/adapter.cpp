@@ -317,7 +317,7 @@ bool Adapter::checkAdapter()
     return status;
 }
 
-void Adapter::update(bool isDefault, int inUse)
+void Adapter::update(bool isDefault, bool inUse)
 {
     bool changed = false;
 

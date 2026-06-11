@@ -20,6 +20,8 @@ Loader {
             screenSettings.item.backAction()
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+
     // Restart timers
     // If a sensible setting is modified many times in a short amount of time (we use
     // a 1 secon window) then applying that setting will be delayed until no more
@@ -56,6 +58,30 @@ Loader {
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////
+
+    Loader {
+        id: popupLoader_cacheseen
+
+        active: false
+        asynchronous: false
+        sourceComponent: PopupClearDeviceSeenCache {
+            id: popupClearSeenCache
+            parent: appContent
+        }
+    }
+
+    Loader {
+        id: popupLoader_cachestructure
+
+        active: false
+        asynchronous: false
+        sourceComponent: PopupClearDeviceStructureCache {
+            id: popupClearStructureCache
+            parent: appContent
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
     opacity: active ? 1 : 0
@@ -78,30 +104,6 @@ Loader {
             }
 
             screenScanner.loadScreen()
-        }
-
-        ////////////////////////////////////////////////////////////////////////
-
-        Loader {
-            id: popupLoader_cacheseen
-
-            active: false
-            asynchronous: false
-            sourceComponent: PopupClearDeviceSeenCache {
-                id: popupClearSeenCache
-                parent: appContent
-            }
-        }
-
-        Loader {
-            id: popupLoader_cachestructure
-
-            active: false
-            asynchronous: false
-            sourceComponent: PopupClearDeviceStructureCache {
-                id: popupClearStructureCache
-                parent: appContent
-            }
         }
 
         ////////////////////////////////////////////////////////////////////////

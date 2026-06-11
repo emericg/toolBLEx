@@ -42,7 +42,7 @@
 [-] better beacon detection
 [-] r/w/n: red badges on errors?
 [-] sanitize old adapters
-[ ] macOS exit to dock is broken
+[x] macOS exit to dock is broken
 [ ] write data: explicit max size
 [ ] write data: check max size
 

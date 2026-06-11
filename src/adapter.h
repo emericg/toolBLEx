@@ -79,7 +79,7 @@ public:
     ~Adapter();
 
     bool checkAdapter();
-    void update(bool isDefault, int inUse);
+    void update(bool isDefault, bool inUse);
 
     bool isDefault() const { return m_default; }
     void setDefault(bool isDefault);

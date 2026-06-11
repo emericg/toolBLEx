@@ -64,7 +64,7 @@ bool Ubertooth::autodetectPaths()
 bool Ubertooth::checkPaths()
 {
 #if defined(Q_OS_WINDOWS)
-    return status; // We just don't support Windows
+    return false; // We just don't support Windows
 #endif
 
     bool status = false;
