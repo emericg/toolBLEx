@@ -377,52 +377,119 @@ Loader {
                                 z: 1
                                 spacing: 10
 
+                                Rectangle { // rectangleAuto
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    width: 72
+                                    height: 36
+                                    radius: 4
+
+                                    color: "white"
+                                    border.color: (SettingsManager.appThemeAuto) ? Theme.colorPrimary : Theme.colorComponentBorder
+                                    border.width: 2
+
+                                    Text {
+                                        anchors.centerIn: parent
+                                        text: qsTr("auto")
+                                        textFormat: Text.PlainText
+                                        color: (SettingsManager.appThemeAuto) ? Theme.colorPrimary : Theme.colorComponentBorder
+                                        font.bold: true
+                                        font.pixelSize: Theme.fontSizeContentSmall
+                                    }
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: {
+                                            SettingsManager.appThemeAuto = true
+                                        }
+                                    }
+                                }
                                 Rectangle {
                                     id: rectangleLight
-                                    width: 80
-                                    height: Theme.componentHeight
                                     anchors.verticalCenter: parent.verticalCenter
+                                    width: 72
+                                    height: 36
+
+                                    property bool selected: (SettingsManager.appTheme === "THEME_DESKTOP_LIGHT" &&
+                                                             !SettingsManager.appThemeAuto)
+
+                                    property bool autoselected: (SettingsManager.appThemeAuto &&
+                                                                 Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT)
 
                                     radius: 4
                                     color: "white"
-                                    border.color: (SettingsManager.appTheme === "THEME_DESKTOP_LIGHT") ? Theme.colorSecondary : "#757575"
+                                    border.color: rectangleLight.selected ? Theme.colorPrimary : "#757575"
                                     border.width: 2
+
+                                    Rectangle {
+                                        anchors.right: parent.right
+                                        anchors.bottom: parent.bottom
+                                        anchors.margins: 4
+                                        width: 8
+                                        height: 8
+                                        radius: 8
+
+                                        color: Theme.colorPrimary
+                                        visible: rectangleLight.autoselected
+                                    }
 
                                     Text {
                                         anchors.centerIn: parent
                                         text: qsTr("light")
                                         textFormat: Text.PlainText
-                                        color: (SettingsManager.appTheme === "THEME_DESKTOP_LIGHT") ? Theme.colorPrimary : "#757575"
+                                        color: rectangleLight.selected ? Theme.colorPrimary : "#757575"
                                         font.bold: true
                                         font.pixelSize: Theme.fontSizeContentSmall
                                     }
                                     MouseArea {
                                         anchors.fill: parent
-                                        onClicked: SettingsManager.appTheme = "THEME_DESKTOP_LIGHT"
+                                        onClicked: {
+                                            SettingsManager.appThemeAuto = false
+                                            SettingsManager.appTheme = "THEME_DESKTOP_LIGHT"
+                                        }
                                     }
                                 }
                                 Rectangle {
                                     id: rectangleDark
-                                    width: 80
-                                    height: Theme.componentHeight
                                     anchors.verticalCenter: parent.verticalCenter
-
+                                    width: 72
+                                    height: 36
                                     radius: 4
+
+                                    property bool selected: (SettingsManager.appTheme === "THEME_DESKTOP_DARK" &&
+                                                             !SettingsManager.appThemeAuto)
+
+                                    property bool autoselected: (SettingsManager.appThemeAuto &&
+                                                                 Theme.currentTheme === Theme.THEME_DESKTOP_DARK)
+
                                     color: "#555151"
                                     border.color: Theme.colorSecondary
-                                    border.width: (SettingsManager.appTheme === "THEME_DESKTOP_DARK") ? 2 : 0
+                                    border.width: rectangleDark.selected ? 2 : 0
+
+                                    Rectangle {
+                                        anchors.right: parent.right
+                                        anchors.bottom: parent.bottom
+                                        anchors.margins: 4
+                                        width: 8
+                                        height: 8
+                                        radius: 8
+
+                                        color: Theme.colorPrimary
+                                        visible: rectangleDark.autoselected
+                                    }
 
                                     Text {
                                         anchors.centerIn: parent
                                         text: qsTr("dark")
                                         textFormat: Text.PlainText
-                                        color: (SettingsManager.appTheme === "THEME_DESKTOP_DARK") ? Theme.colorPrimary : "#ececec"
+                                        color: rectangleDark.selected ? Theme.colorPrimary : "#ececec"
                                         font.bold: true
                                         font.pixelSize: Theme.fontSizeContentSmall
                                     }
                                     MouseArea {
                                         anchors.fill: parent
-                                        onClicked: SettingsManager.appTheme = "THEME_DESKTOP_DARK"
+                                        onClicked: {
+                                            SettingsManager.appThemeAuto = false
+                                            SettingsManager.appTheme = "THEME_DESKTOP_DARK"
+                                        }
                                     }
                                 }
                             }
@@ -737,8 +804,8 @@ Loader {
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 model: ListModel {
-                                    ListElement { idx: 1; txt: qsTr("Classic"); src: ""; sz: 16; }
                                     ListElement { idx: 2; txt: qsTr("BLE"); src: ""; sz: 16; }
+                                    ListElement { idx: 1; txt: qsTr("Classic"); src: ""; sz: 16; }
                                     ListElement { idx: 3; txt: qsTr("Both"); src: ""; sz: 16; }
                                 }
 
@@ -766,7 +833,7 @@ Loader {
                                 anchors.rightMargin: Theme.componentMargin
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                text: qsTr("Scanning for both Classic and Low Energy at the same time usually means that your adapter will switch between scanning modes every couple of seconds instead of scanning for both simultaneously.")
+                                text: qsTr("Scanning for both Classic and Low Energy at the same time usually means that your adapter will switch between scanning modes every couple of seconds, instead of scanning for both simultaneously.")
                                 textFormat: Text.PlainText
                                 font.pixelSize: Theme.fontSizeContent
                                 color: Theme.colorSubText

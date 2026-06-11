@@ -43,7 +43,7 @@
 [ ] write data: explicit max size
 [ ] write data: check max size
 [-] sanitize old adapters
-[ ] auto theme switch
+[x] auto theme switch
 [ ] macOS exit to dock is broken
 [x] graphs: unify min/max RSSI values (floorDb, ceilDb)
 [x] graphs: change clickable marker text position depending on its position onscreen
