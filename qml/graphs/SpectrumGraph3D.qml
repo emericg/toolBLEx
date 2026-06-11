@@ -32,6 +32,49 @@ Item {
 
     ////////////////////////////////////////////////////////////////////////
 
+    Item { // RSSI legend
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.margins: 24
+
+        width: 64
+        height: 256
+
+        Rectangle {
+            anchors.fill: parent
+
+            border.width: 2
+            border.color: Theme.colorComponentBorder
+
+            rotation: 180
+            gradient: ColormapFactory.getGradient(spectrumGraph3D_container.colorScheme,
+                                                  actionBar.minRSSI, actionBar.maxRSSI)
+        }
+
+        Text {
+            anchors.top: parent.top
+            anchors.right: parent.left
+            anchors.rightMargin: 8
+
+            text: actionBar.maxRSSI
+            textFormat: Text.PlainText
+            font.pixelSize: Theme.componentFontSize
+            color: Theme.colorSubText
+        }
+        Text {
+            anchors.bottom: parent.bottom
+            anchors.right: parent.left
+            anchors.rightMargin: 8
+
+            text: actionBar.minRSSI
+            textFormat: Text.PlainText
+            font.pixelSize: Theme.componentFontSize
+            color: Theme.colorSubText
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////
+
     Surface3D {
         id: surfaceGraph
 
@@ -85,7 +128,7 @@ Item {
         axisX: Value3DAxis {
             title: qsTr("Frequency (MHz)")
             titleVisible: true
-            labelFormat: "%.0f"
+            labelFormat: (dataSource.freqUnit ? "%.1f" : "%.0f")
 
             segmentCount: 8
         }

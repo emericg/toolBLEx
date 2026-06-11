@@ -70,6 +70,7 @@ Loader {
             property int maxRSSI: -20
 
             // visualize known spectrum bands
+            property bool autobands: false
             property bool bluetooth: false
             property bool bluetooth_classic: false
             property bool bluetooth_lowenergy: true

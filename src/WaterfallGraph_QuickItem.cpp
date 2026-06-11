@@ -41,10 +41,10 @@ WaterfallGraph_QuickItem::WaterfallGraph_QuickItem(QQuickItem *parent) : QQuickP
 
 void WaterfallGraph_QuickItem::refresh()
 {
-    if (!m_ubertooth) return;
+    if (!m_dataSource) return;
 
-    const int rawRows = m_ubertooth->getFreqBinCount();
-    const QList <int *> &cols = m_ubertooth->getChronologicalValues(m_maxDepth, true);
+    const int rawRows = m_dataSource->getFreqBinCount();
+    const QList <int *> &cols = m_dataSource->getChronologicalValues(m_maxDepth, true);
     const int ncols = cols.size();
 
     if (rawRows <= 0 || ncols <= 0) return;
@@ -99,7 +99,7 @@ void WaterfallGraph_QuickItem::setSource(QObject *source)
     if (m_source != source)
     {
         m_source = source;
-        m_ubertooth = qobject_cast<SpectrumSource *>(source);
+        m_dataSource = qobject_cast<SpectrumSource *>(source);
         Q_EMIT sourceChanged();
 
         refresh();

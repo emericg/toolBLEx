@@ -55,7 +55,7 @@ class WaterfallGraph_QuickItem: public QQuickPaintedItem
     Q_PROPERTY(int colorScheme READ colorScheme WRITE setColorScheme NOTIFY colorsChanged)
 
     QPointer <QObject> m_source;
-    SpectrumSource *m_ubertooth = nullptr;
+    SpectrumSource *m_dataSource = nullptr;
 
     int m_maxDepth = 512;       //!< only plot the most-recent N sweeps along Z (0 = all)
     int m_maxFreqBins = 512;    //!< cap image height along frequency; >this is max-pooled down (0 = all)

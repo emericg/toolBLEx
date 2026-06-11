@@ -384,12 +384,12 @@ void SpectrumSource::getFrequencyGraphAxis(QValueAxis *axis)
 {
     if (!axis) return;
 
-    //if (m_unit == 1) // FrequencyUnit::kHz
-    //{
-    //    axis->setMin(m_freq_min / 1000);
-    //    axis->setMax(m_freq_max / 1000);
-    //}
-    //else
+    if (m_unit == FrequencyUnit::kHz)
+    {
+        axis->setMin(m_freq_min / 1000.0);
+        axis->setMax(m_freq_max / 1000.0);
+    }
+    else
     {
         axis->setMin(m_freq_min);
         axis->setMax(m_freq_max);
@@ -432,7 +432,12 @@ void SpectrumSource::getFrequencyGraphMax(QLineSeries *serie)
     for (int i = 0; i < freqBinCount; i++)
     {
         if (max[i] > peak_val) { peak_val = max[i]; peak_idx = i; }
-        serie->append(m_freq_min + i, max[i]);
+
+        if (m_unit == FrequencyUnit::kHz) {
+            serie->append((m_freq_min + i) / 1000.0, max[i]);
+        } else {
+            serie->append(m_freq_min + i, max[i]);
+        }
     }
 
     const int peak_freq = (peak_idx >= 0) ? (m_freq_min + peak_idx) : 0;
@@ -478,7 +483,12 @@ void SpectrumSource::getFrequencyGraphAverage(QLineSeries *serie)
     for (int i = 0; i < freqBinCount; i++)
     {
         const int avg = cnt[i] ? static_cast<int>(sum[i] / cnt[i]) : s_rssi_raw_default;
-        serie->append(m_freq_min + i, avg);
+
+        if (m_unit == FrequencyUnit::kHz) {
+            serie->append((m_freq_min + i) / 1000.0, avg);
+        } else {
+            serie->append(m_freq_min + i, avg);
+        }
     }
 }
 
@@ -491,7 +501,11 @@ void SpectrumSource::getFrequencyGraphCurrent(QLineSeries *serie)
 
     for (int i = m_freq_min; i <= m_freq_max; i++)
     {
-        serie->append(i, m_values_latest[i]);
+        if (m_unit == FrequencyUnit::kHz) {
+            serie->append(i / 1000.0, m_values_latest[i]);
+        } else {
+            serie->append(i, m_values_latest[i]);
+        }
     }
 }
 
@@ -515,7 +529,11 @@ void SpectrumSource::getFrequencyGraphData(QLineSeries *serie, int index)
     const int bins = std::min(freqBinCount, m_ring_bins);
     for (int i = 0; i < bins; i++)
     {
-        serie->append(m_freq_min + i, current[i]);
+        if (m_unit == FrequencyUnit::kHz) {
+            serie->append((m_freq_min + i) / 1000.0, current[i]);
+        } else {
+            serie->append(m_freq_min + i, current[i]);
+        }
     }
 }
 

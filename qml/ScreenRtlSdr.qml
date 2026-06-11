@@ -71,6 +71,14 @@ Loader {
 
             // visualize known spectrum bands
             property bool autobands: false
+            property bool bluetooth: false
+            property bool bluetooth_classic: false
+            property bool bluetooth_lowenergy: true
+            property bool wifi: false
+            property bool wifi_b: true
+            property bool wifi_gn: false
+            property bool wifi_n: false
+            property bool zigbee: false
 
             ////////
 

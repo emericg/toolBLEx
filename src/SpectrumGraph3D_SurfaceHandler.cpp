@@ -42,13 +42,13 @@ SpectrumGraph3D_SurfaceHandler::SpectrumGraph3D_SurfaceHandler(QObject *parent) 
 
 void SpectrumGraph3D_SurfaceHandler::refresh(QSurface3DSeries *series)
 {
-    if (!m_ubertooth || !series) return;
+    if (!m_dataSource || !series) return;
 
     QSurfaceDataProxy *proxy = series->dataProxy();
     if (!proxy) return;
 
-    const int rawRows = m_ubertooth->getFreqBinCount();
-    const QList <int *> &cols = m_ubertooth->getChronologicalValues(m_maxDepth, true);
+    const int rawRows = m_dataSource->getFreqBinCount();
+    const QList <int *> &cols = m_dataSource->getChronologicalValues(m_maxDepth, true);
     const int available = cols.size();
 
     if (rawRows <= 0 || available <= 0) return;
@@ -63,7 +63,7 @@ void SpectrumGraph3D_SurfaceHandler::refresh(QSurface3DSeries *series)
     const int ncols = (m_maxDepth > 0) ? std::min(available, m_maxDepth) : available;
     const int startCol = available - ncols;
 
-    const float fmin = static_cast<float>(m_ubertooth->getFreqMin());
+    const float fmin = static_cast<float>(m_dataSource->getFreqMin());
     const float floor = static_cast<float>(m_floorDb);
     const float holeThreshold = -125.0f; // any value below this threshold is a hole in the data
 
@@ -176,8 +176,11 @@ void SpectrumGraph3D_SurfaceHandler::refresh(QSurface3DSeries *series)
         {
             float y = src[i];
             if (y < floor) y = floor;
+
             // output bin i back to a real frequency (group input bins per output bin)
-            const float freq = fmin + (i + 0.5f) * static_cast<float>(group);
+            float freq = fmin + (i + 0.5f) * static_cast<float>(group);
+            if (m_dataSource->frequencyUnit() == 1) freq /= 1000.f; // FrequencyUnit::kHz
+
             row.append(QSurfaceDataItem(QVector3D(freq, y, static_cast<float>(age))));
         }
         array.append(std::move(row));
@@ -194,7 +197,7 @@ void SpectrumGraph3D_SurfaceHandler::setSource(QObject *source)
     if (m_source != source)
     {
         m_source = source;
-        m_ubertooth = qobject_cast<SpectrumSource *>(source);
+        m_dataSource = qobject_cast<SpectrumSource *>(source);
         Q_EMIT sourceChanged();
     }
 }

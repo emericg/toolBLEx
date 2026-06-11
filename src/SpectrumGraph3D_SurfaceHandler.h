@@ -52,7 +52,7 @@ class SpectrumGraph3D_SurfaceHandler: public QObject
     Q_PROPERTY(int freqSmoothing READ freqSmoothing WRITE setFreqSmoothing NOTIFY smoothingChanged)
 
     QPointer <QObject> m_source;
-    SpectrumSource *m_ubertooth = nullptr;
+    SpectrumSource *m_dataSource = nullptr;
 
     qreal m_floorDb = -100.0;   //!< value used for holes / hard floor (match axisY.min)
     int m_maxDepth = 256;       //!< only plot the most-recent N sweeps along Z (0 = all)

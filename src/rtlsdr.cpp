@@ -90,7 +90,7 @@ void RtlSdr::applyFreqRange()
 
     const double halfBwHz = (m_bandwidthMHz * 1000000.0) / 2.0;
     const double centerHz = m_centerMHz * 1000000.0;
-    const double hzPerUnit = (m_unit == kHz) ? 1000.0 : 1000000.0;
+    const double hzPerUnit = (m_unit == FrequencyUnit::kHz) ? 1000.0 : 1000000.0;
 
     m_freq_min = static_cast<int>(std::lround((centerHz - halfBwHz) / hzPerUnit));
     m_freq_max = static_cast<int>(std::lround((centerHz + halfBwHz) / hzPerUnit));
@@ -131,14 +131,14 @@ void RtlSdr::setBandwidth(double bwMHz)
 
 void RtlSdr::setFrequencyUnit(int unit)
 {
-    if (unit != MHz && unit != kHz) return;
+    if (unit != FrequencyUnit::MHz && unit != FrequencyUnit::kHz) return;
     if (m_unit == static_cast<FrequencyUnit>(unit)) return;
 
     // The band is defined by center/bandwidth, so just re-derive freqMin/freqMax in
     // the new unit and pick a default SDR step finer than the new bucket.
 
     m_unit = static_cast<FrequencyUnit>(unit);
-    m_bin_hz = (m_unit == kHz) ? 500 : 250000;
+    m_bin_hz = (m_unit == FrequencyUnit::kHz) ? 500 : 250000;
     applyFreqRange();
 }
 
@@ -358,7 +358,7 @@ QStringList RtlSdr::buildArguments() const
 
 int RtlSdr::hzToUnit(double hz) const
 {
-    const double div = (m_unit == kHz) ? 1000.0 : 1000000.0;
+    const double div = (m_unit == FrequencyUnit::kHz) ? 1000.0 : 1000000.0;
     return static_cast<int>(std::lround(hz / div));
 }
 
