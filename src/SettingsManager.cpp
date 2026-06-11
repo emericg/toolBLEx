@@ -733,7 +733,7 @@ void SettingsManager::setRtlSdrPath(const QString &value)
 
 void SettingsManager::setRtlSdrFreqTarget(const int value)
 {
-    if (value >= 54 && value <= 2200)
+    if (value >= 52 && value <= 2200)
     {
         if (m_rtlsdr_freqTarget != value)
         {
@@ -746,7 +746,7 @@ void SettingsManager::setRtlSdrFreqTarget(const int value)
 
 void SettingsManager::setRtlSdrFreqBandwidth(const int value)
 {
-    if (value >= 2400 && value <= 4800)
+    if (value >= 2400 && value <= 3200)
     {
         if (m_rtlsdr_freqBandwidth != value)
         {

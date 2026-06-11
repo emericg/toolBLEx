@@ -42,8 +42,8 @@ Adapter::Adapter(const QBluetoothHostInfo &adapterInfo, QObject *parent) : QObje
     process.start("btmgmt", QStringList("info"));
     process.waitForFinished(8000); // 8 ms
 
-    QString output(process.readAllStandardOutput());
-    QString err(process.readAllStandardError());
+    const QString output(process.readAllStandardOutput());
+    const QString err(process.readAllStandardError());
     //qDebug() << output << err;
 
     // Output example:
@@ -136,8 +136,8 @@ Adapter::Adapter(const QBluetoothHostInfo &adapterInfo, QObject *parent) : QObje
     process.start("system_profiler", QStringList() << "-detailLevel" << "full" << "SPBluetoothDataType");
     process.waitForFinished(8000); // 8 ms
 
-    QString output(process.readAllStandardOutput());
-    QString err(process.readAllStandardError());
+    const QString output(process.readAllStandardOutput());
+    const QString err(process.readAllStandardError());
     //qDebug() << output << err;
 
     // Output example:

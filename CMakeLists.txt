@@ -69,6 +69,7 @@ set(SOURCES
 
     src/SpectrumSource.cpp src/SpectrumSource.h
     src/ubertooth.cpp src/ubertooth.h
+    src/rtlsdr.cpp src/rtlsdr.h
     src/ColormapFactory.cpp src/ColormapFactory.h
     src/WaterfallGraph_QuickItem.cpp src/WaterfallGraph_QuickItem.h
     src/SpectrumGraph3D_SurfaceHandler.cpp src/SpectrumGraph3D_SurfaceHandler.h
@@ -111,6 +112,7 @@ qt_add_qml_module(${PROJECT_NAME}
         qml/ScreenAdvertiser.qml
         qml/ScreenBluetooth.qml
         qml/ScreenUbertooth.qml
+        qml/ScreenRtlSdr.qml
         qml/ScreenSettings.qml
         qml/PanelDevice.qml
         qml/PanelDeviceInfos.qml

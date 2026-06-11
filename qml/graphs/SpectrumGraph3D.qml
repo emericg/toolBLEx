@@ -46,7 +46,7 @@ Item {
         horizontalAspectRatio: 0.66
         aspectRatio: 5.0
 
-        selectionMode: Graphs3D.SelectionFlag.ItemAndColumn
+        selectionMode: Graphs3D.SelectionFlag.Item
 
         cameraPreset: Graphs3D.CameraPreset.Left
         cameraTargetPosition: Qt.vector3d(0.0, 0.0, 0.0)

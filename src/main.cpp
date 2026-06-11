@@ -26,6 +26,8 @@
 #include "MenubarManager.h"
 #include "DeviceManager.h"
 #include "device_utils.h"
+
+#include "rtlsdr.h"
 #include "ubertooth.h"
 
 #include "utils_app.h"
@@ -84,11 +86,17 @@ int main(int argc, char *argv[])
     SettingsManager *sm = SettingsManager::getInstance();
     MenubarManager *mb = MenubarManager::getInstance();
     DeviceManager *dm = new DeviceManager;
-    Ubertooth *uber = new Ubertooth;
-    if (!sm ||!mb || !dm || !uber)
+    if (!sm || !mb || !dm)
     {
         qWarning() << "Cannot init toolBLEx components!";
         return EXIT_FAILURE;
+    }
+
+    Ubertooth *ubertooth = new Ubertooth;
+    RtlSdr *rtlsdr = new RtlSdr;
+    if (!ubertooth || !rtlsdr)
+    {
+        qWarning() << "Cannot init toolBLEx spectrum analyzers!";
     }
 
     // Start scanning?
@@ -119,7 +127,8 @@ int main(int argc, char *argv[])
     QQmlContext *engine_context = engine.rootContext();
 
     engine_context->setContextProperty("deviceManager", dm);
-    engine_context->setContextProperty("ubertooth", uber);
+    engine_context->setContextProperty("ubertooth", ubertooth);
+    engine_context->setContextProperty("rtlsdr", rtlsdr);
 
     engine_context->setContextProperty("utilsApp", utilsApp);
     engine_context->setContextProperty("utilsScreen", utilsScreen);

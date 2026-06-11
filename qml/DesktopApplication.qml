@@ -65,6 +65,8 @@ ApplicationWindow {
             screenAdvertiser.loadScreen()
         } else if (SettingsManager.preferredScreen === 2 && ubertooth.toolsAvailable) {
             screenUbertooth.loadScreen()
+        } else if (SettingsManager.preferredScreen === 2 && rtlsdr.toolsAvailable) {
+            screenRtlSdr.loadScreen()
         } else {
             screenScanner.loadScreen() // default to scanner
         }
@@ -75,6 +77,7 @@ ApplicationWindow {
         function onScannerButtonClicked() { screenScanner.loadScreen() }
         function onAdvertiserButtonClicked() { screenAdvertiser.loadScreen() }
         function onUbertoothButtonClicked() { screenUbertooth.loadScreen() }
+        function onRtlsdrButtonClicked() { screenRtlSdr.loadScreen() }
         function onSettingsButtonClicked() { screenSettings.loadScreen() }
     }
 
@@ -151,6 +154,8 @@ ApplicationWindow {
             screenAdvertiser.backAction()
         } else if (appContent.state === "Ubertooth") {
             screenUbertooth.backAction()
+        } else if (appContent.state === "RtlSdr") {
+            screenRtlSdr.backAction()
         } else if (appContent.state === "Settings") {
             screenSettings.backAction()
         } else { // default
@@ -287,6 +292,10 @@ ApplicationWindow {
             anchors.fill: parent
             id: screenUbertooth
         }
+        ScreenRtlSdr {
+            anchors.fill: parent
+            id: screenRtlSdr
+        }
 
         ScreenSettings {
             anchors.fill: parent
@@ -314,6 +323,7 @@ ApplicationWindow {
                 PropertyChanges { target: screenAdvertiser; visible: false; enabled: false; }
                 PropertyChanges { target: screenBluetooth; visible: true; enabled: true; }
                 PropertyChanges { target: screenUbertooth; visible: false; enabled: false; }
+                PropertyChanges { target: screenRtlSdr; visible: false; enabled: false; }
                 PropertyChanges { target: screenSettings; visible: false; enabled: false; }
             },
             State {
@@ -322,6 +332,7 @@ ApplicationWindow {
                 PropertyChanges { target: screenAdvertiser; visible: true; enabled: true; focus: true; }
                 PropertyChanges { target: screenBluetooth; visible: true; enabled: true; }
                 PropertyChanges { target: screenUbertooth; visible: false; enabled: false; }
+                PropertyChanges { target: screenRtlSdr; visible: false; enabled: false; }
                 PropertyChanges { target: screenSettings; visible: false; enabled: false; }
             },
             State {
@@ -330,6 +341,16 @@ ApplicationWindow {
                 PropertyChanges { target: screenAdvertiser; visible: false; enabled: false; }
                 PropertyChanges { target: screenBluetooth; visible: false; enabled: false; }
                 PropertyChanges { target: screenUbertooth; visible: true; enabled: true; focus: true; }
+                PropertyChanges { target: screenRtlSdr; visible: false; enabled: false; }
+                PropertyChanges { target: screenSettings; visible: false; enabled: false; }
+            },
+            State {
+                name: "RtlSdr"
+                PropertyChanges { target: screenScanner; visible: false; enabled: false; }
+                PropertyChanges { target: screenAdvertiser; visible: false; enabled: false; }
+                PropertyChanges { target: screenBluetooth; visible: false; enabled: false; }
+                PropertyChanges { target: screenUbertooth; visible: false; enabled: false; }
+                PropertyChanges { target: screenRtlSdr; visible: true; enabled: true; focus: true; }
                 PropertyChanges { target: screenSettings; visible: false; enabled: false; }
             },
             State {
@@ -338,6 +359,7 @@ ApplicationWindow {
                 PropertyChanges { target: screenAdvertiser; visible: false; enabled: false; }
                 PropertyChanges { target: screenBluetooth; visible: false; enabled: false; }
                 PropertyChanges { target: screenUbertooth; visible: false; enabled: false; }
+                PropertyChanges { target: screenRtlSdr; visible: false; enabled: false; }
                 PropertyChanges { target: screenSettings; visible: true; enabled: true; focus: true; }
             }
         ]
@@ -413,7 +435,7 @@ ApplicationWindow {
         repeat: false
         interval: 333
         onTriggered: {
-            if (!deviceManager.areDevicesConnected()) {
+            if (!deviceManager.areDevicesConnected() && !ubertooth.running && !rtlsdr.running) {
                 appWindow.close()
             }
         }
@@ -433,8 +455,16 @@ ApplicationWindow {
         // If devices are still connected, disconnect them first
         if (deviceManager.areDevicesConnected()) {
             deviceManager.disconnectDevices()
-            disconnectTimer.start()
+        }
+        if (ubertooth.running) {
+            ubertooth.stopWork()
+        }
+        if (rtlsdr.running) {
+            rtlsdr.stopWork()
+        }
 
+        if (deviceManager.areDevicesConnected() || ubertooth.running || rtlsdr.running) {
+            disconnectTimer.start()
             close.accepted = false
             return
         }

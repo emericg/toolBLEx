@@ -20,6 +20,7 @@ Rectangle {
     signal scannerButtonClicked()
     signal advertiserButtonClicked()
     signal ubertoothButtonClicked()
+    signal rtlsdrButtonClicked()
     signal settingsButtonClicked()
 
     ////////////////
@@ -49,7 +50,8 @@ Rectangle {
 
         visible: (appContent.state === "Scanner" ||
                   appContent.state === "Advertiser" ||
-                  appContent.state === "Ubertooth")
+                  appContent.state === "Ubertooth" ||
+                  appContent.state === "RtlSdr")
 
         Row {
             id: rowleft
@@ -70,6 +72,7 @@ Rectangle {
                 source: {
                     if (appContent.state === "Advertiser") return "qrc:/IconLibrary/material-icons/duotone/wifi_tethering.svg"
                     if (appContent.state === "Ubertooth") return "qrc:/IconLibrary/material-icons/duotone/microwave.svg"
+                    if (appContent.state === "RtlSdr") return "qrc:/IconLibrary/material-icons/duotone/cell_tower.svg"
                     return "qrc:/IconLibrary/material-icons/duotone/devices.svg"
                 }
             }
@@ -90,6 +93,7 @@ Rectangle {
                     if (appContent.state === "Scanner" && deviceManager.scanning) return true
                     if (appContent.state === "Advertiser" && deviceManager.advertising) return true
                     if (appContent.state === "Ubertooth" && ubertooth.running) return true
+                    if (appContent.state === "RtlSdr" && rtlsdr.running) return true
                     return false
                 }
                 backgroundColor: Theme.colorHeaderHighlight
@@ -98,6 +102,7 @@ Rectangle {
                     if (appContent.state === "Scanner" && deviceManager.scanning) return 1
                     if (appContent.state === "Advertiser" && deviceManager.advertising) return 1
                     if (appContent.state === "Ubertooth" && ubertooth.running) return 1
+                    if (appContent.state === "RtlSdr" && rtlsdr.running) return 1
                     return 0.4
                 }
 
@@ -111,6 +116,7 @@ Rectangle {
                     if (appContent.state === "Scanner") deviceManager.scanDevices_start()
                     if (appContent.state === "Advertiser") deviceManager.advertise_start()
                     if (appContent.state === "Ubertooth") ubertooth.startWork()
+                    if (appContent.state === "RtlSdr") rtlsdr.startWork()
                 }
             }
 
@@ -128,6 +134,7 @@ Rectangle {
                     if (appContent.state === "Scanner" && !deviceManager.scanning) return 1
                     if (appContent.state === "Advertiser" && !deviceManager.advertising) return 1
                     if (appContent.state === "Ubertooth" && !ubertooth.running) return 1
+                    if (appContent.state === "RtlSdr" && !rtlsdr.running) return 1
                     return 0.4
                 }
 
@@ -141,6 +148,7 @@ Rectangle {
                     if (appContent.state === "Scanner") deviceManager.scanDevices_stop()
                     if (appContent.state === "Advertiser") deviceManager.advertise_stop()
                     if (appContent.state === "Ubertooth") ubertooth.stopWork()
+                    if (appContent.state === "RtlSdr") rtlsdr.stopWork()
                 }
             }
         }
@@ -412,6 +420,33 @@ Rectangle {
                     color: Theme.colorGreen
 
                     opacity: ubertooth.running ? 0.8 : 0
+                    Behavior on opacity { OpacityAnimator { duration: 333 } }
+                }
+            }
+            DesktopHeaderItem {
+                id: menuRtlSdr
+                width: headerHeight
+                height: headerHeight
+
+                source: "qrc:/IconLibrary/material-icons/duotone/cell_tower.svg"
+                colorContent: Theme.colorHeaderContent
+                colorHighlight: Theme.colorHeaderHighlight
+
+                visible: rtlsdr.toolsAvailable
+                highlighted: (appContent.state === "RtlSdr")
+                onClicked: rtlsdrButtonClicked()
+
+                Rectangle {
+                    anchors.left: parent.left
+                    anchors.bottom: parent.bottom
+                    anchors.margins: 6
+
+                    width: 12
+                    height: 12
+                    radius: 12
+                    color: Theme.colorGreen
+
+                    opacity: rtlsdr.running ? 0.8 : 0
                     Behavior on opacity { OpacityAnimator { duration: 333 } }
                 }
             }

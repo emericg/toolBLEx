@@ -38,16 +38,19 @@
 [x] switch from Qt Charts to Qt Graphs
 [x] textfields: double click to select
 [x] keyboard navigation, move elevators
+[x] auto theme switch
 [-] better beacon detection
 [-] r/w/n: red badges on errors?
+[-] sanitize old adapters
+[ ] macOS exit to dock is broken
 [ ] write data: explicit max size
 [ ] write data: check max size
-[-] sanitize old adapters
-[x] auto theme switch
-[ ] macOS exit to dock is broken
+
 [x] graphs: unify min/max RSSI values (floorDb, ceilDb)
 [x] graphs: change clickable marker text position depending on its position onscreen
 [ ] graphs: auto/dynamic bands on sub 2 GHz view
+[ ] graphs: 3D graph legend
+[ ] graphs: missing some RtlSdr KHz > MHz convertions
 
 ## TODO # v1+
 

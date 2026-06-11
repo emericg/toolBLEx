@@ -63,6 +63,7 @@ protected:
 public:
     Ubertooth(QObject *parent = nullptr);
 
+    Q_INVOKABLE bool autodetectPaths() override;
     Q_INVOKABLE bool checkPaths() override;
     Q_INVOKABLE bool checkUbertooth();
 };

@@ -22,6 +22,7 @@
 #include "ubertooth.h"
 #include "SettingsManager.h"
 
+#include <QStandardPaths>
 #include <QStringList>
 #include <QProcess>
 #include <QFile>
@@ -45,41 +46,74 @@ Ubertooth::Ubertooth(QObject *parent) : SpectrumSource(parent)
 /* ************************************************************************** */
 /* ************************************************************************** */
 
+bool Ubertooth::autodetectPaths()
+{
+    m_path_specan = QStandardPaths::findExecutable("ubertooth-specan");
+    m_path_util = QStandardPaths::findExecutable("ubertooth-util");
+
+    if (m_path_specan.isEmpty() || m_path_util.isEmpty()) return false;
+
+    SettingsManager *sm = SettingsManager::getInstance();
+    sm->setUbertoothPath(m_path_specan);
+
+    return true;
+}
+
+/* ************************************************************************** */
+
 bool Ubertooth::checkPaths()
 {
-    bool status = false;
-
 #if defined(Q_OS_WINDOWS)
     return status; // We just don't support Windows
 #endif
 
-    SettingsManager *sm = SettingsManager::getInstance();
-    QString path_specscan = sm->getUbertoothPath();
+    bool status = false;
 
-    // Just check if the path points to a file
-    if (path_specscan.contains("ubertooth-specan") && QFile::exists(path_specscan))
+    SettingsManager *sm = SettingsManager::getInstance();
+    QString path_specan = sm->getUbertoothPath();
+
+    if (path_specan.isEmpty()) return false;
+    if (!path_specan.contains("ubertooth-specan")) return false;
+
+    if (QFile::exists(path_specan))
     {
+        // If the path points directly to a file
         status = true;
+    }
+    else if (path_specan == "ubertooth-specan")
+    {
+        // If the path is the executable name, and we can find it
+        m_path_specan = QStandardPaths::findExecutable("ubertooth-specan");
+        if (!m_path_specan.isEmpty())
+        {
+            status = true;
+
+            // And save it... QStandardPaths::findExecutable() is expensive
+            sm->setUbertoothPath(m_path_specan);
+        }
     }
     else
     {
+        // Otherwise, just try to run it...
+
         QString path_util = "";
-        if (path_specscan.contains("ubertooth-specan"))
+        if (path_specan.contains("ubertooth-specan"))
         {
-            path_util = path_specscan;
+            path_util = path_specan;
             path_util.replace("ubertooth-specan", "ubertooth-util");
         }
 
         QProcess process;
         process.start(path_util, QStringList("-v"), QIODevice::ReadOnly);
-        process.waitForFinished(8000);
+        process.waitForStarted(333);
+        process.waitForFinished(333);
 
         QString err(process.readAllStandardError());
         QProcess::ProcessError error = process.error();
 
         if (error >= QProcess::FailedToStart && err.isEmpty())
         {
-            qDebug() << "QProcess::FailedToStart for process '" << path_util << "' with error:" << error;
+            qWarning() << "QProcess::FailedToStart for process '" << path_util << "' with error:" << error;
         }
         else
         {
@@ -89,13 +123,13 @@ bool Ubertooth::checkPaths()
 
     if (status)
     {
-        m_path_specan = path_specscan;
-        m_path_util = path_specscan;
+        m_path_specan = path_specan;
+        m_path_util = path_specan; // always next to specan
         m_path_util.replace("ubertooth-specan", "ubertooth-util");
     }
     else
     {
-        qDebug() << "Ubertooth::checkPaths() Unable to detect Ubertooth tools at: '" << path_specscan << "'";
+        qDebug() << "Ubertooth::checkPaths() Unable to detect Ubertooth tools at: '" << path_specan << "'";
     }
 
     if (m_toolsAvailable != status)
@@ -115,13 +149,14 @@ bool Ubertooth::checkUbertooth()
     return false; // We just don't support Windows
 #endif
 
-    if (m_childProcess) return true; // A running capture already implies a device
+    if (m_childProcess) return true; // A running capture already implies a working device
 
     bool status = false;
 
     QProcess process;
     process.start(m_path_util, QStringList("-v"), QIODevice::ReadOnly);
-    process.waitForFinished(8000);
+    process.waitForStarted(333);
+    process.waitForFinished(333);
 
     QString output(process.readAllStandardOutput());
 
@@ -134,7 +169,8 @@ bool Ubertooth::checkUbertooth()
             l1.contains("usb_claim_interface error", Qt::CaseInsensitive) ||
             l1.contains("failed to run:", Qt::CaseInsensitive))
         {
-            qDebug() << "Ubertooth::checkUbertooth() Unable to detect an Ubertooth device";
+            qWarning() << "Ubertooth::checkUbertooth() Unable to detect an Ubertooth device";
+            qWarning() << "Ubertooth::checkUbertooth() error:" << l1;
         }
         else
         {

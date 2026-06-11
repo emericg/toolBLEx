@@ -210,6 +210,12 @@ public:
     const QMap <int, int> &getLatestValues() const { return m_values_latest; }
 
     /*!
+     * \brief Autodetect paths using QStandardPaths::findExecutable()
+     * \return true if tools found.
+     */
+    Q_INVOKABLE virtual bool autodetectPaths() = 0;
+
+    /*!
      * \brief Locate binary tools necessary for a device-specific class to work.
      * \return true if tools found.
      *
