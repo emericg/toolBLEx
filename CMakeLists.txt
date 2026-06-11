@@ -121,6 +121,13 @@ qt_add_qml_module(${PROJECT_NAME}
         qml/PanelDeviceLog.qml
         qml/PanelScanner.qml
 
+        qml/settings/SettingsApp.qml
+        qml/settings/SettingsInfo.qml
+        qml/settings/SettingsCredits.qml
+        qml/settings/SettingsScanner.qml
+        qml/settings/SettingsAdvertiser.qml
+        qml/settings/SettingsSpectrum.qml
+
         qml/graphs/RssiBar.qml
         qml/graphs/RssiGraph.qml
         qml/graphs/ProximityRadar.qml
