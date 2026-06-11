@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 
     // GUI application /////////////////////////////////////////////////////////
 
-    SingleApplication app(argc, argv, true);
+    SingleApplication app(argc, argv, false);
 
     // Application name
     app.setApplicationName("toolBLEx");
