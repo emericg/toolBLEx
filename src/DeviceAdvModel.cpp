@@ -211,6 +211,10 @@ AdvertisementFilterModel::AdvertisementFilterModel(QObject *parent)
 
 void AdvertisementFilterModel::setUuidSelected(uint16_t mode, uint16_t uuid, bool selected)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
+    beginFilterChange();
+#endif
+
     if (selected)
     {
         if (mode == DeviceUtils::BLE_ADV_MANUFACTURERDATA)
@@ -237,9 +241,14 @@ void AdvertisementFilterModel::setUuidSelected(uint16_t mode, uint16_t uuid, boo
             m_selectedUuids_svd.remove(uuid);
         }
     }
-
-    invalidateFilter();
     Q_EMIT selectedUuidsChanged();
+
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
+    endFilterChange(Direction::Both);
+#else
+    invalidateFilter();
+#endif
 }
 
 void AdvertisementFilterModel::setUuidSelected(int mode, int uuid, bool selected)
@@ -269,7 +278,12 @@ void AdvertisementFilterModel::selectAll()
 
     if (changed)
     {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
+        beginFilterChange();
+        endFilterChange(Direction::Both);
+#else
         invalidateFilter();
+#endif
         Q_EMIT selectedUuidsChanged();
     }
 }
@@ -277,11 +291,20 @@ void AdvertisementFilterModel::selectAll()
 void AdvertisementFilterModel::clearFilter()
 {
     if (isUnfiltered()) return;
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
+    beginFilterChange();
+#endif
+
     m_selectedUuids_svd.clear();
     m_selectedUuids_mfd.clear();
-
-    invalidateFilter();
     Q_EMIT selectedUuidsChanged();
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
+    endFilterChange(Direction::Both);
+#else
+    invalidateFilter();
+#endif
 }
 
 /* ************************************************************************** */
