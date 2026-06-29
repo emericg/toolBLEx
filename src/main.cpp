@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     qputenv("QT_QUICK_FLICKABLE_WHEEL_DECELERATION", "7500");
 #endif
 
-    // Allow macOS (and patched Qt for bluez) to report ALL advertising packets
+    // Allow macOS (and patched Qt for BlueZ) to report ALL advertising packets
     //qputenv("QT_BLUETOOTH_SCAN_ENABLE_DUPLICATES", "1");
 
     // GUI application /////////////////////////////////////////////////////////
