@@ -22,6 +22,7 @@
   </description>
 
   <releases>
+    <release version="0.18" date="2026-09-01"> <url type="details">https://github.com/emericg/toolBLEx/releases/tag/v0.18</url> </release>
     <release version="0.17" date="2026-06-29"> <url type="details">https://github.com/emericg/toolBLEx/releases/tag/v0.17</url> </release>
     <release version="0.16" date="2026-04-20"> <url type="details">https://github.com/emericg/toolBLEx/releases/tag/v0.16</url> </release>
     <release version="0.15" date="2026-02-16"> <url type="details">https://github.com/emericg/toolBLEx/releases/tag/v0.15</url> </release>

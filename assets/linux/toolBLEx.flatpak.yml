@@ -136,7 +136,7 @@ modules:
           stable-only: true
           url-template: https://download.qt.io/archive/qt/$major.$minor/$version/submodules/qtconnectivity-everywhere-src-$version.tar.xz
 
-  - name: qtcharts
+  - name: qtquick3d
     buildsystem: cmake-ninja
     config-opts:
       - -DCMAKE_BUILD_TYPE=RelWithDebInfo
@@ -144,13 +144,29 @@ modules:
       - -DQT_BUILD_TESTS=OFF
     sources:
       - type: archive
-        url: https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtcharts-everywhere-src-6.11.1.tar.xz
-        sha256: 3fe3ed318c2a86d1417c5c29cf7494275e8fd4b537cd37453f5599c57365515c
+        url: https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtquick3d-everywhere-src-6.11.1.tar.xz
+        sha256: c76b85de3f8aa2a4bee64987acfef560675c1b378b92076c7c6264613e5b456f
         x-checker-data:
           type: anitya
           project-id: 7927
           stable-only: true
-          url-template: https://download.qt.io/archive/qt/$major.$minor/$version/submodules/qtcharts-everywhere-src-$version.tar.xz
+          url-template: https://download.qt.io/archive/qt/$major.$minor/$version/submodules/qtquick3d-everywhere-src-$version.tar.xz
+
+  - name: qtgraphs
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+      - -DQT_BUILD_EXAMPLES=OFF
+      - -DQT_BUILD_TESTS=OFF
+    sources:
+      - type: archive
+        url: https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtgraphs-everywhere-src-6.11.1.tar.xz
+        sha256: 84b1138ab68a8e2956439895a4b85eb68dda48ac169da673f67191873b1e0462
+        x-checker-data:
+          type: anitya
+          project-id: 7927
+          stable-only: true
+          url-template: https://download.qt.io/archive/qt/$major.$minor/$version/submodules/qtgraphs-everywhere-src-$version.tar.xz
 
   - name: qtwayland
     buildsystem: cmake-ninja
@@ -174,5 +190,5 @@ modules:
     buildsystem: cmake-ninja
     sources:
       - type: archive
-        url: https://github.com/emericg/toolBLEx/archive/refs/tags/v0.17.tar.gz
+        url: https://github.com/emericg/toolBLEx/archive/refs/tags/v0.18.tar.gz
         sha256: 
