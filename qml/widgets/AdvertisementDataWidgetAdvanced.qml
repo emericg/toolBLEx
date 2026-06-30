@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 
 import ComponentLibrary
+import AppUtils
 import DeviceUtils
 
 Item {
@@ -244,7 +245,7 @@ Item {
                         source: "qrc:/IconLibrary/material-symbols/content_copy.svg"
 
                         onClicked: {
-                            utilsClipboard.setText(advDataHex)
+                            UtilsClipboard.setText(advDataHex)
                         }
                     }
                 }
@@ -310,7 +311,7 @@ Item {
                         source: "qrc:/IconLibrary/material-symbols/content_copy.svg"
 
                         onClicked: {
-                            utilsClipboard.setText(advDataAscii)
+                            UtilsClipboard.setText(advDataAscii)
                         }
                     }
                 }

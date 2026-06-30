@@ -218,11 +218,11 @@ target_link_libraries(${PROJECT_NAME} PRIVATE SingleApplication)
 set(UTILS_QT_RHI ON CACHE BOOL "UTILS_QT_RHI" FORCE)
 set(UTILS_DOCK_ENABLED ON CACHE BOOL "UTILS_DOCK_ENABLED" FORCE)
 add_subdirectory(thirdparty/AppUtils)
-target_link_libraries(${PROJECT_NAME} PRIVATE AppUtils)
+target_link_libraries(${PROJECT_NAME} PRIVATE AppUtils AppUtils_plugin)
 
 # ComponentLibrary
 add_subdirectory(thirdparty/ComponentLibrary)
-target_link_libraries(${PROJECT_NAME} PRIVATE ComponentLibrary_plugin)
+target_link_libraries(${PROJECT_NAME} PRIVATE ComponentLibrary ComponentLibrary_plugin)
 
 # Qt libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE

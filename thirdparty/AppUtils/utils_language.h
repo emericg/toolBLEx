@@ -24,17 +24,25 @@
 #define UTILS_LANGUAGE_H
 /* ************************************************************************** */
 
+#include <QtQml/qqmlregistration.h>
 #include <QObject>
 #include <QCoreApplication>
 #include <QQmlApplicationEngine>
 #include <QTranslator>
 #include <QString>
+#include <QStringList>
+#include <QList>
+
+class QQmlEngine;
+class QJSEngine;
 
 /* ************************************************************************** */
 
 class UtilsLanguage : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
 
     QString m_appName;
     QString m_appLanguage;
@@ -42,23 +50,38 @@ class UtilsLanguage : public QObject
     QString m_locale_str_full;
     QString m_locale_str_short;
 
+    QString m_translation_prefix;
+
     QCoreApplication *m_qt_app = nullptr;
     QQmlApplicationEngine *m_qml_engine = nullptr;
 
     QTranslator *m_qtTranslator = nullptr;
     QTranslator *m_appTranslator = nullptr;
 
+    QStringList m_extraCatalogs;
+    QList<QTranslator *> m_extraTranslators;
+
     // Singleton
-    static UtilsLanguage *instance;
-    UtilsLanguage();
-    ~UtilsLanguage();
+    explicit UtilsLanguage(QObject *parent = nullptr);
 
 public:
     static UtilsLanguage *getInstance();
+    static UtilsLanguage *create(QQmlEngine *engine, QJSEngine *scriptEngine);
 
     void setAppName(const QString &name, const bool forceLowerCase = false);
     void setAppInstance(QCoreApplication *app);
+    void setTranslationPrefix(const QString &prefix);
     void setQmlEngine(QQmlApplicationEngine *engine);
+
+    /*!
+     * \brief Register extra catalogs.
+     * \param catalog: The catalog name.
+     *
+     * Register extra catalogs (":/<prefix>/<catalog>_<locale>.qm") from libraries or
+     * QML modules shipping their own translations, to be installed together with
+     * the application translation.
+     */
+    void addTranslationCatalog(const QString &catalog);
 
     Q_INVOKABLE void loadLanguage(const QString &lng);
 

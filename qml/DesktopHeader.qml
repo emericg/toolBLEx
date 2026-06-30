@@ -1,6 +1,7 @@
 import QtQuick
 
 import ComponentLibrary
+import AppUtils
 
 Rectangle {
     id: desktopHeader
@@ -378,7 +379,7 @@ Rectangle {
                 colorContent: Theme.colorHeaderContent
                 colorHighlight: Theme.colorHeaderHighlight
 
-                visible: utilsApp.isDebugBuild()
+                visible: UtilsApp.isDebugBuild()
                 highlighted: (appContent.state === "Advertiser")
                 onClicked: advertiserButtonClicked()
 

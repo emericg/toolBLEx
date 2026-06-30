@@ -24,8 +24,12 @@
 #define UTILS_WIFI_H
 /* ************************************************************************** */
 
+#include <QtQml/qqmlregistration.h>
 #include <QObject>
 #include <QString>
+
+class QQmlEngine;
+class QJSEngine;
 
 /* ************************************************************************** */
 
@@ -38,6 +42,8 @@
 class UtilsWiFi: public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
 
     Q_PROPERTY(QString currentSSID READ getCurrentSSID NOTIFY wifiChanged)
     Q_PROPERTY(bool permissionOS READ hasPermissionOS NOTIFY permissionsChanged)
@@ -49,9 +55,7 @@ class UtilsWiFi: public QObject
     void refreshWiFi_internal();
 
     // Singleton
-    static UtilsWiFi *instance;
-    UtilsWiFi();
-    ~UtilsWiFi();
+    explicit UtilsWiFi(QObject *parent = nullptr);
 
 Q_SIGNALS:
     void wifiChanged();
@@ -62,6 +66,7 @@ private slots:
 
 public:
     static UtilsWiFi *getInstance();
+    static UtilsWiFi *create(QQmlEngine *engine, QJSEngine *scriptEngine);
 
     Q_INVOKABLE void refreshWiFi();
     QString getCurrentSSID() { return m_currentSSID; }

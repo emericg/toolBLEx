@@ -41,8 +41,7 @@ class MacOSDockHandler : public QObject
 {
     Q_OBJECT
 
-    MacOSDockHandler();
-    ~MacOSDockHandler();
+    explicit MacOSDockHandler(QObject *parent = nullptr);
 
     QQuickWindow *m_saved_window = nullptr;
 

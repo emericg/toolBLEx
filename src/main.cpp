@@ -30,11 +30,7 @@
 #include "rtlsdr.h"
 #include "ubertooth.h"
 
-#include "utils_app.h"
-#include "utils_screen.h"
-#include "utils_sysinfo.h"
 #include "utils_language.h"
-#include "utils_clipboard.h"
 #if defined(Q_OS_MACOS)
 #include "utils_os_macos_dock.h"
 #endif
@@ -106,12 +102,8 @@ int main(int argc, char *argv[])
     }
 
     // Init generic utils
-    UtilsApp *utilsApp = UtilsApp::getInstance();
-    UtilsScreen *utilsScreen = UtilsScreen::getInstance();
-    UtilsSysInfo *utilsSysInfo = UtilsSysInfo::getInstance();
     UtilsLanguage *utilsLanguage = UtilsLanguage::getInstance();
-    UtilsClipboard *utilsClipboard = new UtilsClipboard();
-    if (!utilsScreen || !utilsApp|| !utilsLanguage || !utilsClipboard)
+    if (!utilsLanguage)
     {
         qWarning() << "Cannot init toolBLEx utils!";
         return EXIT_FAILURE;
@@ -130,12 +122,6 @@ int main(int argc, char *argv[])
     engine_context->setContextProperty("ubertooth", ubertooth);
     engine_context->setContextProperty("rtlsdr", rtlsdr);
 
-    engine_context->setContextProperty("utilsApp", utilsApp);
-    engine_context->setContextProperty("utilsScreen", utilsScreen);
-    engine_context->setContextProperty("utilsSysInfo", utilsSysInfo);
-    engine_context->setContextProperty("utilsLanguage", utilsLanguage);
-    engine_context->setContextProperty("utilsClipboard", utilsClipboard);
-
     // Load the main view
     engine.loadFromModule("toolBLEx", "DesktopApplication");
 
@@ -150,7 +136,6 @@ int main(int argc, char *argv[])
 
     // QQuickWindow must be valid at this point
     QQuickWindow *window = qobject_cast<QQuickWindow *>(engine.rootObjects().value(0));
-    utilsApp->setQuickWindow(window);
 
     // React to secondary instances
     QObject::connect(&app, &SingleApplication::instanceStarted, window, &QQuickWindow::show);

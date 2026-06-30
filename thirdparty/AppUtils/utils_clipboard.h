@@ -24,8 +24,12 @@
 #define UTILS_CLIPBOARD_H
 /* ************************************************************************** */
 
+#include <QtQml/qqmlregistration.h>
 #include <QObject>
 #include <QString>
+
+class QQmlEngine;
+class QJSEngine;
 
 /*!
  * \brief Clipboard wrapper for QML
@@ -35,12 +39,21 @@
 class UtilsClipboard : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
+
+    // Singleton
+    explicit UtilsClipboard(QObject *parent = nullptr);
 
 public:
-    Q_INVOKABLE static void clear();
+    static UtilsClipboard *getInstance();
+    static UtilsClipboard *create(QQmlEngine *engine, QJSEngine *scriptEngine);
 
     Q_INVOKABLE static void setText(const QString &txt);
-    Q_INVOKABLE static  QString getText();
+
+    Q_INVOKABLE static QString getText();
+
+    Q_INVOKABLE static void clear();
 };
 
 /* ************************************************************************** */

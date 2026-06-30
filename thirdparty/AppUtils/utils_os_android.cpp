@@ -21,6 +21,7 @@
  */
 
 #include "utils_os_android.h"
+#include "utils_os.h"
 
 #if defined(Q_OS_ANDROID)
 
@@ -722,11 +723,44 @@ void UtilsAndroid::screenLockOrientation(int orientation, bool autoRotate)
 
 /* ************************************************************************** */
 
-void UtilsAndroid::vibrate(int milliseconds)
-{
-    if (milliseconds > 100) milliseconds = 100;
+// android.os.VibrationEffect constants
+#define DEFAULT_AMPLITUDE                       0xffffffff
+#define EFFECT_CLICK                            0x00000000
+#define EFFECT_DOUBLE_CLICK                     0x00000001
+#define EFFECT_TICK                             0x00000002
+#define EFFECT_HEAVY_CLICK                      0x00000005
 
-    QNativeInterface::QAndroidApplication::runOnAndroidMainThread([=]() {
+void UtilsAndroid::vibrate(int hapticType)
+{
+    // Android has no notification/selection haptics, so we map each style to
+    // the closest predefined effect (or a one-shot duration on API 26-28).
+    jint effect = EFFECT_TICK;
+    jlong ms = 20;
+
+    switch (hapticType)
+    {
+    case UtilsOS::HapticSelection:
+    case UtilsOS::HapticLight:
+        effect = EFFECT_TICK; ms = 20;
+        break;
+    case UtilsOS::HapticMedium:
+        effect = EFFECT_CLICK; ms = 30;
+        break;
+    case UtilsOS::HapticHeavy:
+        effect = EFFECT_HEAVY_CLICK; ms = 40;
+        break;
+    case UtilsOS::HapticSuccess:
+        effect = EFFECT_HEAVY_CLICK; ms = 30;
+        break;
+    case UtilsOS::HapticWarning:
+        effect = EFFECT_DOUBLE_CLICK; ms = 40;
+        break;
+    case UtilsOS::HapticError:
+        effect = EFFECT_DOUBLE_CLICK; ms = 60;
+        break;
+    }
+
+    QNativeInterface::QAndroidApplication::runOnAndroidMainThread([effect, ms]() {
         QJniObject activity = QNativeInterface::QAndroidApplication::context();
         if (activity.isValid())
         {
@@ -734,25 +768,30 @@ void UtilsAndroid::vibrate(int milliseconds)
             QJniObject vibratorService = activity.callObjectMethod("getSystemService",
                                                                    "(Ljava/lang/String;)Ljava/lang/Object;",
                                                                    vibratorString.object<jstring>());
-            if (vibratorService.callMethod<jboolean>("hasVibrator", "()Z"))
+            if (vibratorService.isValid() &&
+                vibratorService.callMethod<jboolean>("hasVibrator", "()Z"))
             {
-                if (QNativeInterface::QAndroidApplication::sdkVersion() < 26)
+                QJniObject vibrationEffect;
+                if (QNativeInterface::QAndroidApplication::sdkVersion() >= 29)
                 {
-                    // vibrate (long milliseconds) // Deprecated in API level 26
-
-                    jlong ms = milliseconds;
-                    vibratorService.callMethod<void>("vibrate", "(J)V", ms);
+                    // createPredefined() // Added in API level 29
+                    // a nicer, system-tuned effect (EFFECT_TICK/CLICK/HEAVY_CLICK/DOUBLE_CLICK)
+                    vibrationEffect = QJniObject::callStaticObjectMethod("android/os/VibrationEffect",
+                                                                         "createPredefined",
+                                                                         "(I)Landroid/os/VibrationEffect;",
+                                                                         effect);
                 }
                 else
                 {
-                    // vibrate(VibrationEffect vibe) // Added in API level 26
+                    // createOneShot() // Added in API level 26
+                    vibrationEffect = QJniObject::callStaticObjectMethod("android/os/VibrationEffect",
+                                                                         "createOneShot",
+                                                                         "(JI)Landroid/os/VibrationEffect;",
+                                                                         ms, static_cast<jint>(DEFAULT_AMPLITUDE));
+                }
 
-                    jint effect = 0x00000002;
-                    QJniObject vibrationEffect = QJniObject::callStaticObjectMethod("android/os/VibrationEffect",
-                                                                                    "createPredefined",
-                                                                                    "(I)Landroid/os/VibrationEffect;",
-                                                                                    effect);
-
+                if (vibrationEffect.isValid())
+                {
                     vibratorService.callMethod<void>("vibrate",
                                                      "(Landroid/os/VibrationEffect;)V",
                                                      vibrationEffect.object<jobject>());

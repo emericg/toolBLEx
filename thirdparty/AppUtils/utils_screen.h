@@ -24,11 +24,14 @@
 #define UTILS_SCREEN_H
 /* ************************************************************************** */
 
+#include <QtQml/qqmlregistration.h>
 #include <QObject>
 #include <QVariantMap>
+#include <QScreen>
 
-class QScreen;
 class QQuickWindow;
+class QQmlEngine;
+class QJSEngine;
 
 /* ************************************************************************** */
 
@@ -38,6 +41,8 @@ class QQuickWindow;
 class UtilsScreen: public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
 
     Q_PROPERTY(int screenWidth READ getScreenWidth NOTIFY screenChanged)
     Q_PROPERTY(int screenHeight READ getScreenHeight NOTIFY screenChanged)
@@ -79,9 +84,7 @@ class UtilsScreen: public QObject
     const QScreen *m_scr = nullptr;
 
     // Singleton
-    static UtilsScreen *instance;
-    UtilsScreen();
-    ~UtilsScreen();
+    explicit UtilsScreen(QObject *parent = nullptr);
 
 Q_SIGNALS:
     void screenChanged();
@@ -91,6 +94,7 @@ public slots:
 
 public:
     static UtilsScreen *getInstance();
+    static UtilsScreen *create(QQmlEngine *engine, QJSEngine *scriptEngine);
 
     Q_INVOKABLE void printScreenInfos();
 

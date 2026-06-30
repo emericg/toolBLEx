@@ -22,24 +22,41 @@
 
 #include "utils_clipboard.h"
 
+#include <QCoreApplication>
+#include <QQmlEngine>
 #include <QGuiApplication>
 #include <QClipboard>
 #include <QMimeData>
 
 /* ************************************************************************** */
 
-void UtilsClipboard::clear()
+UtilsClipboard *UtilsClipboard::getInstance()
+{
+    static UtilsClipboard *instance = new UtilsClipboard(QCoreApplication::instance());
+    return instance;
+}
+
+UtilsClipboard *UtilsClipboard::create(QQmlEngine *, QJSEngine *)
+{
+    UtilsClipboard *instance = getInstance();
+    QJSEngine::setObjectOwnership(instance, QJSEngine::CppOwnership);
+    return instance;
+}
+
+UtilsClipboard::UtilsClipboard(QObject *parent) : QObject(parent)
 {
     //
 }
 
+/* ************************************************************************** */
+
 void UtilsClipboard::setText(const QString &txt)
 {
     QClipboard *clipboard = QGuiApplication::clipboard();
-    QString originalText = clipboard->text();
-
     clipboard->setText(txt);
 }
+
+/* ************************************************************************** */
 
 QString UtilsClipboard::getText()
 {
@@ -57,6 +74,13 @@ QString UtilsClipboard::getText()
     }
 
     return QString();
+}
+
+/* ************************************************************************** */
+
+void UtilsClipboard::clear()
+{
+    QGuiApplication::clipboard()->clear();
 }
 
 /* ************************************************************************** */

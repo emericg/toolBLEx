@@ -72,13 +72,13 @@ Item {
                 qsTr("[peak: %1 MHz · %2 dBm]").arg(freq).arg(dataSource.peakDbm)
             }
 
-            posX: UtilsNumber.mapNumber_nocheck(dataSource.peakFreq,
-                                                dataSource.freqMin, dataSource.freqMax,
-                                                0, overlayClickable.width).toFixed(0) - 1
+            posX: UtilsNumber.mapNumber(dataSource.peakFreq,
+                                        dataSource.freqMin, dataSource.freqMax,
+                                        0, overlayClickable.width).toFixed(0) - 1
 
-            posY: UtilsNumber.mapNumber_nocheck(dataSource.peakDbm,
-                                                actionBar.maxRSSI, actionBar.minRSSI,
-                                                0, overlayClickable.height).toFixed(0) - 1
+            posY: UtilsNumber.mapNumber(dataSource.peakDbm,
+                                        actionBar.maxRSSI, actionBar.minRSSI,
+                                        0, overlayClickable.height).toFixed(0) - 1
         }
 
         ////////

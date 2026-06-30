@@ -243,14 +243,12 @@ public:
     /* ********************************************************************** */
 
     /*!
-     * \param milliseconds: vibration duration.
+     * \param hapticType: a UtilsApp::HapticFeedback value.
      *
-     * Need VIBRATE permission.
-     *
-     * - 25 is a small 'keyboard like' vibration
-     * - 100 is a regular 'notification' vibration
+     * Need the VIBRATE permission. Maps each haptic style to the closest
+     * Android predefined VibrationEffect (or a one-shot duration on API 26-28).
      */
-    static void vibrate(int milliseconds);
+    static void vibrate(int hapticType);
 
     /* ********************************************************************** */
 

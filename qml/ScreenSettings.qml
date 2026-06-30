@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 
 import ComponentLibrary
+import AppUtils
 
 Loader {
     id: screenSettings
@@ -221,7 +222,7 @@ Loader {
                                 Text {
                                     anchors.baseline: title.baseline
 
-                                    text: qsTr("version %1 %2").arg(utilsApp.appVersion()).arg(utilsApp.appBuildMode())
+                                    text: qsTr("version %1 %2").arg(UtilsApp.appVersion()).arg(UtilsApp.appBuildMode())
                                     textFormat: Text.PlainText
                                     font.pixelSize: Theme.fontSizeContentBig
                                     color: "white" // Theme.colorSubText
@@ -230,8 +231,8 @@ Loader {
                                 Text {
                                     anchors.baseline: title.baseline
 
-                                    visible: utilsApp.isDebugBuild()
-                                    text: qsTr("built on %1").arg(utilsApp.appBuildDateTime())
+                                    visible: UtilsApp.isDebugBuild()
+                                    text: qsTr("built on %1").arg(UtilsApp.appBuildDateTime())
                                     textFormat: Text.PlainText
                                     font.pixelSize: Theme.fontSizeContentBig
                                     color: "white" // Theme.colorSubText
@@ -333,7 +334,7 @@ Loader {
                         }
 
                         Loader { // DEBUG PANEL
-                            active: true // utilsApp.isDebugBuild()
+                            active: true // UtilsApp.isDebugBuild()
                             asynchronous: true
                             sourceComponent:  SettingsInfo {
                                 width: settingsColumn.flowElementWidth

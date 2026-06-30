@@ -24,6 +24,7 @@
 
 #if defined(Q_OS_MACOS)
 
+#include <QCoreApplication>
 #include <QQuickWindow>
 #include <objc/runtime.h>
 #include <AppKit/AppKit.h>
@@ -54,23 +55,18 @@ MacOSDockHandler *MacOSDockHandler::getInstance()
 {
     if (instance == nullptr)
     {
-        instance = new MacOSDockHandler();
+        instance = new MacOSDockHandler(QCoreApplication::instance());
     }
 
     return instance;
 }
 
-MacOSDockHandler::MacOSDockHandler() : QObject()
+MacOSDockHandler::MacOSDockHandler(QObject *parent) : QObject(parent)
 {
     // Setup dock click handler
     Class delClass = (Class)[[[NSApplication sharedApplication] delegate] class];
     SEL shouldHandle = sel_registerName("applicationShouldHandleReopen:hasVisibleWindows:");
     class_replaceMethod(delClass, shouldHandle, reinterpret_cast<IMP>(dockClickHandler), "B@:");
-}
-
-MacOSDockHandler::~MacOSDockHandler()
-{
-    delete instance;
 }
 
 /* ************************************************************************** */

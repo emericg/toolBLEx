@@ -1,6 +1,7 @@
 import QtQuick
 
 import ComponentLibrary
+import AppUtils
 
 Column { // APP INFO
 
@@ -48,11 +49,11 @@ Column { // APP INFO
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: {
-                    var txt = utilsSysInfo.getOsName()
-                    if (utilsSysInfo.getOsVersion() !== "unknown")
+                    var txt = UtilsSysInfo.getOsName()
+                    if (UtilsSysInfo.getOsVersion() !== "unknown")
                     {
                         if (txt.length) txt += " "
-                        txt += utilsSysInfo.getOsVersion()
+                        txt += UtilsSysInfo.getOsVersion()
                     }
                     return txt
                 }
@@ -73,9 +74,9 @@ Column { // APP INFO
                 anchors.centerIn: parent
 
                 text: {
-                    var txt = utilsSysInfo.getOsDisplayServer()
+                    var txt = UtilsSysInfo.getOsDisplayServer()
                     if (txt.length) txt += " / "
-                    txt += utilsApp.qtRhiBackend()
+                    txt += UtilsApp.qtRhiBackend()
                     return txt
                 }
                 textFormat: Text.PlainText
@@ -119,7 +120,7 @@ Column { // APP INFO
             Text {
                 anchors.centerIn: parent
 
-                text: utilsApp.qtVersion()
+                text: UtilsApp.qtVersion()
                 textFormat: Text.PlainText
                 color: Theme.colorText
                 font.pixelSize: Theme.fontSizeContent
@@ -161,7 +162,7 @@ Column { // APP INFO
             Text {
                 anchors.centerIn: parent
 
-                text: utilsApp.qtArchitecture()
+                text: UtilsApp.qtArchitecture()
                 textFormat: Text.PlainText
                 color: Theme.colorText
                 font.pixelSize: Theme.fontSizeContent

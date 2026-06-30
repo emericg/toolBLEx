@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Window
 
 import ComponentLibrary
+import AppUtils
 import DeviceUtils
 
 ApplicationWindow {
@@ -10,11 +11,22 @@ ApplicationWindow {
     flags: Qt.Window
     color: Theme.colorBackground
 
+    // Helpers
     property bool isDesktop: true
     property bool isMobile: false
     property bool isPhone: false
     property bool isTablet: false
-    property bool isHdpi: (utilsScreen.screenDpi >= 128 || utilsScreen.screenPar >= 2.0)
+    property bool isHdpi: (UtilsScreen.screenDpi >= 128 || UtilsScreen.screenPar >= 2.0)
+
+    // Setup ThemeEngine
+    Binding { target: Theme; property: "appTheme";               value: SettingsManager.appTheme }
+    Binding { target: Theme; property: "appThemeAuto";           value: SettingsManager.appThemeAuto }
+    Binding { target: Theme; property: "appThemeAutoMethod";     value: SettingsManager.appThemeAutoMethod }
+    Binding { target: Theme; property: "appWidth";               value: appWindow.width }
+    Binding { target: Theme; property: "appHeight";              value: appWindow.height }
+    Binding { target: Theme; property: "screenDpi";              value: UtilsScreen.screenDpi }
+    Binding { target: Theme; property: "screenPar";              value: UtilsScreen.screenPar }
+    Binding { target: Theme; property: "screenSize";             value: UtilsScreen.screenSize }
 
     // Desktop stuff ///////////////////////////////////////////////////////////
 
@@ -204,7 +216,7 @@ ApplicationWindow {
     }
     Shortcut {
         sequences: [StandardKey.Quit]
-        onActivated: utilsApp.appExit()
+        onActivated: UtilsApp.appExit()
     }
 
     // UI sizes ////////////////////////////////////////////////////////////////

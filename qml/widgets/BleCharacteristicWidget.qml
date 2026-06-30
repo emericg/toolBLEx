@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 
 import ComponentLibrary
+import AppUtils
 
 Rectangle {
     id: bleCharacteristicWidget
@@ -220,7 +221,7 @@ Rectangle {
                     source: "qrc:/IconLibrary/material-symbols/content_copy.svg"
 
                     onClicked: {
-                        utilsClipboard.setText(modelData.valueHex)
+                        UtilsClipboard.setText(modelData.valueHex)
                     }
                 }
             }
@@ -292,7 +293,7 @@ Rectangle {
                     source: "qrc:/IconLibrary/material-symbols/content_copy.svg"
 
                     onClicked: {
-                        utilsClipboard.setText(modelData.valueAscii)
+                        UtilsClipboard.setText(modelData.valueAscii)
                     }
                 }
             }

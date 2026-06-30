@@ -5,6 +5,7 @@ import QtQuick.Controls
 import QtQuick.Dialogs
 
 import ComponentLibrary
+import AppUtils
 import DeviceUtils
 
 Flickable {
@@ -541,12 +542,12 @@ Flickable {
 
                     ButtonSolid {
                         color: (selectedDevice && selectedDevice.userColor)
-                        //fulltextColor: (selectedDevice && utilsApp.isQColorLight(selectedDevice.userColor)) ? "#333" : "#f4f4f4"
+                        //fulltextColor: (selectedDevice && UtilsApp.isQColorLight(selectedDevice.userColor)) ? "#333" : "#f4f4f4"
                         font.bold: true
 
                         text: qsTr("color")
                         onClicked: colorDialog.open()
-                        colorText: utilsApp.isQColorLight(colorBackground) ? "dark" : "white"
+                        colorText: UtilsApp.isQColorLight(colorBackground) ? "dark" : "white"
 
                         ColorDialog {
                             id: colorDialog

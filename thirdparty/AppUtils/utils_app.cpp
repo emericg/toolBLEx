@@ -36,14 +36,15 @@
 #include <QColor>
 
 #include <QCoreApplication>
-#include <QStandardPaths>
 #include <QDesktopServices>
+#include <QStandardPaths>
 #include <QLibraryInfo>
 #include <QSysInfo>
 
 #include <QGuiApplication>
 #include <QQuickWindow>
 #include <QStyleHints>
+#include <QQmlEngine>
 #include <QPalette>
 
 #if defined(UTILS_QT_RHI)
@@ -51,31 +52,28 @@
 #endif
 
 /* ************************************************************************** */
-
-UtilsApp *UtilsApp::instance = nullptr;
+/* ************************************************************************** */
 
 UtilsApp *UtilsApp::getInstance()
 {
-    if (instance == nullptr)
-    {
-        instance = new UtilsApp();
-    }
-
+    static UtilsApp *instance = new UtilsApp(QCoreApplication::instance());
     return instance;
 }
 
-UtilsApp::UtilsApp()
+UtilsApp *UtilsApp::create(QQmlEngine *, QJSEngine *)
+{
+    UtilsApp *instance = getInstance();
+    QJSEngine::setObjectOwnership(instance, QJSEngine::CppOwnership);
+    return instance;
+}
+
+UtilsApp::UtilsApp(QObject *parent) : QObject(parent)
 {
     // Set default application path
     m_appPath = QCoreApplication::applicationDirPath();
 
     // Make sure the path is terminated with a separator?
     //if (!m_appPath.endsWith('/')) m_appPath += '/';
-}
-
-UtilsApp::~UtilsApp()
-{
-    //
 }
 
 /* ************************************************************************** */
@@ -104,19 +102,19 @@ QString UtilsApp::appBuildDateTime()
 QString UtilsApp::appBuildMode()
 {
 #if !defined(QT_NO_DEBUG) && !defined(NDEBUG)
-    return "DEBUG";
+    return QStringLiteral("DEBUG");
 #endif
 
-    return "";
+    return QString();
 }
 
 QString UtilsApp::appBuildModeFull()
 {
 #if defined(QT_NO_DEBUG) || defined(NDEBUG)
-    return "RELEASE";
+    return QStringLiteral("RELEASE");
 #endif
 
-    return "DEBUG";
+    return QStringLiteral("DEBUG");
 }
 
 bool UtilsApp::isDebugBuild()
@@ -140,10 +138,10 @@ QString UtilsApp::qtBuildMode()
 {
     if (QLibraryInfo::isDebugBuild())
     {
-        return "DEBUG";
+        return QStringLiteral("DEBUG");
     }
 
-    return "RELEASE";
+    return QStringLiteral("RELEASE");
 }
 
 QString UtilsApp::qtArchitecture()
@@ -272,15 +270,6 @@ bool UtilsApp::isQColorLight(const QColor &color)
 
 /* ************************************************************************** */
 
-bool UtilsApp::isOsThemeDark()
-{
-    const QStyleHints *styleHints = static_cast<QGuiApplication *>qApp->styleHints();
-    return (styleHints && styleHints->colorScheme() == Qt::ColorScheme::Dark);
-}
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-
 QUrl UtilsApp::getStandardPath_url(const QString &type)
 {
     return QUrl::fromLocalFile(getStandardPath_string(type));
@@ -312,19 +301,14 @@ QString UtilsApp::getStandardPath_string(const QString &type)
 }
 
 /* ************************************************************************** */
-/* ************************************************************************** */
 
-void UtilsApp::vibrate(int ms)
+bool UtilsApp::isOsThemeDark()
 {
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::vibrate(ms);
-#elif defined(Q_OS_IOS)
-    return UtilsIOS::vibrate(ms);
-#else
-    Q_UNUSED(ms)
-#endif
+    const QStyleHints *styleHints = QGuiApplication::styleHints();
+    return (styleHints && styleHints->colorScheme() == Qt::ColorScheme::Dark);
 }
 
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 int UtilsApp::getAndroidSdkVersion()
@@ -335,6 +319,8 @@ int UtilsApp::getAndroidSdkVersion()
 
     return 0;
 }
+
+/* ************************************************************************** */
 
 void UtilsApp::openAndroidAppInfo(const QString &packageName)
 {
@@ -369,344 +355,4 @@ void UtilsApp::openAndroidAlarms()
 }
 
 /* ************************************************************************** */
-
-bool UtilsApp::checkMobileBluetoothPermission()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::checkPermission_bluetooth();
-#elif defined(Q_OS_IOS)
-    qWarning() << "Please use Qt permission system directly on iOS";
-    return false;
-#endif
-
-    return true;
-}
-
-bool UtilsApp::getMobileBluetoothPermission()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::getPermission_bluetooth();
-#elif defined(Q_OS_IOS)
-    qWarning() << "Please use Qt permission system directly on iOS";
-    return false;
-#endif
-
-    return true;
-}
-
-bool UtilsApp::checkMobileLocationPermission()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::checkPermission_location();
-#endif
-
-    return true;
-}
-
-bool UtilsApp::getMobileLocationPermission()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::getPermission_location();
-#endif
-
-    return true;
-}
-
-bool UtilsApp::checkMobileBleLocationPermission()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::checkPermission_location_ble();
-#endif
-
-    return true;
-}
-
-bool UtilsApp::getMobileBleLocationPermission()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::getPermission_location_ble();
-#endif
-
-    return true;
-}
-
-bool UtilsApp::checkMobileBackgroundLocationPermission()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::checkPermission_location_background();
-#endif
-
-    return true;
-}
-
-bool UtilsApp::getMobileBackgroundLocationPermission()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::getPermission_location_background();
-#endif
-
-    return true;
-}
-
-bool UtilsApp::checkMobileStoragePermissions()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::checkPermissions_storage();
-#elif defined(Q_OS_IOS)
-    return false;
-#endif
-
-    return true;
-}
-
-bool UtilsApp::getMobileStoragePermissions()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::getPermissions_storage();
-#elif defined(Q_OS_IOS)
-    return false;
-#endif
-
-    return true;
-}
-
-bool UtilsApp::checkMobileStorageReadPermission()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::checkPermission_storage_read();
-#elif defined(Q_OS_IOS)
-    return false;
-#endif
-
-    return true;
-}
-
-bool UtilsApp::getMobileStorageReadPermission()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::getPermission_storage_read();
-#elif defined(Q_OS_IOS)
-    return false;
-#endif
-
-    return true;
-}
-
-bool UtilsApp::checkMobileStorageWritePermission()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::checkPermission_storage_write();
-#elif defined(Q_OS_IOS)
-    return false;
-#endif
-
-    return true;
-}
-
-bool UtilsApp::getMobileStorageWritePermission()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::getPermission_storage_write();
-#elif defined(Q_OS_IOS)
-    return false;
-#endif
-
-    return true;
-}
-
-bool UtilsApp::checkMobileStorageFileSystemPermission()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::checkPermission_storage_filesystem();
-#elif defined(Q_OS_IOS)
-    return false;
-#endif
-
-    return true;
-}
-
-bool UtilsApp::getMobileStorageFileSystemPermission(const QString &packageName)
-{
-    Q_UNUSED(packageName)
-
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::getPermission_storage_filesystem(packageName);
-#elif defined(Q_OS_IOS)
-    return false;
-#endif
-
-    return true;
-}
-
-bool UtilsApp::checkMobilePhoneStatePermission()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::checkPermission_phonestate();
-#elif defined(Q_OS_IOS)
-    return false;
-#endif
-
-    return true;
-}
-
-bool UtilsApp::getMobilePhoneStatePermission()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::getPermission_phonestate();
-#elif defined(Q_OS_IOS)
-    return false;
-#endif
-
-    return true;
-}
-
-/* ************************************************************************** */
-
-bool UtilsApp::checkMobileCameraPermission()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::checkPermission_camera();
-#elif defined(Q_OS_IOS)
-    return false;
-#endif
-
-    return true;
-}
-
-bool UtilsApp::getMobileCameraPermission()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::getPermission_camera();
-#elif defined(Q_OS_IOS)
-    return false;
-#endif
-
-    return true;
-}
-
-/* ************************************************************************** */
-
-bool UtilsApp::checkMobileNotificationPermission()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::checkPermission_notification();
-#elif defined(Q_OS_IOS)
-    #if defined(UTILS_NOTIFICATIONS_ENABLED)
-        return UtilsIOSNotifications::checkPermission_notification();
-    #else
-        qWarning() << "UTILS_NOTIFICATIONS_ENABLED is not enabled";
-    #endif
-#endif
-
-    return true;
-}
-
-bool UtilsApp::getMobileNotificationPermission()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::getPermission_notification();
-#elif defined(Q_OS_IOS)
-    #if defined(UTILS_NOTIFICATIONS_ENABLED)
-        return UtilsIOSNotifications::getPermission_notification();
-    #else
-        qWarning() << "UTILS_NOTIFICATIONS_ENABLED is not enabled";
-    #endif
-#endif
-
-    return true;
-}
-
-/* ************************************************************************** */
-
-bool UtilsApp::isMobileGpsEnabled()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::gpsutils_isGpsEnabled();
-#elif defined(Q_OS_IOS)
-    return false; // TODO?
-#endif
-
-    return false;
-}
-
-void UtilsApp::forceMobileGpsEnabled()
-{
-#if defined(Q_OS_ANDROID)
-    UtilsAndroid::gpsutils_forceGpsEnabled();
-#endif
-}
-
-/* ************************************************************************** */
-
-QString UtilsApp::getMobileDeviceModel()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::getDeviceModel();
-#endif
-
-    return QString();
-}
-
-QString UtilsApp::getMobileDeviceSerial()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::getDeviceSerial();
-#endif
-
-    return QString();
-}
-
-/* ************************************************************************** */
-
-int UtilsApp::getMobileStorageCount()
-{
-#if defined(Q_OS_ANDROID)
-    QStringList storages = UtilsAndroid::get_storages_by_api();
-    return storages.size();
-#endif
-
-    return 0;
-}
-
-QString UtilsApp::getMobileStorageInternal()
-{
-    QString internal;
-
-#if defined(Q_OS_ANDROID)
-    QStringList storages = UtilsAndroid::get_storages_by_api();
-
-    if (storages.size() > 0)
-        internal = storages.at(0);
-#endif
-
-    return internal;
-}
-
-QString UtilsApp::getMobileStorageExternal(int index)
-{
-#if defined(Q_OS_ANDROID)
-    QStringList storages = UtilsAndroid::get_storages_by_api();
-
-    if (storages.size() > index)
-        return storages.at(1 + index);
-#endif
-
-    Q_UNUSED(index)
-    return QString();
-}
-
-QStringList UtilsApp::getMobileStorageExternals()
-{
-#if defined(Q_OS_ANDROID)
-    QStringList storages = UtilsAndroid::get_storages_by_api();
-
-    if (storages.size() > 0)
-        storages.removeFirst();
-
-    return storages;
-#endif
-
-    return QStringList();
-}
-
 /* ************************************************************************** */

@@ -24,8 +24,12 @@
 #define UTILS_SYSINFO_H
 /* ************************************************************************** */
 
+#include <QtQml/qqmlregistration.h>
 #include <QObject>
 #include <QVariantMap>
+
+class QQmlEngine;
+class QJSEngine;
 
 /* ************************************************************************** */
 
@@ -35,6 +39,8 @@
 class UtilsSysInfo: public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
 
     Q_PROPERTY(QString cpu_arch READ getCpuArch CONSTANT)
     Q_PROPERTY(int cpu_coreCount_physical READ getCpuCoreCountPhysical CONSTANT)
@@ -56,15 +62,14 @@ class UtilsSysInfo: public QObject
     QString m_os_displayserver;
 
     // Singleton
-    static UtilsSysInfo *instance;
-    UtilsSysInfo();
-    ~UtilsSysInfo();
+    explicit UtilsSysInfo(QObject *parent = nullptr);
 
     void getCpuInfos();
     void getRamInfos();
 
 public:
     static UtilsSysInfo *getInstance();
+    static UtilsSysInfo *create(QQmlEngine *engine, QJSEngine *scriptEngine);
 
     void printInfos();
 

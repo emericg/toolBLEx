@@ -8,13 +8,13 @@ Item {
 
     // parent.width/height should be the same as frequencyGraph.plotArea.width/height
 
-    anchors.leftMargin: UtilsNumber.mapNumber_nocheck(2400,
-                                                      dataSource.freqMin, dataSource.freqMax,
-                                                      0, parent.width)
+    anchors.leftMargin: UtilsNumber.mapNumber(2400,
+                                              dataSource.freqMin, dataSource.freqMax,
+                                              0, parent.width)
 
-    anchors.rightMargin: parent.width - UtilsNumber.mapNumber_nocheck(2500,
-                                                                      dataSource.freqMin, dataSource.freqMax,
-                                                                      0, parent.width)
+    anchors.rightMargin: parent.width - UtilsNumber.mapNumber(2500,
+                                                              dataSource.freqMin, dataSource.freqMax,
+                                                              0, parent.width)
 
     ////////////////////////////////////////////////////////////////////////////
 

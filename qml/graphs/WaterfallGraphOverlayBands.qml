@@ -70,8 +70,8 @@ Item {
         property color color: Theme.colorBlue
 
         function freqToY(f) {
-            return UtilsNumber.mapNumber_nocheck(f, dataSource.freqMin, dataSource.freqMax,
-                                                 overlayFrequencyBands.height, 0)
+            return UtilsNumber.mapNumber(f, dataSource.freqMin, dataSource.freqMax,
+                                         overlayFrequencyBands.height, 0)
         }
 
         x: 0

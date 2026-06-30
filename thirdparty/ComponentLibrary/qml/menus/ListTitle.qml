@@ -1,0 +1,83 @@
+import QtQuick
+import QtQuick.Effects
+
+import ComponentLibrary
+
+Rectangle {
+    id: control
+
+    anchors.left: parent.left
+    anchors.leftMargin: singleColumn ? 0 : Theme.componentMargin
+    anchors.right: parent.right
+    anchors.rightMargin: singleColumn ? 0 : Theme.componentMargin
+
+    height: Theme.componentHeightXL
+    radius: singleColumn ? 0 : Theme.componentRadius
+    z: 2
+
+    color: Theme.colorForeground
+    border.width: singleColumn ? 0 : Theme.componentBorderWidth
+    border.color: Theme.colorSeparator
+
+    property url source
+    property int sourceSize: 24
+    property int sourceRotation: 0
+    property color sourceColor: Theme.colorIcon
+
+    property string text: "title"
+    property color textColor: Theme.colorText
+    property int textSize: source.length ? Theme.fontSizeContentBig : Theme.fontSizeContentVeryBig
+    property bool textBold: false
+
+    property bool shadow: !singleColumn
+
+    ////////////////
+
+    IconSvg {
+        anchors.left: control.left
+        anchors.leftMargin: Theme.componentMarginL
+        anchors.verticalCenter: control.verticalCenter
+
+        visible: control.source.toString().length
+        width: control.sourceSize
+        height: control.sourceSize
+        rotation: control.sourceRotation
+
+        color: control.sourceColor
+        source: control.source
+    }
+
+    Text {
+        anchors.left: control.left
+        anchors.leftMargin: {
+            if (control.source.toString().length) {
+                if (singleColumn) return appHeader.headerPosition
+                return (Theme.componentMarginL*2 + control.sourceSize)
+            }
+            return Theme.componentMarginL
+        }
+        anchors.right: control.right
+        anchors.rightMargin: Theme.componentMarginL
+        anchors.verticalCenter: control.verticalCenter
+
+        text: control.text
+        textFormat: Text.PlainText
+        font.pixelSize: control.textSize
+        font.bold: control.textBold
+        color: control.textColor
+        wrapMode: Text.WordWrap
+        verticalAlignment: Text.AlignVCenter
+    }
+
+    ////////////////
+
+    layer.enabled: control.shadow
+    layer.effect: MultiEffect {
+        autoPaddingEnabled: true
+        shadowEnabled: true
+        shadowOpacity: 0.12
+        shadowColor: control.border.color
+    }
+
+    ////////////////
+}

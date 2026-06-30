@@ -2,6 +2,7 @@ import QtCore
 import QtQuick
 
 import ComponentLibrary
+import AppUtils
 
 Column { // APP SETTINGS
 
@@ -237,7 +238,7 @@ Column { // APP SETTINGS
                 }
             }
             onActivated: {
-                utilsLanguage.loadLanguage(cbAppLanguage.get(currentIndex).text)
+                UtilsLanguage.loadLanguage(cbAppLanguage.get(currentIndex).text)
                 SettingsManager.appLanguage = cbAppLanguage.get(currentIndex).text
             }
         }
@@ -276,10 +277,10 @@ Column { // APP SETTINGS
                 ListElement { idx: 1; txt: qsTr("imperial"); src: ""; sz: 16; }
             }
 
-            currentSelection: SettingsManager.appUnits
+            currentSelection: SettingsManager.appUnitSystem
             onMenuSelected: (index) => {
                 currentSelection = index
-                SettingsManager.appUnits = index
+                SettingsManager.appUnitSystem = index
             }
         }
     }

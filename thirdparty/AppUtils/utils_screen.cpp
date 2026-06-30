@@ -24,6 +24,8 @@
 
 #include <cmath>
 
+#include <QCoreApplication>
+#include <QQmlEngine>
 #include <QGuiApplication>
 #include <QQuickWindow>
 #include <QScreen>
@@ -45,19 +47,20 @@
 
 /* ************************************************************************** */
 
-UtilsScreen *UtilsScreen::instance = nullptr;
-
 UtilsScreen *UtilsScreen::getInstance()
 {
-    if (instance == nullptr)
-    {
-        instance = new UtilsScreen();
-    }
-
+    static UtilsScreen *instance = new UtilsScreen(QCoreApplication::instance());
     return instance;
 }
 
-UtilsScreen::UtilsScreen()
+UtilsScreen *UtilsScreen::create(QQmlEngine *, QJSEngine *)
+{
+    UtilsScreen *instance = getInstance();
+    QJSEngine::setObjectOwnership(instance, QJSEngine::CppOwnership);
+    return instance;
+}
+
+UtilsScreen::UtilsScreen(QObject *parent) : QObject(parent)
 {
     if (qApp)
     {
@@ -69,11 +72,6 @@ UtilsScreen::UtilsScreen()
     {
         qWarning() << "UtilsScreen::UtilsScreen() QGuiApplication is NULL";
     }
-}
-
-UtilsScreen::~UtilsScreen()
-{
-    //
 }
 
 /* ************************************************************************** */

@@ -29,32 +29,29 @@
 #endif
 
 #if QT_CONFIG(permissions)
-#include <QCoreApplication>
 #include <QPermission>
 #endif
 
+#include <QCoreApplication>
+#include <QQmlEngine>
 #include <QDebug>
 
 /* ************************************************************************** */
 
-UtilsWiFi *UtilsWiFi::instance = nullptr;
-
 UtilsWiFi *UtilsWiFi::getInstance()
 {
-    if (instance == nullptr)
-    {
-        instance = new UtilsWiFi();
-    }
-
+    static UtilsWiFi *instance = new UtilsWiFi(QCoreApplication::instance());
     return instance;
 }
 
-UtilsWiFi::UtilsWiFi()
+UtilsWiFi *UtilsWiFi::create(QQmlEngine *, QJSEngine *)
 {
-    //
+    UtilsWiFi *instance = getInstance();
+    QJSEngine::setObjectOwnership(instance, QJSEngine::CppOwnership);
+    return instance;
 }
 
-UtilsWiFi::~UtilsWiFi()
+UtilsWiFi::UtilsWiFi(QObject *parent) : QObject(parent)
 {
     //
 }

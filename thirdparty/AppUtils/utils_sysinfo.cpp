@@ -24,6 +24,8 @@
 
 #include <thread>
 
+#include <QCoreApplication>
+#include <QQmlEngine>
 #include <QSysInfo>
 #include <QProcess>
 #include <QDebug>
@@ -56,19 +58,20 @@
 
 /* ************************************************************************** */
 
-UtilsSysInfo *UtilsSysInfo::instance = nullptr;
-
 UtilsSysInfo *UtilsSysInfo::getInstance()
 {
-    if (instance == nullptr)
-    {
-        instance = new UtilsSysInfo();
-    }
-
+    static UtilsSysInfo *instance = new UtilsSysInfo(QCoreApplication::instance());
     return instance;
 }
 
-UtilsSysInfo::UtilsSysInfo()
+UtilsSysInfo *UtilsSysInfo::create(QQmlEngine *, QJSEngine *)
+{
+    UtilsSysInfo *instance = getInstance();
+    QJSEngine::setObjectOwnership(instance, QJSEngine::CppOwnership);
+    return instance;
+}
+
+UtilsSysInfo::UtilsSysInfo(QObject *parent) : QObject(parent)
 {
     getCpuInfos();
     getRamInfos();
@@ -88,10 +91,6 @@ UtilsSysInfo::UtilsSysInfo()
 #endif
 }
 
-UtilsSysInfo::~UtilsSysInfo()
-{
-    //
-}
 
 /* ************************************************************************** */
 

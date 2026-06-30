@@ -21,6 +21,7 @@
  */
 
 #include "utils_os_ios.h"
+#include "utils_os.h"
 
 #if defined(Q_OS_IOS)
 
@@ -73,14 +74,43 @@ void UtilsIOS::screenLockOrientation(int orientation, bool autoRotate)
 
 /* ************************************************************************** */
 
-void UtilsIOS::vibrate(int ms)
+void UtilsIOS::vibrate(int hapticType)
 {
-    Q_UNUSED(ms)
+    switch (hapticType)
+    {
+        case UtilsOS::HapticSelection:
+        {
+            UISelectionFeedbackGenerator *generator = [[UISelectionFeedbackGenerator alloc] init];
+            [generator selectionChanged];
+            generator = nil;
+        } break;
 
-    UISelectionFeedbackGenerator *generator = [[UISelectionFeedbackGenerator alloc] init];
-    [generator prepare];
-    [generator selectionChanged];
-    generator = nil;
+        case UtilsOS::HapticLight:
+        case UtilsOS::HapticMedium:
+        case UtilsOS::HapticHeavy:
+        {
+            UIImpactFeedbackStyle style = UIImpactFeedbackStyleMedium;
+            if (hapticType == UtilsOS::HapticLight) style = UIImpactFeedbackStyleLight;
+            else if (hapticType == UtilsOS::HapticHeavy) style = UIImpactFeedbackStyleHeavy;
+
+            UIImpactFeedbackGenerator *generator = [[UIImpactFeedbackGenerator alloc] initWithStyle:style];
+            [generator impactOccurred];
+            generator = nil;
+        } break;
+
+        case UtilsOS::HapticSuccess:
+        case UtilsOS::HapticWarning:
+        case UtilsOS::HapticError:
+        {
+            UINotificationFeedbackType notif = UINotificationFeedbackTypeSuccess;
+            if (hapticType == UtilsOS::HapticWarning) notif = UINotificationFeedbackTypeWarning;
+            else if (hapticType == UtilsOS::HapticError) notif = UINotificationFeedbackTypeError;
+
+            UINotificationFeedbackGenerator *generator = [[UINotificationFeedbackGenerator alloc] init];
+            [generator notificationOccurred:notif];
+            generator = nil;
+        } break;
+    }
 }
 
 /* ************************************************************************** */

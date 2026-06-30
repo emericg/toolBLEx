@@ -23,6 +23,7 @@
 #include "utils_language.h"
 
 #include <QCoreApplication>
+#include <QQmlEngine>
 #include <QLibraryInfo>
 #include <QTranslator>
 #include <QLocale>
@@ -30,28 +31,26 @@
 
 /* ************************************************************************** */
 
-UtilsLanguage *UtilsLanguage::instance = nullptr;
-
 UtilsLanguage *UtilsLanguage::getInstance()
 {
-    if (instance == nullptr)
-    {
-        instance = new UtilsLanguage();
-    }
-
+    static UtilsLanguage *instance = new UtilsLanguage(QCoreApplication::instance());
     return instance;
 }
 
-UtilsLanguage::UtilsLanguage()
+UtilsLanguage *UtilsLanguage::create(QQmlEngine *, QJSEngine *)
+{
+    UtilsLanguage *instance = getInstance();
+    QJSEngine::setObjectOwnership(instance, QJSEngine::CppOwnership);
+    return instance;
+}
+
+UtilsLanguage::UtilsLanguage(QObject *parent) : QObject(parent)
 {
     // Set a default application name and Qt application instance
     m_appName = QCoreApplication::applicationName();
     m_qt_app = QCoreApplication::instance();
-}
 
-UtilsLanguage::~UtilsLanguage()
-{
-    //
+    m_translation_prefix = "i18n";
 }
 
 /* ************************************************************************** */
@@ -60,6 +59,13 @@ void UtilsLanguage::setAppName(const QString &name, const bool forceLowerCase)
 {
     if (forceLowerCase) m_appName = name.toLower();
     else m_appName = name;
+}
+
+void UtilsLanguage::setTranslationPrefix(const QString &prefix)
+{
+    m_translation_prefix = prefix;
+    if (m_translation_prefix.startsWith('/')) m_translation_prefix = m_translation_prefix.remove(0, 1);
+    if (m_translation_prefix.endsWith('/')) m_translation_prefix.chop(1);
 }
 
 void UtilsLanguage::setAppInstance(QCoreApplication *app)
@@ -89,24 +95,30 @@ void UtilsLanguage::loadLanguage(const QString &lng)
     }
     if (m_appTranslator)
     {
-        m_qt_app->installTranslator(m_appTranslator);
+        m_qt_app->removeTranslator(m_appTranslator);
         delete m_appTranslator;
     }
+    for (QTranslator *extra : std::as_const(m_extraTranslators))
+    {
+        m_qt_app->removeTranslator(extra);
+        delete extra;
+    }
+    m_extraTranslators.clear();
 
     m_appLanguage = lng;
     if (m_appLanguage == "Chinese (traditional)") m_locale_str_full = "zh_TW";
     else if (m_appLanguage == "Chinese (simplified)") m_locale_str_full = "zh_CN";
     else if (m_appLanguage == "Dansk") m_locale_str_full = "da_DK"; // Danish
     else if (m_appLanguage == "Deutsch") m_locale_str_full = "de_DE";
-    else if (m_appLanguage == "English") m_locale_str_full = "en_EN";
+    else if (m_appLanguage == "English") m_locale_str_full = "en_US";
     else if (m_appLanguage == "Español") m_locale_str_full = "es_ES";
     else if (m_appLanguage == "Italiano") m_locale_str_full = "it_IT";
     else if (m_appLanguage == "Français") m_locale_str_full = "fr_FR";
     else if (m_appLanguage == "Frysk") m_locale_str_full = "fy_NL";
     else if (m_appLanguage == "Hungarian") m_locale_str_full = "hu_HU";
     else if (m_appLanguage == "Nederlands") m_locale_str_full = "nl_NL"; // Dutch
-    else if (m_appLanguage == "Norsk (Bokmål)") m_locale_str_full = "nb_NO"; // Swedish
-    else if (m_appLanguage == "Norsk (Nynorsk)") m_locale_str_full = "nn_NO"; // Swedish
+    else if (m_appLanguage == "Norsk (Bokmål)") m_locale_str_full = "nb_NO"; // Norwegian
+    else if (m_appLanguage == "Norsk (Nynorsk)") m_locale_str_full = "nn_NO"; // Norwegian
     else if (m_appLanguage == "Polski") m_locale_str_full = "pl_PL"; // Polish
     else if (m_appLanguage == "Pусский") m_locale_str_full = "ru_RU"; // Russian
     else
@@ -134,15 +146,55 @@ void UtilsLanguage::loadLanguage(const QString &lng)
 
     m_appTranslator = new QTranslator;
     if (m_appTranslator) {
-        if (m_appTranslator->load(":/i18n/" + m_appName + "_" + m_locale_str_short + ".qm")) {
+        if (m_appTranslator->load(":/" + m_translation_prefix + "/" + m_appName + "_" + m_locale_str_short + ".qm")) {
             m_qt_app->installTranslator(m_appTranslator);
         } else {
             qWarning() << "appTranslator ERROR !" << m_appName << m_locale_str_full;
         }
     }
 
+    // Extra catalogs
+    for (const QString &catalog : std::as_const(m_extraCatalogs))
+    {
+        QTranslator *extra = new QTranslator;
+        if (extra->load(":/" + m_translation_prefix + "/" + catalog + "_" + m_locale_str_short + ".qm"))
+        {
+            m_qt_app->installTranslator(extra);
+            m_extraTranslators.push_back(extra);
+        }
+        else
+        {
+            qWarning() << "extraTranslator ERROR !" << catalog << m_locale_str_full;
+            delete extra;
+        }
+    }
+
     // Install new language
     if (m_qml_engine) m_qml_engine->retranslate();
+}
+
+void UtilsLanguage::addTranslationCatalog(const QString &catalog)
+{
+    if (catalog.isEmpty() || m_extraCatalogs.contains(catalog)) return;
+
+    m_extraCatalogs.push_back(catalog);
+
+    // If a language is already loaded, install this catalog right away
+    if (m_qt_app && !m_locale_str_short.isEmpty())
+    {
+        QTranslator *extra = new QTranslator;
+        if (extra->load(":/" + m_translation_prefix + "/" + catalog + "_" + m_locale_str_short + ".qm"))
+        {
+            m_qt_app->installTranslator(extra);
+            m_extraTranslators.push_back(extra);
+            if (m_qml_engine) m_qml_engine->retranslate();
+        }
+        else
+        {
+            qWarning() << "extraTranslator ERROR !" << catalog << m_locale_str_full;
+            delete extra;
+        }
+    }
 }
 
 /* ************************************************************************** */

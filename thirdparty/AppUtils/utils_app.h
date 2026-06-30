@@ -24,6 +24,7 @@
 #define UTILS_APP_H
 /* ************************************************************************** */
 
+#include <QtQml/qqmlregistration.h>
 #include <QObject>
 #include <QUrl>
 #include <QColor>
@@ -31,26 +32,29 @@
 #include <QStringList>
 
 class QQuickWindow;
+class QQmlEngine;
+class QJSEngine;
 
 /* ************************************************************************** */
 
 class UtilsApp : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
 
     QString m_appPath;
 
     QQuickWindow *m_quickwindow = nullptr;
 
     // Singleton
-    static UtilsApp *instance;
-    UtilsApp();
-    ~UtilsApp();
+    explicit UtilsApp(QObject *parent = nullptr);
 
 public:
     static UtilsApp *getInstance();
+    static UtilsApp *create(QQmlEngine *engine, QJSEngine *scriptEngine);
 
-    // app info
+    // App info
 
     static Q_INVOKABLE QString appName();
     static Q_INVOKABLE QString appVersion();
@@ -74,7 +78,7 @@ public:
     Q_INVOKABLE QString qtRhiBackend() const;
     void setQuickWindow(QQuickWindow *window);
 
-    // tools
+    // Helpers
 
     Q_INVOKABLE QString getAppPath() const { return m_appPath; }
     void setAppPath(const QString &value);
@@ -90,58 +94,13 @@ public:
 
     static Q_INVOKABLE bool isOsThemeDark();
 
-    // mobile related
+    // Android helpers
 
     static Q_INVOKABLE int getAndroidSdkVersion();
-
     static Q_INVOKABLE void openAndroidAppInfo(const QString &packageName);
     static Q_INVOKABLE void openAndroidStorageSettings(const QString &packageName);
     static Q_INVOKABLE void openAndroidLocationSettings();
     static Q_INVOKABLE void openAndroidAlarms();
-
-    static Q_INVOKABLE void vibrate(int ms);
-
-    static Q_INVOKABLE bool checkMobileStoragePermissions();
-    static Q_INVOKABLE bool getMobileStoragePermissions();
-    static Q_INVOKABLE bool checkMobileStorageReadPermission();
-    static Q_INVOKABLE bool getMobileStorageReadPermission();
-    static Q_INVOKABLE bool checkMobileStorageWritePermission();
-    static Q_INVOKABLE bool getMobileStorageWritePermission();
-
-    static Q_INVOKABLE bool checkMobileStorageFileSystemPermission();
-    static Q_INVOKABLE bool getMobileStorageFileSystemPermission(const QString &packageName);
-
-    static Q_INVOKABLE bool checkMobileBluetoothPermission();
-    static Q_INVOKABLE bool getMobileBluetoothPermission();
-
-    static Q_INVOKABLE bool checkMobileLocationPermission();
-    static Q_INVOKABLE bool getMobileLocationPermission();
-
-    static Q_INVOKABLE bool checkMobileBleLocationPermission();
-    static Q_INVOKABLE bool getMobileBleLocationPermission();
-
-    static Q_INVOKABLE bool checkMobileBackgroundLocationPermission();
-    static Q_INVOKABLE bool getMobileBackgroundLocationPermission();
-
-    static Q_INVOKABLE bool checkMobilePhoneStatePermission();
-    static Q_INVOKABLE bool getMobilePhoneStatePermission();
-
-    static Q_INVOKABLE bool checkMobileCameraPermission();
-    static Q_INVOKABLE bool getMobileCameraPermission();
-
-    static Q_INVOKABLE bool checkMobileNotificationPermission();
-    static Q_INVOKABLE bool getMobileNotificationPermission();
-
-    static Q_INVOKABLE bool isMobileGpsEnabled();
-    static Q_INVOKABLE void forceMobileGpsEnabled();
-
-    static Q_INVOKABLE QString getMobileDeviceModel();
-    static Q_INVOKABLE QString getMobileDeviceSerial();
-
-    static Q_INVOKABLE int getMobileStorageCount();
-    static Q_INVOKABLE QString getMobileStorageInternal();
-    static Q_INVOKABLE QString getMobileStorageExternal(int index = 0);
-    static Q_INVOKABLE QStringList getMobileStorageExternals();
 };
 
 /* ************************************************************************** */

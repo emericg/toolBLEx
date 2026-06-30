@@ -2,16 +2,20 @@ cmake_minimum_required(VERSION 3.20)
 
 #project(AppUtils LANGUAGES CXX)
 
-# To avoid CMake Warnings, you should add Qt6 'CorePrivate' or 'CoreGui', as needed,
-# to your root level find_package()
+# To avoid CMake Warnings, you should add Qt6 'CorePrivate' or 'CoreGui',
+# as needed, to your root level find_package()
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 
 set(QT_NO_PRIVATE_MODULE_WARNING ON)
 
 ################################################################################
+
+# These definitions will use the TOP LEVEL project name / version
+set(APP_NAME ${CMAKE_PROJECT_NAME})
+set(APP_VERSION ${CMAKE_PROJECT_VERSION})
 
 # Optional stuff
 option(UTILS_QT_RHI "Qt RHI (Rendering Hardware Interface) utils" OFF)
@@ -26,32 +30,27 @@ option(UTILS_NOTIFICATIONS_ENABLED "iOS notification handling" OFF)
 ################################################################################
 
 # Generic dependencies
-find_package(Qt6 6.6 REQUIRED COMPONENTS Core Gui Qml Quick)
+find_package(Qt6 6.8 REQUIRED COMPONENTS Core Gui Qml Quick)
 set(CORE_LIBRARIES Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick)
 
 # Generic sources
 set(CORE_SOURCES
-    utils_app.cpp
-    utils_app.h
-    utils_bits.cpp
+    # app utils
+    utils_app.cpp utils_app.h
+    utils_log.cpp utils_log.h
+    utils_clipboard.cpp utils_clipboard.h
+    utils_fpsmonitor.cpp utils_fpsmonitor.h
+    utils_language.cpp utils_language.h
+    PermissionManager.cpp PermissionManager.h
+    # os utils
+    utils_os.cpp utils_os.h
+    utils_screen.cpp utils_screen.h
+    utils_sysinfo.cpp utils_sysinfo.h
+    utils_wifi.cpp utils_wifi.h
+    # pure c++
     utils_bits.h
-    utils_clipboard.cpp
-    utils_clipboard.h
-    utils_fpsmonitor.cpp
-    utils_fpsmonitor.h
-    utils_language.cpp
-    utils_language.h
-    utils_log.cpp
-    utils_log.h
-    utils_maths.cpp
     utils_maths.h
-    utils_screen.cpp
-    utils_screen.h
-    utils_sysinfo.cpp
-    utils_sysinfo.h
-    utils_wifi.cpp
-    utils_wifi.h
-    utils_versionchecker.h)
+)
 
 # Qt optional tools
 if(UTILS_QT_RHI)
@@ -59,7 +58,7 @@ if(UTILS_QT_RHI)
 
     if(Qt6Gui_VERSION VERSION_GREATER_EQUAL 6.10.0)
         find_package(Qt6 REQUIRED COMPONENTS GuiPrivate)
-        set(CORE_LIBRARIES ${CORE_LIBRARIES} Qt6::GuiPrivate)                   # to get RHI infos
+        set(CORE_LIBRARIES ${CORE_LIBRARIES} Qt6::GuiPrivate)
     else()
         find_package(Qt6 REQUIRED COMPONENTS Gui)
         set(CORE_LIBRARIES ${CORE_LIBRARIES} Qt6::GuiPrivate)
@@ -136,12 +135,23 @@ endif()
 
 ################################################################################
 
-add_library(AppUtils STATIC ${CORE_SOURCES} ${PLATFORM_SOURCES})
-add_library(AppUtils::AppUtils ALIAS AppUtils)
+qt_add_library(AppUtils STATIC)
 
-target_compile_definitions(AppUtils PUBLIC APP_NAME=\"${APP_NAME}\" APP_VERSION=\"${APP_VERSION}\")
+qt_add_qml_module(AppUtils
+    URI AppUtils
+    VERSION 1.0
+    PLUGIN_TARGET AppUtils_plugin
+    SOURCES ${CORE_SOURCES} ${PLATFORM_SOURCES}
+)
 
-target_link_libraries(AppUtils PUBLIC ${CORE_LIBRARIES} ${PLATFORM_LIBRARIES})
+# App name and version for UtilsApp
+target_compile_definitions(AppUtils PRIVATE APP_NAME=\"${APP_NAME}\" APP_VERSION=\"${APP_VERSION}\")
+
+# Math constants on MSVC for UtilsMaths
+target_compile_definitions(AppUtils PRIVATE _USE_MATH_DEFINES)
+
+target_link_libraries(AppUtils PUBLIC ${CORE_LIBRARIES})
+target_link_libraries(AppUtils PRIVATE ${PLATFORM_LIBRARIES})
 
 target_include_directories(AppUtils PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 

@@ -1,10 +1,11 @@
 # ComponentLibrary
 
-## About
-
 A Qt6 / QML component library.
 
-#### Prerequisites
+
+## Quick start
+
+### Prerequisites
 
 > find_package(Qt6 REQUIRED COMPONENTS Svg Qml Quick QuickControls2 LabsQmlModels)
 
@@ -19,46 +20,36 @@ A Qt6 / QML component library.
 
 - Location          (for maps/Map*.qml components)
 
-#### Include in your projects
+### Build
 
-Either:
-- include the CMakeLists.txt project file (and use qml_add_modules())
-- include the ComponentLibrary.qrc resource file directly
+To get started, simply checkout the ComponentLibrary repository as a submodule, or copy the
+ComponentLibrary directory into your project, then include the `CMakeLists.txt` CMake project file:
 
-For both methods, you should add the **find_package()** mentionned above to your ROOT CMake project file.
+```cmake
+add_subdirectory(ComponentLibrary/)
+target_link_libraries(${PROJECT_NAME} PRIVATE ComponentLibrary ComponentLibrary_plugin)
+```
+
+You should add the **find_package()** mentionned above to your ROOT CMake project file.
 
 To ensure the application deployment process doesn't miss the necessary QML modules,
 you should also copy the **QmlImports.qml** file (or its content) in the path that 
 will be scanned by the linuxdeploy/macdeployqt/windowdeployqt and the qmlimportscanner.
 
-##### Using the CMakeLists.txt
+You might need some hacks so the QML Language Server recognize the ComponentLibrary module:
 
 ```cmake
-add_subdirectory(thirdparty/ComponentLibrary)
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ComponentLibraryplugin)
-```
-
-And with a couple of hacks that nobody can tell you why they are necessary:
-
-```cmake
-set(QML_IMPORT_PATH
-    "${CMAKE_BINARY_DIR}/thirdparty/"
-    "${CMAKE_BINARY_DIR}/thirdparty/ComponentLibrary"
-    CACHE STRING "QML Modules import paths" FORCE)
-
+set(QML_IMPORT_PATH "${CMAKE_BINARY_DIR}/ComponentLibrary/" CACHE STRING "QML Modules import paths" FORCE)
 set(QT_QML_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 ```
 
-##### Using the ComponentLibrary.qrc (oldschool)
+### Use
 
-```cmake
-qt_add_executable(${CMAKE_PROJECT_NAME}
-    src/main.cpp
-    thirdparty/ComponentLibrary/ComponentLibrary.qrc)
-```
+> TODO
 
-And register the ThemeEngine singleton manually in your ```main.cpp```:
 
-```cpp
-qmlRegisterSingletonType(QUrl("qrc:/ComponentLibrary/ThemeEngine.qml"), "ComponentLibrary", 1, 0, "Theme");
-```
+## Licensing
+
+This project is licensed under the [MIT license](LICENSE).
+
+> Copyright (c) 2026 Emeric Grange (emeric.grange@gmail.com)
