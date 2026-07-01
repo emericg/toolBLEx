@@ -181,6 +181,7 @@ qt_add_qml_module(${PROJECT_NAME}
 )
 
 qt_add_translations(${PROJECT_NAME}
+    SOURCE_TARGETS ${PROJECT_NAME}
     TS_FILE_BASE ${PROJECT_NAME}
     TS_FILE_DIR ${PROJECT_SOURCE_DIR}/i18n/
     RESOURCE_PREFIX "/i18n"

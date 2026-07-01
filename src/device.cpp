@@ -137,7 +137,10 @@ Device::~Device()
 {
     if (m_bleController)
     {
-        delete m_bleController;
+        m_bleController->disconnect(this);
+        m_bleController->disconnectFromDevice();
+        m_bleController->deleteLater();
+        m_bleController = nullptr;
     }
 }
 

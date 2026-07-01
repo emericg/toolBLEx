@@ -23,14 +23,14 @@
 #define DEVICE_FILTER_H
 /* ************************************************************************** */
 
+#include "device.h"
+
 #include <QObject>
 #include <QByteArray>
 #include <QMetaType>
 #include <QAbstractListModel>
 #include <QAbstractTableModel>
 #include <QSortFilterProxyModel>
-
-class Device;
 
 /* ************************************************************************** */
 
