@@ -21,11 +21,14 @@
 
 #include "DatabaseManager.h"
 
-#include <QDir>
-#include <QFile>
-#include <QString>
-#include <QDateTime>
+#include <QCoreApplication>
+#include <QQmlEngine>
+#include <QJSEngine>
+
 #include <QStandardPaths>
+#include <QDateTime>
+#include <QFile>
+#include <QDir>
 #include <QDebug>
 
 #include <QSqlDatabase>
@@ -33,16 +36,11 @@
 #include <QSqlError>
 
 /* ************************************************************************** */
-
-DatabaseManager *DatabaseManager::instance = nullptr;
+/* ************************************************************************** */
 
 DatabaseManager *DatabaseManager::getInstance()
 {
-    if (instance == nullptr)
-    {
-        instance = new DatabaseManager();
-    }
-
+    static DatabaseManager *instance = new DatabaseManager(QCoreApplication::instance());
     return instance;
 }
 
@@ -51,7 +49,7 @@ DatabaseManager *DatabaseManager::create(QQmlEngine *, QJSEngine *)
     return getInstance();
 }
 
-DatabaseManager::DatabaseManager()
+DatabaseManager::DatabaseManager(QObject *parent) : QObject(parent)
 {
     bool status = false;
 
@@ -63,11 +61,11 @@ DatabaseManager::DatabaseManager()
     {
         status = openDatabase_sqlite();
     }
-}
 
-DatabaseManager::~DatabaseManager()
-{
-    //
+    if (!status)
+    {
+        qWarning() << "DatabaseManager > NO DATABASE AVAILABLE !!!";
+    }
 }
 
 /* ************************************************************************** */

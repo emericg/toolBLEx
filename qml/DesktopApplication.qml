@@ -12,11 +12,11 @@ ApplicationWindow {
     color: Theme.colorBackground
 
     // Helpers
+    property bool isHdpi: (UtilsScreen.screenDpi >= 128 || UtilsScreen.screenPar >= 2.0)
     property bool isDesktop: true
     property bool isMobile: false
     property bool isPhone: false
     property bool isTablet: false
-    property bool isHdpi: (UtilsScreen.screenDpi >= 128 || UtilsScreen.screenPar >= 2.0)
 
     // Setup ThemeEngine
     Binding { target: Theme; property: "appTheme";               value: SettingsManager.appTheme }

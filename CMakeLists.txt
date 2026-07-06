@@ -7,9 +7,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(APP_NAME ${PROJECT_NAME})
-set(APP_VERSION ${PROJECT_VERSION})
-
 ################################################################################
 
 message(STATUS ">>> BUILDING ${PROJECT_NAME} v${PROJECT_VERSION} >>>")
@@ -211,7 +208,6 @@ add_other_files(${PROJECT_NAME}
 ################################################################################
 
 # SingleApplication
-set(QAPPLICATION_CLASS QApplication)
 add_subdirectory(thirdparty/SingleApplication)
 target_link_libraries(${PROJECT_NAME} PRIVATE SingleApplication)
 
@@ -245,8 +241,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE thirdparty/)
 
 # Qt official hacks...
 set(QML_IMPORT_PATH
-    "${CMAKE_BINARY_DIR}/"
     "${CMAKE_BINARY_DIR}/thirdparty/"
+    "${CMAKE_BINARY_DIR}/thirdparty/AppUtils"
     "${CMAKE_BINARY_DIR}/thirdparty/ComponentLibrary"
     CACHE STRING "QML Modules import paths" FORCE)
 

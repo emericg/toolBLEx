@@ -39,6 +39,8 @@ class QQmlEngine;
 class DatabaseManager: public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
 
     static const int s_dbCurrentVersion = 1;
 
@@ -59,9 +61,7 @@ class DatabaseManager: public QObject
     void migrateDatabase();
 
     // Singleton
-    static DatabaseManager *instance;
-    DatabaseManager();
-    ~DatabaseManager();
+    explicit DatabaseManager(QObject *parent = nullptr);
 
 public:
     static DatabaseManager *getInstance();
