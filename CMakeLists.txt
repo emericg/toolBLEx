@@ -98,6 +98,77 @@ if(NOT IOS AND NOT ANDROID)
     )
 endif()
 
+set(SOURCES_QML
+    qml/DesktopApplication.qml
+    qml/DesktopHeader.qml
+    qml/ScreenScanner.qml
+    qml/ScreenAdvertiser.qml
+    qml/ScreenBluetooth.qml
+    qml/ScreenUbertooth.qml
+    qml/ScreenRtlSdr.qml
+    qml/ScreenSettings.qml
+    qml/PanelDevice.qml
+    qml/PanelDeviceInfos.qml
+    qml/PanelDeviceAdvertisement.qml
+    qml/PanelDeviceServices.qml
+    qml/PanelDeviceLog.qml
+    qml/PanelScanner.qml
+
+    qml/settings/SettingsApp.qml
+    qml/settings/SettingsInfo.qml
+    qml/settings/SettingsCredits.qml
+    qml/settings/SettingsScanner.qml
+    qml/settings/SettingsAdvertiser.qml
+    qml/settings/SettingsSpectrum.qml
+
+    qml/graphs/RssiBar.qml
+    qml/graphs/RssiGraph.qml
+    qml/graphs/ProximityRadar.qml
+    qml/graphs/SpectrumGraph3D.qml
+    qml/graphs/SpectrumGraph2D.qml
+    qml/graphs/FrequencyGraph.qml
+    qml/graphs/FrequencyGraphLegend.qml
+    qml/graphs/FrequencyGraphOverlayBands.qml
+    qml/graphs/FrequencyGraphOverlayClickable.qml
+    qml/graphs/PhosphorPersistenceGraph.qml
+    qml/graphs/WaterfallGraph.qml
+    qml/graphs/WaterfallGraphLabels.qml
+    qml/graphs/WaterfallGraphOverlayBands.qml
+
+    qml/components/ButtonScanMenu.qml
+    qml/components/ItemActionTag.qml
+    qml/components/SelectorMenuThemedItemBadge.qml
+    qml/components/DeviceScannerListHeader.qml
+    qml/components/DeviceScannerListWidget.qml
+    qml/components/DeviceScannerTableHeader.qml
+    qml/components/DeviceScannerTableWidget.qml
+    qml/components/WarningNoAdapter.qml
+    qml/components/WarningNoBluetooth.qml
+    qml/components/WarningNoPermission.qml
+    qml/components/WarningNotImplemented.qml
+
+    qml/components_js/UtilsBluetooth.js
+    qml/components_js/UtilsDeviceSensors.js
+
+    qml/popups/PopupClearDeviceSeenCache.qml
+    qml/popups/PopupClearDeviceStructureCache.qml
+    qml/popups/PopupExportDeviceData.qml
+    qml/popups/PopupExportScannerData.qml
+    qml/popups/PopupWriteCharacteristic.qml
+
+    qml/widgets/AdapterWidget.qml
+    qml/widgets/AdvertisementDataWidget.qml
+    qml/widgets/AdvertisementDataWidgetAdvanced.qml
+    qml/widgets/BleServiceWidget.qml
+    qml/widgets/BleCharacteristicWidget.qml
+    qml/widgets/DeviceLogWidget.qml
+)
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    # Do not compile QML files to byte code for debug targets # Way too slow...
+    set_source_files_properties(${SOURCES_QML} PROPERTIES QT_QML_SKIP_CACHEGEN TRUE)
+endif()
+
 qt_add_executable(${PROJECT_NAME}
     ${SOURCES}
     ${SOURCES_DESKTOP}
@@ -107,70 +178,7 @@ qt_add_qml_module(${PROJECT_NAME}
     URI ${PROJECT_NAME}
     NO_PLUGIN
     QML_FILES
-        qml/DesktopApplication.qml
-        qml/DesktopHeader.qml
-        qml/ScreenScanner.qml
-        qml/ScreenAdvertiser.qml
-        qml/ScreenBluetooth.qml
-        qml/ScreenUbertooth.qml
-        qml/ScreenRtlSdr.qml
-        qml/ScreenSettings.qml
-        qml/PanelDevice.qml
-        qml/PanelDeviceInfos.qml
-        qml/PanelDeviceAdvertisement.qml
-        qml/PanelDeviceServices.qml
-        qml/PanelDeviceLog.qml
-        qml/PanelScanner.qml
-
-        qml/settings/SettingsApp.qml
-        qml/settings/SettingsInfo.qml
-        qml/settings/SettingsCredits.qml
-        qml/settings/SettingsScanner.qml
-        qml/settings/SettingsAdvertiser.qml
-        qml/settings/SettingsSpectrum.qml
-
-        qml/graphs/RssiBar.qml
-        qml/graphs/RssiGraph.qml
-        qml/graphs/ProximityRadar.qml
-        qml/graphs/SpectrumGraph3D.qml
-        qml/graphs/SpectrumGraph2D.qml
-        qml/graphs/FrequencyGraph.qml
-        qml/graphs/FrequencyGraphLegend.qml
-        qml/graphs/FrequencyGraphOverlayBands.qml
-        qml/graphs/FrequencyGraphOverlayClickable.qml
-        qml/graphs/PhosphorPersistenceGraph.qml
-        qml/graphs/WaterfallGraph.qml
-        qml/graphs/WaterfallGraphLabels.qml
-        qml/graphs/WaterfallGraphOverlayBands.qml
-
-        qml/components/ButtonScanMenu.qml
-        qml/components/ItemActionTag.qml
-        qml/components/SelectorMenuThemedItemBadge.qml
-        qml/components/DeviceScannerListHeader.qml
-        qml/components/DeviceScannerListWidget.qml
-        qml/components/DeviceScannerTableHeader.qml
-        qml/components/DeviceScannerTableWidget.qml
-        qml/components/WarningNoAdapter.qml
-        qml/components/WarningNoBluetooth.qml
-        qml/components/WarningNoPermission.qml
-        qml/components/WarningNotImplemented.qml
-
-        qml/components_js/UtilsBluetooth.js
-        qml/components_js/UtilsDeviceSensors.js
-
-        qml/popups/PopupClearDeviceSeenCache.qml
-        qml/popups/PopupClearDeviceStructureCache.qml
-        qml/popups/PopupExportDeviceData.qml
-        qml/popups/PopupExportScannerData.qml
-        qml/popups/PopupWriteCharacteristic.qml
-
-        qml/widgets/AdapterWidget.qml
-        qml/widgets/AdvertisementDataWidget.qml
-        qml/widgets/AdvertisementDataWidgetAdvanced.qml
-        qml/widgets/BleServiceWidget.qml
-        qml/widgets/BleCharacteristicWidget.qml
-        qml/widgets/DeviceLogWidget.qml
-
+        ${SOURCES_QML}
     SOURCES
         src/DatabaseManager.cpp src/DatabaseManager.h
         src/MenubarManager.cpp src/MenubarManager.h
