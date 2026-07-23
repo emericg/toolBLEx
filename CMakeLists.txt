@@ -31,9 +31,13 @@ message(STATUS "[PROJECT] CMAKE_CURRENT_SOURCE_DIR  = ${CMAKE_CURRENT_SOURCE_DIR
 
 ################################################################################
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Svg Qml Quick QuickControls2 QuickPrivate)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Svg Qml Quick QuickControls2)
 find_package(Qt6 REQUIRED COMPONENTS Sql Bluetooth Graphs Widgets)
 find_package(Qt6 REQUIRED COMPONENTS LinguistTools)
+
+if(Qt6Core_VERSION VERSION_GREATER_EQUAL 6.10.0)
+    find_package(Qt6 REQUIRED COMPONENTS QuickPrivate)
+endif()
 
 qt_standard_project_setup(REQUIRES 6.8
                           I18N_SOURCE_LANGUAGE en
