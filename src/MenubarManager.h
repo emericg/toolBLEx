@@ -26,11 +26,13 @@
 #include <QtQml/qqmlregistration.h>
 
 #include <QObject>
+#include <QWindow>
+
+class QJSEngine;
+class QQmlEngine;
 
 class QMenu;
 class QAction;
-class QJSEngine;
-class QQmlEngine;
 class QQuickWindow;
 
 class DeviceManager;
@@ -58,9 +60,8 @@ class MenubarManager: public QObject
     QAction *m_actionIssueTracker = nullptr;
     QAction *m_actionReleaseNotes = nullptr;
 
-    static MenubarManager *instance;
-
-    MenubarManager();
+    // Singleton
+    explicit MenubarManager(QObject *parent = nullptr);
     ~MenubarManager();
 
 signals:

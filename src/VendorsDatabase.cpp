@@ -21,25 +21,29 @@
 
 #include "VendorsDatabase.h"
 
-#include <QObject>
-#include <QFile>
+#include <QCoreApplication>
+#include <QQmlEngine>
+#include <QJSEngine>
+
 #include <QStringList>
+#include <QFile>
 
 /* ************************************************************************** */
 
-VendorsDatabase *VendorsDatabase::instance = nullptr;
-
 VendorsDatabase *VendorsDatabase::getInstance()
 {
-    if (instance == nullptr)
-    {
-        instance = new VendorsDatabase();
-    }
-
+    static VendorsDatabase *instance = new VendorsDatabase(QCoreApplication::instance());
     return instance;
 }
 
-VendorsDatabase::VendorsDatabase()
+VendorsDatabase *VendorsDatabase::create(QQmlEngine *, QJSEngine *)
+{
+    VendorsDatabase *instance = getInstance();
+    QJSEngine::setObjectOwnership(instance, QJSEngine::CppOwnership);
+    return instance;
+}
+
+VendorsDatabase::VendorsDatabase(QObject *parent) : QObject(parent)
 {
     loadDb();
 }

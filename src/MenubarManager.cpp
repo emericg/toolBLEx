@@ -22,31 +22,31 @@
 #include "MenubarManager.h"
 #include "DeviceManager.h"
 
+#include <QCoreApplication>
+#include <QQmlEngine>
+#include <QJSEngine>
 #include <QDesktopServices>
+#include <QKeySequence>
 #include <QQuickWindow>
 #include <QMenuBar>
 #include <QMenu>
 
 /* ************************************************************************** */
 
-MenubarManager *MenubarManager::instance = nullptr;
-
 MenubarManager *MenubarManager::getInstance()
 {
-    if (instance == nullptr)
-    {
-        instance = new MenubarManager();
-    }
-
+    static MenubarManager *instance = new MenubarManager(QCoreApplication::instance());
     return instance;
 }
 
 MenubarManager *MenubarManager::create(QQmlEngine *, QJSEngine *)
 {
-    return getInstance();
+    MenubarManager *instance = getInstance();
+    QJSEngine::setObjectOwnership(instance, QJSEngine::CppOwnership);
+    return instance;
 }
 
-MenubarManager::MenubarManager()
+MenubarManager::MenubarManager(QObject *parent) : QObject(parent)
 {
     //
 }

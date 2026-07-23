@@ -23,6 +23,8 @@
 #define VENDORS_DATABASE_H
 /* ************************************************************************** */
 
+#include <QtQml/qqmlregistration.h>
+
 #include <QObject>
 #include <QString>
 #include <QVariant>
@@ -30,6 +32,9 @@
 #include <QList>
 #include <QHash>
 #include <QMap>
+
+class QQmlEngine;
+class QJSEngine;
 
 /* ************************************************************************** */
 
@@ -59,6 +64,8 @@ public:
 class VendorsDatabase: public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
 
     Q_PROPERTY(int vendorCount READ getVendorCount CONSTANT)
     Q_PROPERTY(int servicecUUIDsCount READ getServiceUUIDsCount CONSTANT)
@@ -77,12 +84,12 @@ class VendorsDatabase: public QObject
     int getManufacturerIDsCount() { return m_manufacturer_ids.size(); }
 
     // Singleton
-    static VendorsDatabase *instance;
-    VendorsDatabase();
+    explicit VendorsDatabase(QObject *parent = nullptr);
     ~VendorsDatabase();
 
 public:
     static VendorsDatabase *getInstance();
+    static VendorsDatabase *create(QQmlEngine *engine, QJSEngine *scriptEngine);
 
     void getVendor(const QString &device_mac, QString &device_vendor) const;
 
