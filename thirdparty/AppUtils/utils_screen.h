@@ -48,7 +48,9 @@ class UtilsScreen: public QObject
     Q_PROPERTY(int screenHeight READ getScreenHeight NOTIFY screenChanged)
     Q_PROPERTY(int screenDepth READ getScreenDepth NOTIFY screenChanged)
     Q_PROPERTY(double screenRefreshRate READ getScreenRefreshRate NOTIFY screenChanged)
-    Q_PROPERTY(int screenDpi READ getScreenDpi NOTIFY screenChanged)
+    Q_PROPERTY(int screenDpiLogical READ getScreenDpiLogical NOTIFY screenChanged)
+    Q_PROPERTY(int screenDpiPhysical READ getScreenDpiPhysical NOTIFY screenChanged)
+    Q_PROPERTY(int screenDpi READ getScreenDpiPhysical NOTIFY screenChanged)
     Q_PROPERTY(double screenPar READ getScreenPar NOTIFY screenChanged)
     Q_PROPERTY(double screenSize READ getScreenSize_inch NOTIFY screenChanged)
     Q_PROPERTY(double screenDar READ getScreenDar NOTIFY screenChanged)
@@ -59,7 +61,8 @@ class UtilsScreen: public QObject
     int m_screenDepth = -1;
     double m_screenRefreshRate = -1.0;
 
-    int m_screenDpi = -1;
+    int m_screenDpiPhysical = -1;
+    int m_screenDpiLogical = -1;
     double m_screenPar = -1.0;
     double m_screenSizeInch = -1.0;
 
@@ -73,7 +76,8 @@ class UtilsScreen: public QObject
     int getScreenDepth() { return m_screenDepth; }
     double getScreenRefreshRate() { return m_screenRefreshRate; }
 
-    int getScreenDpi() { return m_screenDpi; }
+    int getScreenDpiPhysical() { return m_screenDpiPhysical; }
+    int getScreenDpiLogical() { return m_screenDpiLogical; }
     double getScreenPar() { return m_screenPar; }
     double getScreenSize_inch() { return m_screenSizeInch; }
 

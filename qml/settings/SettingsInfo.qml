@@ -39,7 +39,7 @@ Column { // APP INFO
         spacing: 2
 
         Rectangle {
-            width: parent.width * 0.5 - 1
+            width: parent.width * 0.666 - 1
             height: 32
             color: Theme.colorForeground
 
@@ -66,7 +66,7 @@ Column { // APP INFO
         }
 
         Rectangle {
-            width: parent.width * 0.5 - 1
+            width: parent.width * 0.334 - 1
             height: 32
             color: Theme.colorForeground
 
@@ -95,7 +95,7 @@ Column { // APP INFO
         spacing: 2
 
         Rectangle {
-            width: parent.width * 0.5 - 1
+            width: parent.width * 0.666 - 1
             height: 32
             color: Theme.colorForeground
 
@@ -113,7 +113,7 @@ Column { // APP INFO
         }
 
         Rectangle {
-            width: parent.width * 0.5 - 1
+            width: parent.width * 0.334 - 1
             height: 32
             color: Theme.colorForeground
 
@@ -137,7 +137,7 @@ Column { // APP INFO
         spacing: 2
 
         Rectangle {
-            width: parent.width * 0.5 - 1
+            width: parent.width * 0.666 - 1
             height: 32
             color: Theme.colorForeground
 
@@ -155,7 +155,7 @@ Column { // APP INFO
         }
 
         Rectangle {
-            width: parent.width * 0.5 - 1
+            width: parent.width * 0.334 - 1
             height: 32
             color: Theme.colorForeground
 

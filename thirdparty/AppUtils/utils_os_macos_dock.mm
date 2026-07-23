@@ -81,8 +81,15 @@ void MacOSDockHandler::setupDock(QQuickWindow *window)
 
     m_saved_window = window;
 
-    QObject::connect(this, &MacOSDockHandler::dockIconClicked, m_saved_window, &QQuickWindow::show);
-    QObject::connect(this, &MacOSDockHandler::dockIconClicked, m_saved_window, &QQuickWindow::raise);
+    QObject::connect(this, &MacOSDockHandler::dockIconClicked, m_saved_window, [w = m_saved_window]() {
+        if (!w->isVisible() || w->visibility() == QWindow::Minimized)
+        {
+            // Only show() when the window is actually hidden/minimized
+            w->show();
+        }
+        w->raise();
+        w->requestActivate();
+    });
 }
 
 void MacOSDockHandler::toggleDockIconVisibility(bool show)

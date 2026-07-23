@@ -89,7 +89,8 @@ void UtilsScreen::getScreenInfos(const QScreen *scr)
         m_screenDepth = scr->depth();
         m_screenRefreshRate = scr->refreshRate();
 
-        m_screenDpi = scr->physicalDotsPerInch();
+        m_screenDpiPhysical = scr->physicalDotsPerInch();
+        m_screenDpiLogical = scr->logicalDotsPerInch();
         m_screenPar = scr->devicePixelRatio();
         m_screenSizeInch = std::sqrt(std::pow(scr->physicalSize().width(), 2.0) +
                                      std::pow(scr->physicalSize().height(), 2.0)) / (2.54 * 10.0);

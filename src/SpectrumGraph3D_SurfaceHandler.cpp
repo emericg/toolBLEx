@@ -186,6 +186,10 @@ void SpectrumGraph3D_SurfaceHandler::refresh(QSurface3DSeries *series)
         array.append(std::move(row));
     }
 
+    // Clear any active point selection before swapping the whole array out
+    if (series->selectedPoint() != QSurface3DSeries::invalidSelectionPosition())
+        series->setSelectedPoint(QSurface3DSeries::invalidSelectionPosition());
+
     proxy->resetArray(std::move(array));
 }
 

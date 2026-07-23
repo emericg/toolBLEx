@@ -181,8 +181,6 @@ Column { // SPECTRUM ANALYZERS
                 anchors.rightMargin: Theme.componentMargin
                 anchors.verticalCenter: parent.verticalCenter
 
-                selectByMouse: true
-
                 placeholderText: "ubertooth-specan"
 
                 dialogTitle: qsTr("Please specify the path to the ubertooth-specan binary")
@@ -365,8 +363,6 @@ Column { // SPECTRUM ANALYZERS
                     anchors.right: parent.right
                     anchors.rightMargin: Theme.componentMargin
                     anchors.verticalCenter: parent.verticalCenter
-
-                    selectByMouse: true
 
                     placeholderText: "soapy_power, rtl_power_fftw"
 

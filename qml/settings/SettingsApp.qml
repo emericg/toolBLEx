@@ -75,8 +75,8 @@ Column { // APP SETTINGS
 
             Rectangle { // rectangleAuto
                 anchors.verticalCenter: parent.verticalCenter
-                width: 72
-                height: 36
+                width: Theme.componentHeight*2
+                height: Theme.componentHeight
                 radius: 4
 
                 color: "white"
@@ -98,11 +98,13 @@ Column { // APP SETTINGS
                     }
                 }
             }
+
             Rectangle {
                 id: rectangleLight
                 anchors.verticalCenter: parent.verticalCenter
-                width: 72
-                height: 36
+                width: Theme.componentHeight*2
+                height: Theme.componentHeight
+                radius: 4
 
                 property bool selected: (SettingsManager.appTheme === "THEME_DESKTOP_LIGHT" &&
                                          !SettingsManager.appThemeAuto)
@@ -110,7 +112,6 @@ Column { // APP SETTINGS
                 property bool autoselected: (SettingsManager.appThemeAuto &&
                                              Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT)
 
-                radius: 4
                 color: "white"
                 border.color: rectangleLight.selected ? Theme.colorPrimary : "#757575"
                 border.width: 2
@@ -143,11 +144,12 @@ Column { // APP SETTINGS
                     }
                 }
             }
+
             Rectangle {
                 id: rectangleDark
                 anchors.verticalCenter: parent.verticalCenter
-                width: 72
-                height: 36
+                width: Theme.componentHeight*2
+                height: Theme.componentHeight
                 radius: 4
 
                 property bool selected: (SettingsManager.appTheme === "THEME_DESKTOP_DARK" &&
@@ -408,8 +410,6 @@ Column { // APP SETTINGS
             anchors.right: parent.right
             anchors.rightMargin: Theme.componentMargin
             anchors.verticalCenter: parent.verticalCenter
-
-            selectByMouse: true
 
             placeholderText: qsTr("Default export directory")
 
