@@ -64,9 +64,13 @@ UtilsScreen::UtilsScreen(QObject *parent) : QObject(parent)
 {
     if (qApp)
     {
-        connect(qApp, &QGuiApplication::primaryScreenChanged, this, &UtilsScreen::getScreenInfos);
+        // Follow the primary screen, until a window is set.
+        // Otherwise, just keep following the primary screen...
+        connect(qApp, &QGuiApplication::primaryScreenChanged, this, [this](QScreen *scr) {
+            if (!m_win) setScreen(scr);
+        });
 
-        getScreenInfos(qApp->primaryScreen());
+        setScreen(qApp->primaryScreen());
     }
     else
     {
@@ -76,7 +80,43 @@ UtilsScreen::UtilsScreen(QObject *parent) : QObject(parent)
 
 /* ************************************************************************** */
 
-void UtilsScreen::getScreenInfos(const QScreen *scr)
+void UtilsScreen::setWindow(QObject *window)
+{
+    QWindow *win = qobject_cast<QWindow *>(window);
+    if (m_win == win) return;
+
+    if (m_win) disconnect(m_win, nullptr, this, nullptr);
+    m_win = win;
+
+    if (m_win)
+    {
+        // Re-evaluate when the window is moved to another screen
+        connect(m_win, &QWindow::screenChanged, this, [this](QScreen *scr) { setScreen(scr); });
+
+        if (m_win->screen()) setScreen(m_win->screen());
+    }
+}
+
+void UtilsScreen::setScreen(QScreen *scr)
+{
+    if (!scr || scr == m_scr) return;
+
+    // Drop the previous screen's connections
+    if (m_scr) disconnect(m_scr, nullptr, this, nullptr);
+
+    m_scr = scr;
+
+    // Track this screen DPIs and geometry changes
+    connect(m_scr, &QScreen::logicalDotsPerInchChanged,  this, [this]() { getScreenInfos(m_scr); });
+    connect(m_scr, &QScreen::physicalDotsPerInchChanged, this, [this]() { getScreenInfos(m_scr); });
+    connect(m_scr, &QScreen::geometryChanged,            this, [this]() { getScreenInfos(m_scr); });
+
+    getScreenInfos(m_scr);
+}
+
+/* ************************************************************************** */
+
+void UtilsScreen::getScreenInfos(QScreen *scr)
 {
     if (scr)
     {

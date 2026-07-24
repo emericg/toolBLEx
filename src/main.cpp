@@ -31,6 +31,7 @@
 #include "ubertooth.h"
 
 #include "utils_app.h"
+#include "utils_screen.h"
 #include "utils_language.h"
 #if defined(Q_OS_MACOS)
 #include "utils_os_macos_dock.h"
@@ -138,8 +139,9 @@ int main(int argc, char *argv[])
     // QQuickWindow must be valid at this point
     QQuickWindow *window = qobject_cast<QQuickWindow *>(engine.rootObjects().value(0));
 
-    // Provide the window to UtilsApp
+    // Provide the window to UtilsApp / UtilsScreen
     UtilsApp::getInstance()->setQuickWindow(window);
+    UtilsScreen::getInstance()->setWindow(window);
 
     // React to secondary instances
     QObject::connect(&app, &SingleApplication::instanceStarted, window, &QQuickWindow::show);

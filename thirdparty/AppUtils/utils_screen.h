@@ -29,6 +29,7 @@
 #include <QVariantMap>
 #include <QScreen>
 
+class QWindow;
 class QQuickWindow;
 class QQmlEngine;
 class QJSEngine;
@@ -84,8 +85,11 @@ class UtilsScreen: public QObject
     double getScreenDar() { return m_screenDar; }
     QString getScreenDarStr() { return m_screenDarStr; }
 
-    // Actual screen
-    const QScreen *m_scr = nullptr;
+    // Screen tracked
+    QWindow *m_win = nullptr;
+    QScreen *m_scr = nullptr;
+
+    void setScreen(QScreen *scr);
 
     // Singleton
     explicit UtilsScreen(QObject *parent = nullptr);
@@ -94,12 +98,26 @@ Q_SIGNALS:
     void screenChanged();
 
 public slots:
-    void getScreenInfos(const QScreen *scr);
+    void getScreenInfos(QScreen *scr);
 
 public:
     static UtilsScreen *getInstance();
     static UtilsScreen *create(QQmlEngine *engine, QJSEngine *scriptEngine);
 
+    /*!
+     * \brief Track the display this window is shown on (updates on screen change).
+     * \param window: the application window to follow.
+     *
+     * Call once at startup, once a window is available.
+     * Until (or even if) a window is set, the primary screen is tracked.
+     * Then the window's will set it's screen, and QWindow::screenChanged will
+     * be used to inform us when the window is moved to another screen.
+     */
+    Q_INVOKABLE void setWindow(QObject *window);
+
+    /*!
+     * \brief Print screen infos on the CLI.
+     */
     Q_INVOKABLE void printScreenInfos();
 
     /*!
@@ -130,7 +148,6 @@ public:
 
     /*!
      * \brief Complex orientation locker.
-     * \note Work in progress.
      * \param orientation: see ScreenOrientation enum.
      * \param autoRotate: false to disable auto-rotation completely, true to let some degree of auto-rotation.
      *
