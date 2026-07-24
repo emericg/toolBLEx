@@ -19,6 +19,21 @@ Loader {
             screenScanner.item.backAction()
     }
 
+    property bool _pendingExport: false
+    function openExport() {
+        loadScreen()
+        if (screenScanner.status === Loader.Ready)
+            screenScanner.item.openExport()
+        else
+            _pendingExport = true
+    }
+    onLoaded: {
+        if (_pendingExport) {
+            _pendingExport = false
+            screenScanner.item.openExport()
+        }
+    }
+
     ////////////////
 
     active: false
@@ -41,6 +56,11 @@ Loader {
                 selectedDevice = null
                 return
             }
+        }
+
+        function openExport() {
+            popupLoader_export.active = true
+            popupLoader_export.item.open()
         }
 
         onSelectedDeviceChanged: {

@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
     QObject::connect(&app, &SingleApplication::instanceStarted, window, &QQuickWindow::raise);
 
     // Menu bar
-    mb->setupMenubar(window, dm);
+    mb->setupMenubar(window, dm, ubertooth, rtlsdr);
 
 #if defined(Q_OS_MACOS)
     // macOS dock

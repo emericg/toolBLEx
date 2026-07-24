@@ -96,7 +96,15 @@ ApplicationWindow {
     Connections {
         target: MenubarManager
         function onSensorsClicked() { screenScanner.loadScreen() }
+        function onSettingsClicked() { screenSettings.loadScreen() }
         function onAboutClicked() { screenSettings.loadScreen() }
+        function onExportClicked() { screenScanner.openExport() }
+        function onViewClicked(screen) {
+            if (screen === 0) screenScanner.loadScreen()
+            else if (screen === 1) screenAdvertiser.loadScreen()
+            else if (screen === 2) screenUbertooth.loadScreen()
+            else if (screen === 3) screenRtlSdr.loadScreen()
+        }
     }
 
     Connections {
@@ -205,6 +213,10 @@ ApplicationWindow {
     Shortcut {
         sequence: "Ctrl+F5"
         onActivated: deviceManager.scanDevices_start()
+    }
+    Shortcut {
+        sequence: "Ctrl+."
+        onActivated: deviceManager.scanDevices_stop()
     }
     Shortcut {
         sequences: [StandardKey.Preferences]
@@ -318,9 +330,17 @@ ApplicationWindow {
             //screenScanner.exitSelectionMode()
             //appHeader.setActiveMenu()
 
+            // backward / forward actions
             if (previousStates[previousStates.length-1] !== state) previousStates.push(state)
             if (previousStates.length > 4) previousStates.splice(0, 1)
             //console.log("states > " + appContent.previousStates)
+
+            // Reflect the active screen as a checkmark in the macOS View menu
+            if (state === "Scanner") MenubarManager.setCurrentView(0)
+            else if (state === "Advertiser") MenubarManager.setCurrentView(1)
+            else if (state === "Ubertooth") MenubarManager.setCurrentView(2)
+            else if (state === "RtlSdr") MenubarManager.setCurrentView(3)
+            else MenubarManager.setCurrentView(-1)
         }
 
         states: [
