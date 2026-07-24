@@ -9,7 +9,7 @@ FrameBox {
     height: 128
 
     highlighted: true
-    padding: 20
+    padding: Theme.componentMarginL
 
     ////////////////
 
@@ -17,7 +17,7 @@ FrameBox {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
-        spacing: 20
+        spacing: Theme.componentMarginL
 
         ////
 
@@ -40,7 +40,7 @@ FrameBox {
 
         Column {
             Layout.fillWidth: true
-            spacing: 8
+            spacing: Theme.componentMarginXS
 
             Text {
                 anchors.left: parent.left
@@ -66,7 +66,7 @@ FrameBox {
         ////
 
         Row {
-            spacing: 16
+            spacing: Theme.componentMargin
 
             ButtonSolid {
                 text: qsTr("Ignore")

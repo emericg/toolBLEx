@@ -15,7 +15,7 @@ Flickable {
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.bottom: parent.bottom
-    anchors.margins: 16
+    anchors.margins: Theme.componentMargin
 
     contentWidth: -1
     contentHeight: inflow.height
@@ -29,7 +29,7 @@ Flickable {
         id: inflow
         anchors.left: parent.left
         anchors.right: parent.right
-        spacing: 12
+        spacing: Theme.componentMarginS
 
         ////////
 
@@ -56,12 +56,13 @@ Flickable {
             Column {
                 id: box1
                 anchors.left: parent.left
-                anchors.leftMargin: 20
+                anchors.leftMargin: Theme.componentMarginL
                 anchors.right: parent.right
-                anchors.rightMargin: 8
+                anchors.rightMargin: Theme.componentMarginXS
                 anchors.verticalCenter: parent.verticalCenter
 
                 property int legendWidth: 64
+                property int legendHeight: 24
 
                 Component.onCompleted: {
                     legendWidth = 64
@@ -78,7 +79,7 @@ Flickable {
                 RowLayout {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    spacing: 12
+                    spacing: Theme.componentMarginS
 
                     Text {
                         id: legendName
@@ -93,7 +94,7 @@ Flickable {
                     }
                     TextSelectable {
                         Layout.fillWidth: true
-                        Layout.minimumHeight: 32
+                        Layout.minimumHeight: box1.legendHeight
 
                         property bool nameAvailable: (selectedDevice && selectedDevice.deviceName.length > 0)
                         selectByMouse: nameAvailable
@@ -106,7 +107,7 @@ Flickable {
                 RowLayout {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    spacing: 12
+                    spacing: Theme.componentMarginS
 
                     visible: (selectedDevice && selectedDevice.deviceAddressMAC.length)
 
@@ -123,7 +124,7 @@ Flickable {
                     }
                     TextSelectable {
                         Layout.fillWidth: true
-                        Layout.minimumHeight: 32
+                        Layout.minimumHeight: box1.legendHeight
 
                         text: (selectedDevice && selectedDevice.deviceAddressMAC)
                         wrapMode: Text.WrapAnywhere
@@ -133,7 +134,7 @@ Flickable {
                 RowLayout {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    spacing: 12
+                    spacing: Theme.componentMarginS
 
                     visible: (selectedDevice && !selectedDevice.deviceAddressMAC.length)
 
@@ -150,10 +151,10 @@ Flickable {
                     }
                     TextSelectable {
                         Layout.fillWidth: true
-                        Layout.minimumHeight: 32
+                        Layout.minimumHeight: box1.legendHeight
 
                         text: (selectedDevice && selectedDevice.deviceAddress)
-                        font.pixelSize: Theme.fontSizeContentSmall
+                        font.pixelSize: Theme.fontSizeContent
                         wrapMode: Text.WrapAnywhere
                     }
                 }
@@ -161,7 +162,7 @@ Flickable {
                 RowLayout {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    spacing: 12
+                    spacing: Theme.componentMarginS
 
                     visible: (selectedDevice && selectedDevice.deviceAddressMAC.length)
 
@@ -178,7 +179,7 @@ Flickable {
                     }
                     TextSelectable {
                         Layout.fillWidth: true
-                        Layout.minimumHeight: 32
+                        Layout.minimumHeight: box1.legendHeight
 
                         property bool manufAvailable: (selectedDevice && selectedDevice.deviceManufacturer.length > 0)
                         selectByMouse: manufAvailable
@@ -191,7 +192,7 @@ Flickable {
                 RowLayout {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    spacing: 12
+                    spacing: Theme.componentMarginS
 
                     Text {
                         id: legendBluetooth
@@ -237,9 +238,9 @@ Flickable {
 
             Column {
                 anchors.right: parent.right
-                anchors.rightMargin: 20
+                anchors.rightMargin: Theme.componentMarginL
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 8
+                spacing: Theme.componentMarginXS
 
                 visible: (detailView.ww > 400)
 
@@ -294,12 +295,13 @@ Flickable {
             Column {
                 id: box2
                 anchors.left: parent.left
-                anchors.leftMargin: 20
+                anchors.leftMargin: Theme.componentMarginL
                 anchors.right: parent.right
-                anchors.rightMargin: 8
+                anchors.rightMargin: Theme.componentMarginXS
                 anchors.verticalCenter: parent.verticalCenter
 
                 property int legendWidth: 64
+                property int legendHeight: 24
 
                 Component.onCompleted: {
                     legendWidth = 64
@@ -310,7 +312,7 @@ Flickable {
 /*
                 Row {
                     height: 32
-                    spacing: 12
+                    spacing: Theme.componentMarginS
 
                     Text {
                         width: box2.legendWidth
@@ -333,7 +335,7 @@ Flickable {
                 RowLayout {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    spacing: 12
+                    spacing: Theme.componentMarginS
 
                     Text {
                         id: legendCategory
@@ -348,7 +350,7 @@ Flickable {
                     }
                     TextSelectable {
                         Layout.fillWidth: true
-                        Layout.minimumHeight: 32
+                        Layout.minimumHeight: box2.legendHeight
 
                         text: selectedDevice && UtilsBluetooth.getBluetoothMajorClassText(selectedDevice.majorClass)
                         wrapMode: Text.WrapAnywhere
@@ -358,7 +360,7 @@ Flickable {
                 RowLayout {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    spacing: 12
+                    spacing: Theme.componentMarginS
 
                     Text {
                         id: legendDeviceType
@@ -373,7 +375,7 @@ Flickable {
                     }
                     TextSelectable {
                         Layout.fillWidth: true
-                        Layout.minimumHeight: 32
+                        Layout.minimumHeight: box2.legendHeight
 
                         text: selectedDevice && UtilsBluetooth.getBluetoothMinorClassText(selectedDevice.majorClass, selectedDevice.minorClass)
                         wrapMode: Text.WrapAnywhere
@@ -383,7 +385,7 @@ Flickable {
                 RowLayout {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    spacing: 12
+                    spacing: Theme.componentMarginS
 
                     Text {
                         id: legendService
@@ -398,7 +400,7 @@ Flickable {
                     }
                     TextSelectable {
                         Layout.fillWidth: true
-                        Layout.minimumHeight: 32
+                        Layout.minimumHeight: box2.legendHeight
 
                         text: selectedDevice &&  UtilsBluetooth.getBluetoothServiceClassText(selectedDevice.serviceClass)
                         wrapMode: Text.WrapAnywhere
@@ -424,12 +426,12 @@ Flickable {
                 id: boxA
                 width: parent.width - 32
                 anchors.centerIn: parent
-                spacing: 12
+                spacing: Theme.componentMarginS
 
                 RowLayout { // buttons row
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    spacing: 12
+                    spacing: Theme.componentMarginS
 
                     ButtonScanMenu { // action button
                         Layout.preferredWidth: 1
@@ -471,7 +473,7 @@ Flickable {
                 Flow { // status row?
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    spacing: 12
+                    spacing: Theme.componentMarginS
 
                     Text {
                         text: qsTr("%n adv packet(s)", "", selectedDevice.advCount)
@@ -502,11 +504,11 @@ Flickable {
                 id: boxB
                 width: parent.width - 32
                 anchors.centerIn: parent
-                spacing: 12
+                spacing: Theme.componentMarginS
 
                 Flow { // buttons row
                     width: parent.width
-                    spacing: 12
+                    spacing: Theme.componentMarginS
 
                     ButtonSolid {
                         color: (selectedDevice && selectedDevice.isStarred) ? Theme.colorPrimary : Theme.colorGrey
@@ -608,9 +610,9 @@ Flickable {
             Column {
                 id: box3
                 anchors.left: parent.left
-                anchors.leftMargin: 20
+                anchors.leftMargin: Theme.componentMarginL
                 anchors.right: parent.right
-                anchors.rightMargin: 8
+                anchors.rightMargin: Theme.componentMarginXS
                 anchors.verticalCenter: parent.verticalCenter
 
                 property int legendWidth: 64
@@ -626,7 +628,7 @@ Flickable {
 
                 Row {
                     height: 32
-                    spacing: 12
+                    spacing: Theme.componentMarginS
 
                     visible: (selectedDevice && selectedDevice.mtu > 0)
 
@@ -654,7 +656,7 @@ Flickable {
 
                 Row {
                     height: 32
-                    spacing: 12
+                    spacing: Theme.componentMarginS
 
                     Text {
                         id: legendRSSI
@@ -716,7 +718,7 @@ Flickable {
 
                 Row {
                     height: 32
-                    spacing: 12
+                    spacing: Theme.componentMarginS
 
                     Text {
                         id: legendAdvertising
@@ -832,8 +834,8 @@ Flickable {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
-                anchors.margins: 16
-                spacing: 8
+                anchors.margins: Theme.componentMargin
+                spacing: Theme.componentMarginXS
 
                 Text {
                     text: selectedDevice && qsTr("Service(s) advertised", "", selectedDevice.servicesCount)
@@ -879,9 +881,9 @@ Flickable {
             Text {
                 id: box_adv_nodata
                 anchors.left: parent.left
-                anchors.leftMargin: 16
+                anchors.leftMargin: Theme.componentMargin
                 anchors.right: parent.right
-                anchors.rightMargin: 16
+                anchors.rightMargin: Theme.componentMargin
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("No advertisement data...")
@@ -910,12 +912,12 @@ Flickable {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 16
+                spacing: Theme.componentMargin
 
                 Row {
                     anchors.left: parent.left
-                    anchors.leftMargin: 16
-                    spacing: 16
+                    anchors.leftMargin: Theme.componentMargin
+                    spacing: Theme.componentMargin
 
                     Rectangle {
                         width: 18; height: 18; radius: 4;
@@ -965,14 +967,14 @@ Flickable {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 16
+                spacing: Theme.componentMargin
 
                 ////
 
                 Row {
                     anchors.left: parent.left
-                    anchors.leftMargin: 16
-                    spacing: 16
+                    anchors.leftMargin: Theme.componentMargin
+                    spacing: Theme.componentMargin
 
                     Rectangle {
                         width: 18; height: 18; radius: 4;

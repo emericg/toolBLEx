@@ -136,7 +136,7 @@ Column { // BLE SCANNER
 
         SwitchThemed {
             anchors.right: parent.right
-            anchors.rightMargin: 8
+            anchors.rightMargin: Theme.componentMarginXS
             anchors.verticalCenter: parent.verticalCenter
 
             checked: SettingsManager.scanAuto
@@ -175,7 +175,7 @@ Column { // BLE SCANNER
 
         SwitchThemed {
             anchors.right: parent.right
-            anchors.rightMargin: 8
+            anchors.rightMargin: Theme.componentMarginXS
             anchors.verticalCenter: parent.verticalCenter
 
             checked: SettingsManager.scanPause
@@ -209,7 +209,7 @@ Column { // BLE SCANNER
 
         SwitchThemed {
             anchors.right: parent.right
-            anchors.rightMargin: 8
+            anchors.rightMargin: Theme.componentMarginXS
             anchors.verticalCenter: parent.verticalCenter
 
             checked: SettingsManager.scanCacheAuto
@@ -265,7 +265,6 @@ Column { // BLE SCANNER
             anchors.right: parent.right
             anchors.rightMargin: Theme.componentMargin
             anchors.verticalCenter: parent.verticalCenter
-            height: 34
 
             text: qsTr("Clear cache")
             onClicked: {
@@ -323,7 +322,6 @@ Column { // BLE SCANNER
             anchors.right: parent.right
             anchors.rightMargin: Theme.componentMargin
             anchors.verticalCenter: parent.verticalCenter
-            height: 34
 
             text: qsTr("Clear cache")
             onClicked: {

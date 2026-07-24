@@ -171,7 +171,7 @@ Popup {
             Column {
                 anchors.left: parent.left
                 anchors.right: parent.right
-                spacing: 12
+                spacing: Theme.componentMarginS
 
                 Rectangle {
                     anchors.left: parent.left
@@ -209,7 +209,7 @@ Popup {
                 Flow { // status row
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    spacing: 12
+                    spacing: Theme.componentMarginS
 
                     TagClear {
                         height: 36
@@ -245,7 +245,7 @@ Popup {
             Column {
                 anchors.left: parent.left
                 anchors.right: parent.right
-                spacing: 12
+                spacing: Theme.componentMarginS
 
                 Text {
                     text: qsTr("Select data to export")
@@ -285,7 +285,7 @@ Popup {
             Column {
                 anchors.left: parent.left
                 anchors.right: parent.right
-                spacing: 12
+                spacing: Theme.componentMarginS
 
                 Text {
                     text: qsTr("Select export file")

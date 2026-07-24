@@ -16,10 +16,10 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.margins: 16
+        anchors.margins: Theme.componentMargin
 
         z: 5
-        spacing: 16
+        spacing: Theme.componentMargin
         visible: (selectedDevice && selectedDevice.servicesCount === 0)
 
         Rectangle {
@@ -36,11 +36,11 @@ Item {
             Column {
                 id: columnServiceScan
                 anchors.left: parent.left
-                anchors.leftMargin: 16
+                anchors.leftMargin: Theme.componentMargin
                 anchors.right: parent.right
-                anchors.rightMargin: 16
+                anchors.rightMargin: Theme.componentMargin
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 12
+                spacing: Theme.componentMarginS
 
                 ////
 
@@ -60,7 +60,7 @@ Item {
                 Flow { // buttons row
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    spacing: 12
+                    spacing: Theme.componentMarginS
 
                     property int www: (width > 400) ? ((width - spacing) / 2) : width
 
@@ -107,7 +107,7 @@ Item {
 
             IconSvg {
                 anchors.left: parent.left
-                anchors.leftMargin: 16
+                anchors.leftMargin: Theme.componentMargin
                 anchors.verticalCenter: parent.verticalCenter
                 width: 24
                 height: 24
@@ -119,7 +119,7 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 56
                 anchors.right: parent.right
-                anchors.rightMargin: 16
+                anchors.rightMargin: Theme.componentMargin
                 anchors.verticalCenter: parent.verticalCenter
 
                 visible: (selectedDevice && selectedDevice.servicesCached)
@@ -130,7 +130,7 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 56
                 anchors.right: parent.right
-                anchors.rightMargin: 16
+                anchors.rightMargin: Theme.componentMargin
                 anchors.verticalCenter: parent.verticalCenter
 
                 visible: (selectedDevice && !selectedDevice.servicesCached && !selectedDevice.connected)
@@ -150,8 +150,8 @@ Item {
     Row { // buttons row
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.margins: 8
-        spacing: 8
+        anchors.margins: Theme.componentMarginXS
+        spacing: Theme.componentMarginXS
 
         ButtonSolid {
             id: cacheButton

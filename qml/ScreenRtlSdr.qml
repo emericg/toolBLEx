@@ -84,9 +84,9 @@ Loader {
 
             Row { // left
                 anchors.left: parent.left
-                anchors.leftMargin: 12
+                anchors.leftMargin: Theme.componentMarginS
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 8
+                spacing: Theme.componentMarginXS
 
                 ////
 
@@ -200,13 +200,13 @@ Loader {
 
             Row { // right
                 anchors.right: parent.right
-                anchors.rightMargin: 12
+                anchors.rightMargin: Theme.componentMarginS
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 12
+                spacing: Theme.componentMarginS
 
                 Column {
                     anchors.verticalCenter: parent.verticalCenter
-                    spacing: 0
+
                     Item {
                         width: 256
                         height: 18

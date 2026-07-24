@@ -54,7 +54,7 @@ Item {
         Text {
             anchors.top: parent.top
             anchors.right: parent.left
-            anchors.rightMargin: 8
+            anchors.rightMargin: Theme.componentMarginXS
 
             text: actionBar.maxRSSI
             textFormat: Text.PlainText
@@ -64,7 +64,7 @@ Item {
         Text {
             anchors.bottom: parent.bottom
             anchors.right: parent.left
-            anchors.rightMargin: 8
+            anchors.rightMargin: Theme.componentMarginXS
 
             text: actionBar.minRSSI
             textFormat: Text.PlainText

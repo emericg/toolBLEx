@@ -14,10 +14,10 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.margins: 16
+        anchors.margins: Theme.componentMargin
 
         z: 5
-        spacing: 16
+        spacing: Theme.componentMargin
         visible: (selectedDevice && !selectedDevice.hasAdvertisement)
 
         Rectangle {
@@ -36,9 +36,9 @@ Item {
             Text {
                 id: adv_nodata
                 anchors.left: parent.left
-                anchors.leftMargin: 16
+                anchors.leftMargin: Theme.componentMargin
                 anchors.right: parent.right
-                anchors.rightMargin: 16
+                anchors.rightMargin: Theme.componentMargin
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("No advertisement data...")
@@ -60,19 +60,19 @@ Item {
         boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
         ScrollBar.vertical: ScrollBarThemed { policy: ScrollBar.AsNeeded; }
 
-        spacing: 12
+        spacing: Theme.componentMarginS
 
         ////////
 
         header: Column {
             anchors.left: parent.left
-            anchors.leftMargin: 16
+            anchors.leftMargin: Theme.componentMargin
             anchors.right: parent.right
-            anchors.rightMargin: 16
+            anchors.rightMargin: Theme.componentMargin
 
-            topPadding: 16
-            bottomPadding: 16
-            spacing: 12
+            topPadding: Theme.componentMargin
+            bottomPadding: Theme.componentMargin
+            spacing: Theme.componentMarginS
 
             visible: (selectedDevice && selectedDevice.hasAdvertisement)
 
@@ -91,14 +91,14 @@ Item {
 
                 RowLayout {
                     anchors.top: parent.top
-                    anchors.topMargin: 12
+                    anchors.topMargin: Theme.componentMarginS
                     anchors.left: parent.left
-                    anchors.leftMargin: 16
+                    anchors.leftMargin: Theme.componentMargin
                     anchors.right: parent.right
-                    anchors.rightMargin: 16
+                    anchors.rightMargin: Theme.componentMargin
 
                     height: 32
-                    spacing: 12
+                    spacing: Theme.componentMarginS
 
                     Rectangle {
                         Layout.alignment: Qt.AlignVCenter
@@ -141,11 +141,11 @@ Item {
 
                 Row {
                     anchors.left: parent.left
-                    anchors.leftMargin: 16
+                    anchors.leftMargin: Theme.componentMargin
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 14
                     height: 28
-                    spacing: 12
+                    spacing: Theme.componentMarginS
 
                     Repeater {
                         model: (selectedDevice && selectedDevice.svd_uuid)
@@ -171,11 +171,11 @@ Item {
 
                 Row {
                     anchors.right: parent.right
-                    anchors.rightMargin: 16
+                    anchors.rightMargin: Theme.componentMargin
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 14
                     height: 28
-                    spacing: 12
+                    spacing: Theme.componentMarginS
 
                     Repeater {
                         model: (selectedDevice && selectedDevice.mfd_uuid)
@@ -216,8 +216,8 @@ Item {
     Row { // buttons row
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.margins: 8
-        spacing: 8
+        anchors.margins: Theme.componentMarginXS
+        spacing: Theme.componentMarginXS
 
         ButtonSolid {
             visible: (selectedDevice && selectedDevice.hasAdvertisement)

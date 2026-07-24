@@ -51,7 +51,7 @@ T.Button {
     ////////////////
 
     contentItem: Row {
-        spacing: 8
+        spacing: Theme.componentMarginXS
 
         IconSvg {
             anchors.verticalCenter: parent.verticalCenter

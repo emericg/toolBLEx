@@ -362,7 +362,7 @@ Column { // APP SETTINGS
 
         SwitchThemed {
             anchors.right: parent.right
-            anchors.rightMargin: 8
+            anchors.rightMargin: Theme.componentMarginXS
             anchors.verticalCenter: parent.verticalCenter
 
             checked: SettingsManager.appSplashScreen

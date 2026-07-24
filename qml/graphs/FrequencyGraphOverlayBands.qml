@@ -109,7 +109,7 @@ Item {
                 }
                 Text {
                     anchors.left: parent.left
-                    anchors.leftMargin: 16
+                    anchors.leftMargin: Theme.componentMargin
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: {

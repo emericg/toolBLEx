@@ -130,9 +130,9 @@ Loader {
                     Row { // left
                         id: rowLeft
                         anchors.left: parent.left
-                        anchors.leftMargin: 12
+                        anchors.leftMargin: Theme.componentMarginS
                         anchors.verticalCenter: parent.verticalCenter
-                        spacing: 8
+                        spacing: Theme.componentMarginXS
 
                         ButtonToggle {
                             height: 28
@@ -198,9 +198,9 @@ Loader {
 
                     Row { // right
                         anchors.right: parent.right
-                        anchors.rightMargin: 12
+                        anchors.rightMargin: Theme.componentMarginS
                         anchors.verticalCenter: parent.verticalCenter
-                        spacing: 8
+                        spacing: Theme.componentMarginXS
 
                         TextFieldThemed { // filter
                             id: filterField
@@ -221,7 +221,7 @@ Loader {
 
                             MouseArea {
                                 anchors.right: parent.right
-                                anchors.rightMargin: 24
+                                anchors.rightMargin: Theme.componentMarginXL
                                 width: 30
                                 height: 30
 
@@ -546,7 +546,7 @@ Loader {
                 anchors.leftMargin: 8
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.verticalCenterOffset: 1
-                spacing: 8
+                spacing: Theme.componentMarginXS
 
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
@@ -605,9 +605,9 @@ Loader {
 
             Row { // right
                 anchors.right: parent.right
-                anchors.rightMargin: 8
+                anchors.rightMargin: Theme.componentMarginXS
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 8
+                spacing: Theme.componentMarginXS
 
                 RoundButtonIcon {
                     width: 28; height: 28;

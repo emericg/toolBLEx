@@ -28,7 +28,7 @@ Item {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.margins: 16
+            anchors.margins: Theme.componentMargin
 
             height: log_nodata.height + 32
             radius: 4
@@ -43,9 +43,9 @@ Item {
             Text {
                 id: log_nodata
                 anchors.left: parent.left
-                anchors.leftMargin: 16
+                anchors.leftMargin: Theme.componentMargin
                 anchors.right: parent.right
-                anchors.rightMargin: 16
+                anchors.rightMargin: Theme.componentMargin
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("No event logged yet...")
@@ -81,14 +81,14 @@ Item {
 
         anchors.left: parent.left
         anchors.bottom: parent.bottom
-        anchors.margins: 8
-        spacing: 8
+        anchors.margins: Theme.componentMarginXS
+        spacing: Theme.componentMarginXS
 
         visible: logVisible
 
         Row {
             visible: (logFormat === "adv" && legendVisible)
-            spacing: 8
+            spacing: Theme.componentMarginXS
 
             Repeater {
                 model: [
@@ -136,7 +136,7 @@ Item {
         }
 
         Row { // buttons row (left)
-            spacing: 8
+            spacing: Theme.componentMarginXS
 
             ButtonSolid { // formatButton
                 color: Theme.colorGrey
@@ -167,8 +167,8 @@ Item {
     Row { // buttons row (right)
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.margins: 8
-        spacing: 8
+        anchors.margins: Theme.componentMarginXS
+        spacing: Theme.componentMarginXS
 
         visible: logVisible
 

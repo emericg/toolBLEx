@@ -33,9 +33,9 @@ Rectangle {
 
         Column {
             anchors.left: parent.left
-            anchors.leftMargin: 16
+            anchors.leftMargin: Theme.componentMargin
             anchors.right: parent.right
-            anchors.rightMargin: 16
+            anchors.rightMargin: Theme.componentMargin
             anchors.verticalCenter: parent.verticalCenter
 
             spacing: 4
@@ -58,7 +58,7 @@ Rectangle {
                 Row {
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
-                    spacing: 8
+                    spacing: Theme.componentMarginXS
 
                     TagClear { // serviceType
                         anchors.verticalCenter: parent.verticalCenter

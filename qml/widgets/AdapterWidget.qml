@@ -31,14 +31,15 @@ Rectangle {
     Column {
         id: box
         anchors.left: parent.left
-        anchors.leftMargin: 20
+        anchors.leftMargin: Theme.componentMarginL
         anchors.right: parent.right
-        anchors.rightMargin: 8
+        anchors.rightMargin: Theme.componentMarginS
         anchors.verticalCenter: parent.verticalCenter
 
         ////////
 
         property int legendWidth: 64
+        property int legendHeight: 24
 
         Component.onCompleted: {
             legendWidth = 64
@@ -57,7 +58,7 @@ Rectangle {
 
         Text {
             anchors.left: parent.left
-            anchors.leftMargin: 20
+            anchors.leftMargin: Theme.componentMarginL
             height: 32
 
             text: qsTr("Bluetooth adapter #%1").arg(index+1)
@@ -74,7 +75,7 @@ Rectangle {
         RowLayout {
             anchors.left: parent.left
             anchors.right: parent.right
-            spacing: 12
+            spacing: Theme.componentMarginS
 
             Text {
                 id: legendHostname
@@ -90,7 +91,7 @@ Rectangle {
 
             TextSelectable {
                 Layout.fillWidth: true
-                Layout.minimumHeight: 32
+                Layout.minimumHeight: box.legendHeight
 
                 text: modelData.hostname
                 wrapMode: Text.WrapAnywhere
@@ -102,7 +103,7 @@ Rectangle {
         RowLayout {
             anchors.left: parent.left
             anchors.right: parent.right
-            spacing: 12
+            spacing: Theme.componentMarginS
 
             visible: modelData.chipset.length
 
@@ -120,7 +121,7 @@ Rectangle {
 
             TextSelectable {
                 Layout.fillWidth: true
-                Layout.minimumHeight: 32
+                Layout.minimumHeight: box.legendHeight
 
                 text: modelData.chipset
                 wrapMode: Text.WrapAnywhere
@@ -130,7 +131,7 @@ Rectangle {
         RowLayout {
             anchors.left: parent.left
             anchors.right: parent.right
-            spacing: 12
+            spacing: Theme.componentMarginS
 
             visible: modelData.chipsetFirmware.length
 
@@ -148,7 +149,7 @@ Rectangle {
 
             TextSelectable {
                 Layout.fillWidth: true
-                Layout.minimumHeight: 32
+                Layout.minimumHeight: box.legendHeight
 
                 text: modelData.chipsetFirmware
                 wrapMode: Text.WrapAnywhere
@@ -160,7 +161,7 @@ Rectangle {
         RowLayout {
             anchors.left: parent.left
             anchors.right: parent.right
-            spacing: 12
+            spacing: Theme.componentMarginS
 
             visible: modelData.manufacturer.length
 
@@ -178,7 +179,7 @@ Rectangle {
 
             TextSelectable {
                 Layout.fillWidth: true
-                Layout.minimumHeight: 32
+                Layout.minimumHeight: box.legendHeight
 
                 text: modelData.manufacturer
                 wrapMode: Text.WrapAnywhere
@@ -190,7 +191,7 @@ Rectangle {
         RowLayout {
             anchors.left: parent.left
             anchors.right: parent.right
-            spacing: 12
+            spacing: Theme.componentMarginS
 
             Text {
                 id: legendAddress
@@ -206,7 +207,7 @@ Rectangle {
 
             TextSelectable {
                 Layout.fillWidth: true
-                Layout.minimumHeight: 32
+                Layout.minimumHeight: box.legendHeight
 
                 text: modelData.address
                 wrapMode: Text.WrapAnywhere
@@ -218,7 +219,7 @@ Rectangle {
         RowLayout {
             anchors.left: parent.left
             anchors.right: parent.right
-            spacing: 12
+            spacing: Theme.componentMarginS
 
             visible: modelData.manufacturerMac.length
 
@@ -236,7 +237,7 @@ Rectangle {
 
             TextSelectable {
                 Layout.fillWidth: true
-                Layout.minimumHeight: 32
+                Layout.minimumHeight: box.legendHeight
 
                 text: modelData.manufacturerMac
                 wrapMode: Text.WrapAnywhere
@@ -247,7 +248,7 @@ Rectangle {
 
         Row {
             height: 32
-            spacing: 12
+            spacing: Theme.componentMarginS
 
             visible: modelData.bluetoothVersion.length
 
@@ -276,7 +277,7 @@ Rectangle {
         RowLayout {
             anchors.left: parent.left
             anchors.right: parent.right
-            spacing: 12
+            spacing: Theme.componentMarginS
 
             visible: modelData.bluetoothFeatures.length
 
@@ -312,7 +313,7 @@ Rectangle {
 
         Row {
             height: 32
-            spacing: 12
+            spacing: Theme.componentMarginS
 
             Text {
                 id: legendHostMode
@@ -341,7 +342,7 @@ Rectangle {
 
     Rectangle { // bluetooth icon
         anchors.right: parent.right
-        anchors.rightMargin: 20
+        anchors.rightMargin: Theme.componentMarginL
         anchors.verticalCenter: parent.verticalCenter
 
         width: 96
@@ -391,8 +392,8 @@ Rectangle {
     Row {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.margins: 12
-        spacing: 12
+        anchors.margins: Theme.componentMarginS
+        spacing: Theme.componentMarginS
 
         visible: (deviceManager.adaptersCount > 1)
 

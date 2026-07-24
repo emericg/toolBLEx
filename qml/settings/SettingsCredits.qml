@@ -42,7 +42,7 @@ Column { // APP CREDITS
             anchors.left: parent.left
             anchors.leftMargin: Theme.componentMarginL
             anchors.right: parent.right
-            anchors.rightMargin: 8
+            anchors.rightMargin: Theme.componentMarginXS
             anchors.verticalCenter: parent.verticalCenter
 
             text: qsTr("This application is made possible thanks to a couple of third party open source projects:")

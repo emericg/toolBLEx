@@ -9,10 +9,10 @@ Item {
 
     Row {
         anchors.top: parent.top
-        anchors.topMargin: 12
+        anchors.topMargin: Theme.componentMarginS
         anchors.right: parent.right
-        anchors.rightMargin: 12
-        spacing: 12
+        anchors.rightMargin: Theme.componentMarginS
+        spacing: Theme.componentMarginS
 
         Row {
             spacing: 6

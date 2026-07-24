@@ -63,14 +63,14 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.margins: 16
+        anchors.margins: Theme.componentMargin
 
         visible: (hostMenu.currentSelection === 1)
 
         Flow {
             anchors.left: parent.left
             anchors.right: parent.right
-            spacing: 20
+            spacing: Theme.componentMarginL
 
             Repeater {
                 model: deviceManager.adaptersList

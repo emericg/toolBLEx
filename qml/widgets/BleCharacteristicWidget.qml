@@ -32,7 +32,7 @@ Rectangle {
     Rectangle {
         anchors.top: col.top
         anchors.left: parent.left
-        anchors.leftMargin: 18
+        anchors.leftMargin: Theme.componentMargin + 2
         anchors.bottom: col.bottom
         width: 2
         height: 128
@@ -47,7 +47,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.leftMargin: 32
         anchors.right: parent.right
-        anchors.rightMargin: 8
+        anchors.rightMargin: Theme.componentMarginXS
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: -8
         spacing: 4
@@ -160,7 +160,7 @@ Rectangle {
         RowLayout {
             anchors.left: parent.left
             anchors.right: parent.right
-            spacing: 12
+            spacing: Theme.componentMarginS
 
             visible: (modelData.dataSize > 0)
 
@@ -232,7 +232,7 @@ Rectangle {
         RowLayout {
             anchors.left: parent.left
             anchors.right: parent.right
-            spacing: 12
+            spacing: Theme.componentMarginS
 
             visible: (modelData.dataSize > 0)
 

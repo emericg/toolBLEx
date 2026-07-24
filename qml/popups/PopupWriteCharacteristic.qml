@@ -137,9 +137,9 @@ Popup {
 
             Row {
                 anchors.right: parent.right
-                anchors.rightMargin: 24
+                anchors.rightMargin: Theme.componentMarginXL
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 8
+                spacing: Theme.componentMarginXS
 
                 Repeater { // characteristic properties
                     anchors.verticalCenter: parent.verticalCenter
@@ -162,7 +162,7 @@ Popup {
             anchors.leftMargin: Theme.componentMarginXL
             anchors.right: parent.right
             anchors.rightMargin: Theme.componentMarginXL
-            spacing: 8
+            spacing: Theme.componentMarginXS
 
             Text {
                 text: qsTr("Format")
@@ -267,7 +267,7 @@ Popup {
             Row {
                 id: rowSubType_int
                 width: parent.width
-                spacing: 8
+                spacing: Theme.componentMarginXS
 
                 visible: rowType.mode === qsTr("integer")
                 property string mode_signed: qsTr("signed")
@@ -312,7 +312,7 @@ Popup {
             Row {
                 id: rowSizeType_int
                 width: parent.width
-                spacing: 8
+                spacing: Theme.componentMarginXS
 
                 visible: rowType.mode === qsTr("integer")
                 property string mode: qsTr("32 bits")
@@ -401,7 +401,7 @@ Popup {
             anchors.leftMargin: Theme.componentMarginXL
             anchors.right: parent.right
             anchors.rightMargin: Theme.componentMarginXL
-            spacing: 8
+            spacing: Theme.componentMarginXS
 
             Text {
                 width: parent.width
@@ -535,7 +535,7 @@ Popup {
             anchors.leftMargin: Theme.componentMarginXL
             anchors.right: parent.right
             anchors.rightMargin: Theme.componentMarginXL
-            spacing: 8
+            spacing: Theme.componentMarginXS
 
             Text {
                 width: parent.width

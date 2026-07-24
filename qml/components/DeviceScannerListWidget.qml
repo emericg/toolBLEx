@@ -130,7 +130,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             width: deviceManager.deviceHeader.colName
             height: 32
-            spacing: 8
+            spacing: Theme.componentMarginXS
 
             IconSvg { // device
                 Layout.preferredWidth: 20

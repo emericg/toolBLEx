@@ -67,7 +67,7 @@ Column { // BLE ADVERTISER
 
         SwitchThemed {
             anchors.right: parent.right
-            anchors.rightMargin: 8
+            anchors.rightMargin: Theme.componentMarginXS
             anchors.verticalCenter: parent.verticalCenter
 
             enabled: false
@@ -107,7 +107,7 @@ Column { // BLE ADVERTISER
 
         SwitchThemed {
             anchors.right: parent.right
-            anchors.rightMargin: 8
+            anchors.rightMargin: Theme.componentMarginXS
             anchors.verticalCenter: parent.verticalCenter
 
             enabled: false

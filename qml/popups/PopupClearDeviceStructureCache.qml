@@ -156,7 +156,7 @@ Popup {
             Column {
                 anchors.left: parent.left
                 anchors.right: parent.right
-                spacing: 8
+                spacing: Theme.componentMarginXS
 
                 Text {
                     width: parent.width

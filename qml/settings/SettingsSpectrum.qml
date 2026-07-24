@@ -47,7 +47,7 @@ Column { // SPECTRUM ANALYZERS
     Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
-        height: txtAnalyzers1.height + 16
+        height: 48
         color: Theme.colorForeground
 
         IconSvg {
@@ -217,9 +217,9 @@ Column { // SPECTRUM ANALYZERS
 
             RangeSliderThemed {
                 anchors.left: parent.left
-                anchors.leftMargin: 12
+                anchors.leftMargin: Theme.componentMarginS
                 anchors.right: parent.right
-                anchors.rightMargin: 12
+                anchors.rightMargin: Theme.componentMarginS
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.margins: 2
 
@@ -400,9 +400,9 @@ Column { // SPECTRUM ANALYZERS
 
                 SliderThemed {
                     anchors.left: parent.left
-                    anchors.leftMargin: 12
+                    anchors.leftMargin: Theme.componentMarginS
                     anchors.right: parent.right
-                    anchors.rightMargin: 12
+                    anchors.rightMargin: Theme.componentMarginS
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.margins: 2
 
@@ -430,7 +430,7 @@ Column { // SPECTRUM ANALYZERS
                     anchors.left: parent.left
                     anchors.leftMargin: Theme.componentMargin
                     height: 48
-                    spacing: 8
+                    spacing: Theme.componentMarginXS
 
                     SpinBoxThemedDesktop {
                         anchors.verticalCenter: parent.verticalCenter

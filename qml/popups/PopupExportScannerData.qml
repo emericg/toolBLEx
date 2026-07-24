@@ -168,25 +168,22 @@ Popup {
             Column {
                 anchors.left: parent.left
                 anchors.right: parent.right
-                spacing: 12
+                spacing: Theme.componentMarginS
 
                 Flow { // status row
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    spacing: 12
+                    spacing: Theme.componentMarginS
 
                     TagClear {
-                        height: 36
                         text: qsTr("%n Found", "", deviceManager.deviceCountFound)
                         //colorText: Theme.colorSubText
                     }
                     TagClear {
-                        height: 36
                         text: qsTr("%n Shown", "", deviceManager.deviceCountShown)
                         //colorText: Theme.colorSubText
                     }
                     TagClear {
-                        height: 36
                         text: qsTr("%n Hidden", "", deviceManager.deviceCountHidden)
                         //colorText: Theme.colorSubText
                     }
@@ -196,7 +193,7 @@ Popup {
             Column {
                 anchors.left: parent.left
                 anchors.right: parent.right
-                spacing: 12
+                spacing: Theme.componentMarginS
 
                 Text {
                     text: qsTr("Select devices to export")
@@ -222,7 +219,7 @@ Popup {
             Column {
                 anchors.left: parent.left
                 anchors.right: parent.right
-                spacing: 12
+                spacing: Theme.componentMarginS
 
                 Text {
                     text: qsTr("Optional data to export")
@@ -256,7 +253,7 @@ Popup {
             Column {
                 anchors.left: parent.left
                 anchors.right: parent.right
-                spacing: 12
+                spacing: Theme.componentMarginS
 
                 Text {
                     text: qsTr("Select export file")

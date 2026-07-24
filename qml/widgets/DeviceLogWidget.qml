@@ -16,7 +16,7 @@ Rectangle {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.bottom: parent.bottom
-        width: 12
+        width: Theme.componentMarginS
 
         color: {
             if (model.event === 1) return Theme.colorError
@@ -31,11 +31,11 @@ Rectangle {
 
     RowLayout {
         anchors.left: parent.left
-        anchors.leftMargin: 20
+        anchors.leftMargin: Theme.componentMarginL
         anchors.right: parent.right
-        anchors.rightMargin: 12
+        anchors.rightMargin: Theme.componentMarginS
         anchors.verticalCenter: parent.verticalCenter
-        spacing: 12
+        spacing: Theme.componentMarginS
 
         Text {
             text: model.timestamp.toLocaleTimeString(Qt.locale(), "hh:mm:ss.zzz")

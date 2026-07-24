@@ -27,8 +27,8 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        anchors.leftMargin: 16
-        anchors.rightMargin: 16
+        anchors.leftMargin: Theme.componentMargin
+        anchors.rightMargin: Theme.componentMargin
 
         clip: false
         radius: 4
@@ -55,7 +55,7 @@ Item {
             anchors.top: parent.top
             anchors.right: parent.right
             anchors.topMargin: 4
-            anchors.rightMargin: 8
+            anchors.rightMargin: Theme.componentMarginXS
 
             z: 4
             text: timestamp.toLocaleTimeString(Qt.locale(), "hh:mm:ss")
@@ -80,9 +80,9 @@ Item {
         Column {
             id: columnContent
             anchors.left: parent.left
-            anchors.leftMargin: 16
+            anchors.leftMargin: Theme.componentMargin
             anchors.right: parent.right
-            anchors.rightMargin: 16
+            anchors.rightMargin: Theme.componentMargin
             anchors.verticalCenter: parent.verticalCenter
             spacing: 4
 
@@ -92,7 +92,7 @@ Item {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.rightMargin: timebox.width
-                spacing: 12
+                spacing: Theme.componentMarginS
 
                 Text {
                     id: legendUUID
@@ -154,7 +154,7 @@ Item {
             ////////
 
             Row {
-                spacing: 12
+                spacing: Theme.componentMarginS
 
                 Text {
                     id: legendSize
@@ -191,7 +191,7 @@ Item {
             RowLayout {
                 anchors.left: parent.left
                 anchors.right: parent.right
-                spacing: 12
+                spacing: Theme.componentMarginS
 
                 Text {
                     id: legendData_hex
@@ -256,7 +256,7 @@ Item {
             RowLayout {
                 anchors.left: parent.left
                 anchors.right: parent.right
-                spacing: 12
+                spacing: Theme.componentMarginS
 
                 Text {
                     id: legendData_str
@@ -323,7 +323,7 @@ Item {
         RowLayout { // DEPRECATED // the "old" way to present advertisement data
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.rightMargin: 8
+            anchors.rightMargin: Theme.componentMarginXS
             spacing: 2
 
             Text {
@@ -372,7 +372,7 @@ Item {
         RowLayout {
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.rightMargin: 8
+            anchors.rightMargin: Theme.componentMarginXS
             spacing: 0
 
             Text {

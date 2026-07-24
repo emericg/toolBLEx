@@ -9,9 +9,9 @@ Column {
     id: advDataWidget
 
     anchors.left: parent.left
-    anchors.leftMargin: 16
+    anchors.leftMargin: Theme.componentMargin
     anchors.right: parent.right
-    anchors.rightMargin: 8
+    anchors.rightMargin: Theme.componentMarginXS
 
     clip: false
     spacing: 4
@@ -34,7 +34,7 @@ Column {
     RowLayout {
         anchors.left: parent.left
         anchors.right: parent.right
-        spacing: 12
+        spacing: Theme.componentMarginS
 
         ////////
 
@@ -56,7 +56,7 @@ Column {
         Flow {
             Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
-            spacing: 12
+            spacing: Theme.componentMarginS
 
             Row {
                 spacing: 2
@@ -101,7 +101,7 @@ Column {
     Row {
         anchors.left: parent.left
         anchors.right: parent.right
-        spacing: 12
+        spacing: Theme.componentMarginS
 
         ////////
 
@@ -143,7 +143,7 @@ Column {
     RowLayout {
         anchors.left: parent.left
         anchors.right: parent.right
-        spacing: 12
+        spacing: Theme.componentMarginS
 
         ////////
 
@@ -201,7 +201,7 @@ Column {
     RowLayout {
         anchors.left: parent.left
         anchors.right: parent.right
-        spacing: 12
+        spacing: Theme.componentMarginS
 
         ////////
 
