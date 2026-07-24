@@ -127,7 +127,7 @@ Item {
                 anchors.centerIn: parent
 
                 active: (circleDevice.isStarred || circleDevice.isBeacon || circleDevice.majorClass)
-                asynchronous: true
+                asynchronous: false
 
                 sourceComponent: IconSvg {
                     anchors.centerIn: parent

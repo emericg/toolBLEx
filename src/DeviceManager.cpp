@@ -1015,6 +1015,8 @@ void DeviceManager::clearResults()
     {
         m_devices_model->clearDevices();
     }
+
+    Q_EMIT devicesListUpdated();
 }
 
 bool DeviceManager::exportResults(const QString &filename, int exportMode,

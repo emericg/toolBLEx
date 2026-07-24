@@ -266,10 +266,10 @@ void DeviceModel::removeDevice(Device *d, bool del)
 
 void DeviceModel::clearDevices()
 {
-    for (auto d: std::as_const(m_devices))
-    {
-        removeDevice(d, true);
-    }
+    beginResetModel();
+    qDeleteAll(m_devices);
+    m_devices.clear();
+    endResetModel();
 }
 
 void DeviceModel::sanetize()
