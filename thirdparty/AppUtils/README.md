@@ -3,16 +3,20 @@
 A collection of C++ helpers for (my) Qt/QML applications.
 
 ## Utils available
-- utils_app 
+
+- utils_app
 - utils_bits
 - utils_clipboard
 - utils_fpsmonitor
 - utils_language
 - utils_log
 - utils_maths
+- utils_os
 - utils_screen
 - utils_sysinfo
 - utils_wifi
+
+- PermissionManager
 
 ## Quick start
 
@@ -55,6 +59,6 @@ TODO
 
 ## License
 
-This project is licensed under the MIT license, see LICENSE file for details.
+This project is licensed under the terms of the [MIT license](LICENSE.md).
 
-> Emeric Grange <emeric.grange@gmail.com>
+> Copyright (c) Emeric Grange (emeric.grange@gmail.com)

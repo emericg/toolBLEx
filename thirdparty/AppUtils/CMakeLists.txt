@@ -35,14 +35,16 @@ set(CORE_LIBRARIES Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick)
 
 # Generic sources
 set(CORE_SOURCES
+    # PermissionManager
+    PermissionManager.cpp PermissionManager.h
+    PermissionManager_AndroidHelper.cpp PermissionManager_AndroidHelper.h
     # app utils
     utils_app.cpp utils_app.h
     utils_log.cpp utils_log.h
     utils_clipboard.cpp utils_clipboard.h
     utils_fpsmonitor.cpp utils_fpsmonitor.h
     utils_language.cpp utils_language.h
-    PermissionManager.cpp PermissionManager.h
-    # os utils
+    # system utils
     utils_os.cpp utils_os.h
     utils_screen.cpp utils_screen.h
     utils_sysinfo.cpp utils_sysinfo.h

@@ -7,16 +7,16 @@ Rectangle {
     id: control
 
     anchors.left: parent.left
-    anchors.leftMargin: singleColumn ? 0 : Theme.componentMargin
+    anchors.leftMargin: Theme.singleColumn ? 0 : Theme.componentMargin
     anchors.right: parent.right
-    anchors.rightMargin: singleColumn ? 0 : Theme.componentMargin
+    anchors.rightMargin: Theme.singleColumn ? 0 : Theme.componentMargin
 
     height: Theme.componentHeightXL
-    radius: singleColumn ? 0 : Theme.componentRadius
+    radius: Theme.singleColumn ? 0 : Theme.componentRadius
     z: 2
 
     color: Theme.colorForeground
-    border.width: singleColumn ? 0 : Theme.componentBorderWidth
+    border.width: Theme.singleColumn ? 0 : Theme.componentBorderWidth
     border.color: Theme.colorSeparator
 
     property url source
@@ -29,7 +29,7 @@ Rectangle {
     property int textSize: source.length ? Theme.fontSizeContentBig : Theme.fontSizeContentVeryBig
     property bool textBold: false
 
-    property bool shadow: !singleColumn
+    property bool shadow: !Theme.singleColumn
 
     ////////////////
 
@@ -51,7 +51,7 @@ Rectangle {
         anchors.left: control.left
         anchors.leftMargin: {
             if (control.source.toString().length) {
-                if (singleColumn) return appHeader.headerPosition
+                if (Theme.singleColumn) return appHeader.headerPosition
                 return (Theme.componentMarginL*2 + control.sourceSize)
             }
             return Theme.componentMarginL

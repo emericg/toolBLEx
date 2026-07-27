@@ -16,7 +16,7 @@ T.TextField {
                              contentHeight + topPadding + bottomPadding,
                              placeholder.implicitHeight + topPadding + bottomPadding)
 
-    leftPadding: 8
+    leftPadding: 12
     rightPadding: buttonWidth + 6
 
     clip: true

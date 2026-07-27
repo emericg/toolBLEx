@@ -29,6 +29,11 @@
 #include <QPermission>
 #include <QThread>
 
+#ifdef Q_OS_ANDROID
+#include "PermissionManager_AndroidHelper.h"
+#include <QtCore/private/qandroidextras_p.h>
+#endif
+
 /* ************************************************************************** */
 /* ************************************************************************** */
 
@@ -104,6 +109,15 @@ void PermissionManager::setMicrophonePermission(bool perm)
     {
         m_microphonePermission = perm;
         Q_EMIT microphonePermissionChanged();
+    }
+}
+
+void PermissionManager::setNotificationsPermission(bool perm)
+{
+    if (m_notificationsPermission != perm)
+    {
+        m_notificationsPermission = perm;
+        Q_EMIT notificationsPermissionChanged();
     }
 }
 
@@ -394,6 +408,71 @@ bool PermissionManager::waitLocationPermission()
     }
 
     return m_locationPermission;
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+bool PermissionManager::requestNotificationsPermission()
+{
+    if (!checkNotificationsPermission())
+    {
+#ifdef Q_OS_ANDROID
+        qDebug() << "Requesting NOTIFICATIONS permission...";
+        QtAndroidPrivate::requestPermission(AndroidPermissionHelper::PostNotifications).then(this,
+            [this](QtAndroidPrivate::PermissionResult) {
+                requestNotificationsPermission_results();
+            });
+#endif
+    }
+
+    return m_notificationsPermission;
+}
+
+void PermissionManager::requestNotificationsPermission_results()
+{
+#ifdef Q_OS_ANDROID
+    setNotificationsPermission(AndroidPermissionHelper::check(AndroidPermissionHelper::PostNotifications));
+#endif
+}
+
+bool PermissionManager::checkNotificationsPermission()
+{
+#ifdef Q_OS_ANDROID
+    setNotificationsPermission(!AndroidPermissionHelper::applies(AndroidPermissionHelper::PostNotifications) ||
+                               AndroidPermissionHelper::check(AndroidPermissionHelper::PostNotifications));
+#else
+    setNotificationsPermission(true);
+#endif
+
+    return m_notificationsPermission;
+}
+
+bool PermissionManager::waitNotificationsPermission()
+{
+    if (!checkNotificationsPermission())
+    {
+#ifdef Q_OS_ANDROID
+        qDebug() << "Requesting NOTIFICATIONS permission...";
+        AndroidPermissionHelper::request(AndroidPermissionHelper::PostNotifications);
+
+        int timeout = s_waittimeout;
+        while (timeout > 0)
+        {
+            QThread::msleep(s_waittimeout_interval);
+            timeout -= s_waittimeout_interval;
+
+            if (AndroidPermissionHelper::check(AndroidPermissionHelper::PostNotifications))
+            {
+                setNotificationsPermission(true);
+                return m_notificationsPermission;
+            }
+        }
+        setNotificationsPermission(false);
+#endif
+    }
+
+    return m_notificationsPermission;
 }
 
 /* ************************************************************************** */

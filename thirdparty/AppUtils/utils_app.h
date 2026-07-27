@@ -97,10 +97,17 @@ public:
     // Android helpers
 
     static Q_INVOKABLE int getAndroidSdkVersion();
+    static Q_INVOKABLE QString getAndroidRomName();
+    static Q_INVOKABLE QString getAndroidRomName_currated();
+
     static Q_INVOKABLE void openAndroidAppInfo(const QString &packageName);
     static Q_INVOKABLE void openAndroidStorageSettings(const QString &packageName);
     static Q_INVOKABLE void openAndroidLocationSettings();
+    static Q_INVOKABLE void openAndroidBatterySettings();
     static Q_INVOKABLE void openAndroidAlarms();
+
+    static Q_INVOKABLE bool hasAndroidAutostartSettings();
+    static Q_INVOKABLE void openAndroidAutostartSettings(const QString &packageName);
 };
 
 /* ************************************************************************** */

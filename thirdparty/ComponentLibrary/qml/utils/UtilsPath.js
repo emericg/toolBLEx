@@ -40,10 +40,7 @@ function makeUrl(pathInput) {
     var urlOut = pathInput;
 
     if (!/^[a-zA-Z][a-zA-Z0-9+.-]+:/.test(pathInput)) {
-        // Always emit a 'file:///' (triple-slash) url, matching cleanUrl():
-        // - unix    "/home/x" -> "file:///home/x"
-        // - windows "C:/x"    -> "file:///C:/x"
-        urlOut = "file://" + (pathInput.charAt(0) === '/' ? pathInput : '/' + pathInput);
+        urlOut = "file://" + pathInput;
     }
 
     //console.log("makeUrl() in: " + pathInput + " / out: " + urlOut)

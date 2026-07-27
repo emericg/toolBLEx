@@ -216,6 +216,35 @@ public:
      */
     static QString getDeviceSerial();
 
+    /*!
+     * \return Try to get the OS vendor / ROM name.
+     *
+     * There is no dedicated "ROM name" on Android, so we use the vendor BRAND,
+     * then MANUFACTURER identifiers as a fallback.
+     */
+    static QString getRomName();
+
+    /*!
+     * \return Best effort to catch a known OS name, or an empty string on any other device.
+     *
+     * Detected from system properties:
+     * - ro.mi.os.version.name for HyperOS
+     * - ro.miui.ui.version.name for MIUI
+     * - ro.build.version.emui for EMUI
+     * - ro.build.version.oplus_rom for ColorOS
+     * - ro.oxygen.version for OxygenOS
+     * - ro.build.version.realmeui for RealmeUI
+     * - ro.vivo.os.version for FuntouchOS
+     * - ro.build.version.oneui for OneUI
+     * - ro.build.nubia.rom.name for RedMagicOS
+     * - ro.zui.version for ZUI
+     * - ro.letv.release.version for EUI
+     * - ro.smartisan.version for SmartisanOS
+     * - check display name for Flyme
+     * - ro.lineage.version for LineageOS
+     */
+    static QString getRomName_currated();
+
     /* ********************************************************************** */
 
     /*!
@@ -263,21 +292,16 @@ public:
     /* ********************************************************************** */
 
     /*!
-     * \brief Open the Android alarm list.
+     * \brief Open the Android play store intent for the given package name.
+     * \param packageName: the application package, for instance 'com.application.identifier'.
      */
-    static void openAlarmClock();
+    static void openStorePage(const QString &packageName);
 
     /*!
      * \brief Open the Android application info intent for the given package name.
      * \param packageName: the application package, for instance 'com.application.identifier'.
      */
     static void openApplicationInfo(const QString &packageName);
-
-    /*!
-     * \brief Open the Android play store intent for the given package name.
-     * \param packageName: the application package, for instance 'com.application.identifier'.
-     */
-    static void openStorePage(const QString &packageName);
 
     /*!
      * \brief Open the Android "manage all files" intent for the given package name.
@@ -292,6 +316,38 @@ public:
      * \brief Open the Android location settings intent.
      */
     static void openLocationSettings();
+
+    /*!
+     * \brief Open the Android alarm list.
+     */
+    static void openAlarmClock();
+
+    /*!
+     * \brief Open the Android battery optimization settings intent.
+     *
+     * Shows the system list of apps and their battery optimization status,
+     * so the user can exempt the app when we can't.
+     *
+     * Documentation:
+     * - https://developer.android.com/reference/android/provider/Settings#ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS
+     */
+    static void openBatteryOptimizationSettings();
+
+    /*!
+     * \brief Checks if the device exposes an "Autostart" management screen.
+     *
+     * Checks whether the Autostart activity resolves, so the UI can gate an
+     * "enable autostart" action instead of guessing from the brand.
+     */
+    static bool hasAutostartSettings();
+
+    /*!
+     * \brief Open the device "Autostart" management screen.
+     *
+     * Best-effort: targets the Xiaomi MIUI/HyperOS security center's Autostart activity.
+     * Falls back to the application info screen if that activity is not available.
+     */
+    static void openAutostartSettings(const QString &packageName);
 };
 
 /* ************************************************************************** */

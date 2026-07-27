@@ -64,7 +64,7 @@ Item {
         }
 
         mapScale.width = mapScale.referenceWidth * (scale / dist)
-        mapScaleText.text = UtilsString.distanceToString(scale, 0, mapScale.appUnits)
+        mapScaleText.text = UtilsString.distanceToString(scale, 0, mapScale.appUnitSystem)
     }
 
     ////////////////

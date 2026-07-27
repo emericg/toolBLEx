@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 import QtQuick.Templates as T
 
 import ComponentLibrary
@@ -24,6 +25,29 @@ T.ComboBox {
     property color colorBackground: control.down ? Theme.colorComponentDown : Theme.colorComponent
     property color colorBackgroundBorder: Theme.colorComponentBorder
 
+    // secondary text
+    property string subText: ""
+
+    // icon
+    property string iconRole: "source"
+    readonly property var currentIconSource: currentRoleData(currentIndex, iconRole)
+    readonly property bool hasCurrentIcon: currentIconSource.toString().length > 0
+
+    function currentRoleData(index, role) {
+        if (index < 0 || !role || !control.model)
+            return ""
+
+        if (Array.isArray(control.model)) {
+            const item = control.model[index]
+            return (item && item[role]) ? item[role] : ""
+        }
+        if (typeof control.model.get === "function") {
+            const entry = control.model.get(index)
+            return (entry && entry[role]) ? entry[role] : ""
+        }
+        return ""
+    }
+
     ////////////////
 
     background: Rectangle {
@@ -39,18 +63,52 @@ T.ComboBox {
 
     ////////////////
 
-    contentItem: Text {
-        rightPadding: control.indicator.width
-        verticalAlignment: Text.AlignVCenter
+    contentItem: RowLayout {
+        IconSvg {
+            Layout.preferredWidth: control.hasCurrentIcon ? 20 : 0
+            Layout.preferredHeight: 20
 
-        text: control.displayText
-        textFormat: Text.PlainText
+            visible: control.hasCurrentIcon
+            source: control.currentIconSource
+            color: Theme.colorIcon
+            opacity: control.enabled ? 1 : 0.66
+        }
 
-        font: control.font
-        elide: Text.ElideRight
+        Text {
+            Layout.leftMargin: control.hasCurrentIcon ? 8 : 0
+            Layout.fillWidth: !control.subText
+            Layout.maximumWidth: control.availableWidth - control.indicator.width - (control.subText ? 8 : 0)
 
-        opacity: control.enabled ? 1 : 0.66
-        color: Theme.colorComponentContent
+            rightPadding: control.subText ? 0 : control.indicator.width
+            verticalAlignment: Text.AlignVCenter
+
+            text: control.displayText
+            textFormat: Text.PlainText
+
+            font: control.font
+            elide: Text.ElideRight
+
+            color: Theme.colorComponentContent
+            opacity: control.enabled ? 1 : 0.66
+        }
+
+        Text {
+            Layout.fillWidth: true
+            Layout.leftMargin: 0
+
+            rightPadding: control.indicator.width
+            verticalAlignment: Text.AlignVCenter
+
+            visible: control.subText
+            text: control.subText
+            textFormat: Text.PlainText
+
+            font: control.font
+            elide: Text.ElideRight
+
+            color: Theme.colorSubText
+            opacity: control.enabled ? 1 : 0.66
+        }
     }
 
     ////////////////
@@ -86,6 +144,9 @@ T.ComboBox {
         required property var model
         required property int index
 
+        readonly property var iconSource: (control.iconRole && model && model[control.iconRole]) ? model[control.iconRole] : ""
+        readonly property bool hasIcon: iconSource ? iconSource.toString().length > 0 : false
+
         width: control.width - 2
         height: control.height
         highlighted: (control.highlightedIndex === index)
@@ -98,14 +159,30 @@ T.ComboBox {
             color: highlighted ? "#F6F6F6" : "white"
         }
 
-        contentItem: Text {
-            leftPadding: control.leftPadding
-            rightPadding: control.rightPadding
-            text: model[control.textRole]
-            color: highlighted ? "black" : Theme.colorSubText
-            font.pixelSize: Theme.componentFontSize
-            elide: Text.ElideRight
-            verticalAlignment: Text.AlignVCenter
+        contentItem: RowLayout {
+            spacing: 0
+
+            IconSvg {
+                Layout.leftMargin: hasIcon ? control.leftPadding : 0
+                Layout.preferredWidth: hasIcon ? 24 : 0
+                Layout.preferredHeight: 24
+
+                visible: hasIcon
+                source: iconSource
+                color: Theme.colorIcon
+            }
+
+            Text {
+                Layout.leftMargin: hasIcon ? control.leftPadding / 2 : control.leftPadding
+                Layout.rightMargin: control.rightPadding
+                Layout.fillWidth: true
+
+                text: control.textAt(index)
+                color: highlighted ? "black" : Theme.colorSubText
+                font.pixelSize: Theme.componentFontSize
+                elide: Text.ElideRight
+                verticalAlignment: Text.AlignVCenter
+            }
         }
     }
 

@@ -51,6 +51,7 @@ Item {
 
     // Screen metrics
     property real screenDpi: 96
+    property real screenDpiLogical: 96
     property real screenPar: 1.0
     property real screenSize: 5.0
 
@@ -92,6 +93,19 @@ Item {
                             (isTablet && appWidth >= 480)
 
     property bool wideWideMode: (appWidth >= 640)
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    // Base font size, inherited from the OS / desktop environment
+
+    readonly property real fontSizeOS: {
+        let osfont = Qt.application.font
+        //console.log("Qt.application.font > " + osfont)
+
+        if (osfont.pixelSize > 0) return osfont.pixelSize
+        if (osfont.pointSize > 0) return ((osfont.pointSize * screenDpiLogical) / 72.0)
+        return isMobile ? 14 : 13 // default values
+    }
 
     ////////////////////////////////////////////////////////////////////////////
 

@@ -24,7 +24,8 @@ ApplicationWindow {
     Binding { target: Theme; property: "appThemeAutoMethod";     value: SettingsManager.appThemeAutoMethod }
     Binding { target: Theme; property: "appWidth";               value: appWindow.width }
     Binding { target: Theme; property: "appHeight";              value: appWindow.height }
-    Binding { target: Theme; property: "screenDpi";              value: UtilsScreen.screenDpi }
+    Binding { target: Theme; property: "screenDpi";              value: UtilsScreen.screenDpiPhysical }
+    Binding { target: Theme; property: "screenDpiLogical";       value: UtilsScreen.screenDpiLogical }
     Binding { target: Theme; property: "screenPar";              value: UtilsScreen.screenPar }
     Binding { target: Theme; property: "screenSize";             value: UtilsScreen.screenSize }
 

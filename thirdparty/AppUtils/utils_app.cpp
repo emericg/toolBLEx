@@ -320,6 +320,24 @@ int UtilsApp::getAndroidSdkVersion()
     return 0;
 }
 
+QString UtilsApp::getAndroidRomName()
+{
+#if defined(Q_OS_ANDROID)
+    return UtilsAndroid::getRomName();
+#endif
+
+    return QString();
+}
+
+QString UtilsApp::getAndroidRomName_currated()
+{
+#if defined(Q_OS_ANDROID)
+    return UtilsAndroid::getRomName_currated();
+#endif
+
+    return QString();
+}
+
 /* ************************************************************************** */
 
 void UtilsApp::openAndroidAppInfo(const QString &packageName)
@@ -352,6 +370,31 @@ void UtilsApp::openAndroidAlarms()
 #if defined(Q_OS_ANDROID)
     UtilsAndroid::openAlarmClock();
 #endif
+}
+
+void UtilsApp::openAndroidBatterySettings()
+{
+#if defined(Q_OS_ANDROID)
+    UtilsAndroid::openBatteryOptimizationSettings();
+#endif
+}
+
+bool UtilsApp::hasAndroidAutostartSettings()
+{
+#if defined(Q_OS_ANDROID)
+    return UtilsAndroid::hasAutostartSettings();
+#endif
+
+    return false;
+}
+
+void UtilsApp::openAndroidAutostartSettings(const QString &packageName)
+{
+#if defined(Q_OS_ANDROID)
+    UtilsAndroid::openAutostartSettings(packageName);
+#endif
+
+    Q_UNUSED(packageName)
 }
 
 /* ************************************************************************** */

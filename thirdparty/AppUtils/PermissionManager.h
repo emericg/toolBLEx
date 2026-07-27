@@ -40,8 +40,9 @@ class QJSEngine;
 
 /*!
  * \brief The PermissionManager class
+ * \note REQUIRES Qt 6.6+
  *
- * REQUIRES Qt 6.6+
+ * Available with Qt:
  * https://doc.qt.io/qt-6/permissions.html
  *
  * - https://doc.qt.io/qt-6/qbluetoothpermission.html
@@ -50,6 +51,9 @@ class QJSEngine;
  * - https://doc.qt.io/qt-6/qcontactpermission.html
  * - https://doc.qt.io/qt-6/qlocationpermission.html
  * - https://doc.qt.io/qt-6/qmicrophonepermission.html
+ *
+ * Not available through Qt, done manually:
+ * - https://developer.android.com/develop/ui/compose/notifications/notification-permission
  */
 class PermissionManager: public QObject
 {
@@ -63,6 +67,7 @@ class PermissionManager: public QObject
     Q_PROPERTY(bool contactsPermission READ hasContactsPermission NOTIFY contactsPermissionChanged)
     Q_PROPERTY(bool locationPermission READ hasLocationPermission NOTIFY locationPermissionChanged)
     Q_PROPERTY(bool microphonePermission READ hasMicrophonePermission NOTIFY microphonePermissionChanged)
+    Q_PROPERTY(bool notificationsPermission READ hasNotificationsPermission NOTIFY notificationsPermissionChanged)
 
     explicit PermissionManager(QObject *parent = nullptr);
 
@@ -70,11 +75,12 @@ class PermissionManager: public QObject
     static const int s_waittimeout_interval = 33; // in ms
 
     bool m_bluetoothPermission = false;
-    bool m_calendarPermission = false;
+    bool m_calendarPermission = false; // TODO
     bool m_cameraPermission = false;
-    bool m_contactsPermission = false;
+    bool m_contactsPermission = false; // TODO
     bool m_locationPermission = false;
-    bool m_microphonePermission = false;
+    bool m_microphonePermission = false; // TODO
+    bool m_notificationsPermission = false;
 
     void setBluetoothPermission(bool perm);
     void setCalendarPermission(bool perm);
@@ -82,10 +88,12 @@ class PermissionManager: public QObject
     void setContactsPermission(bool perm);
     void setLocationPermission(bool perm);
     void setMicrophonePermission(bool perm);
+    void setNotificationsPermission(bool perm);
 
     void requestBluetoothPermission_results(const QPermission &permission);
     void requestCameraPermission_results(const QPermission &permission);
     void requestLocationPermission_results(const QPermission &permission);
+    void requestNotificationsPermission_results();
 
 Q_SIGNALS:
     void bluetoothPermissionChanged();
@@ -94,6 +102,7 @@ Q_SIGNALS:
     void contactsPermissionChanged();
     void locationPermissionChanged();
     void microphonePermissionChanged();
+    void notificationsPermissionChanged();
 
 public:
     static PermissionManager *getInstance();
@@ -105,6 +114,7 @@ public:
     bool hasContactsPermission() const { return m_contactsPermission; }
     bool hasLocationPermission() const { return m_locationPermission; }
     bool hasMicrophonePermission() const { return m_microphonePermission; }
+    bool hasNotificationsPermission() const { return m_notificationsPermission; }
 
     Q_INVOKABLE bool requestBluetoothPermission();
     Q_INVOKABLE bool checkBluetoothPermission();
@@ -117,6 +127,10 @@ public:
     Q_INVOKABLE bool requestLocationPermission();
     Q_INVOKABLE bool checkLocationPermission();
     Q_INVOKABLE bool waitLocationPermission();
+
+    Q_INVOKABLE bool requestNotificationsPermission();
+    Q_INVOKABLE bool checkNotificationsPermission();
+    Q_INVOKABLE bool waitNotificationsPermission();
 };
 
 /* ************************************************************************** */

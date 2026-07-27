@@ -28,6 +28,7 @@ T.Slider {
 
     // colors
     property color colorBackground: Theme.colorForeground
+    property color colorBorder: Theme.colorComponentBorder
     property color colorForeground: Theme.colorPrimary
     property color colorForegroundDisabled: Qt.tint(Theme.colorPrimary, "#44eeeeee")
     property color colorText: "white"
@@ -41,10 +42,12 @@ T.Slider {
         implicitHeight: control.horizontal ? control.hhh : 200
         width: control.horizontal ? control.availableWidth : implicitWidth
         height: control.horizontal ? implicitHeight : control.availableHeight
+        scale: control.horizontal && control.mirrored ? -1 : 1
 
         radius: control.hhh
         color: control.colorBackground
-        scale: control.horizontal && control.mirrored ? -1 : 1
+        border.width: 2
+        border.color: control.colorBorder
 
         Rectangle {
             y: control.horizontal ? 0 : control.handle.y

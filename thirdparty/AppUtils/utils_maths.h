@@ -31,6 +31,12 @@
 
 /* ************************************************************************** */
 
+//! Non-deduced parameter helper (std::type_identity is C++20; this works in C++17)
+template<typename T> struct utils_identity { using type = T; };
+template<typename T> using utils_identity_t = typename utils_identity<T>::type;
+
+/* ************************************************************************** */
+
 /*!
  * \brief Map a number from range [srcMin, srcMax] to [dstMin, dstMax]
  * \param n: number to map
@@ -45,7 +51,8 @@
  * example: mapNumber(5, 0, 10, 100, 200) => 150
  */
 template<typename T>
-T mapNumber(T n, T srcMin, T srcMax, T dstMin, T dstMax, bool checks = true)
+T mapNumber(T n, utils_identity_t<T> srcMin, utils_identity_t<T> srcMax,
+            utils_identity_t<T> dstMin, utils_identity_t<T> dstMax, bool checks = true)
 {
     if (srcMax == srcMin) return dstMin;
     if (checks)
@@ -67,7 +74,7 @@ T mapNumber(T n, T srcMin, T srcMax, T dstMin, T dstMax, bool checks = true)
  * example: normalize(5, 0, 10) => 0.5
  */
 template<typename T>
-double normalize(T n, T min, T max)
+double normalize(T n, utils_identity_t<T> min, utils_identity_t<T> max)
 {
     if (n <= min) return 0.0;
     if (n >= max) return 1.0;
@@ -77,7 +84,7 @@ double normalize(T n, T min, T max)
 //! Clamp n between min and max
 //! example: clamp(15, 0, 10) => 10
 template<typename T>
-T clamp(T n, T min, T max)
+T clamp(T n, utils_identity_t<T> min, utils_identity_t<T> max)
 {
     if (n < min) return min;
     if (n > max) return max;
@@ -96,7 +103,7 @@ T roundTo(T n, int decimals = 0)
 //! Align n up to the next multiple of r (any positive r)
 //! example: alignTo(13, 2) => 14 / alignTo(13, 8) => 16
 template<typename T>
-T alignTo(T n, T r)
+T alignTo(T n, utils_identity_t<T> r)
 {
     if (r <= static_cast<T>(0)) return n;
     return static_cast<T>(std::ceil(static_cast<double>(n) / static_cast<double>(r)) * static_cast<double>(r));
@@ -112,23 +119,24 @@ T alignToEven(T n)
 //! Align n up to the next multiple of r, faster than alignTo() BUT 'r' MUST be a power of two
 //! example: alignToPow2(13, 8) => 16 / alignToPow2(16, 8) => 16
 template<typename T>
-T alignToPow2(T n, T r)
+T alignToPow2(T n, utils_identity_t<T> r)
 {
     static_assert(std::is_integral_v<T>, "alignToPow2() expects an integral type");
     return (n + (r - 1)) & ~(r - 1);
 }
 
 //! Linear interpolation between a and b, with t usually in [0, 1]
+//! Result type follows the endpoints (a, b); the factor t may be a different type
 //! example: lerp(100, 200, 0.5) => 150
-template<typename T>
-T lerp(T a, T b, T t)
+template<typename T, typename U>
+T lerp(T a, utils_identity_t<T> b, U t)
 {
     return a + (b - a) * t;
 }
 
 //! Euclidean modulo
 template<typename T>
-T mod(T n, T modulo)
+T mod(T n, utils_identity_t<T> modulo)
 {
     if constexpr (std::is_integral_v<T>)
         return ((n % modulo) + modulo) % modulo;
