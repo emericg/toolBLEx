@@ -46,9 +46,10 @@ DelegateChooser {
             text: address
             textFormat: Text.PlainText
             font.family: fontMonospace
-            color: (pointer.connected || pointer.selected) ? "white" : Theme.colorText
-            verticalAlignment: Text.AlignVCenter
+            font.pixelSize: Theme.componentFontSize
             elide: Text.ElideMiddle
+            verticalAlignment: Text.AlignVCenter
+            color: (pointer.connected || pointer.selected) ? "white" : Theme.colorText
 
             Rectangle { // background
                 anchors.fill: parent
@@ -78,9 +79,10 @@ DelegateChooser {
 
             text: name
             textFormat: Text.PlainText
-            color: (pointer.connected || pointer.selected) ? "white" : Theme.colorText
+            font.pixelSize: Theme.componentFontSize
             elide: Text.ElideRight
             verticalAlignment: Text.AlignVCenter
+            color: (pointer.connected || pointer.selected) ? "white" : Theme.colorText
 
             Rectangle { // background
                 anchors.fill: parent
@@ -110,9 +112,10 @@ DelegateChooser {
 
             text: manufacturer
             textFormat: Text.PlainText
-            color: (pointer.connected || pointer.selected) ? "white" : Theme.colorText
+            font.pixelSize: Theme.componentFontSize
             elide: Text.ElideRight
             verticalAlignment: Text.AlignVCenter
+            color: (pointer.connected || pointer.selected) ? "white" : Theme.colorText
 
             Rectangle { // background
                 anchors.fill: parent
@@ -164,16 +167,17 @@ DelegateChooser {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "-" + Math.abs(rssi).toFixed(0)
                     textFormat: Text.PlainText
-                    color: (pointer.connected || pointer.selected) ? "white" : Theme.colorText
+                    font.pixelSize: Theme.componentFontSize - 2
                     horizontalAlignment: Text.AlignRight
+                    color: (pointer.connected || pointer.selected) ? "white" : Theme.colorText
                 }
 
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     text: qsTr("dBm")
                     textFormat: Text.PlainText
+                    font.pixelSize: Theme.componentFontSize - 4
                     color: (pointer.connected || pointer.selected) ? "#ddd" : Theme.colorSubText
-                    font.pixelSize: 12
                 }
 
                 RssiBar {
@@ -219,6 +223,7 @@ DelegateChooser {
 
                     text: interval
                     textFormat: Text.PlainText
+                    font.pixelSize: Theme.componentFontSize
                     color: (pointer.connected || pointer.selected) ? "white" : Theme.colorText
                 }
 
@@ -227,8 +232,8 @@ DelegateChooser {
 
                     text: qsTr("ms")
                     textFormat: Text.PlainText
+                    font.pixelSize: Theme.componentFontSize - 4
                     color: (pointer.connected || pointer.selected) ? "#ddd" : Theme.colorSubText
-                    font.pixelSize: 12
                 }
             }
         }
@@ -245,9 +250,10 @@ DelegateChooser {
                     pointer.lastSeen.toLocaleTimeString(locale, "hh:mm") :
                     pointer.lastSeen.toLocaleString(locale, "dd/MM hh:mm")
             textFormat: Text.PlainText
-            color: (pointer.connected || pointer.selected) ? "white" : Theme.colorText
+            font.pixelSize: Theme.componentFontSize
             elide: Text.ElideRight
             verticalAlignment: Text.AlignVCenter
+            color: (pointer.connected || pointer.selected) ? "white" : Theme.colorText
 
             Rectangle { // background
                 anchors.fill: parent
@@ -276,9 +282,10 @@ DelegateChooser {
 
             text: pointer.firstSeen.toLocaleString(locale, "dd/MM hh:mm")
             textFormat: Text.PlainText
-            color: (pointer.connected || pointer.selected) ? "white" : Theme.colorText
+            font.pixelSize: Theme.componentFontSize
             elide: Text.ElideRight
             verticalAlignment: Text.AlignVCenter
+            color: (pointer.connected || pointer.selected) ? "white" : Theme.colorText
 
             Rectangle { // background
                 anchors.fill: parent

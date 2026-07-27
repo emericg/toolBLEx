@@ -14,6 +14,9 @@ T.Button {
     leftPadding: 16
     rightPadding: 16
 
+    font.pixelSize: Theme.componentFontSize
+    font.bold: false
+
     focusPolicy: Qt.NoFocus
     hoverEnabled: enabled && !readOnly
 

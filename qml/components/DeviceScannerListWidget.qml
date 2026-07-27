@@ -122,8 +122,9 @@ Item {
             text: boxDevice.deviceAddress
             textFormat: Text.PlainText
             font.family: fontMonospace
-            color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorText
+            font.pixelSize: Theme.componentFontSize
             elide: Text.ElideMiddle
+            color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorText
         }
 
         RowLayout { // icons + name ////////////////////////////////////////////
@@ -151,6 +152,7 @@ Item {
 
                 text: (boxDevice.deviceName.length) ? boxDevice.deviceName_display : qsTr("Unavailable")
                 textFormat: Text.PlainText
+                font.pixelSize: Theme.componentFontSize
                 elide: Text.ElideRight
                 color: {
                     if (boxDevice.connected || boxDevice.selected) return "white"
@@ -213,8 +215,9 @@ Item {
 
             text: boxDevice.deviceManufacturer
             textFormat: Text.PlainText
-            color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorText
+            font.pixelSize: Theme.componentFontSize
             elide: Text.ElideRight
+            color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorText
         }
 
         RowLayout { // rssi ////////////////////////////////////////////////////
@@ -238,16 +241,17 @@ Item {
 
                     text: "-" + Math.abs(boxDevice.rssi)
                     textFormat: Text.PlainText
-                    color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorText
+                    font.pixelSize: Theme.componentFontSize - 2
                     horizontalAlignment: Text.AlignRight
+                    color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorText
                 }
 
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     text: qsTr("dBm")
                     textFormat: Text.PlainText
+                    font.pixelSize: Theme.componentFontSize - 4
                     color: (boxDevice.connected || boxDevice.selected) ? "#ddd" : Theme.colorSubText
-                    font.pixelSize: 12
                 }
             }
 
@@ -277,6 +281,7 @@ Item {
 
                     text: boxDevice && boxDevice.advInterval
                     textFormat: Text.PlainText
+                    font.pixelSize: Theme.componentFontSize
                     color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorText
                 }
 
@@ -285,8 +290,8 @@ Item {
 
                     text: qsTr("ms")
                     textFormat: Text.PlainText
+                    font.pixelSize: Theme.componentFontSize - 4
                     color: (boxDevice.connected || boxDevice.selected) ? "#ddd" : Theme.colorSubText
-                    font.pixelSize: 12
                 }
             }
         }
@@ -302,6 +307,7 @@ Item {
                           boxDevice.lastSeen.toLocaleTimeString(locale, "hh:mm") :
                           boxDevice.lastSeen.toLocaleString(locale, "dd/MM hh:mm")
                 textFormat: Text.PlainText
+                font.pixelSize: Theme.componentFontSize
                 color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorText
             }
         }
@@ -315,6 +321,7 @@ Item {
 
                 text: boxDevice.firstSeen.toLocaleString(locale, "dd/MM hh:mm")
                 textFormat: Text.PlainText
+                font.pixelSize: Theme.componentFontSize
                 color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorText
             }
         }
