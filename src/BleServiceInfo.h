@@ -104,7 +104,7 @@ public:
 
     void askForNotify(const QString &uuid);
     void askForRead(const QString &uuid);
-    void askForWrite(const QString &uuid, const QString &value, const QString &type);
+    void askForWrite(const QString &uuid, const QString &value, const QString &type, bool withResponse = true);
 };
 
 /* ****************************************************************************/

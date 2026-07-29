@@ -356,17 +356,19 @@ void ServiceInfo::askForRead(const QString &uuid)
     }
 }
 
-void ServiceInfo::askForWrite(const QString &uuid, const QString &value, const QString &type)
+void ServiceInfo::askForWrite(const QString &uuid, const QString &value, const QString &type, bool withResponse)
 {
     if (m_ble_service)
     {
         qDebug() << "ServiceInfo::askForWrite(" << uuid << ") > value:" << value
-                 << " (type:" << type << "/ size:" << value.size() << ")";
+                 << " (type:" << type << "/ size:" << value.size()
+                 << "/ withResponse:" << withResponse << ")";
 
         if (m_device) m_device->logEvent("User asked for WRITE on " + uuid, LogEvent::USER);
 
         QBluetoothUuid towrite(uuid);
         QLowEnergyCharacteristic crst = m_ble_service->characteristic(towrite);
+        const QLowEnergyCharacteristic::PropertyTypes properties = crst.properties();
 
         QLowEnergyService::WriteMode m = QLowEnergyService::WriteWithResponse;
         if (crst.properties() & QLowEnergyCharacteristic::Write)

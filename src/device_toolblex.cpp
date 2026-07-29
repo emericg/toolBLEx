@@ -532,7 +532,7 @@ void DeviceToolBLEx::askForRead(const QString &uuid)
 
 /* ************************************************************************** */
 
-void DeviceToolBLEx::askForWrite(const QString &uuid, const QString &value, const QString &type)
+void DeviceToolBLEx::askForWrite(const QString &uuid, const QString &value, const QString &type, bool withResponse)
 {
     // Iterate through services, until we find the characteristic we want to write
     for (const auto &s: std::as_const(m_services))
@@ -545,7 +545,7 @@ void DeviceToolBLEx::askForWrite(const QString &uuid, const QString &value, cons
                 CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
                 if (cst && cst->getUuidFull() == uuid)
                 {
-                    srv->askForWrite(uuid, value, type);
+                    srv->askForWrite(uuid, value, type, withResponse);
                     return;
                 }
             }

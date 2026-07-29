@@ -10,7 +10,7 @@ Popup {
     x: ((appWindow.width / 2) - (width / 2))
     y: ((appWindow.height / 2) - (height / 2) - (appHeader.height))
 
-    width: 720
+    width: 800
     padding: 0
     margins: 0
 
@@ -20,14 +20,41 @@ Popup {
 
     property var characteristic: null
 
+    readonly property bool hasWriteWithResponse: (characteristic && characteristic.propertiesList.indexOf("Write") >= 0)
+    readonly property bool hasWriteWithoutResponse: (characteristic && characteristic.propertiesList.indexOf("WriteNoResp") >= 0)
+
+    readonly property int maxValueSize: 512 // A GATT attribute value cannot exceed 512 bytes
+    readonly property int maxPacketSize: (selectedDevice && selectedDevice.mtu > 0) ? (selectedDevice.mtu - 3) : -1
+    readonly property int valueSize: data_hex.model ? data_hex.model.length : 0
+    readonly property bool valueTooBig: (!writeWithResponse && maxPacketSize > 0 && valueSize > maxPacketSize)
+
     ////////////////////////////////////////////////////////////////////////////
 
     onAboutToShow: { }
     onAboutToHide: { }
 
     function openCC(cc) {
-        characteristic = cc
-        uuid_tf.text = characteristic.uuid_full
+        if (characteristic !== cc) {
+            characteristic = cc
+            uuid_tf.text = characteristic.uuid_full
+
+            // reset toggles
+            rowType.mode = qsTr("data")
+            rowSubType_data.mode = qsTr("bytes")
+            rowSubType_text.mode = qsTr("ascii")
+            rowSubType_int.mode_signed = qsTr("signed")
+            rowSubType_int.mode_endian = qsTr("le")
+            rowSizeType_int.mode = qsTr("32 bits")
+            rowSubType_float.mode = qsTr("IEEE 754")
+            rowSizeType_float.mode = qsTr("32 bits")
+            rowWriteMode.mode = hasWriteWithResponse ? qsTr("with response") : qsTr("without response")
+
+            // reset data
+            textfieldValue_data.clear()
+            textfieldValue_text.clear()
+            textfieldValue_int.clear()
+            textfieldValue_float.clear()
+        }
         open()
     }
 
@@ -86,7 +113,7 @@ Popup {
         layer.effect: MultiEffect { // shadow
             autoPaddingEnabled: true
             shadowEnabled: true
-            shadowColor: Theme.isLight ? "#aa000000" : "#aaffffff"
+            shadowColor: Theme.isLight ? "#aa000000" : "#aa444444"
         }
     }
 
@@ -148,7 +175,7 @@ Popup {
                     TagClear {
                         text: modelData
                         colorText: "white"
-                        color: Qt.darker(Theme.colorPrimary, 1.1)
+                        color: Theme.colorForeground
                         opacity: 0.84
                     }
                 }
@@ -157,7 +184,7 @@ Popup {
 
         ////////
 
-        Column { // contentArea
+        Column {
             anchors.left: parent.left
             anchors.leftMargin: Theme.componentMarginXL
             anchors.right: parent.right
@@ -171,6 +198,8 @@ Popup {
                 color: Theme.colorText
                 wrapMode: Text.WordWrap
             }
+
+            ////
 
             Row {
                 id: rowType
@@ -211,6 +240,8 @@ Popup {
                 }
             }
 
+            ////
+
             Row {
                 id: rowSubType_data
                 width: parent.width
@@ -236,6 +267,8 @@ Popup {
                     onClicked: rowSubType_data.mode = text
                 }
             }
+
+            ////
 
             Row {
                 id: rowSubType_text
@@ -263,6 +296,8 @@ Popup {
                     visible: false
                 }
             }
+
+            ////
 
             Row {
                 id: rowSubType_int
@@ -309,6 +344,8 @@ Popup {
                 }
             }
 
+            ////
+
             Row {
                 id: rowSizeType_int
                 width: parent.width
@@ -349,6 +386,8 @@ Popup {
                 }
             }
 
+            ////
+
             Row {
                 id: rowSubType_float
                 width: parent.width
@@ -365,6 +404,8 @@ Popup {
                     text: qsTr("IEEE 754")
                 }
             }
+
+            ////
 
             Row {
                 id: rowSizeType_float
@@ -391,6 +432,60 @@ Popup {
                     text: qsTr("64 bits")
                 }
             }
+
+            ////
+        }
+
+        ////////
+
+        Column {
+            anchors.left: parent.left
+            anchors.leftMargin: Theme.componentMarginXL
+            anchors.right: parent.right
+            anchors.rightMargin: Theme.componentMarginXL
+            spacing: Theme.componentMarginXS
+
+            visible: (popupWriteCharacteristic.hasWriteWithResponse &&
+                      popupWriteCharacteristic.hasWriteWithoutResponse)
+
+            Text {
+                width: parent.width
+
+                text: qsTr("Mode")
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContentVeryBig
+                color: Theme.colorText
+                wrapMode: Text.WordWrap
+            }
+
+            ////
+
+            Row {
+                id: rowWriteMode
+                width: parent.width
+                spacing: 10
+
+                property string mode: qsTr("with response")
+
+                onModeChanged: columnTf.updateTextFields()
+
+                ButtonSolid {
+                    height: 28
+                    color: (rowWriteMode.mode === text) ? Theme.colorPrimary : Theme.colorGrey
+                    onClicked: rowWriteMode.mode = text
+
+                    text: qsTr("with response")
+                }
+                ButtonSolid {
+                    height: 28
+                    color: (rowWriteMode.mode === text) ? Theme.colorPrimary : Theme.colorGrey
+                    onClicked: rowWriteMode.mode = text
+
+                    text: qsTr("without response")
+                }
+            }
+
+            ////
         }
 
         ////////
@@ -466,7 +561,7 @@ Popup {
                 color: Theme.colorText
                 selectByMouse: true
 
-                maximumLength: 20
+                maximumLength: popupWriteCharacteristic.maxValueSize // one byte per character
                 //validator: RegularExpressionValidator { regularExpression: /[a-zA-Z0-9]+/ } // poor man ascii
                 validator: RegularExpressionValidator { regularExpression: /([\x00-\x7F])+/ } // ascii
 
@@ -484,7 +579,7 @@ Popup {
                 color: Theme.colorText
                 selectByMouse: true
 
-                maximumLength: 40
+                maximumLength: popupWriteCharacteristic.maxValueSize * 2 // two characters per byte
                 validator: RegularExpressionValidator { regularExpression: /[a-fA-F0-9]+/ }
                 //inputMask: "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
 
@@ -526,6 +621,8 @@ Popup {
 
                 onTextChanged: columnTf.updateTextFields()
             }
+
+            ////
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -619,6 +716,7 @@ Popup {
                 text: qsTr("Cancel")
                 onClicked: popupWriteCharacteristic.close()
             }
+
             ButtonSolid {
                 color: Theme.colorMaterialAmber
 
@@ -628,6 +726,7 @@ Popup {
                 onClicked: {
                     var value = ""
                     var type = ""
+                    var writeWithResponse = (rowWriteMode.mode === qsTr("with response"))
 
                     if (rowType.mode === qsTr("data")) {
 
@@ -659,7 +758,7 @@ Popup {
 
                     }
 
-                    selectedDevice.askForWrite(characteristic.uuid_full, value, type)
+                    selectedDevice.askForWrite(characteristic.uuid_full, value, type, writeWithResponse)
                     popupWriteCharacteristic.close()
                 }
             }

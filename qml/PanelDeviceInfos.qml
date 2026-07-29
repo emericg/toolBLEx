@@ -62,7 +62,7 @@ Flickable {
                 anchors.verticalCenter: parent.verticalCenter
 
                 property int legendWidth: 64
-                property int legendHeight: 24
+                property int legendHeight: 28
 
                 Component.onCompleted: {
                     legendWidth = 64
@@ -301,7 +301,7 @@ Flickable {
                 anchors.verticalCenter: parent.verticalCenter
 
                 property int legendWidth: 64
-                property int legendHeight: 24
+                property int legendHeight: 28
 
                 Component.onCompleted: {
                     legendWidth = 64
@@ -454,7 +454,6 @@ Flickable {
                         Layout.fillWidth: true
 
                         color: Theme.colorGrey
-                        //colorText: Theme.colorComponentContent
 
                         enabled: (selectedDevice && (selectedDevice.advCount > 0 ||
                                                      selectedDevice.servicesCount > 0 ||

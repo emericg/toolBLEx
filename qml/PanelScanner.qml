@@ -67,17 +67,29 @@ Item {
 
         visible: (hostMenu.currentSelection === 1)
 
-        Flow {
-            anchors.left: parent.left
-            anchors.right: parent.right
+        Flickable {
+            anchors.fill: parent
+
+            contentWidth: -1
+            contentHeight: hostInfosColumn.height
+
+            boundsBehavior: Flickable.StopAtBounds
+            ScrollBar.vertical: ScrollBarThemed { policy: ScrollBar.AsNeeded; }
+
+            Column {
+                id: hostInfosColumn
+                anchors.left: parent.left
+                anchors.right: parent.right
+
             spacing: Theme.componentMarginL
 
             Repeater {
                 model: deviceManager.adaptersList
 
                 AdapterWidget {
-                    width: hostInfos.width
+                        width: hostInfosColumn.width
                 }
+            }
             }
         }
     }

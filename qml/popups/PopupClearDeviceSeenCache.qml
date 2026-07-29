@@ -10,7 +10,7 @@ Popup {
     x: ((appWindow.width / 2) - (width / 2))
     y: ((appWindow.height / 2) - (height / 2) - (appHeader.height))
 
-    width: 720
+    width: 800
     padding: 0
     margins: 0
 
@@ -74,7 +74,7 @@ Popup {
         layer.effect: MultiEffect { // shadow
             autoPaddingEnabled: true
             shadowEnabled: true
-            shadowColor: Theme.isLight ? "#aa000000" : "#aaffffff"
+            shadowColor: Theme.isLight ? "#aa000000" : "#aa444444"
         }
     }
 
@@ -190,6 +190,7 @@ Popup {
                 text: qsTr("Cancel")
                 onClicked: popupClearDeviceSeenCache.close()
             }
+
             ButtonSolid {
                 color: Theme.colorMaterialOrange
 

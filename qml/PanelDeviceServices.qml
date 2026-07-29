@@ -167,7 +167,7 @@ Item {
             text: qsTr("Clear")
             color: Theme.colorGrey
 
-            enabled: (selectedDevice.status < DeviceUtils.DEVICE_WORKING)
+            enabled: (selectedDevice && selectedDevice.status < DeviceUtils.DEVICE_WORKING)
             onClicked: {
                 selectedDevice.clearDeviceServices()
             }

@@ -39,7 +39,7 @@ Rectangle {
         ////////
 
         property int legendWidth: 64
-        property int legendHeight: 24
+        property int legendHeight: 28
 
         Component.onCompleted: {
             legendWidth = 64
