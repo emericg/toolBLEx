@@ -1020,7 +1020,8 @@ void DeviceManager::clearResults()
 }
 
 bool DeviceManager::exportResults(const QString &filename, int exportMode,
-                                  bool withManuf, bool withComment, bool withSeen)
+                                  bool withManuf, bool withComment, bool withSeen,
+                                  const QString &comment)
 {
     bool status = false;
 
@@ -1030,6 +1031,18 @@ bool DeviceManager::exportResults(const QString &filename, int exportMode,
     QString sep = QChar(',');
     QString sep_replace = QChar(' ');
     QString endl = QChar('\n');
+
+    // Capture comment, as commented out lines above the CSV content
+
+    if (!comment.trimmed().isEmpty())
+    {
+        exportString += "# Capture comment:" + endl;
+        const QStringList lines = comment.trimmed().split(QChar('\n'));
+        for (const auto &line: lines)
+        {
+            exportString += "# " + line.trimmed() + endl;
+        }
+    }
 
     // Legend
 

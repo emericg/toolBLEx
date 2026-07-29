@@ -31,6 +31,7 @@ Popup {
         cbAdvPackets.checked = true
         cbServices.checked = true
         cbData.checked = true
+        taComment.text = ""
 
         var foldersep = "/"
         if (SettingsManager.exportDirectory_str.substr(-1) === "/") foldersep = ""
@@ -288,6 +289,29 @@ Popup {
                 spacing: Theme.componentMarginS
 
                 Text {
+                    text: qsTr("Capture comment")
+                    textFormat: Text.PlainText
+                    font.pixelSize: Theme.fontSizeContent
+                    color: Theme.colorText
+                }
+
+                TextAreaThemed {
+                    id: taComment
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: Theme.componentHeight * 2
+
+                    wrapMode: Text.Wrap
+                    placeholderText: qsTr("Attach a comment to this capture")
+                }
+            }
+
+            Column {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                spacing: Theme.componentMarginS
+
+                Text {
                     text: qsTr("Select export file")
                     textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeContent
@@ -344,7 +368,8 @@ Popup {
                     onClicked: {
                         var status = selectedDevice.exportDeviceInfo(tfExportPath.text,
                                                                      cbGenericInfo.checked, cbAdvPackets.checked,
-                                                                     cbServices.checked, cbData.checked)
+                                                                     cbServices.checked, cbData.checked,
+                                                                     taComment.text)
                         if (status) {
                             buttonError.visible = false
                             popupExportDeviceData.close()

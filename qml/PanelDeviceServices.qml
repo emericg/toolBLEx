@@ -153,9 +153,26 @@ Item {
         anchors.margins: Theme.componentMarginXS
         spacing: Theme.componentMarginXS
 
-        ButtonSolid {
-            id: cacheButton
+        ButtonSolid { // loading
+            visible: (selectedDevice && selectedDevice.hasServices && !selectedDevice.servicesScanned &&
+                      selectedDevice.status >= DeviceUtils.DEVICE_WORKING)
 
+            text: qsTr("Scanning...")
+            color: Theme.colorGrey
+        }
+
+        ButtonSolid { // clearButton
+            visible: (selectedDevice && selectedDevice.hasServices && selectedDevice.servicesScanned)
+
+            text: qsTr("Clear")
+            color: Theme.colorGrey
+
+            enabled: (selectedDevice.status < DeviceUtils.DEVICE_WORKING)
+            onClicked: {
+                selectedDevice.clearDeviceServices()
+            }
+        }
+        ButtonSolid { // cacheButton
             visible: (selectedDevice && selectedDevice.hasServices && selectedDevice.servicesScanned)
 
             text: qsTr("Cache")
@@ -164,6 +181,18 @@ Item {
 
             onClicked: {
                 selectedDevice.saveServiceCache()
+            }
+        }
+        ButtonSolid { // saveButton
+            visible: (selectedDevice && selectedDevice.hasServices && selectedDevice.servicesScanned)
+
+            text: qsTr("Save")
+            color: Theme.colorGrey
+            source: "qrc:/IconLibrary/material-symbols/save.svg"
+
+            onClicked: {
+                popupLoader_export.active = true
+                popupLoader_export.item.open()
             }
         }
     }

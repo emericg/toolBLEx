@@ -94,6 +94,8 @@ public:
     bool containsCharacteristic(const QString &uuid);
     int getCharacteristicsCount() const { return m_characteristics.count(); }
 
+    void clearCharacteristicsData();
+
     QString getName() const;
     QString getUuidFull() const;
     QString getUuidShort() const;

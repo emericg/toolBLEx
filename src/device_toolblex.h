@@ -243,9 +243,9 @@ public:
     QVariant getServices() const { return QVariant::fromValue(m_services); }
     int getServicesCount() const { return m_services.count(); }
     int getServicesScanMode() const { return m_services_scanmode; }
-    bool getServicesCached() const { return (m_services_scanmode == 1 || m_services_scanmode == 2); }
-    bool getServicesScanning() const { return (m_services_scanmode == 4 || m_services_scanmode == 5); }
-    bool getServicesScanned() const { return (m_services_scanmode == 7 || m_services_scanmode == 8); }
+    bool getServicesCached() const { return (m_services_scanmode == srv_cached || m_services_scanmode == srv_cached_values); }
+    bool getServicesScanning() const { return (m_services_scanmode == srv_scanning || m_services_scanmode == srv_scanning_values); }
+    bool getServicesScanned() const { return (m_services_scanmode == srv_scanned || m_services_scanmode == srv_scanned_values); }
     bool areServicesReady() const { return m_areServiceReady; }
 
     int getCharacteristicsCount() const;
@@ -335,13 +335,18 @@ public:
 
     Q_INVOKABLE void clearAdvertisement();
 
+    Q_INVOKABLE void clearDeviceServices();
+
+    Q_INVOKABLE void clearDeviceServicesData();
+
     Q_INVOKABLE void clearDeviceLog();
 
     Q_INVOKABLE bool exportDeviceLog(const QString &filename);
 
     Q_INVOKABLE bool exportDeviceInfo(const QString &filename,
                                       bool withGenericInfo = true, bool withAdvertisements = true,
-                                      bool withServices = true, bool withValues = true);
+                                      bool withServices = true, bool withValues = true,
+                                      const QString &comment = QString());
 };
 
 /* ************************************************************************** */

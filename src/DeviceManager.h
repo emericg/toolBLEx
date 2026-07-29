@@ -269,7 +269,8 @@ public:
 
     Q_INVOKABLE void clearResults();
     Q_INVOKABLE bool exportResults(const QString &filename, int exportMode,
-                                   bool withManuf, bool withComment, bool withSeen);
+                                   bool withManuf, bool withComment, bool withSeen,
+                                   const QString &comment = QString());
 
     // Device saved
     int getDeviceSeenCached() const { return m_devicesSeenCachedCount; }

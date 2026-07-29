@@ -1018,6 +1018,56 @@ void DeviceToolBLEx::setAdvertisedServices(const QList <QBluetoothUuid> &service
 
 /* ************************************************************************** */
 
+void DeviceToolBLEx::clearDeviceServices()
+{
+    //qDebug() << "DeviceToolBLEx::clearDeviceServices(" << m_deviceAddress << ")";
+
+    if (m_services.isEmpty()) return;
+
+    // Do not delete services while there is activity on the device
+    if (m_ble_status >= DeviceUtils::DEVICE_WORKING) return;
+
+    logEvent("Services cleared", LogEvent::USER);
+
+    const QList <QObject *> old_services = m_services;
+    m_services.clear();
+
+    m_services_scanmode = srv_unscanned;
+    m_areServiceReady = false;
+
+    Q_EMIT servicesChanged();
+    Q_EMIT characteristicsChanged();
+
+    for (const auto &s: old_services)
+    {
+        if (s) s->deleteLater();
+    }
+}
+
+void DeviceToolBLEx::clearDeviceServicesData()
+{
+    //qDebug() << "DeviceToolBLEx::clearDeviceServicesData(" << m_deviceAddress << ")";
+
+    if (m_services.isEmpty()) return;
+
+    logEvent("Services data cleared", LogEvent::USER);
+
+    for (const auto &s: std::as_const(m_services))
+    {
+        ServiceInfo *srv = qobject_cast<ServiceInfo *>(s);
+        if (srv) srv->clearCharacteristicsData();
+    }
+
+    // We still have the service/characteristic structure, but no longer the values
+    if (m_services_scanmode == srv_cached_values) m_services_scanmode = srv_cached;
+    else if (m_services_scanmode == srv_incomplete_values) m_services_scanmode = srv_incomplete;
+    else if (m_services_scanmode == srv_scanned_values) m_services_scanmode = srv_scanned;
+
+    Q_EMIT servicesChanged();
+}
+
+/* ************************************************************************** */
+
 bool DeviceToolBLEx::checkServiceCache()
 {
     QString cachePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
@@ -1262,7 +1312,8 @@ bool DeviceToolBLEx::exportDeviceLog(const QString &filename)
 
 bool DeviceToolBLEx::exportDeviceInfo(const QString &filename,
                                       bool withGenericInfo, bool withAdvertisements,
-                                      bool withServices, bool withValues)
+                                      bool withServices, bool withValues,
+                                      const QString &comment)
 {
     bool status = false;
 
@@ -1283,6 +1334,14 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &filename,
         exportString += "Device MAC: " + getAddressUUID() + endl;
     }
     exportString += endl;
+
+    // Capture comment
+    if (!comment.trimmed().isEmpty())
+    {
+        exportString += "Capture comment:" + endl;
+        exportString += comment.trimmed() + endl;
+        exportString += endl;
+    }
 
     // Generic info
     if (withGenericInfo)

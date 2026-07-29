@@ -132,6 +132,26 @@ bool ServiceInfo::containsCharacteristic(const QString &uuid)
     return false;
 }
 
+void ServiceInfo::clearCharacteristicsData()
+{
+    for (const auto &c: std::as_const(m_characteristics))
+    {
+        CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
+        if (!cst) continue;
+
+        // Drop the value read from the device
+        cst->setValue(QByteArray());
+
+        // Drop the transient operation status, so no badge outlives the data
+        cst->setReadInProgress(false);
+        cst->setWriteInProgress(false);
+        cst->setNotifyInProgress(false);
+        cst->setReadInError(false);
+        cst->setWriteInError(false);
+        cst->setNotifyInError(false);
+    }
+}
+
 /* ************************************************************************** */
 
 void ServiceInfo::connectToService(QLowEnergyService::DiscoveryMode scanmode)
@@ -141,7 +161,8 @@ void ServiceInfo::connectToService(QLowEnergyService::DiscoveryMode scanmode)
     if (!m_ble_service) return;
     Q_EMIT stateUpdated();
 
-    if (m_ble_service->state() == QLowEnergyService::RemoteService)
+    if (m_ble_service->state() == QLowEnergyService::RemoteService ||
+        m_ble_service->state() == QLowEnergyService::RemoteServiceDiscovering)
     {
         connect(m_ble_service, &QLowEnergyService::stateChanged, this, &ServiceInfo::serviceDetailsDiscovered);
         connect(m_ble_service, &QLowEnergyService::errorOccurred, this, &ServiceInfo::serviceErrorOccured);
@@ -153,15 +174,13 @@ void ServiceInfo::connectToService(QLowEnergyService::DiscoveryMode scanmode)
         connect(m_ble_service, &QLowEnergyService::descriptorRead, this, &ServiceInfo::bleDescReadDone);
         connect(m_ble_service, &QLowEnergyService::descriptorWritten, this, &ServiceInfo::bleDescWriteDone);
 
+        if (m_ble_service->state() == QLowEnergyService::RemoteService)
+        {
         // Windows hack, see: QTBUG-80770 and QTBUG-78488
-        QTimer::singleShot(0, this, [=] () { m_ble_service->discoverDetails(scanmode); });
+            QTimer::singleShot(0, this, [=] () { m_ble_service->discoverDetails(scanmode); });
+        }
 
         return;
-    }
-
-    if (m_ble_service->state() == QLowEnergyService::RemoteServiceDiscovering)
-    {
-        //
     }
 
     if (m_ble_service->state() == QLowEnergyService::RemoteServiceDiscovered)
@@ -194,6 +213,8 @@ void ServiceInfo::serviceDetailsDiscovered(QLowEnergyService::ServiceState newSt
     QLowEnergyService::DiscoveringService	RemoteServiceDiscovering	Deprecated. Was renamed to RemoteServiceDiscovering.
     QLowEnergyService::ServiceDiscovered	RemoteServiceDiscovered	Deprecated. Was renamed to RemoteServiceDiscovered.
 */
+    Q_EMIT stateUpdated();
+
     if (newState != QLowEnergyService::RemoteServiceDiscovered)
     {
         // do not hang in "Scanning for characteristics" mode forever in case the service discovery failed

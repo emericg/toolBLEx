@@ -67,6 +67,11 @@ Rectangle {
                     TagClear { // serviceStatus
                         anchors.verticalCenter: parent.verticalCenter
                         text: modelData.serviceStatusStr
+                        color: {
+                            if (modelData.serviceStatus === 2) return Theme.colorPrimary // discovering
+                            if (modelData.serviceStatus === 3) return Theme.colorSuccess // discovered
+                            return Theme.colorSubText // remote, invalid, or from cache
+                        }
                     }
 
                     IconSvg { // expandIcon

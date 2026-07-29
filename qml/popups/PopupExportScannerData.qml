@@ -27,6 +27,11 @@ Popup {
     onAboutToShow: {
         buttonError.visible = false
 
+        //cbManufacturer.checked = true
+        //cbComment.checked = false
+        //cbSeen.checked = false
+        taComment.text = ""
+
         var foldersep = "/"
         if (SettingsManager.exportDirectory_str.substr(-1) === "/") foldersep = ""
 
@@ -256,6 +261,29 @@ Popup {
                 spacing: Theme.componentMarginS
 
                 Text {
+                    text: qsTr("Capture comment")
+                    textFormat: Text.PlainText
+                    font.pixelSize: Theme.fontSizeContent
+                    color: Theme.colorText
+                }
+
+                TextAreaThemed {
+                    id: taComment
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: Theme.componentHeight * 2
+
+                    wrapMode: Text.Wrap
+                    placeholderText: qsTr("Attach a comment to this capture")
+                }
+            }
+
+            Column {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                spacing: Theme.componentMarginS
+
+                Text {
                     text: qsTr("Select export file")
                     textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeContent
@@ -314,7 +342,8 @@ Popup {
                                                                  selectorExportMode.currentSelection,
                                                                  cbManufacturer.checked,
                                                                  cbComment.checked,
-                                                                 cbSeen.checked)
+                                                                 cbSeen.checked,
+                                                                 taComment.text)
                         if (status) {
                             buttonError.visible = false
                             popupExportScannerData.close()

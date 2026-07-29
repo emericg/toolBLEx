@@ -74,6 +74,7 @@ Item {
                 function onConnected() { menuInfo.blink() }
                 function onAdvertisementChanged() { menuAdv.blink() }
                 function onServicesChanged() { menuSrv.blink() }
+                function onCharacteristicsChanged() { menuSrv.blink() }
                 function onLogUpdated() { menuLog.blink() }
             }
 

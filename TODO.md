@@ -51,6 +51,11 @@
 [ ] graphs: auto/dynamic bands on sub 2 GHz view
 [x] graphs: 3D graph legend
 
+[x] add export comment
+[x] add scanning in progress in the device scanner
+[x] add export button next to cache button
+[x] add clear button next to cache button
+
 ## TODO # v1+
 
 [ ] device list multiselection?
