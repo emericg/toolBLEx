@@ -985,8 +985,6 @@ void Device::deviceDisconnected()
 
 void Device::deviceErrored(QLowEnergyController::Error error)
 {
-    if (error <= QLowEnergyController::NoError) return;
-    qWarning() << "Device::deviceErrored(" << getAddress() << ") error:" << error;
 /*
     QLowEnergyController::NoError	0	No error has occurred.
     QLowEnergyController::UnknownError	1	An unknown error has occurred.
@@ -999,6 +997,9 @@ void Device::deviceErrored(QLowEnergyController::Error error)
     QLowEnergyController::AuthorizationError (since Qt 5.14)	8	The local Bluetooth device closed the connection due to insufficient authorization.
     QLowEnergyController::MissingPermissionsError (since Qt 6.4)	9	The operating system requests permissions which were not granted by the user.
 */
+    if (error <= QLowEnergyController::NoError) return;
+    qWarning() << "Device::deviceErrored(" << getAddress() << ") error:" << error;
+
     m_timeoutTimer.stop();
     m_keepaliveTimer.stop();
 
@@ -1019,10 +1020,10 @@ void Device::deviceStateChanged(QLowEnergyController::ControllerState)
 
 void Device::deviceMtuChanged(int mtu)
 {
-    qDebug() << "Device::deviceMtuChanged(" << getAddress() << ") MTU:" << mtu;
-
     if (m_mtu != mtu)
     {
+        qDebug() << "Device::deviceMtuChanged(" << getAddress() << ") MTU:" << mtu;
+
         m_mtu = mtu;
         Q_EMIT mtuUpdated();
     }
@@ -1030,10 +1031,10 @@ void Device::deviceMtuChanged(int mtu)
 
 void Device::deviceRssiChanged(qint16 rssi)
 {
-    qDebug() << "Device::deviceRssiChanged(" << getAddress() << ") RSSI:" << rssi;
-
     if (m_rssi != rssi)
     {
+        //qDebug() << "Device::deviceRssiChanged(" << getAddress() << ") RSSI:" << rssi;
+
         m_rssi = rssi;
         Q_EMIT rssiUpdated();
     }

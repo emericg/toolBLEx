@@ -137,8 +137,8 @@ protected:
     QString m_deviceModel;
     QString m_deviceName;
 
-    QString m_deviceFirmware = "UNKN";
     int m_deviceBattery = -1;
+    QString m_deviceFirmware = "UNKN";
 
     // Db availability shortcuts
     bool m_dbInternal = false;

@@ -460,8 +460,8 @@ ApplicationWindow {
     Timer {
         id: disconnectTimer
         running: false
-        repeat: false
-        interval: 333
+        repeat: true
+        interval: 100
         onTriggered: {
             if (!deviceManager.areDevicesConnected() && !ubertooth.running && !rtlsdr.running) {
                 appWindow.close()
