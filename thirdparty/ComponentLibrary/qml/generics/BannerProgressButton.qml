@@ -1,10 +1,11 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Effects
+import QtQuick.Templates as T
 
 import ComponentLibrary
 
-Rectangle {
+T.Control {
     id: control
 
     // Standard anchors:
@@ -15,22 +16,24 @@ Rectangle {
     //anchors.bottom: parent.bottom
     //anchors.bottomMargin: Theme.componentMargin
 
-    height: 44
-    radius: 8
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            implicitContentWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             implicitContentHeight + topPadding + bottomPadding)
 
-    color: Theme.colorMaterialBlue
     //opacity: enabled ? 1 : 0.66
+    Behavior on opacity { OpacityAnimator { duration: Theme.animationMediumSpeed } }
 
-    layer.enabled: true
-    layer.effect: MultiEffect {
-        autoPaddingEnabled: true
-        shadowEnabled: true
-        shadowColor: Theme.colorComponentShadow
-    }
+    font.pixelSize: Theme.fontSizeContentBig
+    font.bold: false
 
     ////////////////
 
+    // settings
+    property int radius: 8
+
     // colors
+    property color colorBackground: Theme.colorMaterialBlue
     property color colorContent: "white"
 
     // icon
@@ -55,10 +58,24 @@ Rectangle {
 
     ////////////////
 
-    RowLayout {
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
+    background: Rectangle {
+        implicitWidth: 256
+        implicitHeight: Theme.componentHeightXL
+
+        radius: control.radius
+        color: control.colorBackground
+
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            autoPaddingEnabled: true
+            shadowEnabled: true
+            shadowColor: Theme.colorComponentShadow
+        }
+    }
+
+    ////////////////
+
+    contentItem: RowLayout {
 
         ////////
 
@@ -68,8 +85,7 @@ Rectangle {
 
             visible: control.source.toString().length
 
-            IconSvg {
-                id: workingIndicator
+            IconSvg { // workingIndicator
                 anchors.centerIn: parent
 
                 width: control.sourceSize
@@ -114,7 +130,8 @@ Rectangle {
 
             Text {
                 text: control.text
-                font.pixelSize: Theme.componentFontSize
+                textFormat: Text.PlainText
+                font: control.font
                 color: control.colorContent
             }
 
@@ -145,7 +162,9 @@ Rectangle {
 
             colorBackground: Theme.colorMaterialBlue
             colorText: control.colorContent
+
             text: control.textButton
+            font: control.font
 
             onClicked: control.clicked()
         }

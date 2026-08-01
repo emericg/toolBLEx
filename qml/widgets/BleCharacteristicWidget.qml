@@ -29,15 +29,20 @@ Rectangle {
 
     ////////////////
 
-    Rectangle {
+    Rectangle { // vertical bar
         anchors.top: col.top
         anchors.left: parent.left
         anchors.leftMargin: Theme.componentMargin + 2
         anchors.bottom: col.bottom
         width: 2
-        height: 128
-        color: Theme.colorSubText
         opacity: 0.8
+        color: Theme.colorSubText
+    }
+    Rectangle { // background
+        anchors.fill: col
+        anchors.leftMargin: -Theme.componentMargin + 2
+        opacity: 0.16
+        color: Theme.colorForeground
     }
 
     ////////////////
@@ -63,7 +68,7 @@ Rectangle {
 
         ////////
 
-        Row {
+        Row { // characteristic uuid
             spacing: 4
 
             Text {
@@ -71,7 +76,7 @@ Rectangle {
                 font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorSubText
             }
-            TextSelectable { // characteristic uuid
+            TextSelectable {
                 text: modelData.uuid_full
                 font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorText
@@ -80,7 +85,7 @@ Rectangle {
 
         ////////
 
-        Row {
+        Row { // characteristic properties
             spacing: 4
 
             Text {
@@ -89,7 +94,7 @@ Rectangle {
                 font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorSubText
             }
-            Repeater { // characteristic properties
+            Repeater {
                 anchors.verticalCenter: parent.verticalCenter
                 model: modelData.propertiesList
                 ItemActionTag {

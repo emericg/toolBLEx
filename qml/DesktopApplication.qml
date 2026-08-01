@@ -457,16 +457,38 @@ ApplicationWindow {
 
     // Exit ////////////////////////////////////////////////////////////////////
 
-    Timer {
-        id: disconnectTimer
-        running: false
-        repeat: true
-        interval: 100
-        onTriggered: {
-            if (!deviceManager.areDevicesConnected() && !ubertooth.running && !rtlsdr.running) {
-                appWindow.close()
-            }
+    BannerButton {
+        anchors.right: parent.right
+        anchors.rightMargin: Theme.componentMarginXL
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: Theme.componentMarginXL*2
+
+        visible: disconnectTimer.running
+        opacity: disconnectTimer.running ? 1 : 0
+
+        animation: "fade"
+        animationRunning: visible
+
+        text: qsTr("Disconnecting devices... Please Wait...")
+        textButton: qsTr("Exit now")
+
+        source: "qrc:/IconLibrary/material-icons/duotone/bluetooth_connected.svg"
+
+        onClicked: {
+            UtilsApp.appExit()
         }
+    }
+
+    Timer {
+       id: disconnectTimer
+       running: false
+       repeat: true
+       interval: 100
+       onTriggered: {
+           if (!deviceManager.areDevicesConnected() && !ubertooth.running && !rtlsdr.running) {
+               appWindow.close()
+           }
+       }
     }
 
     onClosing: (close) => {

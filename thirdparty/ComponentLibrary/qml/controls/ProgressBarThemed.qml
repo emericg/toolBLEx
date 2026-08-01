@@ -23,7 +23,6 @@ T.ProgressBar {
     background: Rectangle {
         implicitWidth: 200
         implicitHeight: 12
-        y: (control.height - height) / 2
         radius: control.radius
         color: control.colorBackground
         border.width: 1
@@ -43,7 +42,7 @@ T.ProgressBar {
             radius: control.radius
         }
 
-        layer.enabled: (control.roundedradius > 0)
+        layer.enabled: (control.radius > 0)
         layer.effect: MultiEffect {
             maskEnabled: true
             maskInverted: false

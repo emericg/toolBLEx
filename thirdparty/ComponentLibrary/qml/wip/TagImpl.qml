@@ -14,10 +14,10 @@ T.Control {
     leftPadding: 8
     rightPadding: 8
 
-    // settings
     font.pixelSize: Theme.componentFontSize
     font.bold: false
 
+    // settings
     property int radius: Theme.componentRadius
 
     // text

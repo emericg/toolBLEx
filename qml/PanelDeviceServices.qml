@@ -95,7 +95,7 @@ Item {
         clip: false
         visible: (selectedDevice && selectedDevice.servicesCount > 0)
 
-        boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
+        boundsBehavior: Flickable.OvershootBounds
         ScrollBar.vertical: ScrollBarThemed { policy: ScrollBar.AsNeeded; }
 
         header: Rectangle {

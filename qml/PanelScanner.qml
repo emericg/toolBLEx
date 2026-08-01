@@ -57,8 +57,9 @@ Item {
 
     ////////////////
 
-    Item {
+    Flickable {
         id: hostInfos
+
         anchors.top: actionBar.bottom
         anchors.left: parent.left
         anchors.right: parent.right
@@ -67,19 +68,16 @@ Item {
 
         visible: (hostMenu.currentSelection === 1)
 
-        Flickable {
-            anchors.fill: parent
+        contentWidth: -1
+        contentHeight: hostInfosColumn.height
 
-            contentWidth: -1
-            contentHeight: hostInfosColumn.height
+        boundsBehavior: Flickable.OvershootBounds
+        ScrollBar.vertical: ScrollBarThemed { policy: ScrollBar.AlwaysOff; }
 
-            boundsBehavior: Flickable.StopAtBounds
-            ScrollBar.vertical: ScrollBarThemed { policy: ScrollBar.AsNeeded; }
-
-            Column {
-                id: hostInfosColumn
-                anchors.left: parent.left
-                anchors.right: parent.right
+        Column {
+            id: hostInfosColumn
+            anchors.left: parent.left
+            anchors.right: parent.right
 
             spacing: Theme.componentMarginL
 
@@ -87,9 +85,8 @@ Item {
                 model: deviceManager.adaptersList
 
                 AdapterWidget {
-                        width: hostInfosColumn.width
+                    width: hostInfosColumn.width
                 }
-            }
             }
         }
     }

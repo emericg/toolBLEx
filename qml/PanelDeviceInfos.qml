@@ -20,7 +20,7 @@ Flickable {
     contentWidth: -1
     contentHeight: inflow.height
 
-    boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
+    boundsBehavior: Flickable.OvershootBounds
     ScrollBar.vertical: ScrollBar { policy: ScrollBar.AlwaysOff; }
 
     ////////////////
@@ -47,6 +47,7 @@ Flickable {
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.bottom: parent.bottom
+                anchors.margins: 1
 
                 width: 8
                 radius: 2

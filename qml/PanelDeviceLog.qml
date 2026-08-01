@@ -232,7 +232,7 @@ Item {
             anchors.fill: parent
             anchors.bottomMargin: columnLegendLeft.height + 16
 
-            //boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
+            //boundsBehavior: Flickable.OvershootBounds
             ScrollBar.vertical: ScrollBarThemed {
                 anchors.top: parent.top
                 anchors.right: parent.right
@@ -282,7 +282,7 @@ Item {
             anchors.fill: parent
             bottomMargin: columnLegendLeft.height + 16
 
-            boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
+            boundsBehavior: Flickable.OvershootBounds
             ScrollBar.vertical: ScrollBarThemed { policy: ScrollBar.AsNeeded; }
 
             model: (selectedDevice && selectedDevice.deviceLogModel)

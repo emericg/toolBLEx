@@ -19,6 +19,7 @@ Rectangle {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.bottom: parent.bottom
+        anchors.margins: 1
 
         width: 8
         radius: 2
