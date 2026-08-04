@@ -1,28 +1,14 @@
 # Binaries and build artifacts
-build/*
-bin/*
 contribs/*
 appdir/*
+build/*
+bin/*
 
-# Private signatures
-assets/ios/ios_signature.pri
-assets/macos/macos_signature.pri
-
-# QtCreator temporary project files
-toolBLEx.config
-toolBLEx.creator*
-toolBLEx.files
-toolBLEx.includes
-toolBLEx.pro.*
-
-# Qt Quick Compiler
+# QtQuick Compiler
 qrc_resources.cpp
 qmlcache_loader.cpp
 qml_*qml.cpp
-
-# QMake temporary project files
-Makefile
-.qmake.stash
+.qmlls.ini
 
 # CMake temporary project files
 CMakeLists.txt.user
@@ -30,7 +16,7 @@ CMakeLists.txt.user
 # XCode related
 Debug/*
 Release/*
-toolBLEx.xcodeproj/*
+*.xcodeproj/*
 asset_catalog_compiler.Info.plist
 
 # Others

@@ -1281,7 +1281,7 @@ Item {
             isLight = true
             isDark = false
 
-            themeStatusbar = Material.Dark
+            themeStatusbar = Theme.Dark
             colorStatusbar = "#944197"
 
             colorHeader                 = "#FFB4DC"

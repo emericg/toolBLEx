@@ -48,8 +48,8 @@ set(QT_QML_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 > TODO
 
 
-## Licensing
+## License
 
-This project is licensed under the [MIT license](LICENSE).
+This project is licensed under the [MIT license](LICENSE.md).
 
-> Copyright (c) 2026 Emeric Grange (emeric.grange@gmail.com)
+> Copyright (c) Emeric Grange <emeric.grange@gmail.com>
