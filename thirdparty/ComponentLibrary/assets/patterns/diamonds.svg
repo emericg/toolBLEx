@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+<g stroke="currentColor" stroke-width="1.5">
+  <line x1="-32" y1="0" x2="0" y2="32"/>
+  <line x1="-32" y1="32" x2="0" y2="0"/>
+  <line x1="0" y1="0" x2="32" y2="32"/>
+  <line x1="0" y1="32" x2="32" y2="0"/>
+  <line x1="32" y1="0" x2="64" y2="32"/>
+  <line x1="32" y1="32" x2="64" y2="0"/>
+</g>
+<g fill="currentColor" fill-opacity="0.45">
+  <polygon points="0,-4 4,0 0,4 -4,0"/>
+  <polygon points="32,-4 36,0 32,4 28,0"/>
+  <polygon points="0,28 4,32 0,36 -4,32"/>
+  <polygon points="32,28 36,32 32,36 28,32"/>
+  <polygon points="16,12 20,16 16,20 12,16"/>
+</g>
+</svg>

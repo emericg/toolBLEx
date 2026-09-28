@@ -147,9 +147,18 @@
         <file>material-symbols/hardware/electrical_services.svg</file>
         <file>material-symbols/hardware/gamepad.svg</file>
         <file>material-symbols/hardware/gamepad-fill.svg</file>
+        <file>material-symbols/hardware/hard_disk.svg</file>
+        <file>material-symbols/hardware/hard_drive.svg</file>
+        <file>material-symbols/hardware/hard_drive_2.svg</file>
+        <file>material-symbols/hardware/head_mounted_device.svg</file>
+        <file>material-symbols/hardware/head_mounted_device-fill.svg</file>
+        <file>material-symbols/hardware/headphones.svg</file>
         <file>material-symbols/hardware/headphones-fill.svg</file>
+        <file>material-symbols/hardware/headset_mic.svg</file>
         <file>material-symbols/hardware/headset_mic-fill.svg</file>
         <file>material-symbols/hardware/home_max.svg</file>
+        <file>material-symbols/hardware/jamboard_kiosk.svg</file>
+        <file>material-symbols/hardware/jamboard_kiosk-fill.svg</file>
         <file>material-symbols/hardware/joystick.svg</file>
         <file>material-symbols/hardware/joystick-fill.svg</file>
         <file>material-symbols/hardware/keyboard.svg</file>
@@ -182,12 +191,16 @@
         <file>material-symbols/hardware/speaker_phone-fill.svg</file>
         <file>material-symbols/hardware/sports_esports.svg</file>
         <file>material-symbols/hardware/sports_esports-fill.svg</file>
+        <file>material-symbols/hardware/stadia_controller.svg</file>
+        <file>material-symbols/hardware/stadia_controller-fill.svg</file>
         <file>material-symbols/hardware/switch.svg</file>
         <file>material-symbols/hardware/switch-fill.svg</file>
         <file>material-symbols/hardware/tv_gen.svg</file>
         <file>material-symbols/hardware/tv_gen-fill.svg</file>
         <file>material-symbols/hardware/tv_remote.svg</file>
         <file>material-symbols/hardware/tv_remote-fill.svg</file>
+        <file>material-symbols/hardware/watch.svg</file>
+        <file>material-symbols/hardware/watch-fill.svg</file>
 
         <file>material-symbols/location/distance.svg</file>
         <file>material-symbols/location/distance-fill.svg</file>
@@ -550,6 +563,8 @@
         <file>material-symbols/bluetooth_connected.svg</file>
         <file>material-symbols/bluetooth_disabled.svg</file>
         <file>material-symbols/bluetooth_searching.svg</file>
+        <file>material-symbols/bookmark_star.svg</file>
+        <file>material-symbols/bookmark_star-fill.svg</file>
         <file>material-symbols/bottom_panel_close-fill.svg</file>
         <file>material-symbols/bottom_panel_open-fill.svg</file>
         <file>material-symbols/bug_report.svg</file>
@@ -585,9 +600,11 @@
         <file>material-symbols/cloud_sync-fill.svg</file>
         <file>material-symbols/cloud_upload.svg</file>
         <file>material-symbols/collapse_content.svg</file>
+        <file>material-symbols/colors.svg</file>
         <file>material-symbols/communication.svg</file>
         <file>material-symbols/construction.svg</file>
         <file>material-symbols/content_copy.svg</file>
+        <file>material-symbols/content_copy-fill.svg</file>
         <file>material-symbols/content_cut.svg</file>
         <file>material-symbols/content_paste.svg</file>
         <file>material-symbols/create_new_folder.svg</file>
@@ -641,6 +658,7 @@
         <file>material-symbols/folder_supervised.svg</file>
         <file>material-symbols/folder_zip.svg</file>
         <file>material-symbols/forklift.svg</file>
+        <file>material-symbols/format_color_text.svg</file>
         <file>material-symbols/format_quote.svg</file>
         <file>material-symbols/format_quote-fill.svg</file>
         <file>material-symbols/fullscreen.svg</file>
@@ -658,12 +676,15 @@
         <file>material-symbols/input_circle.svg</file>
         <file>material-symbols/insert_chart.svg</file>
         <file>material-symbols/insert_chart-fill.svg</file>
+        <file>material-symbols/invert_colors.svg</file>
         <file>material-symbols/join.svg</file>
         <file>material-symbols/join_inner.svg</file>
         <file>material-symbols/join_left.svg</file>
         <file>material-symbols/join_right.svg</file>
         <file>material-symbols/key.svg</file>
         <file>material-symbols/key-fill.svg</file>
+        <file>material-symbols/kid_star.svg</file>
+        <file>material-symbols/kid_star-fill.svg</file>
         <file>material-symbols/label.svg</file>
         <file>material-symbols/label-fill.svg</file>
         <file>material-symbols/label_important.svg</file>
@@ -720,6 +741,8 @@
         <file>material-symbols/open_with.svg</file>
         <file>material-symbols/package_2.svg</file>
         <file>material-symbols/package_2-fill.svg</file>
+        <file>material-symbols/palette.svg</file>
+        <file>material-symbols/palette-fill.svg</file>
         <file>material-symbols/pan_zoom.svg</file>
         <file>material-symbols/password.svg</file>
         <file>material-symbols/pin.svg</file>
@@ -784,6 +807,10 @@
         <file>material-symbols/speed-fill.svg</file>
         <file>material-symbols/stacks.svg</file>
         <file>material-symbols/stacks-fill.svg</file>
+        <file>material-symbols/star.svg</file>
+        <file>material-symbols/star-fill.svg</file>
+        <file>material-symbols/star_half.svg</file>
+        <file>material-symbols/star_half-fill.svg</file>
         <file>material-symbols/stars.svg</file>
         <file>material-symbols/stars-fill.svg</file>
         <file>material-symbols/storage.svg</file>

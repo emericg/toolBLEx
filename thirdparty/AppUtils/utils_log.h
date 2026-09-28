@@ -188,10 +188,11 @@ public:
     static UtilsLog *getInstance();
     static UtilsLog *create(QQmlEngine *engine, QJSEngine *scriptEngine);
 
-    Q_INVOKABLE void setLogFile(const QString &path);
-
     bool isEnabled() const { return m_logging; }
     Q_INVOKABLE void setEnabled(const bool enabled, const bool enableModel = false, const bool enableString = false);
+
+    //!
+    Q_INVOKABLE void setLogFile(const QString &path);
 
     /*!
      * \brief Open (or create) the log file.

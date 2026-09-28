@@ -115,14 +115,16 @@ T.SpinBox {
                 inputMethodHints: Qt.ImhDigitsOnly
 
                 onEditingFinished: {
-                    //var v = parseInt(text)
-                    //if (text.length <= 0) v = control.from
-                    //if (isNaN(v)) v = control.from
-                    //if (v < control.from) v = control.from
-                    //if (v > control.to) v = control.to
+                    let v = parseInt(text)
+                    const lo = Math.min(control.from, control.to)
+                    const hi = Math.max(control.from, control.to)
+                    if (isNaN(v)) v = control.value
+                    v = Math.max(lo, Math.min(hi, v))
 
-                    //control.value = v
-                    //control.valueModified()
+                    if (v !== control.value) {
+                        control.value = v
+                        control.valueModified()
+                    }
 
                     control.focus = false
                     focus = false

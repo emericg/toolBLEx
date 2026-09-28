@@ -28,10 +28,11 @@ T.Slider {
 
     // colors
     property color colorBackground: Theme.colorForeground
-    property color colorBorder: Theme.colorComponentBorder
     property color colorForeground: Theme.colorPrimary
-    property color colorForegroundDisabled: Qt.tint(Theme.colorPrimary, "#44eeeeee")
     property color colorText: "white"
+
+    property color colorBorder: Qt.darker(colorBackground, 1.02)
+    property color colorForegroundDisabled: Qt.tint(colorForeground, "#44eeeeee")
 
     ////////////////
 

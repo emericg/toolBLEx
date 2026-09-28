@@ -3,12 +3,14 @@ import QtQuick
 import ComponentLibrary
 
 ButtonImpl {
-    colorBackground: Theme.colorBackground
-    colorHighlight: Qt.lighter(colorBackground, 0.92)
+    id: control
 
-    colorRipple: Qt.rgba(colorHighlight.r, colorHighlight.g, colorHighlight.b, 0.5)
-    colorBorder: colorBackground
-    colorText: Theme.colorText
+    colorBackground: Theme.colorBackground
+
+    colorHighlight: UtilsColor.emphasize(control.colorBackground)
+    colorRipple: UtilsColor.opacify(control.colorHighlight, 0.5)
+    colorBorder: control.colorBackground
+    colorText: UtilsColor.contrastColor(control.colorBackground)
 
     flat: true
 }

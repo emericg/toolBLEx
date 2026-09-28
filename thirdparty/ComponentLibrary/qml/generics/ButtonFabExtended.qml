@@ -33,7 +33,7 @@ T.Button {
     property bool extended: true
 
     // icon
-    property url source: "qrc:/IconLibrary/material-symbols/add.svg"
+    property url source: "qrc:/ComponentLibraryAssets/icons/add.svg"
     property int sourceSize: 24
     property int sourceRotation: 0
 

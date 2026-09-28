@@ -4,11 +4,11 @@ import ComponentLibrary
 
 SquareButtonImpl {
     colorBackground: Theme.colorBackground
-    colorHighlight: Qt.lighter(colorBackground, 0.92)
 
-    colorRipple: Qt.rgba(colorHighlight.r, colorHighlight.g, colorHighlight.b, 0.5)
+    colorHighlight: UtilsColor.emphasize(colorBackground)
+    colorRipple: UtilsColor.opacify(colorHighlight, 0.5)
     colorBorder: colorBackground
-    colorIcon: Theme.colorIcon
+    colorIcon: UtilsColor.contrastColor(colorBackground)
 
     flat: true
     radius: width / 2

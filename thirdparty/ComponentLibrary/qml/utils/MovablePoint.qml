@@ -12,8 +12,8 @@ Item {
     property color colorHighlight: Theme.colorPrimary
 
     property bool boundToParent: true
-    property bool boundHorizontal: false // when true, horizontal movement is locked
-    property bool boundVertical: false   // when true, vertical movement is locked
+    property bool boundVertical: false
+    property bool boundHorizontal: false
 
     property bool isMoving: false
     signal moved()
@@ -24,16 +24,10 @@ Item {
         height: 32
 
         hoverEnabled: true
-
-        // Offset between the point origin and the grab position, so the point
-        // doesn't jump under the cursor when grabbed away from its center.
-        property real grabOffsetX: 0
-        property real grabOffsetY: 0
+        property point beginDrag
 
         onPressed: (mouse) => {
-            var m = mapToItem(control.parent, mouse.x, mouse.y)
-            grabOffsetX = control.x - m.x
-            grabOffsetY = control.y - m.y
+            beginDrag = mapToItem(control.parent, mouse.x, mouse.y)
             control.isMoving = true
         }
         onReleased: {
@@ -43,24 +37,30 @@ Item {
             control.isMoving = false
         }
         onPositionChanged: (mouse) => {
-            if (!control.isMoving) return
+            if (control.isMoving) {
+                var globalMouse = mapToItem(control.parent, mouse.x, mouse.y)
+                //console.log("mouse > " + globalMouse.x + " " + globalMouse.y)
 
-            var m = mapToItem(control.parent, mouse.x, mouse.y)
-            var xWas = control.x
-            var yWas = control.y
+                var xWas = control.x
+                var yWas = control.y
 
-            if (!control.boundHorizontal) {
-                var nx = m.x + grabOffsetX
-                if (control.boundToParent) nx = Math.max(0, Math.min(nx, control.parent.width))
-                control.x = nx
+                if (!control.boundVertical) {
+                    if (control.boundToParent) {
+                        if (globalMouse.x < 0) control.x = 0
+                        else if (globalMouse.x > control.parent.width) control.x = control.parent.width
+                        else control.x = globalMouse.x
+                    }
+                }
+                if (!control.boundHorizontal) {
+                    if (control.boundToParent) {
+                        if (globalMouse.y < 0) control.y = 0
+                        else if (globalMouse.y > control.parent.height) control.y = control.parent.height
+                        else control.y = globalMouse.y
+                    }
+                }
+
+                if (control.x != xWas || control.y != yWas) control.moved()
             }
-            if (!control.boundVertical) {
-                var ny = m.y + grabOffsetY
-                if (control.boundToParent) ny = Math.max(0, Math.min(ny, control.parent.height))
-                control.y = ny
-            }
-
-            if (control.x !== xWas || control.y !== yWas) control.moved()
         }
 
         Rectangle {
@@ -71,7 +71,7 @@ Item {
 
             color: control.colorHighlight
             opacity: (parent.containsMouse || parent.pressed) ? 0.333 : 0
-            Behavior on opacity { NumberAnimation { duration: Theme.animationFastSpeed } }
+            Behavior on opacity { NumberAnimation { duration: Theme.animationSpeedFast } }
         }
         Rectangle {
             anchors.centerIn: parent

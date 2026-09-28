@@ -20,8 +20,8 @@ T.Control {
     property real zoomLevel_maximum: 20
 
     // icon
-    property url sourceIn: "../../assets/icons/add.svg"
-    property url sourceOut: "../../assets/icons/remove.svg"
+    property url sourceIn: "qrc:/ComponentLibraryAssets/icons/add.svg"
+    property url sourceOut: "qrc:/ComponentLibraryAssets/icons/remove.svg"
     property int sourceSize: UtilsNumber.alignTo(width * 0.5, 2)
     property int sourceRotation: 0
 

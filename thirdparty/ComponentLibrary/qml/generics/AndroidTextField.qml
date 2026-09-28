@@ -37,7 +37,7 @@ T.TextField {
     property string title: ""
 
     // colors
-    property color colorText: Theme.colorComponentContent
+    property color colorText: UtilsColor.contrastColorThemed(colorBackground)
     property color colorPlaceholderText: Theme.colorSubText
     property color colorBorder: Theme.colorSubText
     property color colorBackground: Theme.colorBackground
@@ -55,7 +55,7 @@ T.TextField {
 
         text: control.placeholderText
         font: control.font
-        color: control.placeholderTextColor
+        color: control.colorPlaceholderText
         verticalAlignment: control.verticalAlignment
         visible: !control.length && !control.preeditText && (!control.activeFocus || control.horizontalAlignment !== Qt.AlignHCenter)
         elide: Text.ElideRight

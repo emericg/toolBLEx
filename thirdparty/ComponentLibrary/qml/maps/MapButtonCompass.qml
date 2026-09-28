@@ -13,8 +13,8 @@ T.Button {
     focusPolicy: Qt.NoFocus
 
     // icon
-    property url source_top: "../../assets/maps/compass_top.svg"
-    property url source_bottom: "../../assets/maps/compass_bottom.svg"
+    property url source_top: "qrc:/ComponentLibraryAssets/maps/compass_top.svg"
+    property url source_bottom: "qrc:/ComponentLibraryAssets/maps/compass_bottom.svg"
     property int sourceSize: UtilsNumber.alignTo(height * 0.8, 2)
     property int sourceRotation: 0
 

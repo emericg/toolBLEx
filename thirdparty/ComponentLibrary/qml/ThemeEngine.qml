@@ -2,7 +2,9 @@ pragma Singleton
 
 import QtQuick
 
-Item {
+QtObject {
+    id: themeEngine
+
     ////////////////////////////////////////////////////////////////////////////
 
     enum ThemeNames {
@@ -11,8 +13,6 @@ Item {
         // Generic mobile themes
         THEME_MOBILE_LIGHT,
         THEME_MOBILE_DARK,
-        THEME_MATERIAL_LIGHT,
-        THEME_MATERIAL_DARK,
 
         // Generic desktop themes
         THEME_DESKTOP_LIGHT,
@@ -32,6 +32,11 @@ Item {
         THEME_BLOOD_AND_TEARS,
         THEME_MIGHTY_KITTENS,
 
+        // OS themes
+        THEME_ADWAITA,
+        THEME_MACOS,
+        THEME_WINDOWS,
+
         THEME_LAST
     }
     property int currentTheme: -1
@@ -49,7 +54,7 @@ Item {
     // Bind these from the calling application OR set values directly here
 
     // Theme engine
-    property string appTheme // "THEME_DEFAULT"
+    property string appTheme: "THEME_DEFAULT"
     property bool appThemeAuto: false
     property int appThemeAutoMethod: 0
 
@@ -71,6 +76,10 @@ Item {
     property int screenPaddingLeft: 0
     property int screenPaddingRight: 0
     property int screenPaddingBottom: 0
+
+    // Desktop CSD window settings
+    property int windowBorders: 0
+    property int windowCornersRadius: 0
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -105,17 +114,24 @@ Item {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    // Base font size, inherited from the OS / desktop environment
-
+    /*!
+     * \brief Base font size (in pixels), inherited from the OS / desktop environment.
+     */
     readonly property real fontSizeOS: {
-        let osfont = Qt.application.font
         //console.log("Qt.application.font > " + osfont)
 
-        var fontsize = isMobile ? 14 : 13 // default values
+        // Set default values
+        var fontsize = isMobile ? 16 : 13
+
+        // Read os font size
+        let osfont = Qt.application.font
         if (osfont.pixelSize > 0) fontsize = osfont.pixelSize
         else if (osfont.pointSize > 0) fontsize = ((osfont.pointSize * screenDpiLogical) / 72.0)
 
-        if (fontsize < 11) fontsize = 11 // sanity check
+        // Sanity checks...
+        if (isMobile && fontsize < 15) fontsize = 15
+        else if (fontsize < 11) fontsize = 11
+
         return fontsize
     }
 
@@ -174,10 +190,14 @@ Item {
     readonly property int animationMediumSpeed: 233
     readonly property int animationSlowSpeed: 333
 
+    readonly property int animationSpeedFast: 133
+    readonly property int animationSpeedMedium: 233
+    readonly property int animationSpeedSlow: 333
+
     // Fonts sizes (in pixel)
 
-    readonly property int fontSizeHeader: Math.round(fontSizeOS * (isMobile ? 1.40 : 1.65))
     readonly property int fontSizeTitle: Math.round(fontSizeOS * (isMobile ? 1.55 : 1.80))
+    readonly property int fontSizeHeader: Math.round(fontSizeOS * (isMobile ? 1.40 : 1.65))
     readonly property int fontSizeContentVeryVerySmall: Math.round(fontSizeOS - 6)
     readonly property int fontSizeContentVerySmall: Math.round(fontSizeOS - 4)
     readonly property int fontSizeContentSmall: Math.round(fontSizeOS - 2)
@@ -194,24 +214,56 @@ Item {
     property color colorComponentBorder
     property color colorComponentDown
     property color colorComponentBackground
-    property color colorComponentShadow: isLight ? "#40000000" : "#88000000"
+    property color colorComponentShadow: isLight ? "#30000000" : "#60000000"
 
     property int componentRadius: 4
     property int componentBorderWidth: 2
 
     property int componentFontSize: Math.round(fontSizeOS)
 
-    property int componentMarginXS: 8
-    property int componentMarginS: 12
-    property int componentMargin: 16
-    property int componentMarginL: 20
-    property int componentMarginXL: 24
+    property int componentMarginXXS: 4
+    property int componentMarginXS: isHdpi ? 4 : 8
+    property int componentMarginS: isHdpi ? 8 : 12
+    property int componentMargin: isHdpi ? 12 : 16
+    property int componentMarginL: isHdpi ? 16 : 20
+    property int componentMarginXL: isHdpi ? 20 : 24
+    property int componentMarginXXL: isHdpi ? 28 : 32
 
-    property int componentHeightXS: isDesktop ? 28 : 32
-    property int componentHeightS: isDesktop ? 32 : 36
-    property int componentHeight: isDesktop ? 36 : 40
-    property int componentHeightL: isDesktop ? 40 : 44
-    property int componentHeightXL: isDesktop ? 44 : 48
+    property int componentHeightXXS: {
+        if (isDesktop && isHdpi) return 20
+        if (isDesktop) return 22
+        return 24
+    }
+    property int componentHeightXS: {
+        if (isDesktop && isHdpi) return 24
+        if (isDesktop) return 26
+        return 28
+    }
+    property int componentHeightS: {
+        if (isDesktop && isHdpi) return 28
+        if (isDesktop) return 30
+        return 32
+    }
+    property int componentHeight: {
+        if (isDesktop && isHdpi) return 34
+        if (isDesktop) return 38
+        return 40
+    }
+    property int componentHeightL: {
+        if (isDesktop && isHdpi) return 40
+        if (isDesktop) return 44
+        return 48
+    }
+    property int componentHeightXL: {
+        if (isDesktop && isHdpi) return 44
+        if (isDesktop) return 48
+        return 52
+    }
+    property int componentHeightXXL: {
+        if (isDesktop && isHdpi) return 56
+        if (isDesktop) return 64
+        return 64
+    }
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -277,9 +329,6 @@ Item {
         if (name === "THEME_MOBILE_LIGHT") return Theme.THEME_MOBILE_LIGHT
         if (name === "THEME_MOBILE_DARK") return Theme.THEME_MOBILE_DARK
 
-        if (name === "THEME_MATERIAL_LIGHT") return Theme.THEME_MATERIAL_LIGHT
-        if (name === "THEME_MATERIAL_DARK") return Theme.THEME_MATERIAL_DARK
-
         if (name === "THEME_DESKTOP_LIGHT") return Theme.THEME_DESKTOP_LIGHT
         if (name === "THEME_DESKTOP_DARK") return Theme.THEME_DESKTOP_DARK
 
@@ -295,15 +344,16 @@ Item {
         if (name === "THEME_BLOOD_AND_TEARS") return Theme.THEME_BLOOD_AND_TEARS
         if (name === "THEME_MIGHTY_KITTENS") return Theme.THEME_MIGHTY_KITTENS
 
+        if (name === "THEME_ADWAITA") return Theme.THEME_ADWAITA
+        if (name === "THEME_MACOS") return Theme.THEME_MACOS
+        if (name === "THEME_WINDOWS") return Theme.THEME_WINDOWS
+
         return -1
     }
 
     function getThemeName(index) {
         if (index === Theme.THEME_MOBILE_LIGHT) return "THEME_MOBILE_LIGHT"
         if (index === Theme.THEME_MOBILE_DARK) return "THEME_MOBILE_DARK"
-
-        if (index === Theme.THEME_MATERIAL_LIGHT) return "THEME_MATERIAL_LIGHT"
-        if (index === Theme.THEME_MATERIAL_DARK) return "THEME_MATERIAL_DARK"
 
         if (index === Theme.THEME_DESKTOP_LIGHT) return "THEME_DESKTOP_LIGHT"
         if (index === Theme.THEME_DESKTOP_DARK) return "THEME_DESKTOP_DARK"
@@ -320,6 +370,10 @@ Item {
         if (index === Theme.THEME_BLOOD_AND_TEARS) return "THEME_BLOOD_AND_TEARS"
         if (index === Theme.THEME_MIGHTY_KITTENS) return "THEME_MIGHTY_KITTENS"
 
+        if (index === Theme.THEME_ADWAITA) return "THEME_ADWAITA"
+        if (index === Theme.THEME_MACOS) return "THEME_MACOS"
+        if (index === Theme.THEME_WINDOWS) return "THEME_WINDOWS"
+
         return ""
     }
 
@@ -330,6 +384,10 @@ Item {
     onAppThemeAutoChanged: loadTheme(appTheme)
     onAppThemeAutoMethodChanged: loadTheme(appTheme)
 
+    /*!
+     * \brief Theme loader.
+     * \param newTheme The theme name, as listed in \c getThemeIndex().
+     */
     function loadTheme(newTheme) {
         //console.log("Theme.loadTheme(" + newTheme + ")")
 
@@ -342,12 +400,13 @@ Item {
         }
 
         // Validate the result
-        if (themeIndex === Theme.THEME_DEFAULT) { // set the default
+        if (themeIndex <= Theme.THEME_DEFAULT || themeIndex >= Theme.THEME_LAST) {
+            // set the default
             if (isDesktop) themeIndex = Theme.THEME_DESKTOP_LIGHT
             else if (isMobile) themeIndex = Theme.THEME_MOBILE_LIGHT
         }
-        if (themeIndex <= 0 || themeIndex >= Theme.THEME_LAST) { // or exit
-            return
+        if (themeIndex <= 0 || themeIndex >= Theme.THEME_LAST) {
+            return // or exit
         }
 
         // Handle day/night themes
@@ -360,13 +419,10 @@ Item {
 
             if (needSwitch) {
 
-                // Simple light/dark toggle
+                // Simple light > dark toggle
 
                 if (themeIndex === Theme.THEME_MOBILE_LIGHT)
                     themeIndex = Theme.THEME_MOBILE_DARK
-
-                if (themeIndex === Theme.THEME_MATERIAL_LIGHT)
-                    themeIndex = Theme.THEME_MATERIAL_DARK
 
                 if (themeIndex === Theme.THEME_DESKTOP_LIGHT)
                     themeIndex = Theme.THEME_DESKTOP_DARK
@@ -383,22 +439,24 @@ Item {
                     themeIndex === Theme.THEME_PLAIN_AND_BORING)
                     themeIndex = Theme.THEME_DARK_AND_SPOOKY
 
+                if (themeIndex === Theme.THEME_ADWAITA ||
+                    themeIndex === Theme.THEME_MACOS ||
+                    themeIndex === Theme.THEME_WINDOWS)
+                    themeIndex = Theme.THEME_DESKTOP_DARK
+
                 // theme doesn't have a dark variant set? just don't change the theme...
 
             } else {
 
-                // Simple light/dark toggle
+                // Simple dark > light toggle
 
                 if (themeIndex === Theme.THEME_MOBILE_DARK)
                     themeIndex = Theme.THEME_MOBILE_LIGHT
 
-                if (themeIndex === Theme.THEME_MATERIAL_DARK)
-                    themeIndex = Theme.THEME_MATERIAL_LIGHT
-
                 if (themeIndex === Theme.THEME_DESKTOP_DARK)
                     themeIndex = Theme.THEME_DESKTOP_LIGHT
 
-                // that's it
+                // that's it // we don't handle complex cases
 
             }
         }
@@ -419,122 +477,10 @@ Item {
             isDark = false
 
             themeStatusbar = Theme.Light
-            colorStatusbar = "#eeeeee"
-
-            colorHeader                 = "#eeeeee"
-            colorHeaderContent          = "#ff7b36"
-            colorHeaderHighlight        = "white"
-
-            colorSidebar                = "#f2f2f2"
-            colorSidebarContent         = "#eaeaea"
-            colorSidebarHighlight       = "#c0c0c0"
-
-            colorActionbar              = colorGreen
-            colorActionbarContent       = "white"
-            colorActionbarHighlight     = "#00a27d"
-
-            colorTabletmenu             = "#f3f3f3"
-            colorTabletmenuContent      = "#9d9d9d"
-            colorTabletmenuHighlight    = colorMaterialDeepOrange // "#ff7b36"
-
-            colorBackground             = colorMaterialLightGrey
-            colorForeground             = "#f0f0f0"
-
-            colorPrimary                = colorMaterialDeepOrange // colorRed
-            colorSecondary              = colorMaterialOrange // "#ff7b36"
-            colorSuccess                = colorGreen
-            colorWarning                = colorOrange
-            colorError                  = colorRed
-
-            colorText                   = "#303030"
-            colorSubText                = "#666666"
-            colorIcon                   = "#303030"
-            colorSeparator              = "#ececec"
-            colorLowContrast            = "white"
-            colorHighContrast           = "#303030"
-
-            colorComponent              = "#f0f0f0"
-            colorComponentText          = "black"
-            colorComponentContent       = "black"
-            colorComponentBorder        = "#e0e0e0"
-            colorComponentDown          = "#e9e9e9"
-            colorComponentBackground    = "white"
-
-            componentRadius             = 6
-            componentBorderWidth        = 2
-
-        } else if (themeIndex === Theme.THEME_MOBILE_DARK) { ///////////////////
-
-            colorGreen  = "#58CF77"
-            colorBlue   = "#4dceeb"
-            colorYellow = "#fcc632"
-            colorOrange = "#ff7657"
-            colorRed    = "#e8635a"
-
-            isLight = false
-            isDark = true
-
-            themeStatusbar = Theme.Dark
-            colorStatusbar = "#292929"
-
-            colorHeader                 = "#292929"
-            colorHeaderContent          = "#ee8c21"
-            colorHeaderHighlight        = "#444"
-
-            colorSidebar                = "#333"
-            colorSidebarContent         = "#444"
-            colorSidebarHighlight       = "#666"
-
-            colorActionbar              = colorGreen
-            colorActionbarContent       = "white"
-            colorActionbarHighlight     = "#00a27d"
-
-            colorTabletmenu             = "#292929"
-            colorTabletmenuContent      = "#808080"
-            colorTabletmenuHighlight    = "#ff9f1a"
-
-            colorBackground             = "#313236"
-            colorForeground             = "#292929"
-
-            colorPrimary                = "#ff9f1a"
-            colorSecondary              = "#ffb81a"
-            colorSuccess                = colorGreen
-            colorWarning                = colorOrange
-            colorError                  = colorRed
-
-            colorText                   = "white"
-            colorSubText                = "#aaa"
-            colorIcon                   = "#ddd"
-            colorSeparator              = "#404040"
-            colorLowContrast            = "black"
-            colorHighContrast           = "white"
-
-            colorComponent              = "#666"
-            colorComponentText          = "#eee"
-            colorComponentContent       = "white"
-            colorComponentBorder        = "#666"
-            colorComponentDown          = "#444"
-            colorComponentBackground    = "#505050"
-
-            componentRadius             = 6
-            componentBorderWidth        = 2
-
-        } else if (themeIndex === Theme.THEME_MATERIAL_LIGHT) { ////////////////
-
-            colorGreen  = "#07bf97"
-            colorBlue   = "#4CA1D5"
-            colorYellow = "#ffba5a"
-            colorOrange = "#ff863a"
-            colorRed    = "#ff523a"
-
-            isLight = true
-            isDark = false
-
-            themeStatusbar = Theme.Light
             colorStatusbar = "white"
 
             colorHeader                 = "white"
-            colorHeaderContent          = "#1a73e8"
+            colorHeaderContent          = "#684be2"
             colorHeaderHighlight        = "white"
 
             colorSidebar                = "#fafafa"
@@ -545,15 +491,15 @@ Item {
             colorActionbarContent       = "white"
             colorActionbarHighlight     = "#00a27d"
 
-            colorTabletmenu             = "#f3f3f3"
+            colorTabletmenu             = "#f7f6f9"
             colorTabletmenuContent      = "#888"
             colorTabletmenuHighlight    = colorMaterialDeepOrange
 
             colorBackground             = "white"
-            colorForeground             = "#f9f9f9"
+            colorForeground             = "#f3f5f9"
 
-            colorPrimary                = "#1a73e8"
-            colorSecondary              = "#ff7b36"
+            colorPrimary                = "#684be2"
+            colorSecondary              = "#a08afa"
             colorSuccess                = colorGreen
             colorWarning                = colorOrange
             colorError                  = colorRed
@@ -575,7 +521,7 @@ Item {
             componentRadius             = 6
             componentBorderWidth        = 2
 
-        } else if (themeIndex === Theme.THEME_MATERIAL_DARK) { /////////////////
+        } else if (themeIndex === Theme.THEME_MOBILE_DARK) { ///////////////////
 
             colorGreen  = "#58CF77"
             colorBlue   = "#4dceeb"
@@ -655,37 +601,42 @@ Item {
             colorSidebarHighlight       = "#c0c0c0"
 
             colorActionbar              = "#eaeaea"
-            colorActionbarContent       = "#eaeaea"
+            colorActionbarContent       = "black"
             colorActionbarHighlight     = "#dadada"
 
-            colorTabletmenu             = "#ffffff"
+            colorTabletmenu             = "white"
             colorTabletmenuContent      = "#9d9d9d"
             colorTabletmenuHighlight    = "#cfcbcb"
 
-            colorBackground             = "#f9f8f7"
-            colorForeground             = "#f3f3f3"
+            colorBackground             = "#fcfbfa"
+            colorForeground             = "#f5f4f3"
 
-            colorPrimary                = "#ffc900"
+            //colorPrimary                = "#6640d8" // purple
+            //colorSecondary              = "#ffeb00"
+            colorPrimary                = "#ffc900" // yellow
             colorSecondary              = "#ffeb00"
+            //colorPrimary                = "#27ba72" // green
+            //colorSecondary              = "#ffeb00"
+
             colorSuccess                = colorGreen
             colorWarning                = colorOrange
             colorError                  = colorRed
 
             colorText                   = "#373737"
-            colorSubText                = "#666666"
+            colorSubText                = "#666"
             colorIcon                   = "#373737"
             colorSeparator              = "#e8e8e8"
             colorLowContrast            = "white"
             colorHighContrast           = "#303030"
 
-            colorComponent              = "#eaeaea"
+            colorComponent              = "#ededed"
             colorComponentText          = "black"
             colorComponentContent       = "black"
-            colorComponentBorder        = "#ddd"
-            colorComponentDown          = "#dadada"
-            colorComponentBackground    = "#fcfcfc"
+            colorComponentBorder        = "#e0e0e0"
+            colorComponentDown          = "#eee"
+            colorComponentBackground    = "#fff"
 
-            componentRadius             = 6
+            componentRadius             = 4
             componentBorderWidth        = 2
 
             // (app)
@@ -715,12 +666,12 @@ Item {
             themeStatusbar              = Theme.Dark
             colorStatusbar              = "#b16bee"
 
-            colorHeader                 = "#b16bee"
+            colorHeader                 = "#252024"
             colorHeaderContent          = "white"
             colorHeaderHighlight        = "#725595"
 
-            colorSidebar                = "#373949"
-            colorSidebarContent         = "#494a5a"
+            colorSidebar                = "#202020"
+            colorSidebarContent         = "#292929"
             colorSidebarHighlight       = "#1f254a"
 
             colorActionbar              = "#252024"
@@ -754,7 +705,7 @@ Item {
             colorComponentDown          = "#595959"
             colorComponentBackground    = "#393939"
 
-            componentRadius             = 6
+            componentRadius             = 4
             componentBorderWidth        = 2
 
             // (app)
@@ -795,7 +746,7 @@ Item {
             colorActionbarContent       = "white"
             colorActionbarHighlight     = "#7ab800"
 
-            colorTabletmenu             = "#ffffff"
+            colorTabletmenu             = "white"
             colorTabletmenuContent      = "#9d9d9d"
             colorTabletmenuHighlight    = "#0079fe"
 
@@ -809,7 +760,7 @@ Item {
             colorError                  = colorRed
 
             colorText                   = "#474747"
-            colorSubText                = "#666666"
+            colorSubText                = "#666"
             colorIcon                   = "#474747"
             colorSeparator              = colorMaterialDarkGrey
             colorLowContrast            = "white"
@@ -867,9 +818,9 @@ Item {
             colorWarning                = colorOrange
             colorError                  = colorRed
 
-            colorText                   = "#333333"
-            colorSubText                = "#666666"
-            colorIcon                   = "#333333"
+            colorText                   = "#333"
+            colorSubText                = "#666"
+            colorIcon                   = "#333"
             colorSeparator              = "#e8e8e8"
             colorLowContrast            = "white"
             colorHighContrast           = "#303030"
@@ -1088,10 +1039,10 @@ Item {
             colorTabletmenuContent      = "#9d9d9d"
             colorTabletmenuHighlight    = "#0079fe"
 
-            colorBackground             = "#F4F4F4"
-            colorForeground             = "#E9E9E9"
+            colorBackground             = "#F8F8F8"
+            colorForeground             = "#E8E8E8"
 
-            colorPrimary                = "#FFCA28"
+            colorPrimary                = "#f9c700"
             colorSecondary              = "#FFDD28"
             colorSuccess                = "#8CD200"
             colorWarning                = "#FFAC00"
@@ -1100,18 +1051,18 @@ Item {
             colorText                   = "#222"
             colorSubText                = "#555"
             colorIcon                   = "#333"
-            colorSeparator              = "#E4E4E4"
+            colorSeparator              = "#ececec"
             colorLowContrast            = "white"
             colorHighContrast           = "#303030"
 
-            colorComponent              = "#EAEAEA"
+            colorComponent              = "#ededed"
             colorComponentText          = "black"
             colorComponentContent       = "black"
-            colorComponentBorder        = "#DDD"
+            colorComponentBorder        = "#e0e0e0"
             colorComponentDown          = "#E6E6E6"
             colorComponentBackground    = "#FAFAFA"
 
-            componentRadius             = 6
+            componentRadius             = 4
             componentBorderWidth        = 2
 
             // (app)
@@ -1144,8 +1095,11 @@ Item {
             colorBackground             = "#3F3F3F"
             colorForeground             = "#555555"
 
-            colorPrimary                = "#FF9F1A" // indigo: "#6C5ECD"
-            colorSecondary              = "#FFB81A" // indigo2: "#9388E5"
+            colorPrimary                = "#FF9F1A" // pumpkin
+            colorSecondary              = "#FFB81A"
+            //colorPrimary                = "#6C5ECD" // indigo
+            //colorSecondary              = "#9388E5"
+
             colorSuccess                = colorMaterialLightGreen
             colorWarning                = "#FE8F2D"
             colorError                  = "#D33E39"
@@ -1182,7 +1136,7 @@ Item {
             colorHeaderContent          = "#444"
             colorHeaderHighlight        = Qt.darker(colorHeader, 1.08)
 
-            colorSidebar                = "#f6f6f6"
+            colorSidebar                = "#f4f4f4"
             colorSidebarContent         = "#e9e9e9"
             colorSidebarHighlight       = "#c0c0c0"
 
@@ -1197,15 +1151,15 @@ Item {
             colorBackground             = "#fefefe"
             colorForeground             = "#f6f6f6"
 
-            colorPrimary                = "#ffca28"
+            colorPrimary                = "#2d8eff"
             colorSecondary              = "#ffdb28"
             colorSuccess                = colorMaterialLightGreen
             colorWarning                = "#ffac00"
             colorError                  = "#dc4543"
 
-            colorText                   = "#222222"
-            colorSubText                = "#555555"
-            colorIcon                   = "#333333"
+            colorText                   = "#222"
+            colorSubText                = "#555"
+            colorIcon                   = "#333"
             colorSeparator              = "#e4e4e4"
             colorLowContrast            = "white"
             colorHighContrast           = "black"
@@ -1213,7 +1167,7 @@ Item {
             colorComponent              = "#f5f5f5"
             colorComponentText          = "black"
             colorComponentContent       = "black"
-            colorComponentBorder        = "#ddd"
+            colorComponentBorder        = "#edeef1"
             colorComponentDown          = "#eee"
             colorComponentBackground    = "#f8f8f8"
 
@@ -1328,6 +1282,213 @@ Item {
 
             // (app)
             sidebarSelector             = ""
+
+        } else if (themeIndex === Theme.THEME_ADWAITA) { ///////////////////////
+
+            colorRed    = "#ff7657"
+            colorGreen  = "#85c700"
+            colorBlue   = "#4cafe9"
+            colorYellow = "#ffcf00"
+            colorOrange = "#ffa635"
+            colorGrey   = "#9E9E9E"
+
+            isLight = true
+            isDark = false
+
+            themeStatusbar = Theme.Light
+            colorStatusbar = "#f1f0ef"
+
+            colorHeader                 = "#f2f2f4"
+            colorHeaderContent          = "#444"
+            colorHeaderHighlight        = "#e2e1df"
+
+            colorSidebar                = "#ebebed"
+            colorSidebarContent         = "#f2f2f4"
+            colorSidebarHighlight       = "#dfdfe1"
+
+            colorActionbar              = "#eaeaea"
+            colorActionbarContent       = "#333"
+            colorActionbarHighlight     = "#dadada"
+
+            colorTabletmenu             = "#fff"
+            colorTabletmenuContent      = "#9d9d9d"
+            colorTabletmenuHighlight    = "#cfcbcb"
+
+            colorBackground             = "#fff"
+            colorForeground             = "#f3f3f5"
+
+            colorPrimary                = "#9141ac"
+            colorSecondary              = "#c085d5"
+            colorSuccess                = colorGreen
+            colorWarning                = colorOrange
+            colorError                  = colorRed
+
+            colorText                   = "#373737"
+            colorSubText                = "#666"
+            colorIcon                   = "#373737"
+            colorSeparator              = "#e8e8e8"
+            colorLowContrast            = "white"
+            colorHighContrast           = "#303030"
+
+            colorComponent              = "#f4f4f4"
+            colorComponentText          = "black"
+            colorComponentContent       = "black"
+            colorComponentBorder        = "#f0f0f0"
+            colorComponentDown          = "#eaeaea"
+            colorComponentBackground    = "#f9f9f9"
+
+            componentRadius             = 6
+            componentBorderWidth        = 2
+
+            // (app)
+            colorBox                    = "white"
+            colorBoxBorder              = "#f4f4f4"
+            colorBoxShadow              = "#20000000"
+            colorGrid                   = "#ebebeb"
+            colorAxis                   = "#b0b0b0"
+            colorLVheader               = "#fafafa"
+            colorLVpair                 = "white"
+            colorLVimpair               = "#f5f5f5"
+            colorLVselected             = "#0080e0"
+            colorLVseparator            = "#e2e2e2"
+
+        } else if (themeIndex === Theme.THEME_MACOS) { /////////////////////////
+
+            colorRed    = "#ff7657"
+            colorGreen  = "#85c700"
+            colorBlue   = "#4cafe9"
+            colorYellow = "#ffcf00"
+            colorOrange = "#ffa635"
+            colorGrey   = "#9E9E9E"
+
+            isLight = true
+            isDark = false
+
+            themeStatusbar = Theme.Light
+            colorStatusbar = "#f1f0ef"
+
+            colorHeader                 = "#f1f1f1"
+            colorHeaderContent          = "#444"
+            colorHeaderHighlight        = "#e2e2e2"
+
+            colorSidebar                = "#e0e0e0"
+            colorSidebarContent         = "#e0e0e0"
+            colorSidebarHighlight       = "#aaaaaa"
+
+            colorActionbar              = "#eaeaea"
+            colorActionbarContent       = "#333"
+            colorActionbarHighlight     = "#dadada"
+
+            colorTabletmenu             = "#fff"
+            colorTabletmenuContent      = "#9d9d9d"
+            colorTabletmenuHighlight    = "#cfcbcb"
+
+            colorBackground             = "#fff"
+            colorForeground             = "#f5f5f5"
+
+            colorPrimary                = "#1066f5"
+            colorSecondary              = "#5c99ff"
+            colorSuccess                = colorGreen
+            colorWarning                = colorOrange
+            colorError                  = colorRed
+
+            colorText                   = "#222"
+            colorSubText                = "#828282"
+            colorIcon                   = "#222"
+            colorSeparator              = "#d5d7d6"
+            colorLowContrast            = "white"
+            colorHighContrast           = "#303030"
+
+            colorComponent              = "#f2f2f2"
+            colorComponentText          = "black"
+            colorComponentContent       = "black"
+            colorComponentBorder        = "#eee"
+            colorComponentDown          = "#e4e4e4"
+            colorComponentBackground    = "#fcfcfc"
+
+            componentRadius             = 6
+            componentBorderWidth        = 2
+
+            // (app)
+            colorBox                    = "white"
+            colorBoxBorder              = "#f4f4f4"
+            colorBoxShadow              = "#20000000"
+            colorGrid                   = "#ebebeb"
+            colorAxis                   = "#b0b0b0"
+            colorLVheader               = "#fafafa"
+            colorLVpair                 = "white"
+            colorLVimpair               = "#f5f5f5"
+            colorLVselected             = "#0080e0"
+            colorLVseparator            = "#e2e2e2"
+
+        } else if (themeIndex === Theme.THEME_WINDOWS) { ///////////////////////
+
+            colorRed    = "#ff7657"
+            colorGreen  = "#85c700"
+            colorBlue   = "#4cafe9"
+            colorYellow = "#ffcf00"
+            colorOrange = "#ffa635"
+            colorGrey   = "#9E9E9E"
+
+            isLight = true
+            isDark = false
+
+            themeStatusbar = Theme.Light
+            colorStatusbar = "#f1f0ef"
+
+            colorHeader                 = "#f6f6f6"
+            colorHeaderContent          = "#444"
+            colorHeaderHighlight        = "#e2e1df"
+
+            colorSidebar                = "#f6f6f6"
+            colorSidebarContent         = "#f6f6f6"
+            colorSidebarHighlight       = "#e8e8e8"
+
+            colorActionbar              = "#eaeaea"
+            colorActionbarContent       = "#333"
+            colorActionbarHighlight     = "#dadada"
+
+            colorTabletmenu             = "#fff"
+            colorTabletmenuContent      = "#9d9d9d"
+            colorTabletmenuHighlight    = "#cfcbcb"
+
+            colorBackground             = "#f2f2f2"
+            colorForeground             = "#f9f9f9"
+
+            colorPrimary                = "#8379fc"
+            colorSecondary              = "#c085d5"
+            colorSuccess                = colorGreen
+            colorWarning                = colorOrange
+            colorError                  = colorRed
+
+            colorText                   = "#373737"
+            colorSubText                = "#666"
+            colorIcon                   = "#373737"
+            colorSeparator              = "#e8e8e8"
+            colorLowContrast            = "white"
+            colorHighContrast           = "#303030"
+
+            colorComponent              = "#fafafa"
+            colorComponentText          = "black"
+            colorComponentContent       = "black"
+            colorComponentBorder        = "#ececec"
+            colorComponentDown          = "#dadada"
+            colorComponentBackground    = "#fcfcfc"
+
+            componentRadius             = 6
+            componentBorderWidth        = 2
+
+            // (app)
+            colorBox                    = "white"
+            colorBoxBorder              = "#f4f4f4"
+            colorBoxShadow              = "#20000000"
+            colorGrid                   = "#ebebeb"
+            colorAxis                   = "#b0b0b0"
+            colorLVheader               = "#fafafa"
+            colorLVpair                 = "white"
+            colorLVimpair               = "#f5f5f5"
+            colorLVselected             = "#0080e0"
+            colorLVseparator            = "#e2e2e2"
 
         }
 

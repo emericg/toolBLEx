@@ -7,16 +7,16 @@ T.Popup {
     id: control
 
     x: {
-        if (tooltipPosition === "left") return -(implicitWidth + 10)
+        if (tooltipPosition === "left") return -(width + 10)
         if (tooltipPosition === "right") return +(parent.width + 10)
         if (tooltipPosition === "topRight" || tooltipPosition === "bottomRight") return 0
-        if (tooltipPosition === "topLeft" || tooltipPosition === "bottomLeft") return (parent.width - implicitWidth)
-        return (parent.width - implicitWidth) / 2
+        if (tooltipPosition === "topLeft" || tooltipPosition === "bottomLeft") return (parent.width - width)
+        return (parent.width - width) / 2
     }
     y: {
-        if (tooltipPosition === "top" || tooltipPosition === "topLeft" || tooltipPosition === "topRight") return -(implicitHeight + 10)
+        if (tooltipPosition === "top" || tooltipPosition === "topLeft" || tooltipPosition === "topRight") return -(height + 10)
         if (tooltipPosition === "bottom" || tooltipPosition === "bottomLeft" || tooltipPosition === "bottomRight") return (parent.height + 10)
-        return ((parent.height / 2) - (implicitHeight / 2))
+        return ((parent.height / 2) - (height / 2))
     }
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
@@ -40,7 +40,7 @@ T.Popup {
 
         var obj = mapToItem(appContent, x, y)
         var thestart = obj.x
-        var theend = obj.x + implicitWidth + 24
+        var theend = obj.x + width + 24
         //console.log("checking tooltip position: " + thestart + " > " + theend)
 
         if (tooltipPosition === "top") {
@@ -73,9 +73,10 @@ T.Popup {
         text: control.text
         textFormat: Text.PlainText
 
+        color: control.textColor
         font: control.font
         wrapMode: Text.Wrap
-        color: control.textColor
+        verticalAlignment: Text.AlignVCenter
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -95,8 +96,8 @@ T.Popup {
                 return parent.horizontalCenter
             }
             anchors.horizontalCenterOffset: {
-                if (control.tooltipPosition === "topLeft" || control.tooltipPosition === "bottomLeft") return (control.implicitWidth / 2) - (control.parent.width / 2)
-                if (control.tooltipPosition === "topRight" || control.tooltipPosition === "bottomRight") return -(control.implicitWidth / 2) + (control.parent.width / 2)
+                if (control.tooltipPosition === "topLeft" || control.tooltipPosition === "bottomLeft") return (control.width / 2) - (control.parent.width / 2)
+                if (control.tooltipPosition === "topRight" || control.tooltipPosition === "bottomRight") return -(control.width / 2) + (control.parent.width / 2)
                 return 0
             }
             anchors.verticalCenter: {

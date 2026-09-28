@@ -21,9 +21,6 @@ T.Button {
     font.pixelSize: Theme.componentFontSize
     font.bold: false
 
-    // layout
-    property int alignment: Qt.AlignCenter // Qt.AlignLeft // Qt.AlignRight
-
     // colors
     property color color: Theme.colorPrimary
 
@@ -43,11 +40,6 @@ T.Button {
     background: Item {
         implicitWidth: Theme.componentHeight
         implicitHeight: Theme.componentHeight
-
-        //radius: (height / 2)
-        //color: "transparent"
-        //border.width: Theme.componentBorderWidth
-        //border.color: control.color
 
         Rectangle {
             anchors.fill: parent
@@ -78,6 +70,8 @@ T.Button {
             opacity: control.enabled ? 1 : 0.66
             spacing: control.spacing
 
+            ////
+
             Item {
                 Layout.preferredWidth: control.height
                 Layout.preferredHeight: control.height
@@ -106,6 +100,8 @@ T.Button {
                 }
             }
 
+            ////
+
             Text {
                 Layout.alignment: Qt.AlignVCenter
 
@@ -119,6 +115,8 @@ T.Button {
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
             }
+
+            ////
 
             Item {
                 Layout.preferredWidth: control.height
@@ -147,6 +145,8 @@ T.Button {
                     source: control.rightIcon
                 }
             }
+
+            ////
         }
     }
 

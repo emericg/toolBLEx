@@ -5,6 +5,7 @@
 
 /*!
  * Take a path (url or string) and make sure we output a clean string path.
+ * Use decodeURIComponent() so that special characters (brackets, '#', '%'...) survives.
  */
 function cleanUrl(pathInput) {
     var stringOut = '';
@@ -13,12 +14,12 @@ function cleanUrl(pathInput) {
 
     if (input.slice(0, 8) === "file:///") {
         const k = input.charAt(9) === ':' ? 8 : 7;
-        stringOut = input.substring(k);
+        stringOut = decodeURIComponent(input.substring(k));
     } else if (input.slice(0, 10) === "content://") {
         // 'content://com.android.providers.media.documents/document/' + filename
         // 'content://' + 'app.package' + '/root/' + path
         const kk = input.indexOf("/root/") + 5;
-        stringOut = input.substring(kk);
+        stringOut = decodeURIComponent(input.substring(kk));
     } else {
         stringOut = input;
     }
@@ -29,8 +30,13 @@ function cleanUrl(pathInput) {
 
 /*!
  * Take a local path (url or string) and make sure we output a clean url.
- * Scheme detection requires 2+ chars before ':', so a Windows drive ("C:")
- * is still treated as a local path.
+ *
+ * Scheme detection requires 2+ chars before ':', so a Windows drive ("C:") for
+ * instance is still treated as a local path.
+ *
+ * Always emit a 'file:///' (triple-slash) url, matching cleanUrl():
+ * - unix    "/home/x" -> "file:///home/x"
+ * - windows "C:/x"    -> "file:///C:/x"
  */
 function makeUrl(pathInput) {
     if (!(typeof pathInput === 'string' || pathInput instanceof String)) {
@@ -40,7 +46,7 @@ function makeUrl(pathInput) {
     var urlOut = pathInput;
 
     if (!/^[a-zA-Z][a-zA-Z0-9+.-]+:/.test(pathInput)) {
-        urlOut = "file://" + pathInput;
+        urlOut = "file://" + (pathInput.charAt(0) === '/' ? pathInput : '/' + pathInput);
     }
 
     //console.log("makeUrl() in: " + pathInput + " / out: " + urlOut)

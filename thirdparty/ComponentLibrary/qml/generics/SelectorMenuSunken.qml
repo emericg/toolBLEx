@@ -9,7 +9,7 @@ Item {
     implicitWidth: 128
     implicitHeight: 32
 
-    width: contentRow.width + Theme.componentBorderWidth*2
+    width: fullWidth ? implicitWidth : (contentRow.width + Theme.componentBorderWidth*2)
 
     opacity: enabled ? 1 : 0.66
 
@@ -27,7 +27,6 @@ Item {
 
     // model
     property var model: null
-    readonly property int count: model ? (model.count ?? model.length ?? 0) : 0
 
     ////////////////
 
@@ -44,19 +43,22 @@ Item {
         anchors.centerIn: parent
         spacing: Theme.componentBorderWidth
 
+        width: control.fullWidth ? (control.width - Theme.componentBorderWidth*2) : implicitWidth
+
         Repeater {
             model: control.model
             delegate: SelectorMenuItem {
                 required property var model
 
                 Layout.preferredHeight: control.height - Theme.componentBorderWidth*2
-                Layout.preferredWidth: control.fullWidth ? ((control.width - Theme.componentBorderWidth*2) / Math.max(1, control.count)) : implicitWidth
+                Layout.preferredWidth: control.fullWidth ? 0 : implicitWidth
+                Layout.fillWidth: control.fullWidth
 
                 colorContent: Theme.colorComponentText
                 colorContentHighlight: Theme.colorComponentText
                 colorBackgroundHighlight: control.colorForeground
                 readOnly: control.readOnly
-                highlighted: (control.currentSelection === model.idx)
+                highlighted: (control.currentSelection === (model.idx ?? 0))
                 index: model.idx ?? 0
                 text: model.txt ?? ""
                 source: model.src ?? ""

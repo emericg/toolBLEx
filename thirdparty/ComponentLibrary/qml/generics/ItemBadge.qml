@@ -5,7 +5,6 @@ import ComponentLibrary
 Rectangle {
     id: control
 
-    implicitWidth: 48
     implicitHeight: 20
 
     width: contentText.contentWidth + 12

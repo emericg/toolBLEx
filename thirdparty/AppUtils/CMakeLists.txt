@@ -1,15 +1,10 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.24)
 
-#project(AppUtils LANGUAGES CXX)
-
-# To avoid CMake Warnings, you should add Qt6 'CorePrivate' or 'CoreGui',
-# as needed, to your root level find_package()
+project(AppUtils LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_AUTOMOC ON)
-
-set(QT_NO_PRIVATE_MODULE_WARNING ON)
+set(CMAKE_FIND_PACKAGE_TARGETS_GLOBAL ON)
 
 ################################################################################
 
@@ -52,11 +47,15 @@ set(CORE_SOURCES
     # pure c++
     utils_bits.h
     utils_maths.h
+    # others
+    LoremIpsum.h
 )
 
 # Qt optional tools
 if(UTILS_QT_RHI)
     add_definitions(-DUTILS_QT_RHI)
+
+    set(QT_NO_PRIVATE_MODULE_WARNING ON)
 
     if(Qt6Gui_VERSION VERSION_GREATER_EQUAL 6.10.0)
         find_package(Qt6 REQUIRED COMPONENTS GuiPrivate)

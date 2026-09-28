@@ -35,11 +35,30 @@ T.ProgressBar {
         width: control.width
         height: control.height
 
-        Rectangle {
+        Rectangle { // determinate progress
             width: control.visualPosition * control.width
             height: control.height
             color: control.colorForeground
             radius: control.radius
+
+            visible: !control.indeterminate
+        }
+
+        Rectangle { // indeterminate progress
+            width: control.width * 0.3
+            height: control.height
+            color: control.colorForeground
+            radius: control.radius
+
+            visible: control.indeterminate
+
+            XAnimator on x {
+                running: control.indeterminate && control.visible
+                loops: Animation.Infinite
+                from: -control.width * 0.3
+                to: control.width
+                duration: 1200
+            }
         }
 
         layer.enabled: (control.radius > 0)

@@ -36,45 +36,33 @@ Item {
 
         //console.log("WindowsGeometrySaver::restoreSettings()")
 
-        // Read persisted geometry into locals, so the sanitization below never
-        // writes (bad) values back to the settings file.
-        var x = windowSettings.x;
-        var y = windowSettings.y;
-        var width = windowSettings.width;
-        var height = windowSettings.height;
-        var visibility = windowSettings.visibility;
-
-        // Nothing saved yet: leave the window with its default geometry
-        if (width <= 0 || height <= 0) {
-            if (windowInstance.visibility < Window.AutomaticVisibility)
-                windowInstance.visibility = Window.AutomaticVisibility;
-            return;
+        // Startup verifications to ensure that app fits inside current screen
+        if ((windowSettings.x <= 0 && windowSettings.y <= 0) &&
+            (windowSettings.width <= 0 && windowSettings.height <= 0)) {
+            windowSettings.x = 64;
+            windowSettings.y = 64;
+        }
+        if (windowSettings.x < 0 || windowSettings.x >= Screen.desktopAvailableWidth)
+            windowSettings.x = 64;
+        if (windowSettings.y < 0 || windowSettings.y >= Screen.desktopAvailableHeight)
+            windowSettings.y = 64;
+        if (windowSettings.width > Screen.desktopAvailableWidth) {
+            windowSettings.x = 64;
+            windowSettings.width = Screen.desktopAvailableWidth - windowSettings.x;
+        }
+        if (windowSettings.height > Screen.desktopAvailableHeight) {
+            windowSettings.y = 64;
+            windowSettings.height = Screen.desktopAvailableHeight - windowSettings.y;
         }
 
-        // Startup verifications to ensure the window fits inside the available
-        // screen area. desktopAvailable* spans the whole virtual desktop, while
-        // virtualX/virtualY give the current screen's origin within it, which
-        // can be non-zero or negative on multi-monitor setups.
-        var minX = Screen.virtualX;
-        var minY = Screen.virtualY;
-        var maxX = Screen.virtualX + Screen.desktopAvailableWidth;
-        var maxY = Screen.virtualY + Screen.desktopAvailableHeight;
-
-        if (width > Screen.desktopAvailableWidth) width = Screen.desktopAvailableWidth;
-        if (height > Screen.desktopAvailableHeight) height = Screen.desktopAvailableHeight;
-
-        // Clamp the window inside the available area, keeping it as close as
-        // possible to its saved position instead of jumping to a fixed corner.
-        if (x < minX || x + width > maxX) x = Math.max(minX, Math.min(x, maxX - width));
-        if (y < minY || y + height > maxY) y = Math.max(minY, Math.min(y, maxY - height));
-
-        // Now apply the (sanitized) saved settings
-        windowInstance.x = x;
-        windowInstance.y = y;
-        windowInstance.width = width;
-        windowInstance.height = height;
-        windowInstance.visibility = visibility;
-
+        // Now apply saved settings
+        if (windowSettings.width > 0 && windowSettings.height > 0) {
+            windowInstance.x = windowSettings.x;
+            windowInstance.y = windowSettings.y;
+            windowInstance.width = windowSettings.width;
+            windowInstance.height = windowSettings.height;
+            windowInstance.visibility = windowSettings.visibility;
+        }
         if (windowInstance.visibility < Window.AutomaticVisibility) {
             windowInstance.visibility = Window.AutomaticVisibility;
         }

@@ -37,7 +37,7 @@ T.Control {
     property color colorContent: "white"
 
     // icon
-    property url source: "qrc:/IconLibrary/material-symbols/autorenew.svg"
+    property url source: "qrc:/ComponentLibraryAssets/icons/autorenew.svg"
     property int sourceSize: UtilsNumber.alignTo(height * 0.5, 2)
     property int sourceRotation: 0
 

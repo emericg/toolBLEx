@@ -16,9 +16,8 @@ T.ComboBox {
     leftPadding: 12
     rightPadding: 12
 
-    font.pixelSize: Theme.componentFontSize
-
     // settings
+    font.pixelSize: Theme.componentFontSize
     property int radius: Theme.componentRadius
 
     // colors
@@ -27,6 +26,7 @@ T.ComboBox {
 
     // secondary text
     property string subText: ""
+    property string subTextRole: ""
 
     // icon
     property string iconRole: "source"
@@ -146,6 +146,8 @@ T.ComboBox {
 
         readonly property var iconSource: (control.iconRole && model && model[control.iconRole]) ? model[control.iconRole] : ""
         readonly property bool hasIcon: iconSource ? iconSource.toString().length > 0 : false
+        readonly property string subText: (control.subTextRole && model && model[control.subTextRole]) ? model[control.subTextRole] : ""
+        readonly property bool selected: (control.currentIndex === index)
 
         width: control.width - 2
         height: control.height
@@ -155,13 +157,15 @@ T.ComboBox {
             implicitWidth: 200
             implicitHeight: Theme.componentHeight
 
-            radius: control.radius
-            color: highlighted ? "#F6F6F6" : "white"
+            radius: control.radius - 1
+            color: {
+                if (highlighted) return Theme.colorComponentDown
+                if (selected) return Qt.alpha(Theme.colorPrimary, 0.12)
+                return Theme.colorComponentBackground
+            }
         }
 
         contentItem: RowLayout {
-            spacing: 0
-
             IconSvg {
                 Layout.leftMargin: hasIcon ? control.leftPadding : 0
                 Layout.preferredWidth: hasIcon ? 24 : 0
@@ -169,18 +173,43 @@ T.ComboBox {
 
                 visible: hasIcon
                 source: iconSource
-                color: Theme.colorIcon
+                color: selected ? Theme.colorPrimary : Theme.colorIcon
             }
 
             Text {
                 Layout.leftMargin: hasIcon ? control.leftPadding / 2 : control.leftPadding
-                Layout.rightMargin: control.rightPadding
+                Layout.rightMargin: subText ? 0 : control.rightPadding
                 Layout.fillWidth: true
 
+                color: {
+                    if (selected) return Theme.colorPrimary
+                    if (highlighted) return Theme.colorComponentContent
+                    return Theme.colorSubText
+                }
+                opacity: 1.0
+
                 text: control.textAt(index)
-                color: highlighted ? "black" : Theme.colorSubText
+                textFormat: Text.PlainText
                 font.pixelSize: Theme.componentFontSize
                 elide: Text.ElideRight
+                horizontalAlignment: Text.AlignLeft
+                verticalAlignment: Text.AlignVCenter
+            }
+
+            Text {
+                Layout.leftMargin: 8
+                Layout.rightMargin: control.rightPadding
+                Layout.maximumWidth: parent.width / 2
+
+                visible: subText.length > 0
+                color: Theme.colorSubText
+                opacity: 0.8
+
+                text: subText
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.componentFontSize
+                elide: Text.ElideRight
+                horizontalAlignment: Text.AlignRight
                 verticalAlignment: Text.AlignVCenter
             }
         }
@@ -189,10 +218,9 @@ T.ComboBox {
     ////////////////
 
     popup: T.Popup {
-        y: control.height - 1
         width: control.width
-        implicitHeight: contentItem.implicitHeight ? contentItem.implicitHeight + 2 : 0
-        padding: 1
+        height: contentItem.implicitHeight ? contentItem.implicitHeight + 4 : 0
+        padding: 2
 
         topMargin: Math.max(Theme.screenPaddingStatusbar, Theme.screenPaddingTop)
         bottomMargin: Math.max(Theme.screenPaddingNavbar, Theme.screenPaddingBottom)
@@ -206,9 +234,9 @@ T.ComboBox {
 
         background: Rectangle {
             radius: control.radius
-            color: "white"
+            color: Theme.colorComponentBackground
             border.color: Theme.colorComponentBorder
-            border.width: control.visualFocus ? 0 : 1
+            border.width: 2
         }
     }
 

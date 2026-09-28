@@ -9,7 +9,7 @@ Item {
     implicitWidth: 128
     implicitHeight: 32
 
-    width: contentRow.width
+    width: fullWidth ? implicitWidth : contentRow.width
 
     opacity: enabled ? 1 : 0.66
 
@@ -23,7 +23,6 @@ Item {
 
     // model
     property var model: null
-    readonly property int count: model ? (model.count ?? model.length ?? 0) : 0
 
     ////////////////
 
@@ -37,8 +36,10 @@ Item {
 
     RowLayout {
         id: contentRow
-        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.centerIn: parent
         spacing: Theme.componentBorderWidth
+
+        width: selectorMenu.fullWidth ? selectorMenu.width : implicitWidth
 
         Repeater {
             model: selectorMenu.model
@@ -46,10 +47,11 @@ Item {
                 required property var model
 
                 Layout.preferredHeight: selectorMenu.height
-                Layout.preferredWidth: selectorMenu.fullWidth ? (selectorMenu.width / Math.max(1, selectorMenu.count)) : implicitWidth
+                Layout.preferredWidth: selectorMenu.fullWidth ? 0 : implicitWidth
+                Layout.fillWidth: selectorMenu.fullWidth
 
                 readOnly: selectorMenu.readOnly
-                highlighted: (selectorMenu.currentSelection === model.idx)
+                highlighted: (selectorMenu.currentSelection === (model.idx ?? 0))
                 index: model.idx ?? 0
                 text: model.txt ?? ""
                 source: model.src ?? ""

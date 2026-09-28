@@ -85,7 +85,7 @@ Loader {
                 width: 16; height: 16;
                 anchors.centerIn: parent
 
-                source: "qrc:/IconLibrary/material-symbols/close.svg"
+                source: "qrc:/ComponentLibraryAssets/icons/close.svg"
                 color: mouseAreaClose.containsMouse ? "white" : Theme.colorIcon
             }
 /*

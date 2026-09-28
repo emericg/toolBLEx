@@ -15,11 +15,31 @@ T.Slider {
 
     ////////////////
 
+    property alias graduation: graduationLayer.graduation
+    property alias graduationFrom: graduationLayer.graduationFrom
+    property alias graduationStepSize: graduationLayer.graduationStepSize
+    property alias graduationTicks: graduationLayer.graduationTicks
+    property alias graduationTickLength: graduationLayer.graduationTickLength
+    property alias graduationDefault: graduationLayer.graduationDefault
+    property alias graduationDefaultValue: graduationLayer.graduationDefaultValue_first
+    property alias graduationPosition: graduationLayer.graduationPosition
+    property alias graduationColor: graduationLayer.graduationColor
+    property alias graduationColorDefault: graduationLayer.graduationColorDefault
+
+    SliderGraduation {
+        id: graduationLayer
+        anchors.fill: parent
+        slider: control
+        sliderHandleWidth: control.handle.width
+    }
+
+    ////////////////
+
     background: Rectangle {
         x: control.leftPadding + (control.horizontal ? 0 : (control.availableWidth - width) / 2)
         y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : 0)
-        implicitWidth: control.horizontal ? 200 : 4
-        implicitHeight: control.horizontal ? 4 : 200
+        implicitWidth: control.horizontal ? 200 : 6
+        implicitHeight: control.horizontal ? 6 : 200
         width: control.horizontal ? control.availableWidth : implicitWidth
         height: control.horizontal ? implicitHeight : control.availableHeight
 
@@ -29,8 +49,8 @@ T.Slider {
         scale: control.horizontal && control.mirrored ? -1 : 1
 
         Rectangle {
-            x: control.horizontal ? 0 : -1
-            y: control.horizontal ? -1 : control.visualPosition * parent.height
+            x: control.horizontal ? 0 : 0
+            y: control.horizontal ? 0 : control.visualPosition * parent.height
             width: control.horizontal ? control.position * parent.width : 6
             height: control.horizontal ? 6 : control.position * parent.height
 

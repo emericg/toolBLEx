@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.24)
 
 project(toolBLEx VERSION 0.18 LANGUAGES CXX)
 
@@ -36,6 +36,8 @@ find_package(Qt6 REQUIRED COMPONENTS Sql Bluetooth Graphs Widgets)
 find_package(Qt6 REQUIRED COMPONENTS LinguistTools)
 
 if(Qt6Core_VERSION VERSION_GREATER_EQUAL 6.10.0)
+    # For custom QQuickGradient
+    set(QT_NO_PRIVATE_MODULE_WARNING ON)
     find_package(Qt6 REQUIRED COMPONENTS QuickPrivate)
 endif()
 

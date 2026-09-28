@@ -39,7 +39,7 @@ Item {
             width: 20
             height: 20
             color: "white"
-            source: "qrc:/IconLibrary/material-symbols/autorenew.svg"
+            source: "qrc:/ComponentLibraryAssets/icons/autorenew.svg"
 
             property int frameCounter: 0
             property int frameCounterAvg: 0

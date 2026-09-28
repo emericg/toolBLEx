@@ -45,7 +45,36 @@ set(QT_QML_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 ### Use
 
-> TODO
+#### QML
+
+```qml
+import QtQuick
+import ComponentLibrary
+
+Item {
+    width: 640
+    height: 480
+
+    ButtonClear {
+        anchor.centerIn: parent
+
+        text: "Click Me"
+        onClicked: doSomething()
+    }
+}
+```
+
+#### Translations
+
+The library ships its own translations catalog, embedded in its own resources.
+
+The host application must install at runtime a QTranslator for this catalog:
+
+```cpp
+QTranslator t;
+t.load(":/i18n/ComponentLibrary_" + <lang> + ".qm");
+qApp->installTranslator(&t);
+```
 
 
 ## License

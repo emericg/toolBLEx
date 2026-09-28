@@ -15,11 +15,31 @@ T.Slider {
 
     ////////////////
 
+    property alias graduation: graduationLayer.graduation
+    property alias graduationFrom: graduationLayer.graduationFrom
+    property alias graduationStepSize: graduationLayer.graduationStepSize
+    property alias graduationTicks: graduationLayer.graduationTicks
+    property alias graduationTickLength: graduationLayer.graduationTickLength
+    property alias graduationDefault: graduationLayer.graduationDefault
+    property alias graduationDefaultValue: graduationLayer.graduationDefaultValue_first
+    property alias graduationPosition: graduationLayer.graduationPosition
+    property alias graduationColor: graduationLayer.graduationColor
+    property alias graduationColorDefault: graduationLayer.graduationColorDefault
+
+    SliderGraduation {
+        id: graduationLayer
+        anchors.fill: parent
+        slider: control
+        sliderHandleWidth: control.handle.width
+    }
+
+    ////////////////
+
     background: Rectangle {
         x: control.leftPadding + (control.horizontal ? 0 : (control.availableWidth - width) / 2)
         y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : 0)
-        implicitWidth: control.horizontal ? 200 : 4
-        implicitHeight: control.horizontal ? 4 : 200
+        implicitWidth: control.horizontal ? 200 : 6
+        implicitHeight: control.horizontal ? 6 : 200
         width: control.horizontal ? control.availableWidth : implicitWidth
         height: control.horizontal ? implicitHeight : control.availableHeight
 
@@ -29,10 +49,14 @@ T.Slider {
         scale: control.horizontal && control.mirrored ? -1 : 1
 
         Rectangle {
-            x: control.horizontal ? ((control.handle.x < control.availableWidth / 2) ? control.handle.x : control.width / 2) : -1
-            y: control.horizontal ? -1 : ((control.handle.y < control.availableHeight / 2) ? control.handle.y : control.height / 2)
-            width: control.horizontal ? Math.abs((control.width / 2) - control.handle.x) : 6
-            height: control.horizontal ? 6 : Math.abs((control.height / 2) - control.handle.y)
+            readonly property real center: control.horizontal ? parent.width / 2 : parent.height / 2
+            readonly property real head: control.horizontal ? control.handle.x - control.leftPadding + control.handle.width / 2
+                                                            : control.handle.y - control.topPadding + control.handle.height / 2
+
+            x: control.horizontal ? Math.min(center, head) : 0
+            y: control.horizontal ? 0 : Math.min(center, head)
+            width: control.horizontal ? Math.abs(center - head) : 6
+            height: control.horizontal ? 6 : Math.abs(center - head)
 
             radius: 2
             color: Theme.colorPrimary
@@ -42,8 +66,10 @@ T.Slider {
     ////////////////
 
     handle: Rectangle {
-        x: control.leftPadding + (control.horizontal ? (control.visualPosition * (control.availableWidth - width)) : (control.availableWidth - width))
-        y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : (control.visualPosition * (control.availableHeight - height)))
+        x: control.leftPadding + (control.horizontal ? (control.visualPosition * (control.availableWidth - width))
+                                                     : (control.availableWidth - width))
+        y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2
+                                                    : (control.visualPosition * (control.availableHeight - height)))
 
         implicitWidth: 18
         implicitHeight: 18

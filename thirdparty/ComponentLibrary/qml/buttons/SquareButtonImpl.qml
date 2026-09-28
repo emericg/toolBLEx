@@ -143,6 +143,7 @@ T.Button {
         active: control.tooltipText !== "" && control.hovered
 
         sourceComponent: ToolTipFlat {
+            height: parent.height
             visible: control.hovered
             text: control.tooltipText
             textColor: control.colorIcon

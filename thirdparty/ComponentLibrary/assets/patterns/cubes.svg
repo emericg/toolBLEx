@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="34.64" height="60" viewBox="0 0 34.64 60">
+<g fill="currentColor">
+  <polygon fill-opacity="1" points="0,-20 17.32,-10 0,0 -17.32,-10"/>
+  <polygon fill-opacity="0.55" points="-17.32,-10 0,0 0,20 -17.32,10"/>
+  <polygon fill-opacity="0.2" points="17.32,-10 17.32,10 0,20 0,0"/>
+  <polygon fill-opacity="1" points="34.64,-20 51.96,-10 34.64,0 17.32,-10"/>
+  <polygon fill-opacity="0.55" points="17.32,-10 34.64,0 34.64,20 17.32,10"/>
+  <polygon fill-opacity="0.2" points="51.96,-10 51.96,10 34.64,20 34.64,0"/>
+  <polygon fill-opacity="1" points="-17.32,10 0,20 -17.32,30 -34.64,20"/>
+  <polygon fill-opacity="0.55" points="-34.64,20 -17.32,30 -17.32,50 -34.64,40"/>
+  <polygon fill-opacity="0.2" points="0,20 0,40 -17.32,50 -17.32,30"/>
+  <polygon fill-opacity="1" points="17.32,10 34.64,20 17.32,30 0,20"/>
+  <polygon fill-opacity="0.55" points="0,20 17.32,30 17.32,50 -0,40"/>
+  <polygon fill-opacity="0.2" points="34.64,20 34.64,40 17.32,50 17.32,30"/>
+  <polygon fill-opacity="1" points="51.96,10 69.28,20 51.96,30 34.64,20"/>
+  <polygon fill-opacity="0.55" points="34.64,20 51.96,30 51.96,50 34.64,40"/>
+  <polygon fill-opacity="0.2" points="69.28,20 69.28,40 51.96,50 51.96,30"/>
+  <polygon fill-opacity="1" points="0,40 17.32,50 0,60 -17.32,50"/>
+  <polygon fill-opacity="0.55" points="-17.32,50 0,60 0,80 -17.32,70"/>
+  <polygon fill-opacity="0.2" points="17.32,50 17.32,70 0,80 0,60"/>
+  <polygon fill-opacity="1" points="34.64,40 51.96,50 34.64,60 17.32,50"/>
+  <polygon fill-opacity="0.55" points="17.32,50 34.64,60 34.64,80 17.32,70"/>
+  <polygon fill-opacity="0.2" points="51.96,50 51.96,70 34.64,80 34.64,60"/>
+</g>
+</svg>

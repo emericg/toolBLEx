@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44">
+  <path
+     fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="miter"
+     d="M0,0h22v22h-22Z M22,0h22v22h-22Z M0,22h22v22h-22Z M22,22h22v22h-22Z" />
+  <path
+     d="M 3.116717,3.116717 V 18.883283 M 6.2700301,3.116717 V 18.883283 M 9.4233433,3.116717 V 18.883283 M 12.576657,3.116717 V 18.883283 M 15.72997,3.116717 V 18.883283 M 18.883283,3.116717 v 15.766566"
+     style="fill:none;stroke:currentColor;stroke-width:1.58748;stroke-linecap:square" />
+  <path
+     d="M 40.883283,3.116717 H 25.116717 M 40.883283,6.27003 H 25.116717 M 40.883283,9.423343 H 25.116717 m 15.766566,3.153314 H 25.116717 M 40.883283,15.72997 H 25.116717 m 15.766566,3.153313 H 25.116717"
+     style="fill:none;stroke:currentColor;stroke-width:1.58748;stroke-linecap:square" />
+  <path
+     d="M 25.116717,25.116717 V 40.883283 M 28.27003,25.116717 V 40.883283 M 31.423343,25.116717 V 40.883283 M 34.576657,25.116717 V 40.883283 M 37.72997,25.116717 v 15.766566 m 3.153313,-15.766566 v 15.766566"
+     style="fill:none;stroke:currentColor;stroke-width:1.58748;stroke-linecap:square" />
+  <path
+     d="M 18.883283,25.116717 H 3.116717 M 18.883283,28.27003 H 3.116717 m 15.766566,3.153313 H 3.116717 m 15.766566,3.153314 H 3.116717 M 18.883283,37.72997 H 3.116717 m 15.766566,3.153313 H 3.116717"
+     style="fill:none;stroke:currentColor;stroke-width:1.58748;stroke-linecap:square" />
+</svg>
