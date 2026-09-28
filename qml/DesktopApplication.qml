@@ -237,7 +237,7 @@ ApplicationWindow {
     property string fontMonospace: "Courier New" // "Monospace" // "Consolas"
 
     // Bluetooth ///////////////////////////////////////////////////////////////
-
+/*
     property bool bluetooth: deviceManager.bluetooth
     property bool bluetoothAdapter: deviceManager.bluetoothAdapter
     property bool bluetoothEnabled: deviceManager.bluetoothEnabled
@@ -250,12 +250,12 @@ ApplicationWindow {
 
     function checkBleStatus() {
         if (!bluetooth || !bluetoothAdapter || !bluetoothEnabled || !bluetoothPermission) {
-            screenBluetooth.loadScreen()
+            //
         } else {
-            screenBluetooth.unloadScreen()
+            //
         }
     }
-
+*/
     // QML /////////////////////////////////////////////////////////////////////
 
     DesktopHeader {

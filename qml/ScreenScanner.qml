@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 import QtQuick.Controls
 
 import ComponentLibrary
@@ -73,10 +74,11 @@ Loader {
 
         SplitView {
             id: splitview
+
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.bottom: statusBar.top
+            anchors.bottom: errorBar.top
 
             orientation: SettingsManager.scanviewOrientation
 
@@ -518,7 +520,133 @@ Loader {
         ////////////////////////////////////////////////////////////////////////
 
         Rectangle {
+            id: errorBar
+
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: statusBar.top
+
+            height: 0
+            Behavior on height { NumberAnimation { duration: Theme.animationSpeedMedium } }
+
+            color: Theme.colorWarning
+            clip: true
+
+            ////
+
+            property bool bluetooth: deviceManager.bluetooth
+            property bool bluetoothAdapter: deviceManager.bluetoothAdapter
+            property bool bluetoothEnabled: deviceManager.bluetoothEnabled
+            property bool bluetoothPermission: deviceManager.bluetoothPermission
+
+            onBluetoothChanged: checkBleStatus()
+            onBluetoothAdapterChanged: checkBleStatus()
+            onBluetoothEnabledChanged: checkBleStatus()
+            onBluetoothPermissionChanged: checkBleStatus()
+
+            function checkBleStatus() {
+                if (!bluetooth || !bluetoothAdapter || !bluetoothEnabled || !bluetoothPermission) {
+                    errorBar.height = 64
+                } else {
+                    errorBar.height = 0
+                }
+            }
+
+            ////
+
+            RowLayout {
+                anchors.left: parent.left
+                anchors.leftMargin: Theme.componentMargin
+                anchors.right: parent.right
+                anchors.rightMargin: Theme.componentMargin
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: Theme.componentMargin
+
+                ////
+
+                Item {
+                    Layout.preferredWidth: 64
+                    Layout.preferredHeight: 64
+
+                    IconSvg {
+                        anchors.centerIn: parent
+                        width: 44
+                        height: 44
+
+                        source: {
+                            if (!deviceManager.hasAdapters) return "qrc:/IconLibrary/material-icons/duotone/settings_bluetooth.svg"
+                            return "qrc:/IconLibrary/material-icons/outlined/bluetooth_disabled.svg"
+                        }
+                        color: "white"
+                    }
+                }
+
+                ////
+
+                Column {
+                    Layout.fillWidth: true
+
+                    Text {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+
+                        text: {
+                            if (!deviceManager.hasAdapters) return qsTr("No Bluetooth adapter detected")
+                            if (!deviceManager.bluetoothPermission) return qsTr("Bluetooth pepermission missing")
+                            if (!deviceManager.bluetooth) return qsTr("Bluetooth is disabled")
+                            return "Error..."
+                        }
+                        font.pixelSize: Theme.fontSizeContentBig
+                        font.bold: true
+                        wrapMode: Text.WordWrap
+                        color: "white"
+                        opacity: 1.0
+                    }
+
+                    Text {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+
+                        text: {
+                            if (!deviceManager.hasAdapters) {
+                                return qsTr("Please check if a Bluetooth adapter is connected and configured on your machine.")
+                            } else if (!deviceManager.bluetoothPermission) {
+                                return qsTr("Please check if the Bluetooth permission has been granted to the application.")
+                            }
+                            return qsTr("Please enable Bluetooth on your machine and retry.")
+                        }
+                        font.pixelSize: Theme.fontSizeContent
+                        wrapMode: Text.WordWrap
+                        color: "white"
+                        opacity: 0.85
+                    }
+                }
+
+                ////
+
+                Row {
+                    spacing: Theme.componentMargin
+
+                    ButtonClear {
+                        text: qsTr("Retry")
+                        color: "white"
+
+                        onClicked: {
+                            deviceManager.requestBluetoothPermission()
+                            deviceManager.enableBluetooth()
+                        }
+                    }
+                }
+
+                ////
+            }
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+
+        Rectangle {
             id: statusBar
+
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
