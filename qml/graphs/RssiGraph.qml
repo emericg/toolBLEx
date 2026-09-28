@@ -74,7 +74,7 @@ GraphsView {
 
     function updateGraph() {
         if (!rssiGraph.visible) return
-        if (!deviceManager.scanning || deviceManager.scanningPaused || hostMenu.currentSelection !== 3) return
+        if (!deviceManager.scanning || deviceManager.scanningPaused || hostMenu.currentIndex !== 2) return
         //console.log("rssiGraph // updateGraph()")
 
         //// AXIS
@@ -95,7 +95,7 @@ GraphsView {
 
     Timer {
         interval: SettingsManager.scanRssiInterval
-        running: (deviceManager.scanning && !deviceManager.scanningPaused && hostMenu.currentSelection === 3)
+        running: (deviceManager.scanning && !deviceManager.scanningPaused && hostMenu.currentIndex === 2)
         repeat: true
         onTriggered: updateGraph()
     }

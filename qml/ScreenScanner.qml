@@ -609,13 +609,18 @@ Loader {
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: Theme.componentMarginXS
 
-                RoundButtonIcon {
+                RoundButtonSunken {
                     width: 28; height: 28;
                     anchors.verticalCenter: parent.verticalCenter
-                    highlightMode: "color"
+
                     highlighted: (SettingsManager.scanviewOrientation === Qt.Vertical)
                     source: "qrc:/IconLibrary/material-symbols/bottom_panel_open-fill.svg"
-                    iconColor: Theme.colorSubText
+
+                    colorBackground: Theme.colorActionbar
+                    colorHighlight: "transparent"
+                    colorRipple: "transparent"
+                    colorIcon: highlighted ? Theme.colorPrimary: Theme.colorSubText
+                    colorIconHighlight: Theme.colorPrimary
 
                     onClicked: {
                         SettingsManager.scanviewOrientation = Qt.Vertical
@@ -624,13 +629,18 @@ Loader {
                         splitview.width = splitview.width-1
                     }
                 }
-                RoundButtonIcon {
+                RoundButtonSunken {
                     width: 28; height: 28;
                     anchors.verticalCenter: parent.verticalCenter
-                    highlightMode: "color"
+
                     highlighted: (SettingsManager.scanviewOrientation === Qt.Horizontal)
                     source: "qrc:/IconLibrary/material-symbols/right_panel_open-fill.svg"
-                    iconColor: Theme.colorSubText
+
+                    colorBackground: Theme.colorActionbar
+                    colorHighlight: "transparent"
+                    colorRipple: "transparent"
+                    colorIcon: highlighted ? Theme.colorPrimary: Theme.colorSubText
+                    colorIconHighlight: Theme.colorPrimary
 
                     onClicked: {
                         SettingsManager.scanviewOrientation = Qt.Horizontal

@@ -28,6 +28,15 @@ T.TabButton {
     property url source
     property int sourceSize: UtilsNumber.alignTo(height * 0.5, 2)
 
+    // badge
+    property string badgeText
+    property bool badgeFade: false
+    property int badgeSize: UtilsNumber.alignTo(height * 0.5, 2)
+    property color badgeColor: checked ? colorTextChecked : Theme.colorPrimary
+    property color badgeTextColor: checked ? colorBackgroundChecked : "white"
+
+    function blink() { badgeLoader.item?.blink() }
+
     // colors
     property color colorBackground: Theme.colorForeground
     property color colorBackgroundChecked: Theme.colorPrimary
@@ -98,6 +107,23 @@ T.TabButton {
                 elide: Text.ElideMiddle
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
+            }
+
+            Loader {
+                id: badgeLoader
+                Layout.preferredWidth: control.badgeSize
+                Layout.preferredHeight: control.badgeSize
+                Layout.alignment: Qt.AlignVCenter
+
+                active: (control.badgeText.length > 0 || control.badgeFade)
+                visible: active
+
+                sourceComponent: ButtonBadge {
+                    text: control.badgeText
+                    fade: control.badgeFade
+                    color: control.badgeColor
+                    colorText: control.badgeTextColor
+                }
             }
         }
     }

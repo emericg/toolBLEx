@@ -29,6 +29,15 @@ T.Button {
     property int sourceSize: 32
     property int sourceRotation: 0
 
+    // badge
+    property string badgeText
+    property bool badgeFade: false
+    property int badgeSize: UtilsNumber.alignTo(height * 0.6, 2)
+    property color badgeColor: Theme.colorPrimary
+    property color badgeTextColor: "white"
+
+    function blink() { badgeLoader.item?.blink() }
+
     // colors
     property color colorContent: Theme.colorComponentText
     property color colorContentHighlight: Theme.colorComponentContent
@@ -80,6 +89,25 @@ T.Button {
 
             color: control.highlighted ? control.colorContentHighlight : control.colorContent
             opacity: control.highlighted ? 1 : 0.66
+        }
+
+        Loader { // contentBadge
+            id: badgeLoader
+            anchors.verticalCenter: parent.verticalCenter
+
+            width: control.badgeSize
+            height: control.badgeSize
+
+            active: (control.badgeText.length > 0 || control.badgeFade)
+            visible: active
+            opacity: control.highlighted ? 1 : 0.6
+
+            sourceComponent: ButtonBadge {
+                text: control.badgeText
+                fade: control.badgeFade
+                color: control.badgeColor
+                colorText: control.badgeTextColor
+            }
         }
     }
 

@@ -333,42 +333,8 @@ Column { // APP SETTINGS
 
             currentSelection: SettingsManager.preferredScreen
             onMenuSelected: (index) => { SettingsManager.preferredScreen = index }
-        }
     }
-
-    ////
-
-    Rectangle {
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: 48
-        color: Theme.colorForeground
-
-        Text {
-            anchors.left: parent.left
-            anchors.leftMargin: Theme.componentMarginL
-            anchors.right: parent.right
-            anchors.rightMargin: 64
-            anchors.verticalCenter: parent.verticalCenter
-
-            text: qsTr("Show splashscreen on startup")
-            textFormat: Text.PlainText
-            font.pixelSize: Theme.fontSizeContent
-            font.bold: false
-            color: Theme.colorText
-            wrapMode: Text.WordWrap
-            verticalAlignment: Text.AlignVCenter
         }
-
-        SwitchThemed {
-            anchors.right: parent.right
-            anchors.rightMargin: Theme.componentMarginXS
-            anchors.verticalCenter: parent.verticalCenter
-
-            checked: SettingsManager.appSplashScreen
-            onClicked: SettingsManager.appSplashScreen = checked
-        }
-    }
 
     ////
 

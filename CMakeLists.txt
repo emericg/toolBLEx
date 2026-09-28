@@ -139,7 +139,6 @@ set(SOURCES_QML
 
     qml/components/ButtonScanMenu.qml
     qml/components/ItemActionTag.qml
-    qml/components/SelectorMenuThemedItemBadge.qml
     qml/components/DeviceScannerListHeader.qml
     qml/components/DeviceScannerListWidget.qml
     qml/components/DeviceScannerTableHeader.qml

@@ -21,37 +21,29 @@ Item {
         // prevent clicks below this area
         MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
 
-        SelectorMenu {
+        TabBarThemed {
             id: hostMenu
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.verticalCenterOffset: -1
+            anchors.fill: parent
 
-            height: 32
+            contentHeight: parent.height - separatorHeight
+            separatorHeight: 2
+            colorBackground: Theme.colorActionbar
 
-            currentSelection: 1
-            model: ListModel {
-                id: lmSelectorMenuTxt1
-                ListElement { idx: 1; txt: qsTr("host info"); src: ""; sz: 0; }
-                ListElement { idx: 2; txt: qsTr("proximity radar"); src: ""; sz: 0; }
-                ListElement { idx: 3; txt: qsTr("RSSI graph"); src: ""; sz: 0; }
+            currentIndex: 0
+            onCurrentIndexChanged: if (currentIndex === 2) rssiGraph.updateGraph()
+
+            TabButtonThemed {
+                text: qsTr("host info")
+                colorBackground: Theme.colorActionbar
             }
-
-            onMenuSelected: (index) => {
-                //console.log("SelectorMenu clicked #" + index)
-                currentSelection = index
-                if (currentSelection === 3) rssiGraph.updateGraph()
+            TabButtonThemed {
+                text: qsTr("proximity radar")
+                colorBackground: Theme.colorActionbar
             }
-        }
-
-        Rectangle {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-
-            height: 2
-            opacity: 1
-            color: Theme.colorSeparator
+            TabButtonThemed {
+                text: qsTr("RSSI graph")
+                colorBackground: Theme.colorActionbar
+            }
         }
     }
 
@@ -66,7 +58,7 @@ Item {
         anchors.bottom: parent.bottom
         anchors.margins: Theme.componentMargin
 
-        visible: (hostMenu.currentSelection === 1)
+        visible: (hostMenu.currentIndex === 0)
 
         contentWidth: -1
         contentHeight: hostInfosColumn.height
@@ -90,7 +82,21 @@ Item {
             }
         }
     }
+/*
+    DevicesSummaryWidget {
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.margins: Theme.componentMargin
 
+        visible: (hostMenu.currentIndex === 0)
+
+        onExportList: {
+            popupLoader_export.active = true
+            popupLoader_export.item.open()
+        }
+    }
+*/
     ////////////////
 
     ProximityRadar {
@@ -100,8 +106,8 @@ Item {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
 
-        visible: (hostMenu.currentSelection === 2)
-        enabled: (hostMenu.currentSelection === 2)
+        visible: (hostMenu.currentIndex === 1)
+        enabled: (hostMenu.currentIndex === 1)
     }
 
     ////////////////
@@ -117,8 +123,8 @@ Item {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: -24
 
-        visible: (hostMenu.currentSelection === 3)
-        enabled: (hostMenu.currentSelection === 3)
+        visible: (hostMenu.currentIndex === 2)
+        enabled: (hostMenu.currentIndex === 2)
     }
 
     ////////////////

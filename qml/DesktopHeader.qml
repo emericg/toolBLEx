@@ -59,45 +59,34 @@ Rectangle {
             height: 32
             spacing: 0
 
-            RoundButtonIcon {
+            SquareButtonSunken {
                 anchors.verticalCenter: parent.verticalCenter
                 width: 48
                 height: 48
-                sourceSize: 30
 
-                backgroundVisible: false
-                backgroundColor: Theme.colorHeaderHighlight
-                opacity: 1
-                highlightMode: "off"
-                iconColor: Theme.colorIcon
+                sourceSize: 30
                 source: {
                     if (appContent.state === "Advertiser") return "qrc:/IconLibrary/material-icons/duotone/wifi_tethering.svg"
                     if (appContent.state === "Ubertooth") return "qrc:/IconLibrary/material-icons/duotone/microwave.svg"
                     if (appContent.state === "RtlSdr") return "qrc:/IconLibrary/material-icons/duotone/cell_tower.svg"
                     return "qrc:/IconLibrary/material-icons/duotone/devices.svg"
                 }
+
+                colorBackground: Theme.colorHeaderHighlight
             }
 
-            RoundButtonIcon {
+            RoundButtonSunken { // start
                 anchors.verticalCenter: parent.verticalCenter
                 width: 48
                 height: 48
                 sourceSize: 32
-
-                highlightMode: (opacity !== 1) ? "color" : "off"
-                iconColor: Theme.colorHeaderContent
                 source: (deviceManager.scanningPaused) ?
                             "qrc:/IconLibrary/material-symbols/media/pause-fill.svg" :
                             "qrc:/IconLibrary/material-symbols/media/play_arrow-fill.svg"
 
-                backgroundVisible: {
-                    if (appContent.state === "Scanner" && deviceManager.scanning) return true
-                    if (appContent.state === "Advertiser" && deviceManager.advertising) return true
-                    if (appContent.state === "Ubertooth" && ubertooth.running) return true
-                    if (appContent.state === "RtlSdr" && rtlsdr.running) return true
-                    return false
-                }
-                backgroundColor: Theme.colorHeaderHighlight
+                colorBackground: "transparent"
+                colorHighlight: (opacity === 1) ? Theme.colorHeaderHighlight : Theme.colorHeaderContent
+                colorIcon: Theme.colorHeaderContent
 
                 opacity: {
                     if (appContent.state === "Scanner" && deviceManager.scanning) return 1
@@ -121,15 +110,16 @@ Rectangle {
                 }
             }
 
-            RoundButtonIcon {
+            RoundButtonSunken { // stop
                 anchors.verticalCenter: parent.verticalCenter
                 width: 48
                 height: 48
                 sourceSize: 32
-
-                highlightMode: (opacity !== 1) ? "color" : "off"
-                iconColor: Theme.colorHeaderContent
                 source: "qrc:/IconLibrary/material-symbols/media/stop-fill.svg"
+
+                colorBackground: "transparent"
+                colorHighlight: (opacity === 1) ? Theme.colorHeaderHighlight : Theme.colorHeaderContent
+                colorIcon: Theme.colorHeaderContent
 
                 opacity: {
                     if (appContent.state === "Scanner" && !deviceManager.scanning) return 1

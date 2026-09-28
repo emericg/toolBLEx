@@ -12,7 +12,7 @@ Item {
         if (selectedDevice) {
             // Make sure we switch back to the first tab
             if (!selectedDevice.isLowEnergy) {
-                deviceMenu.currentSelection = 1
+                deviceMenu.currentIndex = 0
             }
         }
     }
@@ -47,27 +47,16 @@ Item {
         // only make sense for BLE device?
         //visible: (selectedDevice && selectedDevice.isLowEnergy)
 
-        Item {
+        TabBarThemed {
             id: deviceMenu
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.verticalCenterOffset: -1
+            anchors.fill: parent
 
-            width: contentRow.width + Theme.componentBorderWidth
-            height: 32
-            opacity: enabled ? 1 : 0.4
+            contentHeight: parent.height - separatorHeight
+            separatorHeight: 2
+            colorBackground: Theme.colorActionbar
+
             enabled: (selectedDevice && selectedDevice.isLowEnergy)
-
-            property int currentSelection: 1
-            signal menuSelected(var index)
-            onMenuSelected: (index) => { currentSelection = index }
-
-            Rectangle {
-                id: background
-                anchors.fill: parent
-                radius: Theme.componentRadius
-                color: Theme.colorComponentBackground
-            }
+            currentIndex: 0
 
             Connections {
                 target: selectedDevice
@@ -78,76 +67,32 @@ Item {
                 function onLogUpdated() { menuLog.blink() }
             }
 
-            Row {
-                id: contentRow
-                height: parent.height
-                anchors.centerIn: parent
-                spacing: Theme.componentBorderWidth
-
-                SelectorMenuThemedItemBadge {
-                    id: menuInfo
-                    index: 1
-                    highlighted: (deviceMenu.currentSelection === index)
-
-                    text: qsTr("device info")
-                    badgeText: (selectedDevice && selectedDevice.connected) ? " " : ""
-                    badgeColor: (selectedDevice && selectedDevice.status === 2) ? Theme.colorYellow : Theme.colorGreen
-                    badgeFade: (selectedDevice && selectedDevice.status === 2)
-                    onClicked: deviceMenu.menuSelected(index)
-                    sourceSize: 0
-                }
-                SelectorMenuThemedItemBadge {
-                    id: menuAdv
-                    index: 2
-                    highlighted: (deviceMenu.currentSelection === index)
-
-                    text: qsTr("advertisement")
-                    badgeText: (selectedDevice && selectedDevice.advCount)
-                    onClicked: deviceMenu.menuSelected(index)
-                    sourceSize: 0
-                }
-                SelectorMenuThemedItemBadge {
-                    id: menuSrv
-                    index: 3
-                    highlighted: (deviceMenu.currentSelection === index)
-
-                    text: qsTr("services")
-                    badgeText: (selectedDevice && selectedDevice.servicesCount) ? selectedDevice.servicesCount : "?"
-                    onClicked: deviceMenu.menuSelected(index)
-                    sourceSize: 0
-                }
-                SelectorMenuThemedItemBadge {
-                    id: menuLog
-                    index: 4
-                    highlighted: (deviceMenu.currentSelection === index)
-
-                    text: qsTr("log")
-                    badgeText: (selectedDevice && selectedDevice.deviceLogCount) ? selectedDevice.deviceLogCount : "?"
-                    onClicked: deviceMenu.menuSelected(index)
-                    sourceSize: 0
-                }
+            TabButtonThemed {
+                id: menuInfo
+                text: qsTr("device info")
+                colorBackground: Theme.colorActionbar
+                badgeText: (selectedDevice && selectedDevice.connected) ? " " : ""
+                badgeColor: (selectedDevice && selectedDevice.status === 2) ? Theme.colorYellow : Theme.colorGreen
+                badgeFade: (selectedDevice && selectedDevice.status === 2)
             }
-
-            Rectangle {
-                id: foreground
-                anchors.fill: parent
-
-                radius: Theme.componentRadius
-                color: "transparent"
-
-                border.width: Theme.componentBorderWidth
-                border.color: Theme.colorComponentBorder
+            TabButtonThemed {
+                id: menuAdv
+                text: qsTr("advertisement")
+                colorBackground: Theme.colorActionbar
+                badgeText: selectedDevice ? selectedDevice.advCount : ""
             }
-        }
-
-        Rectangle {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-
-            height: 2
-            opacity: 1
-            color: Theme.colorSeparator
+            TabButtonThemed {
+                id: menuSrv
+                text: qsTr("services")
+                colorBackground: Theme.colorActionbar
+                badgeText: (selectedDevice && selectedDevice.servicesCount) ? selectedDevice.servicesCount : "?"
+            }
+            TabButtonThemed {
+                id: menuLog
+                text: qsTr("log")
+                colorBackground: Theme.colorActionbar
+                badgeText: (selectedDevice && selectedDevice.deviceLogCount) ? selectedDevice.deviceLogCount : "?"
+            }
         }
     }
 
@@ -162,7 +107,7 @@ Item {
         anchors.bottom: parent.bottom
         anchors.margins: Theme.componentMargin
 
-        visible: (deviceMenu.currentSelection === 1)
+        visible: (deviceMenu.currentIndex === 0)
     }
 
     ////////////////
@@ -176,7 +121,7 @@ Item {
         anchors.bottom: parent.bottom
         anchors.margins: 0
 
-        visible: (deviceMenu.currentSelection === 2)
+        visible: (deviceMenu.currentIndex === 1)
     }
 
     ////////////////
@@ -190,7 +135,7 @@ Item {
         anchors.bottom: parent.bottom
         anchors.margins: 0
 
-        visible: (deviceMenu.currentSelection === 3)
+        visible: (deviceMenu.currentIndex === 2)
     }
 
     ////////////////
@@ -204,7 +149,7 @@ Item {
         anchors.bottom: parent.bottom
         anchors.margins: 0
 
-        visible: (deviceMenu.currentSelection === 4)
+        visible: (deviceMenu.currentIndex === 3)
     }
 
     ////////////////

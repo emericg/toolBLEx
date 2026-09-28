@@ -54,6 +54,7 @@ list(APPEND MODULE_QML_FILES
     qml/generics/ProgressArc.qml
     qml/generics/ProgressCircle.qml
     qml/generics/ProgressChip.qml
+    qml/generics/ButtonBadge.qml
     qml/generics/SelectorMenu.qml
     qml/generics/SelectorMenuSunken.qml
     qml/generics/SelectorMenuItem.qml

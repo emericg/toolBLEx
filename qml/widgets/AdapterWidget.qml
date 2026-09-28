@@ -365,7 +365,7 @@ Rectangle {
             color: Theme.colorPrimary
             visible: (modelData.isInUse &&
                       deviceManager.scanning && !deviceManager.scanningPaused &&
-                      appContent.state === "Scanner" && hostMenu.currentSelection === 1)
+                      appContent.state === "Scanner" && hostMenu.currentIndex === 0)
 
             ParallelAnimation {
                 running: visible

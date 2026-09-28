@@ -10,7 +10,7 @@ Column {
     spacing: 8
 
     //height: checked ? cccccc.height : Theme.componentHeight
-    //Behavior on height { NumberAnimation { duration: Theme.animationSlowSpeed } }
+    //Behavior on height { NumberAnimation { duration: Theme.animationSpeedSlow } }
 
     property string category
     property string text: "submenu"
