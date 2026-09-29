@@ -186,7 +186,7 @@ Rectangle {
             ButtonSolid {
                 height: Theme.componentHeight
 
-                color: Theme.colorMaterialGrey
+                color: Theme.colorGrey
                 enabled: (deviceManager.deviceCountShown > 0)
 
                 text: qsTr("Clear list")

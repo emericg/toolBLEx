@@ -183,18 +183,6 @@ Item {
                 selectedDevice.saveServiceCache()
             }
         }
-        ButtonSolid { // saveButton
-            visible: (selectedDevice && selectedDevice.hasServices && selectedDevice.servicesScanned)
-
-            text: qsTr("Save")
-            color: Theme.colorGrey
-            source: "qrc:/IconLibrary/material-symbols/save.svg"
-
-            onClicked: {
-                popupLoader_export.active = true
-                popupLoader_export.item.open()
-            }
-        }
     }
 
     ////////////////

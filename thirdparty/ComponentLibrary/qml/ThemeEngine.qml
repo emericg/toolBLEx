@@ -584,7 +584,7 @@ QtObject {
             colorBlue   = "#4cafe9"
             colorYellow = "#ffcf00"
             colorOrange = "#ffa635"
-            colorGrey   = "#9E9E9E"
+            colorGrey   = "#aaa"
 
             isLight = true
             isDark = false

@@ -10,7 +10,7 @@ Item {
     ////////////////
 
     Rectangle {
-        id: actionBar
+        id: menuBar
         anchors.left: parent.left
         anchors.right: parent.right
 
@@ -26,7 +26,7 @@ Item {
             anchors.fill: parent
 
             contentHeight: parent.height - separatorHeight
-            separatorHeight: 2
+            separatorHeight: 0
             colorBackground: Theme.colorActionbar
 
             currentIndex: 0
@@ -35,14 +35,17 @@ Item {
             TabButtonThemed {
                 text: qsTr("host info")
                 colorBackground: Theme.colorActionbar
+                colorBackgroundChecked: Theme.colorGrey
             }
             TabButtonThemed {
                 text: qsTr("proximity radar")
                 colorBackground: Theme.colorActionbar
+                colorBackgroundChecked: Theme.colorGrey
             }
             TabButtonThemed {
                 text: qsTr("RSSI graph")
                 colorBackground: Theme.colorActionbar
+                colorBackgroundChecked: Theme.colorGrey
             }
         }
     }
@@ -52,7 +55,7 @@ Item {
     Flickable {
         id: hostInfos
 
-        anchors.top: actionBar.bottom
+        anchors.top: menuBar.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
@@ -101,7 +104,7 @@ Item {
 
     ProximityRadar {
         id: proximityRadar
-        anchors.top: actionBar.bottom
+        anchors.top: menuBar.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
@@ -114,7 +117,7 @@ Item {
 
     RssiGraph {
         id: rssiGraph
-        anchors.top: actionBar.bottom
+        anchors.top: menuBar.bottom
         anchors.topMargin: -20
         anchors.left: parent.left
         anchors.leftMargin: -24

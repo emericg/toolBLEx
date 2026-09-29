@@ -1,8 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls
-
 import QtQuick.Dialogs
+import QtQuick.Controls
 
 import ComponentLibrary
 import AppUtils
@@ -411,7 +410,7 @@ Flickable {
         }
 
         ////////
-
+/*
         Rectangle {
             width: detailView.ww
             height: boxA.height + 32
@@ -469,7 +468,7 @@ Flickable {
                         }
                     }
                 }
-/*
+
                 Flow { // status row?
                     anchors.left: parent.left
                     anchors.right: parent.right
@@ -484,10 +483,9 @@ Flickable {
                         color: Theme.colorSubText
                     }
                 }
-*/
             }
         }
-
+*/
         ////////
 
         Rectangle {
@@ -510,8 +508,11 @@ Flickable {
                     width: parent.width
                     spacing: Theme.componentMarginS
 
-                    ButtonSolid {
-                        color: (selectedDevice && selectedDevice.isStarred) ? Theme.colorPrimary : Theme.colorGrey
+                    ButtonOutline {
+                        property bool star: (selectedDevice && selectedDevice.isStarred)
+                        color: star ? Theme.colorPrimary : Theme.colorGrey
+                        colorText: star ? "white" : Theme.colorText
+                        colorBackground: star ? Theme.colorPrimary : "transparent"
 
                         text: (selectedDevice && selectedDevice.isStarred) ? qsTr("starred") : qsTr("star")
                         source: (selectedDevice && selectedDevice.isStarred) ?
@@ -520,8 +521,9 @@ Flickable {
                         onClicked: selectedDevice.isStarred = !selectedDevice.isStarred
                     }
 
-                    ButtonSolid {
+                    ButtonOutline {
                         color: Theme.colorGrey
+                        colorText: Theme.colorText
 
                         visible: (selectedDevice && !selectedDevice.isBeacon)
 
@@ -532,8 +534,9 @@ Flickable {
                         onClicked: selectedDevice.cache(!selectedDevice.isCached)
                     }
 
-                    ButtonSolid {
+                    ButtonOutline {
                         color: Theme.colorGrey
+                        colorText: Theme.colorText
 
                         text: (selectedDevice && selectedDevice.isBlacklisted) ? qsTr("show") : qsTr("hide")
                         source: (selectedDevice && selectedDevice.isBlacklisted) ?
@@ -542,14 +545,15 @@ Flickable {
                         onClicked: selectedDevice.blacklist(!selectedDevice.isBlacklisted)
                     }
 
-                    ButtonSolid {
+                    ButtonOutline {
                         color: (selectedDevice && selectedDevice.userColor)
-                        //fulltextColor: (selectedDevice && UtilsApp.isQColorLight(selectedDevice.userColor)) ? "#333" : "#f4f4f4"
+                        colorText: UtilsColor.isLight(colorBackground) ? "dark" : "white"
+                        colorBorder: UtilsColor.isLight(colorBackground) ? Theme.colorComponentBorder : Qt.rgba(color.r, color.g, color.b, 0.5)
+                        colorBackground: (selectedDevice && selectedDevice.userColor)
                         font.bold: true
 
                         text: qsTr("color")
                         onClicked: colorDialog.open()
-                        colorText: UtilsApp.isQColorLight(colorBackground) ? "dark" : "white"
 
                         ColorDialog {
                             id: colorDialog
@@ -557,28 +561,6 @@ Flickable {
                             onAccepted: selectedDevice.userColor = colorDialog.selectedColor
                         }
                     }
-/*
-                    Rectangle { // user color
-                        width: Theme.componentHeight
-                        height: Theme.componentHeight
-                        radius: Theme.componentRadius
-
-                        color: selectedDevice.userColor
-                        border.width: 2
-                        border.color: Qt.darker(selectedDevice.userColor, 1.1)
-
-                        ColorDialog {
-                            id: colorDialog
-                            selectedColor: selectedDevice.userColor
-                            onAccepted: selectedDevice.userColor = colorDialog.selectedColor
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: colorDialog.open()
-                        }
-                    }
-*/
                 }
 
                 TextFieldThemed { // user comment

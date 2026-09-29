@@ -235,6 +235,12 @@ Column { // SPECTRUM ANALYZERS
                     SettingsManager.ubertooth_freqMax = second.value
                     restartUbertoothTimer.restart()
                 }
+
+                graduation: true
+                graduationStepSize: 10
+                graduationDefault: true
+                graduationDefaultValue_first: 2400
+                graduationDefaultValue_second: 2500
             }
         }
 
@@ -413,6 +419,10 @@ Column { // SPECTRUM ANALYZERS
                         SettingsManager.rtlsdr_freqTarget = value
                         restartRtlSdrTimer.restart()
                     }
+
+                    graduation: true
+                    graduationFrom: 0
+                    graduationStepSize: 100
                 }
             }
 

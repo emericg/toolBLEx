@@ -186,7 +186,7 @@ Item {
         ButtonSolid { // saveButton
             color: Theme.colorGrey
 
-            text: qsTr("Save")
+            text: qsTr("Save log")
             source: "qrc:/IconLibrary/material-symbols/save.svg"
 
             onClicked: {

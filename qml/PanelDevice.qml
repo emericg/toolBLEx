@@ -33,7 +33,7 @@ Item {
     ////////////////
 
     Rectangle {
-        id: actionBar
+        id: menuBar
         anchors.left: parent.left
         anchors.right: parent.right
 
@@ -52,7 +52,7 @@ Item {
             anchors.fill: parent
 
             contentHeight: parent.height - separatorHeight
-            separatorHeight: 2
+            separatorHeight: 0
             colorBackground: Theme.colorActionbar
 
             enabled: (selectedDevice && selectedDevice.isLowEnergy)
@@ -93,6 +93,94 @@ Item {
                 colorBackground: Theme.colorActionbar
                 badgeText: (selectedDevice && selectedDevice.deviceLogCount) ? selectedDevice.deviceLogCount : "?"
             }
+        }
+    }
+
+    ////////////////
+
+    Rectangle {
+        id: actionBar
+        anchors.top: menuBar.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+
+        z: 5
+        height: 56
+        color: Theme.colorBox
+        //color: Qt.lighter(Theme.colorActionbar, 1.05)
+
+        Rectangle {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            height: 2
+            color: Theme.colorBoxBorder
+        }
+
+        // prevent clicks below this area
+        MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
+
+        // only make sense for BLE device?
+        visible: (selectedDevice && selectedDevice.isLowEnergy)
+
+        Row { // Layout { // buttons row
+            anchors.left: parent.left
+            anchors.leftMargin: Theme.componentMarginXS
+            anchors.right: parent.right
+            anchors.rightMargin: Theme.componentMarginXS
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: Theme.componentMarginXS
+
+            ////
+
+            ButtonScanMenu { // action button
+                width: 256
+                height: 34
+            }
+
+            ButtonDesktop {
+                height: 34
+
+                source: "qrc:/IconLibrary/material-symbols/bluetooth_disabled.svg"
+
+                visible: (selectedDevice && selectedDevice.status >= DeviceUtils.DEVICE_CONNECTED)
+                onClicked: {
+                    if (selectedDevice.status >= DeviceUtils.DEVICE_CONNECTED) {
+                        selectedDevice.actionDisconnect()
+                    }
+                }
+            }
+
+            ButtonDesktop {
+                height: 34
+
+                text: qsTr("Load from cache")
+                source: "qrc:/IconLibrary/material-symbols/save.svg"
+
+                visible: (selectedDevice && selectedDevice.hasServiceCache)
+                //enabled: selectedDevice.status === DeviceUtils.DEVICE_OFFLINE
+                onClicked: selectedDevice.restoreServiceCache()
+            }
+
+            ////
+
+            ButtonDesktop {
+                height: 34
+
+                text: qsTr("Export available data")
+                source: "qrc:/IconLibrary/material-symbols/save-fill.svg"
+
+                enabled: (selectedDevice && (selectedDevice.advCount > 0 ||
+                                             selectedDevice.servicesCount > 0 ||
+                                             selectedDevice.hasServiceCache))
+
+                onClicked: {
+                    popupLoader_export.active = true
+                    popupLoader_export.item.open()
+                }
+            }
+
+            ////
         }
     }
 
