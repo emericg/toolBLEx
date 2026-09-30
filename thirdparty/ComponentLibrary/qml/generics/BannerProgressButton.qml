@@ -22,7 +22,7 @@ T.Control {
                              implicitContentHeight + topPadding + bottomPadding)
 
     //opacity: enabled ? 1 : 0.66
-    Behavior on opacity { OpacityAnimator { duration: Theme.animationMediumSpeed } }
+    Behavior on opacity { OpacityAnimator { duration: Theme.animationSpeedMedium } }
 
     font.pixelSize: Theme.fontSizeContentBig
     font.bold: false
@@ -95,7 +95,7 @@ T.Control {
                 rotation: control.sourceRotation
 
                 opacity: 1
-                Behavior on opacity { OpacityAnimator { duration: Theme.animationMediumSpeed } }
+                Behavior on opacity { OpacityAnimator { duration: Theme.animationSpeedMedium } }
 
                 SequentialAnimation on opacity {
                     running: (control.animationRunning &&

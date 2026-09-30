@@ -19,7 +19,7 @@ T.Button {
 
     width: compactInternal ? height : implicitWidth
     height: compactInternal ? height : implicitHeight
-    Behavior on width { NumberAnimation { duration: Theme.animationFastSpeed } }
+    Behavior on width { NumberAnimation { duration: Theme.animationSpeedFast } }
 
     font.pixelSize: Theme.componentFontSize
     font.bold: false
@@ -90,7 +90,7 @@ T.Button {
         color: control.backgroundColor
 
         //opacity: (mouseArea.containsMouse) ? 1 : 0
-        Behavior on opacity { NumberAnimation { duration: Theme.animationMediumSpeed } }
+        Behavior on opacity { NumberAnimation { duration: Theme.animationSpeedMedium } }
 
         Rectangle {
             id: mouseBackground
@@ -101,8 +101,8 @@ T.Button {
             //visible: !control.compact
             color: "white"
             opacity: mouseArea.containsMouse ? 0.16 : 0
-            Behavior on opacity { NumberAnimation { duration: Theme.animationSlowSpeed } }
-            Behavior on width { NumberAnimation { duration: Theme.animationMediumSpeed } }
+            Behavior on opacity { NumberAnimation { duration: Theme.animationSpeedSlow } }
+            Behavior on width { NumberAnimation { duration: Theme.animationSpeedMedium } }
         }
 
         layer.enabled: true
@@ -184,8 +184,11 @@ T.Button {
     ////////////////
 
     Loader {
+        id: tooltipLoader
         anchors.fill: control
-        active: control.tooltipText && control.hovered && control.compactInternal
+
+        property bool tooltipShown: false
+        active: control.tooltipText && (control.hovered || tooltipLoader.tooltipShown) && control.compactInternal
 
         sourceComponent: ToolTipFlat {
             visible: mouseArea.containsMouse
@@ -193,6 +196,9 @@ T.Button {
             textColor: control.textColor
             tooltipPosition: control.tooltipPosition
             backgroundColor: control.backgroundColor
+
+            onAboutToShow: tooltipLoader.tooltipShown = true
+            onClosed: tooltipLoader.tooltipShown = false
         }
     }
 

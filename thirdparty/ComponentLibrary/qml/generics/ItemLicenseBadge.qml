@@ -1,9 +1,9 @@
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Templates as T
 
 import ComponentLibrary
 
-AbstractButton {
+T.AbstractButton {
     id: control
     width: leftText.contentWidth + rightText.contentWidth + 24
     height: 22

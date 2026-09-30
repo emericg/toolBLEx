@@ -5,6 +5,7 @@ project(AppUtils LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_FIND_PACKAGE_TARGETS_GLOBAL ON)
+set(QT_NO_PRIVATE_MODULE_WARNING ON)
 
 ################################################################################
 
@@ -54,8 +55,6 @@ set(CORE_SOURCES
 # Qt optional tools
 if(UTILS_QT_RHI)
     add_definitions(-DUTILS_QT_RHI)
-
-    set(QT_NO_PRIVATE_MODULE_WARNING ON)
 
     if(Qt6Gui_VERSION VERSION_GREATER_EQUAL 6.10.0)
         find_package(Qt6 REQUIRED COMPONENTS GuiPrivate)

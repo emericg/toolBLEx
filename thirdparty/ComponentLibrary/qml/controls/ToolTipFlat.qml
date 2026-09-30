@@ -7,15 +7,25 @@ T.Popup {
     id: control
 
     x: {
-        if (tooltipPosition === "left") return -(width + 10)
-        if (tooltipPosition === "right") return +(parent.width + 10)
-        if (tooltipPosition === "topRight" || tooltipPosition === "bottomRight") return 0
-        if (tooltipPosition === "topLeft" || tooltipPosition === "bottomLeft") return (parent.width - width)
-        return (parent.width - width) / 2
+        if (!parent) return 0
+        if (positionInternal === "left") return -(width + 10)
+        if (positionInternal === "right") return (parent.width + 10)
+
+        var px = (parent.width - width) / 2
+        if (positionInternal === "topRight" || positionInternal === "bottomRight") px = 0
+        else if (positionInternal === "topLeft" || positionInternal === "bottomLeft") px = (parent.width - width)
+
+        // clamp inside the window ourselves, so the arrow can follow the final position
+        if (windowWidthInternal > 0) {
+            px = Math.min(px, windowWidthInternal - margins - width - parentSceneXInternal)
+            px = Math.max(px, margins - parentSceneXInternal)
+        }
+        return px
     }
     y: {
-        if (tooltipPosition === "top" || tooltipPosition === "topLeft" || tooltipPosition === "topRight") return -(height + 10)
-        if (tooltipPosition === "bottom" || tooltipPosition === "bottomLeft" || tooltipPosition === "bottomRight") return (parent.height + 10)
+        if (!parent) return 0
+        if (positionInternal === "top" || positionInternal === "topLeft" || positionInternal === "topRight") return -(height + 10)
+        if (positionInternal === "bottom" || positionInternal === "bottomLeft" || positionInternal === "bottomRight") return (parent.height + 10)
         return ((parent.height / 2) - (height / 2))
     }
 
@@ -27,45 +37,41 @@ T.Popup {
     margins: 6
     padding: 6
 
+    closePolicy: T.Popup.CloseOnEscape | T.Popup.CloseOnPressOutsideParent | T.Popup.CloseOnReleaseOutsideParent
+
     // settings
     property string text
-    property string tooltipPosition
+    property string tooltipPosition: "bottom"
 
     // colors
     property color textColor: Theme.colorText
     property color backgroundColor: Theme.colorComponent
 
-    onVisibleChanged: {
-        if (!visible) return
+    // internal
+    property string positionInternal: tooltipPosition
+    property real parentSceneXInternal: 0
+    property real windowWidthInternal: 0
 
-        var obj = mapToItem(appContent, x, y)
-        var thestart = obj.x
-        var theend = obj.x + width + 24
-        //console.log("checking tooltip position: " + thestart + " > " + theend)
+    onAboutToShow: {
+        positionInternal = tooltipPosition
+        if (!parent || !parent.Window.window) return
 
-        if (tooltipPosition === "top") {
-            if (thestart < 0) {
-                tooltipPosition = "topRight"
-            } else if (theend > appContent.width) {
-                tooltipPosition = "topLeft"
-            } else {
-                tooltipPosition = "top"
-            }
-        } else if (tooltipPosition === "bottom") {
-            if (thestart < 0) {
-                tooltipPosition = "bottomRight"
-            } else if (theend > appContent.width) {
-                tooltipPosition = "bottomLeft"
-            } else {
-                tooltipPosition = "bottom"
-            }
+        parentSceneXInternal = parent.mapToItem(null, 0, 0).x
+        windowWidthInternal = parent.Window.width
+
+        var thestart = parentSceneXInternal + (parent.width - width) / 2
+        var theend = thestart + width + 24
+
+        if (tooltipPosition === "top" || tooltipPosition === "bottom") {
+            if (thestart < 0) positionInternal = tooltipPosition + "Right"
+            else if (theend > windowWidthInternal) positionInternal = tooltipPosition + "Left"
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////
 
-    enter: Transition { NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: Theme.animationFastSpeed; } }
-    exit: Transition { NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: Theme.animationFastSpeed; } }
+    enter: Transition { NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: Theme.animationSpeedFast; } }
+    exit: Transition { NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: Theme.animationSpeedFast; } }
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -91,19 +97,18 @@ T.Popup {
             z: -1
 
             anchors.horizontalCenter: {
-                if (control.tooltipPosition === "left") return parent.right
-                if (control.tooltipPosition === "right") return parent.left
+                if (control.positionInternal === "left") return parent.right
+                if (control.positionInternal === "right") return parent.left
                 return parent.horizontalCenter
             }
             anchors.horizontalCenterOffset: {
-                if (control.tooltipPosition === "topLeft" || control.tooltipPosition === "bottomLeft") return (control.width / 2) - (control.parent.width / 2)
-                if (control.tooltipPosition === "topRight" || control.tooltipPosition === "bottomRight") return -(control.width / 2) + (control.parent.width / 2)
-                return 0
+                if (!control.parent) return 0
+                if (control.positionInternal === "left" || control.positionInternal === "right") return 0
+                return (control.parent.width / 2) - (control.x + control.width / 2)
             }
             anchors.verticalCenter: {
-                if (control.tooltipPosition === "bottom" || control.tooltipPosition === "bottomLeft" || control.tooltipPosition === "bottomRight") return parent.top
-                if (control.tooltipPosition === "top" || control.tooltipPosition === "topLeft" || control.tooltipPosition === "topRight") return parent.bottom
-                if (control.tooltipPosition === "left" || control.tooltipPosition === "right") return parent.verticalCenter
+                if (control.positionInternal === "left" || control.positionInternal === "right") return parent.verticalCenter
+                if (control.positionInternal === "top" || control.positionInternal === "topLeft" || control.positionInternal === "topRight") return parent.bottom
                 return parent.top
             }
 

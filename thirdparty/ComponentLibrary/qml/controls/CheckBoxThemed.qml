@@ -46,7 +46,7 @@ T.CheckBox {
 
             color: Theme.colorSecondary
             opacity: control.checked ? 1 : 0
-            Behavior on opacity { NumberAnimation { duration: Theme.animationFastSpeed } }
+            Behavior on opacity { NumberAnimation { duration: Theme.animationSpeedFast } }
         }
     }
 

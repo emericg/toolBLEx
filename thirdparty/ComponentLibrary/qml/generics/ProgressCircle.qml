@@ -27,7 +27,7 @@ Item {
     property color backgroundColor: Theme.colorForeground
 
     property bool animation: true
-    property int animationDuration: Theme.animationSlowSpeed
+    property int animationDuration: Theme.animationSpeedSlow
 
     // private
     property real arcBegin: 0

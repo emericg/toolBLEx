@@ -186,10 +186,6 @@ QtObject {
 
     // Animation speeds
 
-    readonly property int animationFastSpeed: 133
-    readonly property int animationMediumSpeed: 233
-    readonly property int animationSlowSpeed: 333
-
     readonly property int animationSpeedFast: 133
     readonly property int animationSpeedMedium: 233
     readonly property int animationSpeedSlow: 333

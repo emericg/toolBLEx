@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Templates as T
-import QtQuick.Controls.Material
 
 import ComponentLibrary
 
@@ -19,14 +18,14 @@ T.ItemDelegate {
 
     icon.width: 32
     icon.height: 32
-    icon.color: enabled ? Material.foreground : Material.hintTextColor
+    icon.color: enabled ? Theme.colorIcon : Theme.colorSubText
 
     ////////////////
 
     background: Rectangle {
         implicitHeight: Theme.componentHeightXL
 
-        color: control.highlighted ? control.Material.listHighlightColor : "transparent"
+        color: control.highlighted ? Theme.colorForeground : "transparent"
 
         RippleThemed {
             anchors.fill: parent

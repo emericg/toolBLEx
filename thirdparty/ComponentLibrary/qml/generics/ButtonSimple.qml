@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Effects
 import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
@@ -61,24 +60,6 @@ T.Button {
             active: control.enabled && (control.down || control.hovered || control.visualFocus)
             color: control.colorRipple
             clip: true
-
-            layer.enabled: false
-            layer.effect: MultiEffect {
-                maskEnabled: true
-                maskInverted: false
-                maskThresholdMin: 0.5
-                maskSpreadAtMin: 1.0
-                maskSpreadAtMax: 0.0
-                maskSource: ShaderEffectSource {
-                    sourceItem: Rectangle {
-                        x: background.x
-                        y: background.y
-                        width: background.width
-                        height: background.height
-                        radius: Theme.componentRadius
-                    }
-                }
-            }
         }
     }
 

@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Templates as T
 
 import ComponentLibrary
 
@@ -35,12 +35,12 @@ Item {
         if (!_ready) return
         _syncing = true
         if (is24Hour) {
-            tumblerHours.positionViewAtIndex(hours, Tumbler.Center)
+            tumblerHours.positionViewAtIndex(hours, T.Tumbler.Center)
         } else {
-            tumblerHours.positionViewAtIndex(hours % 12, Tumbler.Center)
-            tumblerAmPm.positionViewAtIndex(hours < 12 ? 0 : 1, Tumbler.Center)
+            tumblerHours.positionViewAtIndex(hours % 12, T.Tumbler.Center)
+            tumblerAmPm.positionViewAtIndex(hours < 12 ? 0 : 1, T.Tumbler.Center)
         }
-        tumblerMinutes.positionViewAtIndex(minutes, Tumbler.Center)
+        tumblerMinutes.positionViewAtIndex(minutes, T.Tumbler.Center)
         _hoursCount = tumblerHours.count
         _syncing = false
     }

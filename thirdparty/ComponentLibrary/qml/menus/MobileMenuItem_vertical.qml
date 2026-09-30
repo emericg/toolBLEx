@@ -58,7 +58,7 @@ T.Button {
                 rotation: control.sourceRotation
                 opacity: control.enabled ? 1 : 0.66
                 color: control.highlighted ? control.colorHighlight : control.colorContent
-                Behavior on color { ColorAnimation { duration: Theme.animationFastSpeed } }
+                Behavior on color { ColorAnimation { duration: Theme.animationSpeedFast } }
 
                 Rectangle { // backgroundIndicator
                     anchors.centerIn: parent
@@ -72,10 +72,10 @@ T.Button {
                     visible: control.backgroundVisible
 
                     width: control.highlighted ? 60 : 0
-                    Behavior on width { NumberAnimation { duration: Theme.animationFastSpeed } }
+                    Behavior on width { NumberAnimation { duration: Theme.animationSpeedFast } }
 
                     opacity: control.highlighted ? 0.2 : 0
-                    Behavior on opacity { OpacityAnimator { duration: Theme.animationFastSpeed } }
+                    Behavior on opacity { OpacityAnimator { duration: Theme.animationSpeedFast } }
                 }
 
                 Rectangle { // activityIndicator
@@ -112,7 +112,7 @@ T.Button {
                 font.bold: true
 
                 color: control.highlighted ? control.colorHighlight : control.colorContent
-                Behavior on color { ColorAnimation { duration: Theme.animationMediumSpeed } }
+                Behavior on color { ColorAnimation { duration: Theme.animationSpeedMedium } }
             }
         }
     }

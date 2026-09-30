@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Window
-import QtQuick.Controls
 
 import ComponentLibrary
 
@@ -13,7 +12,7 @@ Loader {
     height: active ? 24 : 0
 
     property bool appThemeCSD: false
-    property ApplicationWindow windowInstance: null
+    property Window windowInstance: null
 
     active: (windowInstance && appThemeCSD && Qt.platform.os === "osx")
     asynchronous: true
@@ -78,7 +77,7 @@ Loader {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        if (csdMacLoader.windowInstance.visibility === ApplicationWindow.Maximized)
+                        if (csdMacLoader.windowInstance.visibility === Window.Maximized)
                             csdMacLoader.windowInstance.showNormal()
                         else
                             csdMacLoader.windowInstance.showMaximized()

@@ -55,8 +55,8 @@ T.Popup {
 
     ////////////////
 
-    enter: Transition { NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: Theme.animationMediumSpeed; } }
-    exit: Transition { NumberAnimation { property: "opacity"; from: 1.0; to: 0.66; duration: Theme.animationMediumSpeed; } }
+    enter: Transition { NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: Theme.animationSpeedMedium; } }
+    exit: Transition { NumberAnimation { property: "opacity"; from: 1.0; to: 0.66; duration: Theme.animationSpeedMedium; } }
 
     ////////////////
 

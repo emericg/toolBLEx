@@ -45,7 +45,7 @@ T.SpinBox {
             x: control.mirrored ? 0 : control.width - width
             color: control.up.pressed ? Theme.colorComponentDown : Theme.colorComponent
             opacity: control.up.hovered ? 0.8 : 1
-            Behavior on opacity { NumberAnimation { duration: Theme.animationFastSpeed } }
+            Behavior on opacity { NumberAnimation { duration: Theme.animationSpeedFast } }
         }
         Rectangle {
             width: control.height
@@ -54,7 +54,7 @@ T.SpinBox {
             x: control.mirrored ? control.width - width : 0
             color: control.down.pressed ? Theme.colorComponentDown : Theme.colorComponent
             opacity: control.down.hovered ? 0.8 : 1
-            Behavior on opacity { NumberAnimation { duration: Theme.animationFastSpeed } }
+            Behavior on opacity { NumberAnimation { duration: Theme.animationSpeedFast } }
         }
 
         Rectangle {

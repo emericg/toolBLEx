@@ -16,12 +16,18 @@ Item {
 
     // settings
     property bool shadow: !Theme.singleColumn
-    property int headerPosition: 64
+    property int headerPosition: Theme.isMobile ? 56 : 64
     property int radius: Theme.singleColumn ? 0 : Theme.componentRadius
 
     // colors
-    property color backgroundColor: Qt.darker(Theme.colorForeground, Theme.isLight ? 0.72 : 1.24)
-    property color borderColor: Qt.darker(Theme.colorComponentBorder, Theme.isLight ? 1.0 : 1.32)
+    property color backgroundColor: {
+        if (Theme.singleColumn) return Theme.colorForeground
+        return Qt.darker(Theme.colorForeground, Theme.isLight ? 0.72 : 1.24)
+    }
+    property color borderColor:  {
+        if (Theme.colorComponentBorder) return Theme.colorForeground
+        return Qt.darker(Theme.colorComponentBorder, Theme.isLight ? 1.0 : 1.32)
+    }
     property color shadowColor: Theme.colorComponentShadow
 
     // icon

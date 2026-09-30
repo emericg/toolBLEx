@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Templates as T
 
 import ComponentLibrary
 
@@ -40,8 +40,8 @@ Item {
     function sync() {
         if (!_ready) return
         _syncing = true
-        tumblerMonth.positionViewAtIndex(month, Tumbler.Center)
-        tumblerYear.positionViewAtIndex(Math.max(0, maxYear - year), Tumbler.Center)
+        tumblerMonth.positionViewAtIndex(month, T.Tumbler.Center)
+        tumblerYear.positionViewAtIndex(Math.max(0, maxYear - year), T.Tumbler.Center)
         _yearCount = tumblerYear.count
         _syncing = false
     }
@@ -88,7 +88,7 @@ Item {
                 color: (tumblerMonth.currentIndex === index) ? Theme.colorPrimary : Theme.colorText
                 Behavior on color { ColorAnimation { duration: Theme.animationSpeedFast } }
 
-                opacity: 1.0 - Math.abs(Tumbler.displacement) / (tumblerMonth.visibleItemCount / 2)
+                opacity: 1.0 - Math.abs(T.Tumbler.displacement) / (tumblerMonth.visibleItemCount / 2)
             }
 
             onCurrentIndexChanged: {
@@ -120,7 +120,7 @@ Item {
                 color: (tumblerYear.currentIndex === index) ? Theme.colorPrimary : Theme.colorText
                 Behavior on color { ColorAnimation { duration: Theme.animationSpeedFast } }
 
-                opacity: 1.0 - Math.abs(Tumbler.displacement) / (tumblerYear.visibleItemCount / 2)
+                opacity: 1.0 - Math.abs(T.Tumbler.displacement) / (tumblerYear.visibleItemCount / 2)
             }
 
             onCurrentIndexChanged: {

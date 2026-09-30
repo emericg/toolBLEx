@@ -43,7 +43,7 @@ T.Button {
 
             visible: (control.hoverMode === "glow")
             opacity: control.hovered ? 0.33 : 0
-            Behavior on opacity { OpacityAnimator { duration: Theme.animationSlowSpeed } }
+            Behavior on opacity { OpacityAnimator { duration: Theme.animationSpeedSlow } }
         }
 
         layer.enabled: (control.hoverMode === "glow")

@@ -60,7 +60,7 @@ T.Tumbler {
         verticalAlignment: Text.AlignVCenter
 
         color: (control.currentIndex === index) ? Theme.colorPrimary : Theme.colorText
-        Behavior on color { ColorAnimation { duration: Theme.animationFastSpeed } }
+        Behavior on color { ColorAnimation { duration: Theme.animationSpeedFast } }
 
         opacity: 1.0 - Math.abs(T.Tumbler.displacement) / (control.visibleItemCount / 2)
 

@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Effects
-import QtQuick.Controls
+import QtQuick.Controls.Basic
 
 import ComponentLibrary
 

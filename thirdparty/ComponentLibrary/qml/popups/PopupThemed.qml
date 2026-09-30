@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Effects
-import QtQuick.Controls
+import QtQuick.Templates as T
 
 import ComponentLibrary
 
@@ -15,8 +15,13 @@ import ComponentLibrary
  * The sections are exposed as headerArea, bannerArea, bodyArea and footerArea,
  * to tweak their color, paddings, minimum height, or to force their visibility (shown).
  */
-Popup {
+T.Popup {
     id: popupThemed
+
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            implicitContentWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             implicitContentHeight + topPadding + bottomPadding)
 
     x: Theme.singleColumn ? 0 : Math.round((Theme.appWidth / 2) - (width / 2))
     y: Theme.singleColumn ? (Theme.appHeight - height)
@@ -38,8 +43,8 @@ Popup {
     dim: true
     modal: true
     focus: true
-    closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-    parent: Overlay.overlay
+    closePolicy: T.Popup.CloseOnEscape | T.Popup.CloseOnPressOutside
+    parent: T.Overlay.overlay
 
     // settings
     readonly property real cornerRadius: Theme.singleColumn ? 0 : Theme.componentRadius
@@ -62,7 +67,7 @@ Popup {
     enter: Transition { NumberAnimation { property: "opacity"; from: 0.5; to: 1.0; duration: Theme.animationSpeedFast; } }
     //exit: Transition { NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: Theme.animationSpeedMedium; } }
 
-    Overlay.modal: Item {
+    T.Overlay.modal: Item {
         Rectangle {
             anchors.fill: parent
             anchors.margins: Theme.windowBorders

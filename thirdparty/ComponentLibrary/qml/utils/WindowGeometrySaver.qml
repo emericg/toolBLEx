@@ -1,13 +1,12 @@
 import QtCore
 import QtQuick
 import QtQuick.Window
-import QtQuick.Controls
 
 Item {
     id: control
 
-    // The ApplicationWindow instance that will be manipulated. MUST be set by the calling application.
-    property ApplicationWindow windowInstance: null
+    // The Window (or ApplicationWindow) instance that will be manipulated. MUST be set by the calling application.
+    property Window windowInstance: null
 
     // Name of the setting section. Can be changed by the calling application.
     property string windowName: "ApplicationWindow"
@@ -93,17 +92,17 @@ Item {
         //console.log("WindowsGeometrySaver::saveSettings()")
 
         switch (windowInstance.visibility) {
-            case ApplicationWindow.Windowed:
+            case Window.Windowed:
                 windowSettings.x = windowInstance.x;
                 windowSettings.y = windowInstance.y;
                 windowSettings.width = windowInstance.width;
                 windowSettings.height = windowInstance.height;
                 windowSettings.visibility = windowInstance.visibility;
                 break;
-            case ApplicationWindow.Maximized:
+            case Window.Maximized:
                 windowSettings.visibility = windowInstance.visibility;
                 break;
-            case ApplicationWindow.FullScreen:
+            case Window.FullScreen:
                 windowSettings.visibility = windowInstance.visibility;
                 break;
         }

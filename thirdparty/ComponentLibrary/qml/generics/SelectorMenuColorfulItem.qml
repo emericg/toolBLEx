@@ -47,7 +47,7 @@ T.Button {
             else if (control.hovered) return 0.2
             return 0
         }
-        Behavior on opacity { OpacityAnimator { duration: Theme.animationFastSpeed } }
+        Behavior on opacity { OpacityAnimator { duration: Theme.animationSpeedFast } }
     }
 
     ////////////////

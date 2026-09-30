@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Window
 
 import ComponentLibrary
@@ -18,7 +17,7 @@ Loader {
     height: active ? 26 : 0
 
     property bool appThemeCSD: false
-    property ApplicationWindow windowInstance: null
+    property Window windowInstance: null
 
     active: (windowInstance && appThemeCSD && Qt.platform.os !== "windows" && Qt.platform.os !== "osx")
     asynchronous: true
@@ -31,7 +30,7 @@ Loader {
         Rectangle { // button minimize
             width: 26; height: 26; radius: 26;
             color: mouseAreaMin.containsMouse ? "#66aaaaaa" : "#33aaaaaa"
-            Behavior on color { ColorAnimation { duration: Theme.animationMediumSpeed; easing.type: Easing.InOutCirc; } }
+            Behavior on color { ColorAnimation { duration: Theme.animationSpeedMedium; easing.type: Easing.InOutCirc; } }
 
             Rectangle {
                 width: 10; height: 2;
@@ -55,7 +54,7 @@ Loader {
         Rectangle { // button maximize
             width: 26; height: 26; radius: 26;
             color: mouseAreaMax.containsMouse ? "#66aaaaaa" : "#33aaaaaa"
-            Behavior on color { ColorAnimation { duration: Theme.animationMediumSpeed; easing.type: Easing.InOutCirc; } }
+            Behavior on color { ColorAnimation { duration: Theme.animationSpeedMedium; easing.type: Easing.InOutCirc; } }
 
             Rectangle {
                 width: 10; height: 10;
@@ -71,7 +70,7 @@ Loader {
 
                 hoverEnabled: true
                 onClicked: {
-                    if (csdLinuxLoader.windowInstance.visibility === ApplicationWindow.Maximized)
+                    if (csdLinuxLoader.windowInstance.visibility === Window.Maximized)
                         csdLinuxLoader.windowInstance.showNormal()
                     else
                         csdLinuxLoader.windowInstance.showMaximized()
@@ -84,7 +83,7 @@ Loader {
         Rectangle { // button close
             width: 26; height: 26; radius: 26;
             color: mouseAreaClose.containsMouse ? "red" : "#33aaaaaa"
-            Behavior on color { ColorAnimation { duration: Theme.animationMediumSpeed; easing.type: Easing.InOutCirc; } }
+            Behavior on color { ColorAnimation { duration: Theme.animationSpeedMedium; easing.type: Easing.InOutCirc; } }
 
             Rectangle {
                 width: 13; height: 2; radius: 2;

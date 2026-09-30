@@ -56,7 +56,7 @@ T.Button {
                 return control.backgroundVisible ? 0.75 : 0
             }
         }
-        Behavior on opacity { NumberAnimation { duration: Theme.animationSlowSpeed } }
+        Behavior on opacity { NumberAnimation { duration: Theme.animationSpeedSlow } }
 
         Rectangle { // border
             anchors.fill: parent
@@ -80,7 +80,7 @@ T.Button {
 
             rotation: control.sourceRotation
             opacity: control.enabled ? 1 : 0.66
-            Behavior on opacity { NumberAnimation { duration: Theme.animationSlowSpeed } }
+            Behavior on opacity { NumberAnimation { duration: Theme.animationSpeedSlow } }
 
             source: control.source
             color: {
@@ -115,8 +115,11 @@ T.Button {
     ////////////////
 
     Loader {
+        id: tooltipLoader
         anchors.fill: control
-        active: control.tooltipText && control.hovered
+
+        property bool tooltipShown: false
+        active: control.tooltipText && (control.hovered || tooltipLoader.tooltipShown)
 
         sourceComponent: ToolTipFlat {
             visible: control.hovered
@@ -124,6 +127,9 @@ T.Button {
             textColor: control.iconColor
             tooltipPosition: control.tooltipPosition
             backgroundColor: control.backgroundColor
+
+            onAboutToShow: tooltipLoader.tooltipShown = true
+            onClosed: tooltipLoader.tooltipShown = false
         }
     }
 

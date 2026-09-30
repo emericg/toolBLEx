@@ -50,7 +50,7 @@ T.Switch {
 
         Rectangle {
             x: control.checked ? (parent.width - width) : 0
-            Behavior on x { NumberAnimation { duration: Theme.animationFastSpeed } }
+            Behavior on x { NumberAnimation { duration: Theme.animationSpeedFast } }
             width: 24
             height: width
             radius: control.radius
@@ -66,7 +66,7 @@ T.Switch {
                 color: parent.color
                 opacity: (control.enabled && control.checkable && (control.pressed || control.hovered || control.visualFocus)) ?
                              (control.checked ? 0.16 : 0.32) : 0
-                Behavior on opacity { NumberAnimation { duration: Theme.animationFastSpeed } }
+                Behavior on opacity { NumberAnimation { duration: Theme.animationSpeedFast } }
             }
         }
     }

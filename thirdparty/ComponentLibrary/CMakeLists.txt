@@ -104,6 +104,7 @@ list(APPEND MODULE_QML_FILES
     qml/controls/RangeSliderThemed.qml
     qml/controls/RangeSliderValue.qml
     qml/controls/RangeSliderValueSolid.qml
+    qml/controls/RippleCustom.qml
     qml/controls/RippleThemed.qml
     qml/controls/RoundButtonThemed.qml
     qml/controls/RoundButtonIconThemed.qml

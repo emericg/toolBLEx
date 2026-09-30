@@ -43,7 +43,7 @@ T.Button {
             source: control.source
             opacity: control.enabled ? 1 : 0.66
             color: control.highlighted ? control.colorHighlight : control.colorContent
-            Behavior on color { ColorAnimation { duration: Theme.animationFastSpeed } }
+            Behavior on color { ColorAnimation { duration: Theme.animationSpeedFast } }
         }
 
         Text { // contentText
@@ -57,7 +57,7 @@ T.Button {
             font.pixelSize: Theme.componentFontSize
             font.bold: true
             color: control.highlighted ? control.colorHighlight : control.colorContent
-            Behavior on color { ColorAnimation { duration: Theme.animationFastSpeed } }
+            Behavior on color { ColorAnimation { duration: Theme.animationSpeedFast } }
         }
     }
 

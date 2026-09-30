@@ -85,8 +85,11 @@ T.Button {
     ////////////////
 
     Loader {
+        id: tooltipLoader
         anchors.fill: control
-        active: control.tooltipText && control.hovered
+
+        property bool tooltipShown: false
+        active: control.tooltipText && (control.hovered || tooltipLoader.tooltipShown)
 
         sourceComponent: ToolTipFlat {
             visible: control.hovered
@@ -94,6 +97,9 @@ T.Button {
             textColor: control.textColor
             tooltipPosition: control.tooltipPosition
             backgroundColor: control.backgroundColor
+
+            onAboutToShow: tooltipLoader.tooltipShown = true
+            onClosed: tooltipLoader.tooltipShown = false
         }
     }
 

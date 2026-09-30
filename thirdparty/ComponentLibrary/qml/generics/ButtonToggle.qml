@@ -56,7 +56,7 @@ T.Button {
                 if (control.hovered && !control.down) return 0.66
                 return 0
             }
-            Behavior on opacity { NumberAnimation { duration: Theme.animationFastSpeed } }
+            Behavior on opacity { NumberAnimation { duration: Theme.animationSpeedFast } }
         }
 
         RippleThemed {

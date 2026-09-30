@@ -1,5 +1,13 @@
 # IconLibrary
 
+A collection of icons, ready to use, embedded into your application binary.
+
+- Bootstrap icons
+- FontAwesome icons
+- Lucide icons
+- Material icons (legacy)
+- Material symbols
+
 
 ## Quick start
 
@@ -21,3 +29,5 @@ Image {
 ```
 
 ## License
+
+IconLibrary uses a combination of licenses, see [COPYING](COPYING)
