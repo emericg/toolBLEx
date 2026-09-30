@@ -873,11 +873,12 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
                                                 const QByteArray &data,
                                                 const QDateTime &timestamp)
 {
-    Q_UNUSED(uuid)
-
     // Add to the model
-    bool hasNewData = m_advertisementDataModel->addEntry(mode, id, data, timestamp);
+    bool hasNewData = m_advertisementDataModel->addEntry(mode, id, uuid, data, timestamp);
     if (!hasNewData) return false;
+
+    const QString uuidStr = AdvertisementData::uuidToString(mode, id, uuid);
+    const QString uuidDisplay = (uuidStr.size() <= 8) ? "0x" + uuidStr : uuidStr;
 
     if (mode == DeviceUtils::BLE_ADV_MANUFACTURERDATA)
     {
@@ -888,13 +889,13 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
             if (!hasNewData) return false;
         }
 */
-        logEvent2(timestamp, LogEvent::ADV, "New manufacturer data: ID 0x" + QString::number(id, 16).toUpper().rightJustified(4, '0') +
+        logEvent2(timestamp, LogEvent::ADV, "New manufacturer data: ID " + uuidDisplay +
                                             " / " + QString::number(data.size()) + " bytes / 0x" + data.toHex());
 
         bool uuidFound = false;
         for (const auto &uuu: std::as_const(m_mfd_uuid))
         {
-            if (uuu->getUuid() == id)
+            if (uuu->getUuidStr() == uuidStr)
             {
                 uuidFound = true;
                 break;
@@ -902,7 +903,7 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
         }
         if (!uuidFound)
         {
-            AdvertisementUUID *uu = new AdvertisementUUID(mode, id, true);
+            AdvertisementUUID *uu = new AdvertisementUUID(mode, uuidStr, true);
             m_mfd_uuid.push_back(uu);
             Q_EMIT advertisementUuidChanged();
 
@@ -918,13 +919,13 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
             if (!hasNewData) return false;
         }
 */
-        logEvent2(timestamp, LogEvent::ADV, "New service data: ID 0x" + QString::number(id, 16).toUpper().rightJustified(4, '0') +
+        logEvent2(timestamp, LogEvent::ADV, "New service data: UUID " + uuidDisplay +
                                             " / " + QString::number(data.size()) + " bytes / 0x" + data.toHex());
 
         bool uuidFound = false;
         for (auto uuu: std::as_const(m_svd_uuid))
         {
-            if (uuu->getUuid() == id)
+            if (uuu->getUuidStr() == uuidStr)
             {
                 uuidFound = true;
                 break;
@@ -932,7 +933,7 @@ bool DeviceToolBLEx::parseAdvertisementToolBLEx(const uint16_t mode,
         }
         if (!uuidFound)
         {
-            AdvertisementUUID *uu = new AdvertisementUUID(mode, id, true);
+            AdvertisementUUID *uu = new AdvertisementUUID(mode, uuidStr, true);
             m_svd_uuid.push_back(uu);
             Q_EMIT advertisementUuidChanged();
 

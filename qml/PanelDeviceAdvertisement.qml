@@ -153,7 +153,7 @@ Item {
                         ButtonToggle {
                             height: 28
 
-                            text: "0x" + modelData.uuid.toUpperCase()
+                            text: (modelData.uuidShort ? "0x" : "") + modelData.uuid
                             font.bold: false
                             colorBackground: Theme.colorComponent
                             colorText: Theme.colorText
@@ -183,7 +183,7 @@ Item {
                         ButtonToggle {
                             height: 28
 
-                            text: "0x" + modelData.uuid.toUpperCase()
+                            text: (modelData.uuidShort ? "0x" : "") + modelData.uuid
                             font.bold: false
                             colorBackground: Theme.colorComponent
                             colorText: Theme.colorText

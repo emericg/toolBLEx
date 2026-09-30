@@ -117,6 +117,7 @@ Item {
                         spacing: 2
 
                         Text {
+                            visible: advUUIDshort
                             text: "0x"
                             textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent

@@ -30,6 +30,7 @@
 #include <QList>
 #include <QMap>
 #include <QPair>
+#include <QSet>
 
 /* ************************************************************************** */
 
@@ -58,6 +59,7 @@ public:
         AdvModeRole,
         AdvUUIDRole,
         AdvUUIDStrRole,
+        AdvUUIDShortRole,
         AdvUUIDVendorRole,
         AdvDataHexRole,
         AdvDataHexListRole,
@@ -72,18 +74,18 @@ public:
 
     QList <AdvertisementData *> m_advertisements_mfd;
     QList <AdvertisementData *> m_advertisements_svd;
-    QMap <QPair<uint16_t, uint16_t>, AdvertisementData *> m_advertisements_latest;
+    QMap <QPair<int, QString>, AdvertisementData *> m_advertisements_latest; //!< key: mode + uuid string
 
     int getAdvertisementCount() const { return m_advertisements.count(); }
     int getAdvertisementMfdCount() const { return m_advertisements_mfd.count(); }
     int getAdvertisementSvdCount() const { return m_advertisements_svd.count(); }
 
     bool addEntry(AdvertisementData *entry);
-    bool addEntry(uint16_t mode, uint16_t uuid, const QByteArray &data, const QDateTime &timestamp);
+    bool addEntry(uint16_t mode, uint16_t id, const QBluetoothUuid &uuid,
+                  const QByteArray &data, const QDateTime &timestamp);
     void clear();
 
-    Q_INVOKABLE AdvertisementData *latestEntry(uint16_t mode, uint16_t uuid) const;
-    Q_INVOKABLE AdvertisementData *latestEntry(int mode, int uuid) const;
+    Q_INVOKABLE AdvertisementData *latestEntry(int mode, const QString &uuid) const;
 
     QVariantList latestEntriesVariant_svd() const;
     QVariantList latestEntriesVariant_mfd() const;
@@ -104,8 +106,7 @@ public:
     explicit AdvertisementFilterModel(QObject *parent = nullptr);
     ~AdvertisementFilterModel() override = default;
 
-    Q_INVOKABLE void setUuidSelected(uint16_t mode, uint16_t uuid, bool selected);
-    Q_INVOKABLE void setUuidSelected(int mode, int uuid, bool selected);
+    Q_INVOKABLE void setUuidSelected(int mode, const QString &uuid, bool selected);
     Q_INVOKABLE void syncUuid(AdvertisementUUID *uuidObj);
 
     Q_INVOKABLE bool isUnfiltered() const;
@@ -120,8 +121,8 @@ protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 
 private:
-    QSet <uint16_t> m_selectedUuids_svd;
-    QSet <uint16_t> m_selectedUuids_mfd;
+    QSet <QString> m_selectedUuids_svd;
+    QSet <QString> m_selectedUuids_mfd;
 };
 
 /* ************************************************************************** */

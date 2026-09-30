@@ -27,6 +27,7 @@
 #include <QList>
 #include <QDateTime>
 #include <QByteArray>
+#include <QBluetoothUuid>
 
 /* ************************************************************************** */
 
@@ -69,17 +70,18 @@ class AdvertisementUUID: public QObject
 
     Q_PROPERTY(uint16_t mode READ getAdvMode CONSTANT)
     Q_PROPERTY(QString uuid READ getUuidStr CONSTANT)
+    Q_PROPERTY(bool uuidShort READ isUuidShort CONSTANT)
     Q_PROPERTY(bool selected READ getSelected WRITE setSelected NOTIFY selectedChanged)
 
     uint16_t m_mode;
-    uint16_t m_uuid;
+    QString m_uuid;
     bool m_selected = true;
 
 Q_SIGNALS:
     void selectedChanged();
 
 public:
-    AdvertisementUUID(const uint16_t mode, const uint16_t uuid, const bool selected,
+    AdvertisementUUID(const uint16_t mode, const QString &uuid, const bool selected,
                       QObject *parent = nullptr): QObject(parent) {
         m_mode = mode;
         m_uuid = uuid;
@@ -88,8 +90,8 @@ public:
     ~AdvertisementUUID() = default;
 
     uint16_t getAdvMode() const { return m_mode; }
-    uint16_t getUuid() const { return m_uuid; }
-    QString getUuidStr() const { return QString::number(m_uuid, 16).rightJustified(4, '0'); }
+    const QString &getUuidStr() const { return m_uuid; }
+    bool isUuidShort() const { return (m_uuid.size() <= 8); }
 
     bool getSelected() const { return m_selected; }
     void setSelected(bool s) { if (m_selected != s) { m_selected = s; Q_EMIT selectedChanged(); } }
@@ -105,6 +107,7 @@ class AdvertisementData: public QObject
     Q_PROPERTY(int advMode READ getMode CONSTANT)
     Q_PROPERTY(int advUUID READ getUUID_int CONSTANT)
     Q_PROPERTY(QString advUUIDstr READ getUUID_str CONSTANT)
+    Q_PROPERTY(bool advUUIDshort READ isUUID_short CONSTANT)
     Q_PROPERTY(QString advUUIDmanuf READ getUUID_vendor CONSTANT)
 
     Q_PROPERTY(int advDataSize READ getDataSize CONSTANT)
@@ -118,15 +121,29 @@ class AdvertisementData: public QObject
     QDateTime m_timestamp;
     int advMode;
     int advUUID;
+    QBluetoothUuid advServiceUUID;
     QString advUUIDstr;
     QString advUUIDvendor;
     QByteArray advData;
 
 public:
-    AdvertisementData(const uint16_t adv_mode, const uint16_t adv_id,
+    /*!
+     * \param adv_mode: BLE_ADV_MANUFACTURERDATA or BLE_ADV_SERVICEDATA.
+     * \param adv_id: company ID (manufacturer data), or 16-bit service UUID (service data, 0 if none).
+     * \param adv_uuid: full service UUID (service data only).
+     */
+    AdvertisementData(const uint16_t adv_mode, const uint16_t adv_id, const QBluetoothUuid &adv_uuid,
                       const QByteArray &data, const QDateTime &timestamp,
                       QObject *parent);
     ~AdvertisementData() = default;
+
+    /*!
+     * \brief Identifier string of a manufacturer or service data, unique within its mode.
+     * \return Company ID or 16/32-bit service UUID as uppercase hex (without "0x"),
+     *         or full 128-bit service UUID (uppercase, without braces).
+     */
+    static QString uuidToString(const uint16_t adv_mode, const uint16_t adv_id,
+                                const QBluetoothUuid &adv_uuid);
 
     bool compare(const QByteArray &data) { return (advData.compare(data) == 0); }
 
@@ -135,9 +152,11 @@ public:
     int getMode() const { return advMode; }
 
     const QString &getUUID_str() const { return advUUIDstr; }
+    bool isUUID_short() const { return (advUUIDstr.size() <= 8); }
     const QString &getUUID_vendor() const { return advUUIDvendor; }
     int getUUID_int() const { return advUUID; }
     uint16_t getUUID_uint() const { return advUUID; }
+    const QBluetoothUuid &getServiceUUID() const { return advServiceUUID; }
 
     const QVariant getData() const { return QVariant::fromValue(advData); }
     int getDataSize() const { return advData.size(); }

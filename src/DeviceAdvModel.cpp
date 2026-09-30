@@ -67,6 +67,7 @@ QVariant AdvertisementDataModel::data(const QModelIndex &index, int role) const
             case AdvModeRole: return adv->getMode();
             case AdvUUIDRole: return adv->getUUID_int();
             case AdvUUIDStrRole: return adv->getUUID_str();
+            case AdvUUIDShortRole: return adv->isUUID_short();
             case AdvUUIDVendorRole: return adv->getUUID_vendor();
             case AdvDataHexRole: return adv->getDataHex();
             case AdvDataHexListRole: return adv->getDataHex_list();
@@ -88,6 +89,7 @@ QHash <int, QByteArray> AdvertisementDataModel::roleNames() const
         { AdvModeRole, "advMode" },
         { AdvUUIDRole, "advUUID" },
         { AdvUUIDStrRole, "advUUIDstr" },
+        { AdvUUIDShortRole, "advUUIDshort" },
         { AdvUUIDVendorRole, "advUUIDvendor" },
         { AdvDataHexRole, "advDataHex" },
         { AdvDataHexListRole, "advDataHex_list" },
@@ -104,7 +106,8 @@ bool AdvertisementDataModel::addEntry(AdvertisementData *entry)
     if (!entry) return false;
 
     // Is it a duplicate entry?
-    AdvertisementData *last = m_advertisements_latest.value({ entry->getMode(), entry->getUUID_int() }, nullptr);
+    const QPair<int, QString> key { entry->getMode(), entry->getUUID_str() };
+    AdvertisementData *last = m_advertisements_latest.value(key, nullptr);
     if (last && last->compare(entry->getDataBA()))
     {
         delete entry;
@@ -125,18 +128,17 @@ bool AdvertisementDataModel::addEntry(AdvertisementData *entry)
     else if (entry->getMode() == DeviceUtils::BLE_ADV_MANUFACTURERDATA) m_advertisements_mfd.append(entry);
 
     // To get the latest svd/mfd (per uuid)
-    const QPair<uint16_t, uint16_t> key { static_cast<uint16_t>(entry->getMode()), entry->getUUID_uint() };
     m_advertisements_latest.insert(key, entry); // insert() replaces an existing key
     Q_EMIT latestEntriesChanged();
 
     return true;
 }
 
-bool AdvertisementDataModel::addEntry(uint16_t mode, uint16_t uuid,
+bool AdvertisementDataModel::addEntry(uint16_t mode, uint16_t id, const QBluetoothUuid &uuid,
                                       const QByteArray &data,
                                       const QDateTime &timestamp)
 {
-    return addEntry(new AdvertisementData(mode, uuid, data, timestamp, this));
+    return addEntry(new AdvertisementData(mode, id, uuid, data, timestamp, this));
 }
 
 void AdvertisementDataModel::clear()
@@ -156,14 +158,9 @@ void AdvertisementDataModel::clear()
 
 /* ************************************************************************** */
 
-AdvertisementData *AdvertisementDataModel::latestEntry(uint16_t mode, uint16_t uuid) const
+AdvertisementData *AdvertisementDataModel::latestEntry(int mode, const QString &uuid) const
 {
     return m_advertisements_latest.value({ mode, uuid }, nullptr);
-}
-
-AdvertisementData *AdvertisementDataModel::latestEntry(int mode, int uuid) const
-{
-    return latestEntry(static_cast<uint16_t>(mode), static_cast<uint16_t>(uuid));
 }
 
 QVariantList AdvertisementDataModel::latestEntriesVariant_svd() const
@@ -209,7 +206,7 @@ AdvertisementFilterModel::AdvertisementFilterModel(QObject *parent)
 
 /* ************************************************************************** */
 
-void AdvertisementFilterModel::setUuidSelected(uint16_t mode, uint16_t uuid, bool selected)
+void AdvertisementFilterModel::setUuidSelected(int mode, const QString &uuid, bool selected)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
     beginFilterChange();
@@ -251,14 +248,9 @@ void AdvertisementFilterModel::setUuidSelected(uint16_t mode, uint16_t uuid, boo
 #endif
 }
 
-void AdvertisementFilterModel::setUuidSelected(int mode, int uuid, bool selected)
-{
-    setUuidSelected(static_cast<uint16_t>(mode), static_cast<uint16_t>(uuid), selected);
-}
-
 void AdvertisementFilterModel::syncUuid(AdvertisementUUID *uuidObj)
 {
-    if (uuidObj) setUuidSelected(uuidObj->getAdvMode(), uuidObj->getUuid(), uuidObj->getSelected());
+    if (uuidObj) setUuidSelected(uuidObj->getAdvMode(), uuidObj->getUuidStr(), uuidObj->getSelected());
 }
 
 /* ************************************************************************** */
@@ -314,7 +306,7 @@ bool AdvertisementFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex
     if (!sourceModel()) return false;
 
     const QModelIndex index = sourceModel()->index(sourceRow, 0, sourceParent);
-    const uint16_t uuid = static_cast<uint16_t>(sourceModel()->data(index, AdvertisementDataModel::AdvUUIDRole).toUInt());
+    const QString uuid = sourceModel()->data(index, AdvertisementDataModel::AdvUUIDStrRole).toString();
 
     if (sourceModel()->data(index, AdvertisementDataModel::AdvModeRole).toInt() == DeviceUtils::BLE_ADV_SERVICEDATA)
     {

@@ -62,6 +62,7 @@ Column {
                 spacing: 2
 
                 Text {
+                    visible: packet.advUUIDshort
                     text: "0x"
                     textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeContent

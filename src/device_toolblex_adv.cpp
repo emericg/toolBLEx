@@ -34,13 +34,15 @@
 /* ************************************************************************** */
 
 AdvertisementData::AdvertisementData(const uint16_t adv_mode, const uint16_t adv_id,
+                                     const QBluetoothUuid &adv_uuid,
                                      const QByteArray &data, const QDateTime &timestamp,
                                      QObject *parent): QObject(parent)
 {
     m_timestamp = timestamp;
     advMode = adv_mode;
     advUUID = adv_id;
-    advUUIDstr = QString::number(advUUID, 16).toUpper().rightJustified(4, '0');
+    if (adv_mode == DeviceUtils::BLE_ADV_SERVICEDATA) advServiceUUID = adv_uuid;
+    advUUIDstr = uuidToString(adv_mode, adv_id, adv_uuid);
 
     VendorsDatabase *v = VendorsDatabase::getInstance();
     if (adv_mode == DeviceUtils::BLE_ADV_MANUFACTURERDATA)
@@ -49,6 +51,25 @@ AdvertisementData::AdvertisementData(const uint16_t adv_mode, const uint16_t adv
         v->getVendor_serviceUUID(advUUIDstr, advUUIDvendor);
 
     advData = data;
+}
+
+QString AdvertisementData::uuidToString(const uint16_t adv_mode, const uint16_t adv_id,
+                                        const QBluetoothUuid &adv_uuid)
+{
+    if (adv_mode == DeviceUtils::BLE_ADV_SERVICEDATA)
+    {
+        bool success = false;
+
+        const quint16 uuid16 = adv_uuid.toUInt16(&success);
+        if (success) return QString::number(uuid16, 16).toUpper().rightJustified(4, '0');
+
+        const quint32 uuid32 = adv_uuid.toUInt32(&success);
+        if (success) return QString::number(uuid32, 16).toUpper().rightJustified(8, '0');
+
+        return adv_uuid.toString(QUuid::WithoutBraces).toUpper();
+    }
+
+    return QString::number(adv_id, 16).toUpper().rightJustified(4, '0');
 }
 
 /* ************************************************************************** */
