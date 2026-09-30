@@ -19,7 +19,7 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#include "ubertooth.h"
+#include "UbertoothDriver_bin.h"
 #include "SettingsManager.h"
 
 #include <QStandardPaths>
@@ -28,25 +28,20 @@
 #include <QFile>
 #include <QDebug>
 
+#include <cmath>
+
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-Ubertooth::Ubertooth(QObject *parent) : SpectrumSource(parent)
+UbertoothDriver_bin::UbertoothDriver_bin(QObject *parent) : SpectrumDriver_bin(parent)
 {
-    m_floorDb = -100.0;
-    m_ceilDb = -20.0;
-
-    m_unit = MHz;
-
-    configureForStart();
-
-    checkPaths();
+    //
 }
 
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-bool Ubertooth::autodetectPaths()
+bool UbertoothDriver_bin::autodetect()
 {
     m_path_specan = QStandardPaths::findExecutable("ubertooth-specan");
     m_path_util = QStandardPaths::findExecutable("ubertooth-util");
@@ -61,19 +56,18 @@ bool Ubertooth::autodetectPaths()
 
 /* ************************************************************************** */
 
-bool Ubertooth::checkPaths()
+bool UbertoothDriver_bin::detect()
 {
-#if defined(Q_OS_WINDOWS)
-    return false; // We just don't support Windows
-#endif
-
     bool status = false;
 
     SettingsManager *sm = SettingsManager::getInstance();
     QString path_specan = sm->getUbertoothPath();
 
-    if (path_specan.isEmpty()) return false;
-    if (!path_specan.contains("ubertooth-specan")) return false;
+    if (path_specan.isEmpty() || !path_specan.contains("ubertooth-specan"))
+    {
+        m_available = false;
+        return false;
+    }
 
     if (QFile::exists(path_specan))
     {
@@ -83,25 +77,21 @@ bool Ubertooth::checkPaths()
     else if (path_specan == "ubertooth-specan")
     {
         // If the path is the executable name, and we can find it
-        m_path_specan = QStandardPaths::findExecutable("ubertooth-specan");
-        if (!m_path_specan.isEmpty())
+        path_specan = QStandardPaths::findExecutable("ubertooth-specan");
+        if (!path_specan.isEmpty())
         {
             status = true;
 
             // And save it... QStandardPaths::findExecutable() is expensive
-            sm->setUbertoothPath(m_path_specan);
+            sm->setUbertoothPath(path_specan);
         }
     }
     else
     {
         // Otherwise, just try to run it...
 
-        QString path_util = "";
-        if (path_specan.contains("ubertooth-specan"))
-        {
-            path_util = path_specan;
-            path_util.replace("ubertooth-specan", "ubertooth-util");
-        }
+        QString path_util = path_specan;
+        path_util.replace("ubertooth-specan", "ubertooth-util");
 
         QProcess process;
         process.start(path_util, QStringList("-v"), QIODevice::ReadOnly);
@@ -129,32 +119,26 @@ bool Ubertooth::checkPaths()
     }
     else
     {
-        qDebug() << "Ubertooth::checkPaths() Unable to detect Ubertooth tools at: '" << path_specan << "'";
+        qDebug() << "UbertoothDriver_bin::detect() Unable to detect Ubertooth tools at: '" << path_specan << "'";
     }
 
-    if (m_toolsAvailable != status)
-    {
-        m_toolsAvailable = status;
-        Q_EMIT availableChanged();
-    }
-
+    m_available = status;
     return status;
 }
 
 /* ************************************************************************** */
 
-bool Ubertooth::checkUbertooth()
+bool UbertoothDriver_bin::checkHardware(int deviceIndex)
 {
-#if defined(Q_OS_WINDOWS)
-    return false; // We just don't support Windows
-#endif
-
-    if (m_childProcess) return true; // A running capture already implies a working device
+    if (m_path_util.isEmpty()) return false;
 
     bool status = false;
 
+    QStringList args("-v");
+    if (deviceIndex > 0) args << "-U" + QString::number(deviceIndex);
+
     QProcess process;
-    process.start(m_path_util, QStringList("-v"), QIODevice::ReadOnly);
+    process.start(m_path_util, args, QIODevice::ReadOnly);
     process.waitForStarted(333);
     process.waitForFinished(333);
 
@@ -169,8 +153,8 @@ bool Ubertooth::checkUbertooth()
             l1.contains("usb_claim_interface error", Qt::CaseInsensitive) ||
             l1.contains("failed to run:", Qt::CaseInsensitive))
         {
-            qWarning() << "Ubertooth::checkUbertooth() Unable to detect an Ubertooth device";
-            qWarning() << "Ubertooth::checkUbertooth() error:" << l1;
+            qWarning() << "UbertoothDriver_bin::checkHardware() Unable to detect an Ubertooth device";
+            qWarning() << "UbertoothDriver_bin::checkHardware() error:" << l1;
         }
         else
         {
@@ -179,49 +163,31 @@ bool Ubertooth::checkUbertooth()
         }
     }
 
-    if (m_hardwareAvailable != status)
-    {
-        m_hardwareAvailable = status;
-        Q_EMIT availableChanged();
-    }
-
     return status;
 }
 
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void Ubertooth::configureForStart()
-{
-    SettingsManager *sm = SettingsManager::getInstance();
-    m_freq_min = sm->getUbertoothFreqMin();
-    m_freq_max = sm->getUbertoothFreqMax();
-    Q_EMIT freqChanged();
-}
-
-/* ************************************************************************** */
-
-QStringList Ubertooth::buildArguments() const
+QStringList UbertoothDriver_bin::buildArguments(const Config &cfg) const
 {
     QStringList args;
-    args << "-l" + QString::number(m_freq_min);
-    args << "-u" + QString::number(m_freq_max);
-    if (m_deviceIndex > 0) args << "-U" + QString::number(m_deviceIndex);
+    args << "-l" + QString::number(std::lround(cfg.freqMinHz / 1e6));
+    args << "-u" + QString::number(std::lround(cfg.freqMaxHz / 1e6));
+    if (cfg.deviceIndex > 0) args << "-U" + QString::number(cfg.deviceIndex);
     return args;
 }
 
 /* ************************************************************************** */
 
-void Ubertooth::requestStop(QProcess *process)
+void UbertoothDriver_bin::requestStop(QProcess *process)
 {
-    // ubertooth-specan reads stdin, and stops cleanly on 'q'.
-
     if (process) process->write("q\n");
 }
 
 /* ************************************************************************** */
 
-void Ubertooth::parseLine(const QString &line, int *&current_values, bool &sweepCompleted)
+void UbertoothDriver_bin::parseLine(const QString &line, std::vector <Sample> &out)
 {
     // ubertooth-specan CSV: "timestamp (seconds), freq (MHz), rssi (dB)"
 
@@ -233,9 +199,8 @@ void Ubertooth::parseLine(const QString &line, int *&current_values, bool &sweep
     const int rssi = f.at(2).toInt(&ok_rssi);
 
     if (!ok_freq || !ok_rssi) return;
-    if (freq < m_freq_min || freq > m_freq_max) return;
 
-    recordBin(freq, rssi + s_rssi_offset, current_values, sweepCompleted);
+    out.push_back({ freq * 1e6, static_cast<float>(rssi + s_rssi_offset) });
 }
 
 /* ************************************************************************** */

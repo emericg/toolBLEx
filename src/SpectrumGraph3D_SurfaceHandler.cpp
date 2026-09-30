@@ -20,7 +20,7 @@
  */
 
 #include "SpectrumGraph3D_SurfaceHandler.h"
-#include "SpectrumSource.h"
+#include "spectrumanalyzers/SpectrumSource.h"
 
 #include <QSurfaceDataProxy>
 #include <QSurface3DSeries>

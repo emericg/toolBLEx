@@ -36,7 +36,7 @@ Loader {
         Component.onCompleted: loadAction()
 
         function loadAction() {
-            //rtlsdr.checkRtlSdr() // too slow...
+            //rtlsdr.checkHardware() // too slow...
         }
 
         function backAction() {
@@ -275,7 +275,7 @@ Loader {
                     text: rtlsdr.hardwareAvailable ? qsTr("hardware ready") : qsTr("hardware busy?")
                     source: rtlsdr.hardwareAvailable ? "qrc:/IconLibrary/material-symbols/check_circle.svg"
                                                         : "qrc:/IconLibrary/material-icons/outlined/hourglass_empty.svg"
-                    onClicked: rtlsdr.checkRtlSdr()
+                    onClicked: rtlsdr.checkHardware()
                 }
             }
 

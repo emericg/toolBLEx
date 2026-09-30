@@ -21,7 +21,7 @@
 
 #include "MenubarManager.h"
 #include "DeviceManager.h"
-#include "SpectrumSource.h"
+#include "spectrumanalyzers/SpectrumSource.h"
 
 #include <QCoreApplication>
 #include <QQmlEngine>

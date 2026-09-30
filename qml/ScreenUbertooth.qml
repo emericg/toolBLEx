@@ -36,7 +36,7 @@ Loader {
         Component.onCompleted: loadAction()
 
         function loadAction() {
-            ubertooth.checkUbertooth()
+            ubertooth.checkHardware()
         }
 
         function backAction() {
@@ -455,7 +455,7 @@ Loader {
                     text: ubertooth.hardwareAvailable ? qsTr("hardware ready") : qsTr("hardware busy?")
                     source: ubertooth.hardwareAvailable ? "qrc:/IconLibrary/material-symbols/check_circle.svg"
                                                         : "qrc:/IconLibrary/material-icons/outlined/hourglass_empty.svg"
-                    onClicked: ubertooth.checkUbertooth()
+                    onClicked: ubertooth.checkHardware()
                 }
             }
 

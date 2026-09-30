@@ -19,54 +19,35 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#ifndef UBERTOOTH_H
-#define UBERTOOTH_H
+#ifndef SPECTRUM_SOURCE_UBERTOOTH_H
+#define SPECTRUM_SOURCE_UBERTOOTH_H
 /* ************************************************************************** */
 
 #include "SpectrumSource.h"
 
-#include <QString>
-#include <QStringList>
-
 /* ************************************************************************** */
 
 /*!
- * \brief Spectrum source backed by Ubertooth One USB device.
+ * \brief Spectrum source backed by an Ubertooth One USB device.
  *
- * Spawns 'ubertooth-specan' and parses its CSV output ("timestamp, freq_MHz, rssi").
- * Frequencies are integer MHz (1 bin == 1 MHz); the raw RSSI is offset to dBm.
- *
+ * Frequencies are integer MHz (1 bin == 1 MHz).
  * Ubertooth One is great from 2.3 GHz to 2.6 GHz, maybe even more at a reduced precision.
  *
- * Usual capture rate with 'ubertooth-specan' is around:
- * - ~83 Hz for the default 2402..2480 Mhz 'WiFi' range.
- * - ~66 Hz for our default 2400..2500 Mhz range.
- * - ~22 Hz for the full 2300..2600 Mhz range.
+ * Its driver is selected at build time (TOOLBLEX_SPECTRUM_UBERTOOTH in CMakeLists.txt):
+ * - UbertoothDriver_lib: libusb,
+ * - UbertoothDriver_bin: 'ubertooth-specan' binary,
+ * - or none at all.
  */
-class Ubertooth: public SpectrumSource
+class SpectrumSourceUbertooth: public SpectrumSource
 {
     Q_OBJECT
 
-    static constexpr int s_rssi_offset = -52; //!< raw RSSI -> dBm offset (from ubertooth-specan-ui)
-
-    QString m_path_specan;  //!< 'ubertooth-specan' binary
-    QString m_path_util;    //!< 'ubertooth-util' binary (version / device probe)
-
 protected:
-    QString binaryPath() const override { return m_path_specan; }
-    QStringList buildArguments() const override;
-
     void configureForStart() override;
-    void requestStop(QProcess *process) override;
-    void parseLine(const QString &line, int *&current_values, bool &sweepCompleted) override;
 
 public:
-    Ubertooth(QObject *parent = nullptr);
-
-    Q_INVOKABLE bool autodetectPaths() override;
-    Q_INVOKABLE bool checkPaths() override;
-    Q_INVOKABLE bool checkUbertooth();
+    explicit SpectrumSourceUbertooth(QObject *parent = nullptr);
 };
 
 /* ************************************************************************** */
-#endif // UBERTOOTH_H
+#endif // SPECTRUM_SOURCE_UBERTOOTH_H

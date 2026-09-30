@@ -22,7 +22,7 @@
 #include "WaterfallGraph_QuickItem.h"
 #include "ColormapFactory.h"
 #include "SettingsManager.h"
-#include "SpectrumSource.h"
+#include "spectrumanalyzers/SpectrumSource.h"
 
 #include <QPainter>
 #include <algorithm>

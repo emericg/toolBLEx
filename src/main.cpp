@@ -27,8 +27,8 @@
 #include "DeviceManager.h"
 #include "device_utils.h"
 
-#include "rtlsdr.h"
-#include "ubertooth.h"
+#include "spectrumanalyzers/SpectrumSourceRtlSdr.h"
+#include "spectrumanalyzers/SpectrumSourceUbertooth.h"
 
 #include "utils_app.h"
 #include "utils_screen.h"
@@ -93,8 +93,8 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    Ubertooth *ubertooth = new Ubertooth;
-    RtlSdr *rtlsdr = new RtlSdr;
+    SpectrumSourceUbertooth *ubertooth = new SpectrumSourceUbertooth;
+    SpectrumSourceRtlSdr *rtlsdr = new SpectrumSourceRtlSdr;
     if (!ubertooth || !rtlsdr)
     {
         qWarning() << "Cannot init toolBLEx spectrum analyzers!";

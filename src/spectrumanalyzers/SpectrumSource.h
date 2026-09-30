@@ -23,8 +23,9 @@
 #define SPECTRUM_SOURCE_H
 /* ************************************************************************** */
 
+#include "SpectrumDriver.h"
+
 #include <QObject>
-#include <QProcess>
 
 #include <QList>
 #include <QMap>
@@ -40,14 +41,15 @@
 /* ************************************************************************** */
 
 /*!
- * \brief Abstract base for a swept-spectrum data source driven by a child process.
+ * \brief Abstract base for a swept-spectrum data source, fed by a SpectrumDriver.
  *
  * Owns everything generic to a spectrum scanner:
- * The rolling ring buffer of sweeps, the QProcess lifecycle, per-bin max-hold / average / peak extraction,
+ * The rolling ring buffer of sweeps, the capture lifecycle, per-bin max-hold / average / peak extraction,
  * capture-rate measurement, and the methods the various graphs consume.
  *
- * A device class (Ubertooth, RtlSdr) only implements the handful of things that actually differ:
- * which binary to run, how to build its arguments, and how to parse its output.
+ * A device class (SpectrumSourceUbertooth, SpectrumSourceRtlSdr) owns its drivers
+ * (command-line tool '_bin', and/or library '_lib'), selects the active one,
+ * and maps its settings to the driver configuration.
  *
  * Frequency bins are integer values in the source's chosen unit (MHz or kHz):
  * bin index i maps to (freqMin + i) units, getFreqBinCount() == freqMax-freqMin+1.
@@ -62,6 +64,9 @@ class SpectrumSource: public QObject
     Q_PROPERTY(bool toolsAvailable READ areToolsAvailable NOTIFY availableChanged)
     Q_PROPERTY(bool hardwareAvailable READ isHardwareAvailable NOTIFY availableChanged)
     Q_PROPERTY(bool hardwareReady READ isHardwareReady NOTIFY availableChanged)
+
+    Q_PROPERTY(bool hasDriver READ hasDriver NOTIFY availableChanged)
+    Q_PROPERTY(bool driverUsesTools READ driverUsesTools NOTIFY availableChanged)
 
     Q_PROPERTY(int deviceIndex READ deviceIndex WRITE setDeviceIndex NOTIFY deviceIndexChanged)
 
@@ -107,8 +112,7 @@ protected:
     double m_floorDb = -100.0;              //!< colormap low end (per-source, uncalibrated)
     double m_ceilDb = -20.0;                //!< colormap high end (per-source, uncalibrated)
 
-    QProcess *m_childProcess = nullptr;
-    QString m_buffer;                       //!< accumulates partial stdout between reads
+    SpectrumDriver *m_driver = nullptr;     //!< active driver (not owned)
     int m_last_bin = -1;                    //!< last bin frequency seen (sweep-wrap detection)
     int m_fill_prev_idx = -1;               //!< last bucket index written this sweep (sample-and-hold gap fill)
 
@@ -139,7 +143,10 @@ protected:
     bool isHardwareAvailable() const { return m_hardwareAvailable; }
     bool isHardwareReady() const { return m_hardwareReady; }
 
-    bool isRunning() const { return m_childProcess; }
+    bool hasDriver() const { return m_driver; }
+    bool driverUsesTools() const { return m_driver && m_driver->usesTools(); }
+
+    bool isRunning() const { return m_driver && m_driver->isRunning(); }
 
     // Shared ring / parsing logic
     void allocateRing();
@@ -150,18 +157,25 @@ protected:
     void scheduleDataNotification();
     void emitDataNotification();
 
-    // Device-specific hooks
-    virtual QString binaryPath() const = 0;                 //!< binary to spawn (empty if unavailable)
-    virtual QStringList buildArguments() const = 0;         //!< child-process arguments
-    virtual void parseLine(const QString &line, int *&current_values, bool &sweepCompleted) = 0; //!< feeds recordBin()
-    virtual void requestStop(QProcess *process);            //!< ask the child to stop (default: terminate)
-    virtual void configureForStart() {}                     //!< refresh freq range etc. before the ring is (re)allocated
+    //! Convert a frequency in Hz into the current bin unit (MHz or kHz).
+    int hzToUnit(double hz) const;
 
-protected slots:
-    void processStarted();
-    void processFinished();
-    void processOutput();
-    void processError();
+    /*!
+     * \brief Select the driver used by the next capture.
+     * \param driver: Driver owned by the subclass, or nullptr.
+     *
+     * Ignored while a capture is running. Applies the driver's default dB range.
+     */
+    void setActiveDriver(SpectrumDriver *driver);
+
+    // Device-specific hooks
+    virtual void configureForStart() {}                     //!< refresh freq range etc. before the ring is (re)allocated
+    virtual SpectrumDriver::Config driverConfig() const;    //!< capture parameters (default: device index + freq range)
+
+private slots:
+    void driverRunningChanged();
+    void driverReadyRead();
+    void driverError(const QString &message);
 
 Q_SIGNALS:
     void availableChanged();
@@ -202,7 +216,7 @@ public:
      * \return maxColumns of data.
      *
      * Expose the ring as a chronological list (oldest first, newest last).
-     * The pointers alias into m_ring and stay valid until the next processOutput()/startWork() on the GUI thread.
+     * The pointers alias into m_ring and stay valid until the next driverReadyRead()/startWork() on the GUI thread.
      *
      * getChronologicalValues() can left-pads its result with blank (no-data) columns,
      * so the list always has the full s_max_stack entry count.
@@ -219,18 +233,22 @@ public:
     const QMap <int, int> &getLatestValues() const { return m_values_latest; }
 
     /*!
-     * \brief Autodetect paths using QStandardPaths::findExecutable()
-     * \return true if tools found.
+     * \brief Search for the driver backend automatically (ex: tools in the PATH), and save it to the settings.
+     * \return true if found.
      */
-    Q_INVOKABLE virtual bool autodetectPaths() = 0;
+    Q_INVOKABLE bool autodetectPaths();
 
     /*!
-     * \brief Locate binary tools necessary for a device-specific class to work.
-     * \return true if tools found.
-     *
-     * Maybe should be split between find tools, check hardware availability, check hardware readiness.
+     * \brief Check that the driver backend is usable, and update toolsAvailable.
+     * \return true if usable (tools installed, or supported device connected for a library driver).
      */
-    Q_INVOKABLE virtual bool checkPaths() = 0;
+    Q_INVOKABLE bool checkPaths();
+
+    /*!
+     * \brief Check that a device is connected and responding, and update hardwareAvailable.
+     * \return true if the device answered, or if a capture is already running.
+     */
+    Q_INVOKABLE bool checkHardware();
 
     Q_INVOKABLE void startWork();
     Q_INVOKABLE void stopWork();

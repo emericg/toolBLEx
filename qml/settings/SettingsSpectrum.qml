@@ -86,7 +86,12 @@ Column { // SPECTRUM ANALYZERS
         height: txtAnalyzers2.height + 16
         color: Theme.colorForeground
 
-        visible: (Qt.platform.os === "windows")
+        property bool noDriver: (!ubertooth.hasDriver && !rtlsdr.hasDriver)
+        property bool needsZadig: (Qt.platform.os === "windows" &&
+                                   ((ubertooth.hasDriver && !ubertooth.driverUsesTools) ||
+                                    (rtlsdr.hasDriver && !rtlsdr.driverUsesTools)))
+
+        visible: (noDriver || needsZadig)
 
         IconSvg {
             width: 28
@@ -108,11 +113,18 @@ Column { // SPECTRUM ANALYZERS
             anchors.rightMargin: Theme.componentMarginL
             anchors.verticalCenter: parent.verticalCenter
 
-            text: qsTr("Spectrum analyzers are not available for Windows.")
-            textFormat: Text.PlainText
+            text: parent.noDriver ?
+                      qsTr("Spectrum analyzers are not available in this build.") :
+                      qsTr("On Windows, Ubertooth One and RTL-SDR devices need the WinUSB driver, which can be installed with <a href=\"https://zadig.akeo.ie/\">Zadig</a>.")
+            textFormat: Text.StyledText
             font.pixelSize: Theme.fontSizeContent
             color: Theme.colorText
+            linkColor: Theme.colorText
             wrapMode: Text.WordWrap
+
+            onLinkActivated: (link) => {
+                Qt.openUrlExternally(link)
+            }
         }
     }
 
@@ -163,8 +175,6 @@ Column { // SPECTRUM ANALYZERS
         width: settingsColumn.flowElementWidth
         spacing: 2
 
-        enabled: (Qt.platform.os === "linux" || Qt.platform.os === "osx")
-
         ////
 
         Rectangle {
@@ -172,6 +182,8 @@ Column { // SPECTRUM ANALYZERS
             anchors.right: parent.right
             height: 48
             color: Theme.colorForeground
+
+            visible: ubertooth.driverUsesTools
 
             FileInputArea {
                 id: ubertoothPath
@@ -215,6 +227,8 @@ Column { // SPECTRUM ANALYZERS
             height: 48
             color: Theme.colorForeground
 
+            enabled: ubertooth.hasDriver
+
             RangeSliderThemed {
                 anchors.left: parent.left
                 anchors.leftMargin: Theme.componentMarginS
@@ -251,6 +265,8 @@ Column { // SPECTRUM ANALYZERS
             anchors.right: parent.right
             height: 48
             color: Theme.colorForeground
+
+            enabled: ubertooth.hasDriver
 
             SpinBoxThemedDesktop {
                 anchors.left: parent.left
@@ -352,7 +368,7 @@ Column { // SPECTRUM ANALYZERS
             width: settingsColumn.flowElementWidth
             spacing: 2
 
-            enabled: (Qt.platform.os === "linux" || Qt.platform.os === "osx")
+            enabled: rtlsdr.hasDriver
 
             ////
 
@@ -361,6 +377,8 @@ Column { // SPECTRUM ANALYZERS
                 anchors.right: parent.right
                 height: 48
                 color: Theme.colorForeground
+
+                visible: rtlsdr.driverUsesTools
 
                 FileInputArea {
                     id: rtlsdrPath

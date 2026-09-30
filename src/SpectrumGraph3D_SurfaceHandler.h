@@ -33,9 +33,9 @@ class SpectrumSource;
 /* ************************************************************************** */
 
 /*!
- * \brief Fills a Qt Graphs Surface3D series from the Ubertooth data.
+ * \brief Fills a Qt Graphs Surface3D series from a SpectrumSource data.
  *
- * Bridges the rolling sweep stack exposed by the Ubertooth class to a
+ * Bridges the rolling sweep stack exposed by a SpectrumSource to a
  * QSurface3DSeries data proxy (X = frequency MHz, Y = magnitude, Z = time).
  */
 class SpectrumGraph3D_SurfaceHandler: public QObject

@@ -26,6 +26,7 @@
 #include <QDebug>
 
 #include <algorithm>
+#include <cmath>
 #include <vector>
 
 /* ************************************************************************** */
@@ -38,10 +39,10 @@ SpectrumSource::SpectrumSource(QObject *parent) : QObject(parent)
 
 SpectrumSource::~SpectrumSource()
 {
-    if (m_childProcess)
+    if (m_driver)
     {
-        m_childProcess->kill();
-        m_childProcess->waitForFinished(333);
+        m_driver->disconnect(this);
+        m_driver->stop();
     }
 
     m_ring_buffer.clear();
@@ -87,9 +88,86 @@ void SpectrumSource::setCeilDb(double v)
 
 /* ************************************************************************** */
 
-void SpectrumSource::requestStop(QProcess *process)
+int SpectrumSource::hzToUnit(double hz) const
 {
-    if (process) process->terminate();
+    const double div = (m_unit == FrequencyUnit::kHz) ? 1000.0 : 1000000.0;
+    return static_cast<int>(std::lround(hz / div));
+}
+
+/* ************************************************************************** */
+
+void SpectrumSource::setActiveDriver(SpectrumDriver *driver)
+{
+    if (driver == m_driver || isRunning()) return;
+
+    if (m_driver) m_driver->disconnect(this);
+    m_driver = driver;
+
+    if (m_driver)
+    {
+        connect(m_driver, &SpectrumDriver::runningChanged, this, &SpectrumSource::driverRunningChanged);
+        connect(m_driver, &SpectrumDriver::readyRead, this, &SpectrumSource::driverReadyRead);
+        connect(m_driver, &SpectrumDriver::errorOccurred, this, &SpectrumSource::driverError);
+
+        setFloorDb(m_driver->defaultFloorDb());
+        setCeilDb(m_driver->defaultCeilDb());
+
+        qDebug() << "SpectrumSource::setActiveDriver()" << m_driver->metaObject()->className();
+    }
+
+    Q_EMIT availableChanged();
+}
+
+/* ************************************************************************** */
+
+bool SpectrumSource::autodetectPaths()
+{
+    return m_driver && m_driver->autodetect();
+}
+
+/* ************************************************************************** */
+
+bool SpectrumSource::checkPaths()
+{
+    const bool status = m_driver && m_driver->detect();
+
+    if (m_toolsAvailable != status)
+    {
+        m_toolsAvailable = status;
+        Q_EMIT availableChanged();
+    }
+
+    return status;
+}
+
+/* ************************************************************************** */
+
+bool SpectrumSource::checkHardware()
+{
+    if (isRunning()) return true; // A running capture already implies a working device
+
+    const bool status = m_driver && m_driver->checkHardware(m_deviceIndex);
+
+    if (m_hardwareAvailable != status)
+    {
+        m_hardwareAvailable = status;
+        Q_EMIT availableChanged();
+    }
+
+    return status;
+}
+
+/* ************************************************************************** */
+
+SpectrumDriver::Config SpectrumSource::driverConfig() const
+{
+    const double hzPerUnit = (m_unit == FrequencyUnit::kHz) ? 1000.0 : 1000000.0;
+
+    SpectrumDriver::Config cfg;
+    cfg.deviceIndex = m_deviceIndex;
+    cfg.freqMinHz = m_freq_min * hzPerUnit;
+    cfg.freqMaxHz = m_freq_max * hzPerUnit;
+    return cfg;
 }
 
 /* ************************************************************************** */
@@ -124,24 +202,16 @@ void SpectrumSource::allocateRing()
 
 void SpectrumSource::startWork()
 {
-    if (m_childProcess) return;
+    if (isRunning()) return;
 
-#if defined(Q_OS_WINDOWS)
-    return;
-#endif
-
-    // Let the subclass refresh its frequency range / unit before we size the ring.
+    // Let the subclass refresh its frequency range / unit / driver before we size the ring.
     configureForStart();
 
-    const QString binary = binaryPath();
-    if (binary.isEmpty()) return;
-
-    const QStringList args = buildArguments();
+    if (!m_driver) return;
 
     // Reset the rolling state
     m_ring_head = 0;
     m_ring_count = 0;
-    m_buffer.clear();
     m_last_bin = -1;
     m_fill_prev_idx = -1;
     m_values_latest.clear();
@@ -159,39 +229,21 @@ void SpectrumSource::startWork()
 
     allocateRing();
 
-    m_childProcess = new QProcess();
-    if (m_childProcess)
-    {
-        connect(m_childProcess, SIGNAL(started()), this, SLOT(processStarted()));
-        connect(m_childProcess, SIGNAL(finished(int)), this, SLOT(processFinished()));
-        connect(m_childProcess, &QProcess::readyReadStandardOutput, this, &SpectrumSource::processOutput);
-        connect(m_childProcess, &QProcess::readyReadStandardError, this, &SpectrumSource::processError);
-
-        qDebug() << "SpectrumSource::startWork()" << binary << args;
-        m_childProcess->start(binary, args);
-    }
+    m_driver->start(driverConfig());
 }
 
 /* ************************************************************************** */
 
 void SpectrumSource::stopWork()
 {
-    if (m_childProcess)
-    {
-        requestStop(m_childProcess);
-
-        if (!m_childProcess->waitForFinished(333))
-        {
-            m_childProcess->kill();
-        }
-    }
+    if (m_driver) m_driver->stop();
 }
 
 /* ************************************************************************** */
 
 void SpectrumSource::restartWork()
 {
-    if (m_childProcess)
+    if (isRunning())
     {
         stopWork();
         QTimer::singleShot(333, this, &SpectrumSource::startWork);
@@ -201,55 +253,17 @@ void SpectrumSource::restartWork()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void SpectrumSource::processStarted()
+void SpectrumSource::driverRunningChanged()
 {
-    if (m_childProcess)
-    {
-        qDebug() << "SpectrumSource::processStarted()";
-        Q_EMIT runningChanged();
-
-        if (!m_hardwareAvailable)
-        {
-            m_hardwareAvailable = true; // obviously...
-            Q_EMIT availableChanged();
-        }
-    }
+    qDebug() << "SpectrumSource::driverRunningChanged()" << isRunning();
+    Q_EMIT runningChanged();
 }
 
 /* ************************************************************************** */
 
-void SpectrumSource::processFinished()
+void SpectrumSource::driverError(const QString &message)
 {
-    if (m_childProcess)
-    {
-        int exitStatus = m_childProcess->exitStatus();
-        int exitCode = m_childProcess->exitCode();
-
-        m_childProcess->waitForFinished();
-        m_childProcess->deleteLater();
-        m_childProcess = nullptr;
-
-        qDebug() << "SpectrumSource::processFinished(status:" << exitStatus << "/ code:" << exitCode << ")";
-        Q_EMIT runningChanged();
-    }
-}
-
-/* ************************************************************************** */
-
-void SpectrumSource::processError()
-{
-    if (!m_childProcess) return;
-
-    const QString err = m_childProcess->readAllStandardError();
-    if (!err.isEmpty())
-    {
-        if (err.contains("No supported devices", Qt::CaseInsensitive) ||
-            err.contains("No devices found", Qt::CaseInsensitive) ||
-            err.contains("usb_claim_interface error", Qt::CaseInsensitive))
-        {
-            qWarning() << "SpectrumSource::processError()" << err.trimmed();
-        }
-    }
+    qWarning() << "SpectrumSource::driverError()" << message;
 }
 
 /* ************************************************************************** */
@@ -263,7 +277,7 @@ void SpectrumSource::advanceSweep(int *&current_values, bool &sweepCompleted)
     std::fill_n(current_values, m_ring_bins, s_rssi_raw_default);
 
     sweepCompleted = true;
-    m_sweeps_in_window++; // counted here; the rate is computed over a time window in processOutput()
+    m_sweeps_in_window++; // counted here; the rate is computed over a time window in driverReadyRead()
 }
 
 /* ************************************************************************** */
@@ -305,12 +319,19 @@ void SpectrumSource::recordBin(int unitFreq, int dB, int *&current_values, bool 
 
 /* ************************************************************************** */
 
-void SpectrumSource::processOutput()
+void SpectrumSource::driverReadyRead()
 {
-    if (!m_childProcess) return;
+    if (!m_driver) return;
+
+    const std::vector <SpectrumDriver::Sample> samples = m_driver->takeSamples();
+    if (samples.empty()) return;
     if (m_ring_bins <= 0 || m_ring_buffer.empty()) return;
 
-    m_buffer += QString(m_childProcess->readAllStandardOutput());
+    if (!m_hardwareAvailable)
+    {
+        m_hardwareAvailable = true; // obviously...
+        Q_EMIT availableChanged();
+    }
 
     // Make sure we have an in-progress slot to write the incoming sweep into.
     if (m_ring_count == 0)
@@ -322,16 +343,9 @@ void SpectrumSource::processOutput()
 
     bool sweepCompleted = false; // becomes true once this batch finishes a sweep
 
-    // Consume only complete lines; keep any trailing partial line for next time.
-    int nl;
-    while ((nl = m_buffer.indexOf('\n')) >= 0)
+    for (const SpectrumDriver::Sample &smp : samples)
     {
-        const QString line = m_buffer.left(nl).trimmed();
-        m_buffer.remove(0, nl + 1);
-
-        if (line.isEmpty() || line.startsWith('#')) continue; // blanks / comments
-
-        parseLine(line, current_values, sweepCompleted);
+        recordBin(hzToUnit(smp.freqHz), static_cast<int>(std::lround(smp.db)), current_values, sweepCompleted);
     }
 
     if (sweepCompleted)

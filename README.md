@@ -90,7 +90,7 @@ macOS has various limitations regarding Bluetooth handling:
 
 Bluetooth driver support might be a little shaky...
 
-- Windows doesn't have good enough support for the Ubertooth One and RTL-SDL tools, and thus the frequency analyzers are disabled.
+- The Ubertooth One and RTL-SDR command-line tools are not supported on Windows. The frequency analyzers are available when toolBLEx is built with libusb and librtlsdr, and the devices need the WinUSB driver (installed with [Zadig](https://zadig.akeo.ie/)).
 
 #### Third party projects used by toolBLEx
 

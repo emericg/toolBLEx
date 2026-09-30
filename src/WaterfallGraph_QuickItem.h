@@ -37,7 +37,7 @@ class SpectrumSource;
 /*!
  * \brief Live scrolling spectrogram waterfall renderer.
  *
- * Reads the rolling magnitude matrix exposed by the Ubertooth class and paints
+ * Reads the rolling magnitude matrix exposed by a SpectrumSource and paints
  * it as a viridis-colored heatmap (X = time, Y = frequency, color = magnitude).
  */
 class WaterfallGraph_QuickItem: public QQuickPaintedItem

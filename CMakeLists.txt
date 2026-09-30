@@ -70,9 +70,10 @@ set(SOURCES
     src/DeviceAdvModel.cpp src/DeviceAdvModel.h
     src/DeviceLogModel.cpp src/DeviceLogModel.h
 
-    src/SpectrumSource.cpp src/SpectrumSource.h
-    src/ubertooth.cpp src/ubertooth.h
-    src/rtlsdr.cpp src/rtlsdr.h
+    src/spectrumanalyzers/SpectrumSource.cpp src/spectrumanalyzers/SpectrumSource.h
+    src/spectrumanalyzers/SpectrumSourceUbertooth.cpp src/spectrumanalyzers/SpectrumSourceUbertooth.h
+    src/spectrumanalyzers/SpectrumSourceRtlSdr.cpp src/spectrumanalyzers/SpectrumSourceRtlSdr.h
+    src/spectrumanalyzers/SpectrumDriver.cpp src/spectrumanalyzers/SpectrumDriver.h
     src/ColormapFactory.cpp src/ColormapFactory.h
     src/WaterfallGraph_QuickItem.cpp src/WaterfallGraph_QuickItem.h
     src/SpectrumGraph3D_SurfaceHandler.cpp src/SpectrumGraph3D_SurfaceHandler.h
