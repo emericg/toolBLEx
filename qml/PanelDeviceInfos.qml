@@ -68,6 +68,7 @@ Flickable {
                     legendWidth = 64
                     legendWidth = Math.max(legendWidth, legendName.contentWidth)
                     legendWidth = Math.max(legendWidth, legendBluetooth.contentWidth)
+                    legendWidth = Math.max(legendWidth, legendMTU.contentWidth)
                     if (Qt.platform.os === "osx") {
                         legendWidth = Math.max(legendWidth, legendAddressUUID.contentWidth)
                     } else {
@@ -232,6 +233,32 @@ Flickable {
                         //TextSelectable {
                         //    text: UtilsBluetooth.getBluetoothCoreConfigurationText(selectedDevice.bluetoothConfiguration)
                         //}
+                    }
+
+                    Row {
+                        height: 32
+                        spacing: Theme.componentMarginS
+
+                        visible: (selectedDevice && selectedDevice.mtu > 0)
+
+                        Text {
+                            id: legendMTU
+                            width: box1.legendWidth
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            text: qsTr("MTU")
+                            textFormat: Text.PlainText
+                            font.pixelSize: Theme.fontSizeContent
+                            horizontalAlignment: Text.AlignRight
+                            color: Theme.colorSubText
+                        }
+
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: selectedDevice && selectedDevice.mtu
+                            font.pixelSize: Theme.fontSizeContent
+                            color: Theme.colorText
+                        }
                     }
                 }
             }
@@ -578,8 +605,9 @@ Flickable {
         ////////
 
         Rectangle {
+            id: boxRssi
             width: detailView.ww
-            height: box3.height + 32
+            height: box3.height + advTimeline.height + Theme.componentMargin*3
             radius: 4
 
             clip: true
@@ -589,22 +617,16 @@ Flickable {
 
             visible: (selectedDevice && selectedDevice.rssi !== 0)
 
-            Column {
+            Row {
                 id: box3
+
+                anchors.top: parent.top
+                anchors.topMargin: Theme.componentMargin
                 anchors.left: parent.left
-                anchors.leftMargin: Theme.componentMarginL
+                anchors.leftMargin: Theme.componentMargin
                 anchors.right: parent.right
-                anchors.rightMargin: Theme.componentMarginXS
-                anchors.verticalCenter: parent.verticalCenter
-
-                property int legendWidth: 64
-
-                Component.onCompleted: {
-                    legendWidth = 64
-                    legendWidth = Math.max(legendWidth, legendMTU.contentWidth)
-                    legendWidth = Math.max(legendWidth, legendRSSI.contentWidth)
-                    legendWidth = Math.max(legendWidth, legendAdvertising.contentWidth)
-                }
+                anchors.rightMargin: Theme.componentMargin
+                spacing: Theme.componentMarginXL
 
                 ////
 
@@ -615,8 +637,7 @@ Flickable {
                     visible: (selectedDevice && selectedDevice.mtu > 0)
 
                     Text {
-                        id: legendMTU
-                        width: box3.legendWidth
+                        id: legendMTUu
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("MTU")
@@ -642,7 +663,6 @@ Flickable {
 
                     Text {
                         id: legendRSSI
-                        width: box3.legendWidth
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("RSSI")
@@ -704,7 +724,6 @@ Flickable {
 
                     Text {
                         id: legendAdvertising
-                        width: box3.legendWidth
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Advertising interval")
@@ -754,47 +773,36 @@ Flickable {
                 }
 
                 ////
-
-                Item {
-                    width: 24
-                    height: 24
-                }
             }
 
-            Row {
+            AdvTimelineGraph {
+                id: advTimeline
+
+                anchors.top: box3.bottom
+                anchors.topMargin: Theme.componentMargin
                 anchors.left: parent.left
+                anchors.leftMargin: Theme.componentMarginS
                 anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                anchors.margins: 2
-                spacing: 2
+                anchors.rightMargin: Theme.componentMarginS
+                height: 240
 
-                Repeater {
-                    model: (selectedDevice && selectedDevice.rssiHistory)
-
-                    Rectangle {
-                        width: ((detailView.ww - 59*2 - 2*2) / 60)
-                        height: 40
-                        radius: 2
-                        color: Theme.colorForeground
-
-                        Rectangle {
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            anchors.bottom: parent.bottom
-
-                            height: ((100 - Math.abs(modelData.rssi)) / 100) * parent.height
-                            radius: 2
-
-                            color: {
-                                if (modelData.hasMFD && modelData.hasSVD) Theme.colorOrange
-                                if (modelData.hasMFD) return Theme.colorBlue
-                                if (modelData.hasSVD) return Theme.colorGreen
-                                return Theme.colorPrimary
-                            }
-                        }
-                    }
-                }
+                device: selectedDevice
             }
+/*
+            AdvTimelineBars {
+                id: advTimeline
+
+                anchors.top: box3.bottom
+                anchors.topMargin: Theme.componentMargin
+                anchors.left: parent.left
+                anchors.leftMargin: Theme.componentMarginS
+                anchors.right: parent.right
+                anchors.rightMargin: Theme.componentMarginS
+                height: 64
+
+                device: selectedDevice
+            }
+*/
         }
 
         ////////

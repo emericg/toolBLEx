@@ -37,6 +37,8 @@
 #include <QBluetoothLocalDevice>
 #include <QLowEnergyController>
 
+#include <QtGraphs/QXYSeries>
+
 /* ************************************************************************** */
 
 /*!
@@ -111,8 +113,8 @@ class DeviceToolBLEx: public Device
     Q_PROPERTY(DeviceLogModel *deviceLogModel READ getDeviceLog_model CONSTANT)
     Q_PROPERTY(QString deviceLogString READ getDeviceLog_string CONSTANT)
 
-    static const int s_min_entries_advertisement = 32;
-    static const int s_max_entries_advertisement = 64;
+    static const int s_max_entries_advertisement = 1024;
+    static const int s_max_age_advertisement_ms = 120000;
     static const int s_max_entries_packets = 60;
     static const int s_max_entries_logs = 1024;
 
@@ -335,6 +337,22 @@ public:
     void logEvent2(const QDateTime &timestamp, const int event, const QString &logline);
 
     Q_INVOKABLE void clearAdvertisement();
+
+    /*!
+     * \brief Fill the advertisement timeline series, one point per received packet.
+     * \param none: Series for packets without manufacturer or service data.
+     * \param mfd: Series for packets with manufacturer data only.
+     * \param svd: Series for packets with service data only.
+     * \param both: Series for packets with both manufacturer and service data.
+     * \param refTimeMs: Reference time (ms since epoch) used as x = 0.
+     * \param windowMs: Visible time window (ms) before refTimeMs.
+     *
+     * Points are placed at their age relative to refTimeMs, in (negative) seconds, with RSSI as y.
+     * Packets older than the window, or without a valid RSSI, are skipped.
+     */
+    Q_INVOKABLE void getAdvTimelineData(QXYSeries *none, QXYSeries *mfd,
+                                        QXYSeries *svd, QXYSeries *both,
+                                        qint64 refTimeMs, qint64 windowMs) const;
 
     Q_INVOKABLE void clearDeviceServices();
 

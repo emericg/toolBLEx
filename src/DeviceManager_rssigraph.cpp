@@ -49,13 +49,14 @@ QString DeviceManager::getAvailableColor()
     return clr_str;
 }
 
-void DeviceManager::getRssiGraphData(QLineSeries *serie, int index)
+void DeviceManager::getRssiGraphData(QLineSeries *serie, int index,
+                                     qint64 refTimeMs, qint64 windowMs)
 {
     if (!serie) return;
-    if (m_devices_model->m_devices.size() < index) return;
+    if (index < 0 || index >= m_devices_model->m_devices.size()) return;
     //qDebug() << "DeviceManager::getRssiGraphData()" << serie << index;
 
-    serie->clear();
+    QList <QPointF> points;
 
     DeviceToolBLEx *dd = qobject_cast<DeviceToolBLEx *>(m_devices_model->m_devices.at(index));
     if (dd)
@@ -63,21 +64,22 @@ void DeviceManager::getRssiGraphData(QLineSeries *serie, int index)
         serie->setColor(dd->getUserColor());
 
         const QList <AdvertisementEntry *> & l = dd->getRssiHistory2();
-        for (auto a: l)
+        const qint64 oldestMs = refTimeMs - windowMs;
+
+        qsizetype first = 0;
+        while (first < l.size() && l.at(first)->getTimestamp().toMSecsSinceEpoch() < oldestMs) first++;
+        if (first > 0) first--;
+
+        points.reserve(l.size() - first);
+        for (qsizetype i = first; i < l.size(); i++)
         {
-            serie->append(a->getTimestamp().toMSecsSinceEpoch(), a->getRssi());
-            //qDebug() << "point:" << a->getTimestamp().toMSecsSinceEpoch() << a->getRssi();
+            const AdvertisementEntry *a = l.at(i);
+            points.append(QPointF((a->getTimestamp().toMSecsSinceEpoch() - refTimeMs) / 1000.0,
+                                  a->getRssi()));
         }
     }
-}
 
-void DeviceManager::getRssiGraphAxis(QDateTimeAxis *axis)
-{
-    if (!axis) return;
-    //qDebug() << "DeviceManager::getRssiGraphAxis()";
-
-    axis->setMin(QDateTime::currentDateTime().addSecs(-60));
-    axis->setMax(QDateTime::currentDateTime());
+    serie->replace(points);
 }
 
 /* ************************************************************************** */

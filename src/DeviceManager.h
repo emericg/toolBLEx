@@ -33,7 +33,6 @@
 
 #include <QtGraphs/QLineSeries>
 #include <QtGraphs/QValueAxis>
-#include <QtGraphs/QDateTimeAxis>
 
 #include <QBluetoothLocalDevice>
 #include <QBluetoothDeviceDiscoveryAgent>
@@ -167,15 +166,20 @@ class DeviceManager: public QObject
     Qt::SortOrder m_orderBy_order;
 
     QStringList m_colorsAvailable = {
-        "HotPink", "White", "Tomato", "Yellow", "Red", "Orange", "Gold", "LimeGreen", "Green",
+        "HotPink", "Tomato", "Yellow", "Red", "Orange", "Gold", "LimeGreen", "Green",
         "MediumOrchid", "Purple", "YellowGreen", "LightYellow", "MediumVioletRed", "PeachPuff", "DodgerBlue",
-        "Indigo", "Ivory", "DeepSkyBlue", "MistyRose", "DarkBlue", "MintCream", "Black", "OrangeRed",
+        "Indigo", "DeepSkyBlue", "MistyRose", "DarkBlue", "Black", "OrangeRed",
         "PaleGreen", "Gainsboro", "PaleVioletRed", "Lavender", "Cyan", "MidnightBlue", "LightPink",
         "FireBrick", "Crimson", "DarkMagenta", "SteelBlue", "GreenYellow", "Brown", "DarkOrange",
         "Goldenrod", "DarkSeaGreen", "DarkRed", "LavenderBlush", "Violet", "Maroon", "Khaki",
-        "WhiteSmoke", "Salmon", "Olive", "Orchid", "Fuchsia", "Pink", "LawnGreen", "Peru",
-        "Grey", "Moccasin", "Beige", "Magenta", "DarkOrchid", "LightCyan", "RosyBrown", "GhostWhite",
+        "Salmon", "Olive", "Orchid", "Fuchsia", "Pink", "LawnGreen", "Peru",
+        "Grey", "Moccasin", "Beige", "Magenta", "DarkOrchid", "RosyBrown",
         "MediumSeaGreen", "LemonChiffon", "Chocolate", "BurlyWood"
+    };
+    QStringList m_colorsAvailable_toolight = { // too light
+        "White", "Ivory", "MintCream", "WhiteSmoke", "GhostWhite", "LightCyan",
+    };
+    QStringList m_colorsAvailable_toodark = { // too dark
     };
     QStringList m_colorsLeft;
     QString getAvailableColor();
@@ -333,8 +337,19 @@ public:
     void invalidateFilter();
 
     // RSSI graph
-    Q_INVOKABLE void getRssiGraphAxis(QDateTimeAxis *axis);
-    Q_INVOKABLE void getRssiGraphData(QLineSeries *serie, int index);
+    /*!
+     * \brief Fill a line series with the RSSI history of a device.
+     * \param serie: The series to fill. Its previous content is replaced.
+     * \param index: The device index in the device model.
+     * \param refTimeMs: Reference time (ms since epoch) used as x = 0.
+     * \param windowMs: Visible time window (ms) before refTimeMs.
+     *
+     * Points are placed at their age relative to refTimeMs, in (negative) seconds.
+     * Only points within the window are kept, plus the last one before it,
+     * so the line reaches the left edge of the graph.
+     */
+    Q_INVOKABLE void getRssiGraphData(QLineSeries *serie, int index,
+                                      qint64 refTimeMs, qint64 windowMs);
 };
 
 /* ************************************************************************** */

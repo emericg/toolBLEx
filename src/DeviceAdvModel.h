@@ -69,7 +69,18 @@ public:
     };
     Q_ENUM(AdvertisementDataRoles)
 
+private:
+    /*!
+     * \brief Remove the oldest entries above s_max_entries.
+     *
+     * The latest entry of each manufacturer / service data is never removed,
+     * the oldest entries that are not the latest of their kind go first.
+     */
+    void trimEntries();
+
 public:
+    static inline int s_max_entries = 2048; //!< Maximum number of entries kept in the history
+
     QList <AdvertisementData *> m_advertisements;
 
     QList <AdvertisementData *> m_advertisements_mfd;

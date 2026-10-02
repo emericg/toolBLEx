@@ -118,11 +118,11 @@ Item {
     RssiGraph {
         id: rssiGraph
         anchors.top: menuBar.bottom
-        anchors.topMargin: -20
+        anchors.topMargin: -10
         anchors.left: parent.left
         anchors.leftMargin: -24
         anchors.right: parent.right
-        anchors.rightMargin: -20
+        anchors.rightMargin: -12
         anchors.bottom: parent.bottom
         anchors.bottomMargin: -24
 

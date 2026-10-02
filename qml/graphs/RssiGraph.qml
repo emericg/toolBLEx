@@ -46,12 +46,17 @@ GraphsView {
         subGridVisible: false
     }
 
-    axisX: DateTimeAxis {
+    axisX: ValueAxis {
         id: axisTime
         visible: true
 
+        min: -60
+        max: 0
+        tickInterval: 10
+
         labelsVisible: true
-        labelFormat: "mm:ss"
+        labelDecimals: 0
+        labelDelegate: GraphAxisLabelAge { }
 
         gridVisible: true
         subGridVisible: false
@@ -68,7 +73,6 @@ GraphsView {
     }
 
     Component.onCompleted: {
-        deviceManager.getRssiGraphAxis(axisTime)
         graphs[0] = createLineSeries()
     }
 
@@ -77,10 +81,8 @@ GraphsView {
         if (!deviceManager.scanning || deviceManager.scanningPaused || hostMenu.currentIndex !== 2) return
         //console.log("rssiGraph // updateGraph()")
 
-        //// AXIS
-        deviceManager.getRssiGraphAxis(axisTime)
-
         //// DATA
+        var now = Date.now()
         for (var i = 0; i < deviceManager.deviceCount; i++) {
             if (!graphs[i]) {
                 //console.log("graph " + i + " is being created")
@@ -88,7 +90,7 @@ GraphsView {
             }
             if (graphs[i]) {
                 //console.log("graph " + i + " is being updated")
-                deviceManager.getRssiGraphData(graphs[i], i)
+                deviceManager.getRssiGraphData(graphs[i], i, now, -axisTime.min * 1000)
             }
         }
     }

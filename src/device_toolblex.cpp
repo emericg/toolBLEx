@@ -972,25 +972,21 @@ void DeviceToolBLEx::clearAdvertisement()
 void DeviceToolBLEx::addAdvertisementEntry(const QDateTime &timestamp, const int rssi,
                                            const bool hasMFD, const bool hasSVD)
 {
-    int maxentries = s_min_entries_advertisement;
-    if (m_advertisementInterval > 0 && m_advertisementInterval < 1000) maxentries = s_max_entries_advertisement;
-
     m_advertisementEntries.push_back(new AdvertisementEntry(timestamp, rssi, hasMFD, hasSVD, this));
-    if (m_advertisementEntries.length() > maxentries)
+
+    // Drop entries older than the retention window, or above the hard cap
+    const QDateTime oldest = timestamp.addMSecs(-s_max_age_advertisement_ms);
+    while (m_advertisementEntries.length() > s_max_entries_advertisement ||
+           (m_advertisementEntries.length() > 1 && m_advertisementEntries.first()->getTimestamp() < oldest))
     {
-        delete m_advertisementEntries.at(0);
-        m_advertisementEntries.pop_front();
+        delete m_advertisementEntries.takeFirst();
     }
 
     if (m_advertisementEntries.length() > 1)
     {
-        int intvm = 0;
-        for (int i=1; i < m_advertisementEntries.length(); i++)
-        {
-            //qDebug() << i << m_rssiHistory.at(i)->getTimestamp();
-            intvm += m_advertisementEntries.at(i-1)->getTimestamp().msecsTo(m_advertisementEntries.at(i)->getTimestamp());
-        }
-        m_advertisementInterval = (intvm / (m_advertisementEntries.length()-1.0));
+        // Mean of consecutive deltas, which reduces to (last - first) / (n - 1)
+        const qint64 span = m_advertisementEntries.first()->getTimestamp().msecsTo(m_advertisementEntries.last()->getTimestamp());
+        m_advertisementInterval = static_cast<int>(span / (m_advertisementEntries.length() - 1.0));
     }
 
     Q_EMIT rssiUpdated();
@@ -1000,6 +996,33 @@ void DeviceToolBLEx::cleanAdvertisementEntries()
 {
     qDeleteAll(m_advertisementEntries);
     m_advertisementEntries.clear();
+}
+
+void DeviceToolBLEx::getAdvTimelineData(QXYSeries *none, QXYSeries *mfd,
+                                        QXYSeries *svd, QXYSeries *both,
+                                        qint64 refTimeMs, qint64 windowMs) const
+{
+    if (!none || !mfd || !svd || !both) return;
+
+    QList <QPointF> pts_none, pts_mfd, pts_svd, pts_both;
+    const qint64 oldestMs = refTimeMs - windowMs;
+
+    for (const AdvertisementEntry *a: m_advertisementEntries)
+    {
+        const qint64 ts = a->getTimestamp().toMSecsSinceEpoch();
+        if (ts < oldestMs || a->getRssi() >= 0) continue;
+
+        const QPointF pt((ts - refTimeMs) / 1000.0, a->getRssi());
+        if (a->hasMFD() && a->hasSVD()) pts_both.append(pt);
+        else if (a->hasMFD()) pts_mfd.append(pt);
+        else if (a->hasSVD()) pts_svd.append(pt);
+        else pts_none.append(pt);
+    }
+
+    none->replace(pts_none);
+    mfd->replace(pts_mfd);
+    svd->replace(pts_svd);
+    both->replace(pts_both);
 }
 
 /* ************************************************************************** */

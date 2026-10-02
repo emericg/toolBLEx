@@ -131,7 +131,33 @@ bool AdvertisementDataModel::addEntry(AdvertisementData *entry)
     m_advertisements_latest.insert(key, entry); // insert() replaces an existing key
     Q_EMIT latestEntriesChanged();
 
+    trimEntries();
+
     return true;
+}
+
+void AdvertisementDataModel::trimEntries()
+{
+    int row = 0;
+    while (m_advertisements.size() > s_max_entries && row < m_advertisements.size())
+    {
+        AdvertisementData *entry = m_advertisements.at(row);
+
+        const QPair<int, QString> key { entry->getMode(), entry->getUUID_str() };
+        if (m_advertisements_latest.value(key, nullptr) == entry)
+        {
+            row++;
+            continue;
+        }
+
+        beginRemoveRows(QModelIndex(), row, row);
+        m_advertisements.removeAt(row);
+        endRemoveRows();
+
+        m_advertisements_svd.removeOne(entry);
+        m_advertisements_mfd.removeOne(entry);
+        delete entry;
+    }
 }
 
 bool AdvertisementDataModel::addEntry(uint16_t mode, uint16_t id, const QBluetoothUuid &uuid,

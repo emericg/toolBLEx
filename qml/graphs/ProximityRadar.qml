@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 
 import ComponentLibrary
 
@@ -6,6 +7,10 @@ Item {
     id: proximityRadar
 
     clip: true
+
+    property var hoveredDevice: null
+    property var pinnedDevice: null
+    property var bannerDevice: hoveredDevice ?? pinnedDevice
 
     Rectangle {
         anchors.centerIn: cc
@@ -98,6 +103,9 @@ Item {
 
             property var circleDevice: pointer
 
+            property bool hovered: (proximityRadar.hoveredDevice === circleDevice)
+            property bool pinned: (proximityRadar.pinnedDevice === circleDevice)
+
             property real alpha: Math.random() * (3.14/2) + (3.14/4)
             property real a: c * Math.cos(alpha)
             property real b: c * Math.sin(alpha)
@@ -117,11 +125,14 @@ Item {
             border.color: circleDevice.selected ? Theme.colorSecondary : Qt.darker(color, 1.2)
 
             color: {
+                if (circleDelegate.pinned) return Theme.colorPrimary
                 if (Math.abs(circleDevice.rssi) < 65) return Theme.colorGreen
                 if (Math.abs(circleDevice.rssi) < 85) return Theme.colorOrange
                 if (Math.abs(circleDevice.rssi) < 100) return Theme.colorRed
                 return Theme.colorRed
             }
+
+            ////
 
             Loader {
                 anchors.centerIn: parent
@@ -144,10 +155,115 @@ Item {
                 }
             }
 
-            //MouseArea {
-            //    anchors.fill: parent
-            //    onClicked: circleDelegate.selected = !circleDelegate.selected
-            //}
+            ////
+
+            MouseArea {
+                anchors.fill: parent
+
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+
+                onContainsMouseChanged: {
+                    if (containsMouse) proximityRadar.hoveredDevice = circleDelegate.circleDevice
+                    else if (proximityRadar.hoveredDevice === circleDelegate.circleDevice) proximityRadar.hoveredDevice = null
+                }
+                onClicked: {
+                    proximityRadar.pinnedDevice = (proximityRadar.pinnedDevice === circleDelegate.circleDevice) ? null : circleDelegate.circleDevice
+                }
+            }
+
+            Component.onDestruction: {
+                if (circleDelegate.hovered) proximityRadar.hoveredDevice = null
+                if (circleDelegate.pinned) proximityRadar.pinnedDevice = null
+            }
+
+            ////
         }
     }
+
+    ////////
+
+    Rectangle {
+        id: banner
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+
+        height: 36
+        color: Theme.colorBox
+
+        opacity: proximityRadar.bannerDevice ? 1 : 0
+        visible: opacity > 0
+        Behavior on opacity { NumberAnimation { duration: 133 } }
+
+        property var device: null
+        Connections {
+            target: proximityRadar
+            function onBannerDeviceChanged() {
+                if (proximityRadar.bannerDevice) banner.device = proximityRadar.bannerDevice
+            }
+        }
+
+        RowLayout {
+            id: bannerColumn
+            anchors.fill: parent
+            anchors.leftMargin: Theme.componentMargin
+            anchors.rightMargin: Theme.componentMarginS
+            spacing: Theme.componentMargin
+
+            Text {
+                Layout.maximumWidth: implicitWidth
+                Layout.fillWidth: true
+                text: (banner.device && banner.device.deviceName.length) ? banner.device.deviceName_display : qsTr("Unavailable")
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContent
+                font.bold: true
+                color: Theme.colorText
+                elide: Text.ElideRight
+            }
+            Text {
+                text: banner.device ? banner.device.deviceAddress : ""
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContentSmall
+                color: Theme.colorSubText
+            }
+
+            RssiBar {
+                Layout.fillWidth: true
+                Layout.minimumWidth: 64
+                Layout.maximumWidth: 200
+
+                visible: (banner.device && banner.device.rssi !== 0)
+                value: banner.device ? -Math.abs(banner.device.rssi) : 0
+                value_max: banner.device ? -Math.abs(banner.device.rssiMax) : 0
+            }
+
+            Item { Layout.fillWidth: true }
+
+            RoundButtonSunken {
+                Layout.preferredWidth: 28
+                Layout.preferredHeight: 28
+
+                visible: (proximityRadar.pinnedDevice !== null)
+                source: "qrc:/IconLibrary/material-symbols/close.svg"
+                colorBackground: banner.color
+                colorIcon: Theme.colorSubText
+
+                onClicked: {
+                    proximityRadar.pinnedDevice = null
+                    proximityRadar.hoveredDevice = null
+                }
+            }
+        }
+
+        Rectangle {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            height: 2
+            color: Theme.colorSeparator
+        }
+    }
+
+    ////////
 }

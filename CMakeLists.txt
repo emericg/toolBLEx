@@ -126,6 +126,9 @@ set(SOURCES_QML
 
     qml/graphs/RssiBar.qml
     qml/graphs/RssiGraph.qml
+    qml/graphs/AdvTimelineBars.qml
+    qml/graphs/AdvTimelineGraph.qml
+    qml/graphs/GraphAxisLabelAge.qml
     qml/graphs/ProximityRadar.qml
     qml/graphs/SpectrumGraph3D.qml
     qml/graphs/SpectrumGraph2D.qml

@@ -59,6 +59,7 @@
 ## TODO # v1+
 
 [ ] device list multiselection?
+[ ] RSSI graph multiselection?
 [ ] show "new" device badge?
 
 [x] select preferred adapter (only works on linux, OS limitations...)
