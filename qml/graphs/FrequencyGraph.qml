@@ -83,8 +83,8 @@ GraphsView {
     }
 
     function updateGraph() {
-        //if (ubertooth.running && appContent.state !== "Ubertooth") return
-        //if (rtlsdr.running && appContent.state !== "RtlSdr") return
+        //if (Ubertooth.running && appContent.state !== "Ubertooth") return
+        //if (RtlSdr.running && appContent.state !== "RtlSdr") return
         //console.log("frequencyGraph // updateGraph()")
 
         //// AXIS

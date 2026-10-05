@@ -22,6 +22,9 @@
 #include "SpectrumSourceRtlSdr.h"
 #include "SettingsManager.h"
 
+#include <QCoreApplication>
+#include <QJSEngine>
+
 #if defined(TOOLBLEX_RTLSDR_LIB)
 #include "RtlSdrDriver_lib.h"
 #elif defined(TOOLBLEX_RTLSDR_BIN)
@@ -30,6 +33,21 @@
 
 #include <algorithm>
 #include <cmath>
+
+/* ************************************************************************** */
+
+SpectrumSourceRtlSdr *SpectrumSourceRtlSdr::getInstance()
+{
+    static SpectrumSourceRtlSdr *instance = new SpectrumSourceRtlSdr(QCoreApplication::instance());
+    return instance;
+}
+
+SpectrumSourceRtlSdr *SpectrumSourceRtlSdr::create(QQmlEngine *, QJSEngine *)
+{
+    SpectrumSourceRtlSdr *instance = getInstance();
+    QJSEngine::setObjectOwnership(instance, QJSEngine::CppOwnership);
+    return instance;
+}
 
 /* ************************************************************************** */
 

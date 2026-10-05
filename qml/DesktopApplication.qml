@@ -76,9 +76,9 @@ ApplicationWindow {
             screenScanner.loadScreen()
         } else if (SettingsManager.preferredScreen === 1) {
             screenAdvertiser.loadScreen()
-        } else if (SettingsManager.preferredScreen === 2 && ubertooth.toolsAvailable) {
+        } else if (SettingsManager.preferredScreen === 2 && Ubertooth.toolsAvailable) {
             screenUbertooth.loadScreen()
-        } else if (SettingsManager.preferredScreen === 2 && rtlsdr.toolsAvailable) {
+        } else if (SettingsManager.preferredScreen === 2 && RtlSdr.toolsAvailable) {
             screenRtlSdr.loadScreen()
         } else {
             screenScanner.loadScreen() // default to scanner
@@ -463,7 +463,7 @@ ApplicationWindow {
        repeat: true
        interval: 100
        onTriggered: {
-           if (!deviceManager.areDevicesConnected() && !ubertooth.running && !rtlsdr.running) {
+           if (!deviceManager.areDevicesConnected() && !Ubertooth.running && !RtlSdr.running) {
                appWindow.close()
            }
        }
@@ -484,14 +484,14 @@ ApplicationWindow {
         if (deviceManager.areDevicesConnected()) {
             deviceManager.disconnectDevices()
         }
-        if (ubertooth.running) {
-            ubertooth.stopWork()
+        if (Ubertooth.running) {
+            Ubertooth.stopWork()
         }
-        if (rtlsdr.running) {
-            rtlsdr.stopWork()
+        if (RtlSdr.running) {
+            RtlSdr.stopWork()
         }
 
-        if (deviceManager.areDevicesConnected() || ubertooth.running || rtlsdr.running) {
+        if (deviceManager.areDevicesConnected() || Ubertooth.running || RtlSdr.running) {
             disconnectTimer.start()
             close.accepted = false
             return

@@ -36,7 +36,7 @@ Loader {
         Component.onCompleted: loadAction()
 
         function loadAction() {
-            //rtlsdr.checkHardware() // too slow...
+            //RtlSdr.checkHardware() // too slow...
         }
 
         function backAction() {
@@ -242,7 +242,7 @@ Loader {
                             }
                         }
                         Rectangle {
-                            x: UtilsNumber.mapNumber(rtlsdr.freqMin/1000,
+                            x: UtilsNumber.mapNumber(RtlSdr.freqMin/1000,
                                                      52, 2200,
                                                      0, parent.width)
 
@@ -250,7 +250,7 @@ Loader {
                             width: 8
                             radius: 8
 
-                            visible: rtlsdr.running
+                            visible: RtlSdr.running
                             color: Theme.colorSuccess
                         }
                     }
@@ -258,11 +258,11 @@ Loader {
 
                 ButtonFlat {
                     height: 30
-                    visible: rtlsdr.running
-                    text: rtlsdr.captureRate.toFixed(0) + qsTr(" Hz")
+                    visible: RtlSdr.running
+                    text: RtlSdr.captureRate.toFixed(0) + qsTr(" Hz")
                     source: "qrc:/IconLibrary/material-symbols/stacks.svg"
                     color: {
-                        var hz = rtlsdr.captureRate.toFixed(0)
+                        var hz = RtlSdr.captureRate.toFixed(0)
                         if (hz > 30) return Theme.colorGreen
                         if (hz > 15) return Theme.colorOrange
                         return Theme.colorRed
@@ -271,11 +271,11 @@ Loader {
 
                 ButtonFlat {
                     height: 30
-                    color: rtlsdr.hardwareAvailable ? Theme.colorSuccess: Theme.colorWarning
-                    text: rtlsdr.hardwareAvailable ? qsTr("hardware ready") : qsTr("hardware busy?")
-                    source: rtlsdr.hardwareAvailable ? "qrc:/IconLibrary/material-symbols/check_circle.svg"
+                    color: RtlSdr.hardwareAvailable ? Theme.colorSuccess: Theme.colorWarning
+                    text: RtlSdr.hardwareAvailable ? qsTr("hardware ready") : qsTr("hardware busy?")
+                    source: RtlSdr.hardwareAvailable ? "qrc:/IconLibrary/material-symbols/check_circle.svg"
                                                         : "qrc:/IconLibrary/material-icons/outlined/hourglass_empty.svg"
-                    onClicked: rtlsdr.checkHardware()
+                    onClicked: RtlSdr.checkHardware()
                 }
             }
 
@@ -306,7 +306,7 @@ Loader {
 
             visible: (actionBar.viewMode === 0)
 
-            dataSource: rtlsdr
+            dataSource: RtlSdr
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -321,7 +321,7 @@ Loader {
 
             visible: (actionBar.viewMode === 1)
 
-            dataSource: rtlsdr
+            dataSource: RtlSdr
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -336,7 +336,7 @@ Loader {
 
             visible: (actionBar.viewMode === 2)
 
-            dataSource: rtlsdr
+            dataSource: RtlSdr
         }
 
         ////////////////////////////////////////////////////////////////////////

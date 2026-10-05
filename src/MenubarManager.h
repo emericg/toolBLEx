@@ -36,7 +36,6 @@ class QAction;
 class QQuickWindow;
 
 class DeviceManager;
-class SpectrumSource;
 
 /* ************************************************************************** */
 
@@ -51,8 +50,6 @@ class MenubarManager: public QObject
 
     QQuickWindow *m_saved_view = nullptr;
     DeviceManager *m_saved_devicemanager = nullptr;
-    SpectrumSource *m_saved_ubertooth = nullptr;
-    SpectrumSource *m_saved_rtlsdr = nullptr;
 
     QAction *m_actionAbout = nullptr;
     QAction *m_actionSettings = nullptr;
@@ -106,8 +103,7 @@ public:
     static MenubarManager *getInstance();
     static MenubarManager *create(QQmlEngine *, QJSEngine *);
 
-    void setupMenubar(QQuickWindow *view, DeviceManager *dm,
-                      SpectrumSource *ubertooth, SpectrumSource *rtlsdr);
+    void setupMenubar(QQuickWindow *view, DeviceManager *dm);
 
     Q_INVOKABLE void setCurrentView(int screen);
 

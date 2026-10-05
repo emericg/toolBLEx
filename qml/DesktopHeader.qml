@@ -91,8 +91,8 @@ Rectangle {
                 opacity: {
                     if (appContent.state === "Scanner" && deviceManager.scanning) return 1
                     if (appContent.state === "Advertiser" && deviceManager.advertising) return 1
-                    if (appContent.state === "Ubertooth" && ubertooth.running) return 1
-                    if (appContent.state === "RtlSdr" && rtlsdr.running) return 1
+                    if (appContent.state === "Ubertooth" && Ubertooth.running) return 1
+                    if (appContent.state === "RtlSdr" && RtlSdr.running) return 1
                     return 0.4
                 }
 
@@ -105,8 +105,8 @@ Rectangle {
                 onClicked: {
                     if (appContent.state === "Scanner") deviceManager.scanDevices_start()
                     if (appContent.state === "Advertiser") deviceManager.advertise_start()
-                    if (appContent.state === "Ubertooth") ubertooth.startWork()
-                    if (appContent.state === "RtlSdr") rtlsdr.startWork()
+                    if (appContent.state === "Ubertooth") Ubertooth.startWork()
+                    if (appContent.state === "RtlSdr") RtlSdr.startWork()
                 }
             }
 
@@ -124,8 +124,8 @@ Rectangle {
                 opacity: {
                     if (appContent.state === "Scanner" && !deviceManager.scanning) return 1
                     if (appContent.state === "Advertiser" && !deviceManager.advertising) return 1
-                    if (appContent.state === "Ubertooth" && !ubertooth.running) return 1
-                    if (appContent.state === "RtlSdr" && !rtlsdr.running) return 1
+                    if (appContent.state === "Ubertooth" && !Ubertooth.running) return 1
+                    if (appContent.state === "RtlSdr" && !RtlSdr.running) return 1
                     return 0.4
                 }
 
@@ -138,8 +138,8 @@ Rectangle {
                 onClicked: {
                     if (appContent.state === "Scanner") deviceManager.scanDevices_stop()
                     if (appContent.state === "Advertiser") deviceManager.advertise_stop()
-                    if (appContent.state === "Ubertooth") ubertooth.stopWork()
-                    if (appContent.state === "RtlSdr") rtlsdr.stopWork()
+                    if (appContent.state === "Ubertooth") Ubertooth.stopWork()
+                    if (appContent.state === "RtlSdr") RtlSdr.stopWork()
                 }
             }
         }
@@ -248,7 +248,7 @@ Rectangle {
 
             Text {
                 anchors.verticalCenter: parent.verticalCenter
-                visible: ubertooth.running
+                visible: Ubertooth.running
 
                 text: "  |  "
                 textFormat: Text.PlainText
@@ -262,12 +262,12 @@ Rectangle {
                 height: 20; width: 20;
                 anchors.verticalCenter: parent.verticalCenter
 
-                visible: ubertooth.running
+                visible: Ubertooth.running
                 source: "qrc:/IconLibrary/material-icons/duotone/microwave.svg"
                 color: Theme.colorText
 
                 SequentialAnimation on opacity {
-                    running: ubertooth.running
+                    running: Ubertooth.running
                     alwaysRunToEnd: true
                     loops: Animation.Infinite
 
@@ -277,7 +277,7 @@ Rectangle {
             }
             Text {
                 anchors.verticalCenter: parent.verticalCenter
-                visible: ubertooth.running
+                visible: Ubertooth.running
 
                 text: qsTr("Ubertooth is running")
                 textFormat: Text.PlainText
@@ -396,7 +396,7 @@ Rectangle {
                 colorContent: Theme.colorHeaderContent
                 colorHighlight: Theme.colorHeaderHighlight
 
-                visible: ubertooth.toolsAvailable
+                visible: Ubertooth.toolsAvailable
                 highlighted: (appContent.state === "Ubertooth")
                 onClicked: ubertoothButtonClicked()
 
@@ -410,7 +410,7 @@ Rectangle {
                     radius: 12
                     color: Theme.colorGreen
 
-                    opacity: ubertooth.running ? 0.8 : 0
+                    opacity: Ubertooth.running ? 0.8 : 0
                     Behavior on opacity { OpacityAnimator { duration: 333 } }
                 }
             }
@@ -423,7 +423,7 @@ Rectangle {
                 colorContent: Theme.colorHeaderContent
                 colorHighlight: Theme.colorHeaderHighlight
 
-                visible: rtlsdr.toolsAvailable
+                visible: RtlSdr.toolsAvailable
                 highlighted: (appContent.state === "RtlSdr")
                 onClicked: rtlsdrButtonClicked()
 
@@ -437,7 +437,7 @@ Rectangle {
                     radius: 12
                     color: Theme.colorGreen
 
-                    opacity: rtlsdr.running ? 0.8 : 0
+                    opacity: RtlSdr.running ? 0.8 : 0
                     Behavior on opacity { OpacityAnimator { duration: 333 } }
                 }
             }

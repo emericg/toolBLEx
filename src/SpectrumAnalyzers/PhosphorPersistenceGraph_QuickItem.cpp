@@ -20,7 +20,7 @@
  */
 
 #include "PhosphorPersistenceGraph_QuickItem.h"
-#include "spectrumanalyzers/SpectrumSource.h"
+#include "SpectrumSource.h"
 
 #include <QPainter>
 #include <QPainterPath>

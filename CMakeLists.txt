@@ -70,14 +70,7 @@ set(SOURCES
     src/DeviceAdvModel.cpp src/DeviceAdvModel.h
     src/DeviceLogModel.cpp src/DeviceLogModel.h
 
-    src/spectrumanalyzers/SpectrumSource.cpp src/spectrumanalyzers/SpectrumSource.h
-    src/spectrumanalyzers/SpectrumSourceUbertooth.cpp src/spectrumanalyzers/SpectrumSourceUbertooth.h
-    src/spectrumanalyzers/SpectrumSourceRtlSdr.cpp src/spectrumanalyzers/SpectrumSourceRtlSdr.h
-    src/spectrumanalyzers/SpectrumDriver.cpp src/spectrumanalyzers/SpectrumDriver.h
     src/ColormapFactory.cpp src/ColormapFactory.h
-    src/WaterfallGraph_QuickItem.cpp src/WaterfallGraph_QuickItem.h
-    src/SpectrumGraph3D_SurfaceHandler.cpp src/SpectrumGraph3D_SurfaceHandler.h
-    src/PhosphorPersistenceGraph_QuickItem.cpp src/PhosphorPersistenceGraph_QuickItem.h
 
     assets/assets.qrc
     assets/vendors.qrc
@@ -189,9 +182,6 @@ qt_add_qml_module(${PROJECT_NAME}
         src/MenubarManager.cpp src/MenubarManager.h
         src/SettingsManager.cpp src/SettingsManager.h
         src/ColormapFactory.cpp src/ColormapFactory.h
-        src/WaterfallGraph_QuickItem.cpp src/WaterfallGraph_QuickItem.h
-        src/SpectrumGraph3D_SurfaceHandler.cpp src/SpectrumGraph3D_SurfaceHandler.h
-        src/PhosphorPersistenceGraph_QuickItem.cpp src/PhosphorPersistenceGraph_QuickItem.h
 )
 
 qt_add_translations(${PROJECT_NAME}
@@ -221,6 +211,11 @@ add_other_files(${PROJECT_NAME}
     .github/workflows/flatpak.yml
     .gitignore
 )
+
+################################################################################
+
+# SpectrumAnalyzers backends
+add_subdirectory(src/SpectrumAnalyzers)
 
 ################################################################################
 

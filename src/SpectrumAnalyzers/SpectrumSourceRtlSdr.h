@@ -25,6 +25,9 @@
 
 #include "SpectrumSource.h"
 
+class QQmlEngine;
+class QJSEngine;
+
 /* ************************************************************************** */
 
 /*!
@@ -49,6 +52,8 @@
 class SpectrumSourceRtlSdr: public SpectrumSource
 {
     Q_OBJECT
+    QML_SINGLETON
+    QML_NAMED_ELEMENT(RtlSdr)
 
     Q_PROPERTY(double centerFrequency READ centerFrequency WRITE setCenterFrequency NOTIFY centerFrequencyChanged)
     Q_PROPERTY(double bandwidth READ bandwidth WRITE setBandwidth NOTIFY bandwidthChanged)
@@ -66,6 +71,9 @@ class SpectrumSourceRtlSdr: public SpectrumSource
     //! Recompute the base freqMin/freqMax (in the current unit) from the center frequency +/- bandwidth/2, and emit freqChanged().
     void applyFreqRange();
 
+    // Singleton
+    explicit SpectrumSourceRtlSdr(QObject *parent = nullptr);
+
 protected:
     void configureForStart() override;
     SpectrumDriver::Config driverConfig() const override;
@@ -76,7 +84,8 @@ Q_SIGNALS:
     void integrationTimeChanged();
 
 public:
-    explicit SpectrumSourceRtlSdr(QObject *parent = nullptr);
+    static SpectrumSourceRtlSdr *getInstance();
+    static SpectrumSourceRtlSdr *create(QQmlEngine *engine, QJSEngine *scriptEngine);
 
     double centerFrequency() const { return m_centerMHz; }
     Q_INVOKABLE void setCenterFrequency(double freqMHz);

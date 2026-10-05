@@ -27,8 +27,8 @@
 #include "DeviceManager.h"
 #include "device_utils.h"
 
-#include "spectrumanalyzers/SpectrumSourceRtlSdr.h"
-#include "spectrumanalyzers/SpectrumSourceUbertooth.h"
+#include "SpectrumAnalyzers/SpectrumSourceRtlSdr.h"
+#include "SpectrumAnalyzers/SpectrumSourceUbertooth.h"
 
 #include "utils_app.h"
 #include "utils_screen.h"
@@ -93,8 +93,8 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    SpectrumSourceUbertooth *ubertooth = new SpectrumSourceUbertooth;
-    SpectrumSourceRtlSdr *rtlsdr = new SpectrumSourceRtlSdr;
+    SpectrumSourceUbertooth *ubertooth = SpectrumSourceUbertooth::getInstance();
+    SpectrumSourceRtlSdr *rtlsdr = SpectrumSourceRtlSdr::getInstance();
     if (!ubertooth || !rtlsdr)
     {
         qWarning() << "Cannot init toolBLEx spectrum analyzers!";
@@ -124,8 +124,6 @@ int main(int argc, char *argv[])
     QQmlContext *engine_context = engine.rootContext();
 
     engine_context->setContextProperty("deviceManager", dm);
-    engine_context->setContextProperty("ubertooth", ubertooth);
-    engine_context->setContextProperty("rtlsdr", rtlsdr);
 
     // Load the main view
     engine.loadFromModule("toolBLEx", "DesktopApplication");
@@ -151,7 +149,7 @@ int main(int argc, char *argv[])
     QObject::connect(&app, &SingleApplication::instanceStarted, window, &QQuickWindow::raise);
 
     // Menu bar
-    mb->setupMenubar(window, dm, ubertooth, rtlsdr);
+    mb->setupMenubar(window, dm);
 
 #if defined(Q_OS_MACOS)
     // macOS dock

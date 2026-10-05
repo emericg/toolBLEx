@@ -21,7 +21,8 @@
 
 #include "MenubarManager.h"
 #include "DeviceManager.h"
-#include "spectrumanalyzers/SpectrumSource.h"
+#include "SpectrumAnalyzers/SpectrumSourceUbertooth.h"
+#include "SpectrumAnalyzers/SpectrumSourceRtlSdr.h"
 
 #include <QCoreApplication>
 #include <QQmlEngine>
@@ -93,8 +94,7 @@ MenubarManager::~MenubarManager()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void MenubarManager::setupMenubar(QQuickWindow *view, DeviceManager *dm,
-                                  SpectrumSource *ubertooth, SpectrumSource *rtlsdr)
+void MenubarManager::setupMenubar(QQuickWindow *view, DeviceManager *dm)
 {
     if (!view || !dm)
     {
@@ -104,8 +104,6 @@ void MenubarManager::setupMenubar(QQuickWindow *view, DeviceManager *dm,
 
     m_saved_devicemanager = dm;
     m_saved_view = view;
-    m_saved_ubertooth = ubertooth;
-    m_saved_rtlsdr = rtlsdr;
 
     QMenuBar *menuBar = new QMenuBar(nullptr);
 
@@ -307,10 +305,10 @@ void MenubarManager::updateViewActions()
     if (m_actionViewUbertooth) m_actionViewUbertooth->setChecked(m_currentView == 2);
     if (m_actionViewRtlsdr) m_actionViewRtlsdr->setChecked(m_currentView == 3);
 /*
-    if (m_actionViewUbertooth && m_saved_ubertooth)
-        m_actionViewUbertooth->setEnabled(m_saved_ubertooth->areToolsAvailable());
-    if (m_actionViewRtlsdr && m_saved_rtlsdr)
-        m_actionViewRtlsdr->setEnabled(m_saved_rtlsdr->areToolsAvailable());
+    if (m_actionViewUbertooth)
+        m_actionViewUbertooth->setEnabled(SpectrumSourceUbertooth::getInstance()->areToolsAvailable());
+    if (m_actionViewRtlsdr)
+        m_actionViewRtlsdr->setEnabled(SpectrumSourceRtlSdr::getInstance()->areToolsAvailable());
 */
 }
 

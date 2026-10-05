@@ -42,8 +42,8 @@ Loader {
         interval: 1000
         repeat: false
         onTriggered: {
-            if (ubertooth.running) {
-                ubertooth.restartWork()
+            if (Ubertooth.running) {
+                Ubertooth.restartWork()
             }
         }
     }
@@ -52,8 +52,8 @@ Loader {
         interval: 1000
         repeat: false
         onTriggered: {
-            if (rtlsdr.running) {
-                rtlsdr.restartWork()
+            if (RtlSdr.running) {
+                RtlSdr.restartWork()
             }
         }
     }

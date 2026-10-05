@@ -36,7 +36,7 @@ Loader {
         Component.onCompleted: loadAction()
 
         function loadAction() {
-            ubertooth.checkHardware()
+            Ubertooth.checkHardware()
         }
 
         function backAction() {
@@ -419,18 +419,18 @@ Loader {
                         }
                         Rectangle {
                             anchors.left: parent.left
-                            anchors.leftMargin: UtilsNumber.mapNumber(ubertooth.freqMin,
+                            anchors.leftMargin: UtilsNumber.mapNumber(Ubertooth.freqMin,
                                                                       2300, 2600,
                                                                       0, parent.width)
                             anchors.right: parent.right
-                            anchors.rightMargin: parent.width - UtilsNumber.mapNumber(ubertooth.freqMax,
+                            anchors.rightMargin: parent.width - UtilsNumber.mapNumber(Ubertooth.freqMax,
                                                                                       2300, 2600,
                                                                                       0, parent.width)
 
                             height: 8
                             radius: 2
 
-                            visible: ubertooth.running
+                            visible: Ubertooth.running
                             color: Theme.colorSuccess
                         }
                     }
@@ -438,11 +438,11 @@ Loader {
 
                 ButtonFlat {
                     height: 30
-                    visible: ubertooth.running
-                    text: ubertooth.captureRate.toFixed(0) + qsTr(" Hz")
+                    visible: Ubertooth.running
+                    text: Ubertooth.captureRate.toFixed(0) + qsTr(" Hz")
                     source: "qrc:/IconLibrary/material-symbols/stacks.svg"
                     color: {
-                        var hz = ubertooth.captureRate.toFixed(0)
+                        var hz = Ubertooth.captureRate.toFixed(0)
                         if (hz > 59) return Theme.colorGreen
                         if (hz > 29) return Theme.colorOrange
                         return Theme.colorRed
@@ -451,11 +451,11 @@ Loader {
 
                 ButtonFlat {
                     height: 30
-                    color: ubertooth.hardwareAvailable ? Theme.colorSuccess: Theme.colorWarning
-                    text: ubertooth.hardwareAvailable ? qsTr("hardware ready") : qsTr("hardware busy?")
-                    source: ubertooth.hardwareAvailable ? "qrc:/IconLibrary/material-symbols/check_circle.svg"
+                    color: Ubertooth.hardwareAvailable ? Theme.colorSuccess: Theme.colorWarning
+                    text: Ubertooth.hardwareAvailable ? qsTr("hardware ready") : qsTr("hardware busy?")
+                    source: Ubertooth.hardwareAvailable ? "qrc:/IconLibrary/material-symbols/check_circle.svg"
                                                         : "qrc:/IconLibrary/material-icons/outlined/hourglass_empty.svg"
-                    onClicked: ubertooth.checkHardware()
+                    onClicked: Ubertooth.checkHardware()
                 }
             }
 
@@ -486,7 +486,7 @@ Loader {
 
             visible: (actionBar.viewMode === 0)
 
-            dataSource: ubertooth
+            dataSource: Ubertooth
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -501,7 +501,7 @@ Loader {
 
             visible: (actionBar.viewMode === 1)
 
-            dataSource: ubertooth
+            dataSource: Ubertooth
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -516,7 +516,7 @@ Loader {
 
             visible: (actionBar.viewMode === 2)
 
-            dataSource: ubertooth
+            dataSource: Ubertooth
         }
 
         ////////////////////////////////////////////////////////////////////////

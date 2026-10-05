@@ -26,6 +26,7 @@
 #include "SpectrumDriver.h"
 
 #include <QObject>
+#include <QtQml/qqmlregistration.h>
 
 #include <QList>
 #include <QMap>
@@ -33,10 +34,10 @@
 #include <QStringList>
 #include <QElapsedTimer>
 
-#include <vector>
-
 #include <QtGraphs/QLineSeries>
 #include <QtGraphs/QValueAxis>
+
+#include <vector>
 
 /* ************************************************************************** */
 
@@ -60,6 +61,7 @@
 class SpectrumSource: public QObject
 {
     Q_OBJECT
+    QML_ANONYMOUS
 
     Q_PROPERTY(bool toolsAvailable READ areToolsAvailable NOTIFY availableChanged)
     Q_PROPERTY(bool hardwareAvailable READ isHardwareAvailable NOTIFY availableChanged)

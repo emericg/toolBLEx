@@ -86,10 +86,10 @@ Column { // SPECTRUM ANALYZERS
         height: txtAnalyzers2.height + 16
         color: Theme.colorForeground
 
-        property bool noDriver: (!ubertooth.hasDriver && !rtlsdr.hasDriver)
+        property bool noDriver: (!Ubertooth.hasDriver && !RtlSdr.hasDriver)
         property bool needsZadig: (Qt.platform.os === "windows" &&
-                                   ((ubertooth.hasDriver && !ubertooth.driverUsesTools) ||
-                                    (rtlsdr.hasDriver && !rtlsdr.driverUsesTools)))
+                                   ((Ubertooth.hasDriver && !Ubertooth.driverUsesTools) ||
+                                    (RtlSdr.hasDriver && !RtlSdr.driverUsesTools)))
 
         visible: (noDriver || needsZadig)
 
@@ -183,7 +183,7 @@ Column { // SPECTRUM ANALYZERS
             height: 48
             color: Theme.colorForeground
 
-            visible: ubertooth.driverUsesTools
+            visible: Ubertooth.driverUsesTools
 
             FileInputArea {
                 id: ubertoothPath
@@ -206,7 +206,7 @@ Column { // SPECTRUM ANALYZERS
                     width: 24
                     height: 24
 
-                    visible: ubertooth.toolsAvailable
+                    visible: Ubertooth.toolsAvailable
                     source: "qrc:/IconLibrary/material-symbols/check_circle.svg"
                     color: Theme.colorSuccess
                 }
@@ -214,7 +214,7 @@ Column { // SPECTRUM ANALYZERS
                 text: SettingsManager.ubertooth_path
                 onTextChanged: {
                     SettingsManager.ubertooth_path = text
-                    ubertooth.checkPaths()
+                    Ubertooth.checkPaths()
                 }
             }
         }
@@ -227,7 +227,7 @@ Column { // SPECTRUM ANALYZERS
             height: 48
             color: Theme.colorForeground
 
-            enabled: ubertooth.hasDriver
+            enabled: Ubertooth.hasDriver
 
             RangeSliderThemed {
                 anchors.left: parent.left
@@ -266,7 +266,7 @@ Column { // SPECTRUM ANALYZERS
             height: 48
             color: Theme.colorForeground
 
-            enabled: ubertooth.hasDriver
+            enabled: Ubertooth.hasDriver
 
             SpinBoxThemedDesktop {
                 anchors.left: parent.left
@@ -295,8 +295,8 @@ Column { // SPECTRUM ANALYZERS
                 onClicked: {
                     SettingsManager.ubertooth_freqMin = 2400
                     SettingsManager.ubertooth_freqMax = 2500
-                    if (ubertooth.running) {
-                        ubertooth.restartWork()
+                    if (Ubertooth.running) {
+                        Ubertooth.restartWork()
                     }
                 }
             }
@@ -368,7 +368,7 @@ Column { // SPECTRUM ANALYZERS
             width: settingsColumn.flowElementWidth
             spacing: 2
 
-            enabled: rtlsdr.hasDriver
+            enabled: RtlSdr.hasDriver
 
             ////
 
@@ -378,7 +378,7 @@ Column { // SPECTRUM ANALYZERS
                 height: 48
                 color: Theme.colorForeground
 
-                visible: rtlsdr.driverUsesTools
+                visible: RtlSdr.driverUsesTools
 
                 FileInputArea {
                     id: rtlsdrPath
@@ -401,7 +401,7 @@ Column { // SPECTRUM ANALYZERS
                         width: 24
                         height: 24
 
-                        visible: rtlsdr.toolsAvailable
+                        visible: RtlSdr.toolsAvailable
                         source: "qrc:/IconLibrary/material-symbols/check_circle.svg"
                         color: Theme.colorSuccess
                     }
@@ -409,7 +409,7 @@ Column { // SPECTRUM ANALYZERS
                     text: SettingsManager.rtlsdr_path
                     onTextChanged: {
                         SettingsManager.rtlsdr_path = text
-                        rtlsdr.checkPaths()
+                        RtlSdr.checkPaths()
                     }
                 }
             }

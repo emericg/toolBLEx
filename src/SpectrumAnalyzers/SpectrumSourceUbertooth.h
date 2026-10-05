@@ -19,40 +19,44 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#include "SpectrumSourceUbertooth.h"
-#include "SettingsManager.h"
+#ifndef SPECTRUM_SOURCE_UBERTOOTH_H
+#define SPECTRUM_SOURCE_UBERTOOTH_H
+/* ************************************************************************** */
 
-#if defined(TOOLBLEX_UBERTOOTH_LIB)
-#include "UbertoothDriver_lib.h"
-#elif defined(TOOLBLEX_UBERTOOTH_BIN)
-#include "UbertoothDriver_bin.h"
-#endif
+#include "SpectrumSource.h"
+
+class QQmlEngine;
+class QJSEngine;
 
 /* ************************************************************************** */
 
-SpectrumSourceUbertooth::SpectrumSourceUbertooth(QObject *parent) : SpectrumSource(parent)
+/*!
+ * \brief Spectrum source backed by an Ubertooth One USB device.
+ *
+ * Frequencies are integer MHz (1 bin == 1 MHz).
+ * Ubertooth One is great from 2.3 GHz to 2.6 GHz, maybe even more at a reduced precision.
+ *
+ * Its driver is selected at build time (TOOLBLEX_SPECTRUM_UBERTOOTH in CMakeLists.txt):
+ * - UbertoothDriver_lib: libusb,
+ * - UbertoothDriver_bin: 'ubertooth-specan' binary,
+ * - or none at all.
+ */
+class SpectrumSourceUbertooth: public SpectrumSource
 {
-    m_unit = MHz;
+    Q_OBJECT
+    QML_SINGLETON
+    QML_NAMED_ELEMENT(Ubertooth)
 
-#if defined(TOOLBLEX_UBERTOOTH_LIB)
-    setActiveDriver(new UbertoothDriver_lib(this));
-#elif defined(TOOLBLEX_UBERTOOTH_BIN)
-    setActiveDriver(new UbertoothDriver_bin(this));
-#endif
+    // Singleton
+    explicit SpectrumSourceUbertooth(QObject *parent = nullptr);
 
-    configureForStart();
+protected:
+    void configureForStart() override;
 
-    checkPaths();
-}
-
-/* ************************************************************************** */
-
-void SpectrumSourceUbertooth::configureForStart()
-{
-    SettingsManager *sm = SettingsManager::getInstance();
-    m_freq_min = sm->getUbertoothFreqMin();
-    m_freq_max = sm->getUbertoothFreqMax();
-    Q_EMIT freqChanged();
-}
+public:
+    static SpectrumSourceUbertooth *getInstance();
+    static SpectrumSourceUbertooth *create(QQmlEngine *engine, QJSEngine *scriptEngine);
+};
 
 /* ************************************************************************** */
+#endif // SPECTRUM_SOURCE_UBERTOOTH_H

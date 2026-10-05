@@ -329,12 +329,12 @@ Column { // APP SETTINGS
                 ListElement { idx: 0; txt: qsTr("scanner"); src: ""; sz: 16; }
                 ListElement { idx: 1; txt: qsTr("advertiser"); src: ""; sz: 16; }
             }
-            model: ubertooth.toolsAvailable ? lmScreens1 : lmScreens2
+            model: Ubertooth.toolsAvailable ? lmScreens1 : lmScreens2
 
             currentSelection: SettingsManager.preferredScreen
             onMenuSelected: (index) => { SettingsManager.preferredScreen = index }
-    }
         }
+    }
 
     ////
 
