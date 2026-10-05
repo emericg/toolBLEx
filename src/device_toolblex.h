@@ -256,6 +256,14 @@ public:
     QStringList getAdvertisedServices() const { return m_advertised_services; };
     void setAdvertisedServices(const QList <QBluetoothUuid> &services);
 
+    /*!
+     * \brief Parse the manufacturer and service data of an advertisement, and set the beacon flag.
+     * \param hasMfd: set to true if new manufacturer data was found.
+     * \param hasSvd: set to true if new service data was found.
+     */
+    void parseAdvertisement(const QBluetoothDeviceInfo &info, const QDateTime &timestamp,
+                            bool &hasMfd, bool &hasSvd);
+
     bool parseAdvertisementToolBLEx(uint16_t mode,
                                     uint16_t id, const QBluetoothUuid &uuid,
                                     const QByteArray &data,
