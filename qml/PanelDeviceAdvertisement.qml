@@ -23,7 +23,8 @@ Item {
         Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
-            height: 16 + 32
+
+            height: adv_nodata.height + Theme.componentMargin*2
             radius: 4
 
             clip: false
@@ -206,6 +207,19 @@ Item {
         model: selectedDevice && selectedDevice.advModel
         delegate: AdvertisementDataWidgetAdvanced {
             width: ListView.view.width
+        }
+
+        ////////
+
+        footer: Column {
+            anchors.left: parent.left
+            anchors.leftMargin: Theme.componentMargin
+            anchors.right: parent.right
+            anchors.rightMargin: Theme.componentMargin
+
+            // hack, just to have some bottomPadding with a ListView...
+            bottomPadding: Theme.componentMargin
+            spacing: Theme.componentMarginS
         }
 
         ////////

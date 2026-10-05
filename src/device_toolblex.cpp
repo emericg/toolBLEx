@@ -149,7 +149,7 @@ bool DeviceToolBLEx::getSqlDeviceInfos()
                 m_deviceManufacturer = getInfos.value(3).toString();
 
                 m_deviceFirmware = getInfos.value(4).toString();
-                m_deviceBattery = getInfos.value(5).toInt();
+                if (!getInfos.isNull(5)) m_deviceBattery = getInfos.value(5).toInt();
 
                 m_bluetoothCoreConfiguration = getInfos.value(6).toInt();
                 m_isBLE = (m_bluetoothCoreConfiguration == 1 || m_bluetoothCoreConfiguration == 3);

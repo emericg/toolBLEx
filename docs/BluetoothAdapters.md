@@ -6,24 +6,34 @@
 
 * BCM20702A0 - also a quite old chipset with Bluetooth 4.0 only (I can find issues from 2014 with a simple google search).
 
-#### should work
+#### should work / kind'of work
 
 * TP-Link UB500 (RTL8761b)
 
-* ASUS USB-BT500 (RTL8761b) (0b05:190e)
+* ASUS USB-BT500 (RTL8761b) [0b05:190e]
+* ASUS USB-BT540 (?)
+
+* UGREEEN BT5.4 CM748 "45134" (BR8654A02) [33fa:0010]
+* UGREEEN BT6.0 CM748 "75073" (BR8654A02)
 
 #### unknown
+
+* UGREEEN BT5.4 CM749 "35059" (ATS2851? BR8654?)
+* UGREEEN BT5.4 CM748 "35058" (ATS2851? BR8654?)
+* UGREEEN BT5.3 CM591 "35995" (ATS2851?)
+* UGREEEN BT5.3 CM591 "90225" (ATS2851?)
+* UGREEEN BT5.0 CM390 "80889" (?)
+
+* UGREEN BT5.4 BT301 (???)
+* UGREEN BT5.3 BT501 (???)
+
+* EDUP EP-B3536 Plus Bluetooth 5.1 (RTL8761BUE) [0bda:876e]
+
+* EDUP EP-B3552 Bluetooth 5.3 (ATS2851) [10d7:b012]
 
 * TP-Link UB600 (8821CU)
 
 * EDIMAX BT-8500 (RTL8761BUV)
-
-* UGREEEN CM591 (ATS2851)
-
-* EDUP EP-B3536 Plus Bluetooth 5.1 (RTL8761BUE) (0bda:876e)
-
-* EDUP EP-B3552 Bluetooth 5.3 (ATS2851) (10d7:b012)
-
 
 # Linux tricks:
 

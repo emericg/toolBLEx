@@ -25,7 +25,8 @@ Item {
         Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
-            height: columnServiceScan.height + 32
+
+            height: svd_nodata.height + Theme.componentMargin*2
             radius: 4
 
             clip: false
@@ -33,56 +34,18 @@ Item {
             border.width: 2
             border.color: Theme.colorBoxBorder
 
-            Column {
-                id: columnServiceScan
+            Text {
+                id: svd_nodata
                 anchors.left: parent.left
                 anchors.leftMargin: Theme.componentMargin
                 anchors.right: parent.right
                 anchors.rightMargin: Theme.componentMargin
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: Theme.componentMarginS
 
-                ////
-
-                Text {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-
-                    text: qsTr("Services have not been scanned yet...")
-                    font.pixelSize: Theme.fontSizeContent
-                    verticalAlignment: Text.AlignVCenter
-                    wrapMode: Text.WordWrap
-                    color: Theme.colorText
-                }
-
-                ////
-
-                Flow { // buttons row
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    spacing: Theme.componentMarginS
-
-                    property int www: (width > 400) ? ((width - spacing) / 2) : width
-
-                    ButtonScanMenu {
-                        width: parent.www
-                    }
-
-                    ButtonFlat {
-                        width: parent.www
-
-                        color: Theme.colorGrey
-
-                        text: qsTr("Load from cache")
-                        source: "qrc:/IconLibrary/material-symbols/save.svg"
-
-                        visible: (selectedDevice && selectedDevice.hasServiceCache)
-                        //enabled: selectedDevice.status === DeviceUtils.DEVICE_OFFLINE
-                        onClicked: selectedDevice.restoreServiceCache()
-                    }
-                }
-
-                ////
+                text: qsTr("Services have not been scanned yet...")
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContent
+                color: Theme.colorText
             }
         }
     }

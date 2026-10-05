@@ -49,8 +49,7 @@ QString DeviceManager::getAvailableColor()
     return clr_str;
 }
 
-void DeviceManager::getRssiGraphData(QLineSeries *serie, int index,
-                                     qint64 refTimeMs, qint64 windowMs)
+void DeviceManager::getRssiGraphData(QLineSeries *serie, int index, qint64 refTimeMs, qint64 windowMs)
 {
     if (!serie) return;
     if (index < 0 || index >= m_devices_model->m_devices.size()) return;
@@ -74,8 +73,7 @@ void DeviceManager::getRssiGraphData(QLineSeries *serie, int index,
         for (qsizetype i = first; i < l.size(); i++)
         {
             const AdvertisementEntry *a = l.at(i);
-            points.append(QPointF((a->getTimestamp().toMSecsSinceEpoch() - refTimeMs) / 1000.0,
-                                  a->getRssi()));
+            points.append(QPointF((a->getTimestamp().toMSecsSinceEpoch() - refTimeMs) / 1000.0, a->getRssi()));
         }
     }
 

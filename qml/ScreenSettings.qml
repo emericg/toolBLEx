@@ -20,12 +20,11 @@ Loader {
             screenSettings.item.backAction()
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     // Restart timers
-    // If a sensible setting is modified many times in a short amount of time (we use
-    // a 1 secon window) then applying that setting will be delayed until no more
-    // modifications are registered
+    // If a sensible setting is modified many times in a short amount of time (we use a 1 secon window)
+    // then applying that setting will be delayed until no more modifications are registered
 
     Timer {
         id: restartScannerTimer
@@ -58,7 +57,7 @@ Loader {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     Loader {
         id: popupLoader_cacheseen
@@ -131,7 +130,7 @@ Loader {
 
                 // HEADER //////////////////////////////////////////////////////
 
-                Rectangle {
+                GradientRectangle {
                     id: settingsHeader
                     anchors.left: parent.left
                     anchors.right: parent.right
@@ -139,7 +138,9 @@ Loader {
                     z: 5
                     clip: true
                     height: isHdpi ? 200 : 230
-                    color: (Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT) ? "#69b7ff" : "#b184f6"
+
+                    //color: (Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT) ? "#69b7ff" : "#b184f6"
+                    stops: (Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT) ? GradientPresets.sky : GradientPresets.violet
 
                     Image {
                         anchors.fill: parent

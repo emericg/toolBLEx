@@ -34,6 +34,7 @@
 
 [x] CMake build system
 [x] macOS BLE permission
+[x] macOS exit to dock is broken
 [x] new permission system+
 [x] switch from Qt Charts to Qt Graphs
 [x] textfields: double click to select
@@ -42,14 +43,13 @@
 [-] better beacon detection
 [-] r/w/n: red badges on errors?
 [-] sanitize old adapters
-[x] macOS exit to dock is broken
-[ ] write data: explicit max size
-[ ] write data: check max size
+[-] write data: explicit max size
+[-] write data: check max size
 
 [x] graphs: unify min/max RSSI values (floorDb, ceilDb)
 [x] graphs: change clickable marker text position depending on its position onscreen
-[ ] graphs: auto/dynamic bands on sub 2 GHz view
 [x] graphs: 3D graph legend
+[ ] graphs: auto/dynamic bands on sub 2 GHz view
 
 [x] add export comment
 [x] add scanning in progress in the device scanner

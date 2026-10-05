@@ -176,6 +176,7 @@ class DeviceToolBLEx: public Device
     void updateCache();
 
     // log
+
     DeviceLogModel *m_deviceLog_obj;
     QString m_deviceLog_str;
 
@@ -221,9 +222,10 @@ public:
     void setDeviceClass(const int major, const int minor, const int service) override;
     void setCoreConfiguration(const int bleconf) override;
 
-    void serviceDetailsDiscovered_fromservice();
+    /// toolBLEx
 
-    // toolBLEx
+    bool isAvailable() const { return (m_rssi < 0); }
+
     QString getName_display() const;
     QString getAddr_display() const;
     QString getName_export() const;
@@ -250,6 +252,8 @@ public:
     bool getServicesScanned() const { return (m_services_scanmode == srv_scanned || m_services_scanmode == srv_scanned_values); }
     bool areServicesReady() const { return m_areServiceReady; }
 
+    void serviceDetailsDiscovered_fromservice();
+
     int getCharacteristicsCount() const;
 
     int getAdvertisedServicesCount() const { return m_advertised_services.count(); }
@@ -269,8 +273,14 @@ public:
                                     const QByteArray &data,
                                     const QDateTime &timestamp);
 
-    bool isAvailable() const { return (m_rssi < 0); }
-    QVariant getRssiHistory() const { return QVariant::fromValue(m_advertisementEntries); }
+    /*!
+     * \brief Get the most recent advertisement entries, for the RSSI bar strip.
+     * \return Up to s_max_entries_packets entries, oldest first.
+     */
+    QVariant getRssiHistory() const {
+        return QVariant::fromValue(m_advertisementEntries.last(qMin<qsizetype>(s_max_entries_packets,
+                                                                                m_advertisementEntries.size())));
+    }
     const QList <AdvertisementEntry *> &getRssiHistory2() const { return m_advertisementEntries; }
 
     void addAdvertisementEntry(const QDateTime &timestamp, const int rssi,

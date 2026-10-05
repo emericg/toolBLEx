@@ -234,31 +234,33 @@ Flickable {
                         //    text: UtilsBluetooth.getBluetoothCoreConfigurationText(selectedDevice.bluetoothConfiguration)
                         //}
                     }
+                }
 
-                    Row {
-                        height: 32
-                        spacing: Theme.componentMarginS
+                RowLayout {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    spacing: Theme.componentMarginS
 
-                        visible: (selectedDevice && selectedDevice.mtu > 0)
+                    visible: (selectedDevice && selectedDevice.mtu > 0)
 
-                        Text {
-                            id: legendMTU
-                            width: box1.legendWidth
-                            anchors.verticalCenter: parent.verticalCenter
+                    Text {
+                        id: legendMTU
+                        Layout.preferredWidth: box1.legendWidth
+                        Layout.alignment: Qt.AlignCenter
 
-                            text: qsTr("MTU")
-                            textFormat: Text.PlainText
-                            font.pixelSize: Theme.fontSizeContent
-                            horizontalAlignment: Text.AlignRight
-                            color: Theme.colorSubText
-                        }
+                        text: qsTr("MTU")
+                        textFormat: Text.PlainText
+                        font.pixelSize: Theme.fontSizeContent
+                        horizontalAlignment: Text.AlignRight
+                        color: Theme.colorSubText
+                    }
+                    TextSelectable {
+                        Layout.fillWidth: true
+                        Layout.minimumHeight: box1.legendHeight
 
-                        Text {
-                            anchors.verticalCenter: parent.verticalCenter
-                            text: selectedDevice && selectedDevice.mtu
-                            font.pixelSize: Theme.fontSizeContent
-                            color: Theme.colorText
-                        }
+                        text: selectedDevice && selectedDevice.mtu
+                        font.pixelSize: Theme.fontSizeContent
+                        color: Theme.colorText
                     }
                 }
             }
@@ -634,33 +636,6 @@ Flickable {
                     height: 32
                     spacing: Theme.componentMarginS
 
-                    visible: (selectedDevice && selectedDevice.mtu > 0)
-
-                    Text {
-                        id: legendMTUu
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        text: qsTr("MTU")
-                        textFormat: Text.PlainText
-                        font.pixelSize: Theme.fontSizeContent
-                        horizontalAlignment: Text.AlignRight
-                        color: Theme.colorSubText
-                    }
-
-                    Text {
-                        anchors.verticalCenter: parent.verticalCenter
-                        text: selectedDevice && selectedDevice.mtu
-                        font.pixelSize: Theme.fontSizeContent
-                        color: Theme.colorText
-                    }
-                }
-
-                ////
-
-                Row {
-                    height: 32
-                    spacing: Theme.componentMarginS
-
                     Text {
                         id: legendRSSI
                         anchors.verticalCenter: parent.verticalCenter
@@ -767,6 +742,33 @@ Flickable {
 
                         text: qsTr("Unknown")
                         textFormat: Text.PlainText
+                        font.pixelSize: Theme.fontSizeContent
+                        color: Theme.colorText
+                    }
+                }
+
+                ////
+
+                Row {
+                    height: 32
+                    spacing: Theme.componentMarginS
+
+                    visible: (selectedDevice && selectedDevice.mtu > 0)
+
+                    Text {
+                        id: legendMTUu
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        text: qsTr("MTU")
+                        textFormat: Text.PlainText
+                        font.pixelSize: Theme.fontSizeContent
+                        horizontalAlignment: Text.AlignRight
+                        color: Theme.colorSubText
+                    }
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: selectedDevice && selectedDevice.mtu
                         font.pixelSize: Theme.fontSizeContent
                         color: Theme.colorText
                     }

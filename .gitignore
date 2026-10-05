@@ -21,4 +21,5 @@ asset_catalog_compiler.Info.plist
 
 # Others
 stash/*
+tests/*
 .DS_Store

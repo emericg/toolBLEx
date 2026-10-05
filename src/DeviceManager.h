@@ -337,6 +337,7 @@ public:
     void invalidateFilter();
 
     // RSSI graph
+
     /*!
      * \brief Fill a line series with the RSSI history of a device.
      * \param serie: The series to fill. Its previous content is replaced.
@@ -348,8 +349,7 @@ public:
      * Only points within the window are kept, plus the last one before it,
      * so the line reaches the left edge of the graph.
      */
-    Q_INVOKABLE void getRssiGraphData(QLineSeries *serie, int index,
-                                      qint64 refTimeMs, qint64 windowMs);
+    Q_INVOKABLE void getRssiGraphData(QLineSeries *serie, int index, qint64 refTimeMs, qint64 windowMs);
 };
 
 /* ************************************************************************** */

@@ -22,7 +22,7 @@
   </description>
 
   <releases>
-    <release version="0.18" date="2026-09-01"> <url type="details">https://github.com/emericg/toolBLEx/releases/tag/v0.18</url> </release>
+    <release version="0.18" date="2026-10-20"> <url type="details">https://github.com/emericg/toolBLEx/releases/tag/v0.18</url> </release>
     <release version="0.17" date="2026-06-29"> <url type="details">https://github.com/emericg/toolBLEx/releases/tag/v0.17</url> </release>
     <release version="0.16" date="2026-04-20"> <url type="details">https://github.com/emericg/toolBLEx/releases/tag/v0.16</url> </release>
     <release version="0.15" date="2026-02-16"> <url type="details">https://github.com/emericg/toolBLEx/releases/tag/v0.15</url> </release>
@@ -54,6 +54,11 @@
   <url type="vcs-browser">https://github.com/emericg/toolBLEx</url>
   <url type="bugtracker">https://github.com/emericg/toolBLEx/issues</url>
   <url type="donation">https://paypal.me/EmericGrange</url>
+
+  <branding>
+    <color type="primary" scheme_preference="light">#2f80ed</color>
+    <color type="primary" scheme_preference="dark">#8e2de2</color>
+  </branding>
 
   <screenshots>
     <screenshot type="default">

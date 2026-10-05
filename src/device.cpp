@@ -732,7 +732,7 @@ void Device::setModel(const QString &model)
 
 void Device::setModelID(const QString &modelID)
 {
-    if (!modelID.isEmpty() && m_deviceModel != modelID)
+    if (!modelID.isEmpty() && m_deviceModelID != modelID)
     {
         m_deviceModelID = modelID;
         Q_EMIT deviceUpdated();
@@ -747,6 +747,21 @@ void Device::setFirmware(const QString &firmware)
     {
         m_deviceFirmware = firmware;
         Q_EMIT firmwareUpdated();
+/*
+        if ((m_dbInternal || m_dbExternal) && changes)
+        {
+            QSqlQuery setFirmware;
+            setFirmware.prepare("UPDATE devices SET deviceFirmware = :firmware WHERE deviceAddr = :deviceAddr");
+            setFirmware.bindValue(":firmware", m_deviceFirmware);
+            setFirmware.bindValue(":deviceAddr", getAddress());
+
+            if (setFirmware.exec() == false)
+            {
+                qWarning() << "> setFirmware.exec() ERROR"
+                           << setFirmware.lastError().type() << ":" << setFirmware.lastError().text();
+            }
+        }
+*/
     }
 }
 
@@ -754,7 +769,7 @@ void Device::setBattery(const int battery)
 {
     //qDebug() << "Device::setBattery(" << battery << ")";
 
-    if (battery > 0 && battery <= 100)
+    if (battery >= 0 && battery <= 100)
     {
         if (!hasBatteryLevel())
         {
@@ -766,6 +781,21 @@ void Device::setBattery(const int battery)
         {
             m_deviceBattery = battery;
             Q_EMIT batteryUpdated();
+/*
+            if ((m_dbInternal || m_dbExternal))
+            {
+                QSqlQuery setBattery;
+                setBattery.prepare("UPDATE devices SET deviceBattery = :battery WHERE deviceAddr = :deviceAddr");
+                setBattery.bindValue(":battery", m_deviceBattery);
+                setBattery.bindValue(":deviceAddr", getAddress());
+
+                if (setBattery.exec() == false)
+                {
+                    qWarning() << "> setBattery.exec() ERROR"
+                               << setBattery.lastError().type() << ":" << setBattery.lastError().text();
+                }
+            }
+*/
         }
     }
 }
@@ -774,7 +804,7 @@ void Device::setBatteryFirmware(const int battery, const QString &firmware)
 {
     bool changes = false;
 
-    if (battery > 0 && battery <= 100 && m_deviceBattery != battery)
+    if (battery >= 0 && battery <= 100 && m_deviceBattery != battery)
     {
         m_deviceBattery = battery;
         Q_EMIT batteryUpdated();
@@ -787,6 +817,8 @@ void Device::setBatteryFirmware(const int battery, const QString &firmware)
         changes = true;
     }
 
+    Q_UNUSED(changes)
+/*
     if ((m_dbInternal || m_dbExternal) && changes)
     {
         QSqlQuery setBatteryFirmware;
@@ -801,6 +833,7 @@ void Device::setBatteryFirmware(const int battery, const QString &firmware)
                        << setBatteryFirmware.lastError().type() << ":" << setBatteryFirmware.lastError().text();
         }
     }
+*/
 }
 
 /* ************************************************************************** */

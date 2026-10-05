@@ -30,7 +30,7 @@ Item {
             anchors.right: parent.right
             anchors.margins: Theme.componentMargin
 
-            height: log_nodata.height + 32
+            height: log_nodata.height + Theme.componentMargin*2
             radius: 4
 
             clip: false

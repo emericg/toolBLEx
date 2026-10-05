@@ -162,21 +162,20 @@ Item {
             }
 
             Row { // status icons
-                Layout.preferredWidth: 20
                 Layout.preferredHeight: 20
                 Layout.alignment: Qt.AlignRight
+                spacing: 4
                 opacity: 0.8
 
-                //IconSvg { // battery
-                //    Layout.preferredWidth: 18
-                //    Layout.preferredHeight: 20
-                //    visible: (boxDevice.hasBattery && boxDevice.deviceBattery >= 0)
-                //
-                //    source: UtilsDeviceSensors.getDeviceBatteryIcon(boxDevice.deviceBattery)
-                //    color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorIcon
-                //    rotation: 90
-                //    fillMode: Image.PreserveAspectCrop
-                //}
+                IconSvg { // battery
+                    width: 20
+                    height: 20
+                    visible: (boxDevice.deviceBattery >= 0)
+
+                    source: UtilsDeviceSensors.getDeviceBatteryIcon(boxDevice.deviceBattery)
+                    color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorIcon
+                    rotation: 90
+                }
 
                 IconSvg { // connected
                     width: 20
