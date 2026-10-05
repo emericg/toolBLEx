@@ -2,7 +2,7 @@ import QtQuick
 
 import ComponentLibrary
 
-Column { // BLE ADVERTISER
+Column { // BLE SIMULATOR
 
     width: 512
     spacing: 2
@@ -20,7 +20,7 @@ Column { // BLE ADVERTISER
             anchors.leftMargin: Theme.componentMarginL
             anchors.verticalCenter: parent.verticalCenter
 
-            text: qsTr("Advertiser")
+            text: qsTr("Simulator")
             textFormat: Text.PlainText
             font.pixelSize: Theme.fontSizeContentVeryBig
             font.bold: false
@@ -56,7 +56,7 @@ Column { // BLE ADVERTISER
             anchors.rightMargin: 64
             anchors.verticalCenter: parent.verticalCenter
 
-            text: qsTr("Start advertising automatically")
+            text: qsTr("Start simulator automatically")
             textFormat: Text.PlainText
             font.pixelSize: Theme.fontSizeContent
             font.bold: false
@@ -70,14 +70,9 @@ Column { // BLE ADVERTISER
             anchors.rightMargin: Theme.componentMarginXS
             anchors.verticalCenter: parent.verticalCenter
 
-            enabled: false
-            //checked: SettingsManager.advAuto
-            //onClicked: {
-            //    SettingsManager.advAuto = checked
-            //    if (!advManager.advertising) {
-            //        advManager.advertising_start()
-            //    }
-            //}
+            enabled: false // BleSimulator.supported
+            checked: SettingsManager.simAuto
+            onClicked: SettingsManager.simAuto = checked
         }
     }
 
@@ -96,7 +91,7 @@ Column { // BLE ADVERTISER
             anchors.rightMargin: 64
             anchors.verticalCenter: parent.verticalCenter
 
-            text: qsTr("Pause advertising while in the background")
+            text: qsTr("Pause simulator while in the background")
             textFormat: Text.PlainText
             font.pixelSize: Theme.fontSizeContent
             font.bold: false
@@ -110,9 +105,9 @@ Column { // BLE ADVERTISER
             anchors.rightMargin: Theme.componentMarginXS
             anchors.verticalCenter: parent.verticalCenter
 
-            enabled: false
-            //checked: SettingsManager.advPause
-            //onClicked: SettingsManager.advPause = checked
+            enabled: false // BleSimulator.supported
+            checked: SettingsManager.simPause
+            onClicked: SettingsManager.simPause = checked
         }
     }
 

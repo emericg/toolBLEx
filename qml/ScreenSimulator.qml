@@ -4,18 +4,18 @@ import QtQuick.Controls
 import ComponentLibrary
 
 Loader {
-    id: screenAdvertiser
+    id: screenSimulator
 
     ////////////////
 
     function loadScreen() {
-        screenAdvertiser.active = true
-        appContent.state = "Advertiser"
+        screenSimulator.active = true
+        appContent.state = "Simulator"
     }
 
     function backAction() {
-        if (screenAdvertiser.status === Loader.Ready)
-            screenAdvertiser.item.backAction()
+        if (screenSimulator.status === Loader.Ready)
+            screenSimulator.item.backAction()
     }
 
     ////////////////
@@ -38,7 +38,7 @@ Loader {
             ////
 
             WarningNotImplemented {
-                width: screenAdvertiser.width * 0.666
+                width: screenSimulator.width * 0.666
                 visible: true
             }
 

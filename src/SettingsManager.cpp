@@ -111,8 +111,15 @@ bool SettingsManager::readSettings()
             m_preferredScreen = settings.value("settings/preferredScreen").toInt();
         if (settings.contains("settings/preferredAdapter_scan"))
             m_preferredAdapter_scan = settings.value("settings/preferredAdapter_scan").toString();
-        if (settings.contains("settings/preferredAdapter_adv"))
-            m_preferredAdapter_adv = settings.value("settings/preferredAdapter_adv").toString();
+        if (settings.contains("settings/preferredAdapter_sim"))
+            m_preferredAdapter_sim = settings.value("settings/preferredAdapter_sim").toString();
+
+        if (settings.contains("settings/simAuto"))
+            m_simAuto = settings.value("settings/simAuto").toBool();
+        if (settings.contains("settings/simPause"))
+            m_simPause = settings.value("settings/simPause").toBool();
+        if (settings.contains("settings/simProfile"))
+            m_simProfile = settings.value("settings/simProfile").toString();
 
         if (settings.contains("settings/scanAuto"))
             m_scanAuto = settings.value("settings/scanAuto").toBool();
@@ -205,7 +212,11 @@ bool SettingsManager::writeSettings()
 
         settings.setValue("settings/preferredScreen", m_preferredScreen);
         settings.setValue("settings/preferredAdapter_scan", m_preferredAdapter_scan);
-        settings.setValue("settings/preferredAdapter_adv", m_preferredAdapter_adv);
+        settings.setValue("settings/preferredAdapter_sim", m_preferredAdapter_sim);
+
+        settings.setValue("settings/simAuto", m_simAuto);
+        settings.setValue("settings/simPause", m_simPause);
+        settings.setValue("settings/simProfile", m_simProfile);
 
         settings.setValue("settings/scanAuto", m_scanAuto);
         settings.setValue("settings/scanPause", m_scanPause);
@@ -274,8 +285,8 @@ void SettingsManager::resetSettings()
     Q_EMIT preferredScreenChanged();
     m_preferredAdapter_scan.clear();
     Q_EMIT preferredAdapterScanChanged();
-    m_preferredAdapter_adv.clear();
-    Q_EMIT preferredAdapterAdvChanged();
+    m_preferredAdapter_sim.clear();
+    Q_EMIT preferredAdapterSimChanged();
 
     m_scanMethods = QBluetoothDeviceDiscoveryAgent::LowEnergyMethod;
     Q_EMIT scanMethodsChanged();
@@ -283,6 +294,13 @@ void SettingsManager::resetSettings()
     Q_EMIT scanTimeoutChanged();
     m_scanRssiInterval = 1000;
     Q_EMIT scanRssiIntervalChanged();
+
+    m_simAuto = false;
+    Q_EMIT simAutoChanged();
+    m_simPause = false;
+    Q_EMIT simPauseChanged();
+    m_simProfile.clear();
+    Q_EMIT simProfileChanged();
 
     m_scanAuto = true;
     Q_EMIT scanAutoChanged();
@@ -419,13 +437,45 @@ void SettingsManager::setPreferredAdapter_scan(const QString &value)
     }
 }
 
-void SettingsManager::setPreferredAdapter_adv(const QString &value)
+void SettingsManager::setPreferredAdapter_sim(const QString &value)
 {
-    if (m_preferredAdapter_adv != value)
+    if (m_preferredAdapter_sim != value)
     {
-        m_preferredAdapter_adv = value;
+        m_preferredAdapter_sim = value;
         writeSettings();
-        Q_EMIT preferredAdapterAdvChanged();
+        Q_EMIT preferredAdapterSimChanged();
+    }
+}
+
+/* ************************************************************************** */
+
+void SettingsManager::setSimAuto(const bool value)
+{
+    if (m_simAuto != value)
+    {
+        m_simAuto = value;
+        writeSettings();
+        Q_EMIT simAutoChanged();
+    }
+}
+
+void SettingsManager::setSimPause(const bool value)
+{
+    if (m_simPause != value)
+    {
+        m_simPause = value;
+        writeSettings();
+        Q_EMIT simPauseChanged();
+    }
+}
+
+void SettingsManager::setSimProfile(const QString &value)
+{
+    if (m_simProfile != value)
+    {
+        m_simProfile = value;
+        writeSettings();
+        Q_EMIT simProfileChanged();
     }
 }
 

@@ -19,7 +19,7 @@ Rectangle {
     ////////////////
 
     signal scannerButtonClicked()
-    signal advertiserButtonClicked()
+    signal simulatorButtonClicked()
     signal ubertoothButtonClicked()
     signal rtlsdrButtonClicked()
     signal settingsButtonClicked()
@@ -50,7 +50,7 @@ Rectangle {
         border.color: Theme.colorHeaderHighlight
 
         visible: (appContent.state === "Scanner" ||
-                  appContent.state === "Advertiser" ||
+                  appContent.state === "Simulator" ||
                   appContent.state === "Ubertooth" ||
                   appContent.state === "RtlSdr")
 
@@ -66,7 +66,7 @@ Rectangle {
 
                 sourceSize: 30
                 source: {
-                    if (appContent.state === "Advertiser") return "qrc:/IconLibrary/material-icons/duotone/wifi_tethering.svg"
+                    if (appContent.state === "Simulator") return "qrc:/IconLibrary/material-icons/duotone/wifi_tethering.svg"
                     if (appContent.state === "Ubertooth") return "qrc:/IconLibrary/material-icons/duotone/microwave.svg"
                     if (appContent.state === "RtlSdr") return "qrc:/IconLibrary/material-icons/duotone/cell_tower.svg"
                     return "qrc:/IconLibrary/material-icons/duotone/devices.svg"
@@ -90,21 +90,21 @@ Rectangle {
 
                 opacity: {
                     if (appContent.state === "Scanner" && deviceManager.scanning) return 1
-                    if (appContent.state === "Advertiser" && deviceManager.advertising) return 1
+                    //if (appContent.state === "Simulator" && BleSimulator.running) return 1
                     if (appContent.state === "Ubertooth" && Ubertooth.running) return 1
                     if (appContent.state === "RtlSdr" && RtlSdr.running) return 1
                     return 0.4
                 }
 
                 enabled: {
-                    if (appContent.state === "Scanner" || appContent.state === "Advertiser")
+                    if (appContent.state === "Scanner" || appContent.state === "Simulator")
                         return deviceManager.bluetooth
                     return true
                 }
 
                 onClicked: {
                     if (appContent.state === "Scanner") deviceManager.scanDevices_start()
-                    if (appContent.state === "Advertiser") deviceManager.advertise_start()
+                    //if (appContent.state === "Simulator") BleSimulator.start()
                     if (appContent.state === "Ubertooth") Ubertooth.startWork()
                     if (appContent.state === "RtlSdr") RtlSdr.startWork()
                 }
@@ -123,21 +123,21 @@ Rectangle {
 
                 opacity: {
                     if (appContent.state === "Scanner" && !deviceManager.scanning) return 1
-                    if (appContent.state === "Advertiser" && !deviceManager.advertising) return 1
+                    //if (appContent.state === "Simulator" && !BleSimulator.running) return 1
                     if (appContent.state === "Ubertooth" && !Ubertooth.running) return 1
                     if (appContent.state === "RtlSdr" && !RtlSdr.running) return 1
                     return 0.4
                 }
 
                 enabled: {
-                    if (appContent.state === "Scanner" || appContent.state === "Advertiser")
+                    if (appContent.state === "Scanner" || appContent.state === "Simulator")
                         return deviceManager.bluetooth
                     return true
                 }
 
                 onClicked: {
                     if (appContent.state === "Scanner") deviceManager.scanDevices_stop()
-                    if (appContent.state === "Advertiser") deviceManager.advertise_stop()
+                    //if (appContent.state === "Simulator") BleSimulator.stop()
                     if (appContent.state === "Ubertooth") Ubertooth.stopWork()
                     if (appContent.state === "RtlSdr") RtlSdr.stopWork()
                 }
@@ -208,7 +208,7 @@ Rectangle {
 
             Text {
                 anchors.verticalCenter: parent.verticalCenter
-                visible: deviceManager.advertising
+                visible: false // BleSimulator.running
 
                 text: "  |  "
                 textFormat: Text.PlainText
@@ -222,12 +222,12 @@ Rectangle {
                 height: 20; width: 20;
                 anchors.verticalCenter: parent.verticalCenter
 
-                visible: deviceManager.advertising
+                visible: false // BleSimulator.running
                 source: "qrc:/IconLibrary/material-icons/duotone/wifi_tethering.svg"
                 color: Theme.colorText
 
                 SequentialAnimation on opacity {
-                    running: deviceManager.advertising
+                    running: false // BleSimulator.running
                     alwaysRunToEnd: true
                     loops: Animation.Infinite
 
@@ -238,7 +238,7 @@ Rectangle {
             Text {
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: deviceManager.advertising ? qsTr("Virtual device is running") : ""
+                //text: BleSimulator.running ? qsTr("Virtual device is running") : ""
                 textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorText
@@ -361,7 +361,7 @@ Rectangle {
                 }
             }
             DesktopHeaderItem {
-                id: menuAdvertiser
+                id: menuSimulator
                 width: headerHeight
                 height: headerHeight
 
@@ -370,8 +370,8 @@ Rectangle {
                 colorHighlight: Theme.colorHeaderHighlight
 
                 visible: UtilsApp.isDebugBuild()
-                highlighted: (appContent.state === "Advertiser")
-                onClicked: advertiserButtonClicked()
+                highlighted: (appContent.state === "Simulator")
+                onClicked: simulatorButtonClicked()
 
                 Rectangle {
                     anchors.left: parent.left
@@ -383,7 +383,7 @@ Rectangle {
                     radius: 12
                     color: Theme.colorGreen
 
-                    opacity: deviceManager.advertising ? 0.8 : 0
+                    opacity: 0 // BleSimulator.running ? 0.8 : 0
                     Behavior on opacity { OpacityAnimator { duration: 333 } }
                 }
             }

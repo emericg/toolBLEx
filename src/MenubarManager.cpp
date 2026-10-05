@@ -66,14 +66,14 @@ MenubarManager::~MenubarManager()
     delete m_actionClear;
     delete m_menuFile;
 
-    delete m_actionSensorList;
+    delete m_actionScanner;
     delete m_actionScanStart;
     delete m_actionScanStop;
     delete m_actionDisconnect;
-    delete m_menuSensors;
+    delete m_menuScanner;
 
     delete m_actionViewScanner;
-    delete m_actionViewAdvertiser;
+    delete m_actionViewSimulator;
     delete m_actionViewUbertooth;
     delete m_actionViewRtlsdr;
     delete m_menuSort; // owns its sort actions
@@ -135,9 +135,9 @@ void MenubarManager::setupMenubar(QQuickWindow *view, DeviceManager *dm)
     connect(m_menuFile, &QMenu::aboutToShow, this, &MenubarManager::updateFileActions);
     connect(m_menuFile, &QMenu::aboutToHide, this, &MenubarManager::unlockMenusShortcuts);
 
-    // Devices menu
+    // Scanner menu
 
-    m_actionSensorList = new QAction(tr("Show device list"));
+    m_actionScanner = new QAction(tr("Show device list"));
     m_actionScanStart = new QAction(tr("Start scanning"));
     m_actionScanStop = new QAction(tr("Stop scanning"));
     m_actionDisconnect = new QAction(tr("Disconnect all"));
@@ -145,54 +145,75 @@ void MenubarManager::setupMenubar(QQuickWindow *view, DeviceManager *dm)
     m_actionScanStart->setShortcuts({QKeySequence(QKeySequence::Refresh), QKeySequence(QStringLiteral("Ctrl+F5"))});
     m_actionScanStop->setShortcut(QKeySequence(QStringLiteral("Ctrl+.")));
 
-    connect(m_actionSensorList, &QAction::triggered, this, &MenubarManager::sensorList);
+    connect(m_actionScanner, &QAction::triggered, this, &MenubarManager::scannerOpen);
     connect(m_actionScanStart, &QAction::triggered, this, &MenubarManager::scanStart);
     connect(m_actionScanStop, &QAction::triggered, this, &MenubarManager::scanStop);
     connect(m_actionDisconnect, &QAction::triggered, this, &MenubarManager::devicesDisconnect);
 
-    m_menuSensors = new QMenu(tr("Devices"));
-    m_menuSensors->addAction(m_actionSensorList);
-    m_menuSensors->addSeparator();
-    m_menuSensors->addAction(m_actionScanStart);
-    m_menuSensors->addAction(m_actionScanStop);
-    m_menuSensors->addSeparator();
-    m_menuSensors->addAction(m_actionDisconnect);
-    menuBar->addMenu(m_menuSensors);
+    m_menuScanner = new QMenu(tr("Devices"));
+    m_menuScanner->addAction(m_actionScanner);
+    m_menuScanner->addSeparator();
+    m_menuScanner->addAction(m_actionScanStart);
+    m_menuScanner->addAction(m_actionScanStop);
+    m_menuScanner->addSeparator();
+    m_menuScanner->addAction(m_actionDisconnect);
+    menuBar->addMenu(m_menuScanner);
 
-    connect(m_menuSensors, &QMenu::aboutToShow, this, &MenubarManager::updateDeviceActions);
-    connect(m_menuSensors, &QMenu::aboutToHide, this, &MenubarManager::unlockMenusShortcuts);
+    connect(m_menuScanner, &QMenu::aboutToShow, this, &MenubarManager::updateDeviceActions);
+    connect(m_menuScanner, &QMenu::aboutToHide, this, &MenubarManager::unlockMenusShortcuts);
+
+    // Simulator menu
+
+    m_actionSimulator = new QAction(tr("Show simulator"));
+    m_actionSimStart = new QAction(tr("Start simulator"));
+    m_actionSimStop = new QAction(tr("Stop simulator"));
+
+    connect(m_actionSimulator, &QAction::triggered, this, &MenubarManager::simulatorOpen);
+    connect(m_actionSimStart, &QAction::triggered, this, &MenubarManager::simStart);
+    connect(m_actionSimStop, &QAction::triggered, this, &MenubarManager::simStop);
+
+    m_menuSimulator = new QMenu(tr("Simulator"));
+    m_menuSimulator->addAction(m_actionSimulator);
+    m_menuSimulator->addSeparator();
+    m_menuSimulator->addAction(m_actionSimStart);
+    m_menuSimulator->addAction(m_actionSimStop);
+
+    QMenu *m_menuSimulator = nullptr;
+    QAction *m_actionSimulator = nullptr;
+    QAction *m_actionSimStart = nullptr;
+    QAction *m_actionSimStop = nullptr;
 
     // View menu
 
     m_actionViewScanner = new QAction(tr("Scanner"));
-    m_actionViewAdvertiser = new QAction(tr("Advertiser"));
+    m_actionViewSimulator = new QAction(tr("Simulator"));
     m_actionViewUbertooth = new QAction(tr("Ubertooth"));
     m_actionViewRtlsdr = new QAction(tr("RTL-SDR"));
 
     m_actionViewScanner->setCheckable(true);
-    m_actionViewAdvertiser->setCheckable(true);
+    m_actionViewSimulator->setCheckable(true);
     m_actionViewUbertooth->setCheckable(true);
     m_actionViewRtlsdr->setCheckable(true);
 
     m_actionViewScanner->setShortcut(QKeySequence(QStringLiteral("Ctrl+1")));
-    m_actionViewAdvertiser->setShortcut(QKeySequence(QStringLiteral("Ctrl+2")));
+    m_actionViewSimulator->setShortcut(QKeySequence(QStringLiteral("Ctrl+2")));
     m_actionViewUbertooth->setShortcut(QKeySequence(QStringLiteral("Ctrl+3")));
     m_actionViewRtlsdr->setShortcut(QKeySequence(QStringLiteral("Ctrl+4")));
 
     connect(m_actionViewScanner, &QAction::triggered, this, [this]() { showWindow(); Q_EMIT viewClicked(0); });
-    connect(m_actionViewAdvertiser, &QAction::triggered, this, [this]() { showWindow(); Q_EMIT viewClicked(1); });
+    connect(m_actionViewSimulator, &QAction::triggered, this, [this]() { showWindow(); Q_EMIT viewClicked(1); });
     connect(m_actionViewUbertooth, &QAction::triggered, this, [this]() { showWindow(); Q_EMIT viewClicked(2); });
     connect(m_actionViewRtlsdr, &QAction::triggered, this, [this]() { showWindow(); Q_EMIT viewClicked(3); });
 
 #if defined(QT_NO_DEBUG) || defined(NDEBUG)
-    // The advertiser screen is only visible in debug builds for noow
-    m_actionViewAdvertiser->setVisible(false);
-    m_actionViewAdvertiser->setEnabled(false);
+    // The simulator screen is only visible in debug builds for noow
+    m_actionViewSimulator->setVisible(false);
+    m_actionViewSimulator->setEnabled(false);
 #endif
 
     m_menuView = new QMenu(tr("View"));
     m_menuView->addAction(m_actionViewScanner);
-    m_menuView->addAction(m_actionViewAdvertiser);
+    m_menuView->addAction(m_actionViewSimulator);
     m_menuView->addAction(m_actionViewUbertooth);
     m_menuView->addAction(m_actionViewRtlsdr);
 
@@ -301,7 +322,7 @@ void MenubarManager::updateViewActions()
 {
     // Checkmark on the active screen
     if (m_actionViewScanner) m_actionViewScanner->setChecked(m_currentView == 0);
-    if (m_actionViewAdvertiser) m_actionViewAdvertiser->setChecked(m_currentView == 1);
+    if (m_actionViewSimulator) m_actionViewSimulator->setChecked(m_currentView == 1);
     if (m_actionViewUbertooth) m_actionViewUbertooth->setChecked(m_currentView == 2);
     if (m_actionViewRtlsdr) m_actionViewRtlsdr->setChecked(m_currentView == 3);
 /*
@@ -372,10 +393,10 @@ void MenubarManager::fileClear()
 
 /* ************************************************************************** */
 
-void MenubarManager::sensorList()
+void MenubarManager::scannerOpen()
 {
     showWindow();
-    Q_EMIT sensorsClicked();
+    Q_EMIT scannerClicked();
 }
 
 void MenubarManager::scanStart()
@@ -398,6 +419,24 @@ void MenubarManager::devicesDisconnect()
 {
     if (m_saved_devicemanager && m_saved_devicemanager->areDevicesConnected())
         m_saved_devicemanager->disconnectDevices();
+}
+
+/* ************************************************************************** */
+
+void MenubarManager::simulatorOpen()
+{
+    showWindow();
+    Q_EMIT simulatorClicked();
+}
+
+void MenubarManager::simStart()
+{
+    //
+}
+
+void MenubarManager::simStop()
+{
+    //
 }
 
 /* ************************************************************************** */

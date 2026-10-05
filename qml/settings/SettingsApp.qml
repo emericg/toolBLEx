@@ -321,13 +321,13 @@ Column { // APP SETTINGS
             ListModel {
                 id: lmScreens1
                 ListElement { idx: 0; txt: qsTr("scanner"); src: ""; sz: 16; }
-                ListElement { idx: 1; txt: qsTr("advertiser"); src: ""; sz: 16; }
+                ListElement { idx: 1; txt: qsTr("simulator"); src: ""; sz: 16; }
                 ListElement { idx: 2; txt: qsTr("freq. analyzer"); src: ""; sz: 16; }
             }
             ListModel {
                 id: lmScreens2
                 ListElement { idx: 0; txt: qsTr("scanner"); src: ""; sz: 16; }
-                ListElement { idx: 1; txt: qsTr("advertiser"); src: ""; sz: 16; }
+                ListElement { idx: 1; txt: qsTr("simulator"); src: ""; sz: 16; }
             }
             model: Ubertooth.toolsAvailable ? lmScreens1 : lmScreens2
 

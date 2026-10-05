@@ -22,16 +22,6 @@
 [x] improve hex/text view (with monospace view)
 [x] improve hex/text view (with selection & edition)
 
-## TODO # Qt 6.6
-
-[x] other: print errors?
-[x] new permission system
-[x] connected device, connected line color
-[x] proper TableWidget (resize, select, show/hide columns)
-[x] sanitize old devices? (new box in adapter view) (not seen in last 90 days?)
-
-## TODO # v1
-
 [x] CMake build system
 [x] macOS BLE permission
 [x] macOS exit to dock is broken
@@ -45,6 +35,7 @@
 [-] sanitize old adapters
 [-] write data: explicit max size
 [-] write data: check max size
+[ ] remove ScreenBluetooth
 
 [x] graphs: unify min/max RSSI values (floorDb, ceilDb)
 [x] graphs: change clickable marker text position depending on its position onscreen
@@ -56,24 +47,37 @@
 [x] add export button next to cache button
 [x] add clear button next to cache button
 
+## TODO # Qt 6.6
+
+[x] other: print errors?
+[x] new permission system
+[x] connected device, connected line color
+[x] proper TableWidget (resize, select, show/hide columns)
+[x] sanitize old devices? (new box in adapter view) (not seen in last 90 days?)
+
+## TODO # v1
+
+[ ] DeviceManager singleton
+
+[ ] AdapterManager singleton
+[x] select preferred adapter (only works on linux, OS limitations...)
+[x] adapter status (linux)
+[ ] adapter status (linux DBUS)
+[x] adapter status (macOS)
+[ ] adapter status (windows API)
+
+[x] device simulator (v1 - with advertising support)
+
+[x] "known" advertising data parsing / device integration
+[-] "known" characteristic data parsing
+
 ## TODO # v1+
 
 [ ] device list multiselection?
 [ ] RSSI graph multiselection?
 [ ] show "new" device badge?
 
-[x] select preferred adapter (only works on linux, OS limitations...)
-[x] adapter status (macOS)
-[ ] adapter status (windows)
-
-## TODO # v2+
-
-[ ] device broadcaster UI (v1 - with advertising)
-
-[ ] device broadcaster UI (v2 - with advertising & services)
+[ ] device simulator (v2 - with advertising & services support)
+[ ] "known" characteristic data parsing (v2 - with characteristic catalog)
 
 [ ] Use numbers from NordicSemiconductor / bluetooth-numbers-database?
-
-[ ] "known" advertising data parsing / device integration?
-
-[ ] "known" characteristic data parsing?

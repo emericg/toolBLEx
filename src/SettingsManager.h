@@ -63,7 +63,11 @@ class SettingsManager: public QObject
 
     Q_PROPERTY(int preferredScreen READ getPreferredScreen WRITE setPreferredScreen NOTIFY preferredScreenChanged)
     Q_PROPERTY(QString preferredAdapter_scan READ getPreferredAdapter_scan WRITE setPreferredAdapter_scan NOTIFY preferredAdapterScanChanged)
-    Q_PROPERTY(QString preferredAdapter_adv READ getPreferredAdapter_adv WRITE setPreferredAdapter_adv NOTIFY preferredAdapterAdvChanged)
+    Q_PROPERTY(QString preferredAdapter_sim READ getPreferredAdapter_sim WRITE setPreferredAdapter_sim NOTIFY preferredAdapterSimChanged)
+
+    Q_PROPERTY(bool simAuto READ getSimAuto WRITE setSimAuto NOTIFY simAutoChanged)
+    Q_PROPERTY(bool simPause READ getSimPause WRITE setSimPause NOTIFY simPauseChanged)
+    Q_PROPERTY(QString simProfile READ getSimProfile WRITE setSimProfile NOTIFY simProfileChanged)
 
     Q_PROPERTY(bool scanAuto READ getScanAuto WRITE setScanAuto NOTIFY scanAutoChanged)
     Q_PROPERTY(bool scanPause READ getScanPause WRITE setScanPause NOTIFY scanPauseChanged)
@@ -119,11 +123,15 @@ class SettingsManager: public QObject
 
     int m_preferredScreen = 0;
     QString m_preferredAdapter_scan;
-    QString m_preferredAdapter_adv;
+    QString m_preferredAdapter_sim;
 
     int m_scanMethods = QBluetoothDeviceDiscoveryAgent::LowEnergyMethod; //!< QBluetoothDeviceDiscoveryAgent::DiscoveryMethod
     int m_scanTimeout = 0;
     int m_scanRssiInterval = 1000;
+    bool m_simAuto = false;
+    bool m_simPause = false;
+    QString m_simProfile;
+
     bool m_scanAuto = true;
     bool m_scanPause = false;
     bool m_scanCacheAuto = true;
@@ -172,7 +180,11 @@ Q_SIGNALS:
 
     void preferredScreenChanged();
     void preferredAdapterScanChanged();
-    void preferredAdapterAdvChanged();
+    void preferredAdapterSimChanged();
+
+    void simAutoChanged();
+    void simPauseChanged();
+    void simProfileChanged();
 
     void scanAutoChanged();
     void scanPauseChanged();
@@ -228,6 +240,26 @@ public:
 
     /// App
 
+    int getPreferredScreen() const { return m_preferredScreen; }
+    void setPreferredScreen(const int value);
+
+    const QString &getPreferredAdapter_scan() const { return m_preferredAdapter_scan; }
+    void setPreferredAdapter_scan(const QString &value);
+    const QString &getPreferredAdapter_sim() const { return m_preferredAdapter_sim; }
+    void setPreferredAdapter_sim(const QString &value);
+
+    int getScanviewOrientation() const { return m_scanviewOrientation; }
+    void setScanviewOrientation(const int value);
+    const QByteArray &getScanviewSize() const { return m_scanviewSize; }
+    void setScanviewSize(const QByteArray &value);
+
+    const QString &getExportDirectory() const { return m_exportDirectory; }
+    QString getExportDirectory_str() const;
+    QUrl getExportDirectory_url() const;
+    void setExportDirectory(const QString &value);
+
+    // scanner
+
     bool getScanAuto() const { return m_scanAuto; }
     void setScanAuto(const bool value);
 
@@ -258,23 +290,18 @@ public:
     bool getScanShowLowEnergy() const { return m_scanShowLowEnergy; }
     void setScanShowLowEnergy(const bool value);
 
-    int getScanviewOrientation() const { return m_scanviewOrientation; }
-    void setScanviewOrientation(const int value);
-    const QByteArray &getScanviewSize() const { return m_scanviewSize; }
-    void setScanviewSize(const QByteArray &value);
+    // simulator
 
-    int getPreferredScreen() const { return m_preferredScreen; }
-    void setPreferredScreen(const int value);
+    bool getSimAuto() const { return m_simAuto; }
+    void setSimAuto(const bool value);
 
-    const QString &getPreferredAdapter_scan() const { return m_preferredAdapter_scan; }
-    void setPreferredAdapter_scan(const QString &value);
-    const QString &getPreferredAdapter_adv() const { return m_preferredAdapter_adv; }
-    void setPreferredAdapter_adv(const QString &value);
+    bool getSimPause() const { return m_simPause; }
+    void setSimPause(const bool value);
 
-    const QString &getExportDirectory() const { return m_exportDirectory; }
-    QString getExportDirectory_str() const;
-    QUrl getExportDirectory_url() const;
-    void setExportDirectory(const QString &value);
+    const QString &getSimProfile() const { return m_simProfile; }
+    void setSimProfile(const QString &value);
+
+    // spectrum analyers
 
     const QString &getUbertoothPath() const { return m_ubertooth_path; }
     void setUbertoothPath(const QString &value);

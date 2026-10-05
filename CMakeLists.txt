@@ -98,7 +98,7 @@ set(SOURCES_QML
     qml/DesktopApplication.qml
     qml/DesktopHeader.qml
     qml/ScreenScanner.qml
-    qml/ScreenAdvertiser.qml
+    qml/ScreenSimulator.qml
     qml/ScreenBluetooth.qml
     qml/ScreenUbertooth.qml
     qml/ScreenRtlSdr.qml
@@ -114,7 +114,7 @@ set(SOURCES_QML
     qml/settings/SettingsInfo.qml
     qml/settings/SettingsCredits.qml
     qml/settings/SettingsScanner.qml
-    qml/settings/SettingsAdvertiser.qml
+    qml/settings/SettingsSimulator.qml
     qml/settings/SettingsSpectrum.qml
 
     qml/graphs/RssiBar.qml

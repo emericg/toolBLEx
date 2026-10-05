@@ -58,15 +58,20 @@ class MenubarManager: public QObject
     QAction *m_actionExport = nullptr;
     QAction *m_actionClear = nullptr;
 
-    QMenu *m_menuSensors = nullptr;
-    QAction *m_actionSensorList = nullptr;
+    QMenu *m_menuScanner = nullptr;
+    QAction *m_actionScanner = nullptr;
     QAction *m_actionScanStart = nullptr;
     QAction *m_actionScanStop = nullptr;
     QAction *m_actionDisconnect = nullptr;
 
+    QMenu *m_menuSimulator = nullptr;
+    QAction *m_actionSimulator = nullptr;
+    QAction *m_actionSimStart = nullptr;
+    QAction *m_actionSimStop = nullptr;
+
     QMenu *m_menuView = nullptr;
     QAction *m_actionViewScanner = nullptr;
-    QAction *m_actionViewAdvertiser = nullptr;
+    QAction *m_actionViewSimulator = nullptr;
     QAction *m_actionViewUbertooth = nullptr;
     QAction *m_actionViewRtlsdr = nullptr;
     QMenu *m_menuSort = nullptr;
@@ -93,7 +98,8 @@ class MenubarManager: public QObject
     ~MenubarManager();
 
 signals:
-    void sensorsClicked();
+    void scannerClicked();
+    void simulatorClicked();
     void settingsClicked();
     void aboutClicked();
     void exportClicked();
@@ -117,10 +123,13 @@ private slots:
     void settings();
     void fileExport();
     void fileClear();
-    void sensorList();
+    void scannerOpen();
     void scanStart();
     void scanStop();
     void devicesDisconnect();
+    void simulatorOpen();
+    void simStart();
+    void simStop();
     void windowMinimize();
     void windowMaximize();
     void windowFullScreen();

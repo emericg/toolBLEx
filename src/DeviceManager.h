@@ -69,12 +69,8 @@ class DeviceManager: public QObject
 
     ////////
 
-    Q_PROPERTY(bool advertising READ isAdvertising NOTIFY advertisingChanged)
-    Q_PROPERTY(bool listening READ isListening NOTIFY listeningChanged)
     Q_PROPERTY(bool scanning READ isScanning NOTIFY scanningChanged)
     Q_PROPERTY(bool scanningPaused READ isScanningPaused NOTIFY scanningChanged)
-    Q_PROPERTY(bool updating READ isUpdating NOTIFY updatingChanged)
-    Q_PROPERTY(bool syncing READ isSyncing NOTIFY syncingChanged)
 
     Q_PROPERTY(bool bluetooth READ hasBluetooth NOTIFY bluetoothChanged)
     Q_PROPERTY(bool bluetoothAdapter READ hasBluetoothAdapter NOTIFY bluetoothChanged)
@@ -127,23 +123,11 @@ class DeviceManager: public QObject
 
     ////
 
-    bool m_advertising = false;
-    bool isAdvertising() const { return m_advertising; }
-
-    bool m_listening = false;
-    bool isListening() const { return m_listening; }
-
     bool m_scanning = false;
     bool isScanning() const { return m_scanning; }
 
     bool m_scanning_paused = false;
     bool isScanningPaused() const { return m_scanning_paused; }
-
-    bool m_updating = false;
-    bool isUpdating() const { return m_updating; }
-
-    bool m_syncing = false;
-    bool isSyncing() const { return m_syncing; }
 
     bool hasBluetoothAdapter() const { return m_bleAdapter; }
     bool hasBluetoothEnabled() const { return m_bleEnabled; }
@@ -210,11 +194,7 @@ Q_SIGNALS:
     void devicesStructureCacheUpdated();
     void devicesBlacklistUpdated();
 
-    void advertisingChanged();
-    void listeningChanged();
     void scanningChanged();
-    void updatingChanged();
-    void syncingChanged();
 
     void filteringChanged();
 
@@ -258,9 +238,6 @@ public:
 
     // Scanning management
     static int getLastRun();
-
-    Q_INVOKABLE void advertise_start();
-    Q_INVOKABLE void advertise_stop();
 
     Q_INVOKABLE void scanDevices_start();
     Q_INVOKABLE void scanDevices_stop();

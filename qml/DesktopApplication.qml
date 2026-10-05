@@ -75,7 +75,7 @@ ApplicationWindow {
         if (SettingsManager.preferredScreen === 0) {
             screenScanner.loadScreen()
         } else if (SettingsManager.preferredScreen === 1) {
-            screenAdvertiser.loadScreen()
+            screenSimulator.loadScreen()
         } else if (SettingsManager.preferredScreen === 2 && Ubertooth.toolsAvailable) {
             screenUbertooth.loadScreen()
         } else if (SettingsManager.preferredScreen === 2 && RtlSdr.toolsAvailable) {
@@ -88,7 +88,7 @@ ApplicationWindow {
     Connections {
         target: appHeader
         function onScannerButtonClicked() { screenScanner.loadScreen() }
-        function onAdvertiserButtonClicked() { screenAdvertiser.loadScreen() }
+        function onSimulatorButtonClicked() { screenSimulator.loadScreen() }
         function onUbertoothButtonClicked() { screenUbertooth.loadScreen() }
         function onRtlsdrButtonClicked() { screenRtlSdr.loadScreen() }
         function onSettingsButtonClicked() { screenSettings.loadScreen() }
@@ -96,13 +96,14 @@ ApplicationWindow {
 
     Connections {
         target: MenubarManager
-        function onSensorsClicked() { screenScanner.loadScreen() }
+        function onScannerClicked() { screenScanner.loadScreen() }
+        function onSimulatorClicked() { screenSimulator.loadScreen() }
         function onSettingsClicked() { screenSettings.loadScreen() }
         function onAboutClicked() { screenSettings.loadScreen() }
         function onExportClicked() { screenScanner.openExport() }
         function onViewClicked(screen) {
             if (screen === 0) screenScanner.loadScreen()
-            else if (screen === 1) screenAdvertiser.loadScreen()
+            else if (screen === 1) screenSimulator.loadScreen()
             else if (screen === 2) screenUbertooth.loadScreen()
             else if (screen === 3) screenRtlSdr.loadScreen()
         }
@@ -166,8 +167,8 @@ ApplicationWindow {
     function backAction() {
         if (appContent.state === "Scanner") {
             screenScanner.backAction()
-        } else if (appContent.state === "Advertiser") {
-            screenAdvertiser.backAction()
+        } else if (appContent.state === "Simulator") {
+            screenSimulator.backAction()
         } else if (appContent.state === "Ubertooth") {
             screenUbertooth.backAction()
         } else if (appContent.state === "RtlSdr") {
@@ -274,30 +275,30 @@ ApplicationWindow {
         anchors.bottom: parent.bottom
 
         ScreenScanner {
-            anchors.fill: parent
             id: screenScanner
-        }
-        ScreenAdvertiser {
             anchors.fill: parent
-            id: screenAdvertiser
         }
-        ScreenBluetooth { // is on top of the scanner and advertiser tabs
+        ScreenSimulator {
+            id: screenSimulator
             anchors.fill: parent
+        }
+        ScreenBluetooth { // is on top of the scanner and simulator tabs
             id: screenBluetooth
+            anchors.fill: parent
         }
 
         ScreenUbertooth {
-            anchors.fill: parent
             id: screenUbertooth
+            anchors.fill: parent
         }
         ScreenRtlSdr {
-            anchors.fill: parent
             id: screenRtlSdr
+            anchors.fill: parent
         }
 
         ScreenSettings {
-            anchors.fill: parent
             id: screenSettings
+            anchors.fill: parent
         }
 
         // Initial state
@@ -316,7 +317,7 @@ ApplicationWindow {
 
             // Reflect the active screen as a checkmark in the macOS View menu
             if (state === "Scanner") MenubarManager.setCurrentView(0)
-            else if (state === "Advertiser") MenubarManager.setCurrentView(1)
+            else if (state === "Simulator") MenubarManager.setCurrentView(1)
             else if (state === "Ubertooth") MenubarManager.setCurrentView(2)
             else if (state === "RtlSdr") MenubarManager.setCurrentView(3)
             else MenubarManager.setCurrentView(-1)
@@ -326,16 +327,16 @@ ApplicationWindow {
             State {
                 name: "Scanner"
                 PropertyChanges { target: screenScanner; visible: true; enabled: true; focus: true; }
-                PropertyChanges { target: screenAdvertiser; visible: false; enabled: false; }
+                PropertyChanges { target: screenSimulator; visible: false; enabled: false; }
                 PropertyChanges { target: screenBluetooth; visible: true; enabled: true; }
                 PropertyChanges { target: screenUbertooth; visible: false; enabled: false; }
                 PropertyChanges { target: screenRtlSdr; visible: false; enabled: false; }
                 PropertyChanges { target: screenSettings; visible: false; enabled: false; }
             },
             State {
-                name: "Advertiser"
+                name: "Simulator"
                 PropertyChanges { target: screenScanner; visible: false; enabled: false; }
-                PropertyChanges { target: screenAdvertiser; visible: true; enabled: true; focus: true; }
+                PropertyChanges { target: screenSimulator; visible: true; enabled: true; focus: true; }
                 PropertyChanges { target: screenBluetooth; visible: true; enabled: true; }
                 PropertyChanges { target: screenUbertooth; visible: false; enabled: false; }
                 PropertyChanges { target: screenRtlSdr; visible: false; enabled: false; }
@@ -344,7 +345,7 @@ ApplicationWindow {
             State {
                 name: "Ubertooth"
                 PropertyChanges { target: screenScanner; visible: false; enabled: false; }
-                PropertyChanges { target: screenAdvertiser; visible: false; enabled: false; }
+                PropertyChanges { target: screenSimulator; visible: false; enabled: false; }
                 PropertyChanges { target: screenBluetooth; visible: false; enabled: false; }
                 PropertyChanges { target: screenUbertooth; visible: true; enabled: true; focus: true; }
                 PropertyChanges { target: screenRtlSdr; visible: false; enabled: false; }
@@ -353,7 +354,7 @@ ApplicationWindow {
             State {
                 name: "RtlSdr"
                 PropertyChanges { target: screenScanner; visible: false; enabled: false; }
-                PropertyChanges { target: screenAdvertiser; visible: false; enabled: false; }
+                PropertyChanges { target: screenSimulator; visible: false; enabled: false; }
                 PropertyChanges { target: screenBluetooth; visible: false; enabled: false; }
                 PropertyChanges { target: screenUbertooth; visible: false; enabled: false; }
                 PropertyChanges { target: screenRtlSdr; visible: true; enabled: true; focus: true; }
@@ -362,7 +363,7 @@ ApplicationWindow {
             State {
                 name: "Settings"
                 PropertyChanges { target: screenScanner; visible: false; enabled: false; }
-                PropertyChanges { target: screenAdvertiser; visible: false; enabled: false; }
+                PropertyChanges { target: screenSimulator; visible: false; enabled: false; }
                 PropertyChanges { target: screenBluetooth; visible: false; enabled: false; }
                 PropertyChanges { target: screenUbertooth; visible: false; enabled: false; }
                 PropertyChanges { target: screenRtlSdr; visible: false; enabled: false; }

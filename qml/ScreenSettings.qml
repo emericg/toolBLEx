@@ -357,7 +357,7 @@ Loader {
                             width: settingsColumn.flowElementWidth
                         }
 
-                        SettingsAdvertiser {
+                        SettingsSimulator {
                             width: settingsColumn.flowElementWidth
                         }
                     }

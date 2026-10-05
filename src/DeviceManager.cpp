@@ -696,11 +696,6 @@ void DeviceManager::deviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error e
         m_scanning = false;
         Q_EMIT scanningChanged();
     }
-    if (m_listening)
-    {
-        m_listening = false;
-        Q_EMIT listeningChanged();
-    }
 }
 
 void DeviceManager::deviceDiscoveryFinished()
@@ -711,11 +706,6 @@ void DeviceManager::deviceDiscoveryFinished()
     {
         m_scanning = false;
         Q_EMIT scanningChanged();
-    }
-    if (m_listening)
-    {
-        m_listening = false;
-        Q_EMIT listeningChanged();
     }
 }
 
@@ -728,24 +718,6 @@ void DeviceManager::deviceDiscoveryStopped()
         m_scanning = false;
         Q_EMIT scanningChanged();
     }
-    if (m_listening)
-    {
-        m_listening = false;
-        Q_EMIT listeningChanged();
-    }
-}
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-void DeviceManager::advertise_start()
-{
-    //qDebug() << "DeviceManager::advertise_start()";
-}
-
-void DeviceManager::advertise_stop()
-{
-    //qDebug() << "DeviceManager::advertise_stop()";
 }
 
 /* ************************************************************************** */
