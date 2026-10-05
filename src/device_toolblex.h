@@ -256,6 +256,20 @@ public:
 
     int getCharacteristicsCount() const;
 
+    /*!
+     * \brief Apply a standard GATT characteristic value to the matching device property.
+     * \param uuid: characteristic UUID.
+     * \param value: raw characteristic value.
+     *
+     * So far we handle:
+     * - Battery Level (0x2A19)
+     * - Model Number String (0x2A24)
+     * - Firmware Revision String (0x2A26)
+     *
+     * Other characteristics are ignored.
+     */
+    void decodeStandardCharacteristic(const QBluetoothUuid &uuid, const QByteArray &value);
+
     int getAdvertisedServicesCount() const { return m_advertised_services.count(); }
     QStringList getAdvertisedServices() const { return m_advertised_services; };
     void setAdvertisedServices(const QList <QBluetoothUuid> &services);

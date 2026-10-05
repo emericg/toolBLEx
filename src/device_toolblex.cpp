@@ -834,6 +834,51 @@ void DeviceToolBLEx::serviceDetailsDiscovered_fromservice()
     serviceDiscoveryDone();
 }
 
+void DeviceToolBLEx::decodeStandardCharacteristic(const QBluetoothUuid &uuid, const QByteArray &value)
+{
+    if (value.isEmpty()) return;
+
+    bool ok = false;
+    const quint16 uuid16 = uuid.toUInt16(&ok);
+    if (!ok) return;
+
+    // UTF-8 strings, often padded with trailing NULs or spaces
+    const auto toString = [&value]() {
+        QByteArray str = value;
+        const int nul = str.indexOf('\0');
+        if (nul >= 0) str.truncate(nul);
+        return QString::fromUtf8(str).trimmed();
+    };
+
+    switch (uuid16)
+    {
+    case 0x2A19: // Battery Level
+        setBattery(static_cast<quint8>(value.at(0)));
+        break;
+    case 0x2A24: // Model Number String
+        setModel(toString());
+        break;
+    case 0x2A25: // Serial Number String
+        //setSerialNumber(toString());
+        break;
+    case 0x2A26: // Firmware Revision String
+        setFirmware(toString());
+        break;
+    case 0x2A27: // Hardware Revision String
+        //setHardwareRevision(toString());
+        break;
+    case 0x2A28: // Software Revision String
+        //setSoftwareRevision(toString());
+        break;
+    case 0x2A29: // Manufacturer Name String
+        //setManufacturer(toString());
+        break;
+
+    default:
+        break;
+    }
+}
+
 /* ************************************************************************** */
 
 int DeviceToolBLEx::getCharacteristicsCount() const

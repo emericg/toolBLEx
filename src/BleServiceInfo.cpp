@@ -169,7 +169,7 @@ void ServiceInfo::connectToService(QLowEnergyService::DiscoveryMode scanmode)
 
         connect(m_ble_service, &QLowEnergyService::characteristicRead, this, &ServiceInfo::bleReadDone);
         connect(m_ble_service, &QLowEnergyService::characteristicWritten, this, &ServiceInfo::bleWriteDone);
-        //connect(m_ble_service, &QLowEnergyService::characteristicChanged, this, &ServiceInfo::bleReadNotify);
+        connect(m_ble_service, &QLowEnergyService::characteristicChanged, this, &ServiceInfo::bleReadNotify);
 
         connect(m_ble_service, &QLowEnergyService::descriptorRead, this, &ServiceInfo::bleDescReadDone);
         connect(m_ble_service, &QLowEnergyService::descriptorWritten, this, &ServiceInfo::bleDescWriteDone);
@@ -193,6 +193,7 @@ void ServiceInfo::connectToService(QLowEnergyService::DiscoveryMode scanmode)
         {
             auto cInfo = new CharacteristicInfo(ch, this);
             m_characteristics.append(cInfo);
+            if (m_device) m_device->decodeStandardCharacteristic(ch.uuid(), ch.value());
         }
         Q_EMIT characteristicsUpdated();
     }
@@ -234,6 +235,7 @@ void ServiceInfo::serviceDetailsDiscovered(QLowEnergyService::ServiceState newSt
     {
         auto cInfo = new CharacteristicInfo(ch, this);
         m_characteristics.append(cInfo);
+        if (m_device) m_device->decodeStandardCharacteristic(ch.uuid(), ch.value());
     }
     Q_EMIT characteristicsUpdated();
 
@@ -413,6 +415,7 @@ void ServiceInfo::bleReadDone(const QLowEnergyCharacteristic &c, const QByteArra
     qDebug() << "- DATA (" << v.size() << "b)" << v.toHex();
 
     if (m_device) m_device->logEvent("Read done on " + c.uuid().toString() + " / " + QString::number(v.size()) + " bytes / 0x" + v.toHex(), LogEvent::DATA);
+    if (m_device) m_device->decodeStandardCharacteristic(c.uuid(), v);
 
     for (const auto &cc: std::as_const(m_characteristics))
     {
@@ -434,6 +437,7 @@ void ServiceInfo::bleReadNotify(const QLowEnergyCharacteristic &c, const QByteAr
     qDebug() << "- DATA (" << v.size() << "b)" << v.toHex();
 
     if (m_device) m_device->logEvent("Read/Notify on " + c.uuid().toString() + " / " + QString::number(v.size()) + " bytes / 0x" + v.toHex(), LogEvent::DATA);
+    if (m_device) m_device->decodeStandardCharacteristic(c.uuid(), v);
 
     for (const auto &cc: std::as_const(m_characteristics))
     {
