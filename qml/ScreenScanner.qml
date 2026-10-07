@@ -529,8 +529,8 @@ Loader {
             height: 0
             Behavior on height { NumberAnimation { duration: Theme.animationSpeedMedium } }
 
-            color: Theme.colorWarning
             clip: true
+            color: Theme.colorWarning
 
             ////
 
@@ -568,16 +568,39 @@ Loader {
                     Layout.preferredWidth: 64
                     Layout.preferredHeight: 64
 
-                    IconSvg {
+                    IconSvg { // primary
                         anchors.centerIn: parent
-                        width: 44
-                        height: 44
+                        width: 48
+                        height: 48
 
-                        source: {
-                            if (!deviceManager.hasAdapters) return "qrc:/IconLibrary/material-icons/duotone/settings_bluetooth.svg"
-                            return "qrc:/IconLibrary/material-icons/outlined/bluetooth_disabled.svg"
-                        }
                         color: "white"
+                        source: "qrc:/IconLibrary/material-icons/outlined/bluetooth_disabled.svg"
+
+                        IconSvg { // secondary
+                            anchors.right: parent.right
+                            anchors.bottom: parent.bottom
+                            anchors.margins: -4
+                            width: 24
+                            height: 24
+
+                            color: "white"
+                            source: {
+                                if (!deviceManager.bluetoothAdapter) return "qrc:/IconLibrary/material-symbols/memory-fill.svg"
+                                if (!deviceManager.bluetoothEnabled) return "qrc:/IconLibrary/material-symbols/flaky.svg"
+                                if (!deviceManager.bluetoothPermission) return "qrc:/IconLibrary/material-symbols/lock-fill.svg"
+                                return "qrc:/IconLibrary/material-icons/outlined/bluetooth_disabled.svg"
+                            }
+
+                            Rectangle {
+                                anchors.fill: parent
+                                anchors.margins: -2
+                                z: -1
+
+                                radius: width
+                                color: "grey"
+                                opacity: 0.48
+                            }
+                        }
                     }
                 }
 

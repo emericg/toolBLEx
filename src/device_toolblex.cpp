@@ -140,7 +140,7 @@ bool DeviceToolBLEx::getSqlDeviceInfos()
                            "deviceFirmware, deviceBattery," \
                            "deviceCoreConfig, deviceClass," \
                            "starred, comment, color," \
-                           "firstSeen, lastSeen " \
+                           "firstSeen, lastSeen, settings " \
                          "FROM devices WHERE deviceAddr = :deviceAddr");
         getInfos.bindValue(":deviceAddr", getAddress());
         if (getInfos.exec())
@@ -173,7 +173,7 @@ bool DeviceToolBLEx::getSqlDeviceInfos()
                 m_firstSeen = getInfos.value(11).toDateTime();
                 m_lastSeen = getInfos.value(12).toDateTime();
 
-                QString settings = getInfos.value(11).toString();
+                QString settings = getInfos.value(13).toString();
                 QJsonDocument doc = QJsonDocument::fromJson(settings.toUtf8());
                 if (!doc.isNull() && doc.isObject())
                 {

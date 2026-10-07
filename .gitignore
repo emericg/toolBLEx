@@ -20,6 +20,7 @@ Release/*
 asset_catalog_compiler.Info.plist
 
 # Others
+.DS_Store
+.vscode
 stash/*
 tests/*
-.DS_Store

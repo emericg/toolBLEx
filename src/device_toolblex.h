@@ -69,6 +69,7 @@ class DeviceToolBLEx: public Device
 
     Q_PROPERTY(bool userStar READ getUserStar WRITE setUserStar NOTIFY starChanged)
     Q_PROPERTY(QString userColor READ getUserColor WRITE setUserColor NOTIFY colorChanged)
+    Q_PROPERTY(bool hasUserColor READ hasUserColor NOTIFY colorChanged)
     Q_PROPERTY(QString userComment READ getUserComment WRITE setUserComment NOTIFY commentChanged)
 
     Q_PROPERTY(QDateTime firstSeen READ getFirstSeen CONSTANT)
@@ -324,6 +325,7 @@ public:
 
     QString getUserColor() const { if (!m_userColor.isEmpty()) return m_userColor; return m_color; }
     void setUserColor(const QString &color);
+    bool hasUserColor() const { return !m_userColor.isEmpty(); }
 
     QDateTime getFirstSeen() const { return m_firstSeen; }
     QDateTime getLastSeen() const { return m_lastSeen; }

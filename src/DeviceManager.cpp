@@ -68,6 +68,9 @@ DeviceManager::DeviceManager(bool daemon)
     connect(this, &DeviceManager::bluetoothChanged,
             this, &DeviceManager::bluetoothStatusChanged);
 
+    // Device colors
+    m_colorsLeft = m_colorsAvailable;
+
     // Database
     DatabaseManager *db = DatabaseManager::getInstance();
     if (db)
@@ -122,9 +125,6 @@ DeviceManager::DeviceManager(bool daemon)
     countDevices();
     connect(this, &DeviceManager::devicesListUpdated, this, &DeviceManager::countDevices);
     connect(this, &DeviceManager::devicesSeenCacheUpdated, this, &DeviceManager::countDevices);
-
-    // Device colors
-    m_colorsLeft = m_colorsAvailable;
 }
 
 DeviceManager::~DeviceManager()

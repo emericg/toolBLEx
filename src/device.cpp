@@ -162,8 +162,6 @@ void Device::deviceConnect(const bool stayConnected)
         {
             if (m_bleController->role() == QLowEnergyController::CentralRole)
             {
-                m_bleController->setRemoteAddressType(QLowEnergyController::PublicAddress);
-
                 m_mtu = m_bleController->mtu();
                 Q_EMIT mtuUpdated();
 

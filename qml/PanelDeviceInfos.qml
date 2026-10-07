@@ -587,8 +587,23 @@ Flickable {
                         ColorDialog {
                             id: colorDialog
                             selectedColor: selectedDevice ? selectedDevice.userColor : Theme.colorIcon
-                            onAccepted: selectedDevice.userColor = colorDialog.selectedColor
+                            onAccepted: {
+                                if (!Qt.colorEqual(colorDialog.selectedColor, selectedDevice.userColor)) {
+                                    selectedDevice.userColor = colorDialog.selectedColor
+                                }
+                            }
                         }
+                    }
+
+                    ButtonOutline {
+                        color: Theme.colorGrey
+                        colorText: Theme.colorText
+
+                        visible: (selectedDevice && selectedDevice.hasUserColor)
+
+                        text: qsTr("reset color")
+                        source: "qrc:/IconLibrary/material-symbols/close.svg"
+                        onClicked: selectedDevice.userColor = ""
                     }
                 }
 

@@ -176,11 +176,9 @@ Item {
             color: Theme.colorGrey
 
             text: qsTr("Clear")
-            //source: "qrc:/IconLibrary/material-symbols/save.svg"
+            source: "qrc:/IconLibrary/material-symbols/delete_sweep.svg"
 
-            onClicked: {
-                selectedDevice.clearDeviceLog()
-            }
+            onClicked: selectedDevice.clearDeviceLog()
         }
 
         ButtonSolid { // saveButton

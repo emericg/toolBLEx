@@ -129,6 +129,7 @@ Item {
 
             text: qsTr("Clear")
             color: Theme.colorGrey
+            source: "qrc:/IconLibrary/material-symbols/delete_sweep.svg"
 
             enabled: (selectedDevice && selectedDevice.status < DeviceUtils.DEVICE_WORKING)
             onClicked: {

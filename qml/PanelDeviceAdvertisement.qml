@@ -238,6 +238,7 @@ Item {
 
             text: qsTr("Clear")
             color: Theme.colorGrey
+            source: "qrc:/IconLibrary/material-symbols/delete_sweep.svg"
 
             onClicked: {
                 selectedDevice.clearAdvertisement()
