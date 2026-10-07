@@ -79,6 +79,7 @@ class CharacteristicInfo: public QObject
 
     // Characteristic Presentation Format (0x2904)
     Q_PROPERTY(bool hasPresentationFormat READ hasPresentationFormat NOTIFY characteristicChanged)
+    Q_PROPERTY(int formatType READ getFormatType NOTIFY characteristicChanged)
     Q_PROPERTY(QString formatName READ getFormatName NOTIFY characteristicChanged)
     Q_PROPERTY(QString formatInfo READ getFormatInfo NOTIFY characteristicChanged)
     Q_PROPERTY(int formatExponent READ getFormatExponent NOTIFY characteristicChanged)
@@ -247,6 +248,12 @@ public:
 
     // Characteristic Presentation Format (0x2904)
     bool hasPresentationFormat() const { return !m_formats.isEmpty(); }
+
+    /*!
+     * \brief GATT format type of the characteristic value (see BleFormat::FormatType).
+     * \return the format, -1 without presentation format or for an aggregate.
+     */
+    int getFormatType() const;
     QString getFormatName() const;
     QString getFormatInfo() const;
     int getFormatExponent() const;

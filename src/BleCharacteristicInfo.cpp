@@ -750,6 +750,12 @@ const BleFormat::CharacteristicPresentationFormat *CharacteristicInfo::singleFor
     return &m_formats.first();
 }
 
+int CharacteristicInfo::getFormatType() const
+{
+    const BleFormat::CharacteristicPresentationFormat *pf = singleFormat();
+    return pf ? pf->format : -1;
+}
+
 QString CharacteristicInfo::getFormatName() const
 {
     const BleFormat::CharacteristicPresentationFormat *pf = singleFormat();

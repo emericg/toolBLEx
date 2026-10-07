@@ -45,43 +45,11 @@
 #include <QSqlQuery>
 #include <QSqlError>
 
-#include <QHash>
 #include <QDateTime>
 #include <QTimer>
 #include <QDebug>
 
 #include <algorithm>
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-/*!
- * \brief Presentation format matching a write type string.
- * \param type: ex: "uint24_le", "int16_be", "float32_le", "utf8".
- * \return one of the GATT format types, FORMAT_RFU if unknown.
- */
-static uint8_t formatFromType(const QString &type)
-{
-    static const QHash <QString, uint8_t> formats = {
-        { QStringLiteral("uint8"),   BleFormat::FORMAT_UINT8 },
-        { QStringLiteral("uint16"),  BleFormat::FORMAT_UINT16 },
-        { QStringLiteral("uint24"),  BleFormat::FORMAT_UINT24 },
-        { QStringLiteral("uint32"),  BleFormat::FORMAT_UINT32 },
-        { QStringLiteral("uint48"),  BleFormat::FORMAT_UINT48 },
-        { QStringLiteral("uint64"),  BleFormat::FORMAT_UINT64 },
-        { QStringLiteral("int8"),    BleFormat::FORMAT_SINT8 },
-        { QStringLiteral("int16"),   BleFormat::FORMAT_SINT16 },
-        { QStringLiteral("int24"),   BleFormat::FORMAT_SINT24 },
-        { QStringLiteral("int32"),   BleFormat::FORMAT_SINT32 },
-        { QStringLiteral("int48"),   BleFormat::FORMAT_SINT48 },
-        { QStringLiteral("int64"),   BleFormat::FORMAT_SINT64 },
-        { QStringLiteral("float32"), BleFormat::FORMAT_FLOAT32 },
-        { QStringLiteral("float64"), BleFormat::FORMAT_FLOAT64 },
-        { QStringLiteral("utf8"),    BleFormat::FORMAT_UTF8S },
-    };
-
-    return formats.value(type.section(QLatin1Char('_'), 0, 0), BleFormat::FORMAT_RFU);
-}
 
 /* ************************************************************************** */
 /* ************************************************************************** */
@@ -597,8 +565,7 @@ void DeviceToolBLEx::askForDescriptorRead(QObject *descriptor)
 
 /* ************************************************************************** */
 
-void DeviceToolBLEx::askForWrite(const QString &uuid, const QString &value, const QString &type,
-                                 bool withResponse, int exponent)
+void DeviceToolBLEx::askForWrite(const QString &uuid, const QByteArray &data, bool withResponse)
 {
     // Iterate through services, until we find the characteristic we want to write
     for (const auto &s: std::as_const(m_services))
@@ -611,7 +578,7 @@ void DeviceToolBLEx::askForWrite(const QString &uuid, const QString &value, cons
                 CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
                 if (cst && cst->getUuidFull() == uuid)
                 {
-                    srv->askForWrite(uuid, value, type, withResponse, exponent);
+                    srv->askForWrite(uuid, data, withResponse);
                     return;
                 }
             }
@@ -622,62 +589,26 @@ void DeviceToolBLEx::askForWrite(const QString &uuid, const QString &value, cons
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-QByteArray DeviceToolBLEx::askForData_qba(const QString &value, const QString &type, int exponent)
+QVariantMap DeviceToolBLEx::encodeWriteValue(const QString &value, int format, bool bigEndian, int exponent)
 {
-    QByteArray data;
+    BleFormat::WriteError error = BleFormat::WRITE_OK;
+    const QByteArray bytes = BleFormat::encodeValue(value, static_cast<uint8_t>(format), bigEndian,
+                                                    static_cast<int8_t>(exponent), &error);
 
-    if (type == "data")
+    // One string per byte, for the data widgets
+    QStringList hex;
+    hex.reserve(bytes.size());
+    for (const char b: std::as_const(bytes))
     {
-        //qDebug() << "DATA > " << value.toLatin1();
-        if (value.size() % 2 == 0) // an incomplete byte cannot be written
-        {
-            data = QByteArray::fromHex(value.toLatin1());
-        }
-    }
-    else if (type == "ascii")
-    {
-        //qDebug() << "ASCII > " << value.toLatin1().toHex();
-        data = value.toLatin1();
-    }
-    else
-    {
-        // Numbers and utf8 text, using the presentation format encoder
-        const uint8_t format = formatFromType(type);
-        BleFormat::WriteError error = BleFormat::WRITE_OK;
-
-        data = BleFormat::writeValue(value, format, static_cast<int8_t>(exponent), &error);
-
-        if (error != BleFormat::WRITE_OK)
-        {
-            data.clear(); // no silent rounding for manual input
-        }
-        else if (type.endsWith("_be") && BleFormat::formatSize(format) > 0)
-        {
-            std::reverse(data.begin(), data.end());
-        }
+        hex += QString::fromLatin1(QByteArray(1, b).toHex());
     }
 
-    //qDebug() << "DeviceToolBLEx::askForData_qba(" << value << " / " << type << ")  >> " << data << "   size:" << data.size();
-    return data;
-}
-
-/* ************************************************************************** */
-
-QStringList DeviceToolBLEx::askForData_strlst(const QString &value, const QString &type, int exponent)
-{
-    QByteArray in = askForData_qba(value, type, exponent);
-    QStringList out;
-
-    // Make it compatible with the data widget for display
-    for (int i = 0; i < in.size();)
-    {
-        QByteArray hex;
-        hex += in.at(i++);
-        out.append(hex.toHex());
-    }
-
-    //qDebug() << "DeviceToolBLEx::askForData_strlst(" << value << " / " << type << ")  >> " << out;
-    return out;
+    return QVariantMap{
+        { QStringLiteral("bytes"), bytes },
+        { QStringLiteral("hex"), hex },
+        { QStringLiteral("error"), static_cast<int>(error) },
+        { QStringLiteral("errorString"), BleFormat::writeErrorToString(error) },
+    };
 }
 
 /* ************************************************************************** */

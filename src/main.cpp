@@ -26,6 +26,7 @@
 #include "MenubarManager.h"
 #include "DeviceManager.h"
 #include "device_utils.h"
+#include "BleFormat.h"
 
 #include "SpectrumAnalyzers/SpectrumSourceRtlSdr.h"
 #include "SpectrumAnalyzers/SpectrumSourceUbertooth.h"
@@ -45,6 +46,7 @@
 
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QQmlEngine>
 #include <QQuickWindow>
 #include <QSurfaceFormat>
 
@@ -115,6 +117,8 @@ int main(int argc, char *argv[])
     }
 
     DeviceUtils::registerQML();
+    qmlRegisterUncreatableMetaObject(BleFormat::staticMetaObject, "BleFormat", 1, 0, "BleFormat",
+                                     QStringLiteral("BleFormat only provides enums"));
 
     // Translate the application
     utilsLanguage->loadLanguage(sm->getAppLanguage());

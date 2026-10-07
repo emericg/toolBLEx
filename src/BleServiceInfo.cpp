@@ -378,14 +378,12 @@ void ServiceInfo::askForRead(const QString &uuid)
     }
 }
 
-void ServiceInfo::askForWrite(const QString &uuid, const QString &value, const QString &type,
-                              bool withResponse, int exponent)
+void ServiceInfo::askForWrite(const QString &uuid, const QByteArray &data, bool withResponse)
 {
     if (m_ble_service)
     {
-        qDebug() << "ServiceInfo::askForWrite(" << uuid << ") > value:" << value
-                 << " (type:" << type << "/ size:" << value.size()
-                 << "/ exponent:" << exponent << "/ withResponse:" << withResponse << ")";
+        qDebug() << "ServiceInfo::askForWrite(" << uuid << ") > data:" << data.toHex()
+                 << " (size:" << data.size() << "/ withResponse:" << withResponse << ")";
 
         if (m_device) m_device->logEvent("User asked for WRITE on " + uuid, LogEvent::USER);
 
@@ -430,8 +428,7 @@ void ServiceInfo::askForWrite(const QString &uuid, const QString &value, const Q
             }
         }
 
-        QByteArray qba = DeviceToolBLEx::askForData_qba(value, type, exponent);
-        m_ble_service->writeCharacteristic(crst, qba, m);
+        m_ble_service->writeCharacteristic(crst, data, m);
 
         if (m == QLowEnergyService::WriteWithoutResponse && (properties & QLowEnergyCharacteristic::Read))
         {

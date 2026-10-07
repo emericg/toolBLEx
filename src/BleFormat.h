@@ -32,6 +32,8 @@
 #include <QVariant>
 #include <QByteArray>
 #include <QBluetoothUuid>
+#include <QObject>
+#include <QCoreApplication>
 
 /* ************************************************************************** */
 
@@ -44,6 +46,9 @@
  */
 class BleFormat
 {
+    Q_GADGET
+    Q_DECLARE_TR_FUNCTIONS(BleFormat)
+
 public:
     BleFormat() = delete;
 
@@ -94,6 +99,7 @@ public:
         FORMAT_STRUCT     = 0x1B,
         FORMAT_MEDASN1    = 0x1C,
     };
+    Q_ENUM(FormatType)
 
     /*!
      * \brief Result of writeValue()
@@ -106,6 +112,7 @@ public:
         WRITE_OUT_OF_RANGE,         //!< Does not fit in that format
         WRITE_UNSUPPORTED_FORMAT,   //!< RFU format
     };
+    Q_ENUM(WriteError)
 
     /*!
      * \brief A decimal number, parsed from a string: (-1)^negative * digits * 10^exponent
@@ -239,6 +246,26 @@ public:
      * Formats wider than 64 bits and structures take an hexadecimal string, like readValue() returns.
      */
     static QByteArray writeValue(const QVariant &value, const uint8_t format, const int8_t exponent = 0, WriteError *error = nullptr);
+
+    /*!
+     * \brief Encode a value typed by the user. writeValue(), plus the byte order and the empty value.
+     * \param value: the value, as typed (hexadecimal for structures, see writeValue()).
+     * \param format: one of the GATT format types (see FormatType).
+     * \param bigEndian: reverse the bytes of numeric formats (GATT values are little-endian).
+     * \param exponent: the presentation format exponent (only used by integer formats).
+     * \param error: if set, the result of the encoding.
+     * \return the encoded value, empty if it cannot be encoded, or if 'value' is empty (that is not an error).
+     *
+     * Values that need rounding are still encoded, but 'error' is set to WRITE_PRECISION_LOST.
+     */
+    static QByteArray encodeValue(const QString &value, const uint8_t format, const bool bigEndian = false,
+                                  const int8_t exponent = 0, WriteError *error = nullptr);
+
+    /*!
+     * \brief Human readable reason of a writeValue() failure, ex: "out of range for this format".
+     * \return an empty string for WRITE_OK.
+     */
+    static QString writeErrorToString(const WriteError error);
 
 private:
     /*!

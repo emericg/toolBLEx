@@ -3,6 +3,7 @@ import QtQuick.Effects
 import QtQuick.Controls
 
 import ComponentLibrary
+import BleFormat
 
 Popup {
     id: popupWriteCharacteristic
@@ -18,43 +19,113 @@ Popup {
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
+    ////////////////////////////////////////////////////////////////////////////
+
     property var characteristic: null
+
+    enum WriteMode { WithResponse, WithoutResponse }
 
     readonly property bool hasWriteWithResponse: (characteristic && characteristic.propertiesList.indexOf("Write") >= 0)
     readonly property bool hasWriteWithoutResponse: (characteristic && characteristic.propertiesList.indexOf("WriteNoResp") >= 0)
 
+    // Only "with response" writes can be split into multiple packets by the stack
+    readonly property bool writeWithResponse: (selectorWriteMode.currentSelection === PopupWriteCharacteristic.WriteMode.WithResponse)
+
     readonly property int maxValueSize: 512 // A GATT attribute value cannot exceed 512 bytes
     readonly property int maxPacketSize: (selectedDevice && selectedDevice.mtu > 0) ? (selectedDevice.mtu - 3) : -1
-    readonly property int valueSize: data_hex.model ? data_hex.model.length : 0
-    readonly property bool valueTooBig: (!writeWithResponse && maxPacketSize > 0 && valueSize > maxPacketSize)
+    readonly property int expectedSize: (characteristic && characteristic.formatSize > 0) ? characteristic.formatSize : -1
+    readonly property int valueSize: encoded.hex.length
+
+    // Hexadecimal data with an odd number of digits, the last byte is incomplete
+    // (the complete bytes are still previewed, the incomplete one is highlighted)
+    readonly property bool valueIncompleteByte: (formatSelectors.type === WriteFormatSelectors.Type.Data &&
+                                                 textfieldValue_data.text.length % 2 !== 0)
+
+    // The descriptor exponent is only applied on demand, the raw integer is written by default
+    property bool scaleValue: false
+    readonly property bool canScaleValue: (formatSelectors.writeDescriptorInteger && characteristic.formatExponent !== 0)
+    readonly property int writeExponent: (canScaleValue && scaleValue) ? characteristic.formatExponent : 0
+
+    // The value, encoded exactly as it will be written (see DeviceToolBLEx::encodeWriteValue())
+    readonly property var encoded: {
+        let value = getWriteValue()
+
+        // encode the complete bytes only, the incomplete one is shown on its own
+        if (valueIncompleteByte) value = value.slice(0, -1)
+
+        if (!selectedDevice) return { bytes: null, hex: [], error: BleFormat.WRITE_OK, errorString: "" }
+        return selectedDevice.encodeWriteValue(value, formatSelectors.writeFormat, formatSelectors.bigEndian, writeExponent)
+    }
+
+    // Can the value be written? Only the most severe problem is reported
+    readonly property var writeStatus: {
+        if (valueIncompleteByte)
+            return makeStatus(WriteValuePreview.Status.Error, qsTr("Incomplete byte, hexadecimal digits go in pairs."))
+        if (encoded.error !== BleFormat.WRITE_OK)
+            return makeStatus(WriteValuePreview.Status.Error, qsTr("This value cannot be written: %1.").arg(encoded.errorString))
+        if (valueSize === 0)
+            return makeStatus(WriteValuePreview.Status.Empty, "")
+
+        // Text fields are capped in characters, but utf8 can use up to 4 bytes per character
+        if (valueSize > maxValueSize)
+            return makeStatus(WriteValuePreview.Status.Error, qsTr("A GATT value cannot exceed %1 bytes.").arg(maxValueSize))
+
+        if (!writeWithResponse && maxPacketSize > 0 && valueSize > maxPacketSize) {
+            return makeStatus(WriteValuePreview.Status.Error, hasWriteWithResponse ?
+                qsTr("A 'without response' write cannot be split into multiple packets, use 'with response' or a shorter value.") :
+                qsTr("A 'without response' write cannot be split into multiple packets, use a shorter value."))
+        }
+
+        if (expectedSize > 0 && valueSize !== expectedSize)
+            return makeStatus(WriteValuePreview.Status.Warning, qsTr("The descriptors expect %n byte(s), the device may reject this value.", "", expectedSize))
+
+        return makeStatus(WriteValuePreview.Status.Ok, "")
+    }
+
+    function makeStatus(level, message) {
+        return { level: level, message: message,
+                 canWrite: (level === WriteValuePreview.Status.Ok || level === WriteValuePreview.Status.Warning) }
+    }
+
+    // The value to write, as typed by the user
+    function getWriteValue() {
+        switch (formatSelectors.type) {
+        case WriteFormatSelectors.Type.Data: return textfieldValue_data.text
+        case WriteFormatSelectors.Type.Text: return textfieldValue_text.text
+        case WriteFormatSelectors.Type.Integer: return textfieldValue_int.text
+        case WriteFormatSelectors.Type.Float: return textfieldValue_float.text
+        }
+        return ""
+    }
 
     ////////////////////////////////////////////////////////////////////////////
 
     onAboutToShow: { }
     onAboutToHide: { }
 
-    function openCC(cc) {
+    function openCC(cc, writeMode) {
         if (characteristic !== cc) {
             characteristic = cc
             uuid_tf.text = characteristic.uuid_full
 
-            // reset toggles
-            rowType.mode = qsTr("data")
-            rowSubType_data.mode = qsTr("bytes")
-            rowSubType_text.mode = qsTr("ascii")
-            rowSubType_int.mode_signed = qsTr("signed")
-            rowSubType_int.mode_endian = qsTr("le")
-            rowSizeType_int.mode = qsTr("32 bits")
-            rowSubType_float.mode = qsTr("IEEE 754")
-            rowSizeType_float.mode = qsTr("32 bits")
-            rowWriteMode.mode = hasWriteWithResponse ? qsTr("with response") : qsTr("without response")
+            // reset selectors, to the presentation format descriptor if any
+            formatSelectors.reset()
 
             // reset data
+            scaleValue = false
             textfieldValue_data.clear()
             textfieldValue_text.clear()
             textfieldValue_int.clear()
             textfieldValue_float.clear()
         }
+
+        // always follow the caller, even when reopening the same characteristic
+        if (writeMode === undefined) {
+            writeMode = hasWriteWithResponse ? PopupWriteCharacteristic.WriteMode.WithResponse :
+                                               PopupWriteCharacteristic.WriteMode.WithoutResponse
+        }
+        selectorWriteMode.currentSelection = writeMode
+
         open()
     }
 
@@ -123,7 +194,7 @@ Popup {
         id: columnContent
         spacing: Theme.componentMarginXL
 
-        ////////
+        ////////////////
 
         Item { // titleArea
             anchors.left: parent.left
@@ -182,261 +253,32 @@ Popup {
             }
         }
 
-        ////////
+        ////////////////
 
-        Column {
+        WriteFormatHints { // what the descriptors say about the expected value
             anchors.left: parent.left
             anchors.leftMargin: Theme.componentMarginXL
             anchors.right: parent.right
             anchors.rightMargin: Theme.componentMarginXL
-            spacing: Theme.componentMarginXS
 
-            Text {
-                text: qsTr("Format")
-                textFormat: Text.PlainText
-                font.pixelSize: Theme.fontSizeContentVeryBig
-                color: Theme.colorText
-                wrapMode: Text.WordWrap
-            }
-
-            ////
-
-            Row {
-                id: rowType
-                width: parent.width
-                spacing: 10
-
-                property string mode: qsTr("data")
-
-                onModeChanged: columnTf.updateTextFields()
-
-                ButtonSolid {
-                    height: 28
-                    color: (rowType.mode === text) ? Theme.colorPrimary : Theme.colorGrey
-                    onClicked: rowType.mode = text
-
-                    text: qsTr("data")
-                }
-                ButtonSolid {
-                    height: 28
-                    color: (rowType.mode === text) ? Theme.colorPrimary : Theme.colorGrey
-                    onClicked: rowType.mode = text
-
-                    text: qsTr("text")
-                }
-                ButtonSolid {
-                    height: 28
-                    color: (rowType.mode === text) ? Theme.colorPrimary : Theme.colorGrey
-                    onClicked: rowType.mode = text
-
-                    text: qsTr("integer")
-                }
-                ButtonSolid {
-                    height: 28
-                    color: (rowType.mode === text) ? Theme.colorPrimary : Theme.colorGrey
-                    onClicked: rowType.mode = text
-
-                    text: qsTr("float")
-                }
-            }
-
-            ////
-
-            Row {
-                id: rowSubType_data
-                width: parent.width
-                spacing: 10
-
-                visible: rowType.mode === qsTr("bytes")
-                property string mode: qsTr("bytes")
-
-                onModeChanged: columnTf.updateTextFields()
-
-                ButtonSolid {
-                    height: 28
-                    color: (rowSubType_data.mode === text) ? Theme.colorPrimary : Theme.colorGrey
-
-                    text: qsTr("bytes")
-                    onClicked: rowSubType_data.mode = text
-                }
-                ButtonSolid {
-                    height: 28
-                    color: (rowSubType_data.mode === text) ? Theme.colorPrimary : Theme.colorGrey
-
-                    text: qsTr("byte")
-                    onClicked: rowSubType_data.mode = text
-                }
-            }
-
-            ////
-
-            Row {
-                id: rowSubType_text
-                width: parent.width
-                spacing: 10
-
-                visible: rowType.mode === qsTr("text")
-                property string mode: qsTr("ascii")
-
-                onModeChanged: columnTf.updateTextFields()
-
-                ButtonSolid {
-                    height: 28
-                    color: (rowSubType_text.mode === text) ? Theme.colorPrimary : Theme.colorGrey
-                    onClicked: rowSubType_text.mode = text
-
-                    text: qsTr("ascii")
-                }
-                ButtonSolid {
-                    height: 28
-                    color: (rowSubType_text.mode === text) ? Theme.colorPrimary : Theme.colorGrey
-                    onClicked: rowSubType_text.mode = text
-
-                    text: qsTr("UTF-8")
-                    visible: false
-                }
-            }
-
-            ////
-
-            Row {
-                id: rowSubType_int
-                width: parent.width
-                spacing: Theme.componentMarginXS
-
-                visible: rowType.mode === qsTr("integer")
-                property string mode_signed: qsTr("signed")
-                property string mode_endian: qsTr("le")
-
-                onMode_signedChanged: columnTf.updateTextFields()
-                onMode_endianChanged: columnTf.updateTextFields()
-
-                ButtonSolid {
-                    height: 28
-                    color: (rowSubType_int.mode_signed === text) ? Theme.colorPrimary : Theme.colorGrey
-                    onClicked: rowSubType_int.mode_signed = text
-
-                    text: qsTr("signed")
-                }
-                ButtonSolid {
-                    height: 28
-                    color: (rowSubType_int.mode_signed === text) ? Theme.colorPrimary : Theme.colorGrey
-                    onClicked: rowSubType_int.mode_signed = text
-
-                    text: qsTr("unsigned")
-                }
-
-                Item { width: 1; height: 1; } // spacer
-
-                ButtonSolid {
-                    height: 28
-                    color: (rowSubType_int.mode_endian === text) ? Theme.colorPrimary : Theme.colorGrey
-                    onClicked: rowSubType_int.mode_endian = text
-
-                    text: qsTr("le")
-                }
-                ButtonSolid {
-                    height: 28
-                    color: (rowSubType_int.mode_endian === text) ? Theme.colorPrimary : Theme.colorGrey
-                    onClicked: rowSubType_int.mode_endian = text
-
-                    text: qsTr("be")
-                }
-            }
-
-            ////
-
-            Row {
-                id: rowSizeType_int
-                width: parent.width
-                spacing: Theme.componentMarginXS
-
-                visible: rowType.mode === qsTr("integer")
-                property string mode: qsTr("32 bits")
-
-                onModeChanged: columnTf.updateTextFields()
-
-                ButtonSolid {
-                    height: 28
-                    color: (rowSizeType_int.mode === text) ? Theme.colorPrimary : Theme.colorGrey
-                    onClicked: rowSizeType_int.mode = text
-
-                    text: qsTr("8 bits")
-                }
-                ButtonSolid {
-                    height: 28
-                    color: (rowSizeType_int.mode === text) ? Theme.colorPrimary : Theme.colorGrey
-                    onClicked: rowSizeType_int.mode = text
-
-                    text: qsTr("16 bits")
-                }
-                ButtonSolid {
-                    height: 28
-                    color: (rowSizeType_int.mode === text) ? Theme.colorPrimary : Theme.colorGrey
-                    onClicked: rowSizeType_int.mode = text
-
-                    text: qsTr("32 bits")
-                }
-                ButtonSolid {
-                    height: 28
-                    color: (rowSizeType_int.mode === text) ? Theme.colorPrimary : Theme.colorGrey
-                    onClicked: rowSizeType_int.mode = text
-
-                    text: qsTr("64 bits")
-                }
-            }
-
-            ////
-
-            Row {
-                id: rowSubType_float
-                width: parent.width
-                spacing: 10
-
-                visible: rowType.mode === qsTr("float")
-                property string mode: qsTr("IEEE 754")
-
-                ButtonSolid {
-                    height: 28
-                    color: (rowSubType_float.mode === text) ? Theme.colorPrimary : Theme.colorGrey
-                    onClicked: rowSubType_float.mode = text
-
-                    text: qsTr("IEEE 754")
-                }
-            }
-
-            ////
-
-            Row {
-                id: rowSizeType_float
-                width: parent.width
-                spacing: 10
-
-                visible: rowType.mode === qsTr("float")
-                property string mode: qsTr("32 bits")
-
-                onModeChanged: columnTf.updateTextFields()
-
-                ButtonSolid {
-                    height: 28
-                    color: (rowSizeType_float.mode === text) ? Theme.colorPrimary : Theme.colorGrey
-                    onClicked: rowSizeType_float.mode = text
-
-                    text: qsTr("32 bits")
-                }
-                ButtonSolid {
-                    height: 28
-                    color: (rowSizeType_float.mode === text) ? Theme.colorPrimary : Theme.colorGrey
-                    onClicked: rowSizeType_float.mode = text
-
-                    text: qsTr("64 bits")
-                }
-            }
-
-            ////
+            characteristic: popupWriteCharacteristic.characteristic
+            expectedSize: popupWriteCharacteristic.expectedSize
+            writeExponent: popupWriteCharacteristic.writeExponent
         }
 
-        ////////
+        ////////////////
+
+        WriteFormatSelectors {
+            id: formatSelectors
+            anchors.left: parent.left
+            anchors.leftMargin: Theme.componentMarginXL
+            anchors.right: parent.right
+            anchors.rightMargin: Theme.componentMarginXL
+
+            characteristic: popupWriteCharacteristic.characteristic
+        }
+
+        ////////////////
 
         Column {
             anchors.left: parent.left
@@ -448,103 +290,56 @@ Popup {
             visible: (popupWriteCharacteristic.hasWriteWithResponse &&
                       popupWriteCharacteristic.hasWriteWithoutResponse)
 
-            Text {
-                width: parent.width
+            ////
 
+            SectionTitle {
+                width: parent.width
                 text: qsTr("Mode")
-                textFormat: Text.PlainText
-                font.pixelSize: Theme.fontSizeContentVeryBig
-                color: Theme.colorText
-                wrapMode: Text.WordWrap
             }
 
             ////
 
-            Row {
-                id: rowWriteMode
-                width: parent.width
-                spacing: 10
+            WriteSelector {
+                id: selectorWriteMode
 
-                property string mode: qsTr("with response")
-
-                onModeChanged: columnTf.updateTextFields()
-
-                ButtonSolid {
-                    height: 28
-                    color: (rowWriteMode.mode === text) ? Theme.colorPrimary : Theme.colorGrey
-                    onClicked: rowWriteMode.mode = text
-
-                    text: qsTr("with response")
+                model: ListModel {
+                    ListElement { idx: 0; txt: qsTr("with response"); src: ""; sz: 16; }
+                    ListElement { idx: 1; txt: qsTr("without response"); src: ""; sz: 16; }
                 }
-                ButtonSolid {
-                    height: 28
-                    color: (rowWriteMode.mode === text) ? Theme.colorPrimary : Theme.colorGrey
-                    onClicked: rowWriteMode.mode = text
 
-                    text: qsTr("without response")
-                }
+                currentSelection: PopupWriteCharacteristic.WriteMode.WithResponse
             }
 
             ////
         }
 
-        ////////
+        ////////////////
 
         Column {
-            id: columnTf
             anchors.left: parent.left
             anchors.leftMargin: Theme.componentMarginXL
             anchors.right: parent.right
             anchors.rightMargin: Theme.componentMarginXL
             spacing: Theme.componentMarginXS
 
-            Text {
-                width: parent.width
-
-                text: qsTr("Value")
-                textFormat: Text.PlainText
-                font.pixelSize: Theme.fontSizeContentVeryBig
-                color: Theme.colorText
-                wrapMode: Text.WordWrap
-            }
-
             ////
 
-            function updateTextFields() {
-                var value = ""
-                var type = ""
+            Row {
+                spacing: Theme.componentMargin
 
-                if (rowType.mode === qsTr("data")) {
-
-                    type = "data"
-                    value = textfieldValue_data.text
-
-                } else if (rowType.mode === qsTr("text")) {
-
-                    type = "ascii"
-                    value = textfieldValue_text.text
-
-                } else if (rowType.mode === qsTr("integer")) {
-
-                    if (rowSubType_int.mode_signed === qsTr("signed")) type = "int"
-                    if (rowSubType_int.mode_signed === qsTr("unsigned")) type = "uint"
-                    if (rowSizeType_int.mode === "8 bits") type += "8"
-                    if (rowSizeType_int.mode === "16 bits") type += "16"
-                    if (rowSizeType_int.mode === "32 bits") type += "32"
-                    if (rowSizeType_int.mode === "64 bits") type += "64"
-                    if (rowSubType_int.mode_endian === qsTr("le")) type += "_le"
-                    if (rowSubType_int.mode_endian === qsTr("be")) type += "_be"
-                    value = textfieldValue_int.text
-
-                } else if (rowType.mode === qsTr("float")) {
-
-                    if (rowSizeType_float.mode === "32 bits") type = "float32"
-                    if (rowSizeType_float.mode === "64 bits") type = "float64"
-                    value = textfieldValue_float.text
-
+                SectionTitle {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: qsTr("Value")
                 }
 
-                data_hex.model = selectedDevice.askForData_strlst(value, type)
+                SwitchThemed {
+                    anchors.verticalCenter: parent.verticalCenter
+                    visible: popupWriteCharacteristic.canScaleValue
+                    text: qsTr("scaled value (exponent %1)").arg(popupWriteCharacteristic.characteristic ?
+                                                                 popupWriteCharacteristic.characteristic.formatExponent : 0)
+                    checked: popupWriteCharacteristic.scaleValue
+                    onClicked: popupWriteCharacteristic.scaleValue = checked
+                }
             }
 
             ////
@@ -553,25 +348,30 @@ Popup {
                 id: textfieldValue_text
                 width: parent.width
 
-                visible: rowType.mode === qsTr("text")
-                placeholderText: qsTr("ascii text")
+                readonly property bool isAscii: (formatSelectors.textFormat === WriteFormatSelectors.TextFormat.Ascii)
+
+                visible: (formatSelectors.type === WriteFormatSelectors.Type.Text)
+                placeholderText: isAscii ? qsTr("ascii text") : qsTr("utf8 text")
 
                 font.pixelSize: 18
                 font.bold: false
                 color: Theme.colorText
                 selectByMouse: true
 
-                maximumLength: popupWriteCharacteristic.maxValueSize // one byte per character
-                //validator: RegularExpressionValidator { regularExpression: /[a-zA-Z0-9]+/ } // poor man ascii
-                validator: RegularExpressionValidator { regularExpression: /([\x00-\x7F])+/ } // ascii
+                // exact for ascii (one byte per character), an upper bound for utf8 (up to four)
+                maximumLength: popupWriteCharacteristic.maxValueSize
 
-                onTextChanged: columnTf.updateTextFields()
+                RegularExpressionValidator {
+                    id: validatorAscii
+                    regularExpression: /([\x00-\x7F])+/
+                }
+                validator: textfieldValue_text.isAscii ? validatorAscii : null
             }
             TextFieldThemed {
                 id: textfieldValue_data
                 width: parent.width
 
-                visible: rowType.mode === qsTr("data")
+                visible: (formatSelectors.type === WriteFormatSelectors.Type.Data)
                 placeholderText: qsTr("hexadecimal data")
 
                 font.pixelSize: 18
@@ -582,34 +382,46 @@ Popup {
                 maximumLength: popupWriteCharacteristic.maxValueSize * 2 // two characters per byte
                 validator: RegularExpressionValidator { regularExpression: /[a-fA-F0-9]+/ }
                 //inputMask: "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
-
-                onTextChanged: columnTf.updateTextFields()
             }
             TextFieldThemed {
                 id: textfieldValue_int
                 width: parent.width
 
-                visible: rowType.mode === qsTr("integer")
-                placeholderText: qsTr("integer")
+                readonly property bool isScaled: (popupWriteCharacteristic.writeExponent !== 0)
+                readonly property bool isSigned: formatSelectors.isSigned
+
+                visible: (formatSelectors.type === WriteFormatSelectors.Type.Integer)
+                placeholderText: isScaled ? qsTr("decimal value") : qsTr("integer")
 
                 font.pixelSize: 18
                 font.bold: false
                 color: Theme.colorText
                 selectByMouse: true
 
-                property var v_int1 : IntValidator { bottom: parseInt(-2147483647); top: parseInt(2147483647); }
-                property var v_int : RegularExpressionValidator { regularExpression: /[0-9--]+/ }
-                property var v_uint : RegularExpressionValidator { regularExpression: /[0-9]+/ }
-
-                validator: RegularExpressionValidator { regularExpression: /[0-9--]+/ }
-
-                onTextChanged: columnTf.updateTextFields()
+                RegularExpressionValidator {
+                    id: validatorSigned
+                    regularExpression: /-?[0-9]+/
+                }
+                RegularExpressionValidator {
+                    id: validatorUnsigned
+                    regularExpression: /[0-9]+/
+                }
+                RegularExpressionValidator {
+                    id: validatorSignedDecimal
+                    regularExpression: /-?[0-9]+(\.[0-9]*)?/
+                }
+                RegularExpressionValidator {
+                    id: validatorUnsignedDecimal
+                    regularExpression: /[0-9]+(\.[0-9]*)?/
+                }
+                validator: isScaled ? (isSigned ? validatorSignedDecimal : validatorUnsignedDecimal) :
+                                      (isSigned ? validatorSigned : validatorUnsigned)
             }
             TextFieldThemed {
                 id: textfieldValue_float
                 width: parent.width
 
-                visible: rowType.mode === qsTr("float")
+                visible: (formatSelectors.type === WriteFormatSelectors.Type.Float)
                 placeholderText: qsTr("floating point")
 
                 font.pixelSize: 18
@@ -617,91 +429,29 @@ Popup {
                 color: Theme.colorText
                 selectByMouse: true
 
-                validator: DoubleValidator { }
-
-                onTextChanged: columnTf.updateTextFields()
+                validator: DoubleValidator { locale: "C" }
             }
 
             ////
         }
 
-        ////////////////////////////////////////////////////////////////////////
+        ////////////////
 
-        Column {
+        WriteValuePreview {
             anchors.left: parent.left
             anchors.leftMargin: Theme.componentMarginXL
             anchors.right: parent.right
             anchors.rightMargin: Theme.componentMarginXL
-            spacing: Theme.componentMarginXS
 
-            Text {
-                width: parent.width
-
-                text: qsTr("Data to be written (hexadecimal)")
-                textFormat: Text.PlainText
-                font.pixelSize: Theme.fontSizeContentVeryBig
-                color: Theme.colorText
-                wrapMode: Text.WordWrap
-            }
-
-            Rectangle {
-                id: rectNoData
-                width: 26
-                height: 26
-
-                visible: !data_hex.model.length
-                color: Theme.colorForeground
-
-                Canvas {
-                    width: 26
-                    height: 26
-                    onPaint: {
-                        var ctx = getContext("2d")
-                        ctx.reset()
-                        ctx.moveTo(0, width)
-                        ctx.lineTo(width, width)
-                        ctx.lineTo(width, 0)
-                        ctx.closePath()
-                        ctx.fillStyle = Theme.colorBox
-                        ctx.fill()
-                    }
-                    Connections {
-                        target: Theme
-                        function onCurrentThemeChanged() { indicator.requestPaint() }
-                    }
-                }
-            }
-
-            Flow {
-                width: parent.width
-                spacing: 0
-
-                Repeater {
-                    id: data_hex
-                    model: null
-
-                    Rectangle {
-                        width: 26
-                        height: 26
-                        color: (index % 2 === 0) ? Theme.colorForeground : Theme.colorBox
-
-                        Text {
-                            height: 26
-                            anchors.horizontalCenter: parent.horizontalCenter
-
-                            text: modelData
-                            textFormat: Text.PlainText
-                            font.pixelSize: Theme.fontSizeContent-1
-                            verticalAlignment: Text.AlignVCenter
-                            color: Theme.colorText
-                            font.family: fontMonospace
-                        }
-                    }
-                }
-            }
+            bytes: popupWriteCharacteristic.encoded.hex
+            partialNibble: popupWriteCharacteristic.valueIncompleteByte ?
+                               textfieldValue_data.text.slice(-1).toLowerCase() : ""
+            expectedSize: popupWriteCharacteristic.expectedSize
+            maxPacketSize: popupWriteCharacteristic.maxPacketSize
+            status: popupWriteCharacteristic.writeStatus
         }
 
-        ////////
+        ////////////////
 
         Item { width: 1; height: 1; } // spacer
 
@@ -720,45 +470,13 @@ Popup {
             ButtonSolid {
                 color: Theme.colorMaterialAmber
 
-                enabled: data_hex.model.length
+                enabled: popupWriteCharacteristic.writeStatus.canWrite
 
                 text: qsTr("Write value")
                 onClicked: {
-                    var value = ""
-                    var type = ""
-                    var writeWithResponse = (rowWriteMode.mode === qsTr("with response"))
-
-                    if (rowType.mode === qsTr("data")) {
-
-                        type = "data"
-                        value = textfieldValue_data.text
-
-                    } else if (rowType.mode === qsTr("text")) {
-
-                        type = "ascii"
-                        value = textfieldValue_text.text
-
-                    } else if (rowType.mode === qsTr("integer")) {
-
-                        if (rowSubType_int.mode_signed === qsTr("signed")) type = "int"
-                        if (rowSubType_int.mode_signed === qsTr("unsigned")) type = "uint"
-                        if (rowSizeType_int.mode === "8 bits") type += "8"
-                        if (rowSizeType_int.mode === "16 bits") type += "16"
-                        if (rowSizeType_int.mode === "32 bits") type += "32"
-                        if (rowSizeType_int.mode === "34 bits") type += "34"
-                        if (rowSubType_int.mode_endian === qsTr("le")) type += "_le"
-                        if (rowSubType_int.mode_endian === qsTr("be")) type += "_be"
-                        value = textfieldValue_int.text
-
-                    } else if (rowType.mode === qsTr("float")) {
-
-                        if (rowSizeType_float.mode === "32 bits") type = "float32"
-                        if (rowSizeType_float.mode === "64 bits") type = "float64"
-                        value = textfieldValue_float.text
-
-                    }
-
-                    selectedDevice.askForWrite(characteristic.uuid_full, value, type, writeWithResponse)
+                    selectedDevice.askForWrite(characteristic.uuid_full,
+                                               popupWriteCharacteristic.encoded.bytes,
+                                               popupWriteCharacteristic.writeWithResponse)
                     popupWriteCharacteristic.close()
                 }
             }
@@ -766,6 +484,8 @@ Popup {
 
         Item{ width: 1; height: 1; } // spacer
 
-        ////////
+        ////////////////
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

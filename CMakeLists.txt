@@ -140,6 +140,9 @@ set(SOURCES_QML
 
     qml/components/ButtonScanMenu.qml
     qml/components/ItemActionTag.qml
+    qml/components/HexBytesView.qml
+    qml/components/WriteSelector.qml
+    qml/components/SectionTitle.qml
     qml/components/DeviceScannerListHeader.qml
     qml/components/DeviceScannerListWidget.qml
     qml/components/DeviceScannerTableHeader.qml
@@ -157,6 +160,9 @@ set(SOURCES_QML
     qml/popups/PopupExportDeviceData.qml
     qml/popups/PopupExportScannerData.qml
     qml/popups/PopupWriteCharacteristic.qml
+    qml/popups/write/WriteFormatHints.qml
+    qml/popups/write/WriteFormatSelectors.qml
+    qml/popups/write/WriteValuePreview.qml
 
     qml/widgets/AdapterWidget.qml
     qml/widgets/AdvertisementDataWidget.qml

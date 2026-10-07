@@ -107,8 +107,7 @@ public:
 
     void askForNotify(const QString &uuid);
     void askForRead(const QString &uuid);
-    void askForWrite(const QString &uuid, const QString &value, const QString &type,
-                     bool withResponse = true, int exponent = 0);
+    void askForWrite(const QString &uuid, const QByteArray &data, bool withResponse = true);
 
     /*!
      * \brief Read a descriptor value again.

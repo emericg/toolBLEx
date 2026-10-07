@@ -349,8 +349,14 @@ public:
 
     Q_INVOKABLE void askForNotify(const QString &uuid);
     Q_INVOKABLE void askForRead(const QString &uuid);
-    Q_INVOKABLE void askForWrite(const QString &uuid, const QString &value, const QString &type,
-                                 bool withResponse = true, int exponent = 0);
+
+    /*!
+     * \brief Write a characteristic value.
+     * \param uuid: the characteristic UUID (full, uppercase, with braces).
+     * \param data: the value, already encoded (see encodeWriteValue()).
+     * \param withResponse: the write mode to use, if the characteristic supports it.
+     */
+    Q_INVOKABLE void askForWrite(const QString &uuid, const QByteArray &data, bool withResponse = true);
 
     /*!
      * \brief Read a descriptor value again.
@@ -359,15 +365,20 @@ public:
     Q_INVOKABLE void askForDescriptorRead(QObject *descriptor);
 
     /*!
-     * \brief Encode a value typed by the user.
-     * \param value: the value, as typed.
-     * \param type: ex: "data", "ascii", "utf8", "uint24_le", "int16_be", "float32_le".
-     * \param exponent: presentation format exponent, integer types only.
+     * \brief Encode a value typed by the user, using a GATT format.
+     * \param value: the value, as typed (hexadecimal for FORMAT_STRUCT).
+     * \param format: one of the GATT format types (see BleFormat::FormatType).
+     * \param bigEndian: byte order of the fixed size formats, GATT values are little endian.
+     * \param exponent: presentation format exponent, integer formats only.
      *                  The value is then the actual value, ex: "21.5" with -2 is encoded as 2150.
-     * \return the encoded value, empty if it cannot be encoded exactly.
+     * \return a map with "bytes" (QByteArray, empty if it cannot be encoded),
+     *         "hex" (QStringList, one string per byte), "error" (BleFormat::WriteError),
+     *         and "errorString" (empty for WRITE_OK). An empty value gives no bytes and no error.
+     *
+     * Values that need rounding are still encoded, but reported as WRITE_PRECISION_LOST.
      */
-    Q_INVOKABLE static QByteArray askForData_qba(const QString &value, const QString &type, int exponent = 0);
-    Q_INVOKABLE static QStringList askForData_strlst(const QString &value, const QString &type, int exponent = 0);
+    Q_INVOKABLE static QVariantMap encodeWriteValue(const QString &value, int format,
+                                                    bool bigEndian = false, int exponent = 0);
 
     Q_INVOKABLE bool checkServiceCache();
 

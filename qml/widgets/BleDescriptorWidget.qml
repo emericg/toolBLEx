@@ -15,17 +15,15 @@ Item {
     property bool editable: (selectedDevice && selectedDevice.connected)
 
     Rectangle {
+        id: background
         anchors.left: parent.left
         anchors.leftMargin: 4
         anchors.right: parent.right
-        anchors.rightMargin: 0
+        anchors.rightMargin: 4
 
         height: columnDescriptor.height
-        radius: 0
-
+        radius: 4
         color: Theme.colorBox
-        border.color: Theme.colorSeparator
-        border.width: 2
 
         ////////
 
@@ -51,7 +49,7 @@ Item {
                     anchors.right: parent.right
                     anchors.margins: -2
                     height: parent.height
-                    radius: 0
+                    radius: 3
                     color: Qt.darker(Theme.colorBackground, 1.01)
                 }
 
@@ -175,7 +173,7 @@ Item {
 
                 topPadding: 4
                 bottomPadding: 4
-                spacing: 4
+                spacing: 2
 
                 readonly property int legendWidth: {
                     const fields = bleDescriptorWidget.descriptor.fields
@@ -225,5 +223,13 @@ Item {
         }
 
         ////////
+    }
+
+    Rectangle {
+        anchors.fill: background
+        radius: 4
+        color: "transparent"
+        border.color: Theme.colorSeparator
+        border.width: 2
     }
 }

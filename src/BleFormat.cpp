@@ -22,6 +22,7 @@
 
 #include "BleFormat.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cctype>
 #include <cstring>
@@ -960,6 +961,44 @@ QByteArray BleFormat::writeValue(const QVariant &value, const uint8_t format,
     if (error) *error = status;
 
     return out;
+}
+
+/* ************************************************************************** */
+
+QByteArray BleFormat::encodeValue(const QString &value, const uint8_t format, const bool bigEndian,
+                                  const int8_t exponent, WriteError *error)
+{
+    if (error) *error = WRITE_OK;
+    if (value.isEmpty()) return QByteArray();
+
+    QByteArray out = writeValue(value, format, exponent, error);
+
+    // Numbers only, hexadecimal formats (uint128, uint16[2], struct...) are typed in transmission order
+    const bool numeric = (formatIntegerBits(format) > 0 ||
+                          format == FORMAT_FLOAT32 || format == FORMAT_FLOAT64 ||
+                          format == FORMAT_MEDFLOAT16 || format == FORMAT_MEDFLOAT32);
+    if (bigEndian && numeric)
+    {
+        std::reverse(out.begin(), out.end());
+    }
+
+    return out;
+}
+
+/* ************************************************************************** */
+
+QString BleFormat::writeErrorToString(const WriteError error)
+{
+    switch (error)
+    {
+        case WRITE_OK:                  return QString();
+        case WRITE_PRECISION_LOST:      return tr("the value would be rounded");
+        case WRITE_NOT_A_NUMBER:        return tr("invalid value for this format");
+        case WRITE_OUT_OF_RANGE:        return tr("out of range for this format");
+        case WRITE_UNSUPPORTED_FORMAT:  return tr("unsupported format");
+    }
+
+    return QString();
 }
 
 /* ************************************************************************** */
