@@ -8,7 +8,7 @@ Rectangle {
     implicitWidth: 800
     implicitHeight: 36
 
-    width: deviceManager.deviceHeader.width
+    width: DeviceManager.deviceHeader.width
 
     color: Theme.colorLVheader
     z: 5
@@ -27,31 +27,31 @@ Rectangle {
                   "00:11:22:33:44:55"
         textFormat: Text.PlainText
         font.family: fontMonospace
-        Component.onCompleted: deviceManager.deviceHeader.colAddress = contentWidth
+        Component.onCompleted: DeviceManager.deviceHeader.colAddress = contentWidth
     }
     Text { // "seen" fields size reference
         visible: false
         text: "00/00 00:00"
         textFormat: Text.PlainText
-        Component.onCompleted: deviceManager.deviceHeader.colFirstSeen = contentWidth
+        Component.onCompleted: DeviceManager.deviceHeader.colFirstSeen = contentWidth
     }
 
     ////////
 
     Row {
         anchors.left: parent.left
-        anchors.leftMargin: deviceManager.deviceHeader.margin
+        anchors.leftMargin: DeviceManager.deviceHeader.margin
         anchors.right: parent.right
-        anchors.rightMargin: deviceManager.deviceHeader.margin
+        anchors.rightMargin: DeviceManager.deviceHeader.margin
         anchors.verticalCenter: parent.verticalCenter
 
         Item { // color column header //////////////////////////////////////////
-            width: deviceManager.deviceHeader.colColor
+            width: DeviceManager.deviceHeader.colColor
             height: 24
         }
 
         Item { // separator
-            width: deviceManager.deviceHeader.spacing
+            width: DeviceManager.deviceHeader.spacing
             height: 24
             visible: showAddress
             Rectangle {
@@ -64,7 +64,7 @@ Rectangle {
         Text { // address column header ////////////////////////////////////////
             id: colAddress
             anchors.verticalCenter: parent.verticalCenter
-            width: deviceManager.deviceHeader.colAddress
+            width: DeviceManager.deviceHeader.colAddress
 
             clip: true
             visible: showAddress
@@ -72,7 +72,7 @@ Rectangle {
             text: qsTr("Address")
             textFormat: Text.PlainText
             color: Theme.colorText
-            font.bold: (deviceManager.orderBy_role === "address")
+            font.bold: (DeviceManager.orderBy_role === "address")
             elide: Text.ElideRight
 
             MouseArea {
@@ -80,10 +80,10 @@ Rectangle {
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onClicked: (mouse) => {
                     if (mouse.button === Qt.LeftButton) {
-                        deviceManager.orderby_address()
+                        DeviceManager.orderby_address()
                     } else if (mouse.button === Qt.RightButton) {
-                        if (deviceManager.orderBy_role === "address")
-                            deviceManager.orderby_default()
+                        if (DeviceManager.orderBy_role === "address")
+                            DeviceManager.orderby_default()
                     }
                 }
             }
@@ -95,8 +95,8 @@ Rectangle {
 
                 width: 8
                 height: 4
-                rotation: deviceManager.orderBy_order ? 0 : 180
-                visible: (deviceManager.orderBy_role === "address")
+                rotation: DeviceManager.orderBy_order ? 0 : 180
+                visible: (DeviceManager.orderBy_role === "address")
 
                 Connections {
                     target: Theme
@@ -117,7 +117,7 @@ Rectangle {
         }
 
         Item { // separator
-            width: deviceManager.deviceHeader.spacing
+            width: DeviceManager.deviceHeader.spacing
             height: 24
 
             MouseArea {
@@ -128,12 +128,12 @@ Rectangle {
 
                 drag.target: parent
                 drag.axis: Drag.XAxis
-                drag.minimumX: colAddress.x + deviceManager.deviceHeader.minSize
+                drag.minimumX: colAddress.x + DeviceManager.deviceHeader.minSize
                 drag.maximumX: colAddress.x + 512
 
                 onPositionChanged: {
                     var delta =  parent.x - (colAddress.x + colAddress.width)
-                    if (delta != 0) deviceManager.deviceHeader.colAddress = colAddress.width + delta
+                    if (delta != 0) DeviceManager.deviceHeader.colAddress = colAddress.width + delta
                 }
 
                 Rectangle { // marker
@@ -151,14 +151,14 @@ Rectangle {
         Text { // name column header ///////////////////////////////////////////
             id: colName
             anchors.verticalCenter: parent.verticalCenter
-            width: deviceManager.deviceHeader.colName
+            width: DeviceManager.deviceHeader.colName
 
             clip: true
 
             text: qsTr("Advertised name")
             textFormat: Text.PlainText
             color: Theme.colorText
-            font.bold: (deviceManager.orderBy_role === "name")
+            font.bold: (DeviceManager.orderBy_role === "name")
             elide: Text.ElideRight
 
             MouseArea {
@@ -166,10 +166,10 @@ Rectangle {
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onClicked: (mouse) => {
                     if (mouse.button === Qt.LeftButton) {
-                        deviceManager.orderby_name()
+                        DeviceManager.orderby_name()
                     } else if (mouse.button === Qt.RightButton) {
-                        if (deviceManager.orderBy_role === "name")
-                            deviceManager.orderby_default()
+                        if (DeviceManager.orderBy_role === "name")
+                            DeviceManager.orderby_default()
                     }
                 }
             }
@@ -181,8 +181,8 @@ Rectangle {
 
                 width: 8
                 height: 4
-                rotation: deviceManager.orderBy_order ? 0 : 180
-                visible: (deviceManager.orderBy_role === "name")
+                rotation: DeviceManager.orderBy_order ? 0 : 180
+                visible: (DeviceManager.orderBy_role === "name")
 
                 Connections {
                     target: Theme
@@ -203,7 +203,7 @@ Rectangle {
         }
 
         Item { // separator
-            width: deviceManager.deviceHeader.spacing
+            width: DeviceManager.deviceHeader.spacing
             height: 24
 
             MouseArea {
@@ -214,12 +214,12 @@ Rectangle {
 
                 drag.target: parent
                 drag.axis: Drag.XAxis
-                drag.minimumX: colName.x + deviceManager.deviceHeader.minSize
+                drag.minimumX: colName.x + DeviceManager.deviceHeader.minSize
                 drag.maximumX: colName.x + 512
 
                 onPositionChanged: {
                     var delta =  parent.x - (colName.x + colName.width)
-                    if (delta != 0) deviceManager.deviceHeader.colName = colName.width + delta
+                    if (delta != 0) DeviceManager.deviceHeader.colName = colName.width + delta
                 }
 
                 Rectangle { // marker
@@ -237,14 +237,14 @@ Rectangle {
         Text { // manufacturer column header ///////////////////////////////////
             id: colManuf
             anchors.verticalCenter: parent.verticalCenter
-            width: deviceManager.deviceHeader.colManuf
+            width: DeviceManager.deviceHeader.colManuf
 
             clip: true
             visible: showAddress
 
             text: qsTr("Manufacturer")
             textFormat: Text.PlainText
-            font.bold: (deviceManager.orderBy_role === "manufacturer")
+            font.bold: (DeviceManager.orderBy_role === "manufacturer")
             color: Theme.colorText
             elide: Text.ElideRight
 
@@ -253,10 +253,10 @@ Rectangle {
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onClicked: (mouse) => {
                     if (mouse.button === Qt.LeftButton) {
-                        deviceManager.orderby_manufacturer()
+                        DeviceManager.orderby_manufacturer()
                     } else if (mouse.button === Qt.RightButton) {
-                        if (deviceManager.orderBy_role === "manufacturer")
-                            deviceManager.orderby_default()
+                        if (DeviceManager.orderBy_role === "manufacturer")
+                            DeviceManager.orderby_default()
                     }
                 }
             }
@@ -268,8 +268,8 @@ Rectangle {
 
                 width: 8
                 height: 4
-                rotation: deviceManager.orderBy_order ? 0 : 180
-                visible: (deviceManager.orderBy_role === "manufacturer")
+                rotation: DeviceManager.orderBy_order ? 0 : 180
+                visible: (DeviceManager.orderBy_role === "manufacturer")
 
                 Connections {
                     target: Theme
@@ -290,7 +290,7 @@ Rectangle {
         }
 
         Item { // separator
-            width: deviceManager.deviceHeader.spacing
+            width: DeviceManager.deviceHeader.spacing
             height: 24
 
             visible: showAddress
@@ -302,12 +302,12 @@ Rectangle {
 
                 drag.target: parent
                 drag.axis: Drag.XAxis
-                drag.minimumX: colManuf.x + deviceManager.deviceHeader.minSize
+                drag.minimumX: colManuf.x + DeviceManager.deviceHeader.minSize
                 drag.maximumX: colManuf.x + 512
 
                 onPositionChanged: {
                     var delta =  parent.x - (colManuf.x + colManuf.width)
-                    if (delta != 0) deviceManager.deviceHeader.colManuf = colManuf.width + delta
+                    if (delta != 0) DeviceManager.deviceHeader.colManuf = colManuf.width + delta
                 }
 
                 Rectangle { // marker
@@ -325,7 +325,7 @@ Rectangle {
         Item { // RSSI column header ///////////////////////////////////////////
             id: colRssi
             anchors.verticalCenter: parent.verticalCenter
-            width: deviceManager.deviceHeader.colRssi
+            width: DeviceManager.deviceHeader.colRssi
             height: 24
             clip: true
 
@@ -347,7 +347,7 @@ Rectangle {
 
                     text: qsTr("RSSI")
                     textFormat: Text.PlainText
-                    font.bold: (deviceManager.orderBy_role === "rssi")
+                    font.bold: (DeviceManager.orderBy_role === "rssi")
                     color: Theme.colorText
                     elide: Text.ElideRight
                 }
@@ -358,10 +358,10 @@ Rectangle {
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onClicked: (mouse) => {
                     if (mouse.button === Qt.LeftButton) {
-                        deviceManager.orderby_rssi()
+                        DeviceManager.orderby_rssi()
                     } else if (mouse.button === Qt.RightButton) {
-                        if (deviceManager.orderBy_role === "rssi")
-                            deviceManager.orderby_default()
+                        if (DeviceManager.orderBy_role === "rssi")
+                            DeviceManager.orderby_default()
                     }
                 }
             }
@@ -373,8 +373,8 @@ Rectangle {
 
                 width: 8
                 height: 4
-                rotation: deviceManager.orderBy_order ? 0 : 180
-                visible: (deviceManager.orderBy_role === "rssi")
+                rotation: DeviceManager.orderBy_order ? 0 : 180
+                visible: (DeviceManager.orderBy_role === "rssi")
 
                 Connections {
                     target: Theme
@@ -395,7 +395,7 @@ Rectangle {
         }
 
         Item { // separator
-            width: deviceManager.deviceHeader.spacing
+            width: DeviceManager.deviceHeader.spacing
             height: 24
 
             MouseArea {
@@ -406,12 +406,12 @@ Rectangle {
 
                 drag.target: parent
                 drag.axis: Drag.XAxis
-                drag.minimumX: colRssi.x + deviceManager.deviceHeader.minSize
+                drag.minimumX: colRssi.x + DeviceManager.deviceHeader.minSize
                 drag.maximumX: colRssi.x + 256
 
                 onPositionChanged: {
                     var delta =  parent.x - (colRssi.x + colRssi.width)
-                    if (delta != 0) deviceManager.deviceHeader.colRssi = colRssi.width + delta
+                    if (delta != 0) DeviceManager.deviceHeader.colRssi = colRssi.width + delta
                 }
 
                 Rectangle { // marker
@@ -429,7 +429,7 @@ Rectangle {
         Item { // Adv interval header column ///////////////////////////////////
             id: colInterval
             anchors.verticalCenter: parent.verticalCenter
-            width: deviceManager.deviceHeader.colInterval
+            width: DeviceManager.deviceHeader.colInterval
             height: 24
             clip: true
 
@@ -449,7 +449,7 @@ Rectangle {
                 Text {
                     text: qsTr("Interval")
                     textFormat: Text.PlainText
-                    font.bold: (deviceManager.orderBy_role === "interval")
+                    font.bold: (DeviceManager.orderBy_role === "interval")
                     color: Theme.colorText
                     elide: Text.ElideRight
                 }
@@ -460,10 +460,10 @@ Rectangle {
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onClicked: (mouse) => {
                     if (mouse.button === Qt.LeftButton) {
-                        deviceManager.orderby_interval()
+                        DeviceManager.orderby_interval()
                     } else if (mouse.button === Qt.RightButton) {
-                        if (deviceManager.orderBy_role === "interval")
-                            deviceManager.orderby_default()
+                        if (DeviceManager.orderBy_role === "interval")
+                            DeviceManager.orderby_default()
                     }
                 }
             }
@@ -475,8 +475,8 @@ Rectangle {
 
                 width: 8
                 height: 4
-                rotation: deviceManager.orderBy_order ? 0 : 180
-                visible: (deviceManager.orderBy_role === "interval")
+                rotation: DeviceManager.orderBy_order ? 0 : 180
+                visible: (DeviceManager.orderBy_role === "interval")
 
                 Connections {
                     target: Theme
@@ -497,7 +497,7 @@ Rectangle {
         }
 
         Item { // separator
-            width: deviceManager.deviceHeader.spacing
+            width: DeviceManager.deviceHeader.spacing
             height: 24
 
             MouseArea {
@@ -508,12 +508,12 @@ Rectangle {
 
                 drag.target: parent
                 drag.axis: Drag.XAxis
-                drag.minimumX: colInterval.x + deviceManager.deviceHeader.minSize
+                drag.minimumX: colInterval.x + DeviceManager.deviceHeader.minSize
                 drag.maximumX: colInterval.x + 256
 
                 onPositionChanged: {
                     var delta =  parent.x - (colInterval.x + colInterval.width)
-                    if (delta != 0) deviceManager.deviceHeader.colInterval = colInterval.width + delta
+                    if (delta != 0) DeviceManager.deviceHeader.colInterval = colInterval.width + delta
                 }
 
                 Rectangle { // marker
@@ -530,11 +530,11 @@ Rectangle {
 
         Text { // last seen header column //////////////////////////////////////
             anchors.verticalCenter: parent.verticalCenter
-            width: deviceManager.deviceHeader.colLastSeen
+            width: DeviceManager.deviceHeader.colLastSeen
 
             text: qsTr("Last seen")
             textFormat: Text.PlainText
-            font.bold: (deviceManager.orderBy_role === "lastseen")
+            font.bold: (DeviceManager.orderBy_role === "lastseen")
             color: Theme.colorText
             elide: Text.ElideRight
 
@@ -543,10 +543,10 @@ Rectangle {
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onClicked: (mouse) => {
                     if (mouse.button === Qt.LeftButton) {
-                        deviceManager.orderby_lastseen()
+                        DeviceManager.orderby_lastseen()
                     } else if (mouse.button === Qt.RightButton) {
-                        if (deviceManager.orderBy_role === "lastseen")
-                            deviceManager.orderby_default()
+                        if (DeviceManager.orderBy_role === "lastseen")
+                            DeviceManager.orderby_default()
                     }
                 }
             }
@@ -558,8 +558,8 @@ Rectangle {
 
                 width: 8
                 height: 4
-                rotation: deviceManager.orderBy_order ? 0 : 180
-                visible: (deviceManager.orderBy_role === "lastseen")
+                rotation: DeviceManager.orderBy_order ? 0 : 180
+                visible: (DeviceManager.orderBy_role === "lastseen")
 
                 Connections {
                     target: Theme
@@ -580,7 +580,7 @@ Rectangle {
         }
 
         Item { // separator
-            width: deviceManager.deviceHeader.spacing
+            width: DeviceManager.deviceHeader.spacing
             height: 24
             Rectangle {
                 anchors.centerIn: parent
@@ -591,11 +591,11 @@ Rectangle {
 
         Text { // first seen header column /////////////////////////////////////
             anchors.verticalCenter: parent.verticalCenter
-            width: deviceManager.deviceHeader.colFirstSeen
+            width: DeviceManager.deviceHeader.colFirstSeen
 
             text: qsTr("First seen")
             textFormat: Text.PlainText
-            font.bold: (deviceManager.orderBy_role === "firstseen")
+            font.bold: (DeviceManager.orderBy_role === "firstseen")
             color: Theme.colorText
             elide: Text.ElideRight
 
@@ -604,10 +604,10 @@ Rectangle {
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onClicked: (mouse) => {
                     if (mouse.button === Qt.LeftButton) {
-                        deviceManager.orderby_firstseen()
+                        DeviceManager.orderby_firstseen()
                     } else if (mouse.button === Qt.RightButton) {
-                        if (deviceManager.orderBy_role === "firstseen")
-                            deviceManager.orderby_default()
+                        if (DeviceManager.orderBy_role === "firstseen")
+                            DeviceManager.orderby_default()
                     }
                 }
             }
@@ -619,8 +619,8 @@ Rectangle {
 
                 width: 8
                 height: 4
-                rotation: deviceManager.orderBy_order ? 0 : 180
-                visible: (deviceManager.orderBy_role === "firstseen")
+                rotation: DeviceManager.orderBy_order ? 0 : 180
+                visible: (DeviceManager.orderBy_role === "firstseen")
 
                 Connections {
                     target: Theme
@@ -641,7 +641,7 @@ Rectangle {
         }
 
         Item { // separator
-            width: deviceManager.deviceHeader.spacing
+            width: DeviceManager.deviceHeader.spacing
             height: 24
             Rectangle {
                 anchors.centerIn: parent

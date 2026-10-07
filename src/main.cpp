@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
     // Init app components
     SettingsManager *sm = SettingsManager::getInstance();
     MenubarManager *mb = MenubarManager::getInstance();
-    DeviceManager *dm = new DeviceManager;
+    DeviceManager *dm = DeviceManager::getInstance();
     if (!sm || !mb || !dm)
     {
         qWarning() << "Cannot init toolBLEx components!";
@@ -127,8 +127,6 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     QQmlContext *engine_context = engine.rootContext();
 
-    engine_context->setContextProperty("deviceManager", dm);
-
     // Load the main view
     engine.loadFromModule("toolBLEx", "DesktopApplication");
 
@@ -153,7 +151,7 @@ int main(int argc, char *argv[])
     QObject::connect(&app, &SingleApplication::instanceStarted, window, &QQuickWindow::raise);
 
     // Menu bar
-    mb->setupMenubar(window, dm);
+    mb->setupMenubar(window);
 
 #if defined(Q_OS_MACOS)
     // macOS dock

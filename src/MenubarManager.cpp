@@ -94,16 +94,16 @@ MenubarManager::~MenubarManager()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void MenubarManager::setupMenubar(QQuickWindow *view, DeviceManager *dm)
+void MenubarManager::setupMenubar(QQuickWindow *view)
 {
-    if (!view || !dm)
+    if (!view)
     {
-        qWarning() << "MenubarManager::initSettings() no QQuickWindow or DeviceManager passed";
+        qWarning() << "MenubarManager::setupMenubar() no QQuickWindow passed";
         return;
     }
 
-    m_saved_devicemanager = dm;
     m_saved_view = view;
+    DeviceManager *dm = DeviceManager::getInstance();
 
     QMenuBar *menuBar = new QMenuBar(nullptr);
 
@@ -297,9 +297,7 @@ void MenubarManager::unlockMenusShortcuts()
 
 void MenubarManager::updateFileActions()
 {
-    if (!m_saved_devicemanager) return;
-
-    const bool hasResults = (m_saved_devicemanager->property("deviceCountShown").toInt() > 0);
+    const bool hasResults = (DeviceManager::getInstance()->property("deviceCountShown").toInt() > 0);
 
     if (m_actionExport) m_actionExport->setEnabled(hasResults);
     if (m_actionClear) m_actionClear->setEnabled(hasResults);
@@ -307,11 +305,10 @@ void MenubarManager::updateFileActions()
 
 void MenubarManager::updateDeviceActions()
 {
-    if (!m_saved_devicemanager) return;
-
-    const bool bluetoothReady = m_saved_devicemanager->property("bluetooth").toBool();
-    const bool scanning = m_saved_devicemanager->property("scanning").toBool();
-    const bool connected = m_saved_devicemanager->areDevicesConnected();
+    DeviceManager *dm = DeviceManager::getInstance();
+    const bool bluetoothReady = dm->property("bluetooth").toBool();
+    const bool scanning = dm->property("scanning").toBool();
+    const bool connected = dm->areDevicesConnected();
 
     if (m_actionScanStart) m_actionScanStart->setEnabled(bluetoothReady && !scanning);
     if (m_actionScanStop) m_actionScanStop->setEnabled(scanning);
@@ -376,8 +373,7 @@ void MenubarManager::settings()
 
 void MenubarManager::fileExport()
 {
-    if (!m_saved_devicemanager) return;
-    if (m_saved_devicemanager->property("deviceCountShown").toInt() <= 0) return;
+    if (DeviceManager::getInstance()->property("deviceCountShown").toInt() <= 0) return;
 
     showWindow();
     Q_EMIT exportClicked();
@@ -385,10 +381,10 @@ void MenubarManager::fileExport()
 
 void MenubarManager::fileClear()
 {
-    if (!m_saved_devicemanager) return;
-    if (m_saved_devicemanager->property("deviceCountShown").toInt() <= 0) return;
+    DeviceManager *dm = DeviceManager::getInstance();
+    if (dm->property("deviceCountShown").toInt() <= 0) return;
 
-    m_saved_devicemanager->clearResults();
+    dm->clearResults();
 }
 
 /* ************************************************************************** */
@@ -401,24 +397,23 @@ void MenubarManager::scannerOpen()
 
 void MenubarManager::scanStart()
 {
-    if (!m_saved_devicemanager) return;
-
-    const bool bluetoothReady = m_saved_devicemanager->property("bluetooth").toBool();
-    const bool scanning = m_saved_devicemanager->property("scanning").toBool();
-    if (bluetoothReady && !scanning) m_saved_devicemanager->scanDevices_start();
+    DeviceManager *dm = DeviceManager::getInstance();
+    const bool bluetoothReady = dm->property("bluetooth").toBool();
+    const bool scanning = dm->property("scanning").toBool();
+    if (bluetoothReady && !scanning) dm->scanDevices_start();
 }
 
 void MenubarManager::scanStop()
 {
-    if (!m_saved_devicemanager) return;
-
-    if (m_saved_devicemanager->property("scanning").toBool()) m_saved_devicemanager->scanDevices_stop();
+    DeviceManager *dm = DeviceManager::getInstance();
+    if (dm->property("scanning").toBool()) dm->scanDevices_stop();
 }
 
 void MenubarManager::devicesDisconnect()
 {
-    if (m_saved_devicemanager && m_saved_devicemanager->areDevicesConnected())
-        m_saved_devicemanager->disconnectDevices();
+    DeviceManager *dm = DeviceManager::getInstance();
+    if (dm->areDevicesConnected())
+        dm->disconnectDevices();
 }
 
 /* ************************************************************************** */

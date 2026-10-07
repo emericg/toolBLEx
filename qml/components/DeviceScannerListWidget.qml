@@ -10,7 +10,7 @@ Item {
     implicitWidth: 800
     implicitHeight: 32
 
-    width: deviceManager.deviceHeader.width
+    width: DeviceManager.deviceHeader.width
 
     property var boxDevice: pointer
 
@@ -91,17 +91,17 @@ Item {
 
     Row { // content
         anchors.left: parent.left
-        anchors.leftMargin: deviceManager.deviceHeader.margin
+        anchors.leftMargin: DeviceManager.deviceHeader.margin
         anchors.right: parent.right
-        anchors.rightMargin: deviceManager.deviceHeader.margin
+        anchors.rightMargin: DeviceManager.deviceHeader.margin
         anchors.verticalCenter: parent.verticalCenter
-        spacing: deviceManager.deviceHeader.spacing
+        spacing: DeviceManager.deviceHeader.spacing
 
         opacity: (boxDevice.connected || boxDevice.selected || boxDevice.rssi < 0) ? 1 : 0.4
 
         Item { // color ////////////////////////////////////////////////////////
             anchors.verticalCenter: parent.verticalCenter
-            width: deviceManager.deviceHeader.colColor
+            width: DeviceManager.deviceHeader.colColor
             height: 32
 
             Rectangle {
@@ -115,7 +115,7 @@ Item {
 
         Text { // address //////////////////////////////////////////////////////
             anchors.verticalCenter: parent.verticalCenter
-            width: deviceManager.deviceHeader.colAddress
+            width: DeviceManager.deviceHeader.colAddress
 
             visible: showAddress
 
@@ -129,7 +129,7 @@ Item {
 
         RowLayout { // icons + name ////////////////////////////////////////////
             anchors.verticalCenter: parent.verticalCenter
-            width: deviceManager.deviceHeader.colName
+            width: DeviceManager.deviceHeader.colName
             height: 32
             spacing: Theme.componentMarginXS
 
@@ -208,7 +208,7 @@ Item {
 
         Text { // mac vendor ///////////////////////////////////////////////////
             anchors.verticalCenter: parent.verticalCenter
-            width: deviceManager.deviceHeader.colManuf
+            width: DeviceManager.deviceHeader.colManuf
 
             visible: showAddress
 
@@ -221,11 +221,11 @@ Item {
 
         RowLayout { // rssi ////////////////////////////////////////////////////
             anchors.verticalCenter: parent.verticalCenter
-            width: deviceManager.deviceHeader.colRssi
+            width: DeviceManager.deviceHeader.colRssi
             clip: true
 
             Item { // fake item so the RowLayout doesn't have a null width when the content is invisible
-                width: deviceManager.deviceHeader.colRssi
+                width: DeviceManager.deviceHeader.colRssi
                 height: 32
                 visible: (boxDevice.rssi === 0)
             }
@@ -266,7 +266,7 @@ Item {
 
         Item { // interval /////////////////////////////////////////////////////
             anchors.verticalCenter: parent.verticalCenter
-            width: deviceManager.deviceHeader.colInterval
+            width: DeviceManager.deviceHeader.colInterval
             height: 32
             clip: true
 
@@ -296,7 +296,7 @@ Item {
         }
 
         Item { // last seen ////////////////////////////////////////////////////
-            width: deviceManager.deviceHeader.colLastSeen
+            width: DeviceManager.deviceHeader.colLastSeen
             height: 32
 
             Text {
@@ -312,7 +312,7 @@ Item {
         }
 
         Item { // first seen ///////////////////////////////////////////////////
-            width: deviceManager.deviceHeader.colFirstSeen
+            width: DeviceManager.deviceHeader.colFirstSeen
             height: 32
 
             Text {

@@ -81,7 +81,7 @@ Column { // BLE SCANNER
             currentSelection: SettingsManager.scanMethods
             onMenuSelected: (index) => {
                 SettingsManager.scanMethods = index
-                deviceManager.scanDevices_restart(true)
+                DeviceManager.scanDevices_restart(true)
             }
         }
     }
@@ -142,8 +142,8 @@ Column { // BLE SCANNER
             checked: SettingsManager.scanAuto
             onClicked: {
                 SettingsManager.scanAuto = checked
-                if (!deviceManager.scanning) {
-                    deviceManager.scanDevices_start()
+                if (!DeviceManager.scanning) {
+                    DeviceManager.scanDevices_start()
                 }
             }
         }
@@ -225,7 +225,7 @@ Column { // BLE SCANNER
         height: 48
         color: Theme.colorForeground
 
-        visible: (deviceManager.deviceSeenCached > 0)
+        visible: (DeviceManager.deviceSeenCached > 0)
 
         Row {
             anchors.left: parent.left
@@ -246,7 +246,7 @@ Column { // BLE SCANNER
             Text {
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: qsTr("%n device(s)", "", deviceManager.deviceSeenCached)
+                text: qsTr("%n device(s)", "", DeviceManager.deviceSeenCached)
                 textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText
@@ -282,7 +282,7 @@ Column { // BLE SCANNER
         height: 48
         color: Theme.colorForeground
 
-        visible: (deviceManager.deviceStructureCached > 0)
+        visible: (DeviceManager.deviceStructureCached > 0)
 
         Row {
             anchors.left: parent.left
@@ -303,7 +303,7 @@ Column { // BLE SCANNER
             Text {
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: qsTr("%n device(s)", "", deviceManager.deviceStructureCached)
+                text: qsTr("%n device(s)", "", DeviceManager.deviceStructureCached)
                 textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText

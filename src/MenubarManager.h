@@ -35,7 +35,6 @@ class QMenu;
 class QAction;
 class QQuickWindow;
 
-class DeviceManager;
 
 /* ************************************************************************** */
 
@@ -49,7 +48,6 @@ class MenubarManager: public QObject
     QML_SINGLETON
 
     QQuickWindow *m_saved_view = nullptr;
-    DeviceManager *m_saved_devicemanager = nullptr;
 
     QAction *m_actionAbout = nullptr;
     QAction *m_actionSettings = nullptr;
@@ -109,7 +107,7 @@ public:
     static MenubarManager *getInstance();
     static MenubarManager *create(QQmlEngine *, QJSEngine *);
 
-    void setupMenubar(QQuickWindow *view, DeviceManager *dm);
+    void setupMenubar(QQuickWindow *view);
 
     Q_INVOKABLE void setCurrentView(int screen);
 

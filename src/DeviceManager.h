@@ -27,6 +27,7 @@
 #include "DeviceHeader.h"
 
 #include <QObject>
+#include <QtQml/qqmlregistration.h>
 #include <QVariant>
 #include <QList>
 #include <QTimer>
@@ -40,6 +41,8 @@
 class QBluetoothDeviceInfo;
 class QLowEnergyController;
 class QPermission;
+class QQmlEngine;
+class QJSEngine;
 
 /* ************************************************************************** */
 
@@ -49,6 +52,8 @@ class QPermission;
 class DeviceManager: public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
 
     ////////
 
@@ -216,9 +221,13 @@ private slots:
     void bleDevice_discovered(const QBluetoothDeviceInfo &info);
     void bleDevice_updated(const QBluetoothDeviceInfo &info, QBluetoothDeviceInfo::Fields updatedFields);
 
-public:
-    DeviceManager(bool daemon = false);
+private:
+    DeviceManager(QObject *parent);
     ~DeviceManager();
+
+public:
+    static DeviceManager *getInstance();
+    static DeviceManager *create(QQmlEngine *engine, QJSEngine *scriptEngine);
 
     bool isDaemon() const { return m_daemonMode; }
 

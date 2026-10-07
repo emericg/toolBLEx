@@ -31,8 +31,8 @@ Loader {
         interval: 1000
         repeat: false
         onTriggered: {
-            if (deviceManager.scanning) {
-                deviceManager.scanDevices_restart()
+            if (DeviceManager.scanning) {
+                DeviceManager.scanDevices_restart()
             }
         }
     }
@@ -192,7 +192,7 @@ Loader {
                                 color: "#f9f8f7" // Theme.colorBackground
 
                                 ParallelAnimation {
-                                    running: (deviceManager.scanning && !deviceManager.scanningPaused && appContent.state === "Settings")
+                                    running: (DeviceManager.scanning && !DeviceManager.scanningPaused && appContent.state === "Settings")
                                     alwaysRunToEnd: true
                                     loops: Animation.Infinite
 

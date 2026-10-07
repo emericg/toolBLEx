@@ -75,18 +75,18 @@ Rectangle {
                 spacing: 4
 
                 TagDesktop {
-                    text: qsTr("%n found", "", deviceManager.deviceCountFound)
+                    text: qsTr("%n found", "", DeviceManager.deviceCountFound)
                     colorBackground: Theme.colorForeground
                     colorBorder: Theme.colorForeground
                 }
                 TagDesktop {
-                    text: qsTr("%n shown", "", deviceManager.deviceCountShown)
+                    text: qsTr("%n shown", "", DeviceManager.deviceCountShown)
                     colorBackground: Theme.colorForeground
                     colorBorder: Theme.colorForeground
                 }
                 TagDesktop {
-                    visible: (deviceManager.deviceCountHidden > 0)
-                    text: qsTr("%n hidden", "", deviceManager.deviceCountHidden)
+                    visible: (DeviceManager.deviceCountHidden > 0)
+                    text: qsTr("%n hidden", "", DeviceManager.deviceCountHidden)
                     colorBackground: Theme.colorForeground
                     colorBorder: Theme.colorForeground
                 }
@@ -118,17 +118,17 @@ Rectangle {
                 spacing: 4
 
                 TagDesktop {
-                    text: qsTr("%n Bluetooth Low Energy", "", deviceManager.deviceCountBLE)
+                    text: qsTr("%n Bluetooth Low Energy", "", DeviceManager.deviceCountBLE)
                     colorBackground: Theme.colorForeground
                     colorBorder: Theme.colorForeground
                 }
                 TagDesktop {
-                    text: qsTr("%n Bluetooth Classic", "", deviceManager.deviceCountClassic)
+                    text: qsTr("%n Bluetooth Classic", "", DeviceManager.deviceCountClassic)
                     colorBackground: Theme.colorForeground
                     colorBorder: Theme.colorForeground
                 }
                 TagDesktop {
-                    text: qsTr("%n beacon(s)", "", deviceManager.deviceCountBeacon)
+                    text: qsTr("%n beacon(s)", "", DeviceManager.deviceCountBeacon)
                     colorBackground: Theme.colorForeground
                     colorBorder: Theme.colorForeground
                 }
@@ -142,8 +142,8 @@ Rectangle {
             anchors.right: parent.right
             spacing: Theme.componentMarginS
 
-            visible: (deviceManager.deviceCountCached > 0 ||
-                      deviceManager.deviceCountBlacklisted > 0)
+            visible: (DeviceManager.deviceCountCached > 0 ||
+                      DeviceManager.deviceCountBlacklisted > 0)
 
             Text {
                 id: legendCache
@@ -163,16 +163,16 @@ Rectangle {
                 spacing: 4
 
                 TagDesktop {
-                    text: qsTr("%n cached", "", deviceManager.deviceCountCached)
+                    text: qsTr("%n cached", "", DeviceManager.deviceCountCached)
                     colorBackground: Theme.colorForeground
                     colorBorder: Theme.colorForeground
-                    visible: (deviceManager.deviceCountCached > 0)
+                    visible: (DeviceManager.deviceCountCached > 0)
                 }
                 TagDesktop {
-                    text: qsTr("%n blacklisted", "", deviceManager.deviceCountBlacklisted)
+                    text: qsTr("%n blacklisted", "", DeviceManager.deviceCountBlacklisted)
                     colorBackground: Theme.colorForeground
                     colorBorder: Theme.colorForeground
-                    visible: (deviceManager.deviceCountBlacklisted > 0)
+                    visible: (DeviceManager.deviceCountBlacklisted > 0)
                 }
             }
         }
@@ -187,19 +187,19 @@ Rectangle {
                 height: Theme.componentHeight
 
                 color: Theme.colorGrey
-                enabled: (deviceManager.deviceCountShown > 0)
+                enabled: (DeviceManager.deviceCountShown > 0)
 
                 text: qsTr("Clear list")
                 source: "qrc:/IconLibrary/material-symbols/delete.svg"
 
-                onClicked: deviceManager.clearResults()
+                onClicked: DeviceManager.clearResults()
             }
 
             ButtonSolid {
                 height: Theme.componentHeight
 
                 color: Theme.colorMaterialAmber
-                enabled: (deviceManager.deviceCountShown > 0)
+                enabled: (DeviceManager.deviceCountShown > 0)
 
                 text: qsTr("Export list")
                 source: "qrc:/IconLibrary/material-symbols/share.svg"

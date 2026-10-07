@@ -80,7 +80,7 @@ Rectangle {
                 width: 48
                 height: 48
                 sourceSize: 32
-                source: (deviceManager.scanningPaused) ?
+                source: (DeviceManager.scanningPaused) ?
                             "qrc:/IconLibrary/material-symbols/media/pause-fill.svg" :
                             "qrc:/IconLibrary/material-symbols/media/play_arrow-fill.svg"
 
@@ -89,7 +89,7 @@ Rectangle {
                 colorIcon: Theme.colorHeaderContent
 
                 opacity: {
-                    if (appContent.state === "Scanner" && deviceManager.scanning) return 1
+                    if (appContent.state === "Scanner" && DeviceManager.scanning) return 1
                     //if (appContent.state === "Simulator" && BleSimulator.running) return 1
                     if (appContent.state === "Ubertooth" && Ubertooth.running) return 1
                     if (appContent.state === "RtlSdr" && RtlSdr.running) return 1
@@ -98,12 +98,12 @@ Rectangle {
 
                 enabled: {
                     if (appContent.state === "Scanner" || appContent.state === "Simulator")
-                        return deviceManager.bluetooth
+                        return DeviceManager.bluetooth
                     return true
                 }
 
                 onClicked: {
-                    if (appContent.state === "Scanner") deviceManager.scanDevices_start()
+                    if (appContent.state === "Scanner") DeviceManager.scanDevices_start()
                     //if (appContent.state === "Simulator") BleSimulator.start()
                     if (appContent.state === "Ubertooth") Ubertooth.startWork()
                     if (appContent.state === "RtlSdr") RtlSdr.startWork()
@@ -122,7 +122,7 @@ Rectangle {
                 colorIcon: Theme.colorHeaderContent
 
                 opacity: {
-                    if (appContent.state === "Scanner" && !deviceManager.scanning) return 1
+                    if (appContent.state === "Scanner" && !DeviceManager.scanning) return 1
                     //if (appContent.state === "Simulator" && !BleSimulator.running) return 1
                     if (appContent.state === "Ubertooth" && !Ubertooth.running) return 1
                     if (appContent.state === "RtlSdr" && !RtlSdr.running) return 1
@@ -131,12 +131,12 @@ Rectangle {
 
                 enabled: {
                     if (appContent.state === "Scanner" || appContent.state === "Simulator")
-                        return deviceManager.bluetooth
+                        return DeviceManager.bluetooth
                     return true
                 }
 
                 onClicked: {
-                    if (appContent.state === "Scanner") deviceManager.scanDevices_stop()
+                    if (appContent.state === "Scanner") DeviceManager.scanDevices_stop()
                     //if (appContent.state === "Simulator") BleSimulator.stop()
                     if (appContent.state === "Ubertooth") Ubertooth.stopWork()
                     if (appContent.state === "RtlSdr") RtlSdr.stopWork()
@@ -174,14 +174,14 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
 
                 source: {
-                    if (deviceManager.scanningPaused) return "qrc:/IconLibrary/material-symbols/pause-fill.svg"
-                    if (deviceManager.scanning) return "qrc:/IconLibrary/material-symbols/autorenew.svg"
+                    if (DeviceManager.scanningPaused) return "qrc:/IconLibrary/material-symbols/pause-fill.svg"
+                    if (DeviceManager.scanning) return "qrc:/IconLibrary/material-symbols/autorenew.svg"
                     return "qrc:/IconLibrary/material-symbols/media/stop-fill.svg"
                 }
                 color: Theme.colorText
 
                 NumberAnimation on rotation {
-                    running: (deviceManager.scanning && !deviceManager.scanningPaused)
+                    running: (DeviceManager.scanning && !DeviceManager.scanningPaused)
                     alwaysRunToEnd: true
                     loops: Animation.Infinite
 
@@ -195,8 +195,8 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: {
-                    if (deviceManager.scanningPaused) return qsTr("Scanning paused")
-                    if (deviceManager.scanning) return qsTr("Scanning for Bluetooth devices nearby")
+                    if (DeviceManager.scanningPaused) return qsTr("Scanning paused")
+                    if (DeviceManager.scanning) return qsTr("Scanning for Bluetooth devices nearby")
                     return qsTr("Not scanning")
                 }
                 textFormat: Text.PlainText
@@ -301,9 +301,9 @@ Rectangle {
 
             Text {
                 anchors.verticalCenter: parent.verticalCenter
-                visible: deviceManager.scanning
+                visible: DeviceManager.scanning
 
-                text: qsTr("%n device(s) found", "", deviceManager.deviceCountFound)
+                text: qsTr("%n device(s) found", "", DeviceManager.deviceCountFound)
                 textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorText
@@ -356,7 +356,7 @@ Rectangle {
                     radius: 12
                     color: Theme.colorGreen
 
-                    opacity: deviceManager.scanning ? 0.8 : 0
+                    opacity: DeviceManager.scanning ? 0.8 : 0
                     Behavior on opacity { OpacityAnimator { duration: 333 } }
                 }
             }

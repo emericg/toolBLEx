@@ -102,7 +102,7 @@ GraphsView {
 
     Timer {
         interval: SettingsManager.scanRssiInterval
-        running: (advTimelineGraph.visible && deviceManager.scanning && !deviceManager.scanningPaused)
+        running: (advTimelineGraph.visible && DeviceManager.scanning && !DeviceManager.scanningPaused)
         repeat: true
         onTriggered: advTimelineGraph.updateGraph()
     }

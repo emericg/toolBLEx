@@ -127,11 +127,11 @@ ApplicationWindow {
                     //console.log("Qt.ApplicationActive")
 
                     // Check Bluetooth anyway (on macOS)
-                    //if (Qt.platform.os === "osx") deviceManager.checkBluetooth()
+                    //if (Qt.platform.os === "osx") DeviceManager.checkBluetooth()
 
                     // Resume scanning (if needed)
                     pauseTimer.stop()
-                    deviceManager.scanDevices_resume();
+                    DeviceManager.scanDevices_resume();
 
                     break
                 }
@@ -150,7 +150,7 @@ ApplicationWindow {
         }
 
         if (visibility === Window.Hidden) {
-            //deviceManager.disconnectDevices()
+            //DeviceManager.disconnectDevices()
         }
     }
 
@@ -159,7 +159,7 @@ ApplicationWindow {
         running: false
         repeat: false
         interval: 3333
-        onTriggered: deviceManager.scanDevices_pause()
+        onTriggered: DeviceManager.scanDevices_pause()
     }
 
     // User generated events handling //////////////////////////////////////////
@@ -210,15 +210,15 @@ ApplicationWindow {
     }
     Shortcut {
         sequences: [StandardKey.Refresh]
-        onActivated: deviceManager.scanDevices_start()
+        onActivated: DeviceManager.scanDevices_start()
     }
     Shortcut {
         sequence: "Ctrl+F5"
-        onActivated: deviceManager.scanDevices_start()
+        onActivated: DeviceManager.scanDevices_start()
     }
     Shortcut {
         sequence: "Ctrl+."
-        onActivated: deviceManager.scanDevices_stop()
+        onActivated: DeviceManager.scanDevices_stop()
     }
     Shortcut {
         sequences: [StandardKey.Preferences]
@@ -239,10 +239,10 @@ ApplicationWindow {
 
     // Bluetooth ///////////////////////////////////////////////////////////////
 /*
-    property bool bluetooth: deviceManager.bluetooth
-    property bool bluetoothAdapter: deviceManager.bluetoothAdapter
-    property bool bluetoothEnabled: deviceManager.bluetoothEnabled
-    property bool bluetoothPermission: deviceManager.bluetoothPermission
+    property bool bluetooth: DeviceManager.bluetooth
+    property bool bluetoothAdapter: DeviceManager.bluetoothAdapter
+    property bool bluetoothEnabled: DeviceManager.bluetoothEnabled
+    property bool bluetoothPermission: DeviceManager.bluetoothPermission
 
     onBluetoothChanged: checkBleStatus()
     onBluetoothAdapterChanged: checkBleStatus()
@@ -464,7 +464,7 @@ ApplicationWindow {
        repeat: true
        interval: 100
        onTriggered: {
-           if (!deviceManager.areDevicesConnected() && !Ubertooth.running && !RtlSdr.running) {
+           if (!DeviceManager.areDevicesConnected() && !Ubertooth.running && !RtlSdr.running) {
                appWindow.close()
            }
        }
@@ -482,8 +482,8 @@ ApplicationWindow {
         }
 
         // If devices are still connected, disconnect them first
-        if (deviceManager.areDevicesConnected()) {
-            deviceManager.disconnectDevices()
+        if (DeviceManager.areDevicesConnected()) {
+            DeviceManager.disconnectDevices()
         }
         if (Ubertooth.running) {
             Ubertooth.stopWork()
@@ -492,7 +492,7 @@ ApplicationWindow {
             RtlSdr.stopWork()
         }
 
-        if (deviceManager.areDevicesConnected() || Ubertooth.running || RtlSdr.running) {
+        if (DeviceManager.areDevicesConnected() || Ubertooth.running || RtlSdr.running) {
             disconnectTimer.start()
             close.accepted = false
             return

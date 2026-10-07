@@ -192,6 +192,7 @@ qt_add_qml_module(${PROJECT_NAME}
         src/DatabaseManager.cpp src/DatabaseManager.h
         src/MenubarManager.cpp src/MenubarManager.h
         src/SettingsManager.cpp src/SettingsManager.h
+        src/DeviceManager.cpp src/DeviceManager.h
         src/ColormapFactory.cpp src/ColormapFactory.h
 )
 

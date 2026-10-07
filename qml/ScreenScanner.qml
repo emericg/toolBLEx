@@ -145,7 +145,7 @@ Loader {
                             text: qsTr("BLE")
                             onClicked: {
                                 SettingsManager.scanShowLowEnergy = !SettingsManager.scanShowLowEnergy
-                                deviceManager.updateBoolFilters()
+                                DeviceManager.updateBoolFilters()
                             }
                         }
                         ButtonToggle {
@@ -157,7 +157,7 @@ Loader {
                             text: qsTr("Classic")
                             onClicked: {
                                 SettingsManager.scanShowClassic = !SettingsManager.scanShowClassic
-                                deviceManager.updateBoolFilters()
+                                DeviceManager.updateBoolFilters()
                             }
                         }
                         ButtonToggle {
@@ -169,7 +169,7 @@ Loader {
                             text: qsTr("cached")
                             onClicked: {
                                 SettingsManager.scanShowCached = !SettingsManager.scanShowCached
-                                deviceManager.updateBoolFilters()
+                                DeviceManager.updateBoolFilters()
                             }
                         }
                         ButtonToggle {
@@ -181,7 +181,7 @@ Loader {
                             text: qsTr("hidden")
                             onClicked: {
                                 SettingsManager.scanShowBlacklisted = !SettingsManager.scanShowBlacklisted
-                                deviceManager.updateBoolFilters()
+                                DeviceManager.updateBoolFilters()
                             }
                         }
                         ButtonToggle {
@@ -193,7 +193,7 @@ Loader {
                             text: qsTr("beacons")
                             onClicked: {
                                 SettingsManager.scanShowBeacon = !SettingsManager.scanShowBeacon
-                                deviceManager.updateBoolFilters()
+                                DeviceManager.updateBoolFilters()
                             }
                         }
                     }
@@ -218,7 +218,7 @@ Loader {
                             Behavior on width { NumberAnimation { duration: 233; easing.type: Easing.InOutQuad; } }
 
                             onTextChanged: {
-                                deviceManager.setFilterString(text)
+                                DeviceManager.setFilterString(text)
                             }
 
                             MouseArea {
@@ -334,10 +334,10 @@ Loader {
                     selectionModel: ItemSelectionModel {
                         onCurrentChanged: (current, previous) => {
                             //console.log("onCurrentChanged: " + current.row + " / " + previous.row)
-                            selectedDevice = deviceManager.getDeviceByProxyIndex(current.row)
-                            deviceManager.getDeviceByProxyIndex(current.row).selected = true
+                            selectedDevice = DeviceManager.getDeviceByProxyIndex(current.row)
+                            DeviceManager.getDeviceByProxyIndex(current.row).selected = true
                             if (typeof previous === "undefined" || !previous) return
-                            deviceManager.getDeviceByProxyIndex(previous.row).selected = false
+                            DeviceManager.getDeviceByProxyIndex(previous.row).selected = false
                         }
                     }
 
@@ -358,7 +358,7 @@ Loader {
                         return 32;
                     }
 
-                    model: deviceManager.devicesList
+                    model: DeviceManager.devicesList
                     delegate: DeviceScannerTableWidget { }
                 }
 */
@@ -376,7 +376,7 @@ Loader {
                     flickableDirection: Flickable.AutoFlickDirection
 
                     contentHeight: -1
-                    contentWidth: deviceManager.deviceHeader.width
+                    contentWidth: DeviceManager.deviceHeader.width
 
                     ScrollBar.vertical: ScrollBarThemed {
                         id: devicesViewVertScrollbar
@@ -389,15 +389,15 @@ Loader {
 
                     headerPositioning: ListView.OverlayHeader
                     header: DeviceScannerListHeader {
-                        width: Math.max(deviceManager.deviceHeader.width, appContent.width)
+                        width: Math.max(DeviceManager.deviceHeader.width, appContent.width)
                     }
 
-                    model: deviceManager.devicesList
+                    model: DeviceManager.devicesList
                     delegate: DeviceScannerListWidget {
-                        width: Math.max(deviceManager.deviceHeader.width, appContent.width)
+                        width: Math.max(DeviceManager.deviceHeader.width, appContent.width)
                         onClicked: {
                             for (var i = 0; i < devicesView.count; i++) {
-                                if (deviceManager.getDeviceByProxyIndex(i).selected) {
+                                if (DeviceManager.getDeviceByProxyIndex(i).selected) {
                                     devicesView.currentIndex = i // move the listview
                                     return
                                 }
@@ -440,11 +440,11 @@ Loader {
                             event.accepted = true
 
                             for (var i = 0; i < devicesView.count; i++) {
-                                if (deviceManager.getDeviceByProxyIndex(i).selected) {
+                                if (DeviceManager.getDeviceByProxyIndex(i).selected) {
                                     if (i-1 >= 0) {
-                                        deviceManager.getDeviceByProxyIndex(i).selected = false
-                                        deviceManager.getDeviceByProxyIndex(i-1).selected = true
-                                        selectedDevice = deviceManager.getDeviceByProxyIndex(i-1)
+                                        DeviceManager.getDeviceByProxyIndex(i).selected = false
+                                        DeviceManager.getDeviceByProxyIndex(i-1).selected = true
+                                        selectedDevice = DeviceManager.getDeviceByProxyIndex(i-1)
                                         currentIndex = i-1 // move the listview
                                         return
                                     }
@@ -455,11 +455,11 @@ Loader {
                             event.accepted = true
 
                             for (var ii = 0; ii < devicesView.count; ii++) {
-                                if (deviceManager.getDeviceByProxyIndex(ii).selected) {
+                                if (DeviceManager.getDeviceByProxyIndex(ii).selected) {
                                     if (ii+1 < devicesView.count) {
-                                        deviceManager.getDeviceByProxyIndex(ii).selected = false
-                                        deviceManager.getDeviceByProxyIndex(ii+1).selected = true
-                                        selectedDevice = deviceManager.getDeviceByProxyIndex(ii+1)
+                                        DeviceManager.getDeviceByProxyIndex(ii).selected = false
+                                        DeviceManager.getDeviceByProxyIndex(ii+1).selected = true
+                                        selectedDevice = DeviceManager.getDeviceByProxyIndex(ii+1)
                                         currentIndex = ii+1 // move the listview
                                         return
                                     }
@@ -534,10 +534,10 @@ Loader {
 
             ////
 
-            property bool bluetooth: deviceManager.bluetooth
-            property bool bluetoothAdapter: deviceManager.bluetoothAdapter
-            property bool bluetoothEnabled: deviceManager.bluetoothEnabled
-            property bool bluetoothPermission: deviceManager.bluetoothPermission
+            property bool bluetooth: DeviceManager.bluetooth
+            property bool bluetoothAdapter: DeviceManager.bluetoothAdapter
+            property bool bluetoothEnabled: DeviceManager.bluetoothEnabled
+            property bool bluetoothPermission: DeviceManager.bluetoothPermission
 
             onBluetoothChanged: checkBleStatus()
             onBluetoothAdapterChanged: checkBleStatus()
@@ -585,9 +585,9 @@ Loader {
 
                             color: "white"
                             source: {
-                                if (!deviceManager.bluetoothAdapter) return "qrc:/IconLibrary/material-symbols/memory-fill.svg"
-                                if (!deviceManager.bluetoothEnabled) return "qrc:/IconLibrary/material-symbols/flaky.svg"
-                                if (!deviceManager.bluetoothPermission) return "qrc:/IconLibrary/material-symbols/lock-fill.svg"
+                                if (!DeviceManager.bluetoothAdapter) return "qrc:/IconLibrary/material-symbols/memory-fill.svg"
+                                if (!DeviceManager.bluetoothEnabled) return "qrc:/IconLibrary/material-symbols/flaky.svg"
+                                if (!DeviceManager.bluetoothPermission) return "qrc:/IconLibrary/material-symbols/lock-fill.svg"
                                 return "qrc:/IconLibrary/material-icons/outlined/bluetooth_disabled.svg"
                             }
 
@@ -614,9 +614,9 @@ Loader {
                         anchors.right: parent.right
 
                         text: {
-                            if (!deviceManager.hasAdapters) return qsTr("No Bluetooth adapter detected")
-                            if (!deviceManager.bluetoothPermission) return qsTr("Bluetooth pepermission missing")
-                            if (!deviceManager.bluetooth) return qsTr("Bluetooth is disabled")
+                            if (!DeviceManager.hasAdapters) return qsTr("No Bluetooth adapter detected")
+                            if (!DeviceManager.bluetoothPermission) return qsTr("Bluetooth pepermission missing")
+                            if (!DeviceManager.bluetooth) return qsTr("Bluetooth is disabled")
                             return "Error..."
                         }
                         font.pixelSize: Theme.fontSizeContentBig
@@ -631,9 +631,9 @@ Loader {
                         anchors.right: parent.right
 
                         text: {
-                            if (!deviceManager.hasAdapters) {
+                            if (!DeviceManager.hasAdapters) {
                                 return qsTr("Please check if a Bluetooth adapter is connected and configured on your machine.")
-                            } else if (!deviceManager.bluetoothPermission) {
+                            } else if (!DeviceManager.bluetoothPermission) {
                                 return qsTr("Please check if the Bluetooth permission has been granted to the application.")
                             }
                             return qsTr("Please enable Bluetooth on your machine and retry.")
@@ -655,8 +655,8 @@ Loader {
                         color: "white"
 
                         onClicked: {
-                            deviceManager.requestBluetoothPermission()
-                            deviceManager.enableBluetooth()
+                            DeviceManager.requestBluetoothPermission()
+                            DeviceManager.enableBluetooth()
                         }
                     }
                 }
@@ -702,18 +702,18 @@ Loader {
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     text: {
-                        var txt = qsTr("%n device(s) found", "", deviceManager.deviceCountFound)
-                        if (deviceManager.deviceCountShown !== deviceManager.deviceCountFound) {
-                            txt += "  |  " + qsTr("%n device(s) shown", "", deviceManager.deviceCountShown)
+                        var txt = qsTr("%n device(s) found", "", DeviceManager.deviceCountFound)
+                        if (DeviceManager.deviceCountShown !== DeviceManager.deviceCountFound) {
+                            txt += "  |  " + qsTr("%n device(s) shown", "", DeviceManager.deviceCountShown)
                         }
-                        if (deviceManager.deviceCountTotal !== deviceManager.deviceCountCached) {
-                            txt += "  |  " + qsTr("%n device(s) cached", "", deviceManager.deviceCountCached)
+                        if (DeviceManager.deviceCountTotal !== DeviceManager.deviceCountCached) {
+                            txt += "  |  " + qsTr("%n device(s) cached", "", DeviceManager.deviceCountCached)
                         }
-                        //if (deviceManager.deviceCountBlacklisted > 0) {
-                        //    txt += "  |  " + qsTr("%n device(s) blacklisted", "", deviceManager.deviceCountBlacklisted)
+                        //if (DeviceManager.deviceCountBlacklisted > 0) {
+                        //    txt += "  |  " + qsTr("%n device(s) blacklisted", "", DeviceManager.deviceCountBlacklisted)
                         //}
-                        //if (deviceManager.deviceCountTotal !== deviceManager.deviceCountShown) {
-                        //    txt += "  |  " + qsTr("%n device(s) total", "", deviceManager.deviceCountTotal)
+                        //if (DeviceManager.deviceCountTotal !== DeviceManager.deviceCountShown) {
+                        //    txt += "  |  " + qsTr("%n device(s) total", "", DeviceManager.deviceCountTotal)
                         //}
                         return txt
                     }
@@ -729,11 +729,11 @@ Loader {
                     colorBackground: Theme.colorActionbar
                     colorHighlight: Theme.colorActionbarHighlight
 
-                    visible: deviceManager.deviceCountShown
+                    visible: DeviceManager.deviceCountShown
 
                     text: qsTr("clear results")
                     onClicked: {
-                        deviceManager.clearResults()
+                        DeviceManager.clearResults()
                     }
                 }
 
@@ -744,7 +744,7 @@ Loader {
                     colorBackground: Theme.colorActionbar
                     colorHighlight: Theme.colorActionbarHighlight
 
-                    visible: deviceManager.deviceCountShown
+                    visible: DeviceManager.deviceCountShown
 
                     text: qsTr("export results")
                     onClicked: {

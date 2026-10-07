@@ -78,26 +78,26 @@ GraphsView {
 
     function updateGraph() {
         if (!rssiGraph.visible) return
-        if (!deviceManager.scanning || deviceManager.scanningPaused || hostMenu.currentIndex !== 2) return
+        if (!DeviceManager.scanning || DeviceManager.scanningPaused || hostMenu.currentIndex !== 2) return
         //console.log("rssiGraph // updateGraph()")
 
         //// DATA
         var now = Date.now()
-        for (var i = 0; i < deviceManager.deviceCount; i++) {
+        for (var i = 0; i < DeviceManager.deviceCount; i++) {
             if (!graphs[i]) {
                 //console.log("graph " + i + " is being created")
                 graphs[i] = createLineSeries()
             }
             if (graphs[i]) {
                 //console.log("graph " + i + " is being updated")
-                deviceManager.getRssiGraphData(graphs[i], i, now, -axisTime.min * 1000)
+                DeviceManager.getRssiGraphData(graphs[i], i, now, -axisTime.min * 1000)
             }
         }
     }
 
     Timer {
         interval: SettingsManager.scanRssiInterval
-        running: (deviceManager.scanning && !deviceManager.scanningPaused && hostMenu.currentIndex === 2)
+        running: (DeviceManager.scanning && !DeviceManager.scanningPaused && hostMenu.currentIndex === 2)
         repeat: true
         onTriggered: updateGraph()
     }

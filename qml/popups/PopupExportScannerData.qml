@@ -138,18 +138,18 @@ Popup {
                     anchors.right: parent.right
 
                     text: {
-                        var txt = qsTr("%n device(s) found", "", deviceManager.deviceCountFound)
-                        if (deviceManager.deviceCountShown !== deviceManager.deviceCountFound) {
-                            txt += "  |  " + qsTr("%n device(s) shown", "", deviceManager.deviceCountShown)
+                        var txt = qsTr("%n device(s) found", "", DeviceManager.deviceCountFound)
+                        if (DeviceManager.deviceCountShown !== DeviceManager.deviceCountFound) {
+                            txt += "  |  " + qsTr("%n device(s) shown", "", DeviceManager.deviceCountShown)
                         }
-                        if (deviceManager.deviceCountTotal !== deviceManager.deviceCountCached) {
-                            txt += "  |  " + qsTr("%n device(s) cached", "", deviceManager.deviceCountCached)
+                        if (DeviceManager.deviceCountTotal !== DeviceManager.deviceCountCached) {
+                            txt += "  |  " + qsTr("%n device(s) cached", "", DeviceManager.deviceCountCached)
                         }
-                        //if (deviceManager.deviceCountBlacklisted > 0) {
-                        //    txt += "  |  " + qsTr("%n device(s) blacklisted", "", deviceManager.deviceCountBlacklisted)
+                        //if (DeviceManager.deviceCountBlacklisted > 0) {
+                        //    txt += "  |  " + qsTr("%n device(s) blacklisted", "", DeviceManager.deviceCountBlacklisted)
                         //}
-                        //if (deviceManager.deviceCountTotal !== deviceManager.deviceCountShown) {
-                        //    txt += "  |  " + qsTr("%n device(s) total", "", deviceManager.deviceCountTotal)
+                        //if (DeviceManager.deviceCountTotal !== DeviceManager.deviceCountShown) {
+                        //    txt += "  |  " + qsTr("%n device(s) total", "", DeviceManager.deviceCountTotal)
                         //}
                         return txt
                     }
@@ -182,15 +182,15 @@ Popup {
                     spacing: Theme.componentMarginS
 
                     TagClear {
-                        text: qsTr("%n Found", "", deviceManager.deviceCountFound)
+                        text: qsTr("%n Found", "", DeviceManager.deviceCountFound)
                         //colorText: Theme.colorSubText
                     }
                     TagClear {
-                        text: qsTr("%n Shown", "", deviceManager.deviceCountShown)
+                        text: qsTr("%n Shown", "", DeviceManager.deviceCountShown)
                         //colorText: Theme.colorSubText
                     }
                     TagClear {
-                        text: qsTr("%n Hidden", "", deviceManager.deviceCountHidden)
+                        text: qsTr("%n Hidden", "", DeviceManager.deviceCountHidden)
                         //colorText: Theme.colorSubText
                     }
                 }
@@ -339,7 +339,7 @@ Popup {
 
                     text: qsTr("Export data")
                     onClicked: {
-                        var status = deviceManager.exportResults(tfExportPath.text,
+                        var status = DeviceManager.exportResults(tfExportPath.text,
                                                                  selectorExportMode.currentSelection,
                                                                  cbManufacturer.checked,
                                                                  cbComment.checked,

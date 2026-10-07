@@ -18,8 +18,8 @@ Popup {
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
-    onAboutToShow: deviceManager.countDeviceStructureCached()
-    onAboutToHide: deviceManager.countDeviceStructureCached()
+    onAboutToShow: DeviceManager.countDeviceStructureCached()
+    onAboutToHide: DeviceManager.countDeviceStructureCached()
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -144,7 +144,7 @@ Popup {
                     anchors.leftMargin: Theme.componentMargin
                     anchors.rightMargin: Theme.componentMargin
 
-                    text: qsTr("There are %n device(s) in the <b>structure</b> cache.", "", deviceManager.deviceStructureCached)
+                    text: qsTr("There are %n device(s) in the <b>structure</b> cache.", "", DeviceManager.deviceStructureCached)
                     textFormat: Text.StyledText
                     font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorText
@@ -197,7 +197,7 @@ Popup {
 
                 text: qsTr("Open folder")
                 onClicked: {
-                    Qt.openUrlExternally("file://" + deviceManager.getDeviceStructureDirectory())
+                    Qt.openUrlExternally("file://" + DeviceManager.getDeviceStructureDirectory())
                 }
             }
             ButtonSolid {
@@ -205,7 +205,7 @@ Popup {
 
                 text: qsTr("Clear cache")
                 onClicked: {
-                    deviceManager.clearDeviceStructureCache()
+                    DeviceManager.clearDeviceStructureCache()
                     popupClearDeviceStructureCache.close()
                 }
             }

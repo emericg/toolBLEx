@@ -364,7 +364,7 @@ Rectangle {
 
             color: Theme.colorPrimary
             visible: (modelData.isInUse &&
-                      deviceManager.scanning && !deviceManager.scanningPaused &&
+                      DeviceManager.scanning && !DeviceManager.scanningPaused &&
                       appContent.state === "Scanner" && hostMenu.currentIndex === 0)
 
             ParallelAnimation {
@@ -396,7 +396,7 @@ Rectangle {
         anchors.margins: Theme.componentMarginS
         spacing: Theme.componentMarginS
 
-        visible: (deviceManager.adaptersCount > 1)
+        visible: (DeviceManager.adaptersCount > 1)
 
         SquareButtonClear { // scanning
             property bool selected: (SettingsManager.preferredAdapter_scan === modelData.address)
@@ -411,7 +411,7 @@ Rectangle {
                     SettingsManager.preferredAdapter_scan = ""
                 } else {
                     SettingsManager.preferredAdapter_scan = modelData.address
-                    //deviceManager.disableBluetooth()
+                    //DeviceManager.disableBluetooth()
                 }
             }
         }
@@ -429,7 +429,7 @@ Rectangle {
                     SettingsManager.preferredAdapter_adv = ""
                 } else {
                     SettingsManager.preferredAdapter_adv = modelData.address
-                    //deviceManager.disableBluetooth()
+                    //DeviceManager.disableBluetooth()
                 }
             }
         }

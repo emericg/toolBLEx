@@ -31,6 +31,7 @@
 #include <chrono>
 
 #include <QCoreApplication>
+#include <QJSEngine>
 #include <QStandardPaths>
 #include <QPermissions>
 
@@ -51,10 +52,21 @@
 
 /* ************************************************************************** */
 
-DeviceManager::DeviceManager(bool daemon)
+DeviceManager *DeviceManager::getInstance()
 {
-    m_daemonMode = daemon;
+    static DeviceManager *instance = new DeviceManager(QCoreApplication::instance());
+    return instance;
+}
 
+DeviceManager *DeviceManager::create(QQmlEngine *, QJSEngine *)
+{
+    DeviceManager *instance = getInstance();
+    QJSEngine::setObjectOwnership(instance, QJSEngine::CppOwnership);
+    return instance;
+}
+
+DeviceManager::DeviceManager(QObject *parent) : QObject(parent)
+{
     // Data model init (unified)
     m_device_header = new DeviceHeader(this);
     m_devices_model = new DeviceModel(this);
