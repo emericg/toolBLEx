@@ -31,6 +31,7 @@
 #include <QJsonObject>
 
 class DeviceToolBLEx;
+class DescriptorInfo;
 
 /* ****************************************************************************/
 
@@ -59,6 +60,8 @@ class ServiceInfo: public QObject
 
     QList <QObject *> m_characteristics; // included characteristics
     QVariant getCharacteristics() { return QVariant::fromValue(m_characteristics); }
+
+    void updateDescriptor(const QLowEnergyDescriptor &d, const QByteArray &v);
 
     bool m_scan_complete = false; // persists around disconnection
 
@@ -104,7 +107,15 @@ public:
 
     void askForNotify(const QString &uuid);
     void askForRead(const QString &uuid);
-    void askForWrite(const QString &uuid, const QString &value, const QString &type, bool withResponse = true);
+    void askForWrite(const QString &uuid, const QString &value, const QString &type,
+                     bool withResponse = true, int exponent = 0);
+
+    /*!
+     * \brief Read a descriptor value again.
+     * \param descriptor: one of the descriptors of this service characteristics,
+     *        ignored without live descriptor (cache).
+     */
+    void askForDescriptorRead(DescriptorInfo *descriptor);
 };
 
 /* ****************************************************************************/

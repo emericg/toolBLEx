@@ -22,7 +22,9 @@
 #include "device_toolblex.h"
 #include "BleServiceInfo.h"
 #include "BleCharacteristicInfo.h"
-#include "utils_bits.h"
+#include "BleDescriptorInfo.h"
+#include "BleFormat.h"
+#include "DeviceProfile.h"
 #include "DeviceManager.h"
 #include "SettingsManager.h"
 
@@ -43,9 +45,43 @@
 #include <QSqlQuery>
 #include <QSqlError>
 
+#include <QHash>
 #include <QDateTime>
 #include <QTimer>
 #include <QDebug>
+
+#include <algorithm>
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+/*!
+ * \brief Presentation format matching a write type string.
+ * \param type: ex: "uint24_le", "int16_be", "float32_le", "utf8".
+ * \return one of the GATT format types, FORMAT_RFU if unknown.
+ */
+static uint8_t formatFromType(const QString &type)
+{
+    static const QHash <QString, uint8_t> formats = {
+        { QStringLiteral("uint8"),   BleFormat::FORMAT_UINT8 },
+        { QStringLiteral("uint16"),  BleFormat::FORMAT_UINT16 },
+        { QStringLiteral("uint24"),  BleFormat::FORMAT_UINT24 },
+        { QStringLiteral("uint32"),  BleFormat::FORMAT_UINT32 },
+        { QStringLiteral("uint48"),  BleFormat::FORMAT_UINT48 },
+        { QStringLiteral("uint64"),  BleFormat::FORMAT_UINT64 },
+        { QStringLiteral("int8"),    BleFormat::FORMAT_SINT8 },
+        { QStringLiteral("int16"),   BleFormat::FORMAT_SINT16 },
+        { QStringLiteral("int24"),   BleFormat::FORMAT_SINT24 },
+        { QStringLiteral("int32"),   BleFormat::FORMAT_SINT32 },
+        { QStringLiteral("int48"),   BleFormat::FORMAT_SINT48 },
+        { QStringLiteral("int64"),   BleFormat::FORMAT_SINT64 },
+        { QStringLiteral("float32"), BleFormat::FORMAT_FLOAT32 },
+        { QStringLiteral("float64"), BleFormat::FORMAT_FLOAT64 },
+        { QStringLiteral("utf8"),    BleFormat::FORMAT_UTF8S },
+    };
+
+    return formats.value(type.section(QLatin1Char('_'), 0, 0), BleFormat::FORMAT_RFU);
+}
 
 /* ************************************************************************** */
 /* ************************************************************************** */
@@ -535,7 +571,34 @@ void DeviceToolBLEx::askForRead(const QString &uuid)
 
 /* ************************************************************************** */
 
-void DeviceToolBLEx::askForWrite(const QString &uuid, const QString &value, const QString &type, bool withResponse)
+void DeviceToolBLEx::askForDescriptorRead(QObject *descriptor)
+{
+    DescriptorInfo *dsc = qobject_cast<DescriptorInfo *>(descriptor);
+    if (!dsc) return;
+
+    // Iterate through services, until we find the characteristic owning that descriptor
+    for (const auto &s: std::as_const(m_services))
+    {
+        ServiceInfo *srv = qobject_cast<ServiceInfo *>(s);
+        if (srv)
+        {
+            for (const auto &c: srv->getCharacteristicsInfos())
+            {
+                CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
+                if (cst && cst->getDescriptorsInfos().contains(descriptor))
+                {
+                    srv->askForDescriptorRead(dsc);
+                    return;
+                }
+            }
+        }
+    }
+}
+
+/* ************************************************************************** */
+
+void DeviceToolBLEx::askForWrite(const QString &uuid, const QString &value, const QString &type,
+                                 bool withResponse, int exponent)
 {
     // Iterate through services, until we find the characteristic we want to write
     for (const auto &s: std::as_const(m_services))
@@ -548,7 +611,7 @@ void DeviceToolBLEx::askForWrite(const QString &uuid, const QString &value, cons
                 CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
                 if (cst && cst->getUuidFull() == uuid)
                 {
-                    srv->askForWrite(uuid, value, type, withResponse);
+                    srv->askForWrite(uuid, value, type, withResponse, exponent);
                     return;
                 }
             }
@@ -559,85 +622,39 @@ void DeviceToolBLEx::askForWrite(const QString &uuid, const QString &value, cons
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-QByteArray DeviceToolBLEx::askForData_qba(const QString &value, const QString &type)
+QByteArray DeviceToolBLEx::askForData_qba(const QString &value, const QString &type, int exponent)
 {
     QByteArray data;
 
-    if (type.startsWith("uint"))
-    {
-        //qDebug() << "uINTEGER > " << value.toULongLong();
-        if (type.startsWith("uint8")) {
-            int8_t u = value.toShort();
-            data.append(reinterpret_cast<const char*>(&u), 1);
-        }
-        else if (type.startsWith("uint16")) {
-            uint16_t u = value.toUShort();
-            if (!type.endsWith("_be")) u = endian_flip_16(u);
-            data.append(reinterpret_cast<const char*>(&u), 2);
-        }
-        else if (type.startsWith("uint32")) {
-            uint32_t u = value.toUInt();
-            if (!type.endsWith("_be")) u = endian_flip_32(u);
-            data.append(reinterpret_cast<const char*>(&u), 4);
-        }
-        else if (type.startsWith("uint64")) {
-            uint64_t u = value.toULongLong();
-            if (!type.endsWith("_be")) u = endian_flip_64(u);
-            data.append(reinterpret_cast<const char*>(&u), 8);
-        }
-    }
-    else if (type.startsWith("int"))
-    {
-        //qDebug() << "sINTEGER > " << value.toInt();
-        if (type.startsWith("int8")) {
-            int8_t i = value.toShort();
-            data.append(reinterpret_cast<const char*>(&i), 1);
-        }
-        else if (type.startsWith("int16")) {
-            int16_t i = value.toShort();
-            if (!type.endsWith("_be")) i = endian_flip_16(i);
-            data.append(reinterpret_cast<const char*>(&i), 2);
-        }
-        else if (type.startsWith("int32")) {
-            int32_t i = value.toInt();
-            if (!type.endsWith("_be")) i = endian_flip_32(i);
-            data.append(reinterpret_cast<const char*>(&i), 4);
-        }
-        else if (type.startsWith("int64")) {
-            int64_t i = value.toLongLong();
-            if (!type.endsWith("_be")) i = endian_flip_64(i);
-            data.append(reinterpret_cast<const char*>(&i), 8);
-        }
-    }
-
-    else if (type == "float32")
-    {
-        //qDebug() << "FLOAT > " << value.toFloat();
-        float f = value.toFloat();
-        if (!type.endsWith("_be")) f = endian_flip_32(f);
-        data.append(reinterpret_cast<const char*>(&f), 4);
-    }
-    else if (type == "float64")
-    {
-        //qDebug() << "DOUBLE > " << value.toDouble();
-        double d = value.toDouble();
-        if (!type.endsWith("_be")) d = endian_flip_64(d);
-        data.append(reinterpret_cast<const char*>(&d), 8);
-    }
-
-    else if (type == "data")
+    if (type == "data")
     {
         //qDebug() << "DATA > " << value.toLatin1();
-        for (int i = 0; i < value.size();) {
-            int a = QString(value.at(i++)).toInt(nullptr, 16) << 4;
-            if (i <value.size()) a += QString(value.at(i++)).toInt(nullptr, 16);
-            data.append(a);
+        if (value.size() % 2 == 0) // an incomplete byte cannot be written
+        {
+            data = QByteArray::fromHex(value.toLatin1());
         }
     }
     else if (type == "ascii")
     {
         //qDebug() << "ASCII > " << value.toLatin1().toHex();
         data = value.toLatin1();
+    }
+    else
+    {
+        // Numbers and utf8 text, using the presentation format encoder
+        const uint8_t format = formatFromType(type);
+        BleFormat::WriteError error = BleFormat::WRITE_OK;
+
+        data = BleFormat::writeValue(value, format, static_cast<int8_t>(exponent), &error);
+
+        if (error != BleFormat::WRITE_OK)
+        {
+            data.clear(); // no silent rounding for manual input
+        }
+        else if (type.endsWith("_be") && BleFormat::formatSize(format) > 0)
+        {
+            std::reverse(data.begin(), data.end());
+        }
     }
 
     //qDebug() << "DeviceToolBLEx::askForData_qba(" << value << " / " << type << ")  >> " << data << "   size:" << data.size();
@@ -646,9 +663,9 @@ QByteArray DeviceToolBLEx::askForData_qba(const QString &value, const QString &t
 
 /* ************************************************************************** */
 
-QStringList DeviceToolBLEx::askForData_strlst(const QString &value, const QString &type)
+QStringList DeviceToolBLEx::askForData_strlst(const QString &value, const QString &type, int exponent)
 {
-    QByteArray in = askForData_qba(value, type);
+    QByteArray in = askForData_qba(value, type, exponent);
     QStringList out;
 
     // Make it compatible with the data widget for display
@@ -1191,16 +1208,68 @@ bool DeviceToolBLEx::checkServiceCache()
     return checkResult;
 }
 
-bool DeviceToolBLEx::saveServiceCache()
+QJsonObject DeviceToolBLEx::getProfileJson(bool withGenericInfo, bool withAdvertisements,
+                                           bool withServices, bool withValues,
+                                           const QString &comment) const
 {
-    qDebug() << "DeviceToolBLEx::saveServiceCache(" << m_deviceAddress << ")";
+    QJsonObject root = DeviceProfile::createRoot();
+    root.insert("name", m_deviceName);
+    root.insert("address", getAddress());
+    if (!comment.trimmed().isEmpty()) root.insert("comment", comment.trimmed());
 
-    bool status = false;
+    // Generic info
+    if (withGenericInfo)
+    {
+        QJsonObject info;
+        if (hasAddressMAC() && !m_deviceManufacturer.isEmpty()) info.insert("mac_manufacturer", m_deviceManufacturer);
+        if (!m_userComment.isEmpty()) info.insert("user_comment", m_userComment);
+        info.insert("first_seen", m_firstSeen.toString(Qt::ISODate));
+        info.insert("last_seen", m_lastSeen.toString(Qt::ISODate));
+
+        root.insert("device_info", info);
+    }
+
+    // Advertisements (latest packet of each manufacturer / service data UUID)
+    if (withAdvertisements)
+    {
+        QJsonObject advertising;
+        if (!m_deviceName.isEmpty()) advertising.insert("local_name", m_deviceName);
+        if (m_advertisementInterval > 0)
+        {
+            advertising.insert("interval_ms", QJsonArray{m_advertisementInterval, m_advertisementInterval});
+        }
+        if (!m_advertised_services.isEmpty())
+        {
+            advertising.insert("services", QJsonArray::fromStringList(m_advertised_services));
+        }
+
+        QJsonArray mfdArray;
+        QJsonArray svdArray;
+        for (const auto *adv: std::as_const(m_advertisementDataModel->m_advertisements_latest))
+        {
+            if (adv->getMode() == DeviceUtils::BLE_ADV_MANUFACTURERDATA)
+            {
+                mfdArray.append(QJsonObject{ {"id", "0x" + adv->getUUID_str().toUpper()},
+                                             {"data", DeviceProfile::valueToString(adv->getDataBA())} });
+            }
+            else if (adv->getMode() == DeviceUtils::BLE_ADV_SERVICEDATA)
+            {
+                svdArray.append(QJsonObject{ {"uuid", DeviceProfile::uuidToString(QBluetoothUuid(adv->getUUID_uint()))},
+                                             {"data", DeviceProfile::valueToString(adv->getDataBA())} });
+            }
+        }
+        if (!mfdArray.isEmpty()) advertising.insert("manufacturer_data", mfdArray);
+        if (!svdArray.isEmpty()) advertising.insert("service_data", svdArray);
+
+        root.insert("advertising", advertising);
+    }
 
     // Services
-    QJsonArray servicesArray;
-    for (const auto &s: std::as_const(m_services))
+    if (withServices)
     {
+        QJsonArray servicesArray;
+        for (const auto &s: std::as_const(m_services))
+        {
         ServiceInfo *srv = qobject_cast<ServiceInfo *>(s);
         if (srv)
         {
@@ -1208,31 +1277,59 @@ bool DeviceToolBLEx::saveServiceCache()
             QJsonArray characteristicsArray;
             for (const auto &c: srv->getCharacteristicsInfos())
             {
-                CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
-                if (cst)
-                {
-                    QJsonObject characteristicObject;
-                    characteristicObject.insert("name", QJsonValue::fromVariant(cst->getName()));
-                    characteristicObject.insert("uuid", QJsonValue::fromVariant(cst->getUuidFull()));
-                    characteristicObject.insert("properties", QJsonValue::fromVariant(cst->getPropertyList()));
+                    CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
+                    if (cst)
+                    {
+                        // Descriptors (their values are part of the structure)
+                        QJsonArray descriptorsArray;
+                        for (const auto &d: cst->getDescriptorsInfos())
+                        {
+                            DescriptorInfo *dsc = qobject_cast<DescriptorInfo *>(d);
+                            if (dsc)
+                            {
+                                QJsonObject descriptorObject;
+                                descriptorObject.insert("name", dsc->getNameRaw());
+                                descriptorObject.insert("uuid", dsc->getUuidFull());
+                                descriptorObject.insert("value", dsc->getValueHex());
 
-                    characteristicsArray.append(characteristicObject);
+                                descriptorsArray.append(descriptorObject);
+                            }
+                        }
+
+                        QJsonObject characteristicObject;
+                        characteristicObject.insert("name", cst->getName());
+                        characteristicObject.insert("uuid", cst->getUuidFull());
+                        characteristicObject.insert("properties", QJsonArray::fromStringList(cst->getPropertyList()));
+                        if (withValues && cst->getDataSize() > 0) characteristicObject.insert("value", cst->getValueHex());
+                        characteristicObject.insert("descriptors", descriptorsArray);
+
+                        characteristicsArray.append(characteristicObject);
+                    }
                 }
+
+                QJsonObject serviceObject;
+                serviceObject.insert("name", srv->getName());
+                serviceObject.insert("uuid", srv->getUuidFull());
+                serviceObject.insert("type", QJsonArray::fromStringList(srv->getTypeList()));
+                serviceObject.insert("characteristics", characteristicsArray);
+
+                servicesArray.append(serviceObject);
             }
-
-            QJsonObject serviceObject;
-            serviceObject.insert("name", QJsonValue::fromVariant(srv->getName()));
-            serviceObject.insert("uuid", QJsonValue::fromVariant(srv->getUuidFull()));
-            serviceObject.insert("type", QJsonValue::fromVariant(srv->getTypeList()));
-            serviceObject.insert("characteristics", characteristicsArray);
-
-            servicesArray.append(serviceObject);
         }
+
+        root.insert("services", servicesArray);
     }
 
-    QJsonObject root;
-    root.insert("address", QJsonValue::fromVariant(getAddress()));
-    root.insert("services", servicesArray);
+    return root;
+}
+
+bool DeviceToolBLEx::saveServiceCache(bool withValues)
+{
+    qDebug() << "DeviceToolBLEx::saveServiceCache(" << m_deviceAddress << ")";
+
+    bool status = false;
+
+    const QJsonObject root = getProfileJson(false, false, true, withValues);
 
     // Get cache directory path
     QString cacheDirectoryPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/devices";
@@ -1297,6 +1394,13 @@ void DeviceToolBLEx::restoreServiceCache()
 
             auto srv = new ServiceInfo(obj, this);
             m_services.append(srv);
+
+            // The cache may or may not contain the characteristic values
+            for (const auto &c: srv->getCharacteristicsInfos())
+            {
+                const CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
+                if (cst && cst->getDataSize() > 0) m_services_scanmode = srv_cached_values;
+            }
         }
 
         Q_EMIT servicesChanged();
@@ -1307,7 +1411,7 @@ void DeviceToolBLEx::restoreServiceCache()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-bool DeviceToolBLEx::getExportFile(QString &filename, bool log) const
+bool DeviceToolBLEx::getExportFile(QString &filename, const QString &suffix) const
 {
     bool status = false;
 
@@ -1316,8 +1420,7 @@ bool DeviceToolBLEx::getExportFile(QString &filename, bool log) const
     {
         filename = SettingsManager::getInstance()->getExportDirectory_str();
         filename += "/" + getName_display() + "-" + getAddr_display();
-        if (log) filename += "-log";
-        filename += ".txt";
+        filename += suffix;
     }
 
     // Check if the directory exist, or try to create it
@@ -1395,7 +1498,7 @@ bool DeviceToolBLEx::exportDeviceLog(const QString &filename)
 
     QString exportFilePath = filename;
 
-    if (getExportFile(exportFilePath, true))
+    if (getExportFile(exportFilePath, QStringLiteral("-log.txt")))
     {
         qDebug() << "DeviceToolBLEx::exportDeviceLog(" << exportFilePath << ")";
 
@@ -1533,13 +1636,33 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &filename,
 
                         if (withValues)
                         {
-                            if (cst->getValue() == "<none>")
+                            if (cst->getDataSize() <= 0)
                                 exportString += " - Value: <none>";
                             else
                                 exportString += " - Value: 0x" + cst->getValueHex();
                         }
 
                         exportString += endl;
+
+                        for (const auto &d: cst->getDescriptorsInfos())
+                        {
+                            DescriptorInfo *dsc = qobject_cast<DescriptorInfo *>(d);
+                            if (dsc)
+                            {
+                                exportString += "  Descriptor Name: " + dsc->getName();
+                                exportString += " - UUID: " + dsc->getUuidFull();
+
+                                if (withValues)
+                                {
+                                    if (dsc->getDataSize() <= 0)
+                                        exportString += " - Value: <none>";
+                                    else
+                                        exportString += " - Value: 0x" + dsc->getValueHex();
+                                }
+
+                                exportString += endl;
+                            }
+                        }
                     }
                 }
 
@@ -1552,7 +1675,7 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &filename,
 
     QString exportFilePath = filename;
 
-    if (getExportFile(exportFilePath, false))
+    if (getExportFile(exportFilePath, QStringLiteral(".txt")))
     {
         qDebug() << "DeviceToolBLEx::exportDeviceInfo(" << exportFilePath << ")";
 
@@ -1565,6 +1688,33 @@ bool DeviceToolBLEx::exportDeviceInfo(const QString &filename,
             eout << exportString;
 
             status = true;
+            efile.close();
+        }
+    }
+
+    return status;
+}
+
+bool DeviceToolBLEx::exportDeviceProfile(const QString &filename,
+                                         bool withGenericInfo, bool withAdvertisements,
+                                         bool withServices, bool withValues,
+                                         const QString &comment)
+{
+    bool status = false;
+
+    const QJsonObject root = getProfileJson(withGenericInfo, withAdvertisements,
+                                            withServices, withValues, comment);
+
+    QString exportFilePath = filename;
+
+    if (getExportFile(exportFilePath, DeviceProfile::fileSuffix))
+    {
+        qDebug() << "DeviceToolBLEx::exportDeviceProfile(" << exportFilePath << ")";
+
+        QFile efile(exportFilePath);
+        if (efile.open(QFile::WriteOnly))
+        {
+            status = (efile.write(QJsonDocument(root).toJson()) > 0);
             efile.close();
         }
     }

@@ -32,6 +32,7 @@
 #include <QList>
 #include <QDateTime>
 #include <QByteArray>
+#include <QJsonObject>
 
 #include <QBluetoothDeviceInfo>
 #include <QBluetoothLocalDevice>
@@ -349,16 +350,59 @@ public:
     Q_INVOKABLE void askForNotify(const QString &uuid);
     Q_INVOKABLE void askForRead(const QString &uuid);
     Q_INVOKABLE void askForWrite(const QString &uuid, const QString &value, const QString &type,
-                                 bool withResponse = true);
+                                 bool withResponse = true, int exponent = 0);
 
-    Q_INVOKABLE static QByteArray askForData_qba(const QString &value, const QString &type);
-    Q_INVOKABLE static QStringList askForData_strlst(const QString &value, const QString &type);
+    /*!
+     * \brief Read a descriptor value again.
+     * \param descriptor: a DescriptorInfo, from one of this device characteristics.
+     */
+    Q_INVOKABLE void askForDescriptorRead(QObject *descriptor);
+
+    /*!
+     * \brief Encode a value typed by the user.
+     * \param value: the value, as typed.
+     * \param type: ex: "data", "ascii", "utf8", "uint24_le", "int16_be", "float32_le".
+     * \param exponent: presentation format exponent, integer types only.
+     *                  The value is then the actual value, ex: "21.5" with -2 is encoded as 2150.
+     * \return the encoded value, empty if it cannot be encoded exactly.
+     */
+    Q_INVOKABLE static QByteArray askForData_qba(const QString &value, const QString &type, int exponent = 0);
+    Q_INVOKABLE static QStringList askForData_strlst(const QString &value, const QString &type, int exponent = 0);
 
     Q_INVOKABLE bool checkServiceCache();
-    Q_INVOKABLE bool saveServiceCache();
+
+    /*!
+     * \brief Save the services structure cache of this device.
+     * \param withValues: also save the characteristic values.
+     */
+    Q_INVOKABLE bool saveServiceCache(bool withValues = false);
+
+    /*!
+     * \brief Restore the services structure cache of this device.
+     *
+     * Reads caches with or without characteristic values, and legacy caches.
+     */
     Q_INVOKABLE void restoreServiceCache();
 
-    bool getExportFile(QString &filename, bool log) const;
+    /*!
+     * \brief Serialize this device to the device profile format (see DeviceProfile).
+     * \param withGenericInfo: "device_info" section (manufacturer, comment, seen dates).
+     * \param withAdvertisements: "advertising" section (latest packet of each UUID).
+     * \param withServices: "services" section.
+     * \param withValues: characteristic values, in the "services" section.
+     * \param comment: capture comment.
+     */
+    QJsonObject getProfileJson(bool withGenericInfo, bool withAdvertisements,
+                               bool withServices, bool withValues,
+                               const QString &comment = QString()) const;
+
+    /*!
+     * \brief Check or generate an export file path.
+     * \param filename: the path to check, a default path is generated if empty.
+     * \param suffix: suffix of the generated path, ex: ".txt".
+     * \return false if the export directory cannot be created.
+     */
+    bool getExportFile(QString &filename, const QString &suffix) const;
 
     int getDeviceLogCount() const { return m_deviceLog_obj->rowCount(); }
     DeviceLogModel *getDeviceLog_model() const { return m_deviceLog_obj; }
@@ -398,6 +442,16 @@ public:
                                       bool withGenericInfo = true, bool withAdvertisements = true,
                                       bool withServices = true, bool withValues = true,
                                       const QString &comment = QString());
+
+    /*!
+     * \brief Export this device as a JSON device profile (.toolblex.json).
+     *
+     * Same sections as exportDeviceInfo(), the file can be loaded by the simulator.
+     */
+    Q_INVOKABLE bool exportDeviceProfile(const QString &filename,
+                                         bool withGenericInfo = true, bool withAdvertisements = true,
+                                         bool withServices = true, bool withValues = true,
+                                         const QString &comment = QString());
 };
 
 /* ************************************************************************** */

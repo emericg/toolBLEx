@@ -21,6 +21,7 @@
 
 #include "BleServiceInfo.h"
 #include "BleCharacteristicInfo.h"
+#include "BleDescriptorInfo.h"
 
 #include "device_toolblex.h"
 
@@ -113,7 +114,7 @@ const QLowEnergyService *ServiceInfo::getService()
     return m_ble_service;
 }
 
-const QList<QObject *> ServiceInfo::getCharacteristicsInfos()
+const QList <QObject *> ServiceInfo::getCharacteristicsInfos()
 {
     return m_characteristics;
 }
@@ -149,6 +150,15 @@ void ServiceInfo::clearCharacteristicsData()
         cst->setReadInError(false);
         cst->setWriteInError(false);
         cst->setNotifyInError(false);
+
+        for (const auto &d: cst->getDescriptorsInfos())
+        {
+            DescriptorInfo *dsc = qobject_cast<DescriptorInfo *>(d);
+            if (!dsc) continue;
+
+            dsc->setReadInProgress(false);
+            dsc->setReadInError(false);
+        }
     }
 }
 
@@ -176,7 +186,7 @@ void ServiceInfo::connectToService(QLowEnergyService::DiscoveryMode scanmode)
 
         if (m_ble_service->state() == QLowEnergyService::RemoteService)
         {
-        // Windows hack, see: QTBUG-80770 and QTBUG-78488
+            // Windows hack, see: QTBUG-80770 and QTBUG-78488
             QTimer::singleShot(0, this, [=] () { m_ble_service->discoverDetails(scanmode); });
         }
 
@@ -290,7 +300,17 @@ void ServiceInfo::serviceErrorOccured(QLowEnergyService::ServiceError error)
     }
     else if (error == QLowEnergyService::DescriptorReadError)
     {
-        // ???
+        for (const auto &c: std::as_const(m_characteristics))
+        {
+            CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
+            if (!cst) continue;
+
+            for (const auto &d: cst->getDescriptorsInfos())
+            {
+                DescriptorInfo *dsc = qobject_cast<DescriptorInfo *>(d);
+                if (dsc && dsc->getReadInProgress()) dsc->setReadInError(true);
+            }
+        }
     }
     else if (error == QLowEnergyService::DescriptorWriteError)
     {
@@ -358,13 +378,14 @@ void ServiceInfo::askForRead(const QString &uuid)
     }
 }
 
-void ServiceInfo::askForWrite(const QString &uuid, const QString &value, const QString &type, bool withResponse)
+void ServiceInfo::askForWrite(const QString &uuid, const QString &value, const QString &type,
+                              bool withResponse, int exponent)
 {
     if (m_ble_service)
     {
         qDebug() << "ServiceInfo::askForWrite(" << uuid << ") > value:" << value
                  << " (type:" << type << "/ size:" << value.size()
-                 << "/ withResponse:" << withResponse << ")";
+                 << "/ exponent:" << exponent << "/ withResponse:" << withResponse << ")";
 
         if (m_device) m_device->logEvent("User asked for WRITE on " + uuid, LogEvent::USER);
 
@@ -372,11 +393,33 @@ void ServiceInfo::askForWrite(const QString &uuid, const QString &value, const Q
         QLowEnergyCharacteristic crst = m_ble_service->characteristic(towrite);
         const QLowEnergyCharacteristic::PropertyTypes properties = crst.properties();
 
+        // Use the mode asked by the user, as long as the characteristic supports it,
+        // otherwise fallback to whatever mode is available
         QLowEnergyService::WriteMode m = QLowEnergyService::WriteWithResponse;
-        if (crst.properties() & QLowEnergyCharacteristic::Write)
+        if (withResponse && (properties & QLowEnergyCharacteristic::Write))
         {
             m = QLowEnergyService::WriteWithResponse;
+        }
+        else if (!withResponse && (properties & QLowEnergyCharacteristic::WriteNoResponse))
+        {
+            m = QLowEnergyService::WriteWithoutResponse;
+        }
+        else if (properties & QLowEnergyCharacteristic::Write)
+        {
+            m = QLowEnergyService::WriteWithResponse;
+        }
+        else if (properties & QLowEnergyCharacteristic::WriteNoResponse)
+        {
+            m = QLowEnergyService::WriteWithoutResponse;
+        }
+        else if (properties & QLowEnergyCharacteristic::WriteSigned)
+        {
+            m = QLowEnergyService::WriteSigned;
+        }
 
+        if (m == QLowEnergyService::WriteWithResponse)
+        {
+            // Only a "with response" write gets a confirmation to wait for
             for (const auto &c: std::as_const(m_characteristics))
             {
                 CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(c);
@@ -386,23 +429,27 @@ void ServiceInfo::askForWrite(const QString &uuid, const QString &value, const Q
                 }
             }
         }
-        else if (crst.properties() & QLowEnergyCharacteristic::WriteNoResponse)
-        {
-            m = QLowEnergyService::WriteWithoutResponse;
-        }
-        else if (crst.properties() & QLowEnergyCharacteristic::WriteSigned)
-        {
-            m = QLowEnergyService::WriteSigned;
-        }
 
-        QByteArray qba = DeviceToolBLEx::askForData_qba(value, type);
+        QByteArray qba = DeviceToolBLEx::askForData_qba(value, type, exponent);
         m_ble_service->writeCharacteristic(crst, qba, m);
 
-        if (crst.properties() & QLowEnergyCharacteristic::WriteNoResponse)
+        if (m == QLowEnergyService::WriteWithoutResponse && (properties & QLowEnergyCharacteristic::Read))
         {
             // If the write is "no response" we manually trigger a read so we can get confirmation of the value
             m_ble_service->readCharacteristic(crst);
         }
+    }
+}
+
+void ServiceInfo::askForDescriptorRead(DescriptorInfo *descriptor)
+{
+    if (m_ble_service && descriptor && descriptor->isReadable())
+    {
+        qDebug() << "ServiceInfo::askForDescriptorRead(" << descriptor->getUuidFull() << ")";
+        if (m_device) m_device->logEvent("User asked for descriptor READ on " + descriptor->getUuidFull(), LogEvent::USER);
+
+        descriptor->setReadInProgress(true);
+        m_ble_service->readDescriptor(descriptor->getDescriptor());
     }
 }
 
@@ -469,6 +516,29 @@ void ServiceInfo::bleWriteDone(const QLowEnergyCharacteristic &c, const QByteArr
     }
 }
 
+void ServiceInfo::updateDescriptor(const QLowEnergyDescriptor &d, const QByteArray &v)
+{
+    if (!m_ble_service) return;
+
+    // Find the characteristic owning that descriptor
+    const QList <QLowEnergyCharacteristic> chars = m_ble_service->characteristics();
+    for (const QLowEnergyCharacteristic &ch: chars)
+    {
+        if (!ch.descriptors().contains(d)) continue;
+
+        for (const auto &cc: std::as_const(m_characteristics))
+        {
+            CharacteristicInfo *cst = qobject_cast<CharacteristicInfo *>(cc);
+            if (cst && cst->getUuidFull() == ch.uuid().toString().toUpper())
+            {
+                cst->updateDescriptor(d, v);
+            }
+        }
+
+        return;
+    }
+}
+
 void ServiceInfo::bleDescReadDone(const QLowEnergyDescriptor &d, const QByteArray &v)
 {
     qDebug() << "ServiceInfo::bleDescReadDone()";
@@ -476,6 +546,8 @@ void ServiceInfo::bleDescReadDone(const QLowEnergyDescriptor &d, const QByteArra
     qDebug() << "- DATA (" << v.size() << "b)" << v.toHex();
 
     if (m_device) m_device->logEvent("Descriptor read on " + d.uuid().toString() + " / " + QString::number(v.size()) + " bytes / 0x" + v.toHex(), LogEvent::DATA);
+
+    updateDescriptor(d, v);
 }
 
 void ServiceInfo::bleDescWriteDone(const QLowEnergyDescriptor &d, const QByteArray &v)
@@ -485,6 +557,8 @@ void ServiceInfo::bleDescWriteDone(const QLowEnergyDescriptor &d, const QByteArr
     qDebug() << "- DATA (" << v.size() << "b)" << v.toHex();
 
     if (m_device) m_device->logEvent("Descriptor write on " + d.uuid().toString() + " / " + QString::number(v.size()) + " bytes / 0x" + v.toHex(), LogEvent::DATA);
+
+    updateDescriptor(d, v);
 }
 
 /* ************************************************************************** */

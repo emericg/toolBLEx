@@ -61,6 +61,9 @@ set(SOURCES
     src/DeviceFilter.cpp src/DeviceFilter.h src/DeviceHeader.h
     src/BleServiceInfo.cpp src/BleServiceInfo.h
     src/BleCharacteristicInfo.cpp src/BleCharacteristicInfo.h
+    src/BleDescriptorInfo.cpp src/BleDescriptorInfo.h
+    src/BleFormat.cpp src/BleFormat.h
+    src/BleDescriptors.cpp src/BleDescriptors.h
     src/VendorsDatabase.cpp src/VendorsDatabase.h
 
     src/adapter.cpp src/adapter.h
@@ -69,6 +72,7 @@ set(SOURCES
     src/device_toolblex_adv.cpp src/device_toolblex_adv.h
     src/DeviceAdvModel.cpp src/DeviceAdvModel.h
     src/DeviceLogModel.cpp src/DeviceLogModel.h
+    src/DeviceProfile.h
 
     src/ColormapFactory.cpp src/ColormapFactory.h
 
@@ -159,6 +163,7 @@ set(SOURCES_QML
     qml/widgets/AdvertisementDataWidgetAdvanced.qml
     qml/widgets/BleServiceWidget.qml
     qml/widgets/BleCharacteristicWidget.qml
+    qml/widgets/BleDescriptorWidget.qml
     qml/widgets/DeviceLogWidget.qml
 )
 

@@ -24,10 +24,27 @@ Popup {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    property int exportFormat: 0 // 0: text, 1: JSON device profile
+
+    readonly property var exportSuffixes: [".txt", ".toolblex.json"]
+
+    onExportFormatChanged: {
+        // swap the suffix of the current path, if it has one of ours
+        var path = tfExportPath.text
+        for (var i = 0; i < exportSuffixes.length; i++) {
+            if (path.endsWith(exportSuffixes[i])) {
+                path = path.slice(0, -exportSuffixes[i].length)
+                tfExportPath.text = path + exportSuffixes[exportFormat]
+                break
+            }
+        }
+    }
+
     onAboutToShow: {
         buttonError.visible = false
 
         // reset toggles
+        exportFormat = 0
         cbGenericInfo.checked = true
         cbAdvPackets.checked = true
         cbServices.checked = true
@@ -40,7 +57,7 @@ Popup {
         tfExportPath.currentFolder = SettingsManager.exportDirectory_url
         tfExportPath.text = SettingsManager.exportDirectory_str + foldersep +
                             selectedDevice.deviceName_export + "-" +
-                            selectedDevice.deviceAddr_export + ".txt"
+                            selectedDevice.deviceAddr_export + exportSuffixes[exportFormat]
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -250,6 +267,33 @@ Popup {
                 spacing: Theme.componentMarginS
 
                 Text {
+                    text: qsTr("Export format")
+                    textFormat: Text.PlainText
+                    font.pixelSize: Theme.fontSizeContent
+                    color: Theme.colorText
+                }
+
+                SelectorMenuColorful {
+                    height: 32
+
+                    model: ListModel {
+                        ListElement { idx: 0; txt: qsTr("Device info recap (text)"); src: ""; sz: 16; }
+                        ListElement { idx: 1; txt: qsTr("Device structured profile (JSON)"); src: ""; sz: 16; }
+                    }
+
+                    currentSelection: popupExportDeviceData.exportFormat
+                    onMenuSelected: (index) => {
+                        popupExportDeviceData.exportFormat = index
+                    }
+                }
+            }
+
+            Column {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                spacing: Theme.componentMarginS
+
+                Text {
                     text: qsTr("Select data to export")
                     textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeContent
@@ -325,7 +369,9 @@ Popup {
                     anchors.right: parent.right
 
                     dialogTitle: qsTr("Please select the export file")
-                    dialogFilter: ["Text file (*.txt)"]
+                    dialogFilter: (popupExportDeviceData.exportFormat === 1)
+                                    ? ["Device structured profile (*.toolblex.json)"]
+                                    : ["Device info recap (*.txt)"]
                     dialogFileMode: FileDialog.SaveFile
 
                     currentFolder: SettingsManager.exportDirectory_url
@@ -367,10 +413,20 @@ Popup {
 
                     text: qsTr("Export data")
                     onClicked: {
-                        var status = selectedDevice.exportDeviceInfo(tfExportPath.text,
+                        var status = false
+
+                        if (popupExportDeviceData.exportFormat === 1) {
+                            status = selectedDevice.exportDeviceProfile(tfExportPath.text,
+                                                                        cbGenericInfo.checked, cbAdvPackets.checked,
+                                                                        cbServices.checked, cbData.checked,
+                                                                        taComment.text)
+                        } else {
+                            status = selectedDevice.exportDeviceInfo(tfExportPath.text,
                                                                      cbGenericInfo.checked, cbAdvPackets.checked,
                                                                      cbServices.checked, cbData.checked,
                                                                      taComment.text)
+                        }
+
                         if (status) {
                             buttonError.visible = false
                             popupExportDeviceData.close()
