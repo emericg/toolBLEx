@@ -305,7 +305,7 @@ void DeviceToolBLEx::setBeacon(bool v)
         m_isBeacon = v;
         Q_EMIT boolChanged();
 
-        static_cast<DeviceManager *>(parent())->invalidateFilter();
+        DeviceManager::getInstance()->invalidateFilter();
     }
 }
 
@@ -316,7 +316,7 @@ void DeviceToolBLEx::setBlacklisted(bool v)
         m_isBlacklisted = v;
         Q_EMIT boolChanged();
 
-        static_cast<DeviceManager *>(parent())->invalidateFilter();
+        DeviceManager::getInstance()->invalidateFilter();
     }
 }
 
@@ -327,7 +327,7 @@ void DeviceToolBLEx::setCached(bool v)
         m_isCached = v;
         Q_EMIT boolChanged();
 
-        static_cast<DeviceManager *>(parent())->invalidateFilter();
+        DeviceManager::getInstance()->invalidateFilter();
     }
 }
 
@@ -385,7 +385,7 @@ void DeviceToolBLEx::setLastSeen(const QDateTime &dt)
         m_lastSeen = dt;
         Q_EMIT seenChanged();
 
-        static_cast<DeviceManager *>(parent())->invalidateFilter();
+        DeviceManager::getInstance()->invalidateFilter();
 
         updateCache();
     }
@@ -402,8 +402,8 @@ void DeviceToolBLEx::blacklist(bool b)
 {
     if (m_isBlacklisted != b)
     {
-        if (b) static_cast<DeviceManager *>(parent())->blacklistBleDevice(m_deviceAddress);
-        else static_cast<DeviceManager *>(parent())->whitelistBleDevice(m_deviceAddress);
+        if (b) DeviceManager::getInstance()->blacklistBleDevice(m_deviceAddress);
+        else DeviceManager::getInstance()->whitelistBleDevice(m_deviceAddress);
 
         setBlacklisted(b);
     }
@@ -413,8 +413,8 @@ void DeviceToolBLEx::cache(bool c)
 {
     if (m_isCached != c)
     {
-        if (c) static_cast<DeviceManager *>(parent())->cacheDeviceSeen(m_deviceAddress);
-        else static_cast<DeviceManager *>(parent())->uncacheDeviceSeen(m_deviceAddress);
+        if (c) DeviceManager::getInstance()->cacheDeviceSeen(m_deviceAddress);
+        else DeviceManager::getInstance()->uncacheDeviceSeen(m_deviceAddress);
 
         setCached(c);
     }

@@ -27,13 +27,12 @@
 #include "DeviceHeader.h"
 
 #include <QObject>
-#include <QtQml/qqmlregistration.h>
 #include <QVariant>
 #include <QList>
-#include <QTimer>
+
+#include <QtQml/qqmlregistration.h>
 
 #include <QtGraphs/QLineSeries>
-#include <QtGraphs/QValueAxis>
 
 #include <QBluetoothLocalDevice>
 #include <QBluetoothDeviceDiscoveryAgent>
@@ -100,8 +99,6 @@ class DeviceManager: public QObject
     bool m_dbInternal = false;  //!< do we have an internal SQLite database?
     bool m_dbExternal = false;  //!< do we have a remote MySQL database?
 
-    bool m_daemonMode = false;  //!< did we start without an UI?
-
     ////
 
     bool m_bleAdapter = false;      //!< do we have a BLE adapter?
@@ -145,14 +142,11 @@ class DeviceManager: public QObject
 
     void startBleAgent();
 
-    bool m_checking_ios_ble = false;
-    QTimer m_checking_ios_timer;
-
     QString getOrderByRole() const;
     int getOrderByOrder() const;
 
-    int m_orderBy_role;
-    Qt::SortOrder m_orderBy_order;
+    int m_orderBy_role = DeviceModel::Default;
+    Qt::SortOrder m_orderBy_order = Qt::AscendingOrder;
 
     QStringList m_colorsAvailable = {
         "HotPink", "Tomato", "Yellow", "Red", "Orange", "Gold", "LimeGreen", "Green",
@@ -229,8 +223,6 @@ public:
     static DeviceManager *getInstance();
     static DeviceManager *create(QQmlEngine *engine, QJSEngine *scriptEngine);
 
-    bool isDaemon() const { return m_daemonMode; }
-
     // Adapters management
     Q_INVOKABLE bool areAdaptersAvailable() const { return m_bluetoothAdapters.size(); }
     QVariant getAdapters() const { return QVariant::fromValue(m_bluetoothAdapters); }
@@ -238,7 +230,7 @@ public:
 
     // Bluetooth management
     Q_INVOKABLE bool checkBluetooth();
-    Q_INVOKABLE bool enableBluetooth(bool enforceUserPermissionCheck = false);
+    Q_INVOKABLE bool enableBluetooth();
     Q_INVOKABLE void disableBluetooth();
 
     Q_INVOKABLE bool checkBluetoothPermission();
@@ -246,8 +238,6 @@ public:
     void requestBluetoothPermission_results(const QPermission &permission);
 
     // Scanning management
-    static int getLastRun();
-
     Q_INVOKABLE void scanDevices_start();
     Q_INVOKABLE void scanDevices_stop();
     Q_INVOKABLE void scanDevices_restart(bool clear = false);

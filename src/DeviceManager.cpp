@@ -45,8 +45,6 @@
 #include <QBluetoothAddress>
 #include <QBluetoothDeviceInfo>
 
-#include <QSqlDatabase>
-#include <QSqlDriver>
 #include <QSqlQuery>
 #include <QSqlError>
 
@@ -94,14 +92,11 @@ DeviceManager::DeviceManager(QObject *parent) : QObject(parent)
     if (m_dbInternal || m_dbExternal)
     {
         // Load device blacklist
-        if (!m_daemonMode)
+        QSqlQuery queryBlacklist;
+        queryBlacklist.exec("SELECT deviceAddr FROM devicesBlacklist");
+        while (queryBlacklist.next())
         {
-            QSqlQuery queryBlacklist;
-            queryBlacklist.exec("SELECT deviceAddr FROM devicesBlacklist");
-            while (queryBlacklist.next())
-            {
-                m_devices_blacklist.push_back(queryBlacklist.value(0).toString());
-            }
+            m_devices_blacklist.push_back(queryBlacklist.value(0).toString());
         }
 
         // Count cached devices
@@ -257,7 +252,7 @@ bool DeviceManager::checkBluetooth()
         Q_EMIT bluetoothChanged();
 
         // let's see if we can turn on the adapter now
-        enableBluetooth(true);
+        enableBluetooth();
     }
 
     return (m_bleAdapter && m_bleEnabled && m_blePermission);
@@ -265,9 +260,9 @@ bool DeviceManager::checkBluetooth()
 
 /* ************************************************************************** */
 
-bool DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
+bool DeviceManager::enableBluetooth()
 {
-    //qDebug() << "DeviceManager::enableBluetooth() enforce:" << enforceUserPermissionCheck;
+    //qDebug() << "DeviceManager::enableBluetooth()";
 
     bool btA_was = m_bleAdapter;
     bool btE_was = m_bleEnabled;
@@ -378,8 +373,6 @@ bool DeviceManager::enableBluetooth(bool enforceUserPermissionCheck)
         }
         else
         {
-            Q_UNUSED(enforceUserPermissionCheck)
-
             // Try to activate the adapter // Doesn't work on all platforms...
             m_bluetoothAdapter->powerOn();
         }
@@ -430,8 +423,6 @@ void DeviceManager::disableBluetooth()
 
         delete m_bluetoothDiscoveryAgent;
         m_bluetoothDiscoveryAgent = nullptr;
-
-        //QTimer::singleShot(333, this, [=] () { enableBluetooth(); });
     }
 }
 
@@ -448,7 +439,7 @@ bool DeviceManager::requestBluetoothPermission()
     {
     case Qt::PermissionStatus::Granted:
         setBluetoothPermission(true);
-        enableBluetooth(true);
+        enableBluetooth();
         break;
     case Qt::PermissionStatus::Denied:
     case Qt::PermissionStatus::Undetermined:
@@ -467,7 +458,7 @@ void DeviceManager::requestBluetoothPermission_results(const QPermission &permis
     {
     case Qt::PermissionStatus::Granted:
         setBluetoothPermission(true);
-        enableBluetooth(true);
+        enableBluetooth();
         break;
     case Qt::PermissionStatus::Denied:
     case Qt::PermissionStatus::Undetermined:
@@ -918,7 +909,7 @@ void DeviceManager::checkPaired()
         {
             DeviceToolBLEx *dd = qobject_cast<DeviceToolBLEx *>(d);
 
-            if (!dd->isBeacon() && dd->isBluetoothClassic()) // ?
+            if (dd && !dd->isBeacon() && dd->isBluetoothClassic())
             {
                 //qDebug() << dd->getName() << m_bluetoothAdapter->pairingStatus(QBluetoothAddress(dd->getAddress()));
                 dd->setPairingStatus(m_bluetoothAdapter->pairingStatus(QBluetoothAddress(dd->getAddress())));
