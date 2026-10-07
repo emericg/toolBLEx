@@ -57,7 +57,8 @@
 
 ## TODO # v1
 
-[ ] DeviceManager singleton
+[x] DeviceManager singleton
+[x] device pairing improvements
 
 [ ] AdapterManager singleton
 [x] select preferred adapter (only works on linux, OS limitations...)

@@ -57,7 +57,7 @@ set(SOURCES
     src/SettingsManager.cpp src/SettingsManager.h
 
     src/DeviceManager.cpp src/DeviceManager.h
-    src/DeviceManager_advertisement.cpp src/DeviceManager_rssigraph.cpp
+    src/DeviceManager_advertisement.cpp src/DeviceManager_rssigraph.cpp src/DeviceManager_bluez.cpp
     src/DeviceFilter.cpp src/DeviceFilter.h src/DeviceHeader.h
     src/BleServiceInfo.cpp src/BleServiceInfo.h
     src/BleCharacteristicInfo.cpp src/BleCharacteristicInfo.h

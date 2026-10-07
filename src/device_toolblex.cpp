@@ -340,6 +340,33 @@ void DeviceToolBLEx::setPairingStatus(QBluetoothLocalDevice::Pairing p)
     }
 }
 
+void DeviceToolBLEx::pairingFinished(QBluetoothLocalDevice::Pairing p)
+{
+    if (p == QBluetoothLocalDevice::Unpaired) logEvent("Device unpaired", LogEvent::STATE);
+    else if (p == QBluetoothLocalDevice::AuthorizedPaired) logEvent("Device paired (authorized)", LogEvent::STATE);
+    else logEvent("Device paired", LogEvent::STATE);
+
+    m_pairingPending = false;
+    m_pairingStatus = p;
+    Q_EMIT pairingChanged();
+}
+
+void DeviceToolBLEx::pairingErrored(QBluetoothLocalDevice::Error error)
+{
+    QString errorstr;
+    if (error == QBluetoothLocalDevice::PairingError) errorstr = "pairing error";
+    else if (error == QBluetoothLocalDevice::MissingPermissionsError) errorstr = "missing permissions";
+    else errorstr = "unknown error";
+
+    logEvent("Pairing failed: " + errorstr, LogEvent::ERROR);
+
+    if (m_pairingPending)
+    {
+        m_pairingPending = false;
+        Q_EMIT pairingChanged();
+    }
+}
+
 void DeviceToolBLEx::setDeviceColor(const QString &color)
 {
     m_color = color;
@@ -473,6 +500,34 @@ void DeviceToolBLEx::actionScanWithValues()
     {
         actionStarted(DeviceUtils::ACTION_SCAN_WITH_VALUES);
         deviceConnect();
+    }
+}
+
+/* ************************************************************************** */
+
+void DeviceToolBLEx::actionPair()
+{
+    qDebug() << "DeviceToolBLEx::actionPair()" << getAddress() << getName();
+    logEvent("User asked for pairing", LogEvent::USER);
+
+    if (!m_pairingPending &&
+        DeviceManager::getInstance()->requestPairing(getAddress(), QBluetoothLocalDevice::Paired))
+    {
+        m_pairingPending = true;
+        Q_EMIT pairingChanged();
+    }
+}
+
+void DeviceToolBLEx::actionUnpair()
+{
+    qDebug() << "DeviceToolBLEx::actionUnpair()" << getAddress() << getName();
+    logEvent("User asked for unpairing", LogEvent::USER);
+
+    if (!m_pairingPending &&
+        DeviceManager::getInstance()->requestPairing(getAddress(), QBluetoothLocalDevice::Unpaired))
+    {
+        m_pairingPending = true;
+        Q_EMIT pairingChanged();
     }
 }
 

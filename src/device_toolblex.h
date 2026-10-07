@@ -63,6 +63,7 @@ class DeviceToolBLEx: public Device
 
     Q_PROPERTY(bool isPaired READ isPaired NOTIFY pairingChanged)
     Q_PROPERTY(int pairingStatus READ getPairingStatus NOTIFY pairingChanged)
+    Q_PROPERTY(bool pairingPending READ isPairingPending NOTIFY pairingChanged)
 
     Q_PROPERTY(bool isStarred READ isStarred WRITE setUserStar NOTIFY starChanged)
     Q_PROPERTY(QString color READ getDeviceColor CONSTANT)
@@ -127,6 +128,7 @@ class DeviceToolBLEx: public Device
     bool m_isClassic = false;
     bool m_isBLE = false;
     int m_pairingStatus = 0;
+    bool m_pairingPending = false;
 
     bool m_userStarred = false;
     QString m_userComment;
@@ -314,6 +316,20 @@ public:
     int getPairingStatus() const { return m_pairingStatus; }
     void setPairingStatus(QBluetoothLocalDevice::Pairing p);
 
+    bool isPairingPending() const { return m_pairingPending; }
+
+    /*!
+     * \brief Called by the DeviceManager when a pairing request has completed.
+     * \param p: the new pairing status.
+     */
+    void pairingFinished(QBluetoothLocalDevice::Pairing p);
+
+    /*!
+     * \brief Called by the DeviceManager when a pairing request has failed.
+     * \param error: the error reported by the local Bluetooth adapter.
+     */
+    void pairingErrored(QBluetoothLocalDevice::Error error);
+
     QString getDeviceColor() const { return m_color; }
     void setDeviceColor(const QString &color);
 
@@ -348,6 +364,18 @@ public:
 
     Q_INVOKABLE void actionScanWithValues() override;
     Q_INVOKABLE void actionScanWithoutValues();
+
+    /*!
+     * \brief Ask the local Bluetooth adapter to pair (bond) with this device.
+     *
+     * Any passkey or confirmation prompt is handled by the OS (BlueZ agent on Linux).
+     */
+    Q_INVOKABLE void actionPair();
+
+    /*!
+     * \brief Ask the local Bluetooth adapter to remove the pairing (bond) with this device.
+     */
+    Q_INVOKABLE void actionUnpair();
 
     Q_INVOKABLE void askForNotify(const QString &uuid);
     Q_INVOKABLE void askForRead(const QString &uuid);

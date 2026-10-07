@@ -26,8 +26,8 @@ function getBluetoothAdapterModeText(mode) {
 
 function getBluetoothPairingText(pairing) {
     if (pairing === 0) return qsTr("Unpaired")
-    if (pairing === 2) return qsTr("Paired")
-    if (pairing === 3) return qsTr("Paired (authorized)")
+    if (pairing === 1) return qsTr("Paired")
+    if (pairing === 2) return qsTr("Paired (authorized)")
     return qsTr("Unknown")
 }
 

@@ -125,7 +125,7 @@ DeviceManager::DeviceManager(QObject *parent) : QObject(parent)
     // Count device structure cache files
     countDeviceStructureCached();
 
-    // Check if we have Bluetooth classic device paired
+    // Check if we have devices paired
     checkPaired();
 
     // Stats
@@ -279,6 +279,12 @@ bool DeviceManager::enableBluetooth()
 
         disconnect(m_bluetoothAdapter, &QBluetoothLocalDevice::hostModeStateChanged,
                    this, &DeviceManager::bluetoothHostModeStateChanged);
+        disconnect(m_bluetoothAdapter, &QBluetoothLocalDevice::pairingFinished,
+                   this, &DeviceManager::bluetoothPairingFinished);
+        disconnect(m_bluetoothAdapter, &QBluetoothLocalDevice::errorOccurred,
+                   this, &DeviceManager::bluetoothPairingError);
+
+        if (!m_pairingPendingAddress.isEmpty()) bluetoothPairingError(QBluetoothLocalDevice::UnknownError);
 
         m_bluetoothAdapter_selected.clear();
 
@@ -358,6 +364,10 @@ bool DeviceManager::enableBluetooth()
             // On some platform, this can only inform us about disconnection, not reconnection
             connect(m_bluetoothAdapter, &QBluetoothLocalDevice::hostModeStateChanged,
                     this, &DeviceManager::bluetoothHostModeStateChanged);
+            connect(m_bluetoothAdapter, &QBluetoothLocalDevice::pairingFinished,
+                    this, &DeviceManager::bluetoothPairingFinished);
+            connect(m_bluetoothAdapter, &QBluetoothLocalDevice::errorOccurred,
+                    this, &DeviceManager::bluetoothPairingError);
         }
     }
 
@@ -415,6 +425,12 @@ void DeviceManager::disableBluetooth()
 
         disconnect(m_bluetoothAdapter, &QBluetoothLocalDevice::hostModeStateChanged,
                    this, &DeviceManager::bluetoothHostModeStateChanged);
+        disconnect(m_bluetoothAdapter, &QBluetoothLocalDevice::pairingFinished,
+                   this, &DeviceManager::bluetoothPairingFinished);
+        disconnect(m_bluetoothAdapter, &QBluetoothLocalDevice::errorOccurred,
+                   this, &DeviceManager::bluetoothPairingError);
+
+        if (!m_pairingPendingAddress.isEmpty()) bluetoothPairingError(QBluetoothLocalDevice::UnknownError);
 
         m_bluetoothAdapter_selected.clear();
 
@@ -882,6 +898,8 @@ void DeviceManager::addBleDevice(const QBluetoothDeviceInfo &info)
         // Get a random color
         d->setDeviceColor(getAvailableColor());
 
+        d->setPairingStatus(m_devicesPaired.value(info.address().toUInt64(), QBluetoothLocalDevice::Unpaired));
+
         // Add it to the UI
         m_devices_model->addDevice(d);
         Q_EMIT devicesListUpdated();
@@ -903,19 +921,89 @@ void DeviceManager::addBleDevice(const QBluetoothDeviceInfo &info)
 
 void DeviceManager::checkPaired()
 {
-    if (m_bluetoothAdapter && m_bluetoothAdapter->isValid() && m_devices_model->hasDevices())
-    {
-        for (auto d: std::as_const(m_devices_model->m_devices))
-        {
-            DeviceToolBLEx *dd = qobject_cast<DeviceToolBLEx *>(d);
+    if (!m_bluetoothAdapter || !m_bluetoothAdapter->isValid()) return;
 
-            if (dd && !dd->isBeacon() && dd->isBluetoothClassic())
-            {
-                //qDebug() << dd->getName() << m_bluetoothAdapter->pairingStatus(QBluetoothAddress(dd->getAddress()));
-                dd->setPairingStatus(m_bluetoothAdapter->pairingStatus(QBluetoothAddress(dd->getAddress())));
-            }
+#if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
+    m_devicesPaired = getPairedDevices_bluez(m_bluetoothAdapter->address());
+#else
+    m_devicesPaired.clear();
+    for (auto d: std::as_const(m_devices_model->m_devices))
+    {
+        DeviceToolBLEx *dd = qobject_cast<DeviceToolBLEx *>(d);
+        if (dd && !dd->isBeacon())
+        {
+            QBluetoothAddress addr(dd->getAddress());
+            if (addr.isNull()) continue;
+
+            QBluetoothLocalDevice::Pairing p = m_bluetoothAdapter->pairingStatus(addr);
+            if (p != QBluetoothLocalDevice::Unpaired) m_devicesPaired.insert(addr.toUInt64(), p);
         }
     }
+#endif
+
+    for (auto d: std::as_const(m_devices_model->m_devices))
+    {
+        DeviceToolBLEx *dd = qobject_cast<DeviceToolBLEx *>(d);
+        if (dd)
+        {
+            dd->setPairingStatus(m_devicesPaired.value(QBluetoothAddress(dd->getAddress()).toUInt64(),
+                                                       QBluetoothLocalDevice::Unpaired));
+        }
+    }
+}
+
+bool DeviceManager::requestPairing(const QString &address, QBluetoothLocalDevice::Pairing pairing)
+{
+    if (!m_bluetoothAdapter || !m_bluetoothAdapter->isValid()) return false;
+    if (!m_pairingPendingAddress.isEmpty()) return false;
+
+    QBluetoothAddress addr(address);
+    if (addr.isNull()) return false;
+
+    m_pairingPendingAddress = address;
+    m_bluetoothAdapter->requestPairing(addr, pairing);
+
+    return true;
+}
+
+void DeviceManager::bluetoothPairingFinished(const QBluetoothAddress &address,
+                                             QBluetoothLocalDevice::Pairing pairing)
+{
+    //qDebug() << "DeviceManager::bluetoothPairingFinished()" << address << pairing;
+
+    if (QBluetoothAddress(m_pairingPendingAddress) == address) m_pairingPendingAddress.clear();
+
+    if (pairing == QBluetoothLocalDevice::Unpaired) m_devicesPaired.remove(address.toUInt64());
+    else m_devicesPaired.insert(address.toUInt64(), pairing);
+
+    for (auto d: std::as_const(m_devices_model->m_devices))
+    {
+        DeviceToolBLEx *dd = qobject_cast<DeviceToolBLEx *>(d);
+        if (dd && QBluetoothAddress(dd->getAddress()) == address)
+        {
+            dd->pairingFinished(pairing);
+            break;
+        }
+    }
+}
+
+void DeviceManager::bluetoothPairingError(QBluetoothLocalDevice::Error error)
+{
+    qWarning() << "DeviceManager::bluetoothPairingError()" << m_pairingPendingAddress << error;
+
+    if (m_pairingPendingAddress.isEmpty()) return;
+
+    for (auto d: std::as_const(m_devices_model->m_devices))
+    {
+        DeviceToolBLEx *dd = qobject_cast<DeviceToolBLEx *>(d);
+        if (dd && dd->getAddress() == m_pairingPendingAddress)
+        {
+            dd->pairingErrored(error);
+            break;
+        }
+    }
+
+    m_pairingPendingAddress.clear();
 }
 
 void DeviceManager::countDevices()

@@ -177,6 +177,15 @@ Item {
                     rotation: 90
                 }
 
+                IconSvg { // paired
+                    width: 20
+                    height: 20
+                    visible: (boxDevice.isPaired)
+
+                    source: "qrc:/IconLibrary/material-symbols/link.svg"
+                    color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorIcon
+                }
+
                 IconSvg { // connected
                     width: 20
                     height: 20
@@ -192,15 +201,6 @@ Item {
                     visible: (boxDevice.isStarred)
 
                     source: "qrc:/IconLibrary/material-symbols/stars-fill.svg"
-                    color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorIcon
-                }
-
-                IconSvg { // paired
-                    width: 20
-                    height: 20
-                    visible: (boxDevice.isPaired)
-
-                    source: "qrc:/IconLibrary/material-symbols/link.svg"
                     color: (boxDevice.connected || boxDevice.selected) ? "white" : Theme.colorIcon
                 }
             }

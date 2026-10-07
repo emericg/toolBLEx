@@ -554,6 +554,29 @@ Flickable {
                         color: Theme.colorGrey
                         colorText: Theme.colorText
 
+                        visible: {
+                            if (!selectedDevice || selectedDevice.isBeacon) return false
+                            if (Qt.platform.os === "ios") return false
+                            if (Qt.platform.os === "osx") return (selectedDevice.isClassic && !selectedDevice.isPaired)
+                            return true
+                        }
+                        enabled: (selectedDevice && !selectedDevice.pairingPending)
+
+                        text: (selectedDevice && selectedDevice.isPaired) ? qsTr("unpair") : qsTr("pair")
+                        source: "qrc:/IconLibrary/material-symbols/link.svg"
+                        animation: "fade"
+                        animationRunning: (selectedDevice && selectedDevice.pairingPending)
+
+                        onClicked: {
+                            if (selectedDevice.isPaired) selectedDevice.actionUnpair()
+                            else selectedDevice.actionPair()
+                        }
+                    }
+
+                    ButtonOutline {
+                        color: Theme.colorGrey
+                        colorText: Theme.colorText
+
                         visible: (selectedDevice && !selectedDevice.isBeacon)
 
                         text: (selectedDevice && selectedDevice.isCached) ? qsTr("forget") : qsTr("cache")

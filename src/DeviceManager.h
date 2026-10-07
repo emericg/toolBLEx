@@ -29,6 +29,7 @@
 #include <QObject>
 #include <QVariant>
 #include <QList>
+#include <QHash>
 
 #include <QtQml/qqmlregistration.h>
 
@@ -108,6 +109,8 @@ class DeviceManager: public QObject
     QBluetoothLocalDevice *m_bluetoothAdapter = nullptr;
     QBluetoothDeviceDiscoveryAgent *m_bluetoothDiscoveryAgent = nullptr;
     QBluetoothLocalDevice::HostMode m_bluetoothHostMode = QBluetoothLocalDevice::HostPoweredOff;
+    QString m_pairingPendingAddress;
+    QHash <quint64, QBluetoothLocalDevice::Pairing> m_devicesPaired; //!< paired devices, by address
 
     QList <QObject *> m_bluetoothAdapters;
     QBluetoothAddress m_bluetoothAdapter_selected;
@@ -202,6 +205,8 @@ Q_SIGNALS:
 private slots:
     // QBluetoothLocalDevice related
     void bluetoothHostModeStateChanged(QBluetoothLocalDevice::HostMode);
+    void bluetoothPairingFinished(const QBluetoothAddress &address, QBluetoothLocalDevice::Pairing pairing);
+    void bluetoothPairingError(QBluetoothLocalDevice::Error error);
     void bluetoothStatusChanged();
     void bluetoothPermissionChanged();
 
@@ -218,6 +223,16 @@ private slots:
 private:
     DeviceManager(QObject *parent);
     ~DeviceManager();
+
+    /*!
+     * \brief Get the pairing status of every device known to BlueZ, using a single D-Bus call.
+     * \param adapterAddress: only report devices known to this adapter.
+     * \return the paired devices, by address.
+     *
+     * QBluetoothLocalDevice::pairingStatus() does one D-Bus round trip per device known to BlueZ,
+     * for every device queried.
+     */
+    QHash <quint64, QBluetoothLocalDevice::Pairing> getPairedDevices_bluez(const QBluetoothAddress &adapterAddress) const;
 
 public:
     static DeviceManager *getInstance();
@@ -246,6 +261,16 @@ public:
     Q_INVOKABLE void scanDevices_resume();
 
     Q_INVOKABLE void checkPaired();
+
+    /*!
+     * \brief Ask the local Bluetooth adapter to change the pairing status of a device.
+     * \param address: the remote device MAC address.
+     * \param pairing: the requested pairing status.
+     * \return false if the request cannot be made (no adapter, invalid address, request pending).
+     *
+     * Only one request can be pending at a time, the device is notified of the result.
+     */
+    bool requestPairing(const QString &address, QBluetoothLocalDevice::Pairing pairing);
 
     Q_INVOKABLE void clearResults();
     Q_INVOKABLE bool exportResults(const QString &filename, int exportMode,
