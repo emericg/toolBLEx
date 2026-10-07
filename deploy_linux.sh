@@ -4,8 +4,8 @@ export APP_NAME="toolBLEx"
 export APP_VERSION=0.18
 export GIT_VERSION=$(git rev-parse --short HEAD)
 
-#export APP_NAME_LOWERCASE=${APP_NAME,,}  # lowercase
-export APP_NAME_LOWERCASE=$APP_NAME       # not actually lowercase
+#export APP_NAME_CASE=${APP_NAME,,}   # lowercase
+export APP_NAME_CASE=$APP_NAME        # not lowercase
 
 echo "> $APP_NAME packager (Linux x86_64) [v$APP_VERSION]"
 
@@ -116,10 +116,10 @@ if [[ $create_package = true ]] ; then
   mkdir -p bin/usr/share/pixmaps/
   mkdir -p bin/usr/share/icons/hicolor/scalable/apps/
   mv bin/$APP_NAME bin/usr/bin/$APP_NAME
-  cp assets/linux/$APP_NAME_LOWERCASE.appdata.xml bin/usr/share/appdata/$APP_NAME_LOWERCASE.appdata.xml
-  cp assets/linux/$APP_NAME_LOWERCASE.desktop bin/usr/share/applications/$APP_NAME_LOWERCASE.desktop
-  cp assets/linux/$APP_NAME_LOWERCASE.svg bin/usr/share/pixmaps/$APP_NAME_LOWERCASE.svg
-  cp assets/linux/$APP_NAME_LOWERCASE.svg  bin/usr/share/icons/hicolor/scalable/apps/$APP_NAME_LOWERCASE.svg
+  cp platforms/linux/$APP_NAME_CASE.appdata.xml bin/usr/share/appdata/$APP_NAME_CASE.appdata.xml
+  cp platforms/linux/$APP_NAME_CASE.desktop bin/usr/share/applications/$APP_NAME_CASE.desktop
+  cp platforms/linux/$APP_NAME_CASE.svg bin/usr/share/pixmaps/$APP_NAME_CASE.svg
+  cp platforms/linux/$APP_NAME_CASE.svg  bin/usr/share/icons/hicolor/scalable/apps/$APP_NAME_CASE.svg
 
   echo '---- Running AppImage packager'
   ./contribs/deploy/linuxdeploy-x86_64.AppImage --appdir bin --plugin qt --output appimage
@@ -138,12 +138,12 @@ if [[ $create_package = true ]] ; then
   mv bin/usr/lib/* bin/$APP_NAME/
   mv bin/usr/plugins bin/$APP_NAME/
   mv bin/usr/qml bin/$APP_NAME/
-  mv bin/usr/share/appdata/$APP_NAME_LOWERCASE.appdata.xml bin/$APP_NAME/
-  mv bin/usr/share/applications/$APP_NAME_LOWERCASE.desktop bin/$APP_NAME/
-  mv bin/usr/share/pixmaps/$APP_NAME_LOWERCASE.svg bin/$APP_NAME/
+  mv bin/usr/share/appdata/$APP_NAME_CASE.appdata.xml bin/$APP_NAME/
+  mv bin/usr/share/applications/$APP_NAME_CASE.desktop bin/$APP_NAME/
+  mv bin/usr/share/pixmaps/$APP_NAME_CASE.svg bin/$APP_NAME/
   printf '[Paths]\nPrefix = .\nPlugins = plugins\nImports = qml\n' > bin/$APP_NAME/qt.conf
-  printf '#!/bin/sh\nappname=`basename $0 | sed s,\.sh$,,`\ndirname=`dirname $0`\nexport LD_LIBRARY_PATH=$dirname\n$dirname/$appname' > bin/$APP_NAME/$APP_NAME_LOWERCASE.sh
-  chmod +x bin/$APP_NAME/$APP_NAME_LOWERCASE.sh
+  printf '#!/bin/sh\nappname=`basename $0 | sed s,\.sh$,,`\ndirname=`dirname $0`\nexport LD_LIBRARY_PATH=$dirname\n$dirname/$appname' > bin/$APP_NAME/$APP_NAME_CASE.sh
+  chmod +x bin/$APP_NAME/$APP_NAME_CASE.sh
 
   echo '---- Compressing package'
   cd bin

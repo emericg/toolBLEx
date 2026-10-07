@@ -136,7 +136,7 @@ jobs:
       # Build application
       - name: Build application
         run: |
-             cmake -B build/ -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"
+             cmake -B build/ -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" -DTOOLBLEX_SPECTRUM_UBERTOOTH=BIN -DTOOLBLEX_SPECTRUM_RTLSDR=BIN
              cmake --build build/ --config Release
 
       # Deploy application
@@ -149,7 +149,7 @@ jobs:
       - name: Codesign application bundle
         run: |
           /usr/bin/codesign --deep --force --options runtime \
-            --entitlements "assets/macos/${{ env.APP_NAME }}.entitlements" \
+            --entitlements "platforms/macos/${{ env.APP_NAME }}.entitlements" \
             --sign "${{ secrets.MACOS_CERTIFICATE_NAME }}" \
             bin/${{ env.APP_NAME }}.app
 
