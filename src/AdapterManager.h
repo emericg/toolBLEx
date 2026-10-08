@@ -41,7 +41,7 @@
 #if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
 #include <QDBusMessage>
 #else
-class QDBusMessage;
+typedef QVariant QDBusMessage;
 #endif
 
 class Adapter;
