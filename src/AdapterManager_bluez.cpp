@@ -19,7 +19,7 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#include "DeviceManager.h"
+#include "AdapterManager.h"
 
 #include <QBluetoothAddress>
 #include <QBluetoothLocalDevice>
@@ -30,11 +30,14 @@
 #include <QDBusMessage>
 #include <QDBusArgument>
 #include <QDBusObjectPath>
+#include <QDBusError>
 #endif
+
+#include <QDebug>
 
 /* ************************************************************************** */
 
-QHash <quint64, QBluetoothLocalDevice::Pairing> DeviceManager::getPairedDevices_bluez(const QBluetoothAddress &adapterAddress) const
+QHash <quint64, QBluetoothLocalDevice::Pairing> AdapterManager::getPairedDevices_bluez(const QBluetoothAddress &adapterAddress) const
 {
     QHash <quint64, QBluetoothLocalDevice::Pairing> paired;
 
@@ -96,6 +99,85 @@ QHash <quint64, QBluetoothLocalDevice::Pairing> DeviceManager::getPairedDevices_
 #endif
 
     return paired;
+}
+
+/* ************************************************************************** */
+
+bool AdapterManager::startAdaptersWatcher_bluez()
+{
+#if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
+    QDBusConnection bus = QDBusConnection::systemBus();
+
+    bool added = bus.connect(QStringLiteral("org.bluez"), QStringLiteral("/"),
+                             QStringLiteral("org.freedesktop.DBus.ObjectManager"),
+                             QStringLiteral("InterfacesAdded"),
+                             this, SLOT(interfacesAdded_bluez(QDBusMessage)));
+    bool removed = bus.connect(QStringLiteral("org.bluez"), QStringLiteral("/"),
+                               QStringLiteral("org.freedesktop.DBus.ObjectManager"),
+                               QStringLiteral("InterfacesRemoved"),
+                               this, SLOT(interfacesRemoved_bluez(QDBusMessage)));
+
+    if (!added || !removed)
+    {
+        qWarning() << "AdapterManager::startAdaptersWatcher_bluez() unable to watch BlueZ adapters:"
+                   << bus.lastError().message();
+        return false;
+    }
+
+    return true;
+#else
+    return false;
+#endif
+}
+
+void AdapterManager::interfacesAdded_bluez(const QDBusMessage &msg)
+{
+#if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
+    // InterfacesAdded(OBJPATH object_path, DICT<STRING, DICT<STRING, VARIANT>> interfaces_and_properties)
+    const QList <QVariant> args = msg.arguments();
+    if (args.size() < 2) return;
+
+    bool isAdapter = false;
+
+    const QDBusArgument arg = args.at(1).value<QDBusArgument>();
+    arg.beginMap();
+    while (!arg.atEnd())
+    {
+        QString iface;
+        QVariantMap props;
+        arg.beginMapEntry();
+        arg >> iface >> props;
+        arg.endMapEntry();
+
+        if (iface == QLatin1String("org.bluez.Adapter1")) isAdapter = true;
+    }
+    arg.endMap();
+
+    if (isAdapter)
+    {
+        qDebug() << "BlueZ adapter added:" << args.at(0).value<QDBusObjectPath>().path();
+        m_adaptersRefreshTimer.start();
+    }
+#else
+    Q_UNUSED(msg)
+#endif
+}
+
+void AdapterManager::interfacesRemoved_bluez(const QDBusMessage &msg)
+{
+#if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
+    // InterfacesRemoved(OBJPATH object_path, ARRAY<STRING> interfaces)
+    const QList <QVariant> args = msg.arguments();
+    if (args.size() < 2) return;
+
+    if (args.at(1).toStringList().contains(QLatin1String("org.bluez.Adapter1")))
+    {
+        qDebug() << "BlueZ adapter removed:" << args.at(0).value<QDBusObjectPath>().path();
+        m_adaptersRefreshTimer.start();
+    }
+#else
+    Q_UNUSED(msg)
+#endif
 }
 
 /* ************************************************************************** */

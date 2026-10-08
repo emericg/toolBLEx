@@ -126,9 +126,6 @@ ApplicationWindow {
                 case Qt.ApplicationActive: {
                     //console.log("Qt.ApplicationActive")
 
-                    // Check Bluetooth anyway (on macOS)
-                    //if (Qt.platform.os === "osx") DeviceManager.checkBluetooth()
-
                     // Resume scanning (if needed)
                     pauseTimer.stop()
                     DeviceManager.scanDevices_resume();
@@ -239,10 +236,10 @@ ApplicationWindow {
 
     // Bluetooth ///////////////////////////////////////////////////////////////
 /*
-    property bool bluetooth: DeviceManager.bluetooth
-    property bool bluetoothAdapter: DeviceManager.bluetoothAdapter
-    property bool bluetoothEnabled: DeviceManager.bluetoothEnabled
-    property bool bluetoothPermission: DeviceManager.bluetoothPermission
+    property bool bluetooth: AdapterManager.bluetooth
+    property bool bluetoothAdapter: AdapterManager.bluetoothAdapter
+    property bool bluetoothEnabled: AdapterManager.bluetoothEnabled
+    property bool bluetoothPermission: AdapterManager.bluetoothPermission
 
     onBluetoothChanged: checkBleStatus()
     onBluetoothAdapterChanged: checkBleStatus()

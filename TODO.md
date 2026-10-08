@@ -32,9 +32,8 @@
 [x] auto theme switch
 [-] better beacon detection
 [-] r/w/n: red badges on errors?
-[-] sanitize old adapters
-[-] write data: explicit max size
-[-] write data: check max size
+[x] write data: explicit max size
+[x] write data: check max size
 [ ] remove ScreenBluetooth
 
 [x] graphs: unify min/max RSSI values (floorDb, ceilDb)
@@ -60,12 +59,13 @@
 [x] DeviceManager singleton
 [x] device pairing improvements
 
-[ ] AdapterManager singleton
+[x] AdapterManager singleton
 [x] select preferred adapter (only works on linux, OS limitations...)
 [x] adapter status (linux)
 [ ] adapter status (linux DBUS)
 [x] adapter status (macOS)
 [ ] adapter status (windows API)
+[x] sanitize old adapters
 
 [x] device simulator (v1 - with advertising support)
 

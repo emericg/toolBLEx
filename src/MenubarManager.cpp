@@ -20,6 +20,7 @@
  */
 
 #include "MenubarManager.h"
+#include "AdapterManager.h"
 #include "DeviceManager.h"
 #include "SpectrumAnalyzers/SpectrumSourceUbertooth.h"
 #include "SpectrumAnalyzers/SpectrumSourceRtlSdr.h"
@@ -306,7 +307,7 @@ void MenubarManager::updateFileActions()
 void MenubarManager::updateDeviceActions()
 {
     DeviceManager *dm = DeviceManager::getInstance();
-    const bool bluetoothReady = dm->property("bluetooth").toBool();
+    const bool bluetoothReady = AdapterManager::getInstance()->hasBluetooth();
     const bool scanning = dm->property("scanning").toBool();
     const bool connected = dm->areDevicesConnected();
 
@@ -398,7 +399,7 @@ void MenubarManager::scannerOpen()
 void MenubarManager::scanStart()
 {
     DeviceManager *dm = DeviceManager::getInstance();
-    const bool bluetoothReady = dm->property("bluetooth").toBool();
+    const bool bluetoothReady = AdapterManager::getInstance()->hasBluetooth();
     const bool scanning = dm->property("scanning").toBool();
     if (bluetoothReady && !scanning) dm->scanDevices_start();
 }

@@ -24,6 +24,7 @@
 
 #include "SettingsManager.h"
 #include "MenubarManager.h"
+#include "AdapterManager.h"
 #include "DeviceManager.h"
 #include "device_utils.h"
 #include "BleFormat.h"
@@ -88,8 +89,9 @@ int main(int argc, char *argv[])
     // Init app components
     SettingsManager *sm = SettingsManager::getInstance();
     MenubarManager *mb = MenubarManager::getInstance();
+    AdapterManager *am = AdapterManager::getInstance();
     DeviceManager *dm = DeviceManager::getInstance();
-    if (!sm || !mb || !dm)
+    if (!sm || !mb || !am || !dm)
     {
         qWarning() << "Cannot init toolBLEx components!";
         return EXIT_FAILURE;

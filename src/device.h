@@ -28,12 +28,14 @@
 #include <QObject>
 #include <QList>
 #include <QTimer>
+#include <QElapsedTimer>
 #include <QDate>
 #include <QDateTime>
 #include <QByteArray>
 #include <QJsonObject>
 
 #include <QBluetoothDeviceInfo>
+#include <QBluetoothAddress>
 #include <QLowEnergyController>
 
 /* ************************************************************************** */
@@ -174,6 +176,9 @@ protected:
     int m_retry = 0;
     static const int s_retryCount = 999;
 
+    QElapsedTimer m_reconnectTimer;                 //!< started on each reconnection attempt
+    static const int s_reconnectInterval = 1000;    //!< minimum time between reconnection attempts (ms)
+
     // Device time
     int64_t m_device_time = -1;
     int64_t m_device_wall_time = -1;
@@ -181,6 +186,7 @@ protected:
     // BLE
     QBluetoothDeviceInfo m_bleDevice;
     QLowEnergyController *m_bleController = nullptr;
+    QBluetoothAddress m_bleLocalAdapter;    //!< local adapter used to connect, null for the system default
 
     int m_bluetoothCoreConfiguration = 0; //!< See QBluetoothDeviceInfo::CoreConfiguration enum
     int m_mtu = -1;
@@ -306,6 +312,20 @@ public:
     Q_INVOKABLE bool setSetting(const QString &key, QVariant value);
 
     // BLE lifecycle
+
+    /*!
+     * \brief Set the local adapter used by the next connection.
+     * \param adapter: the local adapter address, or a null address for the system default adapter.
+     *
+     * An existing (unconnected) controller is recreated if it uses another adapter.
+     */
+    void setLocalAdapter(const QBluetoothAddress &adapter) { m_bleLocalAdapter = adapter; }
+
+    /*!
+     * \brief Create the controller, or recreate it if it is unconnected and uses another local adapter.
+     */
+    void prepareController();
+
     virtual void deviceConnect(const bool stayConnected = false); //!< Initiate a BLE connection with a device
     virtual void deviceDisconnect(const bool stayConnected = false);
     virtual void deviceDisconnect_temporary();

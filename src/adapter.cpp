@@ -29,10 +29,10 @@
 
 Adapter::Adapter(const QBluetoothHostInfo &adapterInfo, QObject *parent) : QObject(parent)
 {
-    checkAdapter();
-
     m_hostname = adapterInfo.name();
     m_address = adapterInfo.address().toString();
+
+    checkAdapter();
 
     VendorsDatabase *v = VendorsDatabase::getInstance();
     v->getVendor(m_address, m_mac_manufacturer);
@@ -255,11 +255,11 @@ void Adapter::errorOccurred(QBluetoothLocalDevice::Error error)
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-bool Adapter::checkAdapter()
+bool Adapter::checkAdapter(bool force)
 {
     bool status = false;
 
-    if (m_adapter_device && m_adapter_device->isValid())
+    if (!force && m_adapter_device && m_adapter_device->isValid())
     {
         //qDebug() << "Adapter::checkAdapter(" << m_address << ") VALID";
         setHostMode(m_adapter_device->hostMode());
@@ -302,6 +302,8 @@ bool Adapter::checkAdapter()
             connect(m_adapter_device, &QBluetoothLocalDevice::errorOccurred,
                     this, &Adapter::errorOccurred);
 
+            Q_EMIT deviceChanged();
+
             if (m_adapter_device->isValid())
             {
                 status = true;
@@ -317,24 +319,6 @@ bool Adapter::checkAdapter()
     return status;
 }
 
-void Adapter::update(bool isDefault, bool inUse)
-{
-    bool changed = false;
-
-    if (m_default != isDefault)
-    {
-        m_default = isDefault;
-        changed = true;
-    }
-    if (m_inUse != inUse)
-    {
-        m_inUse = inUse;
-        changed = true;
-    }
-
-    if (changed) Q_EMIT adapterUpdated();
-}
-
 void Adapter::setHostMode(int hostMode)
 {
     if (m_bluetooth_host_mode != hostMode)
@@ -344,20 +328,49 @@ void Adapter::setHostMode(int hostMode)
     }
 }
 
-void Adapter::setDefault(bool isDefault)
+void Adapter::setAvailable(bool available)
 {
-    if (m_default != isDefault)
+    if (m_available == available) return;
+    m_available = available;
+
+    if (m_available) checkAdapter(true);
+    else setHostMode(QBluetoothLocalDevice::HostPoweredOff);
+
+    Q_EMIT adapterUpdated();
+}
+
+void Adapter::setDefault_scan(bool isDefault)
+{
+    if (m_default_scan != isDefault)
     {
-        m_default = isDefault;
+        m_default_scan = isDefault;
         Q_EMIT adapterUpdated();
     }
 }
 
-void Adapter::setInUse(bool inUse)
+void Adapter::setDefault_sim(bool isDefault)
 {
-    if (m_inUse != inUse)
+    if (m_default_sim != isDefault)
     {
-        m_inUse = inUse;
+        m_default_sim = isDefault;
+        Q_EMIT adapterUpdated();
+    }
+}
+
+void Adapter::setInUse_scan(bool inUse)
+{
+    if (m_inUse_scan != inUse)
+    {
+        m_inUse_scan = inUse;
+        Q_EMIT adapterUpdated();
+    }
+}
+
+void Adapter::setInUse_sim(bool inUse)
+{
+    if (m_inUse_sim != inUse)
+    {
+        m_inUse_sim = inUse;
         Q_EMIT adapterUpdated();
     }
 }

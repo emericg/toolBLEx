@@ -76,7 +76,7 @@ FrameBox {
 
             ButtonSolid {
                 text: qsTr("Retry")
-                onClicked: DeviceManager.enableBluetooth()
+                onClicked: AdapterManager.enableBluetooth()
             }
         }
 

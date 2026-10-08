@@ -77,7 +77,7 @@ Item {
             spacing: Theme.componentMarginL
 
             Repeater {
-                model: DeviceManager.adaptersList
+                model: AdapterManager.adaptersList
 
                 AdapterWidget {
                     width: hostInfosColumn.width

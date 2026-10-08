@@ -21,7 +21,6 @@
 
 #include "device.h"
 #include "DatabaseManager.h"
-#include "VendorsDatabase.h"
 
 #include <cstdlib>
 #include <cmath>
@@ -74,10 +73,6 @@ Device::Device(const QString &deviceAddr, const QString &deviceName, QObject *pa
         m_dbExternal = db->hasDatabaseExternal();
     }
 
-    // Vendor database
-    VendorsDatabase *vdb = VendorsDatabase::getInstance();
-    vdb->getVendor(m_deviceAddress, m_deviceManufacturer);
-
     // Configure timeout timer
     m_timeoutTimer.setSingleShot(true);
     connect(&m_timeoutTimer, &QTimer::timeout, this, &Device::actionTimedOut);
@@ -103,9 +98,6 @@ Device::Device(const QBluetoothDeviceInfo &d, QObject *parent) : QObject(parent)
     m_deviceAddress = m_bleDevice.deviceUuid().toString();
 #else
     m_deviceAddress = m_bleDevice.address().toString();
-
-    VendorsDatabase *vdb = VendorsDatabase::getInstance();
-    vdb->getVendor(d.address().toString(), m_deviceManufacturer);
 #endif
 
     // Check address validity
@@ -147,17 +139,23 @@ Device::~Device()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-/*!
- * \brief Device::deviceConnect
- * \return false means immediate error, true means connection process started
- */
-void Device::deviceConnect(const bool stayConnected)
+void Device::prepareController()
 {
-    //qDebug() << "Device::deviceConnect()" << getAddress() << getName();
+    // The local adapter has changed since the controller was created
+    if (m_bleController && m_bleController->state() == QLowEnergyController::UnconnectedState &&
+        !m_bleLocalAdapter.isNull() && m_bleController->localAddress() != m_bleLocalAdapter)
+    {
+        m_bleController->disconnect(this);
+        m_bleController->deleteLater();
+        m_bleController = nullptr;
+    }
 
     if (!m_bleController)
     {
-        m_bleController = m_bleController->createCentral(m_bleDevice);
+        if (m_bleLocalAdapter.isNull())
+            m_bleController = QLowEnergyController::createCentral(m_bleDevice);
+        else
+            m_bleController = QLowEnergyController::createCentral(m_bleDevice, m_bleLocalAdapter);
         if (m_bleController)
         {
             if (m_bleController->role() == QLowEnergyController::CentralRole)
@@ -175,7 +173,6 @@ void Device::deviceConnect(const bool stayConnected)
                 connect(m_bleController, &QLowEnergyController::stateChanged, this, &Device::deviceStateChanged);
                 connect(m_bleController, &QLowEnergyController::mtuChanged, this, &Device::deviceMtuChanged);
 
-                connect(m_bleController, &QLowEnergyController::mtuChanged, this, &Device::deviceMtuChanged);
                 connect(m_bleController, &QLowEnergyController::rssiRead, this, &Device::deviceRssiChanged);
                 connect(m_bleController, &QLowEnergyController::connectionUpdated, this, &Device::deviceConnParamChanged);
             }
@@ -189,6 +186,17 @@ void Device::deviceConnect(const bool stayConnected)
             qWarning() << "Unable to create BLE controller";
         }
     }
+}
+
+/*!
+ * \brief Device::deviceConnect
+ * \return false means immediate error, true means connection process started
+ */
+void Device::deviceConnect(const bool stayConnected)
+{
+    //qDebug() << "Device::deviceConnect()" << getAddress() << getName();
+
+    prepareController();
 
     // Start the actual connection process
     if (m_bleController && m_bleController->state() == QLowEnergyController::UnconnectedState)
@@ -212,8 +220,13 @@ void Device::deviceReconnect()
     if (m_stayConnected == false) return; // then we don't need to reconnect
     if (m_ble_status != DeviceUtils::DEVICE_AVAILABLE) return; // then we can't reconnect
 
+    // Reconnections are triggered by advertisements, throttle them
+    if (m_reconnectTimer.isValid() && m_reconnectTimer.elapsed() < s_reconnectInterval) return;
+
     //qDebug() << "Device::deviceReconnect(retry" << m_retry << "/" << s_retryCount << ")"
     //         << "[" << getAddress() << getName() << "] { status:" << m_ble_status << "}";
+
+    prepareController();
 
     if (m_bleController && m_bleController->state() == QLowEnergyController::UnconnectedState)
     {
@@ -229,6 +242,7 @@ void Device::deviceReconnect()
             qDebug() << "Device::deviceReconnect(retry" << m_retry << "/" << s_retryCount << ")" << getAddress() << getName();
 
             m_retry++;
+            m_reconnectTimer.start();
 
             m_ble_status = DeviceUtils::DEVICE_CONNECTING;
             Q_EMIT statusUpdated();

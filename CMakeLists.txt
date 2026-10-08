@@ -56,8 +56,9 @@ set(SOURCES
     src/MenubarManager.cpp src/MenubarManager.h
     src/SettingsManager.cpp src/SettingsManager.h
 
+    src/AdapterManager.cpp src/AdapterManager.h src/AdapterManager_bluez.cpp src/AdapterManager_windows.cpp
     src/DeviceManager.cpp src/DeviceManager.h
-    src/DeviceManager_advertisement.cpp src/DeviceManager_rssigraph.cpp src/DeviceManager_bluez.cpp
+    src/DeviceManager_advertisement.cpp src/DeviceManager_rssigraph.cpp
     src/DeviceFilter.cpp src/DeviceFilter.h src/DeviceHeader.h
     src/BleServiceInfo.cpp src/BleServiceInfo.h
     src/BleCharacteristicInfo.cpp src/BleCharacteristicInfo.h
@@ -192,6 +193,7 @@ qt_add_qml_module(${PROJECT_NAME}
         src/DatabaseManager.cpp src/DatabaseManager.h
         src/MenubarManager.cpp src/MenubarManager.h
         src/SettingsManager.cpp src/SettingsManager.h
+        src/AdapterManager.cpp src/AdapterManager.h
         src/DeviceManager.cpp src/DeviceManager.h
         src/ColormapFactory.cpp src/ColormapFactory.h
 )
@@ -259,6 +261,17 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt6::Graphs
     Qt6::Widgets
 )
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    # For BlueZ pairing status queries
+    find_package(Qt6 REQUIRED COMPONENTS DBus)
+    target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::DBus)
+endif()
+
+if(WIN32)
+    # For the adapters watcher (C++/WinRT DeviceWatcher)
+    target_link_libraries(${PROJECT_NAME} PRIVATE WindowsApp)
+endif()
 
 target_include_directories(${PROJECT_NAME} PRIVATE src/)
 target_include_directories(${PROJECT_NAME} PRIVATE thirdparty/)

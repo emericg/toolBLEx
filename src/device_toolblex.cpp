@@ -25,8 +25,10 @@
 #include "BleDescriptorInfo.h"
 #include "BleFormat.h"
 #include "DeviceProfile.h"
+#include "AdapterManager.h"
 #include "DeviceManager.h"
 #include "SettingsManager.h"
+#include "VendorsDatabase.h"
 
 #include <QBluetoothUuid>
 #include <QBluetoothAddress>
@@ -69,6 +71,9 @@ DeviceToolBLEx::DeviceToolBLEx(const QString &deviceAddr, const QString &deviceN
     m_advertisementFilterModel->setSourceModel(m_advertisementDataModel);
     m_advertisementFilterModel->setDynamicSortFilter(true);
 
+    // Vendor database (the manufacturer from the database cache takes precedence)
+    if (hasAddressMAC()) VendorsDatabase::getInstance()->getVendor(getAddressMAC(), m_deviceManufacturer);
+
     getSqlDeviceInfos();
 }
 
@@ -97,6 +102,9 @@ DeviceToolBLEx::DeviceToolBLEx(const QBluetoothDeviceInfo &d, QObject *parent):
     bool hassvd = false;
     parseAdvertisement(d, QDateTime::currentDateTime(), hasmfd, hassvd);
     addAdvertisementEntry(timestamp, d.rssi(), hasmfd, hassvd);
+
+    // Vendor database (the manufacturer from the database cache takes precedence)
+    if (hasAddressMAC()) VendorsDatabase::getInstance()->getVendor(getAddressMAC(), m_deviceManufacturer);
 
     getSqlDeviceInfos();
 }
@@ -668,6 +676,20 @@ QVariantMap DeviceToolBLEx::encodeWriteValue(const QString &value, int format, b
 
 /* ************************************************************************** */
 /* ************************************************************************** */
+
+void DeviceToolBLEx::deviceConnect(const bool stayConnected)
+{
+    setLocalAdapter(AdapterManager::getInstance()->getAdapterAddress_scan());
+
+    Device::deviceConnect(stayConnected);
+}
+
+void DeviceToolBLEx::deviceReconnect()
+{
+    setLocalAdapter(AdapterManager::getInstance()->getAdapterAddress_scan());
+
+    Device::deviceReconnect();
+}
 
 void DeviceToolBLEx::deviceConnected()
 {

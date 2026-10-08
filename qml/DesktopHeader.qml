@@ -98,7 +98,7 @@ Rectangle {
 
                 enabled: {
                     if (appContent.state === "Scanner" || appContent.state === "Simulator")
-                        return DeviceManager.bluetooth
+                        return AdapterManager.bluetooth
                     return true
                 }
 
@@ -131,7 +131,7 @@ Rectangle {
 
                 enabled: {
                     if (appContent.state === "Scanner" || appContent.state === "Simulator")
-                        return DeviceManager.bluetooth
+                        return AdapterManager.bluetooth
                     return true
                 }
 

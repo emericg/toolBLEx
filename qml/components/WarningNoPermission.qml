@@ -76,8 +76,8 @@ FrameBox {
             ButtonSolid {
                 text: qsTr("Retry")
                 onClicked: {
-                    DeviceManager.requestBluetoothPermission()
-                    DeviceManager.enableBluetooth()
+                    AdapterManager.requestBluetoothPermission()
+                    AdapterManager.enableBluetooth()
                 }
             }
         }

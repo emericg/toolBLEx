@@ -184,6 +184,19 @@ class DeviceToolBLEx: public Device
     DeviceLogModel *m_deviceLog_obj;
     QString m_deviceLog_str;
 
+public:
+    /*!
+     * \brief Initiate a BLE connection with a device, using the adapter used for scanning.
+     */
+    void deviceConnect(const bool stayConnected = false) override;
+
+    /*!
+     * \brief Reconnect to a device, using the adapter used for scanning.
+     *
+     * Reconnections are triggered by advertisements, seen by the adapter used for scanning.
+     */
+    void deviceReconnect() override;
+
 private slots:
     // QLowEnergyController related
     void deviceConnected() override;

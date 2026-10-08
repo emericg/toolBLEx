@@ -51,7 +51,7 @@ Loader {
                 width: screenBluetooth.width * 0.66
                 height: 128
 
-                visible: !DeviceManager.hasAdapters
+                visible: !AdapterManager.hasAdapters
             }
 
             ////
@@ -60,7 +60,7 @@ Loader {
                 width: screenBluetooth.width * 0.66
                 height: 128
 
-                visible: (DeviceManager.hasAdapters && !DeviceManager.bluetooth)
+                visible: (AdapterManager.hasAdapters && !AdapterManager.bluetooth)
             }
 
             ////
@@ -69,7 +69,7 @@ Loader {
                 width: screenBluetooth.width * 0.66
                 height: 128
 
-                visible: (DeviceManager.hasAdapters && !DeviceManager.bluetoothPermission)
+                visible: (AdapterManager.hasAdapters && !AdapterManager.bluetoothPermission)
             }
 
             ////

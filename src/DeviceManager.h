@@ -30,6 +30,7 @@
 #include <QVariant>
 #include <QList>
 #include <QHash>
+#include <QPointer>
 
 #include <QtQml/qqmlregistration.h>
 
@@ -39,8 +40,6 @@
 #include <QBluetoothDeviceDiscoveryAgent>
 
 class QBluetoothDeviceInfo;
-class QLowEnergyController;
-class QPermission;
 class QQmlEngine;
 class QJSEngine;
 
@@ -57,12 +56,6 @@ class DeviceManager: public QObject
 
     ////////
 
-    Q_PROPERTY(bool hasAdapters READ areAdaptersAvailable NOTIFY adaptersListUpdated)
-    Q_PROPERTY(QVariant adaptersList READ getAdapters NOTIFY adaptersListUpdated)
-    Q_PROPERTY(int adaptersCount READ getAdaptersCount NOTIFY adaptersListUpdated)
-
-    ////////
-
     Q_PROPERTY(bool hasDevices READ areDevicesAvailable NOTIFY devicesListUpdated)
     Q_PROPERTY(int deviceCount READ getDeviceCount NOTIFY devicesListUpdated)
     Q_PROPERTY(DeviceHeader *deviceHeader READ getDeviceHeader NOTIFY deviceHeaderUpdated)
@@ -76,13 +69,6 @@ class DeviceManager: public QObject
 
     Q_PROPERTY(bool scanning READ isScanning NOTIFY scanningChanged)
     Q_PROPERTY(bool scanningPaused READ isScanningPaused NOTIFY scanningChanged)
-
-    Q_PROPERTY(bool bluetooth READ hasBluetooth NOTIFY bluetoothChanged)
-    Q_PROPERTY(bool bluetoothAdapter READ hasBluetoothAdapter NOTIFY bluetoothChanged)
-    Q_PROPERTY(bool bluetoothEnabled READ hasBluetoothEnabled NOTIFY bluetoothChanged)
-    Q_PROPERTY(bool bluetoothPermission READ hasBluetoothPermission NOTIFY permissionChanged)
-
-    Q_PROPERTY(int bluetoothHostMode READ getBluetoothHostMode NOTIFY hostModeChanged)
 
     Q_PROPERTY(QString orderBy_role READ getOrderByRole NOTIFY filteringChanged)
     Q_PROPERTY(int orderBy_order READ getOrderByOrder NOTIFY filteringChanged)
@@ -102,18 +88,11 @@ class DeviceManager: public QObject
 
     ////
 
-    bool m_bleAdapter = false;      //!< do we have a BLE adapter?
-    bool m_bleEnabled = false;      //!< is the BLE adapter enabled?
-    bool m_blePermission = false;   //!< do we have necessary BLE permission(s)?
-
-    QBluetoothLocalDevice *m_bluetoothAdapter = nullptr;
+    QPointer <QBluetoothLocalDevice> m_bluetoothAdapter; //!< scan adapter device, owned by AdapterManager
     QBluetoothDeviceDiscoveryAgent *m_bluetoothDiscoveryAgent = nullptr;
-    QBluetoothLocalDevice::HostMode m_bluetoothHostMode = QBluetoothLocalDevice::HostPoweredOff;
-    QString m_pairingPendingAddress;
-    QHash <quint64, QBluetoothLocalDevice::Pairing> m_devicesPaired; //!< paired devices, by address
 
-    QList <QObject *> m_bluetoothAdapters;
-    QBluetoothAddress m_bluetoothAdapter_selected;
+    QHash <quint64, QBluetoothLocalDevice::Pairing> m_devicesPaired; //!< paired devices, by address
+    QString m_pairingPendingAddress;
 
     ////
 
@@ -133,15 +112,6 @@ class DeviceManager: public QObject
 
     bool m_scanning_paused = false;
     bool isScanningPaused() const { return m_scanning_paused; }
-
-    bool hasBluetoothAdapter() const { return m_bleAdapter; }
-    bool hasBluetoothEnabled() const { return m_bleEnabled; }
-    bool hasBluetoothPermission() const { return m_blePermission; }
-    bool hasBluetooth() const { return (m_bleAdapter && m_bleEnabled && m_blePermission); }
-
-    void setBluetoothPermission(bool perm);
-
-    int getBluetoothHostMode() const { return m_bluetoothHostMode; }
 
     void startBleAgent();
 
@@ -184,12 +154,6 @@ class DeviceManager: public QObject
     int m_countBeacon = 0;              //!< Beacon devices
 
 Q_SIGNALS:
-    void bluetoothChanged();
-    void hostModeChanged();
-    void permissionChanged();
-
-    void adaptersListUpdated();
-
     void deviceHeaderUpdated();
     void devicesListUpdated();
     void devicesSeenCacheUpdated();
@@ -203,12 +167,13 @@ Q_SIGNALS:
     void statsChanged();
 
 private slots:
+    // AdapterManager related
+    void bluetoothStatusChanged();
+    void adapterChanged_scan();
+
     // QBluetoothLocalDevice related
-    void bluetoothHostModeStateChanged(QBluetoothLocalDevice::HostMode);
     void bluetoothPairingFinished(const QBluetoothAddress &address, QBluetoothLocalDevice::Pairing pairing);
     void bluetoothPairingError(QBluetoothLocalDevice::Error error);
-    void bluetoothStatusChanged();
-    void bluetoothPermissionChanged();
 
     // QBluetoothDeviceDiscoveryAgent related
     void deviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error);
@@ -224,33 +189,9 @@ private:
     DeviceManager(QObject *parent);
     ~DeviceManager();
 
-    /*!
-     * \brief Get the pairing status of every device known to BlueZ, using a single D-Bus call.
-     * \param adapterAddress: only report devices known to this adapter.
-     * \return the paired devices, by address.
-     *
-     * QBluetoothLocalDevice::pairingStatus() does one D-Bus round trip per device known to BlueZ,
-     * for every device queried.
-     */
-    QHash <quint64, QBluetoothLocalDevice::Pairing> getPairedDevices_bluez(const QBluetoothAddress &adapterAddress) const;
-
 public:
     static DeviceManager *getInstance();
     static DeviceManager *create(QQmlEngine *engine, QJSEngine *scriptEngine);
-
-    // Adapters management
-    Q_INVOKABLE bool areAdaptersAvailable() const { return m_bluetoothAdapters.size(); }
-    QVariant getAdapters() const { return QVariant::fromValue(m_bluetoothAdapters); }
-    int getAdaptersCount() const { return m_bluetoothAdapters.size(); }
-
-    // Bluetooth management
-    Q_INVOKABLE bool checkBluetooth();
-    Q_INVOKABLE bool enableBluetooth();
-    Q_INVOKABLE void disableBluetooth();
-
-    Q_INVOKABLE bool checkBluetoothPermission();
-    Q_INVOKABLE bool requestBluetoothPermission();
-    void requestBluetoothPermission_results(const QPermission &permission);
 
     // Scanning management
     Q_INVOKABLE void scanDevices_start();

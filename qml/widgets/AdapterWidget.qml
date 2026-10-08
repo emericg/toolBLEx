@@ -24,7 +24,7 @@ Rectangle {
         width: 8
         radius: 2
         color: Theme.colorPrimary
-        visible: modelData.isInUse
+        visible: (modelData.isInUse_scan || modelData.isInUse_sim)
     }
 
     ////////////////
@@ -363,7 +363,7 @@ Rectangle {
             z: -1
 
             color: Theme.colorPrimary
-            visible: (modelData.isInUse &&
+            visible: (modelData.isInUse_scan &&
                       DeviceManager.scanning && !DeviceManager.scanningPaused &&
                       appContent.state === "Scanner" && hostMenu.currentIndex === 0)
 
@@ -396,10 +396,10 @@ Rectangle {
         anchors.margins: Theme.componentMarginS
         spacing: Theme.componentMarginS
 
-        visible: (DeviceManager.adaptersCount > 1)
+        visible: (AdapterManager.adaptersCount > 1)
 
         SquareButtonClear { // scanning
-            property bool selected: (SettingsManager.preferredAdapter_scan === modelData.address)
+            property bool selected: modelData.isDefault_scan
 
             tooltipText: qsTr("Default for scanning")
             color: selected ? Theme.colorPrimary : Theme.colorGrey
@@ -411,13 +411,12 @@ Rectangle {
                     SettingsManager.preferredAdapter_scan = ""
                 } else {
                     SettingsManager.preferredAdapter_scan = modelData.address
-                    //DeviceManager.disableBluetooth()
                 }
             }
         }
 
         SquareButtonClear { // advertising
-            property bool selected: (SettingsManager.preferredAdapter_adv === modelData.address)
+            property bool selected: modelData.isDefault_sim
 
             tooltipText: qsTr("Default for advertising")
             color: selected ? Theme.colorPrimary : Theme.colorGrey
@@ -426,10 +425,9 @@ Rectangle {
 
             onClicked: {
                 if (selected) {
-                    SettingsManager.preferredAdapter_adv = ""
+                    SettingsManager.preferredAdapter_sim = ""
                 } else {
-                    SettingsManager.preferredAdapter_adv = modelData.address
-                    //DeviceManager.disableBluetooth()
+                    SettingsManager.preferredAdapter_sim = modelData.address
                 }
             }
         }

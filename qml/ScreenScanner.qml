@@ -534,10 +534,10 @@ Loader {
 
             ////
 
-            property bool bluetooth: DeviceManager.bluetooth
-            property bool bluetoothAdapter: DeviceManager.bluetoothAdapter
-            property bool bluetoothEnabled: DeviceManager.bluetoothEnabled
-            property bool bluetoothPermission: DeviceManager.bluetoothPermission
+            property bool bluetooth: AdapterManager.bluetooth
+            property bool bluetoothAdapter: AdapterManager.bluetoothAdapter
+            property bool bluetoothEnabled: AdapterManager.bluetoothEnabled
+            property bool bluetoothPermission: AdapterManager.bluetoothPermission
 
             onBluetoothChanged: checkBleStatus()
             onBluetoothAdapterChanged: checkBleStatus()
@@ -585,9 +585,9 @@ Loader {
 
                             color: "white"
                             source: {
-                                if (!DeviceManager.bluetoothAdapter) return "qrc:/IconLibrary/material-symbols/memory-fill.svg"
-                                if (!DeviceManager.bluetoothEnabled) return "qrc:/IconLibrary/material-symbols/flaky.svg"
-                                if (!DeviceManager.bluetoothPermission) return "qrc:/IconLibrary/material-symbols/lock-fill.svg"
+                                if (!AdapterManager.bluetoothAdapter) return "qrc:/IconLibrary/material-symbols/memory-fill.svg"
+                                if (!AdapterManager.bluetoothEnabled) return "qrc:/IconLibrary/material-symbols/flaky.svg"
+                                if (!AdapterManager.bluetoothPermission) return "qrc:/IconLibrary/material-symbols/lock-fill.svg"
                                 return "qrc:/IconLibrary/material-icons/outlined/bluetooth_disabled.svg"
                             }
 
@@ -614,9 +614,9 @@ Loader {
                         anchors.right: parent.right
 
                         text: {
-                            if (!DeviceManager.hasAdapters) return qsTr("No Bluetooth adapter detected")
-                            if (!DeviceManager.bluetoothPermission) return qsTr("Bluetooth pepermission missing")
-                            if (!DeviceManager.bluetooth) return qsTr("Bluetooth is disabled")
+                            if (!AdapterManager.hasAdapters) return qsTr("No Bluetooth adapter detected")
+                            if (!AdapterManager.bluetoothPermission) return qsTr("Bluetooth pepermission missing")
+                            if (!AdapterManager.bluetooth) return qsTr("Bluetooth is disabled")
                             return "Error..."
                         }
                         font.pixelSize: Theme.fontSizeContentBig
@@ -631,9 +631,9 @@ Loader {
                         anchors.right: parent.right
 
                         text: {
-                            if (!DeviceManager.hasAdapters) {
+                            if (!AdapterManager.hasAdapters) {
                                 return qsTr("Please check if a Bluetooth adapter is connected and configured on your machine.")
-                            } else if (!DeviceManager.bluetoothPermission) {
+                            } else if (!AdapterManager.bluetoothPermission) {
                                 return qsTr("Please check if the Bluetooth permission has been granted to the application.")
                             }
                             return qsTr("Please enable Bluetooth on your machine and retry.")
@@ -655,8 +655,8 @@ Loader {
                         color: "white"
 
                         onClicked: {
-                            DeviceManager.requestBluetoothPermission()
-                            DeviceManager.enableBluetooth()
+                            AdapterManager.requestBluetoothPermission()
+                            AdapterManager.enableBluetooth()
                         }
                     }
                 }
