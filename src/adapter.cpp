@@ -20,9 +20,9 @@
  */
 
 #include "adapter.h"
+#include "AdapterInfo.h"
 #include "VendorsDatabase.h"
 
-#include <QProcess>
 #include <QDebug>
 
 /* ************************************************************************** */
@@ -37,180 +37,12 @@ Adapter::Adapter(const QBluetoothHostInfo &adapterInfo, QObject *parent) : QObje
     VendorsDatabase *v = VendorsDatabase::getInstance();
     v->getVendor(m_address, m_mac_manufacturer);
 
-#if defined(Q_OS_LINUX)
-    QProcess process;
-    process.start("btmgmt", QStringList("info"));
-    process.waitForFinished(8000); // 8 ms
-
-    const QString output(process.readAllStandardOutput());
-    const QString err(process.readAllStandardError());
-    //qDebug() << output << err;
-
-    // Output example:
-    // hci1: Primary controller
-    // addr 00:11:22:33:44:55 version 13 manufacturer 2279 class 0x6c0104
-    // supported settings: powered connectable fast-connectable discoverable bondable link-security ssp br/edr le advertising secure-conn debug-keys privacy static-addr phy-configuration ll-privacy
-    // current settings: powered ssp br/edr le secure-conn ll-privacy
-    // name desktop-emeric #2
-    // short name
-
-    const QStringList output_split = output.split('\n');
-    for (int i = 0; i < output_split.size(); i++)
+    m_info = AdapterInfo::create(this);
+    if (m_info)
     {
-        const auto &line = output_split.at(i);
-        if (line.contains("addr ") && line.contains(m_address))
-        {
-            const QStringList line_split = line.split(' ');
-            //qDebug() << "line_split:" << line_split;
-
-            for (int j = 0; j < line_split.size(); j++)
-            {
-                const auto &section = line_split.at(j);
-                if (section == "version")
-                {
-                    QString version = line_split.at(++j);
-
-                    if (version == "17") m_bluetooth_version = "6.3";
-                    else if (version == "16") m_bluetooth_version = "6.2";
-                    else if (version == "15") m_bluetooth_version = "6.1";
-                    else if (version == "14") m_bluetooth_version = "6.0";
-                    else if (version == "13") m_bluetooth_version = "5.4";
-                    else if (version == "12") m_bluetooth_version = "5.3";
-                    else if (version == "11") m_bluetooth_version = "5.2";
-                    else if (version == "10") m_bluetooth_version = "5.1";
-                    else if (version == "9") m_bluetooth_version = "5.0";
-                    else if (version == "8") m_bluetooth_version = "4.2";
-                    else if (version == "7") m_bluetooth_version = "4.1";
-                    else if (version == "6") m_bluetooth_version = "4.0";
-                    else if (version == "5") m_bluetooth_version = "3.0";
-                    else if (version == "4") m_bluetooth_version = "2.1";
-                    else if (version == "3") m_bluetooth_version = "2.0";
-                    else if (version == "2") m_bluetooth_version = "1.2";
-                    else if (version == "1") m_bluetooth_version = "1.1";
-                    else if (version == "0") m_bluetooth_version = "1.0";
-
-                    //qDebug() << "version >" << version << m_bluetooth_version;
-                }
-                else if (section == "manufacturer")
-                {
-                    QString manufacturer = QString("%1").arg(line_split.at(++j).toInt(), 4, 16, QLatin1Char('0'));
-
-                    VendorsDatabase *v = VendorsDatabase::getInstance();
-                    v->getVendor_manufacturerID(manufacturer, m_manufacturer);
-
-                    //qDebug() << "manufacturer >" << manufacturer << m_manufacturer;
-                }
-                else if (section == "class")
-                {
-                    QString cclass = line_split.at(++j);
-                    //qDebug() << "class >" << cclass;
-                }
-            }
-/*
-            // The next line might interest us too...
-            auto nextline = output_split.at(++i);
-            if (nextline.contains("supported settings: "))
-            {
-                nextline.remove("supported settings: ");
-                nextline.remove('\t');
-
-                const QStringList nextline_split = nextline.remove("supported settings: ").split(' ', Qt::SkipEmptyParts);
-                for (auto &section: std::as_const(nextline_split))
-                {
-                    m_bluetooth_features.push_back(section);
-                }
-            }
-*/
-        }
-
-        if (!m_bluetooth_version.isEmpty()) break;
+        connect(m_info, &AdapterInfo::detailsChanged, this, &Adapter::detailsChanged);
+        m_info->query(adapterInfo.address());
     }
-
-    // other interesting commands:
-    // bluetoothctl show
-    // busctl introspect org.bluez /org/bluez/hci0
-
-#elif defined(Q_OS_MACOS)
-
-    QProcess process;
-    process.start("system_profiler", QStringList() << "-detailLevel" << "full" << "SPBluetoothDataType");
-    process.waitForFinished(8000); // 8 ms
-
-    const QString output(process.readAllStandardOutput());
-    const QString err(process.readAllStandardError());
-    //qDebug() << output << err;
-
-    // Output example:
-    // Bluetooth:
-    //
-    // Bluetooth Controller:
-    //     Address: 00:11:22:33:44:55
-    //     State: On
-    //     Chipset: BCM_4388C2
-    //     Discoverable: Off
-    //     Firmware Version: 23.5.224.1475
-    //     Product ID: 0x4A3F
-    //     Supported services: 0x392039 < HFP AVRCP A2DP HID Braille LEA AACP GATT SerialPort >
-    //     Transport: PCIe
-    //     Vendor ID: 0x004C (Apple)
-    // Not Connected:
-    //     DeviceName:
-    //     Address: 11:22:33:44:55:66
-
-    bool controllersection = false;
-
-    const QStringList output_split = output.split('\n');
-    for (int i = 0; i < output_split.size(); i++)
-    {
-        const auto &line = output_split.at(i);
-
-        if (controllersection)
-        {
-            const QStringList line_split = line.trimmed().split(' ', Qt::SkipEmptyParts);
-            //qDebug() << "line_split:" << line_split;
-            if (line_split.size() < 2) break;
-
-            if (line.contains("BT Spec:")) m_bluetooth_version = line_split.at(1); // legacy key?
-            //else if (line.contains("Address:")) m_address = line_split.at(1).trimmed();
-            else if (line.contains("Chipset:")) m_chipset = line_split.at(1).trimmed();
-            else if (line.contains("Firmware Version:"))
-            {
-                if (line_split.size() >= 3)
-                {
-                    m_chipset_firmware = line_split.at(2).trimmed();
-                }
-            }
-            else if (line.contains("Vendor ID:"))
-            {
-                if (line_split.size() >= 3)
-                {
-                    QString manufacturer = QString(line_split.at(2)).remove("0x");
-
-                    VendorsDatabase *v = VendorsDatabase::getInstance();
-                    v->getVendor_manufacturerID(manufacturer, m_manufacturer);
-                }
-            }
-            else if (line.contains("Supported services:"))
-            {
-                // TODO
-            }
-        }
-
-        if (line.contains("Bluetooth Controller"))
-        {
-            controllersection = true;
-        }
-        else if (line.contains("Connected") || line.contains("Not Connected"))
-        {
-            break; // went to far
-        }
-    }
-
-#elif defined(Q_OS_WINDOWS)
-
-    // ?
-
-#endif // defined(Q_OS_LINUX)
 }
 
 Adapter::~Adapter()
@@ -240,6 +72,50 @@ void Adapter::deviceDisconnected(const QBluetoothAddress &address)
 void Adapter::pairingFinished(const QBluetoothAddress &address, QBluetoothLocalDevice::Pairing pairing)
 {
     qDebug() << "Adapter::pairingFinished(" << m_address << ") to " << address << " / pairing status:" << pairing;
+}
+
+void Adapter::detailsChanged(const AdapterDetails &details)
+{
+    m_details = details;
+
+    if (!m_details.alias.isEmpty()) m_hostname = m_details.alias;
+    m_system_name = (m_details.name != m_hostname) ? m_details.name : QString();
+
+    m_chipset = m_details.chipset;
+    if (m_chipset.isEmpty() && !m_details.usbId.isEmpty()) m_chipset = "USB " + m_details.usbId;
+
+    m_manufacturer.clear();
+    if (m_details.manufacturerId >= 0)
+    {
+        const QString manufacturer = QString("%1").arg(m_details.manufacturerId, 4, 16, QLatin1Char('0'));
+        VendorsDatabase::getInstance()->getVendor_manufacturerID(manufacturer, m_manufacturer);
+    }
+
+    m_bluetooth_features = generateFeatures();
+
+    Q_EMIT adapterUpdated();
+}
+
+QStringList Adapter::getRoles() const
+{
+    QStringList roles;
+    if (m_details.centralRole.value_or(false)) roles << "Central";
+    if (m_details.peripheralRole.value_or(false)) roles << "Peripheral";
+    return roles;
+}
+
+QStringList Adapter::generateFeatures() const
+{
+    QStringList features;
+    const AdapterDetails &d = m_details;
+
+    if (d.lowEnergy.value_or(false)) features << "LE";
+    if (d.classic.value_or(false)) features << "BR/EDR";
+    if (d.leSecureConnections.value_or(false)) features << "LE Secure Connections";
+    if (d.extendedAdvertising.value_or(false)) features << "Extended advertising";
+    if (d.advertisingOffload.value_or(false)) features << "Advertising offload";
+
+    return features;
 }
 
 void Adapter::errorOccurred(QBluetoothLocalDevice::Error error)

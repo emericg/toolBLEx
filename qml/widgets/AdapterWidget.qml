@@ -13,6 +13,28 @@ Rectangle {
     border.width: 2
     border.color: Theme.colorBoxBorder
 
+    readonly property var advertisingTags: {
+        let tags = []
+        if (modelData.maxAdvertisingLength >= 0) {
+            tags.push(qsTr("Data: %1 bytes").arg(modelData.maxAdvertisingLength))
+        }
+        if (modelData.maxScanResponseLength >= 0) {
+            tags.push(qsTr("Scan response: %1 bytes").arg(modelData.maxScanResponseLength))
+        }
+        if (modelData.advertisingInstances >= 0) {
+            if (modelData.activeAdvertisingInstances >= 0) {
+                tags.push(qsTr("Sets: %1 / %2 in use").arg(modelData.activeAdvertisingInstances)
+                                                      .arg(modelData.advertisingInstances))
+            } else {
+                tags.push(qsTr("Sets: %1").arg(modelData.advertisingInstances))
+            }
+        }
+        if (modelData.txPowerMin !== undefined && modelData.txPowerMax !== undefined) {
+            tags.push(qsTr("TX power: %1 to %2 dBm").arg(modelData.txPowerMin).arg(modelData.txPowerMax))
+        }
+        return tags
+    }
+
     ////////////////
 
     Rectangle { // yellow bar
@@ -45,13 +67,17 @@ Rectangle {
         Component.onCompleted: {
             legendWidth = 64
             legendWidth = Math.max(legendWidth, legendHostname.contentWidth)
+            legendWidth = Math.max(legendWidth, legendSystemName.contentWidth)
             legendWidth = Math.max(legendWidth, legendChipset.contentWidth)
             legendWidth = Math.max(legendWidth, legendChipsetFirmware.contentWidth)
             legendWidth = Math.max(legendWidth, legendVendor.contentWidth)
             legendWidth = Math.max(legendWidth, legendAddress.contentWidth)
             legendWidth = Math.max(legendWidth, legendAddressVendor.contentWidth)
             legendWidth = Math.max(legendWidth, legendBluetooth.contentWidth)
-            legendWidth = Math.max(legendWidth, legendFeatures.contentWidth)
+            legendWidth = Math.max(legendWidth, rowFeatures.legendContentWidth)
+            legendWidth = Math.max(legendWidth, rowRoles.legendContentWidth)
+            legendWidth = Math.max(legendWidth, rowPhys.legendContentWidth)
+            legendWidth = Math.max(legendWidth, rowAdvertising.legendContentWidth)
             legendWidth = Math.max(legendWidth, legendHostMode.contentWidth)
         }
 
@@ -95,6 +121,34 @@ Rectangle {
                 Layout.minimumHeight: box.legendHeight
 
                 text: modelData.hostname
+                wrapMode: Text.WrapAnywhere
+            }
+        }
+
+        RowLayout {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            spacing: Theme.componentMarginS
+
+            visible: modelData.systemName.length
+
+            Text {
+                id: legendSystemName
+                Layout.preferredWidth: box.legendWidth
+                Layout.alignment: Qt.AlignCenter
+
+                text: qsTr("System name")
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContent
+                horizontalAlignment: Text.AlignRight
+                color: Theme.colorSubText
+            }
+
+            TextSelectable {
+                Layout.fillWidth: true
+                Layout.minimumHeight: box.legendHeight
+
+                text: modelData.systemName
                 wrapMode: Text.WrapAnywhere
             }
         }
@@ -275,39 +329,46 @@ Rectangle {
 
         ////////
 
-        RowLayout {
+        TagListRow {
+            id: rowFeatures
             anchors.left: parent.left
             anchors.right: parent.right
-            spacing: Theme.componentMarginS
 
-            visible: modelData.bluetoothFeatures.length
+            legendWidth: box.legendWidth
+            legend: qsTr("Features")
+            tags: modelData.bluetoothFeatures
+        }
 
-            Text {
-                id: legendFeatures
-                Layout.preferredWidth: box.legendWidth
-                Layout.preferredHeight: 32
+        TagListRow {
+            id: rowPhys
+            anchors.left: parent.left
+            anchors.right: parent.right
 
-                text: qsTr("Features")
-                textFormat: Text.PlainText
-                font.pixelSize: Theme.fontSizeContent
-                horizontalAlignment: Text.AlignRight
-                verticalAlignment: Text.AlignVCenter
-                color: Theme.colorSubText
-            }
+            legendWidth: box.legendWidth
+            legend: qsTr("PHYs")
+            tags: modelData.phys
+        }
 
-            Flow {
-                Layout.fillWidth: true
-                spacing: 4
+        TagListRow {
+            id: rowAdvertising
+            anchors.left: parent.left
+            anchors.right: parent.right
 
-                Repeater {
-                    model: modelData.bluetoothFeatures
-                    TagDesktop {
-                        text: modelData
-                        colorBackground: Theme.colorComponent
-                        colorBorder: Theme.colorComponent
-                    }
-                }
-            }
+            visible: false
+
+            legendWidth: box.legendWidth
+            legend: qsTr("Advertising")
+            tags: adapterWidget.advertisingTags
+        }
+
+        TagListRow {
+            id: rowRoles
+            anchors.left: parent.left
+            anchors.right: parent.right
+
+            legendWidth: box.legendWidth
+            legend: qsTr("Roles")
+            tags: modelData.roles
         }
 
         ////////
@@ -342,9 +403,11 @@ Rectangle {
     ////////////////
 
     Rectangle { // bluetooth icon
+        anchors.top: parent.top
+        anchors.topMargin: Theme.componentMarginL
         anchors.right: parent.right
         anchors.rightMargin: Theme.componentMarginL
-        anchors.verticalCenter: parent.verticalCenter
+        //anchors.verticalCenter: parent.verticalCenter
 
         width: 96
         height: 96
@@ -433,5 +496,43 @@ Rectangle {
         }
     }
 
-    ////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+    component TagListRow: RowLayout {
+        property alias legend: legendText.text
+        property alias legendContentWidth: legendText.contentWidth
+        property int legendWidth: 64
+        property var tags: []
+
+        spacing: Theme.componentMarginS
+        visible: tags.length > 0
+
+        Text {
+            id: legendText
+            Layout.preferredWidth: legendWidth
+            Layout.preferredHeight: 32
+
+            textFormat: Text.PlainText
+            font.pixelSize: Theme.fontSizeContent
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignVCenter
+            color: Theme.colorSubText
+        }
+
+        Flow {
+            Layout.fillWidth: true
+            spacing: 4
+
+            Repeater {
+                model: tags
+                TagDesktop {
+                    text: modelData
+                    colorBackground: Theme.colorComponent
+                    colorBorder: Theme.colorComponent
+                }
+            }
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

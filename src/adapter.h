@@ -23,10 +23,15 @@
 #define ADAPTER_H
 /* ************************************************************************** */
 
+#include "AdapterDetails.h"
+
 #include <QObject>
+#include <QVariant>
 
 #include <QBluetoothHostInfo>
 #include <QBluetoothLocalDevice>
+
+class AdapterInfo;
 
 /* ************************************************************************** */
 
@@ -41,13 +46,25 @@ class Adapter: public QObject
     Q_PROPERTY(int hostMode READ getBluetoothHostMode NOTIFY adapterUpdated)
 
     Q_PROPERTY(QString address READ getAddress CONSTANT)
-    Q_PROPERTY(QString hostname READ getHostname CONSTANT)
-    Q_PROPERTY(QString chipset READ getChipset CONSTANT)
-    Q_PROPERTY(QString chipsetFirmware READ getChipsetFirmware CONSTANT)
-    Q_PROPERTY(QString manufacturer READ getManufacturer CONSTANT)
+    Q_PROPERTY(QString hostname READ getHostname NOTIFY adapterUpdated)
+    Q_PROPERTY(QString chipset READ getChipset NOTIFY adapterUpdated)
+    Q_PROPERTY(QString chipsetFirmware READ getChipsetFirmware NOTIFY adapterUpdated)
+    Q_PROPERTY(QString manufacturer READ getManufacturer NOTIFY adapterUpdated)
     Q_PROPERTY(QString manufacturerMac READ getManufacturerMac CONSTANT)
-    Q_PROPERTY(QString bluetoothVersion READ getBluetoothVersion CONSTANT)
-    Q_PROPERTY(QStringList bluetoothFeatures READ getBluetoothFeatures CONSTANT)
+    Q_PROPERTY(QString bluetoothVersion READ getBluetoothVersion NOTIFY adapterUpdated)
+    Q_PROPERTY(QStringList bluetoothFeatures READ getBluetoothFeatures NOTIFY adapterUpdated)
+    Q_PROPERTY(QString systemName READ getSystemName NOTIFY adapterUpdated)
+
+    Q_PROPERTY(QStringList roles READ getRoles NOTIFY adapterUpdated)
+    Q_PROPERTY(QStringList phys READ getPhys NOTIFY adapterUpdated)
+    Q_PROPERTY(bool centralRole READ isCentralRole NOTIFY adapterUpdated)
+    Q_PROPERTY(bool peripheralRole READ isPeripheralRole NOTIFY adapterUpdated)
+    Q_PROPERTY(int maxAdvertisingLength READ getMaxAdvertisingLength NOTIFY adapterUpdated)
+    Q_PROPERTY(int maxScanResponseLength READ getMaxScanResponseLength NOTIFY adapterUpdated)
+    Q_PROPERTY(int advertisingInstances READ getAdvertisingInstances NOTIFY adapterUpdated)
+    Q_PROPERTY(int activeAdvertisingInstances READ getActiveAdvertisingInstances NOTIFY adapterUpdated)
+    Q_PROPERTY(QVariant txPowerMin READ getTxPowerMin NOTIFY adapterUpdated)
+    Q_PROPERTY(QVariant txPowerMax READ getTxPowerMax NOTIFY adapterUpdated)
 
     QBluetoothLocalDevice *m_adapter_device = nullptr;
     int m_bluetooth_host_mode = 0;
@@ -61,14 +78,23 @@ class Adapter: public QObject
 
     QString m_address;
     QString m_hostname;
+    QString m_system_name;          //!< system name, when different from the hostname (alias)
     QString m_chipset;
-    QString m_chipset_firmware;
     QString m_manufacturer;
     QString m_mac_manufacturer;
-    QString m_bluetooth_version;
     QStringList m_bluetooth_features;
 
+    AdapterInfo *m_info = nullptr;  //!< platform backend, nullptr if the platform has none
+    AdapterDetails m_details;
+
     void setHostMode(int hostMode);
+
+    /*!
+     * \brief Generate the feature tags shown by AdapterWidget, from the adapter details.
+     *
+     * Roles and PHYs are not included, see getRoles() and getPhys().
+     */
+    QStringList generateFeatures() const;
 
 private slots:
     void hostModeStateChanged(QBluetoothLocalDevice::HostMode state);
@@ -76,6 +102,7 @@ private slots:
     void deviceDisconnected(const QBluetoothAddress &address);
     void pairingFinished(const QBluetoothAddress &address, QBluetoothLocalDevice::Pairing pairing);
     void errorOccurred(QBluetoothLocalDevice::Error error);
+    void detailsChanged(const AdapterDetails &details);
 
 Q_SIGNALS:
     void adapterUpdated();
@@ -128,13 +155,35 @@ public:
 
     const QString &getAddress() const { return m_address; }
     const QString &getHostname() const { return m_hostname; }
+    const QString &getSystemName() const { return m_system_name; }
     const QString &getChipset() const { return m_chipset; }
-    const QString &getChipsetFirmware() const { return m_chipset_firmware; }
+    const QString &getChipsetFirmware() const { return m_details.chipsetFirmware; }
     const QString &getManufacturer() const { return m_manufacturer; }
     const QString &getManufacturerMac() const { return m_mac_manufacturer; }
-    const QString &getBluetoothVersion() const { return m_bluetooth_version; }
+    const QString &getBluetoothVersion() const { return m_details.coreVersion; }
     const QStringList &getBluetoothFeatures() const { return m_bluetooth_features; }
     int getBluetoothHostMode() const { return m_bluetooth_host_mode; }
+
+    const AdapterDetails &getDetails() const { return m_details; }
+
+    /*!
+     * \brief Supported LE roles, as tags: "Central", "Peripheral".
+     */
+    QStringList getRoles() const;
+    const QStringList &getPhys() const { return m_details.phys; }
+    bool isCentralRole() const { return m_details.centralRole.value_or(false); }
+    bool isPeripheralRole() const { return m_details.peripheralRole.value_or(false); }
+    int getMaxAdvertisingLength() const { return m_details.maxAdvertisingLength; }
+    int getMaxScanResponseLength() const { return m_details.maxScanResponseLength; }
+    int getAdvertisingInstances() const { return m_details.advertisingInstances; }
+    int getActiveAdvertisingInstances() const { return m_details.activeAdvertisingInstances; }
+
+    /*!
+     * \brief Advertising TX power range, in dBm.
+     * \return The value, or an invalid QVariant (undefined in QML) when unknown.
+     */
+    QVariant getTxPowerMin() const { return m_details.txPowerMin ? QVariant(*m_details.txPowerMin) : QVariant(); }
+    QVariant getTxPowerMax() const { return m_details.txPowerMax ? QVariant(*m_details.txPowerMax) : QVariant(); }
 };
 
 /* ************************************************************************** */

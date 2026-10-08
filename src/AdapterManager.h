@@ -89,8 +89,6 @@ class AdapterManager: public QObject
 
     QList <QObject *> m_bluetoothAdapters;
 
-    Adapter *getAdapter(const QBluetoothAddress &address) const;
-
     /*!
      * \brief List the Bluetooth adapters available on the system.
      *
@@ -322,6 +320,12 @@ public:
      * The adapters list and the selection are refreshed first.
      */
     bool switchAdapter_scan();
+
+    /*!
+     * \brief Get an adapter by address.
+     * \return the adapter, or nullptr if unknown.
+     */
+    Adapter *getAdapter(const QBluetoothAddress &address) const;
 
     // Sim adapter
 

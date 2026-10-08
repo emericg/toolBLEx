@@ -228,6 +228,9 @@ add_other_files(${PROJECT_NAME}
 
 ################################################################################
 
+# AdapterInfo backends
+add_subdirectory(src/AdapterInfo)
+
 # SpectrumAnalyzers backends
 add_subdirectory(src/SpectrumAnalyzers)
 
@@ -263,7 +266,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 )
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    # For BlueZ pairing status queries
+    # For BlueZ pairing status queries, and adapter info
     find_package(Qt6 REQUIRED COMPONENTS DBus)
     target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::DBus)
 endif()
