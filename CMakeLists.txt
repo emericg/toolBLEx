@@ -104,7 +104,6 @@ set(SOURCES_QML
     qml/DesktopHeader.qml
     qml/ScreenScanner.qml
     qml/ScreenSimulator.qml
-    qml/ScreenBluetooth.qml
     qml/ScreenUbertooth.qml
     qml/ScreenRtlSdr.qml
     qml/ScreenSettings.qml
@@ -140,6 +139,7 @@ set(SOURCES_QML
     qml/graphs/WaterfallGraphOverlayBands.qml
 
     qml/components/ButtonScanMenu.qml
+    qml/components/ErrorBanner.qml
     qml/components/ItemActionTag.qml
     qml/components/HexBytesView.qml
     qml/components/WriteSelector.qml
@@ -148,9 +148,6 @@ set(SOURCES_QML
     qml/components/DeviceScannerListWidget.qml
     qml/components/DeviceScannerTableHeader.qml
     qml/components/DeviceScannerTableWidget.qml
-    qml/components/WarningNoAdapter.qml
-    qml/components/WarningNoBluetooth.qml
-    qml/components/WarningNoPermission.qml
     qml/components/WarningNotImplemented.qml
 
     qml/components_js/UtilsBluetooth.js

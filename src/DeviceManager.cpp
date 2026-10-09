@@ -74,7 +74,7 @@ DeviceManager::DeviceManager(QObject *parent) : QObject(parent)
 
     // Bluetooth adapter
     AdapterManager *am = AdapterManager::getInstance();
-    connect(am, &AdapterManager::bluetoothChanged,
+    connect(am, &AdapterManager::bluetoothChanged_scan,
             this, &DeviceManager::bluetoothStatusChanged);
     connect(am, &AdapterManager::adapterChanged_scan,
             this, &DeviceManager::adapterChanged_scan);
@@ -241,7 +241,7 @@ void DeviceManager::bluetoothStatusChanged()
     //qDebug() << "DeviceManager::bluetoothStatusChanged()";
 
     AdapterManager *am = AdapterManager::getInstance();
-    if (am->hasBluetooth())
+    if (am->hasBluetooth_scan())
     {
         checkPaired();
 
@@ -341,7 +341,7 @@ void DeviceManager::scanDevices_start()
     // Starting a new scan session, go back to the selected adapter (the agent is deleted if it changes)
     if (!m_scanning) AdapterManager::getInstance()->switchAdapter_scan();
 
-    if (AdapterManager::getInstance()->hasBluetooth())
+    if (AdapterManager::getInstance()->hasBluetooth_scan())
     {
         startBleAgent();
 
@@ -374,7 +374,7 @@ void DeviceManager::scanDevices_pause()
 
     if (!SettingsManager::getInstance()->getScanPause()) return;
 
-    if (AdapterManager::getInstance()->hasBluetooth())
+    if (AdapterManager::getInstance()->hasBluetooth_scan())
     {
         if (m_bluetoothDiscoveryAgent)
         {
@@ -404,7 +404,7 @@ void DeviceManager::scanDevices_resume()
     if (!m_scanning_paused) return;
     if (!SettingsManager::getInstance()->getScanPause()) return;
 
-    if (AdapterManager::getInstance()->hasBluetooth())
+    if (AdapterManager::getInstance()->hasBluetooth_scan())
     {
         startBleAgent();
 

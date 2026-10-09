@@ -44,6 +44,17 @@ Loader {
 
             ////
         }
+
+        ErrorBanner {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+
+            bluetooth: AdapterManager.bluetooth_sim
+            bluetoothAdapter: AdapterManager.bluetoothAdapter_sim
+            bluetoothEnabled: AdapterManager.bluetoothEnabled_sim
+            onRetry: AdapterManager.enableBluetooth_sim()
+        }
     }
 
     ////////////////

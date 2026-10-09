@@ -76,7 +76,7 @@ AdapterManager::AdapterManager(QObject *parent) : QObject(parent)
                 this, &AdapterManager::applicationStateChanged);
     }
 
-    // BLE permission initial check // will call enableBluetooth();
+    // BLE permission initial check // will call enableBluetooth_scan();
     requestBluetoothPermission();
 }
 
@@ -85,6 +85,8 @@ AdapterManager::~AdapterManager()
     stopAdaptersWatcher_windows();
 
     m_adapter_scan = nullptr;
+    m_adapter_sim = nullptr;
+    m_adapterStatus_sim = nullptr;
 
     qDeleteAll(m_bluetoothAdapters);
     m_bluetoothAdapters.clear();
@@ -93,12 +95,12 @@ AdapterManager::~AdapterManager()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-bool AdapterManager::checkBluetooth()
+bool AdapterManager::checkBluetooth_scan()
 {
-    //qDebug() << "AdapterManager::checkBluetooth()";
+    //qDebug() << "AdapterManager::checkBluetooth_scan()";
 
-    bool btA_was = m_bleAdapter;
-    bool btE_was = m_bleEnabled;
+    bool btA_was = m_bleAdapter_scan;
+    bool btE_was = m_bleEnabled_scan;
     bool btP_was = m_blePermission;
 
     // Check permissions
@@ -110,24 +112,24 @@ bool AdapterManager::checkBluetooth()
     // Check scan adapter availability
     checkAdapterDevice_scan();
 
-    if (btA_was != m_bleAdapter || btE_was != m_bleEnabled || btP_was != m_blePermission)
+    if (btA_was != m_bleAdapter_scan || btE_was != m_bleEnabled_scan || btP_was != m_blePermission)
     {
         // this function did changed the Bluetooth adapter status
-        Q_EMIT bluetoothChanged();
+        Q_EMIT bluetoothChanged_scan();
 
         // let's see if we can turn on the adapter now
-        enableBluetooth();
+        enableBluetooth_scan();
     }
 
-    return (m_bleAdapter && m_bleEnabled && m_blePermission);
+    return (m_bleAdapter_scan && m_bleEnabled_scan && m_blePermission);
 }
 
-bool AdapterManager::enableBluetooth()
+bool AdapterManager::enableBluetooth_scan()
 {
-    //qDebug() << "AdapterManager::enableBluetooth()";
+    //qDebug() << "AdapterManager::enableBluetooth_scan()";
 
-    bool btA_was = m_bleAdapter;
-    bool btE_was = m_bleEnabled;
+    bool btA_was = m_bleAdapter_scan;
+    bool btE_was = m_bleEnabled_scan;
     bool btP_was = m_blePermission;
 
     // List all Bluetooth adapters, then pick the one to use
@@ -138,12 +140,12 @@ bool AdapterManager::enableBluetooth()
     QBluetoothLocalDevice *dev = getAdapterDevice_scan();
     if (dev && dev->isValid())
     {
-        m_bleAdapter = true;
+        m_bleAdapter_scan = true;
 
         if (dev->hostMode() > QBluetoothLocalDevice::HostMode::HostPoweredOff)
         {
             // Is already activated
-            m_bleEnabled = true;
+            m_bleEnabled_scan = true;
         }
         else
         {
@@ -153,18 +155,18 @@ bool AdapterManager::enableBluetooth()
     }
     else
     {
-        qWarning() << "AdapterManager::enableBluetooth() we have an invalid adapter";
-        m_bleAdapter = false;
-        m_bleEnabled = false;
+        qWarning() << "AdapterManager::enableBluetooth_scan() we have an invalid adapter";
+        m_bleAdapter_scan = false;
+        m_bleEnabled_scan = false;
     }
 
-    if (btA_was != m_bleAdapter || btE_was != m_bleEnabled || btP_was != m_blePermission)
+    if (btA_was != m_bleAdapter_scan || btE_was != m_bleEnabled_scan || btP_was != m_blePermission)
     {
         // this function did changed the Bluetooth adapter status
-        Q_EMIT bluetoothChanged();
+        Q_EMIT bluetoothChanged_scan();
     }
 
-    return (m_bleAdapter && m_bleEnabled && m_blePermission);
+    return (m_bleAdapter_scan && m_bleEnabled_scan && m_blePermission);
 }
 
 /* ************************************************************************** */
@@ -180,7 +182,7 @@ bool AdapterManager::requestBluetoothPermission()
     {
     case Qt::PermissionStatus::Granted:
         setBluetoothPermission(true);
-        enableBluetooth();
+        enableBluetooth_scan();
         Q_EMIT permissionRequestFinished(true);
         break;
     case Qt::PermissionStatus::Denied:
@@ -200,7 +202,7 @@ void AdapterManager::requestBluetoothPermission_results(const QPermission &permi
     {
     case Qt::PermissionStatus::Granted:
         setBluetoothPermission(true);
-        enableBluetooth();
+        enableBluetooth_scan();
         break;
     case Qt::PermissionStatus::Denied:
     case Qt::PermissionStatus::Undetermined:
@@ -237,6 +239,9 @@ void AdapterManager::setBluetoothPermission(bool perm)
     {
         m_blePermission = perm;
         Q_EMIT permissionChanged();
+
+        // The scan status is updated by the callers, along with the scan adapter
+        Q_EMIT bluetoothChanged_sim();
     }
 }
 
@@ -250,9 +255,9 @@ void AdapterManager::applicationStateChanged(Qt::ApplicationState state)
 
     if (btP_was != m_blePermission)
     {
-        Q_EMIT bluetoothChanged();
+        Q_EMIT bluetoothChanged_scan();
 
-        if (m_blePermission) enableBluetooth();
+        if (m_blePermission) enableBluetooth_scan();
     }
 }
 
@@ -264,19 +269,19 @@ void AdapterManager::discoveryError(QBluetoothDeviceDiscoveryAgent::Error error)
     {
         qWarning() << "The Bluetooth adaptor is powered off, power it on before doing discovery.";
 
-        if (m_bleEnabled)
+        if (m_bleEnabled_scan)
         {
-            m_bleEnabled = false;
-            Q_EMIT bluetoothChanged();
+            m_bleEnabled_scan = false;
+            Q_EMIT bluetoothChanged_scan();
         }
     }
     else if (error == QBluetoothDeviceDiscoveryAgent::InputOutputError)
     {
         qWarning() << "deviceDiscoveryError() Writing or reading from the device resulted in an error.";
 
-        m_bleAdapter = false;
-        m_bleEnabled = false;
-        Q_EMIT bluetoothChanged();
+        m_bleAdapter_scan = false;
+        m_bleEnabled_scan = false;
+        Q_EMIT bluetoothChanged_scan();
 
         QTimer::singleShot(s_discoveryErrorRecoveryDelay, this, &AdapterManager::recoverFromDiscoveryError);
     }
@@ -284,12 +289,12 @@ void AdapterManager::discoveryError(QBluetoothDeviceDiscoveryAgent::Error error)
     {
         qWarning() << "deviceDiscoveryError() Invalid Bluetooth adapter.";
 
-        m_bleAdapter = false;
+        m_bleAdapter_scan = false;
 
-        if (m_bleEnabled)
+        if (m_bleEnabled_scan)
         {
-            m_bleEnabled = false;
-            Q_EMIT bluetoothChanged();
+            m_bleEnabled_scan = false;
+            Q_EMIT bluetoothChanged_scan();
         }
 
         QTimer::singleShot(s_discoveryErrorRecoveryDelay, this, &AdapterManager::recoverFromDiscoveryError);
@@ -298,44 +303,41 @@ void AdapterManager::discoveryError(QBluetoothDeviceDiscoveryAgent::Error error)
     {
         qWarning() << "deviceDiscoveryError() Unsupported Platform.";
 
-        m_bleAdapter = false;
-        m_bleEnabled = false;
-        Q_EMIT bluetoothChanged();
+        m_bleAdapter_scan = false;
+        m_bleEnabled_scan = false;
+        Q_EMIT bluetoothChanged_scan();
     }
     else if (error == QBluetoothDeviceDiscoveryAgent::UnsupportedDiscoveryMethod)
     {
         qWarning() << "deviceDiscoveryError() Unsupported Discovery Method.";
 
-        m_bleEnabled = false;
-        m_blePermission = false;
-        Q_EMIT bluetoothChanged();
-        Q_EMIT permissionChanged();
+        m_bleEnabled_scan = false;
+        Q_EMIT bluetoothChanged_scan();
+        setBluetoothPermission(false);
     }
     else if (error == QBluetoothDeviceDiscoveryAgent::LocationServiceTurnedOffError)
     {
         qWarning() << "deviceDiscoveryError() Location Service Turned Off Error.";
 
-        m_bleEnabled = false;
-        m_blePermission = false;
-        Q_EMIT bluetoothChanged();
-        Q_EMIT permissionChanged();
+        m_bleEnabled_scan = false;
+        Q_EMIT bluetoothChanged_scan();
+        setBluetoothPermission(false);
     }
     else if (error == QBluetoothDeviceDiscoveryAgent::MissingPermissionsError)
     {
         qWarning() << "deviceDiscoveryError() Missing Permissions Error.";
 
-        m_bleEnabled = false;
-        m_blePermission = false;
-        Q_EMIT bluetoothChanged();
-        Q_EMIT permissionChanged();
+        m_bleEnabled_scan = false;
+        Q_EMIT bluetoothChanged_scan();
+        setBluetoothPermission(false);
     }
     else
     {
         qWarning() << "An unknown error has occurred.";
 
-        m_bleAdapter = false;
-        m_bleEnabled = false;
-        Q_EMIT bluetoothChanged();
+        m_bleAdapter_scan = false;
+        m_bleEnabled_scan = false;
+        Q_EMIT bluetoothChanged_scan();
     }
 }
 
@@ -403,6 +405,7 @@ void AdapterManager::updateAdapters()
 
     updateDefaultAdapters();
     updateAdapterSelected_scan();
+    updateStatus_sim();
 }
 
 void AdapterManager::checkAdapters()
@@ -416,6 +419,7 @@ void AdapterManager::checkAdapters()
     }
 
     updateDefaultAdapters();
+    updateStatus_sim();
 }
 
 void AdapterManager::updateDefaultAdapters()
@@ -437,6 +441,7 @@ void AdapterManager::preferredAdapterChanged()
 {
     updateDefaultAdapters();
     updateAdapterSelected_scan();
+    updateStatus_sim();
 }
 
 /* ************************************************************************** */
@@ -541,6 +546,9 @@ void AdapterManager::setAdapter_scan(Adapter *adapter)
         }
     }
 
+    // The scan adapter is the simulator fallback
+    updateStatus_sim();
+
     Q_EMIT adapterChanged_scan();
 }
 
@@ -549,22 +557,22 @@ void AdapterManager::checkAdapterDevice_scan()
     QBluetoothLocalDevice *dev = getAdapterDevice_scan();
     if (dev && dev->isValid())
     {
-        m_bleAdapter = true;
+        m_bleAdapter_scan = true;
 
         if (dev->hostMode() > QBluetoothLocalDevice::HostMode::HostPoweredOff)
         {
-            m_bleEnabled = true;
+            m_bleEnabled_scan = true;
         }
         else
         {
-            m_bleEnabled = false;
+            m_bleEnabled_scan = false;
             qWarning() << "Bluetooth adapter host mode:" << dev->hostMode();
         }
     }
     else
     {
-        m_bleAdapter = false;
-        m_bleEnabled = false;
+        m_bleAdapter_scan = false;
+        m_bleEnabled_scan = false;
         qWarning() << "Bluetooth adapter INVALID";
     }
 }
@@ -578,15 +586,15 @@ bool AdapterManager::switchAdapter_scan()
     if (!selected || selected == m_adapter_scan) return false;
     if (!selected->isValid() || selected->getDevice()->hostMode() == QBluetoothLocalDevice::HostPoweredOff) return false;
 
-    bool btA_was = m_bleAdapter;
-    bool btE_was = m_bleEnabled;
+    bool btA_was = m_bleAdapter_scan;
+    bool btE_was = m_bleEnabled_scan;
 
     setAdapter_scan(selected);
     checkAdapterDevice_scan();
 
-    if (btA_was != m_bleAdapter || btE_was != m_bleEnabled)
+    if (btA_was != m_bleAdapter_scan || btE_was != m_bleEnabled_scan)
     {
-        Q_EMIT bluetoothChanged();
+        Q_EMIT bluetoothChanged_scan();
     }
 
     return true;
@@ -613,15 +621,15 @@ void AdapterManager::hostModeChanged_scan(QBluetoothLocalDevice::HostMode state)
     // A powered off adapter is still available, it can be powered on again
     QBluetoothLocalDevice *dev = getAdapterDevice_scan();
 
-    bool btA_was = m_bleAdapter;
-    bool btE_was = m_bleEnabled;
+    bool btA_was = m_bleAdapter_scan;
+    bool btE_was = m_bleEnabled_scan;
 
-    m_bleAdapter = (dev && dev->isValid());
-    m_bleEnabled = (m_bleAdapter && state > QBluetoothLocalDevice::HostPoweredOff);
+    m_bleAdapter_scan = (dev && dev->isValid());
+    m_bleEnabled_scan = (m_bleAdapter_scan && state > QBluetoothLocalDevice::HostPoweredOff);
 
-    if (btA_was != m_bleAdapter || btE_was != m_bleEnabled)
+    if (btA_was != m_bleAdapter_scan || btE_was != m_bleEnabled_scan)
     {
-        Q_EMIT bluetoothChanged();
+        Q_EMIT bluetoothChanged_scan();
     }
 }
 
@@ -633,6 +641,78 @@ QBluetoothAddress AdapterManager::getAdapterAddress_sim() const
     return m_adapter_sim ? QBluetoothAddress(m_adapter_sim->getAddress()) : QBluetoothAddress();
 }
 
+Adapter *AdapterManager::pickAdapter_sim() const
+{
+    // Most of the time, the simulator and the scanner use the same adapter
+    Adapter *adapter = getAdapter(QBluetoothAddress(SettingsManager::getInstance()->getPreferredAdapter_sim()));
+    if (adapter && adapter->isValid()) return adapter;
+
+    return pickAdapter_scan();
+}
+
+void AdapterManager::updateStatus_sim()
+{
+    setAdapterStatus_sim(m_adapter_sim ? m_adapter_sim : pickAdapter_sim());
+
+    QBluetoothLocalDevice *dev = m_adapterStatus_sim ? m_adapterStatus_sim->getDevice() : nullptr;
+
+    bool btA_was = m_bleAdapter_sim;
+    bool btE_was = m_bleEnabled_sim;
+
+    // A powered off adapter is still available, it can be powered on again
+    m_bleAdapter_sim = (dev && m_adapterStatus_sim->isValid());
+    m_bleEnabled_sim = (m_bleAdapter_sim && dev->hostMode() > QBluetoothLocalDevice::HostPoweredOff);
+
+    if (btA_was != m_bleAdapter_sim || btE_was != m_bleEnabled_sim)
+    {
+        Q_EMIT bluetoothChanged_sim();
+    }
+}
+
+void AdapterManager::setAdapterStatus_sim(Adapter *adapter)
+{
+    if (m_adapterStatus_sim == adapter) return;
+
+    if (m_adapterStatus_sim)
+    {
+        disconnect(m_adapterStatus_sim, &Adapter::deviceChanged,
+                   this, &AdapterManager::deviceChangedStatus_sim);
+
+        if (QBluetoothLocalDevice *dev = m_adapterStatus_sim->getDevice())
+        {
+            disconnect(dev, &QBluetoothLocalDevice::hostModeStateChanged,
+                       this, &AdapterManager::updateStatus_sim);
+        }
+    }
+
+    m_adapterStatus_sim = adapter;
+
+    if (m_adapterStatus_sim)
+    {
+        connect(m_adapterStatus_sim, &Adapter::deviceChanged,
+                this, &AdapterManager::deviceChangedStatus_sim);
+
+        if (QBluetoothLocalDevice *dev = m_adapterStatus_sim->getDevice())
+        {
+            connect(dev, &QBluetoothLocalDevice::hostModeStateChanged,
+                    this, &AdapterManager::updateStatus_sim);
+        }
+    }
+}
+
+bool AdapterManager::enableBluetooth_sim()
+{
+    updateAdapters();
+
+    if (m_bleAdapter_sim && !m_bleEnabled_sim)
+    {
+        // Doesn't work on all platforms, the status is updated through the host mode change
+        m_adapterStatus_sim->getDevice()->powerOn();
+    }
+
+    return hasBluetooth_sim();
+}
+
 QBluetoothAddress AdapterManager::acquireAdapter_sim()
 {
     releaseAdapter_sim();
@@ -640,9 +720,7 @@ QBluetoothAddress AdapterManager::acquireAdapter_sim()
     // Refresh the adapters list
     updateAdapters();
 
-    // Most of the time, the simulator and the scanner use the same adapter
-    Adapter *adapter = getAdapter(QBluetoothAddress(SettingsManager::getInstance()->getPreferredAdapter_sim()));
-    if (!adapter || !adapter->isValid()) adapter = pickAdapter_scan();
+    Adapter *adapter = pickAdapter_sim();
     if (!adapter) return QBluetoothAddress();
 
     m_adapter_sim = adapter;
@@ -657,6 +735,8 @@ QBluetoothAddress AdapterManager::acquireAdapter_sim()
         connect(dev, &QBluetoothLocalDevice::hostModeStateChanged,
                 this, &AdapterManager::hostModeChanged_sim);
     }
+
+    updateStatus_sim();
 
     return QBluetoothAddress(m_adapter_sim->getAddress());
 }
@@ -676,6 +756,8 @@ void AdapterManager::releaseAdapter_sim()
 
     m_adapter_sim->setInUse_sim(false);
     m_adapter_sim = nullptr;
+
+    updateStatus_sim();
 }
 
 void AdapterManager::checkAdapter_sim()
@@ -709,6 +791,18 @@ void AdapterManager::hostModeChanged_sim(QBluetoothLocalDevice::HostMode state)
     }
 }
 
+void AdapterManager::deviceChangedStatus_sim()
+{
+    // The previous device has been deleted, along with its connections
+    if (QBluetoothLocalDevice *dev = m_adapterStatus_sim->getDevice())
+    {
+        connect(dev, &QBluetoothLocalDevice::hostModeStateChanged,
+                this, &AdapterManager::updateStatus_sim, Qt::UniqueConnection);
+    }
+
+    updateStatus_sim();
+}
+
 /* ************************************************************************** */
 /* ************************************************************************** */
 
@@ -718,8 +812,8 @@ void AdapterManager::refreshAdapters()
 
     if (!m_blePermission) return;
 
-    bool btA_was = m_bleAdapter;
-    bool btE_was = m_bleEnabled;
+    bool btA_was = m_bleAdapter_scan;
+    bool btE_was = m_bleEnabled_scan;
 
     updateAdapters();
 
@@ -727,9 +821,9 @@ void AdapterManager::refreshAdapters()
     checkAdapterDevice_scan();
     checkAdapter_sim();
 
-    if (btA_was != m_bleAdapter || btE_was != m_bleEnabled)
+    if (btA_was != m_bleAdapter_scan || btE_was != m_bleEnabled_scan)
     {
-        Q_EMIT bluetoothChanged();
+        Q_EMIT bluetoothChanged_scan();
     }
 }
 
@@ -763,15 +857,15 @@ void AdapterManager::recoverFromDiscoveryError()
     Adapter *adapter = pickAdapter_scan();
     if (adapter == m_adapter_scan) return;
 
-    bool btA_was = m_bleAdapter;
-    bool btE_was = m_bleEnabled;
+    bool btA_was = m_bleAdapter_scan;
+    bool btE_was = m_bleEnabled_scan;
 
     setAdapter_scan(adapter);
     checkAdapterDevice_scan();
 
-    if (btA_was != m_bleAdapter || btE_was != m_bleEnabled)
+    if (btA_was != m_bleAdapter_scan || btE_was != m_bleEnabled_scan)
     {
-        Q_EMIT bluetoothChanged();
+        Q_EMIT bluetoothChanged_scan();
     }
 }
 

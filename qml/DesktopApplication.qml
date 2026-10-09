@@ -8,6 +8,7 @@ import DeviceUtils
 
 ApplicationWindow {
     id: appWindow
+
     flags: Qt.Window
     color: Theme.colorBackground
 
@@ -234,26 +235,6 @@ ApplicationWindow {
 
     property string fontMonospace: "Courier New" // "Monospace" // "Consolas"
 
-    // Bluetooth ///////////////////////////////////////////////////////////////
-/*
-    property bool bluetooth: AdapterManager.bluetooth
-    property bool bluetoothAdapter: AdapterManager.bluetoothAdapter
-    property bool bluetoothEnabled: AdapterManager.bluetoothEnabled
-    property bool bluetoothPermission: AdapterManager.bluetoothPermission
-
-    onBluetoothChanged: checkBleStatus()
-    onBluetoothAdapterChanged: checkBleStatus()
-    onBluetoothEnabledChanged: checkBleStatus()
-    onBluetoothPermissionChanged: checkBleStatus()
-
-    function checkBleStatus() {
-        if (!bluetooth || !bluetoothAdapter || !bluetoothEnabled || !bluetoothPermission) {
-            //
-        } else {
-            //
-        }
-    }
-*/
     // QML /////////////////////////////////////////////////////////////////////
 
     DesktopHeader {
@@ -279,10 +260,6 @@ ApplicationWindow {
             id: screenSimulator
             anchors.fill: parent
         }
-        ScreenBluetooth { // is on top of the scanner and simulator tabs
-            id: screenBluetooth
-            anchors.fill: parent
-        }
 
         ScreenUbertooth {
             id: screenUbertooth
@@ -304,9 +281,6 @@ ApplicationWindow {
         property var previousStates: []
 
         onStateChanged: {
-            //screenScanner.exitSelectionMode()
-            //appHeader.setActiveMenu()
-
             // backward / forward actions
             if (previousStates[previousStates.length-1] !== state) previousStates.push(state)
             if (previousStates.length > 4) previousStates.splice(0, 1)
@@ -325,7 +299,6 @@ ApplicationWindow {
                 name: "Scanner"
                 PropertyChanges { target: screenScanner; visible: true; enabled: true; focus: true; }
                 PropertyChanges { target: screenSimulator; visible: false; enabled: false; }
-                PropertyChanges { target: screenBluetooth; visible: true; enabled: true; }
                 PropertyChanges { target: screenUbertooth; visible: false; enabled: false; }
                 PropertyChanges { target: screenRtlSdr; visible: false; enabled: false; }
                 PropertyChanges { target: screenSettings; visible: false; enabled: false; }
@@ -334,7 +307,6 @@ ApplicationWindow {
                 name: "Simulator"
                 PropertyChanges { target: screenScanner; visible: false; enabled: false; }
                 PropertyChanges { target: screenSimulator; visible: true; enabled: true; focus: true; }
-                PropertyChanges { target: screenBluetooth; visible: true; enabled: true; }
                 PropertyChanges { target: screenUbertooth; visible: false; enabled: false; }
                 PropertyChanges { target: screenRtlSdr; visible: false; enabled: false; }
                 PropertyChanges { target: screenSettings; visible: false; enabled: false; }
@@ -343,7 +315,6 @@ ApplicationWindow {
                 name: "Ubertooth"
                 PropertyChanges { target: screenScanner; visible: false; enabled: false; }
                 PropertyChanges { target: screenSimulator; visible: false; enabled: false; }
-                PropertyChanges { target: screenBluetooth; visible: false; enabled: false; }
                 PropertyChanges { target: screenUbertooth; visible: true; enabled: true; focus: true; }
                 PropertyChanges { target: screenRtlSdr; visible: false; enabled: false; }
                 PropertyChanges { target: screenSettings; visible: false; enabled: false; }
@@ -352,7 +323,6 @@ ApplicationWindow {
                 name: "RtlSdr"
                 PropertyChanges { target: screenScanner; visible: false; enabled: false; }
                 PropertyChanges { target: screenSimulator; visible: false; enabled: false; }
-                PropertyChanges { target: screenBluetooth; visible: false; enabled: false; }
                 PropertyChanges { target: screenUbertooth; visible: false; enabled: false; }
                 PropertyChanges { target: screenRtlSdr; visible: true; enabled: true; focus: true; }
                 PropertyChanges { target: screenSettings; visible: false; enabled: false; }
@@ -361,7 +331,6 @@ ApplicationWindow {
                 name: "Settings"
                 PropertyChanges { target: screenScanner; visible: false; enabled: false; }
                 PropertyChanges { target: screenSimulator; visible: false; enabled: false; }
-                PropertyChanges { target: screenBluetooth; visible: false; enabled: false; }
                 PropertyChanges { target: screenUbertooth; visible: false; enabled: false; }
                 PropertyChanges { target: screenRtlSdr; visible: false; enabled: false; }
                 PropertyChanges { target: screenSettings; visible: true; enabled: true; focus: true; }

@@ -71,16 +71,23 @@ class AdapterManager: public QObject
     Q_PROPERTY(QVariant adaptersList READ getAdapters NOTIFY adaptersListUpdated)
     Q_PROPERTY(int adaptersCount READ getAdaptersCount NOTIFY adaptersListUpdated)
 
-    Q_PROPERTY(bool bluetooth READ hasBluetooth NOTIFY bluetoothChanged)
-    Q_PROPERTY(bool bluetoothAdapter READ hasBluetoothAdapter NOTIFY bluetoothChanged)
-    Q_PROPERTY(bool bluetoothEnabled READ hasBluetoothEnabled NOTIFY bluetoothChanged)
     Q_PROPERTY(bool bluetoothPermission READ hasBluetoothPermission NOTIFY permissionChanged)
+
+    Q_PROPERTY(bool bluetooth_scan READ hasBluetooth_scan NOTIFY bluetoothChanged_scan)
+    Q_PROPERTY(bool bluetoothAdapter_scan READ hasBluetoothAdapter_scan NOTIFY bluetoothChanged_scan)
+    Q_PROPERTY(bool bluetoothEnabled_scan READ hasBluetoothEnabled_scan NOTIFY bluetoothChanged_scan)
+
+    Q_PROPERTY(bool bluetooth_sim READ hasBluetooth_sim NOTIFY bluetoothChanged_sim)
+    Q_PROPERTY(bool bluetoothAdapter_sim READ hasBluetoothAdapter_sim NOTIFY bluetoothChanged_sim)
+    Q_PROPERTY(bool bluetoothEnabled_sim READ hasBluetoothEnabled_sim NOTIFY bluetoothChanged_sim)
 
     // Bluetooth state and permission
 
-    bool m_bleAdapter = false;      //!< do we have a BLE adapter?
-    bool m_bleEnabled = false;      //!< is the BLE adapter enabled?
-    bool m_blePermission = false;   //!< do we have necessary BLE permission(s)?
+    bool m_blePermission = false;       //!< do we have necessary BLE permission(s)?
+    bool m_bleAdapter_scan = false;     //!< do we have a scan adapter?
+    bool m_bleEnabled_scan = false;     //!< is the scan adapter enabled?
+    bool m_bleAdapter_sim = false;      //!< do we have a simulator adapter?
+    bool m_bleEnabled_sim = false;      //!< is the simulator adapter enabled?
 
     void setBluetoothPermission(bool perm);
     void requestBluetoothPermission_results(const QPermission &permission);
@@ -142,6 +149,27 @@ class AdapterManager: public QObject
     // Sim adapter
 
     Adapter *m_adapter_sim = nullptr;               //!< adapter used by the simulator, owned by m_bluetoothAdapters
+    Adapter *m_adapterStatus_sim = nullptr;         //!< adapter reported by the simulator status, owned by m_bluetoothAdapters
+
+    /*!
+     * \brief Pick the adapter for the simulator.
+     * \return the preferred simulator adapter (from settings) if plugged in,
+     * otherwise the adapter used for scanning, see pickAdapter_scan().
+     */
+    Adapter *pickAdapter_sim() const;
+
+    /*!
+     * \brief Update the simulator adapter availability and enabled status.
+     *
+     * Reports the simulator adapter while it is held, otherwise the adapter acquireAdapter_sim() would pick.
+     */
+    void updateStatus_sim();
+
+    /*!
+     * \brief Change the adapter reported by the simulator status, and watch its host mode.
+     * \param adapter: the adapter to report, or nullptr.
+     */
+    void setAdapterStatus_sim(Adapter *adapter);
 
     /*!
      * \brief Release the simulator adapter if it has been unplugged, and tell the simulator.
@@ -217,8 +245,9 @@ class AdapterManager: public QObject
     void stopAdaptersWatcher_windows();
 
 Q_SIGNALS:
-    void bluetoothChanged();
     void permissionChanged();
+    void bluetoothChanged_scan();
+    void bluetoothChanged_sim();
 
     /*!
      * \brief Emitted after requestBluetoothPermission(), once the permission status is known.
@@ -258,6 +287,7 @@ private slots:
 
     void deviceChanged_sim();
     void hostModeChanged_sim(QBluetoothLocalDevice::HostMode state);
+    void deviceChangedStatus_sim();
 
     void interfacesAdded_bluez(const QDBusMessage &msg);
     void interfacesRemoved_bluez(const QDBusMessage &msg);
@@ -272,16 +302,29 @@ public:
 
     // Bluetooth state and permission
 
-    bool hasBluetoothAdapter() const { return m_bleAdapter; }
-    bool hasBluetoothEnabled() const { return m_bleEnabled; }
     bool hasBluetoothPermission() const { return m_blePermission; }
-    bool hasBluetooth() const { return (m_bleAdapter && m_bleEnabled && m_blePermission); }
 
-    Q_INVOKABLE bool checkBluetooth();
-    Q_INVOKABLE bool enableBluetooth();
+    bool hasBluetoothAdapter_scan() const { return m_bleAdapter_scan; }
+    bool hasBluetoothEnabled_scan() const { return m_bleEnabled_scan; }
+    bool hasBluetooth_scan() const { return (m_bleAdapter_scan && m_bleEnabled_scan && m_blePermission); }
+
+    bool hasBluetoothAdapter_sim() const { return m_bleAdapter_sim; }
+    bool hasBluetoothEnabled_sim() const { return m_bleEnabled_sim; }
+    bool hasBluetooth_sim() const { return (m_bleAdapter_sim && m_bleEnabled_sim && m_blePermission); }
 
     Q_INVOKABLE bool checkBluetoothPermission();
     Q_INVOKABLE bool requestBluetoothPermission();
+
+    Q_INVOKABLE bool checkBluetooth_scan();
+    Q_INVOKABLE bool enableBluetooth_scan();
+
+    /*!
+     * \brief Power on the simulator adapter, see updateStatus_sim().
+     * \return true if the simulator adapter is usable.
+     *
+     * Powering on an adapter doesn't work on all platforms.
+     */
+    Q_INVOKABLE bool enableBluetooth_sim();
 
     /*!
      * \brief Update the Bluetooth status from a discovery agent error.

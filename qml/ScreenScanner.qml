@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Controls
 
 import ComponentLibrary
@@ -519,150 +518,19 @@ Loader {
 
         ////////////////////////////////////////////////////////////////////////
 
-        Rectangle {
+        ErrorBanner {
             id: errorBar
+
+            bluetooth: AdapterManager.bluetooth_scan
+            bluetoothAdapter: AdapterManager.bluetoothAdapter_scan
+            bluetoothEnabled: AdapterManager.bluetoothEnabled_scan
+            onRetry: AdapterManager.enableBluetooth_scan()
 
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: statusBar.top
 
-            height: 0
-            Behavior on height { NumberAnimation { duration: Theme.animationSpeedMedium } }
-
-            clip: true
-            color: Theme.colorWarning
-
-            ////
-
-            property bool bluetooth: AdapterManager.bluetooth
-            property bool bluetoothAdapter: AdapterManager.bluetoothAdapter
-            property bool bluetoothEnabled: AdapterManager.bluetoothEnabled
-            property bool bluetoothPermission: AdapterManager.bluetoothPermission
-
-            onBluetoothChanged: checkBleStatus()
-            onBluetoothAdapterChanged: checkBleStatus()
-            onBluetoothEnabledChanged: checkBleStatus()
-            onBluetoothPermissionChanged: checkBleStatus()
-
-            function checkBleStatus() {
-                if (!bluetooth || !bluetoothAdapter || !bluetoothEnabled || !bluetoothPermission) {
-                    errorBar.height = 64
-                } else {
-                    errorBar.height = 0
-                }
-            }
-
-            ////
-
-            RowLayout {
-                anchors.left: parent.left
-                anchors.leftMargin: Theme.componentMargin
-                anchors.right: parent.right
-                anchors.rightMargin: Theme.componentMargin
-                anchors.verticalCenter: parent.verticalCenter
-                spacing: Theme.componentMargin
-
-                ////
-
-                Item {
-                    Layout.preferredWidth: 64
-                    Layout.preferredHeight: 64
-
-                    IconSvg { // primary
-                        anchors.centerIn: parent
-                        width: 48
-                        height: 48
-
-                        color: "white"
-                        source: "qrc:/IconLibrary/material-icons/outlined/bluetooth_disabled.svg"
-
-                        IconSvg { // secondary
-                            anchors.right: parent.right
-                            anchors.bottom: parent.bottom
-                            anchors.margins: -4
-                            width: 24
-                            height: 24
-
-                            color: "white"
-                            source: {
-                                if (!AdapterManager.bluetoothAdapter) return "qrc:/IconLibrary/material-symbols/memory-fill.svg"
-                                if (!AdapterManager.bluetoothEnabled) return "qrc:/IconLibrary/material-symbols/flaky.svg"
-                                if (!AdapterManager.bluetoothPermission) return "qrc:/IconLibrary/material-symbols/lock-fill.svg"
-                                return "qrc:/IconLibrary/material-icons/outlined/bluetooth_disabled.svg"
-                            }
-
-                            Rectangle {
-                                anchors.fill: parent
-                                anchors.margins: -2
-                                z: -1
-
-                                radius: width
-                                color: "grey"
-                                opacity: 0.48
-                            }
-                        }
-                    }
-                }
-
-                ////
-
-                Column {
-                    Layout.fillWidth: true
-
-                    Text {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-
-                        text: {
-                            if (!AdapterManager.hasAdapters) return qsTr("No Bluetooth adapter detected")
-                            if (!AdapterManager.bluetoothPermission) return qsTr("Bluetooth pepermission missing")
-                            if (!AdapterManager.bluetooth) return qsTr("Bluetooth is disabled")
-                            return "Error..."
-                        }
-                        font.pixelSize: Theme.fontSizeContentBig
-                        font.bold: true
-                        wrapMode: Text.WordWrap
-                        color: "white"
-                        opacity: 1.0
-                    }
-
-                    Text {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-
-                        text: {
-                            if (!AdapterManager.hasAdapters) {
-                                return qsTr("Please check if a Bluetooth adapter is connected and configured on your machine.")
-                            } else if (!AdapterManager.bluetoothPermission) {
-                                return qsTr("Please check if the Bluetooth permission has been granted to the application.")
-                            }
-                            return qsTr("Please enable Bluetooth on your machine and retry.")
-                        }
-                        font.pixelSize: Theme.fontSizeContent
-                        wrapMode: Text.WordWrap
-                        color: "white"
-                        opacity: 0.85
-                    }
-                }
-
-                ////
-
-                Row {
-                    spacing: Theme.componentMargin
-
-                    ButtonClear {
-                        text: qsTr("Retry")
-                        color: "white"
-
-                        onClicked: {
-                            AdapterManager.requestBluetoothPermission()
-                            AdapterManager.enableBluetooth()
-                        }
-                    }
-                }
-
-                ////
-            }
+            z:4
         }
 
         ////////////////////////////////////////////////////////////////////////

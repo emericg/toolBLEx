@@ -33,12 +33,12 @@ Item {
             onCurrentIndexChanged: if (currentIndex === 2) rssiGraph.updateGraph()
 
             TabButtonThemed {
-                text: qsTr("host info")
+                text: qsTr("Host info")
                 colorBackground: Theme.colorActionbar
                 colorBackgroundChecked: Theme.colorGrey
             }
             TabButtonThemed {
-                text: qsTr("proximity radar")
+                text: qsTr("Proximity radar")
                 colorBackground: Theme.colorActionbar
                 colorBackgroundChecked: Theme.colorGrey
             }

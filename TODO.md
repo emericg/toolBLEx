@@ -34,7 +34,7 @@
 [-] r/w/n: red badges on errors?
 [x] write data: explicit max size
 [x] write data: check max size
-[ ] remove ScreenBluetooth
+[x] remove ScreenBluetooth
 
 [x] graphs: unify min/max RSSI values (floorDb, ceilDb)
 [x] graphs: change clickable marker text position depending on its position onscreen
@@ -62,9 +62,9 @@
 [x] AdapterManager singleton
 [x] select preferred adapter (only works on linux, OS limitations...)
 [x] adapter status (linux)
-[ ] adapter status (linux DBUS)
+[x] adapter status (linux DBUS)
 [x] adapter status (macOS)
-[ ] adapter status (windows API)
+[x] adapter status (windows API)
 [x] sanitize old adapters
 
 [x] device simulator (v1 - with advertising support)

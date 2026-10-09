@@ -56,8 +56,7 @@ protected:
      * \param program: Executable name or path.
      * \param arguments: Command-line arguments.
      * \param onFinished: Called with the standard output, once the process has exited.
-     * \return The running process (owned by this object, deleted once finished),
-     *         or nullptr if the program could not be found.
+     * \return The running process (owned by this object, deleted once finished), or nullptr if none found.
      *
      * The process is killed after s_process_timeout_ms, onFinished() is then called anyway.
      * onFinished() is not called if the process fails to start.
@@ -70,7 +69,7 @@ protected:
      */
     void setDetails(const AdapterDetails &details);
 
-    static constexpr int s_process_timeout_ms = 8000;
+    static constexpr int s_process_timeout_ms = 333;
 
 Q_SIGNALS:
     void detailsChanged(const AdapterDetails &details);

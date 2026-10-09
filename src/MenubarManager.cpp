@@ -307,7 +307,7 @@ void MenubarManager::updateFileActions()
 void MenubarManager::updateDeviceActions()
 {
     DeviceManager *dm = DeviceManager::getInstance();
-    const bool bluetoothReady = AdapterManager::getInstance()->hasBluetooth();
+    const bool bluetoothReady = AdapterManager::getInstance()->hasBluetooth_scan();
     const bool scanning = dm->property("scanning").toBool();
     const bool connected = dm->areDevicesConnected();
 
@@ -399,7 +399,7 @@ void MenubarManager::scannerOpen()
 void MenubarManager::scanStart()
 {
     DeviceManager *dm = DeviceManager::getInstance();
-    const bool bluetoothReady = AdapterManager::getInstance()->hasBluetooth();
+    const bool bluetoothReady = AdapterManager::getInstance()->hasBluetooth_scan();
     const bool scanning = dm->property("scanning").toBool();
     if (bluetoothReady && !scanning) dm->scanDevices_start();
 }

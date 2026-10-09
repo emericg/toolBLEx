@@ -69,7 +69,7 @@ Item {
 
             TabButtonThemed {
                 id: menuInfo
-                text: qsTr("device info")
+                text: qsTr("Device info")
                 colorBackground: Theme.colorActionbar
                 badgeText: (selectedDevice && selectedDevice.connected) ? " " : ""
                 badgeColor: (selectedDevice && selectedDevice.status === 2) ? Theme.colorYellow : Theme.colorGreen
@@ -77,19 +77,19 @@ Item {
             }
             TabButtonThemed {
                 id: menuAdv
-                text: qsTr("advertisement")
+                text: qsTr("Advertisement")
                 colorBackground: Theme.colorActionbar
                 badgeText: selectedDevice ? selectedDevice.advCount : ""
             }
             TabButtonThemed {
                 id: menuSrv
-                text: qsTr("services")
+                text: qsTr("Services")
                 colorBackground: Theme.colorActionbar
                 badgeText: (selectedDevice && selectedDevice.servicesCount) ? selectedDevice.servicesCount : "?"
             }
             TabButtonThemed {
                 id: menuLog
-                text: qsTr("log")
+                text: qsTr("Logs")
                 colorBackground: Theme.colorActionbar
                 badgeText: (selectedDevice && selectedDevice.deviceLogCount) ? selectedDevice.deviceLogCount : "?"
             }
