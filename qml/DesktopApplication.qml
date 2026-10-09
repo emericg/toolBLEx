@@ -110,34 +110,6 @@ ApplicationWindow {
         }
     }
 
-    Connections {
-        target: Qt.application
-        function onStateChanged() {
-            switch (Qt.application.state) {
-
-                case Qt.ApplicationInactive: {
-                    //console.log("Qt.ApplicationInactive")
-
-                    // Pause scanning (if needed)
-                    pauseTimer.start()
-
-                    break
-                }
-
-                case Qt.ApplicationActive: {
-                    //console.log("Qt.ApplicationActive")
-
-                    // Resume scanning (if needed)
-                    pauseTimer.stop()
-                    DeviceManager.scanDevices_resume();
-
-                    break
-                }
-
-            }
-        }
-    }
-
     onVisibilityChanged: (visibility) => {
         //console.log("onVisibilityChanged(" + visibility + ")")
 
@@ -150,14 +122,6 @@ ApplicationWindow {
         if (visibility === Window.Hidden) {
             //DeviceManager.disconnectDevices()
         }
-    }
-
-    Timer {
-        id: pauseTimer
-        running: false
-        repeat: false
-        interval: 3333
-        onTriggered: DeviceManager.scanDevices_pause()
     }
 
     // User generated events handling //////////////////////////////////////////

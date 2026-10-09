@@ -30,12 +30,12 @@
 Adapter::Adapter(const QBluetoothHostInfo &adapterInfo, QObject *parent) : QObject(parent)
 {
     m_hostname = adapterInfo.name();
-    m_address = adapterInfo.address().toString();
+    m_address = adapterInfo.address();
 
     checkAdapter();
 
     VendorsDatabase *v = VendorsDatabase::getInstance();
-    v->getVendor(m_address, m_mac_manufacturer);
+    v->getVendor(m_address.toString(), m_mac_manufacturer);
 
     m_info = AdapterInfo::create(this);
     if (m_info)
@@ -161,7 +161,7 @@ bool Adapter::checkAdapter(bool force)
             m_adapter_device = nullptr;
         }
 
-        m_adapter_device = new QBluetoothLocalDevice(QBluetoothAddress(m_address), this);
+        m_adapter_device = new QBluetoothLocalDevice(m_address, this);
         if (m_adapter_device)
         {
             setHostMode(m_adapter_device->hostMode());

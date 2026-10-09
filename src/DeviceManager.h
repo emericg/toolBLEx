@@ -30,7 +30,7 @@
 #include <QVariant>
 #include <QList>
 #include <QHash>
-#include <QPointer>
+#include <QTimer>
 
 #include <QtQml/qqmlregistration.h>
 
@@ -88,7 +88,6 @@ class DeviceManager: public QObject
 
     ////
 
-    QPointer <QBluetoothLocalDevice> m_bluetoothAdapter; //!< scan adapter device, owned by AdapterManager
     QBluetoothDeviceDiscoveryAgent *m_bluetoothDiscoveryAgent = nullptr;
 
     QHash <quint64, QBluetoothLocalDevice::Pairing> m_devicesPaired; //!< paired devices, by address
@@ -113,7 +112,25 @@ class DeviceManager: public QObject
     bool m_scanning_paused = false;
     bool isScanningPaused() const { return m_scanning_paused; }
 
+    bool m_scanPending = false;     //!< scanning has been requested, it starts once Bluetooth is available
+
+    QTimer m_scanPauseTimer;
+    static const int s_scanPauseDelay = 3333;   //!< inactivity delay before pausing the scan (ms)
+
     void startBleAgent();
+
+    /*!
+     * \brief Stop scanning, without changing m_scanPending.
+     *
+     * Used when scanning is interrupted, scanDevices_stop() is the user request.
+     */
+    void stopScanning();
+
+    /*!
+     * \brief Replace the paired devices, and update the pairing status of every device.
+     * \param paired: the paired devices, by address.
+     */
+    void setDevicesPaired(const QHash <quint64, QBluetoothLocalDevice::Pairing> &paired);
 
     QString getOrderByRole() const;
     int getOrderByOrder() const;
@@ -167,9 +184,20 @@ Q_SIGNALS:
     void statsChanged();
 
 private slots:
+    /*!
+     * \brief Pause scanning while the application is inactive, and resume it when active again.
+     * \param state: the new application state.
+     *
+     * The scan is only paused after s_scanPauseDelay, short inactive periods are ignored,
+     * and only if enabled in the settings, see scanDevices_pause().
+     */
+    void applicationStateChanged(Qt::ApplicationState state);
+
     // AdapterManager related
     void bluetoothStatusChanged();
     void adapterChanged_scan();
+    void pairedDevicesUpdated_bluez(const QBluetoothAddress &adapterAddress,
+                                    const QHash <quint64, QBluetoothLocalDevice::Pairing> &paired);
 
     // QBluetoothLocalDevice related
     void bluetoothPairingFinished(const QBluetoothAddress &address, QBluetoothLocalDevice::Pairing pairing);

@@ -68,6 +68,7 @@ set(SOURCES
     src/VendorsDatabase.cpp src/VendorsDatabase.h
 
     src/adapter.cpp src/adapter.h
+    src/AdapterTracker.cpp src/AdapterTracker.h
     src/device.cpp src/device.h src/device_utils.h
     src/device_toolblex.cpp src/device_toolblex.h
     src/device_toolblex_adv.cpp src/device_toolblex_adv.h

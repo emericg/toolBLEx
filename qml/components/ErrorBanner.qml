@@ -22,7 +22,8 @@ Rectangle {
     required property bool bluetoothEnabled
     property bool bluetoothPermission: AdapterManager.bluetoothPermission
 
-    // Power on the adapter used by the screen, after the permission request
+    // Power on the adapter used by the screen, once the permission is granted
+    // (granting the permission already powers on the scan adapter)
     signal retry()
 
     ////
@@ -87,7 +88,7 @@ Rectangle {
                 anchors.right: parent.right
 
                 text: {
-                    if (!AdapterManager.hasAdapters) return qsTr("No Bluetooth adapter detected")
+                    if (!errorBar.bluetoothAdapter) return qsTr("No Bluetooth adapter detected")
                     if (!errorBar.bluetoothPermission) return qsTr("Bluetooth permission missing")
                     if (!errorBar.bluetooth) return qsTr("Bluetooth is disabled")
                     return "Error..."
@@ -104,7 +105,7 @@ Rectangle {
                 anchors.right: parent.right
 
                 text: {
-                    if (!AdapterManager.hasAdapters) {
+                    if (!errorBar.bluetoothAdapter) {
                         return qsTr("Please check if a Bluetooth adapter is connected and configured on your machine.")
                     } else if (!errorBar.bluetoothPermission) {
                         return qsTr("Please check if the Bluetooth permission has been granted to the application.")
@@ -128,8 +129,8 @@ Rectangle {
                 color: "white"
 
                 onClicked: {
-                    AdapterManager.requestBluetoothPermission()
-                    errorBar.retry()
+                    if (errorBar.bluetoothPermission) errorBar.retry()
+                    else AdapterManager.requestBluetoothPermission()
                 }
             }
         }

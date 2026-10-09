@@ -45,7 +45,7 @@ class Adapter: public QObject
     Q_PROPERTY(bool isInUse_sim READ isInUse_sim NOTIFY adapterUpdated)
     Q_PROPERTY(int hostMode READ getBluetoothHostMode NOTIFY adapterUpdated)
 
-    Q_PROPERTY(QString address READ getAddress CONSTANT)
+    Q_PROPERTY(QString address READ getAddressString CONSTANT)
     Q_PROPERTY(QString hostname READ getHostname NOTIFY adapterUpdated)
     Q_PROPERTY(QString chipset READ getChipset NOTIFY adapterUpdated)
     Q_PROPERTY(QString chipsetFirmware READ getChipsetFirmware NOTIFY adapterUpdated)
@@ -76,7 +76,7 @@ class Adapter: public QObject
     bool m_inUse_scan = false;           //!< used for scanning
     bool m_inUse_sim = false;       //!< used by the simulator
 
-    QString m_address;
+    QBluetoothAddress m_address;
     QString m_hostname;
     QString m_system_name;          //!< system name, when different from the hostname (alias)
     QString m_chipset;
@@ -132,6 +132,12 @@ public:
     bool isValid() const { return (m_available && m_adapter_device && m_adapter_device->isValid()); }
 
     /*!
+     * \brief Check if the adapter is usable right away.
+     * \return true if the adapter is valid, and not powered off.
+     */
+    bool isPoweredOn() const { return (isValid() && m_adapter_device->hostMode() != QBluetoothLocalDevice::HostPoweredOff); }
+
+    /*!
      * \brief Set if the adapter is listed by the system.
      * \param available: false when unplugged, true when plugged back in.
      *
@@ -153,7 +159,8 @@ public:
     bool isInUse_sim() const { return m_inUse_sim; }
     void setInUse_sim(bool inUse);
 
-    const QString &getAddress() const { return m_address; }
+    const QBluetoothAddress &getAddress() const { return m_address; }
+    QString getAddressString() const { return m_address.toString(); }
     const QString &getHostname() const { return m_hostname; }
     const QString &getSystemName() const { return m_system_name; }
     const QString &getChipset() const { return m_chipset; }

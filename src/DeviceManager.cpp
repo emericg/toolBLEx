@@ -31,6 +31,7 @@
 #include <chrono>
 
 #include <QCoreApplication>
+#include <QGuiApplication>
 #include <QJSEngine>
 #include <QStandardPaths>
 
@@ -79,6 +80,17 @@ DeviceManager::DeviceManager(QObject *parent) : QObject(parent)
     connect(am, &AdapterManager::adapterChanged_scan,
             this, &DeviceManager::adapterChanged_scan);
     adapterChanged_scan();
+
+    // Scan pause while the application is inactive
+    m_scanPauseTimer.setSingleShot(true);
+    m_scanPauseTimer.setInterval(s_scanPauseDelay);
+    connect(&m_scanPauseTimer, &QTimer::timeout, this, &DeviceManager::scanDevices_pause);
+
+    if (auto *app = qobject_cast<QGuiApplication *>(QCoreApplication::instance()))
+    {
+        connect(app, &QGuiApplication::applicationStateChanged,
+                this, &DeviceManager::applicationStateChanged);
+    }
 
     // Device colors
     m_colorsLeft = m_colorsAvailable;
@@ -197,6 +209,21 @@ void DeviceManager::disconnectAndExit() const
 /* ************************************************************************** */
 /* ************************************************************************** */
 
+void DeviceManager::applicationStateChanged(Qt::ApplicationState state)
+{
+    if (state == Qt::ApplicationInactive)
+    {
+        m_scanPauseTimer.start();
+    }
+    else if (state == Qt::ApplicationActive)
+    {
+        m_scanPauseTimer.stop();
+        scanDevices_resume();
+    }
+}
+
+/* ************************************************************************** */
+
 void DeviceManager::adapterChanged_scan()
 {
     //qDebug() << "DeviceManager::adapterChanged_scan()";
@@ -207,25 +234,13 @@ void DeviceManager::adapterChanged_scan()
     if (m_bluetoothDiscoveryAgent)
     {
         // A paused scan stays paused, and resumes on the new adapter
-        if (!m_scanning_paused) scanDevices_stop();
+        if (!m_scanning_paused) stopScanning();
 
         delete m_bluetoothDiscoveryAgent;
         m_bluetoothDiscoveryAgent = nullptr;
     }
 
     if (!m_pairingPendingAddress.isEmpty()) bluetoothPairingError(QBluetoothLocalDevice::UnknownError);
-
-    if (m_bluetoothAdapter) disconnect(m_bluetoothAdapter, nullptr, this, nullptr);
-
-    // Bind to the new adapter
-    m_bluetoothAdapter = AdapterManager::getInstance()->getAdapterDevice_scan();
-    if (m_bluetoothAdapter)
-    {
-        connect(m_bluetoothAdapter, &QBluetoothLocalDevice::pairingFinished,
-                this, &DeviceManager::bluetoothPairingFinished);
-        connect(m_bluetoothAdapter, &QBluetoothLocalDevice::errorOccurred,
-                this, &DeviceManager::bluetoothPairingError);
-    }
 
     checkPaired();
 
@@ -245,13 +260,14 @@ void DeviceManager::bluetoothStatusChanged()
     {
         checkPaired();
 
-        // Bluetooth enabled, re/start listening
-        scanDevices_start();
+        // Bluetooth enabled, start listening if it has been requested
+        if (m_scanPending) scanDevices_start();
     }
     else
     {
-        // Bluetooth disabled, force disconnection
-        scanDevices_stop();
+        // Bluetooth disabled, scanning resumes once it is back
+        if (m_scanning || m_scanning_paused) m_scanPending = true;
+        stopScanning();
     }
 }
 
@@ -300,7 +316,7 @@ void DeviceManager::deviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error e
 
     AdapterManager::getInstance()->discoveryError(error);
 
-    scanDevices_stop();
+    stopScanning();
 
     if (m_scanning)
     {
@@ -338,6 +354,9 @@ void DeviceManager::scanDevices_start()
 {
     //qDebug() << "DeviceManager::scanDevices_start()";
 
+    // Handled here, switchAdapter_scan() may change the Bluetooth status, see bluetoothStatusChanged()
+    m_scanPending = false;
+
     // Starting a new scan session, go back to the selected adapter (the agent is deleted if it changes)
     if (!m_scanning) AdapterManager::getInstance()->switchAdapter_scan();
 
@@ -364,7 +383,8 @@ void DeviceManager::scanDevices_start()
     }
     else
     {
-        qWarning() << "Cannot scan or listen without BLE adapter or BLE permission";
+        qWarning() << "Cannot scan or listen without BLE adapter or BLE permission, scanning when available";
+        m_scanPending = true;
     }
 }
 
@@ -400,9 +420,8 @@ void DeviceManager::scanDevices_resume()
 {
     //qDebug() << "DeviceManager::scanDevices_resume()";
 
-    // Are we really paused?
+    // Are we really paused? (the pause setting may have been disabled since)
     if (!m_scanning_paused) return;
-    if (!SettingsManager::getInstance()->getScanPause()) return;
 
     if (AdapterManager::getInstance()->hasBluetooth_scan())
     {
@@ -426,7 +445,9 @@ void DeviceManager::scanDevices_resume()
     }
     else
     {
-        qWarning() << "Cannot scan or listen without BLE adapter or BLE permission";
+        qWarning() << "Cannot scan or listen without BLE adapter or BLE permission, scanning when available";
+        m_scanPending = true;
+        stopScanning();
     }
 }
 
@@ -434,6 +455,12 @@ void DeviceManager::scanDevices_stop()
 {
     //qDebug() << "DeviceManager::scanDevices_stop()";
 
+    m_scanPending = false;
+    stopScanning();
+}
+
+void DeviceManager::stopScanning()
+{
     if (m_bluetoothDiscoveryAgent && m_bluetoothDiscoveryAgent->isActive())
     {
         m_bluetoothDiscoveryAgent->stop();
@@ -518,7 +545,8 @@ void DeviceManager::addBleDevice(const QBluetoothDeviceInfo &info)
 
 void DeviceManager::checkPaired()
 {
-    if (!m_bluetoothAdapter || !m_bluetoothAdapter->isValid()) return;
+    QBluetoothLocalDevice *adapter = AdapterManager::getInstance()->getAdapterDevice_scan();
+    if (!adapter || !adapter->isValid()) return;
 
 #if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
     m_devicesPaired = AdapterManager::getInstance()->getPairedDevices_bluez(m_bluetoothAdapter->address());
@@ -532,8 +560,8 @@ void DeviceManager::checkPaired()
             QBluetoothAddress addr(dd->getAddress());
             if (addr.isNull()) continue;
 
-            QBluetoothLocalDevice::Pairing p = m_bluetoothAdapter->pairingStatus(addr);
-            if (p != QBluetoothLocalDevice::Unpaired) m_devicesPaired.insert(addr.toUInt64(), p);
+            QBluetoothLocalDevice::Pairing p = adapter->pairingStatus(addr);
+            if (p != QBluetoothLocalDevice::Unpaired) paired.insert(addr.toUInt64(), p);
         }
     }
 #endif
@@ -551,14 +579,15 @@ void DeviceManager::checkPaired()
 
 bool DeviceManager::requestPairing(const QString &address, QBluetoothLocalDevice::Pairing pairing)
 {
-    if (!m_bluetoothAdapter || !m_bluetoothAdapter->isValid()) return false;
+    QBluetoothLocalDevice *adapter = AdapterManager::getInstance()->getAdapterDevice_scan();
+    if (!adapter || !adapter->isValid()) return false;
     if (!m_pairingPendingAddress.isEmpty()) return false;
 
     QBluetoothAddress addr(address);
     if (addr.isNull()) return false;
 
     m_pairingPendingAddress = address;
-    m_bluetoothAdapter->requestPairing(addr, pairing);
+    adapter->requestPairing(addr, pairing);
 
     return true;
 }
@@ -1048,11 +1077,6 @@ void DeviceManager::clearDeviceSeenCache()
             qWarning() << "> clearDeviceSeenCache.exec() ERROR"
                        << clearDeviceSeenCache.lastError().type() << ":" << clearDeviceSeenCache.lastError().text();
         }
-    }
-
-    if (wasScanning)
-    {
-        scanDevices_start();
     }
 }
 
