@@ -100,8 +100,6 @@ private slots:
     void hostModeStateChanged(QBluetoothLocalDevice::HostMode state);
     void deviceConnected(const QBluetoothAddress &address);
     void deviceDisconnected(const QBluetoothAddress &address);
-    void pairingFinished(const QBluetoothAddress &address, QBluetoothLocalDevice::Pairing pairing);
-    void errorOccurred(QBluetoothLocalDevice::Error error);
     void detailsChanged(const AdapterDetails &details);
 
 Q_SIGNALS:
@@ -113,6 +111,21 @@ Q_SIGNALS:
      * The previous device has been deleted, pointers obtained through getDevice() must be refreshed.
      */
     void deviceChanged();
+
+    /*!
+     * \brief Forwarded from the current device, see QBluetoothLocalDevice::hostModeStateChanged().
+     */
+    void hostModeChanged(QBluetoothLocalDevice::HostMode state);
+
+    /*!
+     * \brief Forwarded from the current device, see QBluetoothLocalDevice::pairingFinished().
+     */
+    void pairingFinished(const QBluetoothAddress &address, QBluetoothLocalDevice::Pairing pairing);
+
+    /*!
+     * \brief Forwarded from the current device, see QBluetoothLocalDevice::errorOccurred().
+     */
+    void errorOccurred(QBluetoothLocalDevice::Error error);
 
 public:
     Adapter(const QBluetoothHostInfo &adapterInfo, QObject *parent = nullptr);
@@ -134,8 +147,10 @@ public:
     /*!
      * \brief Check if the adapter is usable right away.
      * \return true if the adapter is valid, and not powered off.
+     *
+     * Uses the last known host mode, querying the device is a blocking call on some platforms.
      */
-    bool isPoweredOn() const { return (isValid() && m_adapter_device->hostMode() != QBluetoothLocalDevice::HostPoweredOff); }
+    bool isPoweredOn() const { return (isValid() && m_bluetooth_host_mode != QBluetoothLocalDevice::HostPoweredOff); }
 
     /*!
      * \brief Set if the adapter is listed by the system.

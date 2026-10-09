@@ -130,7 +130,7 @@ Rectangle {
 
                 onClicked: {
                     if (errorBar.bluetoothPermission) errorBar.retry()
-                    else AdapterManager.requestBluetoothPermission()
+                    else AdapterManager.requestBluetoothPermission(true)
                 }
             }
         }

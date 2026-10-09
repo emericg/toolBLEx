@@ -39,7 +39,6 @@
 
 using namespace winrt::Windows::Devices::Enumeration;
 using namespace winrt::Windows::Devices::Bluetooth;
-using WinRtInspectable = winrt::Windows::Foundation::IInspectable;
 
 /*!
  * \brief State shared with the DeviceWatcher callbacks, which are called from other threads.
@@ -50,22 +49,19 @@ struct AdaptersWatcherWindows
     winrt::event_token addedToken;
     winrt::event_token removedToken;
     winrt::event_token updatedToken;
-    winrt::event_token enumerationToken;
 
     std::mutex mutex;
     AdapterManager *owner = nullptr;    //!< null once stopped
-    bool enumerated = false;            //!< the initial enumeration reports the adapters already known
 
-    void enumerationCompleted()
-    {
-        std::lock_guard lock(mutex);
-        enumerated = true;
-    }
-
+    /*!
+     * \brief Schedule an adapters refresh.
+     *
+     * The initial enumeration reports the adapters already known, m_adaptersRefreshTimer coalesces its events.
+     */
     void adaptersChanged()
     {
         std::lock_guard lock(mutex);
-        if (!owner || !enumerated) return;
+        if (!owner) return;
 
         // Events posted to a deleted object are discarded
         AdapterManager *am = owner;
@@ -77,7 +73,7 @@ struct AdaptersWatcherWindows
 
 /* ************************************************************************** */
 
-bool AdapterManager::startAdaptersWatcher_windows()
+void AdapterManager::startAdaptersWatcher_windows()
 {
 #if defined(Q_OS_WINDOWS)
     try
@@ -91,8 +87,6 @@ bool AdapterManager::startAdaptersWatcher_windows()
             [state](const DeviceWatcher &, const DeviceInformation &) { state->adaptersChanged(); });
         state->removedToken = state->watcher.Removed(
             [state](const DeviceWatcher &, const DeviceInformationUpdate &) { state->adaptersChanged(); });
-        state->enumerationToken = state->watcher.EnumerationCompleted(
-            [state](const DeviceWatcher &, const WinRtInspectable &) { state->enumerationCompleted(); });
 
         // Added and Removed are only raised after the initial enumeration if Updated is handled too
         state->updatedToken = state->watcher.Updated(
@@ -101,16 +95,12 @@ bool AdapterManager::startAdaptersWatcher_windows()
         state->watcher.Start();
 
         m_adaptersWatcher_windows = state;
-        return true;
     }
     catch (const winrt::hresult_error &e)
     {
         qWarning() << "AdapterManager::startAdaptersWatcher_windows() unable to watch Windows adapters:"
                    << QString::fromWCharArray(e.message().c_str());
-        return false;
     }
-#else
-    return false;
 #endif
 }
 
@@ -130,7 +120,6 @@ void AdapterManager::stopAdaptersWatcher_windows()
         state->watcher.Added(state->addedToken);
         state->watcher.Removed(state->removedToken);
         state->watcher.Updated(state->updatedToken);
-        state->watcher.EnumerationCompleted(state->enumerationToken);
 
         const DeviceWatcherStatus status = state->watcher.Status();
         if (status == DeviceWatcherStatus::Started || status == DeviceWatcherStatus::EnumerationCompleted)

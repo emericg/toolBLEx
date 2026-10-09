@@ -27,12 +27,7 @@
 #include <QVariant>
 #include <QList>
 #include <QHash>
-#include <QSet>
 #include <QTimer>
-
-#include "AdapterTracker.h"
-
-#include <memory>
 
 #include <QtQml/qqmlregistration.h>
 
@@ -43,7 +38,7 @@
 class Adapter;
 class AdapterManagerBluez;
 struct AdaptersWatcherWindows;
-class QPermission;
+
 class QQmlEngine;
 class QJSEngine;
 
@@ -54,14 +49,13 @@ class QJSEngine;
  *
  * Owns the list of Bluetooth adapters, the adapter used for scanning, connections and pairing
  * (the "scan" adapter), and the adapter used by the simulator (the "sim" adapter).
- * The scan adapter is kept while it is usable, and replaced by another adapter when unplugged.
- * Going back to the selected adapter only happens through switchAdapter_scan().
- * The sim adapter is held between acquireAdapter_sim() and releaseAdapter_sim().
+ * Both adapters are kept while plugged in, even if powered off, and replaced by another adapter when unplugged.
+ * The preferred adapters (from settings) are only picked up when a scan or the simulator starts,
+ * see switchAdapter_scan() and acquireAdapter_sim(), and pickAdapter() for the rules.
+ * The sim adapter is held (in use) between acquireAdapter_sim() and releaseAdapter_sim().
  *
- * The scan and sim status follow the same pattern:
- * checkAdapterDevice_xxx() reads the adapter state, without notifying,
- * notifyStatus_xxx() emits bluetoothChanged_xxx() if the status changed since the last emission,
- * updateStatus_xxx() does both. The adapters in use are followed through AdapterTracker.
+ * The scan and sim status are read from the adapters on demand, see notifyStatus().
+ * Every known adapter is followed, its device being replaced when re-plugged, see connectAdapter().
  */
 class AdapterManager: public QObject
 {
@@ -83,78 +77,97 @@ class AdapterManager: public QObject
     Q_PROPERTY(bool bluetoothAdapter_sim READ hasBluetoothAdapter_sim NOTIFY bluetoothChanged_sim)
     Q_PROPERTY(bool bluetoothEnabled_sim READ hasBluetoothEnabled_sim NOTIFY bluetoothChanged_sim)
 
-    // Bluetooth state and permissions
+    // Bluetooth state and permissions /////////////////////////////////////////
 
     bool m_blePermission = false;       //!< do we have necessary BLE permission(s)?
-    bool m_bleAdapter_scan = false;     //!< do we have a scan adapter?
-    bool m_bleEnabled_scan = false;     //!< is the scan adapter enabled?
-    bool m_bleAdapter_sim = false;      //!< do we have a simulator adapter?
-    bool m_bleEnabled_sim = false;      //!< is the simulator adapter enabled?
 
-    bool m_bleAdapterNotified_scan = false;     //!< m_bleAdapter_scan, as last notified
-    bool m_bleEnabledNotified_scan = false;     //!< m_bleEnabled_scan, as last notified
-    bool m_blePermissionNotified_scan = false;  //!< m_blePermission, as last notified to the scan status
-    bool m_bleAdapterNotified_sim = false;      //!< m_bleAdapter_sim, as last notified
-    bool m_bleEnabledNotified_sim = false;      //!< m_bleEnabled_sim, as last notified
-    bool m_blePermissionNotified_sim = false;   //!< m_blePermission, as last notified to the simulator status
+    /*!
+     * \brief Bluetooth status of the scan or simulator adapter, as notified to QML.
+     */
+    struct Status
+    {
+        bool adapter = false;
+        bool enabled = false;
+        bool permission = false;
+
+        bool operator!=(const Status &other) const
+        {
+            return adapter != other.adapter || enabled != other.enabled || permission != other.permission;
+        }
+    };
+
+    Status m_statusNotified_scan;       //!< scan status, as last notified
+    Status m_statusNotified_sim;        //!< simulator status, as last notified
 
     /*!
      * \brief Change the permission, without notifying the Bluetooth status, see notifyStatus().
      */
     void setBluetoothPermission(bool perm);
-    void requestBluetoothPermission_results(const QPermission &permission);
 
     /*!
-     * \brief Apply a granted Bluetooth permission, then pick and power on the scan adapter.
-     *
-     * bluetoothChanged_scan() is emitted once, if the permission or the scan adapter status changed.
+     * \brief Apply a granted Bluetooth permission, then pick the scan adapter, see refreshAdapters().
+     * \param powerOn: power on the scan adapter if needed, only on user request.
      */
-    void permissionGranted();
+    void permissionGranted(bool powerOn);
 
     /*!
-     * \brief Notify the scan and simulator status, see notifyStatus_scan() and notifyStatus_sim().
+     * \brief Emit bluetoothChanged_scan() and bluetoothChanged_sim() if their status changed since the last emission.
+     *
+     * Comparing with the last emission, rather than with the state before a change,
+     * lets callers update the permission and the adapters first, then notify once.
      */
     void notifyStatus();
 
-    // Adapters list
+    // Adapters list ///////////////////////////////////////////////////////////
 
-    QList <QObject *> m_bluetoothAdapters;
+    QList <Adapter *> m_bluetoothAdapters;
 
     /*!
      * \brief List the Bluetooth adapters available on the system.
      *
      * New adapters are added to the list, plugged in adapters are checked and updated.
      * Unplugged adapters are kept, as they usually reappear.
-     * The default status and the selected adapter are updated too.
+     * The default status is updated too.
      * Adapters without an address are ignored, they cannot be told apart.
      */
     void updateAdapters();
+
+    /*!
+     * \brief Follow a new adapter, for as long as it is known.
+     *
+     * Host mode changes update the status, and release the simulator adapter once powered off.
+     * A new device resets the scan adapter (see adapterChanged_scan()), and releases the simulator adapter.
+     * Pairing signals are only forwarded from the scan adapter.
+     */
+    void connectAdapter(Adapter *adapter);
 
     /*!
      * \brief Update the default (scan and simulator) status of every known adapter, from settings.
      */
     void updateDefaultAdapters();
 
-    // Scanner adapter
+    /*!
+     * \brief Pick an adapter, for the scanner or the simulator.
+     * \param current: the adapter currently used, or nullptr.
+     * \param preferred: the preferred adapter address (from settings), or an empty string.
+     * \return the preferred adapter if powered on, otherwise the current adapter if plugged in (even if powered off),
+     * otherwise the preferred adapter if plugged in, otherwise the first powered on adapter,
+     * otherwise the first plugged in adapter, otherwise nullptr.
+     */
+    Adapter *pickAdapter(Adapter *current, const QString &preferred) const;
 
-    QBluetoothAddress m_adapterSelected_scan;       //!< kept while the adapter is unplugged
+    // Scanner adapter /////////////////////////////////////////////////////////
+
     Adapter *m_adapter_scan = nullptr;              //!< adapter used for scanning, owned by m_bluetoothAdapters
-    AdapterTracker m_tracker_scan;                  //!< follows m_adapter_scan
 
     /*!
-     * \brief Update the selected adapter.
+     * \brief Why the scan adapter cannot be used, despite its state.
      *
-     * The preferred adapter (from settings) if known, even if unplugged,
-     * otherwise the current selection if known, otherwise the first valid adapter.
+     * Set from discovery errors, cleared by a new scan adapter or device, a host mode change,
+     * or a user request, see enableBluetooth_scan(). Avoids a scan / error loop.
      */
-    void updateAdapterSelected_scan();
-
-    /*!
-     * \brief Pick the adapter to use.
-     * \return the scan adapter if valid, otherwise the first powered on adapter (the selected one first),
-     * otherwise the first valid adapter (the selected one first), otherwise nullptr.
-     */
-    Adapter *pickAdapter_scan() const;
+    enum class ScanFailure { None, Disabled, Unusable };
+    ScanFailure m_scanFailure = ScanFailure::None;
 
     /*!
      * \brief Change the scan adapter, and update the in use status of every known adapter.
@@ -162,118 +175,55 @@ class AdapterManager: public QObject
      */
     void setAdapter_scan(Adapter *adapter);
 
-    /*!
-     * \brief Update the adapter availability and enabled status from the scan adapter device, without notifying.
-     */
-    void checkAdapterDevice_scan();
+    // Simulator adapter ///////////////////////////////////////////////////////
+
+    Adapter *m_adapter_sim = nullptr;               //!< adapter last used by the simulator, owned by m_bluetoothAdapters
+    bool m_held_sim = false;                        //!< m_adapter_sim is in use, see acquireAdapter_sim()
 
     /*!
-     * \brief Update the scan status from the scan adapter device, and notify changes.
+     * \brief Pick the adapter for the simulator, see pickAdapter().
      *
-     * See checkAdapterDevice_scan() and notifyStatus_scan().
-     */
-    void updateStatus_scan();
-
-    /*!
-     * \brief Emit bluetoothChanged_scan() if the scan status changed since the last emission.
-     *
-     * The scan status is the scan adapter availability, its enabled status, and the permission.
-     * Comparing with the last emission, rather than with the state before a change,
-     * lets callers update the permission and the scan adapter first, then notify once.
-     */
-    void notifyStatus_scan();
-
-    /*!
-     * \brief Refresh the adapters list, pick the scan adapter, and power it on if needed.
-     *
-     * Updates the scan adapter availability and enabled status, without notifying, see notifyStatus_scan().
-     * Powering on an adapter doesn't work on all platforms.
-     */
-    void powerOnAdapter_scan();
-
-    // Simulator adapter
-
-    Adapter *m_adapter_sim = nullptr;               //!< adapter used by the simulator, owned by m_bluetoothAdapters
-    AdapterTracker m_tracker_sim;                   //!< follows m_adapter_sim
-    Adapter *m_adapterStatus_sim = nullptr;         //!< adapter reported by the simulator status, owned by m_bluetoothAdapters
-    AdapterTracker m_trackerStatus_sim;             //!< follows m_adapterStatus_sim
-
-    /*!
-     * \brief Pick the adapter for the simulator.
-     * \return the preferred simulator adapter (from settings) if powered on,
-     * otherwise the adapter used for scanning if powered on, see pickAdapter_scan(),
-     * otherwise the preferred simulator adapter if plugged in, otherwise the adapter used for scanning.
+     * The current adapter is the simulator adapter, or the scan adapter if the simulator has none.
      */
     Adapter *pickAdapter_sim() const;
 
     /*!
-     * \brief Update the adapter availability and enabled status from the simulator status adapter, without notifying.
+     * \brief Get the adapter reported by the simulator status.
+     * \return the simulator adapter while it is held, otherwise the adapter acquireAdapter_sim() would pick.
      */
-    void checkAdapterDevice_sim();
+    Adapter *getAdapterStatus_sim() const;
 
     /*!
-     * \brief Update the simulator status, and notify changes.
+     * \brief Check the simulator adapter, after a refresh.
      *
-     * Reports the simulator adapter while it is held, otherwise the adapter acquireAdapter_sim() would pick.
-     * See checkAdapterDevice_sim() and notifyStatus_sim().
-     */
-    void updateStatus_sim();
-
-    /*!
-     * \brief Emit bluetoothChanged_sim() if the simulator status changed since the last emission.
-     *
-     * Same as notifyStatus_scan(), for the simulator adapter availability, its enabled status, and the permission.
-     */
-    void notifyStatus_sim();
-
-    /*!
-     * \brief Release the simulator adapter if it has been unplugged or powered off, and tell the simulator.
+     * An unplugged adapter is forgotten, the simulator moves to another adapter on its next start.
+     * A powered off adapter is kept. In both cases, a held adapter is released, see loseAdapter_sim().
      */
     void checkAdapter_sim();
 
     /*!
-     * \brief Release the simulator adapter, and tell the simulator.
+     * \brief Release the simulator adapter if held, and tell the simulator.
      * \param poweredOff: true if the adapter has been powered off, false if it has been unplugged.
      */
     void loseAdapter_sim(bool poweredOff);
 
-    // Plug / unplug detection
+    // Plug / unplug detection /////////////////////////////////////////////////
 
-    QTimer m_adaptersRefreshTimer;
-
-    /*!
-     * \brief Refresh the adapters list and the scan adapter, after an adapter has been plugged or unplugged,
-     * or after the simulator adapter has been powered off.
-     *
-     * Triggered through m_adaptersRefreshTimer, to coalesce events,
-     * and to let QBluetoothLocalDevice instances process the same events first.
-     */
-    void refreshAdapters();
-
-    QTimer m_adaptersPollTimer;
-    static const int s_adaptersPollInterval = 5000; //!< adapters polling interval (ms)
-    QSet <quint64> m_adaptersPresent;               //!< adapters listed by the last updateAdapters()
+    QTimer m_adaptersRefreshTimer;                  //!< coalesces refreshAdapters() calls from events
 
     /*!
-     * \brief Poll the adapters list, when the native adapters watcher is unavailable.
+     * \brief Refresh the adapters list, pick the scan adapter, check the simulator adapter, and notify the status.
+     * \param powerOn: power on the scan adapter if needed, only on user request.
      *
-     * The adapters are only refreshed if the set of plugged in adapters has changed.
-     * Not used on macOS and mobile platforms, which only have their built-in adapter.
+     * Triggered through m_adaptersRefreshTimer after an adapter has been plugged or unplugged,
+     * after the simulator adapter has been powered off, or after a discovery error.
+     * The timer coalesces events, and lets QBluetoothLocalDevice instances process the same events first.
+     * The scan adapter is kept while plugged in, even if powered off.
+     * Powering on an adapter doesn't work on all platforms.
      */
-    void pollAdapters();
+    void refreshAdapters(bool powerOn = false);
 
-    static const int s_discoveryErrorRecoveryDelay = 1000; //!< delay before recovering from a discovery error (ms)
-
-    /*!
-     * \brief Switch to another adapter, after the scan adapter failed to scan.
-     *
-     * Triggered after a delay by discoveryError(), to let the platform notice an unplugged adapter.
-     * Nothing changes if the failing adapter is still the one to use,
-     * the error state is kept until the user tries again, avoiding a scan / error loop.
-     */
-    void recoverFromDiscoveryError();
-
-    // Platform adapters watchers
+    // Platform adapters watchers //////////////////////////////////////////////
 
     AdapterManagerBluez *m_bluez = nullptr;         //!< BlueZ adapters watcher and queries, Linux only
 
@@ -281,9 +231,8 @@ class AdapterManager: public QObject
      * \brief Watch BlueZ for adapters being plugged or unplugged, see AdapterManagerBluez::watchAdapters().
      *
      * Does nothing on other platforms.
-     * \return true if BlueZ is watched.
      */
-    bool startAdaptersWatcher_bluez();
+    void startAdaptersWatcher_bluez();
 
     friend struct AdaptersWatcherWindows;
     std::shared_ptr <AdaptersWatcherWindows> m_adaptersWatcher_windows;
@@ -293,9 +242,8 @@ class AdapterManager: public QObject
      *
      * Uses a WinRT DeviceWatcher on BluetoothAdapter::GetDeviceSelector(),
      * the same selector QBluetoothLocalDevice::allDevices() enumerates. Does nothing on other platforms.
-     * \return true if Windows adapters are watched.
      */
-    bool startAdaptersWatcher_windows();
+    void startAdaptersWatcher_windows();
 
     /*!
      * \brief Stop watching Windows adapters, the callbacks will not reach this object anymore.
@@ -344,11 +292,6 @@ private slots:
 
     void preferredAdapterChanged();
 
-    void hostModeChanged_scan(QBluetoothLocalDevice::HostMode state);
-
-    void deviceChanged_sim();
-    void hostModeChanged_sim(QBluetoothLocalDevice::HostMode state);
-
 private:
     AdapterManager(QObject *parent);
     ~AdapterManager();
@@ -357,25 +300,43 @@ public:
     static AdapterManager *getInstance();
     static AdapterManager *create(QQmlEngine *engine, QJSEngine *scriptEngine);
 
-    /// Bluetooth states and permissions ///////////////////////////////////////
+    // Bluetooth states and permissions ////////////////////////////////////////
 
     bool hasBluetoothPermission() const { return m_blePermission; }
 
-    bool hasBluetoothAdapter_scan() const { return m_bleAdapter_scan; }
-    bool hasBluetoothEnabled_scan() const { return m_bleEnabled_scan; }
-    bool hasBluetooth_scan() const { return (m_bleAdapter_scan && m_bleEnabled_scan && m_blePermission); }
+    /*!
+     * \brief Check if the scan adapter is valid, a powered off adapter is still available.
+     */
+    bool hasBluetoothAdapter_scan() const;
+    bool hasBluetoothEnabled_scan() const;
+    bool hasBluetooth_scan() const { return (hasBluetoothEnabled_scan() && m_blePermission); }
 
-    bool hasBluetoothAdapter_sim() const { return m_bleAdapter_sim; }
-    bool hasBluetoothEnabled_sim() const { return m_bleEnabled_sim; }
-    bool hasBluetooth_sim() const { return (m_bleAdapter_sim && m_bleEnabled_sim && m_blePermission); }
+    /*!
+     * \brief Check if the simulator adapter is valid, see getAdapterStatus_sim().
+     */
+    bool hasBluetoothAdapter_sim() const;
+    bool hasBluetoothEnabled_sim() const;
+    bool hasBluetooth_sim() const { return (hasBluetoothEnabled_sim() && m_blePermission); }
 
     Q_INVOKABLE bool checkBluetoothPermission();
-    Q_INVOKABLE bool requestBluetoothPermission();
 
+    /*!
+     * \brief Request the Bluetooth permission, if not granted already.
+     * \param powerOn: also power on the scan adapter once granted, only on user request.
+     * \return true if the permission is granted already.
+     *
+     * The answer also comes through permissionRequestFinished(), synchronously if already granted.
+     */
+    Q_INVOKABLE bool requestBluetoothPermission(bool powerOn = false);
+
+    /*!
+     * \brief Pick the scan adapter, and power it on, see refreshAdapters().
+     * \return true if the scan adapter is usable.
+     */
     Q_INVOKABLE bool enableBluetooth_scan();
 
     /*!
-     * \brief Power on the simulator adapter, see updateStatus_sim().
+     * \brief Power on the simulator adapter, see getAdapterStatus_sim().
      * \return true if the simulator adapter is usable.
      *
      * Powering on an adapter doesn't work on all platforms.
@@ -392,7 +353,11 @@ public:
 
     bool areAdaptersAvailable() const { return m_bluetoothAdapters.size(); }
 
-    QVariant getAdapters() const { return QVariant::fromValue(m_bluetoothAdapters); }
+    /*!
+     * \brief Get the adapters list, for QML.
+     * \return the adapters, as a QList<QObject *>.
+     */
+    QVariant getAdapters() const;
     int getAdaptersCount() const { return m_bluetoothAdapters.size(); }
 
     /*!
@@ -419,33 +384,43 @@ public:
     QBluetoothAddress getAdapterAddress_scan() const;
 
     /*!
-     * \brief Make the selected adapter the scan adapter, if it is plugged in and powered on.
+     * \brief Pick the scan adapter again, when a scan starts, see pickAdapter().
      * \return true if the scan adapter has changed.
      *
-     * The adapters list and the selection are refreshed first.
+     * Switches to the preferred scan adapter if it is powered on. The adapters list is refreshed first.
      */
     bool switchAdapter_scan();
 
     // Simulator adapter ///////////////////////////////////////////////////////
 
     /*!
-     * \brief Get the address of the simulator adapter.
-     * \return the address, or a null address if the simulator has no adapter (or uses the system default).
+     * \brief Get the device of the simulator adapter, while it is held.
+     * \return the device, or nullptr if the simulator holds no adapter.
+     *
+     * The device is owned by its Adapter, and replaced when the adapter is re-plugged.
+     * Do not keep this pointer, see adapterLost_sim().
+     */
+    QBluetoothLocalDevice *getAdapterDevice_sim() const;
+
+    /*!
+     * \brief Get the address of the simulator adapter, while it is held.
+     * \return the address, or a null address if the simulator holds no adapter.
      */
     QBluetoothAddress getAdapterAddress_sim() const;
 
     /*!
      * \brief Pick the adapter for the simulator, and mark it as used by the simulator.
-     * \return the adapter address, or a null address to use the system default adapter.
      *
-     * See pickAdapter_sim(), the adapter may be powered off if no other adapter is usable.
+     * The adapter is then available through getAdapterDevice_sim(),
+     * no adapter is held if none is known, the system default adapter is then used.
+     * See pickAdapter_sim(), the adapter may be powered off.
      * The adapter is kept until releaseAdapter_sim(),
      * or until it is unplugged or powered off (see adapterLost_sim()).
      */
-    QBluetoothAddress acquireAdapter_sim();
+    void acquireAdapter_sim();
 
     /*!
-     * \brief Release the simulator adapter, if any.
+     * \brief Release the simulator adapter, if held. It stays the simulator adapter for the next start.
      */
     void releaseAdapter_sim();
 

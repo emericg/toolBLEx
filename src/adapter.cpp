@@ -57,6 +57,7 @@ void Adapter::hostModeStateChanged(QBluetoothLocalDevice::HostMode state)
 {
     qDebug() << "Adapter::hostModeStateChanged(" << m_address << ") state: " << state;
     setHostMode(state);
+    Q_EMIT hostModeChanged(state);
 }
 
 void Adapter::deviceConnected(const QBluetoothAddress &address)
@@ -67,11 +68,6 @@ void Adapter::deviceConnected(const QBluetoothAddress &address)
 void Adapter::deviceDisconnected(const QBluetoothAddress &address)
 {
     qDebug() << "Adapter::deviceDisconnected(" << m_address << ") to " << address;
-}
-
-void Adapter::pairingFinished(const QBluetoothAddress &address, QBluetoothLocalDevice::Pairing pairing)
-{
-    qDebug() << "Adapter::pairingFinished(" << m_address << ") to " << address << " / pairing status:" << pairing;
 }
 
 void Adapter::detailsChanged(const AdapterDetails &details)
@@ -118,16 +114,6 @@ QStringList Adapter::generateFeatures() const
     return features;
 }
 
-void Adapter::errorOccurred(QBluetoothLocalDevice::Error error)
-{
-    qWarning() << "Adapter::errorOccurred(" << m_address << ") ERROR:" << error;
-
-    // NoError,
-    // PairingError,
-    // MissingPermissionsError,
-    // UnknownError
-}
-
 /* ************************************************************************** */
 /* ************************************************************************** */
 
@@ -143,23 +129,9 @@ bool Adapter::checkAdapter(bool force)
     }
     else
     {
-        if (m_adapter_device)
-        {
-            disconnect(m_adapter_device, &QBluetoothLocalDevice::hostModeStateChanged,
-                       this, &Adapter::hostModeStateChanged);
-            disconnect(m_adapter_device, &QBluetoothLocalDevice::deviceConnected,
-                       this, &Adapter::deviceConnected);
-            disconnect(m_adapter_device, &QBluetoothLocalDevice::deviceDisconnected,
-                       this, &Adapter::deviceDisconnected);
-            disconnect(m_adapter_device, &QBluetoothLocalDevice::pairingFinished,
-                       this, &Adapter::pairingFinished);
-
-            disconnect(m_adapter_device, &QBluetoothLocalDevice::errorOccurred,
-                       this, &Adapter::errorOccurred);
-
-            delete m_adapter_device;
-            m_adapter_device = nullptr;
-        }
+        // Deleting the device also removes its connections
+        delete m_adapter_device;
+        m_adapter_device = nullptr;
 
         m_adapter_device = new QBluetoothLocalDevice(m_address, this);
         if (m_adapter_device)
@@ -174,7 +146,6 @@ bool Adapter::checkAdapter(bool force)
                     this, &Adapter::deviceDisconnected);
             connect(m_adapter_device, &QBluetoothLocalDevice::pairingFinished,
                     this, &Adapter::pairingFinished);
-
             connect(m_adapter_device, &QBluetoothLocalDevice::errorOccurred,
                     this, &Adapter::errorOccurred);
 

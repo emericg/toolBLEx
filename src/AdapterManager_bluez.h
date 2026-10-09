@@ -62,6 +62,7 @@ Q_SIGNALS:
      * \brief Emitted with the result of queryPairedDevices().
      * \param adapterAddress: the adapter the query was made for.
      * \param paired: the paired devices, by address.
+     *
      * Empty if the query failed, or if the adapter is unknown to BlueZ.
      */
     void pairedDevicesUpdated(const QBluetoothAddress &adapterAddress,
@@ -72,10 +73,10 @@ public:
 
     /*!
      * \brief Watch BlueZ for adapters being plugged or unplugged.
+     * \return true if BlueZ is watched.
      *
      * Uses org.freedesktop.DBus.ObjectManager InterfacesAdded / InterfacesRemoved signals,
      * filtered on the org.bluez.Adapter1 interface, and the org.bluez service owner (bluetoothd restarts).
-     * \return true if BlueZ is watched.
      */
     bool watchAdapters();
 

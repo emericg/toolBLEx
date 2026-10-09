@@ -56,7 +56,7 @@ set(SOURCES
     src/MenubarManager.cpp src/MenubarManager.h
     src/SettingsManager.cpp src/SettingsManager.h
 
-    src/AdapterManager.cpp src/AdapterManager.h src/AdapterManager_bluez.cpp src/AdapterManager_windows.cpp
+    src/AdapterManager.cpp src/AdapterManager.h src/AdapterManager_windows.cpp
     src/DeviceManager.cpp src/DeviceManager.h
     src/DeviceManager_advertisement.cpp src/DeviceManager_rssigraph.cpp
     src/DeviceFilter.cpp src/DeviceFilter.h src/DeviceHeader.h
@@ -68,7 +68,6 @@ set(SOURCES
     src/VendorsDatabase.cpp src/VendorsDatabase.h
 
     src/adapter.cpp src/adapter.h
-    src/AdapterTracker.cpp src/AdapterTracker.h
     src/device.cpp src/device.h src/device_utils.h
     src/device_toolblex.cpp src/device_toolblex.h
     src/device_toolblex_adv.cpp src/device_toolblex_adv.h
@@ -267,6 +266,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     # For BlueZ pairing status queries, and adapter info
     find_package(Qt6 REQUIRED COMPONENTS DBus)
     target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::DBus)
+    target_sources(${PROJECT_NAME} PRIVATE
+        src/AdapterManager_bluez.cpp src/AdapterManager_bluez.h
+    )
 endif()
 
 if(WIN32)
