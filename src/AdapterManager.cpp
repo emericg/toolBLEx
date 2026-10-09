@@ -25,6 +25,10 @@
 #include "adapter.h"
 #include "AdapterTracker.h"
 
+#if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
+#include "AdapterManager_bluez.h"
+#endif
+
 #include <QCoreApplication>
 #include <QGuiApplication>
 #include <QJSEngine>
@@ -746,6 +750,30 @@ void AdapterManager::recoverFromDiscoveryError()
 
     setAdapter_scan(adapter);
     updateStatus_scan();
+}
+
+/* ************************************************************************** */
+
+bool AdapterManager::startAdaptersWatcher_bluez()
+{
+#if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
+    m_bluez = new AdapterManagerBluez(this);
+    connect(m_bluez, &AdapterManagerBluez::adaptersChanged, this, [this]() { m_adaptersRefreshTimer.start(); });
+    connect(m_bluez, &AdapterManagerBluez::pairedDevicesUpdated, this, &AdapterManager::pairedDevicesUpdated_bluez);
+
+    return m_bluez->watchAdapters();
+#else
+    return false;
+#endif
+}
+
+void AdapterManager::queryPairedDevices_bluez(const QBluetoothAddress &adapterAddress)
+{
+#if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
+    if (m_bluez) m_bluez->queryPairedDevices(adapterAddress);
+#else
+    Q_UNUSED(adapterAddress)
+#endif
 }
 
 /* ************************************************************************** */

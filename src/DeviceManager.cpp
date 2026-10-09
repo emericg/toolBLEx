@@ -79,6 +79,12 @@ DeviceManager::DeviceManager(QObject *parent) : QObject(parent)
             this, &DeviceManager::bluetoothStatusChanged);
     connect(am, &AdapterManager::adapterChanged_scan,
             this, &DeviceManager::adapterChanged_scan);
+    connect(am, &AdapterManager::pairedDevicesUpdated_bluez,
+            this, &DeviceManager::pairedDevicesUpdated_bluez);
+    connect(am, &AdapterManager::pairingFinished_scan,
+            this, &DeviceManager::bluetoothPairingFinished);
+    connect(am, &AdapterManager::pairingError_scan,
+            this, &DeviceManager::bluetoothPairingError);
     adapterChanged_scan();
 
     // Scan pause while the application is inactive
@@ -549,9 +555,10 @@ void DeviceManager::checkPaired()
     if (!adapter || !adapter->isValid()) return;
 
 #if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
-    m_devicesPaired = AdapterManager::getInstance()->getPairedDevices_bluez(m_bluetoothAdapter->address());
+    // The result comes through pairedDevicesUpdated_bluez()
+    AdapterManager::getInstance()->queryPairedDevices_bluez(adapter->address());
 #else
-    m_devicesPaired.clear();
+    QHash <quint64, QBluetoothLocalDevice::Pairing> paired;
     for (auto d: std::as_const(m_devices_model->m_devices))
     {
         DeviceToolBLEx *dd = qobject_cast<DeviceToolBLEx *>(d);
@@ -564,7 +571,23 @@ void DeviceManager::checkPaired()
             if (p != QBluetoothLocalDevice::Unpaired) paired.insert(addr.toUInt64(), p);
         }
     }
+
+    setDevicesPaired(paired);
 #endif
+}
+
+void DeviceManager::pairedDevicesUpdated_bluez(const QBluetoothAddress &adapterAddress,
+                                               const QHash <quint64, QBluetoothLocalDevice::Pairing> &paired)
+{
+    // Drop replies about a previous adapter
+    if (AdapterManager::getInstance()->getAdapterAddress_scan() != adapterAddress) return;
+
+    setDevicesPaired(paired);
+}
+
+void DeviceManager::setDevicesPaired(const QHash <quint64, QBluetoothLocalDevice::Pairing> &paired)
+{
+    m_devicesPaired = paired;
 
     for (auto d: std::as_const(m_devices_model->m_devices))
     {

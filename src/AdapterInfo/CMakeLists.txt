@@ -13,6 +13,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_sources(${PROJECT_NAME} PRIVATE
         AdapterInfoBluez.cpp AdapterInfoBluez.h
+        BluezTypes.h
     )
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_sources(${PROJECT_NAME} PRIVATE

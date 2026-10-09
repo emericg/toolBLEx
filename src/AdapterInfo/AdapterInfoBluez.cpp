@@ -21,18 +21,19 @@
 
 #include "AdapterInfoBluez.h"
 #include "AdapterInfoUtils.h"
+#include "BluezTypes.h"
 
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDBusArgument>
 #include <QDBusObjectPath>
 #include <QDBusPendingCallWatcher>
+#include <QDBusPendingReply>
 #include <QDBusError>
 
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QMap>
 #include <QProcess>
 #include <QDebug>
 
@@ -44,45 +45,11 @@ static const QString s_iface_advertising = QStringLiteral("org.bluez.LEAdvertisi
 static const QString s_iface_objects = QStringLiteral("org.freedesktop.DBus.ObjectManager");
 static const QString s_iface_properties = QStringLiteral("org.freedesktop.DBus.Properties");
 
-/*!
- * \brief Read a DICT<STRING, DICT<STRING, VARIANT>> (interfaces and their properties).
- */
-static QMap <QString, QVariantMap> readInterfaces(const QDBusArgument &arg)
-{
-    QMap <QString, QVariantMap> interfaces;
-
-    arg.beginMap();
-    while (!arg.atEnd())
-    {
-        QString iface;
-        QVariantMap props;
-        arg.beginMapEntry();
-        arg >> iface >> props;
-        arg.endMapEntry();
-        interfaces.insert(iface, props);
-    }
-    arg.endMap();
-
-    return interfaces;
-}
-
-/*!
- * \brief Convert a nested a{sv} property value, still marshalled as a QDBusArgument.
- */
-static QVariantMap toVariantMap(const QVariant &value)
-{
-    if (value.metaType() == QMetaType::fromType<QDBusArgument>())
-    {
-        return qdbus_cast<QVariantMap>(value.value<QDBusArgument>());
-    }
-    return value.toMap();
-}
-
 /* ************************************************************************** */
 
 AdapterInfoBluez::AdapterInfoBluez(QObject *parent) : AdapterInfo(parent)
 {
-    //
+    registerBluezTypes();
 }
 
 void AdapterInfoBluez::query(const QBluetoothAddress &address)
@@ -129,31 +96,25 @@ void AdapterInfoBluez::queryObjects()
         m_objectsCall = nullptr;
         call->deleteLater();
 
-        const QDBusMessage reply = call->reply();
-        if (reply.type() != QDBusMessage::ReplyMessage || reply.arguments().isEmpty())
+        QDBusPendingReply <ManagedObjectList> reply = *call;
+        if (reply.isError())
         {
-            qWarning() << "AdapterInfoBluez::queryObjects() GetManagedObjects failed:" << reply.errorMessage();
+            qWarning() << "AdapterInfoBluez::queryObjects() GetManagedObjects failed:" << reply.error().message();
             return;
         }
 
-        // GetManagedObjects() > DICT<OBJPATH, DICT<STRING, DICT<STRING, VARIANT>>>
-        const QDBusArgument arg = reply.arguments().constFirst().value<QDBusArgument>();
-        arg.beginMap();
-        while (!arg.atEnd())
+        const ManagedObjectList objects = reply.value();
+        for (auto it = objects.cbegin(); it != objects.cend(); ++it)
         {
-            QDBusObjectPath path;
-            arg.beginMapEntry();
-            arg >> path;
-            const QMap <QString, QVariantMap> interfaces = readInterfaces(arg);
-            arg.endMapEntry();
+            const InterfaceList &interfaces = it.value();
+            if (!interfaces.contains(s_iface_adapter)) continue;
 
-            const auto adapter = interfaces.constFind(s_iface_adapter);
-            if (adapter != interfaces.cend() && QBluetoothAddress(adapter->value(QStringLiteral("Address")).toString()) == m_address)
+            const QVariantMap adapter = interfaces.value(s_iface_adapter);
+            if (QBluetoothAddress(adapter.value(QStringLiteral("Address")).toString()) == m_address)
             {
-                setAdapter(path.path(), *adapter, interfaces.value(s_iface_advertising));
+                setAdapter(it.key().path(), adapter, interfaces.value(s_iface_advertising));
             }
         }
-        arg.endMap();
     });
 }
 
@@ -253,15 +214,15 @@ void AdapterInfoBluez::interfacesAdded(const QDBusMessage &msg)
     if (args.size() < 2) return;
 
     const QString path = args.at(0).value<QDBusObjectPath>().path();
-    const QMap <QString, QVariantMap> interfaces = readInterfaces(args.at(1).value<QDBusArgument>());
+    const InterfaceList interfaces = qdbus_cast<InterfaceList>(args.at(1));
 
-    const auto adapter = interfaces.constFind(s_iface_adapter);
-    if (adapter != interfaces.cend())
+    if (interfaces.contains(s_iface_adapter))
     {
         // the adapter is back (plugged in, or bluetoothd restarted)
-        if (QBluetoothAddress(adapter->value(QStringLiteral("Address")).toString()) == m_address)
+        const QVariantMap adapter = interfaces.value(s_iface_adapter);
+        if (QBluetoothAddress(adapter.value(QStringLiteral("Address")).toString()) == m_address)
         {
-            setAdapter(path, *adapter, interfaces.value(s_iface_advertising));
+            setAdapter(path, adapter, interfaces.value(s_iface_advertising));
         }
     }
     else if (path == m_path && interfaces.contains(s_iface_advertising))
@@ -399,7 +360,7 @@ void AdapterInfoBluez::updateDetails()
             d.extendedAdvertising = !d.phys.isEmpty();
         }
 
-        const QVariantMap caps = toVariantMap(adv.value(QStringLiteral("SupportedCapabilities")));
+        const QVariantMap caps = qdbus_cast<QVariantMap>(adv.value(QStringLiteral("SupportedCapabilities")));
         if (caps.contains(QStringLiteral("MaxAdvLen"))) d.maxAdvertisingLength = caps.value(QStringLiteral("MaxAdvLen")).toInt();
         if (caps.contains(QStringLiteral("MaxScnRspLen"))) d.maxScanResponseLength = caps.value(QStringLiteral("MaxScnRspLen")).toInt();
         if (caps.contains(QStringLiteral("MinTxPower"))) d.txPowerMin = caps.value(QStringLiteral("MinTxPower")).toInt();
