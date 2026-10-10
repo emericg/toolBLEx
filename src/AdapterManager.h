@@ -26,7 +26,6 @@
 #include <QObject>
 #include <QVariant>
 #include <QList>
-#include <QHash>
 #include <QTimer>
 
 #include <QtQml/qqmlregistration.h>
@@ -137,7 +136,6 @@ class AdapterManager: public QObject
      *
      * Host mode changes update the status, and release the simulator adapter once powered off.
      * A new device resets the scan adapter (see adapterChanged_scan()), and releases the simulator adapter.
-     * Pairing signals are only forwarded from the scan adapter.
      */
     void connectAdapter(Adapter *adapter);
 
@@ -225,7 +223,7 @@ class AdapterManager: public QObject
 
     // Platform adapters watchers //////////////////////////////////////////////
 
-    AdapterManagerBluez *m_bluez = nullptr;         //!< BlueZ adapters watcher and queries, Linux only
+    AdapterManagerBluez *m_bluez = nullptr;         //!< BlueZ adapters watcher, Linux only
 
     /*!
      * \brief Watch BlueZ for adapters being plugged or unplugged, see AdapterManagerBluez::watchAdapters().
@@ -256,29 +254,15 @@ Q_SIGNALS:
     void bluetoothChanged_scan();
     void bluetoothChanged_sim();
     void permissionRequestFinished(bool granted);
+
+    /*!
+     * \brief Emitted when the scan adapter changes, or when its device is replaced (adapter re-plugged).
+     *
+     * Anything bound to the previous device (discovery agent, device signals) must be dropped,
+     * see getAdapterDevice_scan().
+     */
     void adapterChanged_scan();
     void adapterLost_sim(bool poweredOff);
-
-    /*!
-     * \brief Forwarded from the scan adapter device, see QBluetoothLocalDevice::pairingFinished().
-     */
-    void pairingFinished_scan(const QBluetoothAddress &address, QBluetoothLocalDevice::Pairing pairing);
-
-    /*!
-     * \brief Forwarded from the scan adapter device, see QBluetoothLocalDevice::errorOccurred().
-     *
-     * Not only pairing errors, but every device error ends a pending pairing request.
-     */
-    void pairingError_scan(QBluetoothLocalDevice::Error error);
-
-    /*!
-     * \brief Emitted with the result of queryPairedDevices_bluez().
-     * \param adapterAddress: the adapter the query was made for.
-     * \param paired: the paired devices, by address.
-     * Empty if the query failed, or if the adapter is unknown to BlueZ.
-     */
-    void pairedDevicesUpdated_bluez(const QBluetoothAddress &adapterAddress,
-                                    const QHash <quint64, QBluetoothLocalDevice::Pairing> &paired);
 
 private slots:
     /*!
@@ -423,16 +407,6 @@ public:
      * \brief Release the simulator adapter, if held. It stays the simulator adapter for the next start.
      */
     void releaseAdapter_sim();
-
-    // Platform specific / tools ///////////////////////////////////////////////
-
-    /*!
-     * \brief Query the pairing status of every device known to BlueZ, see AdapterManagerBluez::queryPairedDevices().
-     * \param adapterAddress: only report devices known to this adapter.
-     *
-     * The result comes through pairedDevicesUpdated_bluez(). Does nothing on other platforms.
-     */
-    void queryPairedDevices_bluez(const QBluetoothAddress &adapterAddress);
 };
 
 /* ************************************************************************** */

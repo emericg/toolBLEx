@@ -24,29 +24,19 @@
 /* ************************************************************************** */
 
 #include <QObject>
-#include <QHash>
-#include <QBluetoothAddress>
-#include <QBluetoothLocalDevice>
 
 class QDBusMessage;
-class QDBusPendingCallWatcher;
 
 /* ************************************************************************** */
 
 /*!
  * \brief BlueZ side of AdapterManager, Linux only.
  *
- * Watches BlueZ for adapters being plugged or unplugged, and queries the paired devices.
+ * Watches BlueZ for adapters being plugged or unplugged.
  */
 class AdapterManagerBluez: public QObject
 {
     Q_OBJECT
-
-    /*!
-     * \brief Parse the queryPairedDevices() reply, and emit pairedDevicesUpdated().
-     * \param call: the pending GetManagedObjects call, deleted afterwards.
-     */
-    void pairedDevicesReply(QDBusPendingCallWatcher *call);
 
 private Q_SLOTS:
     void interfacesAdded(const QDBusMessage &msg);
@@ -57,16 +47,6 @@ Q_SIGNALS:
      * \brief Emitted when an adapter has been plugged or unplugged, or when bluetoothd restarted or stopped.
      */
     void adaptersChanged();
-
-    /*!
-     * \brief Emitted with the result of queryPairedDevices().
-     * \param adapterAddress: the adapter the query was made for.
-     * \param paired: the paired devices, by address.
-     *
-     * Empty if the query failed, or if the adapter is unknown to BlueZ.
-     */
-    void pairedDevicesUpdated(const QBluetoothAddress &adapterAddress,
-                              const QHash <quint64, QBluetoothLocalDevice::Pairing> &paired);
 
 public:
     explicit AdapterManagerBluez(QObject *parent = nullptr);
@@ -79,16 +59,6 @@ public:
      * filtered on the org.bluez.Adapter1 interface, and the org.bluez service owner (bluetoothd restarts).
      */
     bool watchAdapters();
-
-    /*!
-     * \brief Query the pairing status of every device known to BlueZ, using a single asynchronous D-Bus call.
-     * \param adapterAddress: only report devices known to this adapter.
-     *
-     * The result comes through pairedDevicesUpdated().
-     * QBluetoothLocalDevice::pairingStatus() does one blocking D-Bus round trip per device known to BlueZ,
-     * for every device queried.
-     */
-    void queryPairedDevices(const QBluetoothAddress &adapterAddress);
 };
 
 /* ************************************************************************** */

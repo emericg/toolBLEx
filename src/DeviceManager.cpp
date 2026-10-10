@@ -79,12 +79,6 @@ DeviceManager::DeviceManager(QObject *parent) : QObject(parent)
             this, &DeviceManager::bluetoothStatusChanged);
     connect(am, &AdapterManager::adapterChanged_scan,
             this, &DeviceManager::adapterChanged_scan);
-    connect(am, &AdapterManager::pairedDevicesUpdated_bluez,
-            this, &DeviceManager::pairedDevicesUpdated_bluez);
-    connect(am, &AdapterManager::pairingFinished_scan,
-            this, &DeviceManager::bluetoothPairingFinished);
-    connect(am, &AdapterManager::pairingError_scan,
-            this, &DeviceManager::bluetoothPairingError);
     adapterChanged_scan();
 
     // Scan pause while the application is inactive
@@ -236,6 +230,17 @@ void DeviceManager::adapterChanged_scan()
 
     // Drop everything bound to the previous adapter
     bool wasScanning = (m_scanning && !m_scanning_paused);
+
+    // Follow the pairing signals of the new device, the previous one is usually deleted already
+    if (m_adapterDevice) disconnect(m_adapterDevice, nullptr, this, nullptr);
+    m_adapterDevice = AdapterManager::getInstance()->getAdapterDevice_scan();
+    if (m_adapterDevice)
+    {
+        connect(m_adapterDevice, &QBluetoothLocalDevice::pairingFinished,
+                this, &DeviceManager::bluetoothPairingFinished);
+        connect(m_adapterDevice, &QBluetoothLocalDevice::errorOccurred,
+                this, &DeviceManager::bluetoothPairingError);
+    }
 
     if (m_bluetoothDiscoveryAgent)
     {
@@ -551,12 +556,11 @@ void DeviceManager::addBleDevice(const QBluetoothDeviceInfo &info)
 
 void DeviceManager::checkPaired()
 {
-    QBluetoothLocalDevice *adapter = AdapterManager::getInstance()->getAdapterDevice_scan();
+    QBluetoothLocalDevice *adapter = m_adapterDevice;
     if (!adapter || !adapter->isValid()) return;
 
 #if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
-    // The result comes through pairedDevicesUpdated_bluez()
-    AdapterManager::getInstance()->queryPairedDevices_bluez(adapter->address());
+    queryPairedDevices_bluez(adapter->address());
 #else
     QHash <quint64, QBluetoothLocalDevice::Pairing> paired;
     for (auto d: std::as_const(m_devices_model->m_devices))
@@ -576,15 +580,6 @@ void DeviceManager::checkPaired()
 #endif
 }
 
-void DeviceManager::pairedDevicesUpdated_bluez(const QBluetoothAddress &adapterAddress,
-                                               const QHash <quint64, QBluetoothLocalDevice::Pairing> &paired)
-{
-    // Drop replies about a previous adapter
-    if (AdapterManager::getInstance()->getAdapterAddress_scan() != adapterAddress) return;
-
-    setDevicesPaired(paired);
-}
-
 void DeviceManager::setDevicesPaired(const QHash <quint64, QBluetoothLocalDevice::Pairing> &paired)
 {
     m_devicesPaired = paired;
@@ -602,7 +597,7 @@ void DeviceManager::setDevicesPaired(const QHash <quint64, QBluetoothLocalDevice
 
 bool DeviceManager::requestPairing(const QString &address, QBluetoothLocalDevice::Pairing pairing)
 {
-    QBluetoothLocalDevice *adapter = AdapterManager::getInstance()->getAdapterDevice_scan();
+    QBluetoothLocalDevice *adapter = m_adapterDevice;
     if (!adapter || !adapter->isValid()) return false;
     if (!m_pairingPendingAddress.isEmpty()) return false;
 

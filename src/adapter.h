@@ -117,16 +117,6 @@ Q_SIGNALS:
      */
     void hostModeChanged(QBluetoothLocalDevice::HostMode state);
 
-    /*!
-     * \brief Forwarded from the current device, see QBluetoothLocalDevice::pairingFinished().
-     */
-    void pairingFinished(const QBluetoothAddress &address, QBluetoothLocalDevice::Pairing pairing);
-
-    /*!
-     * \brief Forwarded from the current device, see QBluetoothLocalDevice::errorOccurred().
-     */
-    void errorOccurred(QBluetoothLocalDevice::Error error);
-
 public:
     Adapter(const QBluetoothHostInfo &adapterInfo, QObject *parent = nullptr);
     ~Adapter();

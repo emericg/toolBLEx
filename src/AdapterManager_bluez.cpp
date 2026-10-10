@@ -27,8 +27,6 @@
 #include <QDBusArgument>
 #include <QDBusObjectPath>
 #include <QDBusError>
-#include <QDBusPendingCallWatcher>
-#include <QDBusPendingReply>
 #include <QDBusServiceWatcher>
 
 #include <QDebug>
@@ -98,72 +96,6 @@ void AdapterManagerBluez::interfacesRemoved(const QDBusMessage &msg)
         qDebug() << "BlueZ adapter removed:" << args.at(0).value<QDBusObjectPath>().path();
         Q_EMIT adaptersChanged();
     }
-}
-
-/* ************************************************************************** */
-
-void AdapterManagerBluez::queryPairedDevices(const QBluetoothAddress &adapterAddress)
-{
-    QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.bluez"), QStringLiteral("/"),
-                                                      QStringLiteral("org.freedesktop.DBus.ObjectManager"),
-                                                      QStringLiteral("GetManagedObjects"));
-
-    QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(QDBusConnection::systemBus().asyncCall(msg), this);
-    watcher->setProperty("adapterAddress", adapterAddress.toUInt64());
-    connect(watcher, &QDBusPendingCallWatcher::finished, this, &AdapterManagerBluez::pairedDevicesReply);
-}
-
-void AdapterManagerBluez::pairedDevicesReply(QDBusPendingCallWatcher *call)
-{
-    call->deleteLater();
-
-    const QBluetoothAddress adapterAddress(call->property("adapterAddress").toULongLong());
-    QHash <quint64, QBluetoothLocalDevice::Pairing> paired;
-
-    QDBusPendingReply <ManagedObjectList> reply = *call;
-    if (reply.isError())
-    {
-        qWarning() << "AdapterManagerBluez::pairedDevicesReply() GetManagedObjects failed:" << reply.error().message();
-        Q_EMIT pairedDevicesUpdated(adapterAddress, paired);
-        return;
-    }
-
-    const ManagedObjectList objects = reply.value();
-
-    // Find the adapter object
-    QString adapterPath;
-    for (auto it = objects.cbegin(); it != objects.cend(); ++it)
-    {
-        if (!it.value().contains(QStringLiteral("org.bluez.Adapter1"))) continue;
-
-        const QVariantMap adapter = it.value().value(QStringLiteral("org.bluez.Adapter1"));
-        if (QBluetoothAddress(adapter.value(QStringLiteral("Address")).toString()) == adapterAddress)
-        {
-            adapterPath = it.key().path() + QChar('/');
-            break;
-        }
-    }
-
-    // Then its paired devices
-    if (!adapterPath.isEmpty())
-    {
-        for (auto it = objects.cbegin(); it != objects.cend(); ++it)
-        {
-            if (!it.key().path().startsWith(adapterPath)) continue;
-
-            const QVariantMap device = it.value().value(QStringLiteral("org.bluez.Device1"));
-            if (!device.value(QStringLiteral("Paired")).toBool()) continue;
-
-            QBluetoothAddress addr(device.value(QStringLiteral("Address")).toString());
-            if (addr.isNull()) continue;
-
-            paired.insert(addr.toUInt64(), device.value(QStringLiteral("Trusted")).toBool() ?
-                                               QBluetoothLocalDevice::AuthorizedPaired :
-                                               QBluetoothLocalDevice::Paired);
-        }
-    }
-
-    Q_EMIT pairedDevicesUpdated(adapterAddress, paired);
 }
 
 /* ************************************************************************** */

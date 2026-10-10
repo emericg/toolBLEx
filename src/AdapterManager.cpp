@@ -362,15 +362,6 @@ void AdapterManager::connectAdapter(Adapter *adapter)
 
         notifyStatus();
     });
-
-    connect(adapter, &Adapter::pairingFinished, this,
-            [this, adapter](const QBluetoothAddress &address, QBluetoothLocalDevice::Pairing pairing) {
-        if (adapter == m_adapter_scan) Q_EMIT pairingFinished_scan(address, pairing);
-    });
-
-    connect(adapter, &Adapter::errorOccurred, this, [this, adapter](QBluetoothLocalDevice::Error error) {
-        if (adapter == m_adapter_scan) Q_EMIT pairingError_scan(error);
-    });
 }
 
 void AdapterManager::updateDefaultAdapters()
@@ -604,18 +595,8 @@ void AdapterManager::startAdaptersWatcher_bluez()
 #if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
     m_bluez = new AdapterManagerBluez(this);
     connect(m_bluez, &AdapterManagerBluez::adaptersChanged, this, [this]() { m_adaptersRefreshTimer.start(); });
-    connect(m_bluez, &AdapterManagerBluez::pairedDevicesUpdated, this, &AdapterManager::pairedDevicesUpdated_bluez);
 
     m_bluez->watchAdapters();
-#endif
-}
-
-void AdapterManager::queryPairedDevices_bluez(const QBluetoothAddress &adapterAddress)
-{
-#if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
-    if (m_bluez) m_bluez->queryPairedDevices(adapterAddress);
-#else
-    Q_UNUSED(adapterAddress)
 #endif
 }
 

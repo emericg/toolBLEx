@@ -31,6 +31,7 @@
 #include <QList>
 #include <QHash>
 #include <QTimer>
+#include <QPointer>
 
 #include <QtQml/qqmlregistration.h>
 
@@ -90,6 +91,8 @@ class DeviceManager: public QObject
 
     QBluetoothDeviceDiscoveryAgent *m_bluetoothDiscoveryAgent = nullptr;
 
+    QPointer <QBluetoothLocalDevice> m_adapterDevice;   //!< scan adapter device, its pairing signals are followed
+
     QHash <quint64, QBluetoothLocalDevice::Pairing> m_devicesPaired; //!< paired devices, by address
     QString m_pairingPendingAddress;
 
@@ -131,6 +134,16 @@ class DeviceManager: public QObject
      * \param paired: the paired devices, by address.
      */
     void setDevicesPaired(const QHash <quint64, QBluetoothLocalDevice::Pairing> &paired);
+
+    /*!
+     * \brief Query the pairing status of every device known to BlueZ, using a single asynchronous D-Bus call.
+     * \param adapterAddress: only report devices known to this adapter.
+     *
+     * Linux only, see DeviceManager_bluez.cpp.
+     * QBluetoothLocalDevice::pairingStatus() does one blocking D-Bus round trip per device known to BlueZ,
+     * for every device queried. The result goes to setDevicesPaired(), unless the scan adapter changed meanwhile.
+     */
+    void queryPairedDevices_bluez(const QBluetoothAddress &adapterAddress);
 
     QString getOrderByRole() const;
     int getOrderByOrder() const;
@@ -196,11 +209,14 @@ private slots:
     // AdapterManager related
     void bluetoothStatusChanged();
     void adapterChanged_scan();
-    void pairedDevicesUpdated_bluez(const QBluetoothAddress &adapterAddress,
-                                    const QHash <quint64, QBluetoothLocalDevice::Pairing> &paired);
 
-    // QBluetoothLocalDevice related
+    // QBluetoothLocalDevice related, from the scan adapter device
     void bluetoothPairingFinished(const QBluetoothAddress &address, QBluetoothLocalDevice::Pairing pairing);
+
+    /*!
+     * \brief End the pending pairing request, if any.
+     * \param error: the scan adapter device error, not only pairing errors.
+     */
     void bluetoothPairingError(QBluetoothLocalDevice::Error error);
 
     // QBluetoothDeviceDiscoveryAgent related

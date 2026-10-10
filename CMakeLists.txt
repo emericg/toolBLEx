@@ -268,6 +268,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::DBus)
     target_sources(${PROJECT_NAME} PRIVATE
         src/AdapterManager_bluez.cpp src/AdapterManager_bluez.h
+        src/DeviceManager_bluez.cpp
     )
 endif()
 

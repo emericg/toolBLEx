@@ -144,10 +144,6 @@ bool Adapter::checkAdapter(bool force)
                     this, &Adapter::deviceConnected);
             connect(m_adapter_device, &QBluetoothLocalDevice::deviceDisconnected,
                     this, &Adapter::deviceDisconnected);
-            connect(m_adapter_device, &QBluetoothLocalDevice::pairingFinished,
-                    this, &Adapter::pairingFinished);
-            connect(m_adapter_device, &QBluetoothLocalDevice::errorOccurred,
-                    this, &Adapter::errorOccurred);
 
             Q_EMIT deviceChanged();
 
