@@ -256,10 +256,7 @@ void DeviceManager::adapterChanged_scan()
     checkPaired();
 
     // The Bluetooth status may not change, restart scanning on the new adapter ourselves
-    if (wasScanning)
-    {
-        QMetaObject::invokeMethod(this, &DeviceManager::scanDevices_start, Qt::QueuedConnection);
-    }
+    if (wasScanning) scanDevices_start();
 }
 
 void DeviceManager::bluetoothStatusChanged()

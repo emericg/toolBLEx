@@ -93,19 +93,6 @@ AdapterManager::~AdapterManager()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-bool AdapterManager::enableBluetooth_scan()
-{
-    //qDebug() << "AdapterManager::enableBluetooth_scan()";
-
-    // The user tries again
-    m_scanFailure = ScanFailure::None;
-    refreshAdapters(true);
-
-    return hasBluetooth_scan();
-}
-
-/* ************************************************************************** */
-
 bool AdapterManager::requestBluetoothPermission(bool powerOn)
 {
     //qDebug() << "AdapterManager::requestBluetoothPermission()";
@@ -183,6 +170,12 @@ void AdapterManager::setBluetoothPermission(bool perm)
 
 void AdapterManager::notifyStatus()
 {
+    if (m_adapterChangedPending_scan)
+    {
+        m_adapterChangedPending_scan = false;
+        Q_EMIT adapterChanged_scan();
+    }
+
     const Status scan { hasBluetoothAdapter_scan(), hasBluetoothEnabled_scan(), m_blePermission };
     if (scan != m_statusNotified_scan)
     {
@@ -343,7 +336,7 @@ void AdapterManager::connectAdapter(Adapter *adapter)
         if (adapter == m_adapter_scan)
         {
             m_scanFailure = ScanFailure::None;
-            Q_EMIT adapterChanged_scan();
+            m_adapterChangedPending_scan = true;
         }
 
         // A new device means the adapter has been unplugged, even if it is back already
@@ -424,21 +417,30 @@ bool AdapterManager::hasBluetoothEnabled_scan() const
     return (hasBluetoothAdapter_scan() && m_adapter_scan->isPoweredOn() && m_scanFailure == ScanFailure::None);
 }
 
+bool AdapterManager::enableBluetooth_scan()
+{
+    //qDebug() << "AdapterManager::enableBluetooth_scan()";
+
+    // The user tries again
+    m_scanFailure = ScanFailure::None;
+    refreshAdapters(true);
+
+    return hasBluetooth_scan();
+}
+
 void AdapterManager::setAdapter_scan(Adapter *adapter)
 {
     if (m_adapter_scan == adapter) return;
 
+    if (m_adapter_scan) m_adapter_scan->setInUse_scan(false);
     m_adapter_scan = adapter;
+    if (m_adapter_scan) m_adapter_scan->setInUse_scan(true);
+
     m_scanFailure = ScanFailure::None;
 
     if (m_adapter_scan) qDebug() << "AdapterManager::setAdapter_scan()" << m_adapter_scan->getAddress();
 
-    for (Adapter *adp: std::as_const(m_bluetoothAdapters))
-    {
-        adp->setInUse_scan(adp == m_adapter_scan);
-    }
-
-    Q_EMIT adapterChanged_scan();
+    m_adapterChangedPending_scan = true;
 }
 
 bool AdapterManager::switchAdapter_scan()
@@ -511,7 +513,6 @@ void AdapterManager::acquireAdapter_sim()
 {
     releaseAdapter_sim();
 
-    // Refresh the adapters list
     updateAdapters();
 
     m_adapter_sim = pickAdapter_sim();
@@ -555,7 +556,8 @@ void AdapterManager::loseAdapter_sim(bool poweredOff)
 
     qWarning() << "AdapterManager::loseAdapter_sim() simulator adapter lost, powered off:" << poweredOff;
 
-    releaseAdapter_sim();
+    m_held_sim = false;
+    m_adapter_sim->setInUse_sim(false);
     Q_EMIT adapterLost_sim(poweredOff);
 }
 

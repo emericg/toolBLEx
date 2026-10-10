@@ -81,6 +81,17 @@ class AdapterManager: public QObject
     bool m_blePermission = false;       //!< do we have necessary BLE permission(s)?
 
     /*!
+     * \brief Change the permission, without notifying the Bluetooth status, see notifyStatus().
+     */
+    void setBluetoothPermission(bool perm);
+
+    /*!
+     * \brief Apply a granted Bluetooth permission, then pick the scan adapter, see refreshAdapters().
+     * \param powerOn: power on the scan adapter if needed, only on user request.
+     */
+    void permissionGranted(bool powerOn);
+
+    /*!
      * \brief Bluetooth status of the scan or simulator adapter, as notified to QML.
      */
     struct Status
@@ -99,21 +110,12 @@ class AdapterManager: public QObject
     Status m_statusNotified_sim;        //!< simulator status, as last notified
 
     /*!
-     * \brief Change the permission, without notifying the Bluetooth status, see notifyStatus().
-     */
-    void setBluetoothPermission(bool perm);
-
-    /*!
-     * \brief Apply a granted Bluetooth permission, then pick the scan adapter, see refreshAdapters().
-     * \param powerOn: power on the scan adapter if needed, only on user request.
-     */
-    void permissionGranted(bool powerOn);
-
-    /*!
      * \brief Emit bluetoothChanged_scan() and bluetoothChanged_sim() if their status changed since the last emission.
      *
      * Comparing with the last emission, rather than with the state before a change,
      * lets callers update the permission and the adapters first, then notify once.
+     * A pending adapterChanged_scan() is emitted first.
+     * Every public entry point ends with it, it is never called while the adapters are being updated.
      */
     void notifyStatus();
 
@@ -157,6 +159,7 @@ class AdapterManager: public QObject
     // Scanner adapter /////////////////////////////////////////////////////////
 
     Adapter *m_adapter_scan = nullptr;              //!< adapter used for scanning, owned by m_bluetoothAdapters
+    bool m_adapterChangedPending_scan = false;      //!< adapterChanged_scan() to emit, see notifyStatus()
 
     /*!
      * \brief Why the scan adapter cannot be used, despite its state.
@@ -168,7 +171,7 @@ class AdapterManager: public QObject
     ScanFailure m_scanFailure = ScanFailure::None;
 
     /*!
-     * \brief Change the scan adapter, and update the in use status of every known adapter.
+     * \brief Change the scan adapter, and update the in use status of the previous and new adapters.
      * \param adapter: the new scan adapter, or nullptr.
      */
     void setAdapter_scan(Adapter *adapter);
@@ -202,6 +205,8 @@ class AdapterManager: public QObject
     /*!
      * \brief Release the simulator adapter if held, and tell the simulator.
      * \param poweredOff: true if the adapter has been powered off, false if it has been unplugged.
+     *
+     * Called while the adapters are updated, the status is notified by the callers, see notifyStatus().
      */
     void loseAdapter_sim(bool poweredOff);
 
@@ -260,6 +265,7 @@ Q_SIGNALS:
      *
      * Anything bound to the previous device (discovery agent, device signals) must be dropped,
      * see getAdapterDevice_scan().
+     * Emitted once the adapters are updated, before bluetoothChanged_scan(), see notifyStatus().
      */
     void adapterChanged_scan();
     void adapterLost_sim(bool poweredOff);
