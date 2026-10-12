@@ -21,7 +21,7 @@ T.TabButton {
     font.bold: false
 
     // settings
-    hoverEnabled: isDesktop
+    hoverEnabled: Theme.isDesktop
     focusPolicy: Qt.NoFocus
 
     // icon

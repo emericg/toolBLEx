@@ -137,7 +137,7 @@ Loader {
 
                     z: 5
                     clip: true
-                    height: isHdpi ? 200 : 230
+                    height: Theme.isHdpi ? 200 : 230
 
                     //color: (Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT) ? "#69b7ff" : "#b184f6"
                     stops: (Theme.currentTheme === Theme.THEME_DESKTOP_LIGHT) ? GradientPresets.sky : GradientPresets.violet

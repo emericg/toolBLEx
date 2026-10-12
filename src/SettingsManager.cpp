@@ -134,6 +134,8 @@ bool SettingsManager::readSettings()
             m_scanTimeout = settings.value("settings/scanTimeout").toInt();
         if (settings.contains("settings/scanRssiInterval"))
             m_scanRssiInterval = settings.value("settings/scanRssiInterval").toInt();
+        if (settings.contains("settings/scanAdvDecoding"))
+            m_scanAdvDecoding = std::clamp(settings.value("settings/scanAdvDecoding").toInt(), 0, 2);
 
         if (settings.contains("settings/scanShowBeacon"))
             m_scanShowBeacon = settings.value("settings/scanShowBeacon").toBool();
@@ -224,6 +226,7 @@ bool SettingsManager::writeSettings()
         settings.setValue("settings/scanMethods", m_scanMethods);
         settings.setValue("settings/scanTimeout", m_scanTimeout);
         settings.setValue("settings/scanRssiInterval", m_scanRssiInterval);
+        settings.setValue("settings/scanAdvDecoding", m_scanAdvDecoding);
         settings.setValue("settings/scanShowBeacon", m_scanShowBeacon);
         settings.setValue("settings/scanShowBlacklisted", m_scanShowBlacklisted);
         settings.setValue("settings/scanShowCached", m_scanShowCached);
@@ -294,6 +297,8 @@ void SettingsManager::resetSettings()
     Q_EMIT scanTimeoutChanged();
     m_scanRssiInterval = 1000;
     Q_EMIT scanRssiIntervalChanged();
+    m_scanAdvDecoding = 1;
+    Q_EMIT scanAdvDecodingChanged();
 
     m_simAuto = false;
     Q_EMIT simAutoChanged();
@@ -545,6 +550,23 @@ void SettingsManager::setScanRssiInterval(const int value)
         m_scanRssiInterval = value;
         writeSettings();
         Q_EMIT scanRssiIntervalChanged();
+    }
+}
+
+void SettingsManager::setScanAdvDecoding(const int value)
+{
+    if (value >= 0 && value <= 2)
+    {
+        if (m_scanAdvDecoding != value)
+        {
+            m_scanAdvDecoding = value;
+            writeSettings();
+            Q_EMIT scanAdvDecodingChanged();
+        }
+    }
+    else
+    {
+        qWarning() << "SettingsManager::setAdvDecoding(" << value << ") INVALID VALUE";
     }
 }
 

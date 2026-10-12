@@ -39,13 +39,13 @@ ApplicationWindow {
         if (SettingsManager.initialSize.width > 0)
             return SettingsManager.initialSize.width
         else
-            return isHdpi ? 960 : 1280
+            return Theme.isHdpi ? 960 : 1280
     }
     height: {
         if (SettingsManager.initialSize.height > 0)
             return SettingsManager.initialSize.height
         else
-            return isHdpi ? 640 : 720
+            return Theme.isHdpi ? 640 : 720
     }
     x: SettingsManager.initialPosition.width
     y: SettingsManager.initialPosition.height

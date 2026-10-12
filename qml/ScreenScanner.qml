@@ -414,7 +414,7 @@ Loader {
                         //console.log("> (default) flick maximum velocity: " + maximumFlickVelocity)
                         //console.log("> (default) flick deceleration: " + flickDeceleration)
 
-                        if (isDesktop) {
+                        if (Theme.isDesktop) {
                             // mouse wheel or trackpad
                             maximumFlickVelocity = 6500
                             flickDeceleration = 5000

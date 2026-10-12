@@ -56,7 +56,7 @@ set(SOURCES
     src/MenubarManager.cpp src/MenubarManager.h
     src/SettingsManager.cpp src/SettingsManager.h
 
-    src/AdapterManager.cpp src/AdapterManager.h src/AdapterManager_windows.cpp
+    src/AdapterManager.cpp src/AdapterManager.h
     src/DeviceManager.cpp src/DeviceManager.h
     src/DeviceManager_advertisement.cpp src/DeviceManager_rssigraph.cpp
     src/DeviceFilter.cpp src/DeviceFilter.h src/DeviceHeader.h
@@ -272,9 +272,10 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     )
 endif()
 
-if(WIN32)
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     # For the adapters watcher (C++/WinRT DeviceWatcher)
     target_link_libraries(${PROJECT_NAME} PRIVATE WindowsApp)
+    target_sources(${PROJECT_NAME} PRIVATE src/AdapterManager_windows.cpp)
 endif()
 
 target_include_directories(${PROJECT_NAME} PRIVATE src/)

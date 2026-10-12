@@ -14,7 +14,7 @@ Rectangle {
     z: 10
 
     color: Theme.colorHeader
-    property int headerHeight: isHdpi ? 52 : 56
+    property int headerHeight: Theme.isHdpi ? 52 : 56
 
     ////////////////
 
@@ -324,7 +324,7 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
 
-        spacing: isHdpi ? 4 : 12
+        spacing: Theme.isHdpi ? 4 : 12
         visible: true
 
         // MAIN MENU

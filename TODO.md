@@ -30,11 +30,11 @@
 [x] textfields: double click to select
 [x] keyboard navigation, move elevators
 [x] auto theme switch
-[-] better beacon detection
-[-] r/w/n: red badges on errors?
 [x] write data: explicit max size
 [x] write data: check max size
 [x] remove ScreenBluetooth
+[-] better beacon detection
+[-] r/w/n: red badges on errors?
 
 [x] graphs: unify min/max RSSI values (floorDb, ceilDb)
 [x] graphs: change clickable marker text position depending on its position onscreen
@@ -71,6 +71,9 @@
 
 [x] "known" advertising data parsing / device integration
 [-] "known" characteristic data parsing
+
+[ ] ubertooth & rtlsdr detection polling
+[ ] model column? indicators column?
 
 ## TODO # v1+
 

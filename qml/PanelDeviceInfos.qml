@@ -4,7 +4,6 @@ import QtQuick.Dialogs
 import QtQuick.Controls
 
 import ComponentLibrary
-import AppUtils
 import DeviceUtils
 
 Flickable {

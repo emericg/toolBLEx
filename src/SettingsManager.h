@@ -75,6 +75,7 @@ class SettingsManager: public QObject
     Q_PROPERTY(int scanMethods READ getScanMethods WRITE setScanMethods NOTIFY scanMethodsChanged)
     Q_PROPERTY(int scanTimeout READ getScanTimeout WRITE setScanTimeout NOTIFY scanTimeoutChanged)
     Q_PROPERTY(int scanRssiInterval READ getScanRssiInterval WRITE setScanRssiInterval NOTIFY scanRssiIntervalChanged)
+    Q_PROPERTY(int scanAdvDecoding READ getScanAdvDecoding WRITE setScanAdvDecoding NOTIFY scanAdvDecodingChanged)
 
     Q_PROPERTY(bool scanShowBeacon READ getScanShowBeacon WRITE setScanShowBeacon NOTIFY scanShowChanged)
     Q_PROPERTY(bool scanShowBlacklisted READ getScanShowBlacklisted WRITE setScanShowBlacklisted NOTIFY scanShowChanged)
@@ -115,7 +116,7 @@ class SettingsManager: public QObject
     QString m_appTheme = "THEME_DESKTOP_LIGHT";
     bool m_appThemeAuto = false;
     unsigned m_appThemeAutoMethod = 0;
-    unsigned m_appUnitSystem = 0;               //!< QLocale::MeasurementSystem
+    unsigned m_appUnitSystem = 0;           //!< QLocale::MeasurementSystem
     QString m_appLanguage = "auto";
     bool m_appSplashScreen = true;
 
@@ -128,6 +129,7 @@ class SettingsManager: public QObject
     int m_scanMethods = QBluetoothDeviceDiscoveryAgent::LowEnergyMethod; //!< QBluetoothDeviceDiscoveryAgent::DiscoveryMethod
     int m_scanTimeout = 0;
     int m_scanRssiInterval = 1000;
+    int m_scanAdvDecoding = 1;                  //!< Advertisement decoding: 0 off, 1 on (safe), 2 on (speculative)
     bool m_simAuto = false;
     bool m_simPause = false;
     QString m_simProfile;
@@ -192,6 +194,7 @@ Q_SIGNALS:
     void scanMethodsChanged();
     void scanTimeoutChanged();
     void scanRssiIntervalChanged();
+    void scanAdvDecodingChanged();
     void scanShowChanged();
     void scanviewChanged();
 
@@ -278,6 +281,9 @@ public:
 
     int getScanRssiInterval() const { return m_scanRssiInterval; }
     void setScanRssiInterval(const int value);
+
+    int getScanAdvDecoding() const { return m_scanAdvDecoding; }
+    void setScanAdvDecoding(const int value);
 
     bool getScanShowBeacon() const { return m_scanShowBeacon; }
     void setScanShowBeacon(const bool value);

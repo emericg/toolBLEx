@@ -41,7 +41,80 @@ Column { // BLE SCANNER
         }
     }
 
+    ////
+
+    Rectangle {
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 48
+        color: Theme.colorForeground
+
+        Text {
+            anchors.left: parent.left
+            anchors.leftMargin: Theme.componentMarginL
+            anchors.right: parent.right
+            anchors.rightMargin: 64
+            anchors.verticalCenter: parent.verticalCenter
+
+            text: qsTr("Start scanning automatically")
+            textFormat: Text.PlainText
+            font.pixelSize: Theme.fontSizeContent
+            font.bold: false
+            color: Theme.colorText
+            wrapMode: Text.WordWrap
+            verticalAlignment: Text.AlignVCenter
+        }
+
+        SwitchThemed {
+            anchors.right: parent.right
+            anchors.rightMargin: Theme.componentMarginXS
+            anchors.verticalCenter: parent.verticalCenter
+
+            checked: SettingsManager.scanAuto
+            onClicked: {
+                SettingsManager.scanAuto = checked
+                if (!DeviceManager.scanning) {
+                    DeviceManager.scanDevices_start()
+                }
+            }
+        }
+    }
+
     ////////
+
+    Rectangle {
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 48
+        color: Theme.colorForeground
+
+        Text {
+            anchors.left: parent.left
+            anchors.leftMargin: Theme.componentMarginL
+            anchors.right: parent.right
+            anchors.rightMargin: 64
+            anchors.verticalCenter: parent.verticalCenter
+
+            text: qsTr("Pause scanning while in the background")
+            textFormat: Text.PlainText
+            font.pixelSize: Theme.fontSizeContent
+            font.bold: false
+            color: Theme.colorText
+            wrapMode: Text.WordWrap
+            verticalAlignment: Text.AlignVCenter
+        }
+
+        SwitchThemed {
+            anchors.right: parent.right
+            anchors.rightMargin: Theme.componentMarginXS
+            anchors.verticalCenter: parent.verticalCenter
+
+            checked: SettingsManager.scanPause
+            onClicked: SettingsManager.scanPause = checked
+        }
+    }
+
+    ////
 
     Rectangle {
         anchors.left: parent.left
@@ -121,11 +194,11 @@ Column { // BLE SCANNER
         Text {
             anchors.left: parent.left
             anchors.leftMargin: Theme.componentMarginL
-            anchors.right: parent.right
-            anchors.rightMargin: 64
+            anchors.right: selector_advdecoding.left
+            anchors.rightMargin: Theme.componentMarginL
             anchors.verticalCenter: parent.verticalCenter
 
-            text: qsTr("Start scanning automatically")
+            text: qsTr("Advertisement decoding")
             textFormat: Text.PlainText
             font.pixelSize: Theme.fontSizeContent
             font.bold: false
@@ -134,18 +207,21 @@ Column { // BLE SCANNER
             verticalAlignment: Text.AlignVCenter
         }
 
-        SwitchThemed {
+        SelectorMenuColorful {
+            id: selector_advdecoding
+            height: 32
             anchors.right: parent.right
-            anchors.rightMargin: Theme.componentMarginXS
+            anchors.rightMargin: Theme.componentMargin
             anchors.verticalCenter: parent.verticalCenter
 
-            checked: SettingsManager.scanAuto
-            onClicked: {
-                SettingsManager.scanAuto = checked
-                if (!DeviceManager.scanning) {
-                    DeviceManager.scanDevices_start()
-                }
+            model: ListModel {
+                ListElement { idx: 0; txt: qsTr("off"); src: ""; sz: 16; }
+                ListElement { idx: 1; txt: qsTr("on (safe)"); src: ""; sz: 16; }
+                ListElement { idx: 2; txt: qsTr("on (speculative)"); src: ""; sz: 16; }
             }
+
+            currentSelection: SettingsManager.scanAdvDecoding
+            onMenuSelected: (index) => SettingsManager.scanAdvDecoding = index
         }
     }
 
@@ -154,32 +230,24 @@ Column { // BLE SCANNER
     Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
-        height: 48
+        height: txtAdvDecodingLegend.height + 16
         color: Theme.colorForeground
 
         Text {
+            id: txtAdvDecodingLegend
             anchors.left: parent.left
             anchors.leftMargin: Theme.componentMarginL
             anchors.right: parent.right
-            anchors.rightMargin: 64
+            anchors.rightMargin: Theme.componentMargin
             anchors.verticalCenter: parent.verticalCenter
 
-            text: qsTr("Pause scanning while in the background")
+            text: qsTr("Safe decoding only uses the formats announced by the advertisement (company or service identifiers). " +
+                       "Speculative decoding also tries the formats recognized from the device name or the data structure only " +
+                       "(AltBeacon, Inkbird), which may misidentify some devices.")
             textFormat: Text.PlainText
             font.pixelSize: Theme.fontSizeContent
-            font.bold: false
-            color: Theme.colorText
+            color: Theme.colorSubText
             wrapMode: Text.WordWrap
-            verticalAlignment: Text.AlignVCenter
-        }
-
-        SwitchThemed {
-            anchors.right: parent.right
-            anchors.rightMargin: Theme.componentMarginXS
-            anchors.verticalCenter: parent.verticalCenter
-
-            checked: SettingsManager.scanPause
-            onClicked: SettingsManager.scanPause = checked
         }
     }
 
@@ -214,6 +282,84 @@ Column { // BLE SCANNER
 
             checked: SettingsManager.scanCacheAuto
             onClicked: SettingsManager.scanCacheAuto = checked
+        }
+    }
+
+    ////
+
+    Rectangle {
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 48
+        color: Theme.colorForeground
+
+        Text {
+            anchors.left: parent.left
+            anchors.leftMargin: Theme.componentMarginL
+            anchors.verticalCenter: parent.verticalCenter
+
+            text: qsTr("Scanning timeout")
+            textFormat: Text.PlainText
+            font.pixelSize: Theme.fontSizeContent
+            font.bold: false
+            color: Theme.colorText
+            wrapMode: Text.WordWrap
+            verticalAlignment: Text.AlignVCenter
+        }
+
+        SpinBoxThemedDesktop {
+            anchors.right: parent.right
+            anchors.rightMargin: Theme.componentMargin
+            anchors.verticalCenter: parent.verticalCenter
+
+            editable: false
+            legend: "m"
+            from: 0
+            to: 10
+
+            value: SettingsManager.scanTimeout
+            onValueModified: {
+                SettingsManager.scanTimeout = value
+                restartScannerTimer.restart()
+            }
+        }
+    }
+
+    ////
+
+    Rectangle {
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 48
+        color: Theme.colorForeground
+
+        Text {
+            anchors.left: parent.left
+            anchors.leftMargin: Theme.componentMarginL
+            anchors.verticalCenter: parent.verticalCenter
+
+            text: qsTr("RSSI graph interval")
+            textFormat: Text.PlainText
+            font.pixelSize: Theme.fontSizeContent
+            font.bold: false
+            color: Theme.colorText
+            wrapMode: Text.WordWrap
+            verticalAlignment: Text.AlignVCenter
+        }
+
+        SpinBoxThemedDesktop {
+            anchors.right: parent.right
+            anchors.rightMargin: Theme.componentMargin
+            anchors.verticalCenter: parent.verticalCenter
+
+            editable: false
+            legend: "ms"
+            from: 100
+            to: 1000
+            stepSize: 100
+
+            value: SettingsManager.scanRssiInterval
+            onValueModified: SettingsManager.scanRssiInterval = value
         }
     }
 
@@ -328,84 +474,6 @@ Column { // BLE SCANNER
                 popupLoader_cachestructure.active = true
                 popupLoader_cachestructure.item.open()
             }
-        }
-    }
-
-    ////
-
-    Rectangle {
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: 48
-        color: Theme.colorForeground
-
-        Text {
-            anchors.left: parent.left
-            anchors.leftMargin: Theme.componentMarginL
-            anchors.verticalCenter: parent.verticalCenter
-
-            text: qsTr("Scanning timeout")
-            textFormat: Text.PlainText
-            font.pixelSize: Theme.fontSizeContent
-            font.bold: false
-            color: Theme.colorText
-            wrapMode: Text.WordWrap
-            verticalAlignment: Text.AlignVCenter
-        }
-
-        SpinBoxThemedDesktop {
-            anchors.right: parent.right
-            anchors.rightMargin: Theme.componentMargin
-            anchors.verticalCenter: parent.verticalCenter
-
-            editable: false
-            legend: "m"
-            from: 0
-            to: 10
-
-            value: SettingsManager.scanTimeout
-            onValueModified: {
-                SettingsManager.scanTimeout = value
-                restartScannerTimer.restart()
-            }
-        }
-    }
-
-    ////
-
-    Rectangle {
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: 48
-        color: Theme.colorForeground
-
-        Text {
-            anchors.left: parent.left
-            anchors.leftMargin: Theme.componentMarginL
-            anchors.verticalCenter: parent.verticalCenter
-
-            text: qsTr("RSSI graph interval")
-            textFormat: Text.PlainText
-            font.pixelSize: Theme.fontSizeContent
-            font.bold: false
-            color: Theme.colorText
-            wrapMode: Text.WordWrap
-            verticalAlignment: Text.AlignVCenter
-        }
-
-        SpinBoxThemedDesktop {
-            anchors.right: parent.right
-            anchors.rightMargin: Theme.componentMargin
-            anchors.verticalCenter: parent.verticalCenter
-
-            editable: false
-            legend: "ms"
-            from: 100
-            to: 1000
-            stepSize: 100
-
-            value: SettingsManager.scanRssiInterval
-            onValueModified: SettingsManager.scanRssiInterval = value
         }
     }
 
