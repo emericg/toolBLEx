@@ -75,10 +75,8 @@ DeviceManager::DeviceManager(QObject *parent) : QObject(parent)
 
     // Bluetooth adapter
     AdapterManager *am = AdapterManager::getInstance();
-    connect(am, &AdapterManager::bluetoothChanged_scan,
-            this, &DeviceManager::bluetoothStatusChanged);
-    connect(am, &AdapterManager::adapterChanged_scan,
-            this, &DeviceManager::adapterChanged_scan);
+    connect(am, &AdapterManager::bluetoothChanged_scan, this, &DeviceManager::bluetoothStatusChanged);
+    connect(am, &AdapterManager::adapterChanged_scan, this, &DeviceManager::adapterChanged_scan);
     adapterChanged_scan();
 
     // Scan pause while the application is inactive
@@ -88,8 +86,7 @@ DeviceManager::DeviceManager(QObject *parent) : QObject(parent)
 
     if (auto *app = qobject_cast<QGuiApplication *>(QCoreApplication::instance()))
     {
-        connect(app, &QGuiApplication::applicationStateChanged,
-                this, &DeviceManager::applicationStateChanged);
+        connect(app, &QGuiApplication::applicationStateChanged, this, &DeviceManager::applicationStateChanged);
     }
 
     // Device colors
@@ -577,6 +574,8 @@ void DeviceManager::checkPaired()
 #endif
 }
 
+/* ************************************************************************** */
+
 void DeviceManager::setDevicesPaired(const QHash <quint64, QBluetoothLocalDevice::Pairing> &paired)
 {
     m_devicesPaired = paired;
@@ -592,6 +591,8 @@ void DeviceManager::setDevicesPaired(const QHash <quint64, QBluetoothLocalDevice
     }
 }
 
+/* ************************************************************************** */
+
 bool DeviceManager::requestPairing(const QString &address, QBluetoothLocalDevice::Pairing pairing)
 {
     QBluetoothLocalDevice *adapter = m_adapterDevice;
@@ -606,6 +607,8 @@ bool DeviceManager::requestPairing(const QString &address, QBluetoothLocalDevice
 
     return true;
 }
+
+/* ************************************************************************** */
 
 void DeviceManager::bluetoothPairingFinished(const QBluetoothAddress &address,
                                              QBluetoothLocalDevice::Pairing pairing)
@@ -628,6 +631,8 @@ void DeviceManager::bluetoothPairingFinished(const QBluetoothAddress &address,
     }
 }
 
+/* ************************************************************************** */
+
 void DeviceManager::bluetoothPairingError(QBluetoothLocalDevice::Error error)
 {
     qWarning() << "DeviceManager::bluetoothPairingError()" << m_pairingPendingAddress << error;
@@ -646,6 +651,9 @@ void DeviceManager::bluetoothPairingError(QBluetoothLocalDevice::Error error)
 
     m_pairingPendingAddress.clear();
 }
+
+/* ************************************************************************** */
+/* ************************************************************************** */
 
 void DeviceManager::countDevices()
 {
@@ -723,162 +731,6 @@ void DeviceManager::clearResults()
     Q_EMIT devicesListUpdated();
 }
 
-bool DeviceManager::exportResults(const QString &filename, int exportMode,
-                                  bool withManuf, bool withComment, bool withSeen,
-                                  const QString &comment)
-{
-    bool status = false;
-
-    // Create export string
-
-    QString exportString;
-    QString sep = QChar(',');
-    QString sep_replace = QChar(' ');
-    QString endl = QChar('\n');
-
-    // Capture comment, as commented out lines above the CSV content
-
-    if (!comment.trimmed().isEmpty())
-    {
-        exportString += "# Capture comment:" + endl;
-        const QStringList lines = comment.trimmed().split(QChar('\n'));
-        for (const auto &line: lines)
-        {
-            exportString += "# " + line.trimmed() + endl;
-        }
-    }
-
-    // Legend
-
-    exportString += "Device Address" + sep + "Device Name";
-    if (withManuf) exportString += sep + "Device Manufacturer";
-    if (withComment) exportString += sep + "User Comment";
-    if (withSeen) exportString += sep + "First Seen" + sep + "Last Seen";
-    exportString += endl;
-
-    // Device list /////////////////////////////////////////////////////////////
-
-    SettingsManager *sm = SettingsManager::getInstance();
-    bool filterShowBeacon = sm->getScanShowBeacon();
-    bool filterShowBlacklisted = sm->getScanShowBlacklisted();
-    bool filterShowCached = sm->getScanShowCached();
-    bool filterShowBluetoothClassic = sm->getScanShowClassic();
-    bool filterShowBluetoothLowEnergy = sm->getScanShowLowEnergy();
-
-    const QString filterString = m_devices_filter->getFilterString();
-
-    for (auto dd: std::as_const(m_devices_model->m_devices))
-    {
-        DeviceToolBLEx *d = qobject_cast<DeviceToolBLEx *>(dd);
-        if (d)
-        {
-            bool accepted = true;
-
-            if (exportMode == 2)
-            {
-                // Device currently shown on the list
-
-                if (!filterShowBluetoothClassic && !filterShowBluetoothLowEnergy) accepted = false;
-                else if (!filterShowBluetoothClassic && d->isBluetoothClassic() && !d->isBluetoothLowEnergy()) accepted = false;
-                else if (!filterShowBluetoothLowEnergy && d->isBluetoothLowEnergy() && !d->isBluetoothClassic()) accepted = false;
-                else if (!filterShowBeacon && d->isBeacon()) accepted = false;
-                else if (!filterShowBlacklisted && d->isBlacklisted()) accepted = false;
-                else if (!filterShowCached && d->isCached() && d->getRssi() == 0) accepted = false;
-
-                if (accepted && !filterString.isEmpty())
-                {
-                    if (!d->getAddress().contains(filterString, Qt::CaseInsensitive) &&
-                        !d->getName().contains(filterString, Qt::CaseInsensitive) &&
-                        !d->getManufacturer().contains(filterString, Qt::CaseInsensitive))
-                    {
-                        accepted = false;
-                    }
-                }
-            }
-            else if (exportMode == 1)
-            {
-                // All devices found today (with an RSSI)
-
-                if (d->getRssi() == 0) accepted = false;
-            }
-            else
-            {
-                // All devices
-            }
-
-            if (accepted)
-            {
-                // add device to the export string
-
-                exportString += d->getAddr_display() + sep + d->getName_display().replace(sep, sep_replace, Qt::CaseSensitive);
-
-                if (withManuf) exportString += sep + d->getManufacturer().replace(sep, sep_replace, Qt::CaseSensitive);
-                if (withComment) exportString += sep + d->getUserComment().replace(sep, sep_replace, Qt::CaseSensitive);
-                if (withSeen) exportString += sep + d->getFirstSeen().toString();
-                if (withSeen) exportString += sep + d->getLastSeen().toString();
-
-                exportString += endl;
-            }
-        }
-    }
-
-    // Save export string to file //////////////////////////////////////////////
-
-    QString exportFilePath = filename;
-
-    if (getExportFile(exportFilePath))
-    {
-        qDebug() << "DeviceManager::exportResults(" << exportFilePath << ")";
-
-        // Open file and save content
-        QFile efile(exportFilePath);
-        if (efile.open(QFile::WriteOnly | QIODevice::Text))
-        {
-            QTextStream eout(&efile);
-            eout.setEncoding(QStringConverter::Utf8);
-            eout << exportString;
-
-            status = true;
-            efile.close();
-        }
-    }
-
-    return status;
-}
-
-bool DeviceManager::getExportFile(QString &filename) const
-{
-    bool status = false;
-
-    // No path given by the UI? Generate a "default" path
-    if (filename.isEmpty())
-    {
-        filename = SettingsManager::getInstance()->getExportDirectory_str();
-        filename += "/devicelist_";
-        filename += QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm");
-        filename += ".csv";
-    }
-
-    // Check if the directory exist, or try to create it
-    QDir exportDirectory = QFileInfo(filename).dir();
-    if (!exportDirectory.exists())
-    {
-        exportDirectory.mkpath(exportDirectory.path());
-    }
-
-    if (exportDirectory.exists())
-    {
-        status = true;
-    }
-    else
-    {
-        filename.clear();
-        status = false;
-    }
-
-    return status;
-}
-
 /* ************************************************************************** */
 /* ************************************************************************** */
 
@@ -947,6 +799,7 @@ bool DeviceManager::isBleDeviceBlacklisted(const QString &addr)
     return false;
 }
 
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 void DeviceManager::cacheDeviceSeen(const QString &addr)
