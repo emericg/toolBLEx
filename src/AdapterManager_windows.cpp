@@ -20,30 +20,26 @@
  */
 
 // C++/WinRT headers first, to avoid clashes with Qt macros
-#if defined(_WIN32)
 #include <winrt/Windows.Foundation.h>
 #include <winrt/Windows.Foundation.Collections.h>
 #include <winrt/Windows.Devices.Enumeration.h>
 #include <winrt/Windows.Devices.Bluetooth.h>
 
 #include <mutex>
-#endif
 
-#include "AdapterManager.h"
+#include "AdapterManager_windows.h"
 
 #include <QDebug>
-
-/* ************************************************************************** */
-
-#if defined(Q_OS_WINDOWS)
 
 using namespace winrt::Windows::Devices::Enumeration;
 using namespace winrt::Windows::Devices::Bluetooth;
 
+/* ************************************************************************** */
+
 /*!
  * \brief State shared with the DeviceWatcher callbacks, which are called from other threads.
  */
-struct AdaptersWatcherWindows
+struct AdapterManagerWindows::State
 {
     DeviceWatcher watcher { nullptr };
     winrt::event_token addedToken;
@@ -51,65 +47,35 @@ struct AdaptersWatcherWindows
     winrt::event_token updatedToken;
 
     std::mutex mutex;
-    AdapterManager *owner = nullptr;    //!< null once stopped
+    AdapterManagerWindows *owner = nullptr;     //!< null once stopped
 
     /*!
-     * \brief Schedule an adapters refresh.
+     * \brief Emit adaptersChanged() from the owner thread.
      *
-     * The initial enumeration reports the adapters already known, m_adaptersRefreshTimer coalesces its events.
+     * Events posted to a deleted object are discarded.
      */
     void adaptersChanged()
     {
         std::lock_guard lock(mutex);
         if (!owner) return;
 
-        // Events posted to a deleted object are discarded
-        AdapterManager *am = owner;
-        QMetaObject::invokeMethod(am, [am]() { am->m_adaptersRefreshTimer.start(); }, Qt::QueuedConnection);
+        AdapterManagerWindows *amw = owner;
+        QMetaObject::invokeMethod(amw, [amw]() { Q_EMIT amw->adaptersChanged(); }, Qt::QueuedConnection);
     }
 };
 
-#endif // defined(Q_OS_WINDOWS)
-
 /* ************************************************************************** */
 
-void AdapterManager::startAdaptersWatcher_windows()
+AdapterManagerWindows::AdapterManagerWindows(QObject *parent) : QObject(parent)
 {
-#if defined(Q_OS_WINDOWS)
-    try
-    {
-        auto state = std::make_shared<AdaptersWatcherWindows>();
-        state->owner = this;
-        state->watcher = DeviceInformation::CreateWatcher(BluetoothAdapter::GetDeviceSelector());
-
-        // Callbacks keep the state alive, until they are revoked
-        state->addedToken = state->watcher.Added(
-            [state](const DeviceWatcher &, const DeviceInformation &) { state->adaptersChanged(); });
-        state->removedToken = state->watcher.Removed(
-            [state](const DeviceWatcher &, const DeviceInformationUpdate &) { state->adaptersChanged(); });
-
-        // Added and Removed are only raised after the initial enumeration if Updated is handled too
-        state->updatedToken = state->watcher.Updated(
-            [](const DeviceWatcher &, const DeviceInformationUpdate &) {});
-
-        state->watcher.Start();
-
-        m_adaptersWatcher_windows = state;
-    }
-    catch (const winrt::hresult_error &e)
-    {
-        qWarning() << "AdapterManager::startAdaptersWatcher_windows() unable to watch Windows adapters:"
-                   << QString::fromWCharArray(e.message().c_str());
-    }
-#endif
+    //
 }
 
-void AdapterManager::stopAdaptersWatcher_windows()
+AdapterManagerWindows::~AdapterManagerWindows()
 {
-#if defined(Q_OS_WINDOWS)
-    if (!m_adaptersWatcher_windows) return;
+    if (!m_state) return;
 
-    std::shared_ptr <AdaptersWatcherWindows> state = std::move(m_adaptersWatcher_windows);
+    std::shared_ptr <State> state = std::move(m_state);
     {
         std::lock_guard lock(state->mutex);
         state->owner = nullptr;
@@ -129,10 +95,45 @@ void AdapterManager::stopAdaptersWatcher_windows()
     }
     catch (const winrt::hresult_error &e)
     {
-        qWarning() << "AdapterManager::stopAdaptersWatcher_windows() error:"
+        qWarning() << "AdapterManagerWindows::~AdapterManagerWindows() error:"
                    << QString::fromWCharArray(e.message().c_str());
     }
-#endif
+}
+
+/* ************************************************************************** */
+
+bool AdapterManagerWindows::watchAdapters()
+{
+    if (m_state) return true;
+
+    try
+    {
+        auto state = std::make_shared<State>();
+        state->owner = this;
+        state->watcher = DeviceInformation::CreateWatcher(BluetoothAdapter::GetDeviceSelector());
+
+        // Callbacks keep the state alive, until they are revoked
+        state->addedToken = state->watcher.Added(
+            [state](const DeviceWatcher &, const DeviceInformation &) { state->adaptersChanged(); });
+        state->removedToken = state->watcher.Removed(
+            [state](const DeviceWatcher &, const DeviceInformationUpdate &) { state->adaptersChanged(); });
+
+        // Added and Removed are only raised after the initial enumeration if Updated is handled too
+        state->updatedToken = state->watcher.Updated(
+            [](const DeviceWatcher &, const DeviceInformationUpdate &) {});
+
+        state->watcher.Start();
+
+        m_state = state;
+    }
+    catch (const winrt::hresult_error &e)
+    {
+        qWarning() << "AdapterManagerWindows::watchAdapters() unable to watch Windows adapters:"
+                   << QString::fromWCharArray(e.message().c_str());
+        return false;
+    }
+
+    return true;
 }
 
 /* ************************************************************************** */

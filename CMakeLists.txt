@@ -275,7 +275,7 @@ endif()
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     # For the adapters watcher (C++/WinRT DeviceWatcher)
     target_link_libraries(${PROJECT_NAME} PRIVATE WindowsApp)
-    target_sources(${PROJECT_NAME} PRIVATE src/AdapterManager_windows.cpp)
+    target_sources(${PROJECT_NAME} PRIVATE src/AdapterManager_windows.cpp src/AdapterManager_windows.h)
 endif()
 
 target_include_directories(${PROJECT_NAME} PRIVATE src/)

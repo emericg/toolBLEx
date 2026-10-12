@@ -26,6 +26,8 @@
 
 #if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
 #include "AdapterManager_bluez.h"
+#elif defined(Q_OS_WINDOWS)
+#include "AdapterManager_windows.h"
 #endif
 
 #include <QCoreApplication>
@@ -63,9 +65,7 @@ AdapterManager::AdapterManager(QObject *parent) : QObject(parent)
     m_adaptersRefreshTimer.setInterval(250);
     connect(&m_adaptersRefreshTimer, &QTimer::timeout, this, [this]() { refreshAdapters(); });
 
-    // Nothing to watch on macOS and mobile platforms, they only have their built-in adapter
-    startAdaptersWatcher_bluez();
-    startAdaptersWatcher_windows();
+    startAdaptersWatcher();
 
     // Preferred adapters, the scan adapter only changes when a scan is started
     SettingsManager *sm = SettingsManager::getInstance();
@@ -81,13 +81,6 @@ AdapterManager::AdapterManager(QObject *parent) : QObject(parent)
 
     // BLE permission initial check, the scan adapter is not powered on without user request
     requestBluetoothPermission();
-}
-
-/* ************************************************************************** */
-
-AdapterManager::~AdapterManager()
-{
-    stopAdaptersWatcher_windows();
 }
 
 /* ************************************************************************** */
@@ -592,13 +585,16 @@ void AdapterManager::refreshAdapters(bool powerOn)
 
 /* ************************************************************************** */
 
-void AdapterManager::startAdaptersWatcher_bluez()
+void AdapterManager::startAdaptersWatcher()
 {
 #if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
     m_bluez = new AdapterManagerBluez(this);
     connect(m_bluez, &AdapterManagerBluez::adaptersChanged, this, [this]() { m_adaptersRefreshTimer.start(); });
-
     m_bluez->watchAdapters();
+#elif defined(Q_OS_WINDOWS)
+    m_windows = new AdapterManagerWindows(this);
+    connect(m_windows, &AdapterManagerWindows::adaptersChanged, this, [this]() { m_adaptersRefreshTimer.start(); });
+    m_windows->watchAdapters();
 #endif
 }
 

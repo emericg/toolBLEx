@@ -36,7 +36,7 @@
 
 class Adapter;
 class AdapterManagerBluez;
-struct AdaptersWatcherWindows;
+class AdapterManagerWindows;
 
 class QQmlEngine;
 class QJSEngine;
@@ -229,29 +229,15 @@ class AdapterManager: public QObject
     // Platform adapters watchers //////////////////////////////////////////////
 
     AdapterManagerBluez *m_bluez = nullptr;         //!< BlueZ adapters watcher, Linux only
+    AdapterManagerWindows *m_windows = nullptr;     //!< WinRT adapters watcher, Windows only
 
     /*!
-     * \brief Watch BlueZ for adapters being plugged or unplugged, see AdapterManagerBluez::watchAdapters().
+     * \brief Watch the platform for adapters being plugged or unplugged.
      *
-     * Does nothing on other platforms.
+     * See AdapterManagerBluez::watchAdapters() and AdapterManagerWindows::watchAdapters().
+     * Nothing to watch on macOS and mobile platforms, they only have their built-in adapter.
      */
-    void startAdaptersWatcher_bluez();
-
-    friend struct AdaptersWatcherWindows;
-    std::shared_ptr <AdaptersWatcherWindows> m_adaptersWatcher_windows;
-
-    /*!
-     * \brief Watch Windows for adapters being plugged or unplugged.
-     *
-     * Uses a WinRT DeviceWatcher on BluetoothAdapter::GetDeviceSelector(),
-     * the same selector QBluetoothLocalDevice::allDevices() enumerates. Does nothing on other platforms.
-     */
-    void startAdaptersWatcher_windows();
-
-    /*!
-     * \brief Stop watching Windows adapters, the callbacks will not reach this object anymore.
-     */
-    void stopAdaptersWatcher_windows();
+    void startAdaptersWatcher();
 
 Q_SIGNALS:
     void adaptersListUpdated();
@@ -284,7 +270,7 @@ private slots:
 
 private:
     AdapterManager(QObject *parent);
-    ~AdapterManager();
+    ~AdapterManager() = default;
 
 public:
     static AdapterManager *getInstance();
