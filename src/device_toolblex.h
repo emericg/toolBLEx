@@ -66,9 +66,8 @@ class DeviceToolBLEx: public Device
     Q_PROPERTY(bool pairingPending READ isPairingPending NOTIFY pairingChanged)
 
     Q_PROPERTY(bool isStarred READ isStarred WRITE setUserStar NOTIFY starChanged)
+    Q_PROPERTY(bool isShownInGraph READ isShownInGraph WRITE setShownInGraph NOTIFY graphChanged)
     Q_PROPERTY(QString color READ getDeviceColor CONSTANT)
-
-    Q_PROPERTY(bool userStar READ getUserStar WRITE setUserStar NOTIFY starChanged)
     Q_PROPERTY(QString userColor READ getUserColor WRITE setUserColor NOTIFY colorChanged)
     Q_PROPERTY(bool hasUserColor READ hasUserColor NOTIFY colorChanged)
     Q_PROPERTY(QString userComment READ getUserComment WRITE setUserComment NOTIFY commentChanged)
@@ -131,10 +130,11 @@ class DeviceToolBLEx: public Device
     bool m_pairingPending = false;
 
     bool m_userStarred = false;
+    bool m_userShownInGraph = false;
     QString m_userComment;
     QString m_userColor;
-    QString m_color;
 
+    QString m_color;
     QDateTime m_firstSeen;
     QDateTime m_lastSeen;
 
@@ -223,6 +223,7 @@ Q_SIGNALS:
     void pairingChanged();
     void boolChanged();
     void starChanged();
+    void graphChanged();
     void commentChanged();
     void colorChanged();
     void seenChanged();
@@ -349,6 +350,9 @@ public:
     bool getUserStar() const { return m_userStarred; }
     void setUserStar(bool star);
 
+    bool getShownInGraph() const { return m_userShownInGraph; }
+    void setShownInGraph(bool shown);
+
     QString getUserComment() const { return m_userComment; }
     void setUserComment(const QString &comment);
 
@@ -366,6 +370,7 @@ public:
     bool hasServiceCache() const { return m_hasServiceCache; }
 
     bool isStarred() const { return m_userStarred; }
+    bool isShownInGraph() const { return m_userShownInGraph; }
     bool isBeacon() const { return m_isBeacon; }
     bool isBlacklisted() const { return m_isBlacklisted; }
     bool isCached() const { return m_isCached; }

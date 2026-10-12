@@ -170,6 +170,8 @@ class DeviceManager: public QObject
     QStringList m_colorsLeft;
     QString getAvailableColor();
 
+    bool m_filterRssiGraph = false;
+
     bool getExportFile(QString &filename) const;
 
     // stats
@@ -193,6 +195,7 @@ Q_SIGNALS:
     void scanningChanged();
 
     void filteringChanged();
+    void filterRssiGraphChanged();
 
     void statsChanged();
 
@@ -324,10 +327,25 @@ public:
 
     // RSSI graph
 
+    Q_INVOKABLE void setRssiGraphFilter();
+    Q_INVOKABLE void clearRssiGraphFilter();
+
+    /*!
+     * \brief List the devices the RSSI graph should plot.
+     * \param refTimeMs: Reference time (ms since epoch) used as x = 0.
+     * \param windowMs: Visible time window (ms) before refTimeMs.
+     * \return The devices to plot, in device list order.
+     *
+     * When the RSSI graph filter is set, only devices marked as shown in graph are returned.
+     * Otherwise, the devices currently accepted by the device list filter are returned.
+     * Devices without any RSSI entry within the window are skipped.
+     */
+    Q_INVOKABLE QList <QObject *> getRssiGraphDevices(qint64 refTimeMs, qint64 windowMs) const;
+
     /*!
      * \brief Fill a line series with the RSSI history of a device.
      * \param serie: The series to fill. Its previous content is replaced.
-     * \param index: The device index in the device model.
+     * \param device: The device to plot, as returned by getRssiGraphDevices().
      * \param refTimeMs: Reference time (ms since epoch) used as x = 0.
      * \param windowMs: Visible time window (ms) before refTimeMs.
      *
@@ -335,7 +353,7 @@ public:
      * Only points within the window are kept, plus the last one before it,
      * so the line reaches the left edge of the graph.
      */
-    Q_INVOKABLE void getRssiGraphData(QLineSeries *serie, int index, qint64 refTimeMs, qint64 windowMs);
+    Q_INVOKABLE void getRssiGraphData(QLineSeries *serie, Device *device, qint64 refTimeMs, qint64 windowMs);
 };
 
 /* ************************************************************************** */

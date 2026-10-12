@@ -19,8 +19,8 @@ GraphsView {
     shadowVisible: false
 
     marginTop: 0
-    marginBottom: -16
-    marginLeft: -16
+    marginBottom: axisTime.visible ? -16 : 0
+    marginLeft: axisRSSI.visible ? -16 : 0
     marginRight: 0
 
     theme: GraphsTheme {
@@ -35,16 +35,21 @@ GraphsView {
         grid.mainColor: Theme.colorGrid
         grid.subColor: Theme.colorGrid
 
+        axisX.mainWidth: 0
         axisX.mainColor: Theme.colorAxis
         axisX.labelTextColor: Theme.colorSubText
+        axisXLabelFont.pixelSize: Theme.fontSizeContentVerySmall
+
+        axisY.mainWidth: 2
         axisY.mainColor: Theme.colorAxis
         axisY.labelTextColor: Theme.colorSubText
-
-        axisXLabelFont.pixelSize: Theme.fontSizeContentVerySmall
         axisYLabelFont.pixelSize: Theme.fontSizeContentVerySmall
     }
 
-    axisY: ValueAxis {
+    axisY: ValueAxis { // dBm
+        id: axisRSSI
+        visible: true
+
         min: -100
         max: -20
         tickInterval: 20
@@ -56,7 +61,10 @@ GraphsView {
         subGridVisible: false
     }
 
-    axisX: ValueAxis {
+    axisX: ValueAxis { // seconds
+        id: axisTime
+        visible: false
+
         min: -advTimelineGraph.timeWindow
         max: 0
         tickInterval: (advTimelineGraph.timeWindow > 60) ? 20 : 10
@@ -72,7 +80,6 @@ GraphsView {
     property Component pointMarker: Rectangle {
         property color pointColor
         width: 6; height: 6; radius: 3
-        antialiasing: true
         color: pointColor
     }
 
@@ -87,7 +94,10 @@ GraphsView {
         if (!advTimelineGraph.visible) return
 
         if (!advTimelineGraph.device) {
-            seriesNone.clear(); seriesMfd.clear(); seriesSvd.clear(); seriesBoth.clear()
+            seriesNone.clear();
+            seriesMfd.clear();
+            seriesSvd.clear();
+            seriesBoth.clear()
             return
         }
 

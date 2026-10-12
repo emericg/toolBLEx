@@ -22,16 +22,18 @@ GraphsView {
         grid.mainColor: Theme.colorGrid
         grid.subColor: Theme.colorGrid
 
+        axisX.mainWidth: 2
         axisX.mainColor: Theme.colorAxis
         axisX.labelTextColor: Theme.colorSubText
+        axisXLabelFont.pixelSize: Theme.fontSizeContentVerySmall
+
+        axisY.mainWidth: 2
         axisY.mainColor: Theme.colorAxis
         axisY.labelTextColor: Theme.colorSubText
-
-        axisXLabelFont.pixelSize: Theme.fontSizeContentVerySmall
         axisYLabelFont.pixelSize: Theme.fontSizeContentVerySmall
     }
 
-    axisY: ValueAxis {
+    axisY: ValueAxis { // dBm
         id: axisRSSI
         visible: true
 
@@ -46,7 +48,7 @@ GraphsView {
         subGridVisible: false
     }
 
-    axisX: ValueAxis {
+    axisX: ValueAxis { // seconds
         id: axisTime
         visible: true
 
@@ -83,15 +85,21 @@ GraphsView {
 
         //// DATA
         var now = Date.now()
-        for (var i = 0; i < DeviceManager.deviceCount; i++) {
+        var windowMs = -axisTime.min * 1000
+        var devices = DeviceManager.getRssiGraphDevices(now, windowMs)
+
+        for (var i = 0; i < devices.length; i++) {
             if (!graphs[i]) {
                 //console.log("graph " + i + " is being created")
                 graphs[i] = createLineSeries()
             }
             if (graphs[i]) {
                 //console.log("graph " + i + " is being updated")
-                DeviceManager.getRssiGraphData(graphs[i], i, now, -axisTime.min * 1000)
+                DeviceManager.getRssiGraphData(graphs[i], devices[i], now, windowMs)
             }
+        }
+        for (var j = devices.length; j < graphs.length; j++) {
+            if (graphs[j] && graphs[j].count > 0) graphs[j].clear()
         }
     }
 
