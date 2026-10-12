@@ -79,7 +79,7 @@ ApplicationWindow {
             screenSimulator.loadScreen()
         } else if (SettingsManager.preferredScreen === 2 && Ubertooth.toolsAvailable) {
             screenUbertooth.loadScreen()
-        } else if (SettingsManager.preferredScreen === 2 && RtlSdr.toolsAvailable) {
+        } else if (SettingsManager.preferredScreen === 3 && RtlSdr.toolsAvailable) {
             screenRtlSdr.loadScreen()
         } else {
             screenScanner.loadScreen() // default to scanner

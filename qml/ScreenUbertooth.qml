@@ -452,9 +452,9 @@ Loader {
                 ButtonFlat {
                     height: 30
                     color: Ubertooth.hardwareAvailable ? Theme.colorSuccess: Theme.colorWarning
-                    text: Ubertooth.hardwareAvailable ? qsTr("hardware ready") : qsTr("hardware busy?")
+                    text: Ubertooth.hardwareAvailable ? qsTr("hardware ready") : qsTr("hardware not detected")
                     source: Ubertooth.hardwareAvailable ? "qrc:/IconLibrary/material-symbols/check_circle.svg"
-                                                        : "qrc:/IconLibrary/material-icons/outlined/hourglass_empty.svg"
+                                                        : "qrc:/IconLibrary/material-symbols/warning.svg"
                     onClicked: Ubertooth.checkHardware()
                 }
             }

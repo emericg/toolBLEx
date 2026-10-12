@@ -265,7 +265,7 @@ bool RtlSdrDriver_lib::probeDevice(int deviceIndex, QString *tuner, QString *err
 
 bool RtlSdrDriver_lib::detect()
 {
-    m_available = (deviceCount() > 0);
+    m_available = true;
     return m_available;
 }
 

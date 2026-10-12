@@ -293,6 +293,7 @@ Column { // APP SETTINGS
         anchors.left: parent.left
         anchors.right: parent.right
         height: 48
+        clip: true
         color: Theme.colorForeground
 
         Text {
@@ -318,18 +319,20 @@ Column { // APP SETTINGS
             anchors.rightMargin: Theme.componentMargin
             anchors.verticalCenter: parent.verticalCenter
 
-            ListModel {
-                id: lmScreens1
-                ListElement { idx: 0; txt: qsTr("scanner"); src: ""; sz: 16; }
-                ListElement { idx: 1; txt: qsTr("simulator"); src: ""; sz: 16; }
-                ListElement { idx: 2; txt: qsTr("freq. analyzer"); src: ""; sz: 16; }
+            ListModel { id: lmScreens }
+            model: lmScreens
+
+            Component.onCompleted: updateScreens()
+            Connections { target: Ubertooth; function onAvailableChanged() { selector_prefscreen.updateScreens() } }
+            Connections { target: RtlSdr; function onAvailableChanged() { selector_prefscreen.updateScreens() } }
+
+            function updateScreens() {
+                lmScreens.clear()
+                lmScreens.append({ idx: 0, txt: qsTr("Scanner"), src: "", sz: 16 })
+                lmScreens.append({ idx: 1, txt: qsTr("Simulator"), src: "", sz: 16 })
+                if (Ubertooth.toolsAvailable) lmScreens.append({ idx: 2, txt: qsTr("Ubertooth"), src: "", sz: 16 })
+                if (RtlSdr.toolsAvailable) lmScreens.append({ idx: 3, txt: qsTr("RTL-SDR"), src: "", sz: 16 })
             }
-            ListModel {
-                id: lmScreens2
-                ListElement { idx: 0; txt: qsTr("scanner"); src: ""; sz: 16; }
-                ListElement { idx: 1; txt: qsTr("simulator"); src: ""; sz: 16; }
-            }
-            model: Ubertooth.toolsAvailable ? lmScreens1 : lmScreens2
 
             currentSelection: SettingsManager.preferredScreen
             onMenuSelected: (index) => { SettingsManager.preferredScreen = index }

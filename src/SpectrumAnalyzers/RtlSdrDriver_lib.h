@@ -65,7 +65,7 @@ public:
     ~RtlSdrDriver_lib() override;
 
     /*!
-     * \brief Available if at least one RTL-SDR is connected (does not open it).
+     * \brief Always available, the library is linked in. Device presence is checked by checkHardware().
      */
     bool detect() override;
 
@@ -73,6 +73,8 @@ public:
      * \brief Open the device, and read its tuner type.
      */
     bool checkHardware(int deviceIndex) override;
+
+    int connectedDeviceCount() const override { return deviceCount(); }
 
     double defaultFloorDb() const override { return -90.0; }
     double defaultCeilDb() const override { return -40.0; }

@@ -254,7 +254,7 @@ bool UbertoothDriver_lib::probeDevice(int deviceIndex, QString *firmware, QStrin
 
 bool UbertoothDriver_lib::detect()
 {
-    m_available = (deviceCount() > 0);
+    m_available = (deviceCount() >= 0);
     return m_available;
 }
 

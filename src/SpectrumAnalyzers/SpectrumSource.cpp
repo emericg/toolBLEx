@@ -34,7 +34,9 @@
 
 SpectrumSource::SpectrumSource(QObject *parent) : QObject(parent)
 {
-    //
+    m_hardware_poll = new QTimer(this);
+    m_hardware_poll->setInterval(s_hardware_poll_ms);
+    connect(m_hardware_poll, &QTimer::timeout, this, &SpectrumSource::pollHardware);
 }
 
 SpectrumSource::~SpectrumSource()
@@ -115,6 +117,12 @@ void SpectrumSource::setActiveDriver(SpectrumDriver *driver)
         qDebug() << "SpectrumSource::setActiveDriver()" << m_driver->metaObject()->className();
     }
 
+    // Baseline presence without probing, polling only reacts to changes
+    const int count = m_driver ? m_driver->connectedDeviceCount() : -1;
+    m_hardware_present = (count < 0) ? -1 : (count > m_deviceIndex);
+    if (m_hardware_present >= 0) m_hardware_poll->start();
+    else m_hardware_poll->stop();
+
     Q_EMIT availableChanged();
 }
 
@@ -147,14 +155,38 @@ bool SpectrumSource::checkHardware()
     if (isRunning()) return true; // A running capture already implies a working device
 
     const bool status = m_driver && m_driver->checkHardware(m_deviceIndex);
+    setHardwareAvailable(status);
 
+    return status;
+}
+
+void SpectrumSource::setHardwareAvailable(bool status)
+{
     if (m_hardwareAvailable != status)
     {
         m_hardwareAvailable = status;
         Q_EMIT availableChanged();
     }
+}
 
-    return status;
+/* ************************************************************************** */
+
+void SpectrumSource::pollHardware()
+{
+    if (!m_driver || isRunning()) return;
+
+    const int count = m_driver->connectedDeviceCount();
+    if (count < 0) return;
+
+    const int present = (count > m_deviceIndex);
+    if (present == m_hardware_present) return;
+    m_hardware_present = present;
+
+    qDebug() << "SpectrumSource::pollHardware()" << m_driver->metaObject()->className()
+             << (present ? "device plugged" : "device unplugged");
+
+    if (present) checkHardware();
+    else setHardwareAvailable(false);
 }
 
 /* ************************************************************************** */
@@ -264,6 +296,8 @@ void SpectrumSource::driverRunningChanged()
 void SpectrumSource::driverError(const QString &message)
 {
     qWarning() << "SpectrumSource::driverError()" << message;
+
+    setHardwareAvailable(false);
 }
 
 /* ************************************************************************** */
@@ -327,11 +361,7 @@ void SpectrumSource::driverReadyRead()
     if (samples.empty()) return;
     if (m_ring_bins <= 0 || m_ring_buffer.empty()) return;
 
-    if (!m_hardwareAvailable)
-    {
-        m_hardwareAvailable = true; // obviously...
-        Q_EMIT availableChanged();
-    }
+    setHardwareAvailable(true); // obviously...
 
     // Make sure we have an in-progress slot to write the incoming sweep into.
     if (m_ring_count == 0)

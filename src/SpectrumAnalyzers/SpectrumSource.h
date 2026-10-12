@@ -23,11 +23,9 @@
 #define SPECTRUM_SOURCE_H
 /* ************************************************************************** */
 
-#include "SpectrumDriver.h"
-
-#include <QObject>
 #include <QtQml/qqmlregistration.h>
 
+#include <QObject>
 #include <QList>
 #include <QMap>
 #include <QString>
@@ -38,6 +36,10 @@
 #include <QtGraphs/QValueAxis>
 
 #include <vector>
+
+#include "SpectrumDriver.h"
+
+class QTimer;
 
 /* ************************************************************************** */
 
@@ -94,6 +96,8 @@ public:
     Q_ENUM(FrequencyUnit)
 
 protected:
+    static constexpr int s_hardware_poll_ms = 3333;
+
     static constexpr int s_rssi_raw_default = -128;
     static constexpr int s_rssi_hole_threshold = -125;
 
@@ -104,6 +108,9 @@ protected:
     bool m_toolsAvailable = false;
     bool m_hardwareAvailable = false;
     bool m_hardwareReady = false; // TODO
+
+    QTimer *m_hardware_poll = nullptr;      //!< device presence polling, for drivers that support it
+    int m_hardware_present = -1;            //!< last polled presence (-1 unknown, 0 absent, 1 present)
 
     int m_deviceIndex = 0;                  //!< which device to use when several are present
 
@@ -141,15 +148,6 @@ protected:
 
     int *ringSlot(int i) { return m_ring_buffer.data() + static_cast<size_t>(i) * m_ring_bins; }
 
-    bool areToolsAvailable() const { return m_toolsAvailable; }
-    bool isHardwareAvailable() const { return m_hardwareAvailable; }
-    bool isHardwareReady() const { return m_hardwareReady; }
-
-    bool hasDriver() const { return m_driver; }
-    bool driverUsesTools() const { return m_driver && m_driver->usesTools(); }
-
-    bool isRunning() const { return m_driver && m_driver->isRunning(); }
-
     // Shared ring / parsing logic
     void allocateRing();
     void recordBin(int unitFreq, int dB, int *&current_values, bool &sweepCompleted);
@@ -174,10 +172,27 @@ protected:
     virtual void configureForStart() {}                     //!< refresh freq range etc. before the ring is (re)allocated
     virtual SpectrumDriver::Config driverConfig() const;    //!< capture parameters (default: device index + freq range)
 
+    /*!
+     * \brief Update hardwareAvailable, and emit availableChanged() if needed.
+     */
+    void setHardwareAvailable(bool status);
+
 private slots:
     void driverRunningChanged();
     void driverReadyRead();
+
+    /*!
+     * \brief Capture failed (device unplugged, busy, or not accessible): hardware is no longer available.
+     */
     void driverError(const QString &message);
+
+    /*!
+     * \brief Poll device presence while idle.
+     *
+     * A device disappearing clears hardwareAvailable.
+     * A device appearing triggers a full checkHardware().
+     */
+    void pollHardware();
 
 Q_SIGNALS:
     void availableChanged();
@@ -192,6 +207,15 @@ Q_SIGNALS:
 public:
     explicit SpectrumSource(QObject *parent = nullptr);
     ~SpectrumSource() override;
+
+    bool areToolsAvailable() const { return m_toolsAvailable; }
+    bool isHardwareAvailable() const { return m_hardwareAvailable; }
+    bool isHardwareReady() const { return m_hardwareReady; }
+
+    bool hasDriver() const { return m_driver; }
+    bool driverUsesTools() const { return m_driver && m_driver->usesTools(); }
+
+    bool isRunning() const { return m_driver && m_driver->isRunning(); }
 
     int deviceIndex() const { return m_deviceIndex; }
     void setDeviceIndex(int index);
@@ -242,7 +266,7 @@ public:
 
     /*!
      * \brief Check that the driver backend is usable, and update toolsAvailable.
-     * \return true if usable (tools installed, or supported device connected for a library driver).
+     * \return true if usable (tools installed, or library usable).
      */
     Q_INVOKABLE bool checkPaths();
 

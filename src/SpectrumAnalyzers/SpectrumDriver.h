@@ -123,7 +123,9 @@ public:
 
     /*!
      * \brief Check if this driver can be used on this system.
-     * \return true if the backend is usable (tools installed, or supported device connected).
+     * \return true if the backend is usable (tools installed, or library usable).
+     *
+     * Does not tell if a device is connected, see checkHardware().
      *
      * Can be expensive, the result is cached and available through isAvailable().
      */
@@ -150,6 +152,14 @@ public:
      * Must not be called while a capture is running.
      */
     virtual bool checkHardware(int deviceIndex) = 0;
+
+    /*!
+     * \brief Count connected devices, without opening them.
+     * \return Device count, or -1 if this driver cannot tell cheaply.
+     *
+     * Cheap enough to be polled. Must not be called while a capture is running.
+     */
+    virtual int connectedDeviceCount() const { return -1; }
 
     /*!
      * \brief Suggested colormap range for this driver's (uncalibrated) dB scale.

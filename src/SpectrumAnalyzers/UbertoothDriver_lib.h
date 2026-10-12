@@ -82,7 +82,7 @@ public:
     ~UbertoothDriver_lib() override;
 
     /*!
-     * \brief Available if at least one Ubertooth is connected (does not open it).
+     * \brief Available if libusb can be initialized, regardless of connected devices.
      */
     bool detect() override;
 
@@ -90,6 +90,8 @@ public:
      * \brief Open the device, ping it, and read its firmware version.
      */
     bool checkHardware(int deviceIndex) override;
+
+    int connectedDeviceCount() const override { return deviceCount(); }
 
     double defaultFloorDb() const override { return -100.0; }
     double defaultCeilDb() const override { return -20.0; }

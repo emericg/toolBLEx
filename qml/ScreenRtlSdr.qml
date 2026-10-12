@@ -36,7 +36,7 @@ Loader {
         Component.onCompleted: loadAction()
 
         function loadAction() {
-            //RtlSdr.checkHardware() // too slow...
+            if (!RtlSdr.driverUsesTools) RtlSdr.checkHardware() // too slow with rtl_test
         }
 
         function backAction() {
@@ -272,9 +272,9 @@ Loader {
                 ButtonFlat {
                     height: 30
                     color: RtlSdr.hardwareAvailable ? Theme.colorSuccess: Theme.colorWarning
-                    text: RtlSdr.hardwareAvailable ? qsTr("hardware ready") : qsTr("hardware busy?")
+                    text: RtlSdr.hardwareAvailable ? qsTr("hardware ready") : qsTr("hardware not detected")
                     source: RtlSdr.hardwareAvailable ? "qrc:/IconLibrary/material-symbols/check_circle.svg"
-                                                        : "qrc:/IconLibrary/material-icons/outlined/hourglass_empty.svg"
+                                                        : "qrc:/IconLibrary/material-symbols/warning.svg"
                     onClicked: RtlSdr.checkHardware()
                 }
             }

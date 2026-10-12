@@ -236,6 +236,10 @@ void MenubarManager::setupMenubar(QQuickWindow *view)
     // enter fullscreen will be added automatically at the end of the view menu
     menuBar->addMenu(m_menuView);
 
+    connect(SpectrumSourceUbertooth::getInstance(), &SpectrumSource::availableChanged,
+            this, &MenubarManager::updateViewActions);
+    connect(SpectrumSourceRtlSdr::getInstance(), &SpectrumSource::availableChanged,
+            this, &MenubarManager::updateViewActions);
     updateViewActions();
 
     // Window menu
@@ -323,12 +327,12 @@ void MenubarManager::updateViewActions()
     if (m_actionViewSimulator) m_actionViewSimulator->setChecked(m_currentView == 1);
     if (m_actionViewUbertooth) m_actionViewUbertooth->setChecked(m_currentView == 2);
     if (m_actionViewRtlsdr) m_actionViewRtlsdr->setChecked(m_currentView == 3);
-/*
+
+    // Spectrum analyzer screens are only reachable when their backend is usable
     if (m_actionViewUbertooth)
         m_actionViewUbertooth->setEnabled(SpectrumSourceUbertooth::getInstance()->areToolsAvailable());
     if (m_actionViewRtlsdr)
         m_actionViewRtlsdr->setEnabled(SpectrumSourceRtlSdr::getInstance()->areToolsAvailable());
-*/
 }
 
 void MenubarManager::setCurrentView(int screen)
