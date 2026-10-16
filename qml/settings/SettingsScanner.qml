@@ -477,5 +477,5 @@ Column { // BLE SCANNER
         }
     }
 
-    ////////
+    ////
 }

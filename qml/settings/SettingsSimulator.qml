@@ -111,5 +111,5 @@ Column { // BLE SIMULATOR
         }
     }
 
-    ///////
+    ////
 }

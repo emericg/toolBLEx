@@ -79,14 +79,19 @@ GraphsView {
 
     property Component pointMarker: Rectangle {
         property color pointColor
-        width: 6; height: 6; radius: 3
+        width: 6; height: 6; radius: 3;
+        color: pointColor
+    }
+    property Component pointMarkerBig: Rectangle {
+        property color pointColor
+        width: 8; height: 8; radius: 4;
         color: pointColor
     }
 
     ScatterSeries { id: seriesNone; color: Theme.colorPrimary; pointDelegate: advTimelineGraph.pointMarker }
     ScatterSeries { id: seriesMfd; color: Theme.colorBlue; pointDelegate: advTimelineGraph.pointMarker }
     ScatterSeries { id: seriesSvd; color: Theme.colorGreen; pointDelegate: advTimelineGraph.pointMarker }
-    ScatterSeries { id: seriesBoth; color: Theme.colorOrange; pointDelegate: advTimelineGraph.pointMarker }
+    ScatterSeries { id: seriesBoth; color: "#00B4D8"; pointDelegate: advTimelineGraph.pointMarkerBig; }
 
     ////////////////////////////////////////////////////////////////////////////
 

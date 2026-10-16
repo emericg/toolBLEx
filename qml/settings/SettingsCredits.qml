@@ -53,7 +53,7 @@ Column { // APP CREDITS
         }
     }
 
-    ////////
+    ////
 
     Repeater {
         model: ListModel {
@@ -125,5 +125,5 @@ Column { // APP CREDITS
         }
     }
 
-    ////////
+    ////
 }

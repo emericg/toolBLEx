@@ -413,6 +413,15 @@ void DeviceToolBLEx::setUserStar(bool star)
     }
 }
 
+void DeviceToolBLEx::setShownInGraph(bool shown)
+{
+    if (m_userShownInGraph != shown)
+    {
+        m_userShownInGraph = shown;
+        Q_EMIT graphChanged();
+    }
+}
+
 void DeviceToolBLEx::setLastSeen(const QDateTime &dt)
 {
     if (m_lastSeen.toSecsSinceEpoch() / 60 != dt.toSecsSinceEpoch() / 60)

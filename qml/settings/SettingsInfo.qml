@@ -68,6 +68,7 @@ Column { // APP INFO
         Rectangle {
             width: parent.width * 0.334 - 1
             height: 32
+            clip: true
             color: Theme.colorForeground
 
             Text {
@@ -115,6 +116,7 @@ Column { // APP INFO
         Rectangle {
             width: parent.width * 0.334 - 1
             height: 32
+            clip: true
             color: Theme.colorForeground
 
             Text {
@@ -157,6 +159,7 @@ Column { // APP INFO
         Rectangle {
             width: parent.width * 0.334 - 1
             height: 32
+            clip: true
             color: Theme.colorForeground
 
             Text {
@@ -171,5 +174,5 @@ Column { // APP INFO
         }
     }
 
-    ////////
+    ////
 }
