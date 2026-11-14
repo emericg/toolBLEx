@@ -96,7 +96,7 @@ Item {
 
                 fillMode: Image.PreserveAspectFit
                 source: control.logo
-                sourceSize: Qt.size(width*2, height*2)
+                sourceSize: Theme.isHdpi ? Qt.size(width*2, height*2) : Qt.size(width, height)
             }
         }
 
@@ -123,7 +123,7 @@ Item {
 
                 Text { // title
                     text: UtilsApp.appName()
-                    textFormat: Text.PlainText
+                    textFormat: Text.StyledText
                     font.bold: true
                     font.pixelSize: 32
                     color: Theme.colorText
@@ -146,13 +146,13 @@ Item {
                     anchors.right: parent.right
 
                     text: control.description
-                    textFormat: Text.PlainText
+                    textFormat: Text.StyledText
                     font.pixelSize: Theme.fontSizeContentBig
                     wrapMode: Text.WordWrap
                     color: Theme.colorText
                 }
 
-                Item { width: 16; height: 16; } // spacer
+                ListSpacer { space: 16 }
 
                 ////
 

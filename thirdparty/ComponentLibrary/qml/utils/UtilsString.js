@@ -29,6 +29,29 @@ function capitalizeFirst(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+/*!
+ * Escape a plain text string, so it can be inserted into rich text.
+ *
+ * example: escapeHtml("a < b & c") => "a &lt; b &amp; c"
+ */
+function escapeHtml(str) {
+    return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+/* ************************************************************************** */
+
+/*!
+ * Wikipedia article URL.
+ * \param article: article name, as in the page URL
+ * \param language: language code, ex: "en" or "fr-FR" (default "en")
+ *
+ * example: wikipediaUrl("Optical illusion", "fr_FR") => "https://fr.wikipedia.org/wiki/Optical%20illusion"
+ */
+function wikipediaUrl(article, language) {
+    const wiki = (language || "en").split(/[-_]/)[0].toLowerCase();
+    return "https://" + wiki + ".wikipedia.org/wiki/" + encodeURIComponent(article);
+}
+
 /* ************************************************************************** */
 
 /*!

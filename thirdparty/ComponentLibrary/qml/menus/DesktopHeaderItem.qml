@@ -49,10 +49,8 @@ T.Button {
         RippleThemed {
             anchors.fill: parent
             anchor: control
-            clip: true
             clipRadius: (control.highlightMode === "circle") ? (height / 2) : 0
 
-            pressed: control.pressed
             active: control.enabled && control.down
             color: control.colorRipple
         }

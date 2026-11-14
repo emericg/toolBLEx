@@ -60,12 +60,9 @@ T.Button {
         RippleThemed {
             anchors.fill: parent
             anchor: control
-            clip: true
-            clipRadius: (control.background.height / 2)
 
-            pressed: control.pressed
-            active: control.enabled && (control.down || control.visualFocus)
-            color: Qt.rgba(control.color.r, control.color.g, control.color.b, 0.16)
+            hoverTint: false
+            color: Qt.alpha(control.color, 0.16)
         }
 
         layer.enabled: true

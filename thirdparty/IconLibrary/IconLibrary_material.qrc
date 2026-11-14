@@ -119,8 +119,14 @@
         <file>material-symbols/datetime/alarm-fill.svg</file>
         <file>material-symbols/datetime/alarm_smart_wake.svg</file>
         <file>material-symbols/datetime/alarm_smart_wake-fill.svg</file>
+        <file>material-symbols/datetime/calendar_add_on.svg</file>
+        <file>material-symbols/datetime/calendar_add_on-fill.svg</file>
+        <file>material-symbols/datetime/calendar_check.svg</file>
+        <file>material-symbols/datetime/calendar_check-fill.svg</file>
         <file>material-symbols/datetime/calendar_clock.svg</file>
         <file>material-symbols/datetime/calendar_clock-fill.svg</file>
+        <file>material-symbols/datetime/calendar_lock.svg</file>
+        <file>material-symbols/datetime/calendar_lock-fill.svg</file>
         <file>material-symbols/datetime/calendar_month.svg</file>
         <file>material-symbols/datetime/calendar_month-fill.svg</file>
         <file>material-symbols/datetime/calendar_today.svg</file>
@@ -144,6 +150,12 @@
         <file>material-symbols/hardware/computer-fill.svg</file>
         <file>material-symbols/hardware/controller_gen.svg</file>
         <file>material-symbols/hardware/controller_gen-fill.svg</file>
+        <file>material-symbols/hardware/devices.svg</file>
+        <file>material-symbols/hardware/devices-fill.svg</file>
+        <file>material-symbols/hardware/devices_other.svg</file>
+        <file>material-symbols/hardware/devices_other-fill.svg</file>
+        <file>material-symbols/hardware/devices_wearables.svg</file>
+        <file>material-symbols/hardware/devices_wearables-fill.svg</file>
         <file>material-symbols/hardware/electrical_services.svg</file>
         <file>material-symbols/hardware/gamepad.svg</file>
         <file>material-symbols/hardware/gamepad-fill.svg</file>
@@ -481,6 +493,8 @@
         <file>material-symbols/sport/directions_walk.svg</file>
         <file>material-symbols/sport/paragliding-fill.svg</file>
         <file>material-symbols/sport/rowing.svg</file>
+        <file>material-symbols/sport/sports_motorsports.svg</file>
+        <file>material-symbols/sport/sports_motorsports-fill.svg</file>
         <file>material-symbols/sport/sports_score.svg</file>
 
         <file>material-symbols/weather/brightness_1.svg</file>
@@ -499,6 +513,7 @@
         <file>material-symbols/weather/brightness_7-fill.svg</file>
         <file>material-symbols/weather/cloudy_snowing.svg</file>
         <file>material-symbols/weather/cloudy_snowing-fill.svg</file>
+        <file>material-symbols/weather/cyclone.svg</file>
         <file>material-symbols/weather/foggy.svg</file>
         <file>material-symbols/weather/foggy-fill.svg</file>
         <file>material-symbols/weather/partly_cloudy_day.svg</file>
@@ -512,12 +527,16 @@
         <file>material-symbols/weather/rainy_snow.svg</file>
         <file>material-symbols/weather/snowing.svg</file>
         <file>material-symbols/weather/snowing_heavy.svg</file>
+        <file>material-symbols/weather/storm.svg</file>
+        <file>material-symbols/weather/storm-fill.svg</file>
         <file>material-symbols/weather/sunny.svg</file>
         <file>material-symbols/weather/sunny-fill.svg</file>
         <file>material-symbols/weather/sunny_snowing.svg</file>
         <file>material-symbols/weather/sunny_snowing-fill.svg</file>
         <file>material-symbols/weather/thunderstorm.svg</file>
         <file>material-symbols/weather/thunderstorm-fill.svg</file>
+        <file>material-symbols/weather/tornado.svg</file>
+        <file>material-symbols/weather/tornado-fill.svg</file>
         <file>material-symbols/weather/weather_hail.svg</file>
         <file>material-symbols/weather/weather_hail-fill.svg</file>
         <file>material-symbols/weather/weather_mix.svg</file>
@@ -553,6 +572,8 @@
         <file>material-symbols/arrow_range.svg</file>
         <file>material-symbols/arrow_right.svg</file>
         <file>material-symbols/autorenew.svg</file>
+        <file>material-symbols/background_grid_small.svg</file>
+        <file>material-symbols/background_grid_small-fill.svg</file>
         <file>material-symbols/backlight_high.svg</file>
         <file>material-symbols/backlight_low.svg</file>
         <file>material-symbols/backspace-fill.svg</file>
@@ -647,6 +668,8 @@
         <file>material-symbols/filter_list_off.svg</file>
         <file>material-symbols/filter_none.svg</file>
         <file>material-symbols/filter_none-fill.svg</file>
+        <file>material-symbols/flag_2.svg</file>
+        <file>material-symbols/flag_2-fill.svg</file>
         <file>material-symbols/flaky.svg</file>
         <file>material-symbols/folder.svg</file>
         <file>material-symbols/folder_copy.svg</file>
@@ -663,6 +686,10 @@
         <file>material-symbols/format_quote-fill.svg</file>
         <file>material-symbols/fullscreen.svg</file>
         <file>material-symbols/fullscreen_exit.svg</file>
+        <file>material-symbols/grid_on.svg</file>
+        <file>material-symbols/grid_on-fill.svg</file>
+        <file>material-symbols/grid_view.svg</file>
+        <file>material-symbols/grid_view-fill.svg</file>
         <file>material-symbols/groups.svg</file>
         <file>material-symbols/groups-fill.svg</file>
         <file>material-symbols/help.svg</file>
@@ -723,6 +750,7 @@
         <file>material-symbols/more-fill.svg</file>
         <file>material-symbols/more_horiz.svg</file>
         <file>material-symbols/more_vert.svg</file>
+        <file>material-symbols/network_intelligence.svg</file>
         <file>material-symbols/new_label.svg</file>
         <file>material-symbols/new_label-fill.svg</file>
         <file>material-symbols/new_releases.svg</file>
@@ -739,6 +767,8 @@
         <file>material-symbols/notifications_off.svg</file>
         <file>material-symbols/notifications_off-fill.svg</file>
         <file>material-symbols/open_with.svg</file>
+        <file>material-symbols/orbit.svg</file>
+        <file>material-symbols/orbit-fill.svg</file>
         <file>material-symbols/package_2.svg</file>
         <file>material-symbols/package_2-fill.svg</file>
         <file>material-symbols/palette.svg</file>
@@ -746,6 +776,8 @@
         <file>material-symbols/pan_zoom.svg</file>
         <file>material-symbols/password.svg</file>
         <file>material-symbols/pin.svg</file>
+        <file>material-symbols/planet.svg</file>
+        <file>material-symbols/planet-fill.svg</file>
         <file>material-symbols/publish.svg</file>
         <file>material-symbols/qr_code.svg</file>
         <file>material-symbols/qr_code_2.svg</file>
@@ -837,6 +869,8 @@
         <file>material-symbols/unarchive-fill.svg</file>
         <file>material-symbols/unfold_less.svg</file>
         <file>material-symbols/unfold_more.svg</file>
+        <file>material-symbols/view_cozy.svg</file>
+        <file>material-symbols/view_cozy-fill.svg</file>
         <file>material-symbols/view_in_ar.svg</file>
         <file>material-symbols/warning.svg</file>
         <file>material-symbols/warning-fill.svg</file>

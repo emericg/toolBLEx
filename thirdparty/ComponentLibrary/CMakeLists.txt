@@ -90,6 +90,10 @@ list(APPEND MODULE_QML_FILES
     qml/controls/ButtonIconThemed.qml
     qml/controls/ButtonThemed.qml
     qml/controls/CheckBoxThemed.qml
+    qml/controls/ComboBoxBar.qml
+    qml/controls/ComboBoxColorful.qml
+    qml/controls/ComboBoxMenuBar.qml
+    qml/controls/ComboBoxSunken.qml
     qml/controls/ComboBoxThemed.qml
     qml/controls/DialThemed.qml
     qml/controls/ItemDelegateThemed.qml
@@ -104,7 +108,6 @@ list(APPEND MODULE_QML_FILES
     qml/controls/RangeSliderThemed.qml
     qml/controls/RangeSliderValue.qml
     qml/controls/RangeSliderValueSolid.qml
-    qml/controls/RippleCustom.qml
     qml/controls/RippleThemed.qml
     qml/controls/RoundButtonThemed.qml
     qml/controls/RoundButtonIconThemed.qml
@@ -120,6 +123,7 @@ list(APPEND MODULE_QML_FILES
     qml/controls/SwitchThemedSquare.qml
     qml/controls/TextAreaThemed.qml
     qml/controls/TextEditThemed.qml
+    qml/controls/TextFieldColorful.qml
     qml/controls/TextFieldThemed.qml
     qml/controls/ToolTipFlat.qml
     qml/controls/ToolTipThemed.qml
@@ -139,6 +143,9 @@ list(APPEND MODULE_QML_FILES
     qml/layouts/GroupBoxThemed.qml
     qml/layouts/ListItem.qml
     qml/layouts/ListItemClickable.qml
+    qml/layouts/ListItemPermission.qml
+    qml/layouts/ListItemPermissionInfo.qml
+    qml/layouts/ListItemSetting.qml
     qml/layouts/ListSeparator.qml
     qml/layouts/ListSeparatorPadded.qml
     qml/layouts/ListSpacer.qml
@@ -212,7 +219,7 @@ list(APPEND MODULE_QML_FILES
     qml/utils/CsdMac.qml
     qml/utils/CsdWindows.qml
     qml/utils/CsdLinux.qml
-    qml/utils/FpsMonitor.qml
+    qml/utils/FpsCounter.qml
     qml/utils/MovablePoint.qml
     qml/utils/SwipeArea.qml
     qml/utils/WindowGeometrySaver.qml
@@ -225,7 +232,7 @@ list(APPEND MODULE_QML_FILES # DEPRECATED
     #qml/deprecated/RoundButtonText.qml
 )
 list(APPEND MODULE_QML_FILES # WIP
-    #qml/wip/FileInputArea_complex.qml
+    #
 )
 
 list(APPEND MODULE_JS_FILES

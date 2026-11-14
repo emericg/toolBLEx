@@ -21,7 +21,6 @@ option(UTILS_DOCK_ENABLED "macOS dock utils" OFF)
 
 # Optional stuff (for iOS)
 option(UTILS_WIFI_ENABLED "iOS WiFi SSID reading" OFF)
-option(UTILS_NOTIFICATIONS_ENABLED "iOS notification handling" OFF)
 
 ################################################################################
 
@@ -31,14 +30,10 @@ set(CORE_LIBRARIES Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick)
 
 # Generic sources
 set(CORE_SOURCES
-    # PermissionManager
-    PermissionManager.cpp PermissionManager.h
-    PermissionManager_AndroidHelper.cpp PermissionManager_AndroidHelper.h
     # app utils
     utils_app.cpp utils_app.h
-    utils_log.cpp utils_log.h
     utils_clipboard.cpp utils_clipboard.h
-    utils_fpsmonitor.cpp utils_fpsmonitor.h
+    utils_log.cpp utils_log.h
     utils_language.cpp utils_language.h
     # system utils
     utils_os.cpp utils_os.h
@@ -48,8 +43,16 @@ set(CORE_SOURCES
     # pure c++
     utils_bits.h
     utils_maths.h
+
     # others
     LoremIpsum.h
+
+    # FpsMonitor
+    FpsMonitor.cpp FpsMonitor.h
+    
+    # PermissionManager
+    PermissionManager.cpp PermissionManager.h
+    PermissionManager_AndroidHelper.cpp PermissionManager_AndroidHelper.h
 )
 
 # Qt optional tools
@@ -57,7 +60,7 @@ if(UTILS_QT_RHI)
     add_definitions(-DUTILS_QT_RHI)
 
     if(Qt6Gui_VERSION VERSION_GREATER_EQUAL 6.10.0)
-        find_package(Qt6 REQUIRED COMPONENTS GuiPrivate)
+        find_package(Qt6 REQUIRED COMPONENTS GuiPrivate)                        # RHI infos
         set(CORE_LIBRARIES ${CORE_LIBRARIES} Qt6::GuiPrivate)
     else()
         find_package(Qt6 REQUIRED COMPONENTS Gui)
@@ -72,7 +75,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         utils_os_linux.h)
 
     find_package(Qt6 REQUIRED COMPONENTS DBus)
-    set(PLATFORM_LIBRARIES ${PLATFORM_LIBRARIES} Qt6::DBus)
+    set(PLATFORM_LIBRARIES ${PLATFORM_LIBRARIES} Qt6::DBus)                     # screensaver control
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Android")
@@ -96,6 +99,8 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    enable_language(OBJCXX)
+
     set(PLATFORM_SOURCES ${PLATFORM_SOURCES}
         utils_os_macos.mm
         utils_os_macos.h)
@@ -105,24 +110,18 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
             utils_os_macos_dock.mm
             utils_os_macos_dock.h)
         set(PLATFORM_LIBRARIES ${PLATFORM_LIBRARIES}
-            "-framework AppKit") # dock control
+            "-framework AppKit")                                                # dock control
     endif()
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
+    enable_language(OBJCXX)
+
     set(PLATFORM_SOURCES ${PLATFORM_SOURCES}
         utils_os_ios.mm
         utils_os_ios.h)
     set(PLATFORM_LIBRARIES ${PLATFORM_LIBRARIES}
         "-framework UIKit")
-
-    if(UTILS_NOTIFICATIONS_ENABLED)
-        set(PLATFORM_SOURCES ${PLATFORM_SOURCES}
-            utils_os_ios_notif.mm
-            utils_os_ios_notif.h)
-        set(PLATFORM_LIBRARIES ${PLATFORM_LIBRARIES}
-            "-framework UserNotifications")                                     # show notifications
-    endif()
 
     if(UTILS_WIFI_ENABLED)
         set(PLATFORM_SOURCES ${PLATFORM_SOURCES}

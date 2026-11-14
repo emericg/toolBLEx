@@ -40,8 +40,8 @@
         <file>lucide/location/navigation-2-off.svg</file>
         <file>lucide/location/navigation-2.svg</file>
         <file>lucide/location/navigation.svg</file>
-        <file>lucide/location/map-pin-off.svg</file>
         <file>lucide/location/map-pinned.svg</file>
+        <file>lucide/location/map-pin-off.svg</file>
         <file>lucide/location/map-pin.svg</file>
         <file>lucide/location/map.svg</file>
         <file>lucide/location/locate-off.svg</file>
@@ -77,6 +77,7 @@
         <file>lucide/hardware/ethernet-port.svg</file>
         <file>lucide/hardware/cpu.svg</file>
         <file>lucide/hardware/circuit-board.svg</file>
+        <file>lucide/hardware/cassette-tape.svg</file>
         <file>lucide/hardware/cable.svg</file>
 
         <file>lucide/datetime/timer.svg</file>
@@ -144,25 +145,35 @@
         <file>lucide/settings.svg</file>
         <file>lucide/search-x.svg</file>
         <file>lucide/search.svg</file>
+        <file>lucide/scan-qr-code.svg</file>
         <file>lucide/scan-barcode.svg</file>
         <file>lucide/scan.svg</file>
         <file>lucide/scale-3d.svg</file>
         <file>lucide/save.svg</file>
         <file>lucide/ruler.svg</file>
+        <file>lucide/route.svg</file>
+        <file>lucide/radiation.svg</file>
+        <file>lucide/radar.svg</file>
+        <file>lucide/qr-code.svg</file>
         <file>lucide/plus.svg</file>
         <file>lucide/play.svg</file>
         <file>lucide/plane-takeoff.svg</file>
         <file>lucide/plane-landing.svg</file>
         <file>lucide/pentagon.svg</file>
+        <file>lucide/pencil-line.svg</file>
         <file>lucide/pencil.svg</file>
+        <file>lucide/pen-line.svg</file>
         <file>lucide/pen.svg</file>
         <file>lucide/pause.svg</file>
         <file>lucide/package.svg</file>
+        <file>lucide/orbit.svg</file>
         <file>lucide/octagon-x.svg</file>
         <file>lucide/octagon-pause.svg</file>
         <file>lucide/octagon-minus.svg</file>
         <file>lucide/octagon-alert.svg</file>
         <file>lucide/octagon.svg</file>
+        <file>lucide/navigation.svg</file>
+        <file>lucide/music-4.svg</file>
         <file>lucide/move-3d.svg</file>
         <file>lucide/move.svg</file>
         <file>lucide/minus.svg</file>
@@ -174,29 +185,39 @@
         <file>lucide/menu.svg</file>
         <file>lucide/maximize-2.svg</file>
         <file>lucide/maximize.svg</file>
+        <file>lucide/map-pinned.svg</file>
+        <file>lucide/map-pin.svg</file>
+        <file>lucide/map.svg</file>
         <file>lucide/mail.svg</file>
         <file>lucide/lock-open.svg</file>
         <file>lucide/lock-keyhole-open.svg</file>
         <file>lucide/lock-keyhole.svg</file>
         <file>lucide/lock.svg</file>
+        <file>lucide/locate-off.svg</file>
+        <file>lucide/locate-fixed.svg</file>
+        <file>lucide/locate.svg</file>
         <file>lucide/loader-circle.svg</file>
         <file>lucide/loader.svg</file>
         <file>lucide/list-filter.svg</file>
         <file>lucide/list.svg</file>
         <file>lucide/link-2.svg</file>
+        <file>lucide/link.svg</file>
         <file>lucide/life-buoy.svg</file>
-        <file>lucide/LICENSE</file>
         <file>lucide/layers-2.svg</file>
         <file>lucide/layers.svg</file>
+        <file>lucide/landmark.svg</file>
         <file>lucide/info.svg</file>
+        <file>lucide/hourglass.svg</file>
         <file>lucide/hexagon.svg</file>
         <file>lucide/heart.svg</file>
         <file>lucide/grip-vertical.svg</file>
         <file>lucide/grip-horizontal.svg</file>
+        <file>lucide/goal.svg</file>
+        <file>lucide/globe.svg</file>
         <file>lucide/gauge.svg</file>
         <file>lucide/fullscreen.svg</file>
-        <file>lucide/folder-tree.svg</file>
         <file>lucide/folders.svg</file>
+        <file>lucide/folder-tree.svg</file>
         <file>lucide/folder-closed.svg</file>
         <file>lucide/folder.svg</file>
         <file>lucide/fingerprint.svg</file>
@@ -208,7 +229,10 @@
         <file>lucide/eraser.svg</file>
         <file>lucide/ellipsis-vertical.svg</file>
         <file>lucide/ellipsis.svg</file>
+        <file>lucide/earth.svg</file>
+        <file>lucide/drafting-compass.svg</file>
         <file>lucide/download.svg</file>
+        <file>lucide/dna.svg</file>
         <file>lucide/creative-commons.svg</file>
         <file>lucide/copyright.svg</file>
         <file>lucide/copyleft.svg</file>
@@ -250,7 +274,10 @@
         <file>lucide/chevron-first.svg</file>
         <file>lucide/chevron-down.svg</file>
         <file>lucide/check.svg</file>
+        <file>lucide/chart-area.svg</file>
+        <file>lucide/bus.svg</file>
         <file>lucide/brain.svg</file>
+        <file>lucide/box.svg</file>
         <file>lucide/bookmark-x.svg</file>
         <file>lucide/bookmark-plus.svg</file>
         <file>lucide/bookmark-minus.svg</file>
@@ -266,6 +293,8 @@
         <file>lucide/badge-check.svg</file>
         <file>lucide/badge-alert.svg</file>
         <file>lucide/badge.svg</file>
+        <file>lucide/atom.svg</file>
+        <file>lucide/asterisk.svg</file>
         <file>lucide/arrow-up-right.svg</file>
         <file>lucide/arrow-up-left.svg</file>
         <file>lucide/arrow-up.svg</file>
@@ -275,5 +304,7 @@
         <file>lucide/arrow-down-right.svg</file>
         <file>lucide/arrow-down-left.svg</file>
         <file>lucide/arrow-down.svg</file>
+        <file>lucide/anchor.svg</file>
+        <file>lucide/amphora.svg</file>
     </qresource>
 </RCC>

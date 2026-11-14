@@ -34,9 +34,6 @@
 #include "utils_os_android.h"
 #elif defined(Q_OS_IOS)
 #include "utils_os_ios.h"
-#if defined(UTILS_NOTIFICATIONS_ENABLED)
-#include "utils_os_ios_notif.h"
-#endif
 #endif
 
 #include <QCoreApplication>
@@ -111,6 +108,41 @@ void UtilsOS::hapticFeedback(const HapticFeedback type)
 #else
     Q_UNUSED(type)
 #endif
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+void UtilsOS::openAppInfo(const QString &packageName)
+{
+#if defined(Q_OS_ANDROID)
+    return UtilsAndroid::openApplicationInfo(packageName);
+#elif defined(Q_OS_IOS)
+    Q_UNUSED(packageName)
+    return UtilsIOS::openApplicationInfo();
+#else
+    Q_UNUSED(packageName)
+#endif
+}
+
+/* ************************************************************************** */
+
+QString UtilsOS::getMobileDeviceModel()
+{
+#if defined(Q_OS_ANDROID)
+    return UtilsAndroid::getDeviceModel();
+#endif
+
+    return QString();
+}
+
+QString UtilsOS::getMobileDeviceSerial()
+{
+#if defined(Q_OS_ANDROID)
+    return UtilsAndroid::getDeviceSerial();
+#endif
+
+    return QString();
 }
 
 /* ************************************************************************** */
@@ -332,38 +364,6 @@ bool UtilsOS::getMobileCameraPermission()
 
 /* ************************************************************************** */
 
-bool UtilsOS::checkMobileNotificationPermission()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::checkPermission_notification();
-#elif defined(Q_OS_IOS)
-    #if defined(UTILS_NOTIFICATIONS_ENABLED)
-        return UtilsIOSNotifications::checkPermission_notification();
-    #else
-        qWarning() << "UTILS_NOTIFICATIONS_ENABLED is not enabled";
-    #endif
-#endif
-
-    return true;
-}
-
-bool UtilsOS::getMobileNotificationPermission()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::getPermission_notification();
-#elif defined(Q_OS_IOS)
-    #if defined(UTILS_NOTIFICATIONS_ENABLED)
-        return UtilsIOSNotifications::getPermission_notification();
-    #else
-        qWarning() << "UTILS_NOTIFICATIONS_ENABLED is not enabled";
-    #endif
-#endif
-
-    return true;
-}
-
-/* ************************************************************************** */
-
 bool UtilsOS::isMobileGpsEnabled()
 {
 #if defined(Q_OS_ANDROID)
@@ -380,26 +380,6 @@ void UtilsOS::forceMobileGpsEnabled()
 #if defined(Q_OS_ANDROID)
     UtilsAndroid::gpsutils_forceGpsEnabled();
 #endif
-}
-
-/* ************************************************************************** */
-
-QString UtilsOS::getMobileDeviceModel()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::getDeviceModel();
-#endif
-
-    return QString();
-}
-
-QString UtilsOS::getMobileDeviceSerial()
-{
-#if defined(Q_OS_ANDROID)
-    return UtilsAndroid::getDeviceSerial();
-#endif
-
-    return QString();
 }
 
 /* ************************************************************************** */

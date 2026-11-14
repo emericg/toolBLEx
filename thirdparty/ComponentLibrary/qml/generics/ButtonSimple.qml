@@ -23,7 +23,7 @@ T.Button {
     // settings
     flat: true
     checkable: false
-    hoverEnabled: isDesktop
+    hoverEnabled: Theme.isDesktop
     focusPolicy: Qt.NoFocus
 
     // layout
@@ -56,10 +56,7 @@ T.Button {
             anchors.fill: parent
             anchor: control
 
-            pressed: control.pressed
-            active: control.enabled && (control.down || control.hovered || control.visualFocus)
             color: control.colorRipple
-            clip: true
         }
     }
 

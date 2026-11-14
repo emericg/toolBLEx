@@ -5,8 +5,11 @@ import ComponentLibrary
 MediaCardBackground {
     id: control
 
+    actionButton: actionRow.primaryButton
+
     implicitWidth: 500
-    implicitHeight: 190
+    implicitHeight: Theme.componentMarginL + bodyColumn.implicitHeight + Theme.componentMarginL +
+                    actionRow.implicitHeight + Theme.componentMarginL
 
     signal primaryClicked()
     signal secondaryClicked()
@@ -97,6 +100,7 @@ MediaCardBackground {
     ////////////////
 
     Column { // body text
+        id: bodyColumn
         anchors.left: parent.left
         anchors.leftMargin: control.mediaWidth + Theme.componentMarginL
         anchors.right: parent.right
@@ -134,6 +138,7 @@ MediaCardBackground {
     }
 
     CardActionRow { // pinned to the bottom of the body area
+        id: actionRow
         anchors.left: (control.actionAlignment === Qt.AlignRight) ? undefined : parent.left
         anchors.leftMargin: control.mediaWidth + Theme.componentMarginL
         anchors.right: (control.actionAlignment === Qt.AlignRight) ? parent.right : undefined

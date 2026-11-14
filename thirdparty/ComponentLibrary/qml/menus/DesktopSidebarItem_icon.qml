@@ -28,6 +28,7 @@ T.Button {
     property color colorBackground: Qt.rgba(color.r, color.g, color.b, checked ? 0.2 : 1)
     property color colorHighlight: checked ? Theme.colorPrimary : Theme.colorSidebarHighlight
     property color colorContent: checked ? Theme.colorPrimary : Theme.colorText
+    property color colorRipple: Qt.rgba(colorHighlight.r, colorHighlight.g, colorHighlight.b, 0.16)
 
     // indicator
     property bool indicatorVisible: false
@@ -56,6 +57,16 @@ T.Button {
                 return 0
             }
             Behavior on opacity { OpacityAnimator { duration: Theme.animationSpeedMedium } }
+        }
+
+        RippleThemed {
+            width: control.width
+            height: control.height
+            anchor: control
+            clipRadius: control.backgroundRadius
+
+            hoverTint: false
+            color: control.colorRipple
         }
     }
 

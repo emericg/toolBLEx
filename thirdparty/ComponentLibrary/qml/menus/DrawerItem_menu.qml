@@ -14,6 +14,8 @@ T.ItemDelegate {
     spacing: Theme.componentMargin
     verticalPadding: 0
 
+    property int headerPosition: 64
+
     property url source
     property int sourceSize: 24
     property int sourceRotation: 0
@@ -33,11 +35,6 @@ T.ItemDelegate {
         RippleThemed {
             anchors.fill: parent
             anchor: control
-
-            clip: visible
-            pressed: control.pressed
-            active: control.enabled && (control.down || control.visualFocus || control.hovered)
-            color: Qt.rgba(Theme.colorForeground.r, Theme.colorForeground.g, Theme.colorForeground.b, 0.5)
         }
     }
 
@@ -45,21 +42,20 @@ T.ItemDelegate {
 
     contentItem: RowLayout {
         anchors.left: parent.left
-        anchors.leftMargin: Theme.screenPaddingLeft + Theme.componentMargin
+        anchors.leftMargin: Theme.screenPaddingLeft
         anchors.right: parent.right
         anchors.rightMargin: Theme.screenPaddingRight + Theme.componentMargin / 2
 
         opacity: control.enabled ? 1 : 0.66
-        spacing: Theme.componentMargin
+        spacing: 0
 
         Item {
-            Layout.preferredWidth: Theme.componentHeightL - Theme.componentMargin
+            Layout.preferredWidth: control.headerPosition
             Layout.preferredHeight: Theme.componentHeightL
             Layout.alignment: Qt.AlignTop
 
             IconSvg {
-                anchors.left: parent.left
-                anchors.leftMargin: (32 - control.sourceSize) / 2
+                anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.verticalCenterOffset: (control.height !== Theme.componentHeightL) ? -(Theme.componentMargin / 2) : 0
 

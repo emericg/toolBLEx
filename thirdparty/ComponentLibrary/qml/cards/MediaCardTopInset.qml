@@ -8,8 +8,10 @@ import ComponentLibrary
 MediaCardBackground {
     id: control
 
+    actionButton: actionRow.primaryButton
+
     implicitWidth: 340
-    implicitHeight: control.inset * 2 + control.mediaHeight + Theme.componentMarginS + fgColumn.implicitHeight
+    implicitHeight: control.inset * 2 + control.mediaHeight + Theme.componentMarginL + fgColumn.implicitHeight + Theme.componentMarginS + actionRow.implicitHeight
 
     signal primaryClicked()
     signal secondaryClicked()
@@ -166,21 +168,25 @@ MediaCardBackground {
                 wrapMode: Text.WordWrap
             }
         }
+    }
 
-        CardActionRow {
-            x: Theme.componentMarginXS
-            anchors.right: (control.actionAlignment === Qt.AlignRight) ? parent.right : undefined
-            anchors.rightMargin: Theme.componentMarginXS
+    CardActionRow {
+        id: actionRow
+        anchors.left: (control.actionAlignment === Qt.AlignRight) ? undefined : parent.left
+        anchors.leftMargin: control.inset + Theme.componentMarginXS
+        anchors.right: (control.actionAlignment === Qt.AlignRight) ? parent.right : undefined
+        anchors.rightMargin: control.inset + Theme.componentMarginXS
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: control.inset + Theme.componentMarginXS
 
-            topPadding: Theme.componentMarginXXS
-            primaryText: control.primaryText
-            primaryStyle: control.primaryStyle
-            primarySource: control.primarySource
-            primarySourceRotation: control.primarySourceRotation
-            secondaryText: control.secondaryText
-            onPrimaryClicked: control.primaryClicked()
-            onSecondaryClicked: control.secondaryClicked()
-        }
+        topPadding: Theme.componentMarginXXS
+        primaryText: control.primaryText
+        primaryStyle: control.primaryStyle
+        primarySource: control.primarySource
+        primarySourceRotation: control.primarySourceRotation
+        secondaryText: control.secondaryText
+        onPrimaryClicked: control.primaryClicked()
+        onSecondaryClicked: control.secondaryClicked()
     }
 
     ////////////////

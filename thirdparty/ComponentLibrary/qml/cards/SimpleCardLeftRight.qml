@@ -32,8 +32,8 @@ Item {
         id: backgroundButton
 
         anchors.fill: parent
-        anchors.margins: (singleColumn ? 0 : Theme.componentMarginXL)
-        anchors.bottomMargin: (singleColumn ? Theme.componentMarginXL : Theme.componentMarginXL)
+        anchors.margins: (Theme.singleColumn ? 0 : Theme.componentMarginXL)
+        anchors.bottomMargin: (Theme.singleColumn ? Theme.componentMarginXL : Theme.componentMarginXL)
 
         ////////
 
@@ -41,7 +41,7 @@ Item {
             control.clicked()
         }
         onPressAndHold: {
-            if (isMobile) {
+            if (Theme.isMobile) {
                 actionMenu_bottom_loader.active = true
                 actionMenu_bottom_loader.item.open()
             }
@@ -52,9 +52,9 @@ Item {
         background: Rectangle {
             id: background
             radius: {
-                if (singleColumn) return 8
-                if (isDesktop) return 8
-                if (isTablet) return 12
+                if (Theme.singleColumn) return 8
+                if (Theme.isDesktop) return 8
+                if (Theme.isTablet) return 12
                 return 8
             }
             color: Theme.isLight ? "#fff" : "#444"
@@ -65,36 +65,19 @@ Item {
                 anchors.bottom: parent.bottom
 
                 //width: cardImage.width + rowrowrow.leftMargin*2
-                width: cardImage.width + (isMobile ? 20 : 32)
+                width: cardImage.width + (Theme.isMobile ? 20 : 32)
+                topLeftRadius: background.radius
+                bottomLeftRadius: background.radius
                 color: Theme.isLight ? "#f6f6f6" : "#3a3a3a"
             }
 
             RippleThemed {
                 anchors.fill: parent
                 anchor: backgroundButton
+                clipRadius: background.radius
 
-                pressed: backgroundButton.pressed
-                active: control.enabled && (backgroundButton.down /*|| backgroundButton.hovered*/ || backgroundButton.visualFocus)
-                color: Theme.colorPrimary
-                opacity: 0.033
-            }
-
-            layer.enabled: true
-            layer.effect: MultiEffect { // clip
-                maskEnabled: true
-                maskInverted: false
-                maskThresholdMin: 0.5
-                maskSpreadAtMin: 1.0
-                maskSpreadAtMax: 0.0
-                maskSource: ShaderEffectSource {
-                    sourceItem: Rectangle {
-                        x: background.x
-                        y: background.y
-                        width: background.width
-                        height: background.height
-                        radius: background.radius
-                    }
-                }
+                hoverTint: false
+                color: Qt.alpha(Theme.colorPrimary, 0.033)
             }
         }
 
@@ -112,10 +95,10 @@ Item {
 
             source: "qrc:/IconLibrary/material-symbols/more_vert.svg"
 
-            visible: isDesktop
+            visible: Theme.isDesktop
 
             onClicked: {
-                if (isMobile) {
+                if (Theme.isMobile) {
                     actionMenu_bottom_loader.active = true
                     actionMenu_bottom_loader.item.open()
                 } else {
@@ -130,8 +113,8 @@ Item {
         RowLayout {
             id: rowrowrow
             anchors.fill: background
-            anchors.leftMargin: (isMobile ? 20 : 32) / 2
-            anchors.rightMargin: (isMobile ? 20 : 32) / 2
+            anchors.leftMargin: (Theme.isMobile ? 20 : 32) / 2
+            anchors.rightMargin: (Theme.isMobile ? 20 : 32) / 2
             spacing: 32
             clip: true
 
@@ -140,7 +123,7 @@ Item {
             Image {
                 id: cardImage
                 Layout.maximumWidth: Layout.maximumHeight * 0.66
-                Layout.maximumHeight: background.height - (isMobile ? 20 : 32)
+                Layout.maximumHeight: background.height - (Theme.isMobile ? 20 : 32)
                 Layout.alignment: Qt.AlignVCenter
 
                 rotation: 0
@@ -148,7 +131,7 @@ Item {
 
                 source: control.source
                 //sourceSize: Qt.size(width*mmm, height*mmm)
-                //property int mmm: isMobile ? 2 : 1
+                //property int mmm: Theme.isMobile ? 2 : 1
             }
 
             ////

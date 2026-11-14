@@ -1,6 +1,7 @@
 import QtQuick
 
 import ComponentLibrary
+import AppUtils
 
 Item {
     id: control
@@ -46,6 +47,7 @@ Item {
             property int counter: 0
 
             NumberAnimation on rotation {
+                running: (typeof FpsMonitor === "undefined" || !FpsMonitor)
                 from: 0
                 to: 360
                 duration: 1000
@@ -79,14 +81,17 @@ Item {
 
             color: "#ddd"
             font.pixelSize: 16
-            font.family: "Monospace" // not available on every OS
+            font.family: {
+                if (Qt.platform.os === "osx") return "Menlo"
+                if (Qt.platform.os === "windows") return "Consolas"
+                return "monospace"
+            }
             textFormat: Text.MarkdownText // renders as plain proportional text
-
             text: {
                 var txt = ""
-                if (typeof utilsFpsMonitor !== "undefined" && utilsFpsMonitor) {
-                    // FPS from utilsFpsMonitor
-                    txt += utilsFpsMonitor.fps.toString().padStart(control.digits, "0") + " FPS"
+                if (typeof FpsMonitor !== "undefined" && FpsMonitor) {
+                    // FPS from FpsMonitor
+                    txt += FpsMonitor.fps.toString().padStart(control.digits, "0") + " FPS"
                 } else {
                     // FPS from the UI animation
                     //txt += "Ø " + control.fpsAvg.toString().padStart(control.digits, "0")

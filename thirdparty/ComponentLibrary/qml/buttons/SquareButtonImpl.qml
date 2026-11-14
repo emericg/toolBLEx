@@ -68,11 +68,8 @@ T.Button {
         RippleThemed {
             anchors.fill: parent
             anchor: control
-            clip: true
             clipRadius: control.radius
 
-            pressed: control.pressed
-            active: control.enabled && (control.down || control.hovered || control.visualFocus)
             color: control.colorRipple
         }
     }

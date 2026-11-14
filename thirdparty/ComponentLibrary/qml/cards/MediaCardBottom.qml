@@ -5,8 +5,10 @@ import ComponentLibrary
 MediaCardBackground {
     id: control
 
+    actionButton: actionRow.primaryButton
+
     implicitWidth: 380
-    implicitHeight: bodyColumn.implicitHeight + control.mediaHeight
+    implicitHeight: bodyColumn.implicitHeight + Theme.componentMarginL + actionRow.implicitHeight + control.mediaHeight
 
     signal primaryClicked()
     signal secondaryClicked()
@@ -101,7 +103,9 @@ MediaCardBackground {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
+
         padding: Theme.componentMarginL
+        bottomPadding: Theme.componentMarginXS
         spacing: Theme.componentMarginXS
 
         CardTagLabel {
@@ -130,20 +134,25 @@ MediaCardBackground {
             lineHeight: 1.1
             wrapMode: Text.WordWrap
         }
+    }
 
-        CardActionRow {
-            anchors.right: (control.actionAlignment === Qt.AlignRight) ? parent.right : undefined
-            anchors.rightMargin: parent.padding
+    CardActionRow {
+        id: actionRow
+        anchors.left: (control.actionAlignment === Qt.AlignRight) ? undefined : parent.left
+        anchors.leftMargin: Theme.componentMarginL
+        anchors.right: (control.actionAlignment === Qt.AlignRight) ? parent.right : undefined
+        anchors.rightMargin: Theme.componentMarginL
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: control.mediaHeight + Theme.componentMarginL
 
-            topPadding: Theme.componentMarginXS
-            primaryText: control.primaryText
-            primaryStyle: control.primaryStyle
-            primarySource: control.primarySource
-            primarySourceRotation: control.primarySourceRotation
-            secondaryText: control.secondaryText
-            onPrimaryClicked: control.primaryClicked()
-            onSecondaryClicked: control.secondaryClicked()
-        }
+        topPadding: Theme.componentMarginXS
+        primaryText: control.primaryText
+        primaryStyle: control.primaryStyle
+        primarySource: control.primarySource
+        primarySourceRotation: control.primarySourceRotation
+        secondaryText: control.secondaryText
+        onPrimaryClicked: control.primaryClicked()
+        onSecondaryClicked: control.secondaryClicked()
     }
 
     ////////////////

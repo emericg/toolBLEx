@@ -18,7 +18,7 @@ Item {
 
     // settings
     property bool shadow: !Theme.singleColumn
-    property int headerPosition: 64
+    property int headerPosition: Theme.isMobile ? 56 : 64
     property int radius: Theme.singleColumn ? 0 : 6
     property int borderWidth: Theme.singleColumn ? 0 : Theme.componentBorderWidth
 

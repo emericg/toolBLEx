@@ -15,9 +15,10 @@ Item {
     z: 2
 
     // settings
-    property bool shadow: !Theme.singleColumn
+    property int headerHeight: Theme.isMobile ? 56 : 64
     property int headerPosition: Theme.isMobile ? 56 : 64
     property int radius: Theme.singleColumn ? 0 : Theme.componentRadius
+    property bool shadow: !Theme.singleColumn
 
     // colors
     property color backgroundColor: {
@@ -64,8 +65,9 @@ Item {
     ////////////////
 
     IconSvg {
-        anchors.left: control.left
-        anchors.leftMargin: Theme.componentMarginL
+        anchors.horizontalCenter: control.left
+        anchors.horizontalCenterOffset: Theme.singleColumn ? (control.headerHeight / 2)
+                                                           : Theme.componentMarginL + (control.sourceSize / 2)
         anchors.verticalCenter: control.verticalCenter
 
         visible: control.source.toString().length

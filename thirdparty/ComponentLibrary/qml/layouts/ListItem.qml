@@ -16,7 +16,9 @@ T.ItemDelegate {
     spacing: Theme.componentMargin
     verticalPadding: 0
 
-    property int headerPosition: 64
+    // settings
+    property int headerHeight: Theme.isMobile ? 56 : 64
+    property int headerPosition: Theme.isMobile ? 56 : 64
 
     // icon
     property url source
@@ -39,7 +41,6 @@ T.ItemDelegate {
 
     contentItem: RowLayout {
         anchors.left: parent.left
-        anchors.leftMargin: Theme.componentMargin
         anchors.right: parent.right
         anchors.rightMargin: Theme.componentMargin
 
@@ -47,14 +48,14 @@ T.ItemDelegate {
         opacity: control.enabled ? 1 : 0.4
 
         Item {
-            Layout.preferredWidth: control.headerPosition - parent.anchors.leftMargin
+            Layout.preferredWidth: control.headerPosition
             Layout.preferredHeight: Theme.componentHeightXL
 
             Layout.alignment: Qt.AlignTop
 
             IconSvg {
-                anchors.left: parent.left
-                anchors.leftMargin: (32 - control.sourceSize) / 2
+                anchors.horizontalCenter: parent.left
+                anchors.horizontalCenterOffset: (control.headerHeight / 2)
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.verticalCenterOffset: (control.height !== Theme.componentHeightXL) ? -(Theme.componentMargin / 2) : 0
 

@@ -62,10 +62,7 @@ T.Button {
                 anchors.fill: parent
                 anchor: control
 
-                clip: visible
                 clipRadius: control.radius
-                pressed: control.pressed
-                active: enabled && (control.down || control.visualFocus || control.hovered)
                 color: Qt.rgba(control.colorHighlight.r, control.colorHighlight.g, control.colorHighlight.b, 0.66)
             }
 */

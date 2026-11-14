@@ -80,7 +80,14 @@ public:
      */
     static Q_INVOKABLE void hapticFeedback(const HapticFeedback type = HapticLight);
 
-    // Mobile permissions related
+    // Mobile OS settings related
+
+    static Q_INVOKABLE void openAppInfo(const QString &packageName);
+
+    static Q_INVOKABLE QString getMobileDeviceModel();
+    static Q_INVOKABLE QString getMobileDeviceSerial();
+
+    // Mobile OS permissions related
 
     static Q_INVOKABLE bool checkMobileStoragePermissions();
     static Q_INVOKABLE bool getMobileStoragePermissions();
@@ -110,14 +117,10 @@ public:
     static Q_INVOKABLE bool checkMobileCameraPermission();
     static Q_INVOKABLE bool getMobileCameraPermission();
 
-    static Q_INVOKABLE bool checkMobileNotificationPermission();
-    static Q_INVOKABLE bool getMobileNotificationPermission();
-
     static Q_INVOKABLE bool isMobileGpsEnabled();
     static Q_INVOKABLE void forceMobileGpsEnabled();
 
-    static Q_INVOKABLE QString getMobileDeviceModel();
-    static Q_INVOKABLE QString getMobileDeviceSerial();
+    // Mobile storage related
 
     static Q_INVOKABLE int getMobileStorageCount();
     static Q_INVOKABLE QString getMobileStorageInternal();

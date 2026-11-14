@@ -190,39 +190,6 @@ bool UtilsAndroid::getPermission_camera()
 
 /* ************************************************************************** */
 
-bool UtilsAndroid::checkPermission_notification()
-{
-    QFuture<QtAndroidPrivate::PermissionResult> notif = QtAndroidPrivate::checkPermission("android.permission.POST_NOTIFICATIONS");
-    //cam.waitForFinished();
-
-    return (notif.result() == QtAndroidPrivate::PermissionResult::Authorized);
-}
-
-bool UtilsAndroid::getPermission_notification()
-{
-    bool status = true;
-
-    QFuture<QtAndroidPrivate::PermissionResult> notif = QtAndroidPrivate::checkPermission("android.permission.POST_NOTIFICATIONS");
-    //notif.waitForFinished();
-
-    if (notif.result() == QtAndroidPrivate::PermissionResult::Denied)
-    {
-        QtAndroidPrivate::requestPermission("android.permission.POST_NOTIFICATIONS");
-        notif = QtAndroidPrivate::checkPermission("android.permission.POST_NOTIFICATIONS");
-        //notif.waitForFinished();
-
-        if (notif.result() == QtAndroidPrivate::PermissionResult::Denied)
-        {
-            qWarning() << "POST_NOTIFICATIONS PERMISSION DENIED";
-            status = false;
-        }
-    }
-
-    return status;
-}
-
-/* ************************************************************************** */
-
 bool UtilsAndroid::checkPermission_bluetooth()
 {
     bool status = false;

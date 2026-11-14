@@ -114,4 +114,14 @@ void UtilsIOS::vibrate(int hapticType)
 }
 
 /* ************************************************************************** */
+
+void UtilsIOS::openApplicationInfo()
+{
+    NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+    [[UIApplication sharedApplication] openURL:url
+                                       options:@{}
+                                       completionHandler:nil];
+}
+
+/* ************************************************************************** */
 #endif // Q_OS_IOS

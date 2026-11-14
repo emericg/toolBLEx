@@ -121,7 +121,7 @@ QtObject {
         //console.log("Qt.application.font > " + osfont)
 
         // Set default values
-        var fontsize = isMobile ? 16 : 13
+        var fontsize = isMobile ? 15 : 13
 
         // Read os font size
         let osfont = Qt.application.font
@@ -130,7 +130,8 @@ QtObject {
 
         // Sanity checks...
         if (isMobile && fontsize < 15) fontsize = 15
-        else if (fontsize < 11) fontsize = 11
+        else if (!isHdpi && fontsize < 13) fontsize = 13
+        else if (isHdpi && fontsize < 11) fontsize = 11
 
         return fontsize
     }
@@ -407,10 +408,10 @@ QtObject {
 
         // Handle day/night themes
         if (appThemeAuto) {
-            var needSwitch = false
-            var rightnow = new Date()
+            let needSwitch = false
+            let rightnow = new Date()
 
-            var hour = Qt.formatDateTime(rightnow, "hh")
+            let hour = Qt.formatDateTime(rightnow, "hh")
             if (hour >= 21 || hour <= 8) needSwitch = true
 
             if (needSwitch) {
@@ -473,11 +474,11 @@ QtObject {
             isDark = false
 
             themeStatusbar = Theme.Light
-            colorStatusbar = "white"
+            colorStatusbar = "#684be2"
 
-            colorHeader                 = "white"
-            colorHeaderContent          = "#684be2"
-            colorHeaderHighlight        = "white"
+            colorHeader                 = "#684be2"
+            colorHeaderContent          = "white"
+            colorHeaderHighlight        = "grey"
 
             colorSidebar                = "#fafafa"
             colorSidebarContent         = "#efefef"
@@ -529,9 +530,9 @@ QtObject {
             isDark = true
 
             themeStatusbar = Theme.Dark
-            colorStatusbar = "#313236"
+            colorStatusbar = "#292929"
 
-            colorHeader                 = "#313236"
+            colorHeader                 = "#292929"
             colorHeaderContent          = "#ee8c21"
             colorHeaderHighlight        = "#444"
 
@@ -608,11 +609,11 @@ QtObject {
             colorForeground             = "#f5f4f3"
 
             //colorPrimary                = "#6640d8" // purple
-            //colorSecondary              = "#ffeb00"
+            //colorSecondary              = "#8040d8"
             colorPrimary                = "#ffc900" // yellow
             colorSecondary              = "#ffeb00"
             //colorPrimary                = "#27ba72" // green
-            //colorSecondary              = "#ffeb00"
+            //colorSecondary              = "#27baa2"
 
             colorSuccess                = colorGreen
             colorWarning                = colorOrange

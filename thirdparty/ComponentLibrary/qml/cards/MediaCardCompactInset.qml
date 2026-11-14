@@ -8,8 +8,10 @@ import ComponentLibrary
 MediaCardBackground {
     id: control
 
+    actionButton: actionRow.primaryButton
+
     implicitWidth: 470
-    implicitHeight: Math.max(control.mediaSize, body.implicitHeight, actionRow.implicitHeight)
+    implicitHeight: Math.max(control.mediaSize, body.textHeight, actionRow.implicitHeight)
                     + control.inset * 2
 
     signal primaryClicked()
@@ -117,7 +119,9 @@ MediaCardBackground {
 
     ////////////////
 
-    Column { // body
+    // Body: the texts wrap, and the card grows with them,
+    // unless its height is set: they are then elided to fit it
+    Column {
         id: body
         anchors.left: parent.left
         anchors.leftMargin: control.inset + control.mediaSize + Theme.componentMarginS
@@ -126,29 +130,41 @@ MediaCardBackground {
         anchors.verticalCenter: parent.verticalCenter
         spacing: 2
 
+        readonly property real tagHeight: tag.visible ? (tag.implicitHeight + body.spacing) : 0
+        readonly property real textHeight: body.tagHeight + titleText.implicitHeight + body.spacing + descriptionText.implicitHeight
+        readonly property real availableHeight: control.height - control.inset * 2
+
         CardTagLabel {
+            id: tag
             visible: (control.tagText.length > 0)
             text: control.tagText
             dotColor: control.tagColor
         }
 
         Text {
+            id: titleText
             width: parent.width
+            height: Math.min(implicitHeight, Math.max(0, body.availableHeight - body.tagHeight))
             text: control.title
             textFormat: Text.PlainText
             color: Theme.colorText
             font.pixelSize: Theme.fontSizeContentBig
             font.weight: Font.DemiBold
             font.letterSpacing: -0.5
+            wrapMode: Text.Wrap
             elide: Text.ElideRight
         }
 
         Text {
+            id: descriptionText
             width: parent.width
+            height: Math.min(implicitHeight, Math.max(0, body.availableHeight - body.tagHeight - titleText.height - body.spacing))
+            visible: (height > 0)
             text: control.description
             textFormat: Text.PlainText
             color: Theme.colorSubText
             font.pixelSize: Theme.fontSizeContentSmall
+            wrapMode: Text.Wrap
             elide: Text.ElideRight
         }
     }

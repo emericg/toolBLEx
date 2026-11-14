@@ -26,9 +26,6 @@
 #include "utils_os_android.h"
 #elif defined(Q_OS_IOS)
 #include "utils_os_ios.h"
-#if defined(UTILS_NOTIFICATIONS_ENABLED)
-#include "utils_os_ios_notif.h"
-#endif
 #endif
 
 #include <QDir>

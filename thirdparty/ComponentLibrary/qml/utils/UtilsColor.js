@@ -73,6 +73,28 @@ function darken(c, t) {
 }
 
 /*!
+ * Linear interpolation between colors a and b, alpha included.
+ * \param t: position between a (0) and b (1)
+ */
+function mix(a, b, t) {
+    a = _color(a)
+    b = _color(b)
+    return Qt.rgba(a.r + (b.r - a.r) * t, a.g + (b.g - a.g) * t, a.b + (b.b - a.b) * t, a.a + (b.a - a.a) * t)
+}
+
+/*!
+ * Color along a gradient of evenly spaced stops.
+ * \param stops: list of at least two colors
+ * \param t: position along the gradient, clamped between 0 and 1
+ */
+function gradientAt(stops, t) {
+    var n = stops.length - 1
+    var x = Math.max(0, Math.min(1, t)) * n
+    var i = Math.min(n - 1, Math.floor(x))
+    return mix(stops[i], stops[i + 1], x - i)
+}
+
+/*!
  * Apply alpha to color c.
  */
 function opacify(c, a) {
@@ -132,6 +154,16 @@ function colorToHex(c, withAlpha) {
     var hex = "#" + h2(c.r) + h2(c.g) + h2(c.b)
     if (withAlpha) hex += h2(c.a)
     return hex
+}
+
+/*!
+ * Serialize a color to a CSS "rgba(r, g, b, a)" string, for Canvas fill and stroke styles.
+ * \param alpha: alpha to use instead of the color one (default: the color alpha)
+ */
+function toCss(c, alpha) {
+    c = _color(c)
+    var a = (alpha === undefined) ? c.a : alpha
+    return "rgba(" + Math.round(c.r * 255) + "," + Math.round(c.g * 255) + "," + Math.round(c.b * 255) + "," + a + ")"
 }
 
 /*!

@@ -33,12 +33,6 @@
 
 /*!
  * \brief Android utils
- *
- * Qt5 needs this in the project file:
- * android { QT += androidextras }
- *
- * Qt6 needs this in the project file:
- * android { QT += core-private }
  */
 class UtilsAndroid
 {
@@ -77,16 +71,6 @@ public:
      * \return True if CAMERA permission has been explicitly obtained.
      */
     static bool getPermission_camera();
-
-    /*!
-     * \return True if POST_NOTIFICATIONS permission has been previously obtained.
-     */
-    static bool checkPermission_notification();
-
-    /*!
-     * \return True if POST_NOTIFICATIONS permission has been explicitly obtained.
-     */
-    static bool getPermission_notification();
 
     /*!
      * \return True if Bluetooth permission has been previously obtained.

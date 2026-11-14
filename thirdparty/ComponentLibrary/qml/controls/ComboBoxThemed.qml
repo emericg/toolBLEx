@@ -149,7 +149,7 @@ T.ComboBox {
         readonly property string subText: (control.subTextRole && model && model[control.subTextRole]) ? model[control.subTextRole] : ""
         readonly property bool selected: (control.currentIndex === index)
 
-        width: control.width - 2
+        width: ListView.view ? ListView.view.width : (control.width - 2)
         height: control.height
         highlighted: (control.highlightedIndex === index)
 

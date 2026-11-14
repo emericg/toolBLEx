@@ -120,6 +120,8 @@ void UtilsLanguage::loadLanguage(const QString &lng)
     else if (m_appLanguage == "Norsk (Bokmål)") m_locale_str_full = "nb_NO"; // Norwegian
     else if (m_appLanguage == "Norsk (Nynorsk)") m_locale_str_full = "nn_NO"; // Norwegian
     else if (m_appLanguage == "Polski") m_locale_str_full = "pl_PL"; // Polish
+    else if (m_appLanguage == "Português") m_locale_str_full = "pt_PT"; // Portuguese
+    else if (m_appLanguage == "Português brasileiro") m_locale_str_full = "pt_BR"; // Brazilian Portuguese
     else if (m_appLanguage == "Pусский") m_locale_str_full = "ru_RU"; // Russian
     else
     {
