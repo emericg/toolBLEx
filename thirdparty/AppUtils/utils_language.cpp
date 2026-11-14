@@ -106,8 +106,8 @@ void UtilsLanguage::loadLanguage(const QString &lng)
     m_extraTranslators.clear();
 
     m_appLanguage = lng;
-    if (m_appLanguage == "Chinese (traditional)") m_locale_str_full = "zh_TW";
-    else if (m_appLanguage == "Chinese (simplified)") m_locale_str_full = "zh_CN";
+    if (m_appLanguage == "Chinese (traditional)" || m_appLanguage == "繁體中文") m_locale_str_full = "zh_TW";
+    else if (m_appLanguage == "Chinese (simplified)" || m_appLanguage == "简体中文") m_locale_str_full = "zh_CN";
     else if (m_appLanguage == "Dansk") m_locale_str_full = "da_DK"; // Danish
     else if (m_appLanguage == "Deutsch") m_locale_str_full = "de_DE";
     else if (m_appLanguage == "English") m_locale_str_full = "en_US";
@@ -131,6 +131,9 @@ void UtilsLanguage::loadLanguage(const QString &lng)
 
     m_locale_str_short = m_locale_str_full;
     m_locale_str_short.truncate(m_locale_str_full.lastIndexOf('_'));
+    // Traditional and Simplified Chinese share the same short code ("zh"),
+    // so they need distinct translation catalog filenames.
+    if (m_locale_str_full == "zh_TW") m_locale_str_short = "zh_TW";
 
     QLocale locale(m_locale_str_full);
     QLocale::setDefault(locale);

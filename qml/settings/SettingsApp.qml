@@ -231,6 +231,8 @@ Column { // APP SETTINGS
                 ListElement { text: "English"; }
                 ListElement { text: "Français"; }
                 ListElement { text: "Pусский"; }
+                ListElement { text: "简体中文"; }
+                ListElement { text: "繁體中文"; }
             }
 
             Component.onCompleted: {
