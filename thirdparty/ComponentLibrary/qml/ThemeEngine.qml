@@ -129,9 +129,12 @@ QtObject {
         else if (osfont.pointSize > 0) fontsize = ((osfont.pointSize * screenDpiLogical) / 72.0)
 
         // Sanity checks...
-        if (isMobile && fontsize < 15) fontsize = 15
-        else if (!isHdpi && fontsize < 13) fontsize = 13
-        else if (isHdpi && fontsize < 11) fontsize = 11
+        if (Qt.platform.os === "android" && fontsize < 15) fontsize = 15
+        else if (Qt.platform.os === "ios" && fontsize < 15) fontsize = 15
+        else if (Qt.platform.os === "linux" && fontsize < 15) fontsize = 15
+        else if (Qt.platform.os === "window" && fontsize < 13) fontsize = 13
+        else if (Qt.platform.os === "macos" && fontsize < 13) fontsize = 13
+        else if (fontsize < 13) fontsize = 13
 
         return fontsize
     }
