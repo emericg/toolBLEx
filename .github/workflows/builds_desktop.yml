@@ -147,6 +147,9 @@ jobs:
 
       # Codesign application bundle
       - name: Codesign application bundle
+        if: env.MACOS_CERTIFICATE_NAME
+        env:
+          MACOS_CERTIFICATE_NAME: ${{ secrets.MACOS_CERTIFICATE_NAME }}
         run: |
           /usr/bin/codesign --deep --force --options runtime \
             --entitlements "platforms/macos/${{ env.APP_NAME }}.entitlements" \
@@ -155,6 +158,7 @@ jobs:
 
       # Notarize application bundle
       - name: Notarize application bundle
+        if: env.APPLE_ID
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
@@ -196,7 +200,7 @@ jobs:
         with:
           arch: x86_64
 
-      # Install NSIS (already installed in 'windows-2022')
+      # Install NSIS (preinstalled on 'windows-2022', missing on 'windows-11-arm')
       #- name: Install NSIS
       #  run: |
       #       Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')
