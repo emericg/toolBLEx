@@ -28,7 +28,7 @@ Loader {
     Behavior on opacity { OpacityAnimator { duration: 233 } }
 
     active: false
-    asynchronous: true
+    asynchronous: (Qt.platform.os === "osx") ? false : true
 
     sourceComponent: Item {
         anchors.fill: parent
