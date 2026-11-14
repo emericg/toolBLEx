@@ -9,6 +9,8 @@ A multiplatform Bluetooth Low Energy (and Classic) device scanner and analyzer.
 
 > Available on Linux, macOS, Windows.
 
+> Available in Chinese (traditional and simplified), English, French, Russian.
+
 #### Features
 
 - Bluetooth host adapters info

@@ -123,6 +123,7 @@ int main(int argc, char *argv[])
                                      QStringLiteral("BleFormat only provides enums"));
 
     // Translate the application
+    utilsLanguage->addTranslationCatalog("ComponentLibrary");
     utilsLanguage->loadLanguage(sm->getAppLanguage());
 
     // Start the application

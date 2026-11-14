@@ -52,3 +52,6 @@ Special thanks
 
 **Russian**
 - Andrey Alypov
+
+**Chinese**
+- HonestQiao
